@@ -38,7 +38,7 @@
                         </i>
                         <a
                             mat-icon-button
-                            [routerLink]="change.amendment.getDetailStateURL()"
+                            [routerLink]="change.amendment.getDetailStateUrl()"
                             [state]="{ back: 'true' }"
                             class="smaller-icon-button amendment-link"
                             *ngIf="isAmendment(change)"
@@ -168,7 +168,7 @@
             <a
                 type="button"
                 mat-menu-item
-                [routerLink]="change.amendment.getDetailStateURL()"
+                [routerLink]="change.amendment.getDetailStateUrl()"
                 [state]="{ back: 'true' }"
             >
                 <mat-icon>visibility_on</mat-icon>

@@ -56,7 +56,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      *
      * It's used to debounce messages on the sortedViewModelListSubject
      */
-    protected readonly unsafeViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject<V[]>(null);
+    protected readonly unsafeViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject<V[]>([]);
 
     /**
      * Observable subject for the sorted view model list. Only accessible models are in the list.
@@ -309,6 +309,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     public getViewModelUnsafe(id: Id): V {
         return this.viewModelStore[id];
+    }
+
+    public getViewModelListUnsafeObservable(): Observable<V[]> {
+        return this.unsafeViewModelListSubject.asObservable();
     }
 
     /**

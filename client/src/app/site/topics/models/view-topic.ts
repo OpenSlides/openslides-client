@@ -34,8 +34,8 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
         };
     }
 
-    public getDetailStateURL(): string {
-        return `/${this.getActiveMeetingId()}/topics/${this.id}`;
+    public getDetailStateUrl(): string {
+        return `/${this.getActiveMeetingId()}/topics/${this.sequential_number}`;
     }
 
     /**

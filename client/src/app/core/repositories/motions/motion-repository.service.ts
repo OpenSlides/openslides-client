@@ -4,6 +4,7 @@ import {
     DEFAULT_FIELDSET,
     Fieldsets,
     Follow,
+    ROUTING_FIELDSET,
     TypedFieldset
 } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -20,6 +21,7 @@ import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { SimplifiedModelRequest } from '../../core-services/model-request-builder.service';
 import { AgendaItemRepositoryService, AgendaListTitle } from '../agenda/agenda-item-repository.service';
 import { BaseIsAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-is-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
@@ -195,9 +197,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
     }
 
     public getFieldsets(): Fieldsets<Motion> {
-        const titleFields: TypedFieldset<Motion> = [`title`, `number`, `created`];
+        const routingFields: TypedFieldset<Motion> = [`sequential_number`];
+        const titleFields: TypedFieldset<Motion> = routingFields.concat([`title`, `number`, `created`]);
         const listFields: TypedFieldset<Motion> = titleFields.concat([
-            `sequential_number`,
             `sort_weight`,
             `category_weight`,
             `lead_motion_id`, // needed for filtering
@@ -230,6 +232,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const callListFields: TypedFieldset<Motion> = titleFields.concat([`sort_weight`, `sort_parent_id`]);
         return {
             [DEFAULT_FIELDSET]: detailFields,
+            [ROUTING_FIELDSET]: routingFields,
             list: listFields,
             blockList: blockListFields,
             callList: callListFields,
@@ -533,6 +536,14 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                 return this.languageCollator.compare(a.title, b.title);
             }
         });
+    }
+
+    public getDetailNavigableModelRequest(id: Id): SimplifiedModelRequest {
+        return {
+            ids: [id],
+            viewModelCtor: ViewMotion,
+            fieldset: ROUTING_FIELDSET
+        };
     }
 
     /**

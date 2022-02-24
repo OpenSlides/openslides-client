@@ -22,7 +22,8 @@
     <!-- Multiselect info -->
     <div class="central-info-slot">
         <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
-        <span>{{ selectedRows.length }}&nbsp;</span><span>{{ 'selected' | translate }}</span>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
     </div>
 </os-head-bar>
 
@@ -40,12 +41,7 @@
 >
     <!-- Meta -->
     <div *pblNgridCellDef="'meta'; row as motion" class="cell-slot fill">
-        <a
-            class="detail-link"
-            [routerLink]="motion.getDetailStateURL()"
-            [state]="{ back: 'true' }"
-            *ngIf="!isMultiSelect"
-        ></a>
+        <os-detail-navigator [model]="motion"></os-detail-navigator>
         <div class="innerTable">
             <!-- number and line -->
             <div class="title-line one-line">
@@ -65,7 +61,7 @@
                 </span>
 
                 <span *ngIf="showSequentialNumber">
-                    <span *ngIf="motion.submitters.length"> &middot; </span>
+                    <span *ngIf="motion.submitters.length">&middot;</span>
                     <span>{{ 'Sequential number' | translate }}</span>
                     {{ motion.id }}
                 </span>
@@ -89,7 +85,7 @@
 
     <!-- Summary -->
     <div *pblNgridCellDef="'summary'; row as motion" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="motion.getDetailStateURL()"></a>
+        <os-detail-navigator [model]="motion"></os-detail-navigator>
         <div class="innerTable">
             <div class="motion-text" [innerHtml]="getAmendmentSummary(motion) | trust: 'html'"></div>
         </div>
@@ -146,7 +142,7 @@
 
         <ng-container *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
             <mat-divider></mat-divider>
-            <os-motion-multiselect-actions [selectedMotions]="selectedRows"> </os-motion-multiselect-actions>
+            <os-motion-multiselect-actions [selectedMotions]="selectedRows"></os-motion-multiselect-actions>
         </ng-container>
     </div>
 </mat-menu>

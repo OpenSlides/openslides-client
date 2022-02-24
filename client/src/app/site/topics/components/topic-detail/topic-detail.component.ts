@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
+import { Id } from 'app/core/definitions/key-types';
+import { Deferred } from 'app/core/promises/deferred';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { TopicRepositoryService } from 'app/core/repositories/topics/topic-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -26,10 +28,12 @@ import { ViewTopic } from '../../models/view-topic';
     styleUrls: [`./topic-detail.component.scss`]
 })
 export class TopicDetailComponent extends BaseModelContextComponent {
+    public readonly COLLECTION = Topic.COLLECTION;
+
     /**
      * Determine if the topic is in edit mode
      */
-    public editTopic: boolean;
+    public editTopic = false;
 
     /**
      * Determine is created
@@ -56,24 +60,16 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      */
     public itemVisibility = ItemTypeChoices;
 
+    public readonly hasLoaded = new Deferred<boolean>();
+
+    private _topicId: Id;
+
     /**
      * Constructor for the topic detail page.
-     *
-     * @param title Setting the browsers title
-     * @param matSnackBar display errors and other messages
-     * @param translate Handles translations
-     * @param route Angulars ActivatedRoute
-     * @param router Angulars Router
-     * @param formBuilder Angulars FormBuilder
-     * @param repo The topic repository
-     * @param promptService Allows warning before deletion attempts
-     * @param operator The current user
-     * @param DS Data Store
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        private route: ActivatedRoute,
         private router: Router,
         private formBuilder: FormBuilder,
         private repo: TopicRepositoryService,
@@ -82,7 +78,6 @@ export class TopicDetailComponent extends BaseModelContextComponent {
         private itemRepo: AgendaItemRepositoryService
     ) {
         super(componentServiceCollector, translate);
-        this.getTopicByUrl();
         this.createForm();
 
         this.itemObserver = this.itemRepo.getViewModelListBehaviorSubject();
@@ -111,13 +106,14 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      * Setup the form to create or alter the topic
      */
     public createForm(): void {
-        this.topicForm = this.formBuilder.group({
+        const controlsConfig = {
             agenda_type: [],
             agenda_parent_id: [],
             attachment_ids: [[]],
             text: [``],
             title: [``, Validators.required]
-        });
+        };
+        this.topicForm = this.formBuilder.group(controlsConfig);
 
         this.topicForm.get(`agenda_type`).setValue(AgendaItemType.COMMON);
     }
@@ -126,46 +122,47 @@ export class TopicDetailComponent extends BaseModelContextComponent {
      * Overwrite form Values with values from the topic
      */
     public patchForm(): void {
+        if (!this.topicForm) {
+            this.createForm();
+        }
         const topicPatch = {};
+        const topic = this.topic.topic;
         Object.keys(this.topicForm.controls).forEach(ctrl => {
-            topicPatch[ctrl] = this.topic[ctrl];
+            if (topic[ctrl]) {
+                topicPatch[ctrl] = topic[ctrl];
+            }
         });
-
         this.topicForm.patchValue(topicPatch);
     }
 
-    /**
-     * Determine whether a new topic should be created or an existing one should
-     * be loaded using the ID from the URL
-     */
-    public getTopicByUrl(): void {
-        if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `new`) {
-            // creates a new topic
-            this.newTopic = true;
-            this.editTopic = true;
-            this.topic = new ViewTopic(new Topic());
-            super.setTitle(`New topic`);
+    public onIdFound(id: Id | null): void {
+        this._topicId = id;
+        if (id) {
+            this.loadTopicById();
         } else {
-            // load existing topic
-            this.route.params.subscribe(params => {
-                this.loadTopicById(Number(params.id));
-            });
+            this.initTopicCreation();
         }
+        setTimeout(() => this.hasLoaded.resolve(true));
+    }
+
+    private initTopicCreation(): void {
+        // creates a new topic
+        this.newTopic = true;
+        this.editTopic = true;
+        super.setTitle(`New topic`);
     }
 
     /**
      * Loads a top from the repository
-     *
-     * @param id the id of the required topic
      */
-    public loadTopicById(id: number): void {
+    private loadTopicById(): void {
         this.subscribe({
             viewModelCtor: ViewTopic,
-            ids: [id],
+            ids: [this._topicId],
             follow: [SPEAKER_BUTTON_FOLLOW, { idField: `attachment_ids` }, `tag_ids`]
         });
 
-        this.repo.getViewModelObservable(id).subscribe(newViewTopic => {
+        this.repo.getViewModelObservable(this._topicId).subscribe(newViewTopic => {
             // repo sometimes delivers undefined values
             // also ensures edition cannot be interrupted by autoupdate
             if (newViewTopic) {
@@ -173,7 +170,7 @@ export class TopicDetailComponent extends BaseModelContextComponent {
                 super.setTitle(title);
                 this.topic = newViewTopic;
                 // personalInfoForm is undefined during 'new' and directly after reloading
-                if (this.topicForm && !this.editTopic) {
+                if (!this.editTopic) {
                     this.patchForm();
                 }
             }

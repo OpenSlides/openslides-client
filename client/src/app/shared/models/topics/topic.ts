@@ -5,6 +5,7 @@ import { HasAgendaItemId } from '../base/has-agenda-item-id';
 import { HasAttachmentIds } from '../base/has-attachment-ids';
 import { HasListOfSpeakersId } from '../base/has-list-of-speakers-id';
 import { HasMeetingId } from '../base/has-meeting-id';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 import { HasTagIds } from '../base/has-tag-ids';
 
 /**
@@ -22,4 +23,10 @@ export class Topic extends BaseModel<Topic> {
         super(Topic.COLLECTION, input);
     }
 }
-export interface Topic extends HasMeetingId, HasAgendaItemId, HasListOfSpeakersId, HasAttachmentIds, HasTagIds {}
+export interface Topic
+    extends HasMeetingId,
+        HasAgendaItemId,
+        HasListOfSpeakersId,
+        HasAttachmentIds,
+        HasTagIds,
+        HasSequentialNumber {}

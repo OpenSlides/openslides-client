@@ -13,7 +13,7 @@
 <ng-template #pollArea let-poll="poll" let-last="last">
     <mat-card class="os-card">
         <p>
-            <a [routerLink]="poll.getDetailStateURL()" [state]="{ back: 'true' }" class="subtitle-text">
+            <a [routerLink]="poll.getDetailStateUrl()" [state]="{ back: 'true' }" class="subtitle-text">
                 {{ getPollVoteTitle(poll) }}
             </a>
             <br />

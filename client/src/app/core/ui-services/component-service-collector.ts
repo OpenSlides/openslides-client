@@ -5,6 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { ActiveMeetingService } from '../core-services/active-meeting.service';
 import { ActiveMeetingIdService } from '../core-services/active-meeting-id.service';
 import { ModelRequestService } from '../core-services/model-request.service';
+import { SequentialNumberMappingService } from '../core-services/sequential-number-mapping.service';
 import { StorageService } from '../core-services/storage.service';
 import { MeetingSettingsService } from './meeting-settings.service';
 
@@ -13,12 +14,13 @@ import { MeetingSettingsService } from './meeting-settings.service';
 })
 export class ComponentServiceCollector {
     public constructor(
-        public titleService: Title,
-        public matSnackBar: MatSnackBar,
-        public storage: StorageService,
-        public modelRequestService: ModelRequestService,
-        public meetingSettingService: MeetingSettingsService,
-        public activeMeetingIdService: ActiveMeetingIdService,
-        public activeMeetingService: ActiveMeetingService
+        public readonly titleService: Title,
+        public readonly matSnackBar: MatSnackBar,
+        public readonly storage: StorageService,
+        public readonly modelRequestService: ModelRequestService,
+        public readonly meetingSettingService: MeetingSettingsService,
+        public readonly activeMeetingIdService: ActiveMeetingIdService,
+        public readonly activeMeetingService: ActiveMeetingService,
+        public readonly sequentialNumberMappingService: SequentialNumberMappingService
     ) {}
 }

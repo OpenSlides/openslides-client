@@ -198,7 +198,7 @@ export class HistoryListComponent extends BaseModelContextComponent implements O
         await this.timeTravelService.loadHistoryPoint(history);
         const element = this.viewModelStore.get(history.collection, history.modelId);
         if (element && isDetailNavigable(element)) {
-            this.router.navigate([element.getDetailStateURL()]);
+            this.router.navigate([element.getDetailStateUrl()]);
         } else {
             const message = this.translate.instant('Cannot navigate to the selected history element.');
             this.raiseError(message);

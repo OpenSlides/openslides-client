@@ -13,6 +13,7 @@ import { OfflineService } from './core/core-services/offline.service';
 import { OpenSlidesService } from './core/core-services/openslides.service';
 import { OpenSlidesStatusService } from './core/core-services/openslides-status.service';
 import { OperatorService } from './core/core-services/operator.service';
+import { SequentialNumberMappingService } from './core/core-services/sequential-number-mapping.service';
 import { ServertimeService } from './core/core-services/servertime.service';
 import { Deferred } from './core/promises/deferred';
 import { CountUsersService } from './core/ui-services/count-users.service';
@@ -60,6 +61,7 @@ export class AppComponent implements OnInit {
         routingState: RoutingStateService,
         votingBannerService: VotingBannerService, // needed for initialisation
         offlineSerice: OfflineService,
+        sequentialNumberMappingService: SequentialNumberMappingService,
         private openslidesStatus: OpenSlidesStatusService,
         private matIconRegistry: MatIconRegistry,
         private domSanitizer: DomSanitizer

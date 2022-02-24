@@ -1,9 +1,11 @@
 declare global {
     /**
      * Enhance array with own functions
-     * TODO: Remove once flatMap made its way into official JS/TS (ES 2019?)
      */
     interface Array<T> {
+        /**
+         * TODO: Remove once flatMap made its way into official JS/TS (ES 2019?)
+         */
         flatMap<U>(callbackFn: (currentValue: T, index: number, array: T[]) => U, thisArg?: any): U;
         /**
          * Compares each element of two arrays, which element is included in both. It returns a new array containing all
@@ -29,6 +31,12 @@ declare global {
          */
         tap(callbackFn: (self: T[]) => void): T[];
         mapToObject(f: (item: T) => { [key: string]: any }): { [key: string]: any };
+        /**
+         * TODO: Remove this, when ES 2019 is the target for our tsconfig
+         *
+         * @param index The index of an element in the array one expects
+         */
+        at(index: number): T;
     }
 
     interface Set<T> {
@@ -131,6 +139,19 @@ function overloadArrayFunctions(): void {
         },
         enumerable: false
     });
+
+    Object.defineProperty(Array.prototype, `at`, {
+        value<T>(index: number): T {
+            if (index < 0) {
+                index = index.modulo(this.length);
+            }
+            if (index > this.length) {
+                return undefined;
+            }
+            return this[index];
+        },
+        enumerable: false
+    });
 }
 
 /**
@@ -159,8 +180,11 @@ function overloadSetFunctions(): void {
  */
 function overloadModulo(): void {
     Object.defineProperty(Number.prototype, `modulo`, {
-        value(n: number): number {
-            return ((this % n) + n) % n;
+        value(modulus: number): number {
+            if (this < 0) {
+                return modulus - (Math.abs(this) % modulus);
+            }
+            return this % modulus;
         },
         enumerable: false
     });

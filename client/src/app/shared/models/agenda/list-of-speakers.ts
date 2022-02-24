@@ -3,6 +3,7 @@ import { Fqid, Id } from 'app/core/definitions/key-types';
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
 import { HasProjectionIds } from '../base/has-projectable-ids';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 
 /**
  * Representations of agenda Item
@@ -21,4 +22,4 @@ export class ListOfSpeakers extends BaseModel<ListOfSpeakers> {
         super(ListOfSpeakers.COLLECTION, input);
     }
 }
-export interface ListOfSpeakers extends HasMeetingId, HasProjectionIds {}
+export interface ListOfSpeakers extends HasMeetingId, HasProjectionIds, HasSequentialNumber {}

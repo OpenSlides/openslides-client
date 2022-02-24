@@ -62,7 +62,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         };
     }
 
-    public getDetailStateURL(): string {
+    public getDetailStateUrl(): string {
         return this.url;
     }
 

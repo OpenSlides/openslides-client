@@ -1,134 +1,135 @@
-<os-head-bar
-    [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
-    mainActionTooltip="New amendment"
-    [nav]="false"
-    [editMode]="editMotion"
-    [isSaveButtonEnabled]="canSave"
-    [saveAction]="getSaveAction()"
-    (mainEvent)="createAmendment()"
-    (cancelEditEvent)="leaveEditMotion()"
->
-    <!-- Title -->
-    <div class="title-slot">
-        <h2 *ngIf="motion && !newMotion">
-            <span>{{ 'Motion' | translate }}</span>
-            <!-- Whitespace between "Motion" and number -->
-            <span>&nbsp;</span>
-            <span *ngIf="!editMotion">{{ motion.number }}</span>
-            <!-- <span *ngIf="editMotion">{{ contentForm.get('number').value }}</span> -->
-        </h2>
-        <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
-        <h2 *ngIf="amendmentEdit">{{ 'New amendment' | translate }}</h2>
-    </div>
+<os-detail-view [collection]="collection" (idFound)="onIdFound($event)">
+    <ng-container *ngIf="hasLoaded | async">
+        <os-head-bar
+            [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
+            mainActionTooltip="New amendment"
+            [nav]="false"
+            [editMode]="editMotion"
+            [isSaveButtonEnabled]="canSave"
+            [saveAction]="getSaveAction()"
+            (mainEvent)="createAmendment()"
+            (cancelEditEvent)="leaveEditMotion()"
+        >
+            <!-- Title -->
+            <div class="title-slot">
+                <h2 *ngIf="motion && !newMotion">
+                    <span>{{ 'Motion' | translate }}</span>
+                    <!-- Whitespace between "Motion" and number -->
+                    <span>&nbsp;</span>
+                    <span *ngIf="!editMotion">{{ motion.number }}</span>
+                </h2>
+                <h2 *ngIf="newMotion && !amendmentEdit">{{ 'New motion' | translate }}</h2>
+                <h2 *ngIf="amendmentEdit">{{ 'New amendment' | translate }}</h2>
+            </div>
 
-    <!-- Back and forth buttons -->
-    <div *ngIf="!editMotion && !vp.isMobile" class="extra-controls-slot prev-next-motion-controls">
-        <div *ngIf="previousMotion">
-            <button mat-button (click)="navigateToMotion(previousMotion)">
-                <os-icon-container icon="chevron_left">
-                    {{ previousMotion.number }}
-                </os-icon-container>
-            </button>
+            <!-- Back and forth buttons -->
+            <div *ngIf="!editMotion && !vp.isMobile" class="extra-controls-slot prev-next-motion-controls">
+                <div *ngIf="previousMotion">
+                    <button mat-button (click)="navigateToMotion(previousMotion)">
+                        <os-icon-container icon="chevron_left">
+                            {{ previousMotion.number }}
+                        </os-icon-container>
+                    </button>
+                </div>
+                <div *ngIf="nextMotion">
+                    <button mat-button (click)="navigateToMotion(nextMotion)">
+                        <os-icon-container icon="chevron_right" [swap]="true">
+                            {{ nextMotion.number }}
+                        </os-icon-container>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <div class="menu-slot">
+                <button type="button" mat-icon-button [matMenuTriggerFor]="motionExtraMenu" *ngIf="motion">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+
+            <mat-menu #motionExtraMenu="matMenu">
+                <div *ngIf="vp.isMobile">
+                    <button mat-menu-item (click)="navigateToMotion(previousMotion)" *ngIf="previousMotion">
+                        <mat-icon>chevron_left</mat-icon>
+                        <span>{{ 'Motion' | translate }} {{ previousMotion.number }}</span>
+                    </button>
+                    <button mat-menu-item (click)="navigateToMotion(nextMotion)" *ngIf="nextMotion">
+                        <mat-icon>chevron_right</mat-icon>
+                        <span>{{ 'Motion' | translate }} {{ nextMotion.number }}</span>
+                    </button>
+                    <mat-divider *ngIf="previousMotion || nextMotion"></mat-divider>
+                </div>
+                <!-- List of speakers -->
+                <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
+                <!-- PDF -->
+                <button mat-menu-item (click)="onDownloadPdf()">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                    <span>{{ 'PDF' | translate }}</span>
+                </button>
+                <mat-divider
+                    *osPerms="[
+                        permission.projectorCanManage,
+                        permission.agendaItemCanManage,
+                        permission.meetingCanSeeHistory
+                    ]"
+                ></mat-divider>
+                <!-- Project -->
+                <os-projector-button
+                    *osPerms="permission.projectorCanManage"
+                    [object]="motion"
+                    [menuItem]="true"
+                ></os-projector-button>
+                <!-- Add/remove to/from agenda -->
+                <div *osPerms="permission.agendaItemCanManage">
+                    <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.agenda_item_id">
+                        <mat-icon>add</mat-icon>
+                        <span>{{ 'Add to agenda' | translate }}</span>
+                    </button>
+                    <button mat-menu-item (click)="removeFromAgenda()" *ngIf="motion && motion.agenda_item_id">
+                        <mat-icon>remove</mat-icon>
+                        <span>{{ 'Remove from agenda' | translate }}</span>
+                    </button>
+                </div>
+                <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
+                <!-- Forward to meeting -->
+                <button mat-menu-item (click)="forwardMotionToMeetings()" *ngIf="perms.isAllowed('manage')">
+                    <mat-icon>forward</mat-icon>
+                    <span>{{ 'Forward' | translate }}</span>
+                </button>
+                <!-- Edit-->
+                <button mat-menu-item (click)="enterEditMotion()" *ngIf="perms.isAllowed('update', motion)">
+                    <mat-icon>edit</mat-icon>
+                    <span>{{ 'Edit' | translate }}</span>
+                </button>
+                <!-- Delete -->
+                <button
+                    mat-menu-item
+                    class="red-warning-text"
+                    (click)="deleteMotionButton()"
+                    *ngIf="perms.isAllowed('manage')"
+                >
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ 'Delete' | translate }}</span>
+                </button>
+            </mat-menu>
+        </os-head-bar>
+
+        <div
+            class="content-container spacer-bottom-60"
+            osSwipe
+            (swipeLeft)="navigateToMotion(previousMotion)"
+            (swipeRight)="navigateToMotion(nextMotion)"
+            *ngIf="motion"
+        >
+            <!-- Title -->
+            <div class="title" *ngIf="!editMotion">
+                <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
+            </div>
+
+            <ng-container *ngIf="vp.isMobile; then mobileView; else desktopView"></ng-container>
         </div>
-        <div *ngIf="nextMotion">
-            <button mat-button (click)="navigateToMotion(nextMotion)">
-                <os-icon-container icon="chevron_right" [swap]="true">
-                    {{ nextMotion.number }}
-                </os-icon-container>
-            </button>
-        </div>
-    </div>
-
-    <!-- Menu -->
-    <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="motionExtraMenu" *ngIf="motion">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </div>
-
-    <mat-menu #motionExtraMenu="matMenu">
-        <div *ngIf="vp.isMobile">
-            <button mat-menu-item (click)="navigateToMotion(previousMotion)" *ngIf="previousMotion">
-                <mat-icon>chevron_left</mat-icon>
-                <span>{{ 'Motion' | translate }} {{ previousMotion.number }}</span>
-            </button>
-            <button mat-menu-item (click)="navigateToMotion(nextMotion)" *ngIf="nextMotion">
-                <mat-icon>chevron_right</mat-icon>
-                <span>{{ 'Motion' | translate }} {{ nextMotion.number }}</span>
-            </button>
-            <mat-divider *ngIf="previousMotion || nextMotion"></mat-divider>
-        </div>
-        <!-- List of speakers -->
-        <os-speaker-button [object]="motion" [menuItem]="true"></os-speaker-button>
-        <!-- PDF -->
-        <button mat-menu-item (click)="onDownloadPdf()">
-            <mat-icon>picture_as_pdf</mat-icon>
-            <span>{{ 'PDF' | translate }}</span>
-        </button>
-        <mat-divider
-            *osPerms="[permission.projectorCanManage, permission.agendaItemCanManage, permission.meetingCanSeeHistory]"
-        ></mat-divider>
-        <!-- Project -->
-        <os-projector-button
-            *osPerms="permission.projectorCanManage"
-            [object]="motion"
-            [menuItem]="true"
-        ></os-projector-button>
-        <!-- Add/remove to/from agenda -->
-        <div *osPerms="permission.agendaItemCanManage">
-            <button mat-menu-item (click)="addToAgenda()" *ngIf="motion && !motion.agenda_item_id">
-                <mat-icon>add</mat-icon>
-                <span>{{ 'Add to agenda' | translate }}</span>
-            </button>
-            <button mat-menu-item (click)="removeFromAgenda()" *ngIf="motion && motion.agenda_item_id">
-                <mat-icon>remove</mat-icon>
-                <span>{{ 'Remove from agenda' | translate }}</span>
-            </button>
-        </div>
-        <!-- <button
-                mat-menu-item
-                *osPerms="permission.meetingCanSeeHistory"
-                [routerLink]="['/', activeMeetingId, 'history']"
-                [queryParams]="{ element: motion.fqid }"
-            >
-                <mat-icon>history</mat-icon>
-                <span>
-                    {{ 'History' | translate }}
-                </span>
-            </button> -->
-        <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
-        <!-- Forward to meeting -->
-        <button mat-menu-item (click)="forwardMotionToMeetings()" *ngIf="perms.isAllowed('manage')">
-            <mat-icon>forward</mat-icon>
-            <span>{{ 'Forward' | translate }}</span>
-        </button>
-        <!-- Edit-->
-        <button mat-menu-item (click)="enterEditMotion()" *ngIf="perms.isAllowed('update', motion)">
-            <mat-icon>edit</mat-icon>
-            <span>{{ 'Edit' | translate }}</span>
-        </button>
-        <!-- Delete -->
-        <button mat-menu-item class="red-warning-text" (click)="deleteMotionButton()" *ngIf="perms.isAllowed('manage')">
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
-    </mat-menu>
-</os-head-bar>
-
-<div
-    class="content-container spacer-bottom-60"
-    osSwipe
-    (swipeLeft)="navigateToMotion(previousMotion)"
-    (swipeRight)="navigateToMotion(nextMotion)"
-    *ngIf="motion"
->
-    <!-- Title -->
-    <div class="title" *ngIf="!editMotion">
-        <os-motion-manage-title [motion]="motion"></os-motion-manage-title>
-    </div>
-
-    <ng-container *ngIf="vp.isMobile; then mobileView; else desktopView"></ng-container>
-</div>
+    </ng-container>
+</os-detail-view>
 
 <ng-template #mobileView>
     <div class="mobile-view">
@@ -194,7 +195,3 @@
         (validStateChanged)="canSave = $event"
     ></os-motion-content>
 </ng-template>
-
-<os-not-found *ngIf="!motion">
-    {{ "Motion not found" | translate}}
-</os-not-found>

@@ -77,8 +77,8 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> implements
         };
     }
 
-    public getDetailStateURL(): string {
-        return `/${this.getActiveMeetingId()}/motions/category/${this.id}`;
+    public getDetailStateUrl(): string {
+        return `/${this.getActiveMeetingId()}/motions/category/${this.sequential_number}`;
     }
 
     /**

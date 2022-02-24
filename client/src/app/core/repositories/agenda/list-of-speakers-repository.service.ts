@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ListOfSpeakersAction } from 'app/core/actions/list-of-speakers-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'app/core/core-services/model-request-builder.service';
 import { ListOfSpeakers } from 'app/shared/models/agenda/list-of-speakers';
 import { hasListOfSpeakers, ViewListOfSpeakers } from 'app/site/agenda/models/view-list-of-speakers';
 import { ViewSpeaker } from 'app/site/agenda/models/view-speaker';
@@ -37,9 +37,11 @@ export class ListOfSpeakersRepositoryService extends BaseRepositoryWithActiveMee
     }
 
     public getFieldsets(): Fieldsets<ListOfSpeakers> {
+        const routingFields: (keyof ListOfSpeakers)[] = [`sequential_number`];
         const defaultFieldset: (keyof ListOfSpeakers)[] = [`closed`, `content_object_id`, `speaker_ids`];
         return {
-            [DEFAULT_FIELDSET]: defaultFieldset
+            [DEFAULT_FIELDSET]: defaultFieldset,
+            [ROUTING_FIELDSET]: routingFields
         };
     }
 

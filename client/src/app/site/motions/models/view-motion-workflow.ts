@@ -16,6 +16,10 @@ export class ViewMotionWorkflow extends BaseViewModel<MotionWorkflow> {
     public get workflow(): MotionWorkflow {
         return this._model;
     }
+
+    public getDetailStateUrl(): string {
+        return `/${this.getActiveMeetingId()}/motions/workflow/${this.sequential_number}`;
+    }
 }
 interface IWorkflowRelations {
     states: ViewMotionState[];

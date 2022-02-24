@@ -95,7 +95,14 @@ export interface Fieldsets<M extends BaseModel> {
 class UnknownRelationError extends Error {}
 class UnknownFieldsetError extends Error {}
 
+/**
+ * Fieldset used if no fieldset is specified
+ */
 export const DEFAULT_FIELDSET = `detail`;
+/**
+ * Fieldset used for navigation purposes
+ */
+export const ROUTING_FIELDSET = `routing`;
 
 @Injectable({
     providedIn: `root`

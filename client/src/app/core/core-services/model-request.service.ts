@@ -14,8 +14,11 @@ import { SimplifiedModelRequest } from './model-request-builder.service';
 export class ModelRequestService {
     public constructor(private autoupdateService: AutoupdateService) {}
 
-    public async instant(request: SimplifiedModelRequest, description: string): Promise<void> {
-        return await this.autoupdateService.instant(request, description);
+    public async instant<D = any>(
+        request: SimplifiedModelRequest,
+        description: string
+    ): Promise<{ [collection: string]: { [id: number]: D } }> {
+        return await this.autoupdateService.instant<D>(request, description);
     }
 
     public async subscribe(

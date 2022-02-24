@@ -25,7 +25,7 @@ export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParag
         return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
     }
 
-    public getDetailStateURL(): string {
+    public getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/motions/statute-paragraphs`;
     }
 }

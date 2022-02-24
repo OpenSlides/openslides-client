@@ -87,6 +87,10 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
             return speaker.speaker.user_id === userId;
         });
     }
+
+    public getDetailStateUrl(): string {
+        return `/${this.getActiveMeetingId()}/agenda/speakers/${this.sequential_number}`;
+    }
 }
 interface IListOfSpeakersRelations {
     content_object?: BaseViewModel & HasListOfSpeakers;

@@ -235,7 +235,7 @@ export class ViewUser extends BaseProjectableViewModel<User> implements Searchab
         return { properties, searchValue: properties.map(property => property.value) };
     }
 
-    public getDetailStateURL(): string {
+    public getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/users/${this.id}`;
     }
 

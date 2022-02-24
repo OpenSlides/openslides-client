@@ -2,6 +2,7 @@ import { Id } from 'app/core/definitions/key-types';
 
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 
 /**
  * Representation of a comment section.
@@ -22,4 +23,4 @@ export class MotionCommentSection extends BaseModel<MotionCommentSection> {
         super(MotionCommentSection.COLLECTION, input);
     }
 }
-export interface MotionCommentSection extends HasMeetingId {}
+export interface MotionCommentSection extends HasMeetingId, HasSequentialNumber {}

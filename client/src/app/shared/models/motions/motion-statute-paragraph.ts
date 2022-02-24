@@ -2,6 +2,7 @@ import { Id } from 'app/core/definitions/key-types';
 
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 
 /**
  * Representation of a statute paragraph.
@@ -21,4 +22,4 @@ export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
         super(MotionStatuteParagraph.COLLECTION, input);
     }
 }
-export interface MotionStatuteParagraph extends HasMeetingId {}
+export interface MotionStatuteParagraph extends HasMeetingId, HasSequentialNumber {}

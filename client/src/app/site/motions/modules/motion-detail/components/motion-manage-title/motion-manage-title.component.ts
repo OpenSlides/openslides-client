@@ -5,6 +5,7 @@ import { PersonalNoteRepositoryService } from 'app/core/repositories/users/perso
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PersonalNote } from 'app/shared/models/users/personal-note';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
+import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ViewMotionChangeRecommendation } from 'app/site/motions/models/view-motion-change-recommendation';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { Subscription } from 'rxjs';
@@ -23,6 +24,10 @@ import {
 })
 export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     public titleChangeRecommendation: ViewMotionChangeRecommendation = null;
+
+    public get parent(): ViewMotion | null {
+        return this.motion.lead_motion;
+    }
 
     private get personalNote(): PersonalNote | null {
         return this.motion.getPersonalNote();

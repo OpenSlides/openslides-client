@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { HistoryService } from 'app/core/core-services/history.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
@@ -334,11 +335,11 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         let workflowOptions: OsFilterOptions = [];
         // add "done" and "undone"
         workflowOptions.push({
-            label: `Done`,
+            label: _(`Done`),
             condition: finalStates
         });
         workflowOptions.push({
-            label: this.translate.instant(`Undone`),
+            label: _(`Undone`),
             condition: nonFinalStates
         });
         workflowOptions.push(`-`);
@@ -364,7 +365,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
 
         recoOptions.push(`-`);
         recoOptions.push({
-            label: this.translate.instant(`No recommendation`),
+            label: _(`No recommendation`),
             condition: null
         });
         this.recommendationFilterOptions.options = recoOptions;

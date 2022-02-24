@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/cor
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
@@ -149,7 +149,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         motionServiceCollector: MotionServiceCollectorService,
         private fb: FormBuilder,
         private dialogService: MatDialog,
-        private router: Router,
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
         private perms: PermissionsService
@@ -165,19 +164,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public onKeyDown(event: KeyboardEvent): void {
         if (event.key === `Enter` && event.shiftKey) {
             this.save.emit(this.contentForm.value);
-        }
-    }
-
-    /**
-     * Creates a motion. Calls the "patchValues" function in the MotionObject
-     */
-    public async createMotion(): Promise<void> {
-        const newMotionValues: Partial<MotionAction.CreatePayload> = { ...this.contentForm.value };
-        try {
-            const response = await this.repo.create(newMotionValues);
-            this.router.navigate([this.activeMeetingId, `motions` + response.id]);
-        } catch (e) {
-            this.raiseError(e);
         }
     }
 

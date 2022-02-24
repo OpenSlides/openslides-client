@@ -335,9 +335,9 @@ export class SuperSearchComponent implements OnInit {
      */
     public viewResult(model: BaseViewModel & Searchable): void {
         if (model.collection === `mediafiles/mediafile` && !(<ViewMediafile>model).is_directory) {
-            window.open(model.getDetailStateURL(), `_blank`);
+            window.open(model.getDetailStateUrl(), `_blank`);
         } else {
-            this.router.navigate([model.getDetailStateURL()]);
+            this.router.navigate([model.getDetailStateUrl()]);
         }
         this.hideOverlay();
         this.saveQueryToStorage(this.searchForm.value);

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from 'app/core/core-services/active-meeting.service';
@@ -23,7 +23,7 @@ import { ProjectorEditDialogComponent } from '../projector-edit-dialog/projector
     styleUrls: [`./projector-list-entry.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class ProjectorListEntryComponent extends BaseComponent implements OnInit {
+export class ProjectorListEntryComponent extends BaseComponent {
     /**
      * The projector shown by this entry.
      */
@@ -61,8 +61,6 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
         super(componentServiceCollector, translate);
     }
 
-    public ngOnInit(): void {}
-
     /**
      * Starts editing for the given projector.
      */
@@ -87,9 +85,9 @@ export class ProjectorListEntryComponent extends BaseComponent implements OnInit
      */
     public getDetailLink(): string {
         if (this.operator.hasPerms(Permission.projectorCanManage)) {
-            return `/${this.activeMeetingId}/projectors/detail/${this.projector.id}`;
+            return `/${this.activeMeetingId}/projectors/detail/${this.projector.sequential_number}`;
         } else {
-            return `/${this.activeMeetingId}/projector/${this.projector.id}`;
+            return `/${this.activeMeetingId}/projector/${this.projector.sequential_number}`;
         }
     }
 

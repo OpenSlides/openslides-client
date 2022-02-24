@@ -2,6 +2,7 @@ import { Id } from 'app/core/definitions/key-types';
 
 import { BaseModel } from '../base/base-model';
 import { HasMeetingId } from '../base/has-meeting-id';
+import { HasSequentialNumber } from '../base/has-sequential-number';
 
 /**
  * Representation of a motion category. Has the nested property "File"
@@ -24,4 +25,4 @@ export class MotionCategory extends BaseModel<MotionCategory> {
         super(MotionCategory.COLLECTION, input);
     }
 }
-export interface MotionCategory extends HasMeetingId {}
+export interface MotionCategory extends HasMeetingId, HasSequentialNumber {}
