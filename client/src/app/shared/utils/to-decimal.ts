@@ -11,7 +11,7 @@ const AMOUNT_DECIMAL_PLACES = 6;
  * @returns A string containing the floating point representation of the given number.
  */
 export function toDecimal(input: string | number): Decimal | undefined {
-    if (!input) {
+    if (typeof input !== `string` && typeof input !== `number`) {
         return undefined;
     }
     if (typeof input === `number`) {
