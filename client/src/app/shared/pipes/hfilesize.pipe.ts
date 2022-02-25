@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 
 @Pipe({
-    name: `hSize`
+    name: `readableBytes`
 })
-export class HSize implements PipeTransform {
+export class ReadableBytesPipe implements PipeTransform {
   public transform(bytes: number): string {
       if (bytes === 0) {
           return `0 B`;
