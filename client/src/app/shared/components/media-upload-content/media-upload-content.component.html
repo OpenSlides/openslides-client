@@ -47,7 +47,7 @@
             </span>
             <span>
                 <mat-icon [inline]="true">data_usage</mat-icon>
-                {{ getReadableSize(file.mediafile.size) }}
+                {{ file.mediafile.size | hSize }}
             </span>
         </div>
     </div>
