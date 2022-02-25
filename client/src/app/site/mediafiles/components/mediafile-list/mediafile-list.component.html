@@ -131,7 +131,7 @@
                 {{ mediafile.title }}
             </div>
             <div class="foreground-icon" *ngIf="!mediafile.is_directory">
-                <span>{{ getDateFromTimestamp(mediafile.create_timestamp) }} · {{ mediafile.filesize }}</span>
+                <span>{{ getDateFromTimestamp(mediafile.create_timestamp) }} · {{ mediafile.filesize | readableBytes }}</span>
             </div>
         </div>
     </div>

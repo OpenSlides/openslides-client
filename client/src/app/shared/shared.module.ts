@@ -113,6 +113,7 @@ import { PermsDirective } from './directives/perms.directive';
 import { ResizedDirective } from './directives/resized.directive';
 import { SwipeDirective } from './directives/swipe.directive';
 import { MaterialDesignModule } from './libraries/material-design.module';
+import { ReadableBytesPipe } from './pipes/hfilesize.pipe';
 import { LocalizedDatePipe } from './pipes/localized-date.pipe';
 import { ParsePollNumberPipe } from './pipes/parse-poll-number.pipe';
 import { PollKeyVerbosePipe } from './pipes/poll-key-verbose.pipe';
@@ -122,6 +123,7 @@ import { ReversePipe } from './pipes/reverse.pipe';
 import { TrustPipe } from './pipes/trust.pipe';
 
 const declarations = [
+    ReadableBytesPipe,
     PermsDirective,
     DomChangeDirective,
     AutofocusDirective,
