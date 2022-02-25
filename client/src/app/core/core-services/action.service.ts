@@ -60,8 +60,14 @@ export class Action<T = void> extends Promise<T[]> {
         return new Action(this._sendActionFn, ...concatedActions);
     }
 
-    public resolve(): Promise<T[]> {
-        return this._sendActionFn(this._actions);
+    public async resolve(): Promise<T[] | T> {
+        return await this._sendActionFn(this._actions).then(result => {
+            if (result) {
+                return result.flatMap(value => value);
+            } else {
+                return null;
+            }
+        });
     }
 }
 

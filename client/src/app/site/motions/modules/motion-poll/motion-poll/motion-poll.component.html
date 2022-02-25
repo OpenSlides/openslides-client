@@ -48,6 +48,7 @@
     <!-- Change state button -->
     <span *osPerms="permission.motionCanManagePolls; and: !hideChangeState">
         <button
+            *ngIf="pollStateActions[poll.state]"
             mat-stroked-button
             [ngClass]="pollStateActions[poll.state].css"
             (click)="nextPollState()"

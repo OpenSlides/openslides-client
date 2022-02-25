@@ -319,7 +319,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
                 if (!result.group_ids?.length) {
                     result.group_ids = [this.activeMeeting.default_group_id];
                 }
-                this.repo.update(result, user);
+                this.repo.update(result, user).resolve();
             }
         });
     }
@@ -448,7 +448,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
             this.operator.hasPerms(Permission.userCanManage) ||
             (this._allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
-            this.repo.setPresent(!this.isUserPresent(viewUser), viewUser);
+            this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();
         }
     }
 
@@ -475,7 +475,7 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         if (selectedChoice) {
             const value = selectedChoice.action === options[0];
             if (field === `is_present_in_meetings`) {
-                await this.repo.setPresent(value, ...this.selectedRows);
+                await this.repo.setPresent(value, ...this.selectedRows).resolve();
             } else {
                 await this.repo.setState(field, value, ...this.selectedRows);
             }

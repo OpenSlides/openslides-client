@@ -183,7 +183,7 @@ export class UserRepositoryService
     public update(
         patch: Partial<UserAction.UpdatePayload> | ((user: ViewUser) => Partial<UserAction.UpdatePayload>),
         ...users: ViewUser[]
-    ): Promise<void> {
+    ): Action<void> {
         const updatePayload = users.map(user => {
             const update = typeof patch === `function` ? patch(user) : patch;
             return {
@@ -191,7 +191,7 @@ export class UserRepositoryService
                 ...this.sanitizePayload(this.getBaseUserPayload(update))
             };
         });
-        return this.sendBulkActionToBackend(UserAction.UPDATE, updatePayload);
+        return this.actions.create({ action: UserAction.UPDATE, data: updatePayload });
     }
 
     public updateSelf(patch: any | ((user: ViewUser) => any), user: ViewUser): Promise<void> {
@@ -243,9 +243,7 @@ export class UserRepositoryService
                 comment_$: { [this.activeMeetingId]: partialUser.comment as string },
                 vote_delegated_$_to_id: { [this.activeMeetingId]: partialUser.vote_delegated_to_id },
                 vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids },
-                group_$_ids: {
-                    [this.activeMeetingId]: partialUser.group_ids
-                }
+                group_$_ids: { [this.activeMeetingId]: partialUser.group_ids }
             };
         }
         return partialPayload;
@@ -401,14 +399,14 @@ export class UserRepositoryService
         return this.sendActionToBackend(UserAction.SET_PASSWORD_SELF, payload);
     }
 
-    public setPresent(isPresent: boolean, ...users: ViewUser[]): Promise<void> {
+    public setPresent(isPresent: boolean, ...users: ViewUser[]): Action<void> {
         this.preventAlterationOnDemoUsers(users);
         const payload: UserAction.SetPresentPayload[] = users.map(user => ({
             id: user.id,
             meeting_id: this.activeMeetingId,
             present: isPresent
         }));
-        return this.sendBulkActionToBackend(UserAction.SET_PRESENT, payload);
+        return this.actions.create({ action: UserAction.SET_PRESENT, data: payload });
     }
 
     /**
@@ -457,7 +455,7 @@ export class UserRepositoryService
                 group_ids: groupIds.filter((groupId, index, self) => self.indexOf(groupId) === index)
             };
         };
-        return this.update(patchFn, ...users);
+        return this.update(patchFn, ...users).resolve() as Promise<void>;
     }
 
     public bulkRemoveGroupsFromUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {
@@ -466,7 +464,7 @@ export class UserRepositoryService
             id: user.id,
             group_ids: user.group_ids().filter(groupId => !groupIds.includes(groupId))
         });
-        return this.update(patchFn, ...users);
+        return this.update(patchFn, ...users).resolve() as Promise<void>;
     }
 
     public bulkAssignUsersToCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
@@ -477,7 +475,7 @@ export class UserRepositoryService
                 committee_ids: committeeIds.filter((committeeId, index, self) => self.indexOf(committeeId) === index)
             };
         };
-        return this.update(patchFn, ...users);
+        return this.update(patchFn, ...users).resolve() as Promise<void>;
     }
 
     public bulkUnassignUsersFromCommitteesAsMembers(users: ViewUser[], committeeIds: Id[]): Promise<void> {
@@ -485,7 +483,7 @@ export class UserRepositoryService
             id: user.id,
             committee_ids: (user.committee_ids || []).filter(committeeId => !committeeIds.includes(committeeId))
         });
-        return this.update(patchFn, ...users);
+        return this.update(patchFn, ...users).resolve() as Promise<void>;
     }
 
     public bulkAddUserToMeeting(users: ViewUser[], meeting: ViewMeeting): Promise<void> {
@@ -760,6 +758,7 @@ export class UserRepositoryService
 
     private isFieldAllowedToBeEmpty(field: string): boolean {
         const fields: string[] = [
+            `pronoun`,
             `title`,
             `email`,
             `first_name`,

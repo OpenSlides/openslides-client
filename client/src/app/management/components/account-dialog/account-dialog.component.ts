@@ -139,7 +139,7 @@ export class AccountDialogComponent extends BaseModelContextComponent implements
 
     public async saveUserChanges(): Promise<void> {
         if (this.operator.hasPerms(Permission.userCanManage) && this._isUserInScope) {
-            await this.userRepo.update(this.userPersonalForm, this.self);
+            await this.userRepo.update(this.userPersonalForm, this.self).resolve();
         } else {
             await this.userRepo.updateSelf(this.userPersonalForm, this.self);
         }

@@ -182,7 +182,7 @@ export class MemberEditComponent extends BaseModelContextComponent implements On
 
     private async updateUser(): Promise<void> {
         const payload = this.getPartialUserPayload();
-        await this.repo.update(payload, this.user);
+        await this.repo.update(payload, this.user).resolve();
         this.router.navigate([`..`], { relativeTo: this.route });
     }
 
