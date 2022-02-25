@@ -120,7 +120,6 @@ import { PollPercentBasePipe } from './pipes/poll-percent-base.pipe';
 import { PrecisionPipe } from './pipes/precision.pipe';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { TrustPipe } from './pipes/trust.pipe';
-
 import { ReadableBytesPipe } from './pipes/hfilesize.pipe';
 
 const declarations = [
