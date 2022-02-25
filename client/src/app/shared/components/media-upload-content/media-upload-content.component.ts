@@ -160,8 +160,6 @@ export class MediaUploadContentComponent extends BaseModelContextComponent imple
         return file.type || `File`;
     }
 
-    
-
     /**
      * Change event to adjust the title
      *
