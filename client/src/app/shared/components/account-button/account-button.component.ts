@@ -112,7 +112,7 @@ export class AccountButtonComponent extends BaseComponent implements OnInit {
     }
 
     public toggleOperatorPresence(): void {
-        this.userRepo.setPresent(!this.isPresent, this.user);
+        this.userRepo.setPresent(!this.isPresent, this.user).resolve();
     }
 
     public openAccountDialog(): void {

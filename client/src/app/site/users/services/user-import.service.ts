@@ -164,6 +164,6 @@ export class UserImportService extends BaseUserImportService {
 
     private updateUsers(users: any[]): Promise<void> {
         const updates = users.map(user => copy(user, MEETING_SPECIFIC_USER_PROPERTIES.concat(`id`)));
-        return this.repo.update(user => user as any, ...updates);
+        return this.repo.update(user => user as any, ...updates).resolve() as Promise<void>;
     }
 }
