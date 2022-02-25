@@ -115,20 +115,14 @@ export class UserDetailComponent extends BaseModelContextComponent implements On
     public readonly users: BehaviorSubject<ViewUser[]> = new BehaviorSubject<ViewUser[]>([]);
 
     public get showVoteWeight(): boolean {
-        return (
-            this.pollService.isElectronicVotingEnabled &&
-            this._voteWeightEnabled &&
-            typeof this.user.vote_weight() === `number`
-        );
+        const isVoteWeightEnabled = this.pollService.isElectronicVotingEnabled && this._voteWeightEnabled;
+        return this.user ? isVoteWeightEnabled && typeof this.user.vote_weight() === `number` : isVoteWeightEnabled;
     }
 
     private _userId: Id = undefined; // Not initialized
     private _voteWeightEnabled: boolean;
     private _isUserInScope: boolean;
 
-    /**
-     * Constructor for user
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,

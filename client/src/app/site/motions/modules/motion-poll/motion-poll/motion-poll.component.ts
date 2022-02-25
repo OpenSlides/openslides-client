@@ -54,15 +54,6 @@ export class MotionPollComponent extends BasePollComponent {
         return this.pollService.isElectronicVotingEnabled;
     }
 
-    /**
-     * Constructor.
-     *
-     * @param title
-     * @param translate
-     * @param matSnackbar
-     * @param router
-     * @param motionRepo
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,

@@ -80,17 +80,20 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
                 value: { [optionId]: vote },
                 user_id: user.id
             };
+            await this.sendVote(user.id, votePayload);
+        }
+    }
 
-            this.pollRepo
-                .vote(this.poll, votePayload)
-                .then(() => {
-                    this.alreadyVoted[user.id] = true;
-                })
-                .catch(this.raiseError)
-                .finally(() => {
-                    this.deliveringVote[user.id] = false;
-                    this.cd.markForCheck();
-                });
+    private async sendVote(userId: Id, votePayload: any): Promise<void> {
+        try {
+            await this.pollRepo.vote(this.poll, votePayload);
+            this.alreadyVoted[userId] = true;
+            this.poll.hasVoted = true; // Set it manually to `true`, because the server will do the same
+        } catch (e) {
+            this.raiseError(e);
+        } finally {
+            this.deliveringVote[userId] = false;
+            this.cd.markForCheck();
         }
     }
 }
