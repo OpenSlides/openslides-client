@@ -208,7 +208,6 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         const blockListFields: TypedFieldset<Motion> = titleFields.concat([`block_id`]);
         const detailFields: TypedFieldset<Motion> = titleFields.concat([
             `sequential_number`,
-            `text`,
             `reason`,
             `recommendation_id`,
             `tag_ids`,
