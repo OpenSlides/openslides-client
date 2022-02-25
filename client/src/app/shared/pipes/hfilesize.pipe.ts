@@ -1,6 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-
+/**
+ * Converts a file size in byte into human readable format
+ *
+ * @param bytes file size in bytes
+ * @returns a readable file size representation
+ */
 @Pipe({
     name: `readableBytes`
 })
