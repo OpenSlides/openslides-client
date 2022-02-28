@@ -1,16 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PollAction } from 'app/core/actions/poll-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { VotingService } from 'app/core/ui-services/voting.service';
+import { VotingError, VotingService } from 'app/core/ui-services/voting.service';
 import { GlobalVote, PollMethod, PollType, VoteValue } from 'app/shared/models/poll/poll-constants';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/base-poll-vote.component';
 import { ViewUser } from 'app/site/users/models/view-user';
+import { Observable } from 'rxjs';
 
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
@@ -46,6 +48,19 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     public AssignmentPollMethod = PollMethod;
     public PollType = PollType;
     public voteActions: VoteOption[] = [];
+    public errorsInVoteEntries: { [optionId: number]: String } = {};
+    public formControls: { [optionId: number]: FormControl} = {};
+    public formBuilder = new FormBuilder();
+    public groupControls;
+
+    // votes_amount: this.fb.group(
+    //     {
+    //         max_votes_amount: [1, [Validators.required, Validators.min(1)]],
+    //         min_votes_amount: [1, [Validators.required, Validators.min(1)]],
+    //         max_votes_per_person: [1, [Validators.required, Validators.min(1)]]
+    //     },
+    //     { validators: isNumberRange(`min_votes_amount`, `max_votes_amount`) }
+    // )
 
     public get pollHint(): string {
         return this.poll.content_object.default_poll_description;
@@ -69,7 +84,25 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public ngOnInit(): void {
         this.defineVoteOptions();
+        this.createFormControls();
         this.cd.markForCheck();
+        // this.groupControls = this.formBuilder.group({});
+        
+        
+        // for (var delegation of this.delegations){
+        //     console.log("subscribe for: ", delegation)
+        //     this.canVoteForObservable(delegation).subscribe({
+        //         next(canVote) {
+        //           console.log('canVote new value: ', canVote);
+        //           if (canVote){
+        //               this.createFormControls();
+        //           }
+        //         },
+        //         error(msg) {
+        //           console.log('Error in subscription of canVote: ', msg);
+        //         }
+        //     });
+        // }
     }
 
     public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
@@ -125,6 +158,60 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 }
             }
         }
+    }
+
+    private createFormControls(): void {
+        if (this.poll){
+            console.log("createFormControls_poll");
+            console.log(this.poll.isMethodY);
+            console.log(this.poll.max_votes_per_person);
+            if (this.poll.isMethodY && this.poll.max_votes_per_person > 1){
+                console.log("createFormControls_Y-max");
+                for (var option_id of this.poll.option_ids){
+                    this.formControls[option_id] = new FormControl('',
+                                [Validators.required, Validators.min(0), Validators.max(this.poll.max_votes_per_person)]);
+                }
+            }
+        }
+        console.log("createFormControls");
+        console.log(this.formControls);
+    }
+
+    public getFormControl(optionId: number){
+        if (this.formControls[optionId]){
+
+        } else {
+            this.formControls[optionId] = new FormControl(0,
+                [Validators.required,
+                Validators.min(0),
+                Validators.max(this.poll.max_votes_per_person)]
+            );
+        }
+        // if (!this.groupControls.contains(optionId.toString())){
+        //     this.groupControls.addControl(optionId.toString(),
+        //             [Validators.required,
+        //             Validators.min(0),
+        //             Validators.max(this.poll.max_votes_per_person)]
+        //     )
+        // }
+        console.log("formControls["+optionId+"]");
+        console.log(this.formControls[optionId].setValidators);
+        // return "formControls["+optionId+"]";
+        return this.formControls[optionId];
+    }
+
+    // public canVoteForObservable(user: ViewUser = this.user): Observable<boolean> {
+    //     let res = super.canVoteForObservable(user);
+    //     if (res.)
+    //     return res;
+    // }
+
+    public isErrorInVoteEntry(optionId: number): boolean{
+        if (this.errorsInVoteEntries[optionId]){
+            return true;
+        }
+        return false;
+        // return true;
     }
 
     public getVotesCount(user: ViewUser = this.user): number {
@@ -196,6 +283,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             console.log(Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]));
             console.log(Object.keys(tmpVoteRequest).map(key => parseInt(tmpVoteRequest[key])));
             const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
+            console.log(tmpVoteRequest);
             if (countedVotes <= maxVotesAmount) {
                 this.voteRequestData[user.id].value = tmpVoteRequest;
 
@@ -227,14 +315,20 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public saveMultipleVote(optionId: number, event: any, user: ViewUser = this.user): void {
-        const vote = parseInt(event.target.value);
+        let vote = parseInt(event.target.value);
 
-        if (isNaN(vote)){
+        if (isNaN(vote) || vote > this.poll.max_votes_per_person || vote < 0){
+            this.errorsInVoteEntries[optionId] = this.translate.instant(`Invalid Input.`);
             this.raiseError(
                 this.translate.instant(`Invalid Input.`)
             );
+            vote = 0;
+        }
+        else {
+            delete this.errorsInVoteEntries[optionId];
         }
 
+        console.log(this.isErrorInVoteEntry(optionId));
         console.log("Called!");
         console.log(this.poll.max_votes_per_person);
         console.log(vote);

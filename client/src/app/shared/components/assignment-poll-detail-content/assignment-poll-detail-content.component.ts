@@ -96,8 +96,6 @@ export class AssignmentPollDetailContentComponent extends BaseComponent {
     }
 
     public getVoteAmount(vote: VotingResult, row: PollTableData): number {
-        // console.log("Voting Result");
-        // console.log(vote);
         if (this.isMethodN && row.class === `user`) {
             if (vote.amount < 0) {
                 return vote.amount;
