@@ -129,7 +129,6 @@ export class Poll extends BaseDecimalModel<Poll> {
     }
 
     public get moreThanOneVotePerPerson(): boolean {
-        console.log(this.max_votes_per_person > 1);
         return this.max_votes_per_person > 1;
     }
 
