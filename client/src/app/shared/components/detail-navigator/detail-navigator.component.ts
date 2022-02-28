@@ -12,6 +12,9 @@ export class DetailNavigatorComponent {
     @Input()
     public model: Identifiable | DetailNavigable;
 
+    @Input()
+    public cssClasses: string | string[] | object;
+
     public getRouterLink(): string {
         if (isDetailNavigable(this.model)) {
             return this.model.getDetailStateUrl();

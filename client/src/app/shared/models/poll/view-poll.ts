@@ -93,7 +93,7 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     }
 
     public getDetailStateUrl(): string {
-        if (this.content_object_id) {
+        if (this.content_object) {
             return this.getContentObject().getDetailStateUrl();
         } else {
             return ``;
