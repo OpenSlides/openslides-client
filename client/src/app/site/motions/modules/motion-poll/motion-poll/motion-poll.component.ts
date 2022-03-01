@@ -29,10 +29,6 @@ export class MotionPollComponent extends BasePollComponent {
         this.initializePoll(id);
     }
 
-    public get pollLink(): string {
-        return `/${this.activeMeetingId}/motions/polls/${this.poll.id}`;
-    }
-
     public get showPoll(): boolean {
         if (this.poll) {
             if (
@@ -75,5 +71,9 @@ export class MotionPollComponent extends BasePollComponent {
 
     public downloadPdf(): void {
         this.pdfService.printBallots(this.poll);
+    }
+
+    public getDetailLink(): string {
+        return `/${this.activeMeetingId}/motions/polls/${this.poll.sequential_number}`;
     }
 }
