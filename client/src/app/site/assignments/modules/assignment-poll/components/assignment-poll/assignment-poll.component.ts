@@ -31,10 +31,6 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
         this.initializePoll(id);
     }
 
-    public get pollLink(): string {
-        return `/${this.activeMeetingId}/assignments/polls/${this.poll.id}`;
-    }
-
     public candidatesLabels: string[] = [];
 
     /**
@@ -106,5 +102,9 @@ export class AssignmentPollComponent extends BasePollComponent<ViewAssignment> i
 
     public openVotingWarning(): void {
         this.dialog.open(VotingPrivacyWarningComponent, infoDialogSettings);
+    }
+
+    public getDetailLink(): string {
+        return `/${this.activeMeetingId}/assignments/polls/${this.poll.sequential_number}`;
     }
 }

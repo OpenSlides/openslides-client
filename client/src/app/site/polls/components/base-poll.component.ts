@@ -25,8 +25,6 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
         return this._poll;
     }
 
-    public abstract get pollLink(): string | string[];
-
     public pollStateActions = {
         [PollState.Created]: {
             icon: `play_arrow`,
@@ -153,4 +151,6 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
             })
         );
     }
+
+    public abstract getDetailLink(): string;
 }

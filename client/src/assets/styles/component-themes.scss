@@ -32,7 +32,6 @@
 @import '~app/site/motions/modules/motion-detail/components/amendment-create-wizard/amendment-create-wizard.components.scss-theme.scss';
 @import '~app/site/motions/modules/motion-detail/components/motion-detail-diff/motion-detail-diff.component.scss-theme.scss';
 @import '~app/shared/components/banner/banner.component.scss-theme.scss';
-@import '~app/site/motions/modules/motion-poll/motion-poll/motion-poll.component.scss-theme.scss';
 @import '~app/site/motions/modules/motion-poll/motion-poll-detail/motion-poll-detail.component.scss-theme.scss';
 @import '~app/site/assignments/modules/assignment-poll/components/assignment-poll-detail/assignment-poll-detail-component.scss-theme.scss';
 @import '~app/shared/components/progress-snack-bar/progress-snack-bar.component.scss-theme.scss';
@@ -56,7 +55,6 @@
     @include os-amendment-create-wizard-style($theme);
     @include os-motion-detail-diff-style($theme);
     @include os-banner-style($theme);
-    @include os-motion-poll-style($theme);
     @include os-motion-poll-detail-style($theme);
     @include os-assignment-poll-detail-style($theme);
     @include os-progress-snack-bar-style($theme);
