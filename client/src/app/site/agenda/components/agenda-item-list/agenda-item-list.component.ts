@@ -20,6 +20,7 @@ import { ComponentServiceCollector } from 'app/core/ui-services/component-servic
 import { DurationService } from 'app/core/ui-services/duration.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { TreeService } from 'app/core/ui-services/tree.service';
 import { ViewportService } from 'app/core/ui-services/viewport.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { ColumnRestriction } from 'app/shared/components/list-view-table/list-view-table.component';
@@ -32,6 +33,7 @@ import { BaseListViewComponent } from 'app/site/base/components/base-list-view.c
 import { ProjectionBuildDescriptor } from 'app/site/base/projection-build-descriptor';
 import { ViewTopic } from 'app/site/topics/models/view-topic';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ViewAgendaItem } from '../../models/view-agenda-item';
 import { hasListOfSpeakers } from '../../models/view-list-of-speakers';
@@ -53,6 +55,12 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
     public readonly AGENDA_TYPE_PUBLIC = AgendaItemType.COMMON;
     public readonly AGENDA_TYPE_INTERNAL = AgendaItemType.INTERNAL;
     public readonly AGENDA_TYPE_HIDDEN = AgendaItemType.HIDDEN;
+
+    public get agendaItemsObservable(): Observable<ViewAgendaItem[]> {
+        return this.repo
+            .getViewModelListObservable()
+            .pipe(map(agendaItems => this.treeService.makeFlatTree(agendaItems, `weight`, `parent_id`)));
+    }
 
     /**
      * Show or hide the numbering button
@@ -98,24 +106,6 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
      */
     public filterProps = [`item_number`, `comment`, `getListTitle`];
 
-    /**
-     * The usual constructor for components
-     * @param titleService Setting the browser tab title
-     * @param translate translations
-     * @param matSnackBar Shows errors and messages
-     * @param operator The current user
-     * @param router Angulars router
-     * @param repo the agenda repository,
-     * @param promptService the delete prompt
-     * @param dialog to change info values
-     * @param config read out config values
-     * @param vp determine the viewport
-     * @param durationService Converts numbers to readable duration strings
-     * @param csvExport Handles the exporting into csv
-     * @param filterService: service for filtering data
-     * @param agendaPdfService: service for preparing a pdf of the agenda
-     * @param pdfService: Service for exporting a pdf
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
@@ -134,7 +124,8 @@ export class AgendaItemListComponent extends BaseListViewComponent<ViewAgendaIte
         private pdfService: PdfDocumentService,
         private topicRepo: TopicRepositoryService,
         private meetingRepo: MeetingRepositoryService,
-        private listOfSpeakersRepo: ListOfSpeakersRepositoryService
+        private listOfSpeakersRepo: ListOfSpeakersRepositoryService,
+        private treeService: TreeService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;

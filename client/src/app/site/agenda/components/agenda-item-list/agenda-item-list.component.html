@@ -17,7 +17,7 @@
 </os-head-bar>
 
 <os-list-view-table
-    [listObservableProvider]="repo"
+    [listObservable]="agendaItemsObservable"
     [vScrollFixed]="76"
     [filterService]="filterService"
     [columns]="tableColumnDefinition"

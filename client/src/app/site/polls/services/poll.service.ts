@@ -236,7 +236,7 @@ export class PollService {
     /**
      * returns the total number of votes depending on the selected percent base
      */
-    private getPercentBase(poll: PollData, row?: OptionData): number {
+    protected getPercentBase(poll: PollData, row?: OptionData): number {
         const base: PollPercentBase = poll.onehundred_percent_base as PollPercentBase;
         let totalByBase: number;
         const option = row ?? poll.options[0]; // Assuming that its a motion poll and the first option contains every vote.

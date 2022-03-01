@@ -60,11 +60,11 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         protected translate: TranslateService,
         operator: OperatorService,
         votingService: VotingService,
-        private pollRepo: PollRepositoryService,
+        pollRepo: PollRepositoryService,
         private promptService: PromptService,
         protected cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate, operator, votingService, cd);
+        super(componentServiceCollector, translate, operator, votingService, cd, pollRepo);
     }
 
     public ngOnInit(): void {
@@ -157,16 +157,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 user_id: user.id
             };
 
-            this.pollRepo
-                .vote(this.poll, votePayload)
-                .then(() => {
-                    this.alreadyVoted[user.id] = true;
-                })
-                .catch(this.raiseError)
-                .finally(() => {
-                    this.deliveringVote[user.id] = false;
-                    this.cd.markForCheck();
-                });
+            await this.sendVote(user.id, votePayload);
         }
     }
 
