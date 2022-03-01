@@ -15,26 +15,6 @@
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
-
-    <mat-menu #committeeMenu="matMenu">
-        <ng-container *ngIf="currentCommitteeObservable | async as committee">
-            <a mat-menu-item [routerLink]="['edit-committee']">
-                <mat-icon>edit</mat-icon>
-                <span>{{ 'Edit committee' | translate }}</span>
-            </a>
-            <a mat-menu-item type="button" [routerLink]="['import-meeting']">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>
-                    {{ 'Import meeting' | translate }}
-                </span>
-            </a>
-            <mat-divider></mat-divider>
-            <button mat-menu-item class="red-warning-text" (click)="onDeleteCommittee(committee)">
-                <mat-icon>delete</mat-icon>
-                <span>{{ 'Delete' | translate }}</span>
-            </button>
-        </ng-container>
-    </mat-menu>
 </os-head-bar>
 
 <ng-container *ngIf="currentCommitteeObservable | async as committee">
@@ -87,7 +67,12 @@
         <os-committee-meta-info icon="engineering" title="Committee management" *ngIf="canManageCommittee">
             <ng-container *ngIf="committee.getManagers() as managers">
                 <span *ngFor="let manager of managers; let last = last">
-                    <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
+                    <ng-container *osOmlPerms="OML.can_manage_users">
+                        <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
+                    </ng-container>
+                    <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
+                        <span>{{ manager }}</span>
+                    </ng-container>
                     <span *ngIf="!last">,&nbsp;</span>
                 </span>
                 <i class="red-warning-text" *ngIf="managers.length === 0">
@@ -110,3 +95,27 @@
         ></os-meeting-preview>
     </div>
 </ng-container>
+
+<mat-menu #committeeMenu="matMenu">
+    <ng-template matMenuContent>
+        <ng-container *ngIf="currentCommitteeObservable | async as committee">
+            <a *osOmlPerms="OML.can_manage_organization" mat-menu-item [routerLink]="['edit-committee']">
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit committee' | translate }}</span>
+            </a>
+            <a mat-menu-item type="button" [routerLink]="['import-meeting']">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>
+                    {{ 'Import meeting' | translate }}
+                </span>
+            </a>
+            <ng-container *osOmlPerms="OML.can_manage_organization">
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="red-warning-text" (click)="onDeleteCommittee(committee)">
+                    <mat-icon>delete</mat-icon>
+                    <span>{{ 'Delete' | translate }}</span>
+                </button>
+            </ng-container>
+        </ng-container>
+    </ng-template>
+</mat-menu>

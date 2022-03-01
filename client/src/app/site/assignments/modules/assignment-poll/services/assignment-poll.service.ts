@@ -5,7 +5,7 @@ import { PollRepositoryService } from 'app/core/repositories/polls/poll-reposito
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { Assignment } from 'app/shared/models/assignments/assignment';
-import { PollData } from 'app/shared/models/poll/generic-poll';
+import { OptionData, PollData } from 'app/shared/models/poll/generic-poll';
 import { Poll } from 'app/shared/models/poll/poll';
 import {
     ABSTAIN_KEY,
@@ -95,5 +95,22 @@ export class AssignmentPollService extends PollService {
                 return [YES_KEY];
             }
         }
+    }
+
+    protected getPercentBase(poll: PollData, row?: OptionData): number {
+        const base = poll.onehundred_percent_base as PollPercentBase;
+        switch (base) {
+            case PollPercentBase.Y:
+                return this.getSumOptionsY(poll);
+            default:
+                return super.getPercentBase(poll, row);
+        }
+    }
+
+    private getSumOptionsY(poll: PollData): number {
+        if (!poll.options?.length) {
+            return 0;
+        }
+        return poll.options.reduce((previousValue, currentOption) => previousValue + (currentOption.yes ?? 0), 0);
     }
 }

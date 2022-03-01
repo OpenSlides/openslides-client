@@ -61,12 +61,11 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
     }
 
     private getRandomColor(): string {
-        const nextColor = this.data.getRandomColor();
-        return nextColor.startsWith(`#`) ? nextColor.slice(1) : nextColor;
+        return this.getColor(this.data.getRandomColor());
     }
 
     private createForm(): void {
-        this._lastValidColor = this.data.defaultColor;
+        this._lastValidColor = this.getColor(this.data.defaultColor);
         this.organizationTagForm = this.fb.group({
             name: [``, Validators.required],
             color: [this._lastValidColor, Validators.pattern(/^[0-9a-fA-F]{6}$/)]
@@ -84,8 +83,12 @@ export class OrganizationTagDialogComponent extends BaseComponent implements OnI
         const color = this.data.organizationTag.color;
         const update = {
             name: this.data.organizationTag.name,
-            color: color.startsWith(`#`) ? color.slice(1) : color
+            color: this.getColor(color)
         };
         this.organizationTagForm.patchValue(update);
+    }
+
+    private getColor(htmlCode: HtmlColor): string {
+        return htmlCode.startsWith(`#`) ? htmlCode.slice(1) : htmlCode;
     }
 }

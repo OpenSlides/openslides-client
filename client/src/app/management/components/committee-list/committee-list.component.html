@@ -102,7 +102,7 @@
 
     <div *pblNgridCellDef="'menu'; row as committee" class="cell-slot fill">
         <button
-            *osCmlPerms="CML.can_manage; committeeId: committee.id"
+            *osOmlPerms="OML.can_manage_organization"
             mat-icon-button
             [disabled]="isMultiSelect"
             [matMenuTriggerFor]="singleCommitteeMenu"

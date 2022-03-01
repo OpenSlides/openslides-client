@@ -44,11 +44,11 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         protected translate: TranslateService,
         operator: OperatorService,
         public votingService: VotingService,
-        private pollRepo: PollRepositoryService,
+        pollRepo: PollRepositoryService,
         private promptService: PromptService,
         protected cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate, operator, votingService, cd);
+        super(componentServiceCollector, translate, operator, votingService, cd, pollRepo);
     }
 
     public ngOnInit(): void {
@@ -81,19 +81,6 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
                 user_id: user.id
             };
             await this.sendVote(user.id, votePayload);
-        }
-    }
-
-    private async sendVote(userId: Id, votePayload: any): Promise<void> {
-        try {
-            await this.pollRepo.vote(this.poll, votePayload);
-            this.alreadyVoted[userId] = true;
-            this.poll.hasVoted = true; // Set it manually to `true`, because the server will do the same
-        } catch (e) {
-            this.raiseError(e);
-        } finally {
-            this.deliveringVote[userId] = false;
-            this.cd.markForCheck();
         }
     }
 }

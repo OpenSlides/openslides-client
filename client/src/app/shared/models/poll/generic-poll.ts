@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { EntitledUsersEntry, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
+import { EntitledUsersEntry, PollClassType, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
 /**
  * The main interface to describe everything related to polls
@@ -8,6 +8,7 @@ import { EntitledUsersEntry, PollMethod, PollPercentBase, PollState, PollType } 
  * use this interface, so the poll services can work on this shared view on the data.
  */
 export interface PollData {
+    pollClassType?: PollClassType;
     pollmethod: PollMethod;
     state: PollState;
     onehundred_percent_base: PollPercentBase;

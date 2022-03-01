@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Directive, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Id } from 'app/core/definitions/key-types';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { VotingError, VotingService } from 'app/core/ui-services/voting.service';
 import { PollPropertyVerbose, UserVotingData, VoteValue, VotingData } from 'app/shared/models/poll/poll-constants';
@@ -10,6 +11,8 @@ import { BaseComponent } from 'app/site/base/components/base.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+
+import { PollRepositoryService } from '../../../core/repositories/polls/poll-repository.service';
 
 export interface VoteOption {
     vote?: VoteValue;
@@ -62,7 +65,8 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
         protected translate: TranslateService,
         operator: OperatorService,
         protected votingService: VotingService,
-        protected cd: ChangeDetectorRef
+        protected cd: ChangeDetectorRef,
+        private pollRepo: PollRepositoryService
     ) {
         super(componentServiceCollector, translate);
         this.subscriptions.push(
@@ -96,6 +100,19 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     public getVotingError(user: ViewUser = this.user): string | void {
         console.info(`Cannot vote because:`, this.votingService.getVotePermissionErrorVerbose(this.poll, user));
         return this.votingService.getVotePermissionErrorVerbose(this.poll, user);
+    }
+
+    protected async sendVote(userId: Id, votePayload: any): Promise<void> {
+        try {
+            await this.pollRepo.vote(this.poll, votePayload);
+            this.alreadyVoted[userId] = true;
+            this.poll.hasVoted = true; // Set it manually to `true`, because the server will do the same
+        } catch (e) {
+            this.raiseError(e);
+        } finally {
+            this.deliveringVote[userId] = false;
+            this.cd.markForCheck();
+        }
     }
 
     private createVotingDataObjects(): void {
