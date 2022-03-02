@@ -52,7 +52,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         const properties = [
             { key: `Title`, value: this.getTitle() },
             { key: `Type`, value: type },
-            { key: `Timestamp`, value: String(this.timestamp) },
+            { key: `Timestamp`, value: this.timestamp.toString() },
             { key: `Size`, value: this.filesize ? this.filesize : `0` }
         ];
         return {
