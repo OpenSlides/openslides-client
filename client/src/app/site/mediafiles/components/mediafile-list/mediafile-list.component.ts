@@ -279,8 +279,8 @@ export class MediafileListComponent extends BaseListViewComponent<ViewMediafile>
         return false;
     }
 
-    public getDateFromTimestamp(timestamp: string): string {
-        return new Date(timestamp).toLocaleString(this.translate.currentLang);
+    public getDateFromTimestamp(timestamp: number): string {
+        return new Date(timestamp * 1000).toLocaleString(this.translate.currentLang);
     }
 
     public isFileUsed(file: ViewMediafile, place: string): boolean {
