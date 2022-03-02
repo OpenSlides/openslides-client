@@ -6,7 +6,7 @@ import { OperatorService } from 'app/core/core-services/operator.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { PromptService } from 'app/core/ui-services/prompt.service';
-import { VotingError, VotingService } from 'app/core/ui-services/voting.service';
+import { VotingService } from 'app/core/ui-services/voting.service';
 import { GlobalVote, PollMethod, PollType, VoteValue } from 'app/shared/models/poll/poll-constants';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
@@ -47,7 +47,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     public AssignmentPollMethod = PollMethod;
     public PollType = PollType;
     public voteActions: VoteOption[] = [];
-    public errorsInVoteEntries: { [optionId: number]: String } = {};
     public formControls: { [optionId: number]: FormControl} = {};
 
     public get pollHint(): string {

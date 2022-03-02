@@ -113,8 +113,6 @@ export class PollService {
     }
 
     public generateTableData(poll: PollData): PollTableData[] {
-        // console.log("generateTableData"); // PROBLEM EXISTS ALREADY HERE
-        // console.log(poll.options);
         const tableData: PollTableData[] = poll.options
             .sort((a, b) => {
                 if (this.sortByVote) {
