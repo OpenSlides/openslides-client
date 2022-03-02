@@ -184,7 +184,6 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
             name: model.name,
             id: ids[index]?.id
         })) as CsvMapping<SideModel>[];
-        console.log(`${this.constructor.name}:import - afterImport`, this.modelsToCreate);
     }
 
     /**

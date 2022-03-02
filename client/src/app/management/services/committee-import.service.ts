@@ -91,7 +91,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                         const mapNameModels = context.getData(COMMITTEE_SHARED_MODELS_KEY) as {
                             [committeeName: string]: Committee;
                         };
-                        sideModels.forEach(sideModel => (mapNameModels[sideModel.name] = sideModel));
+                        this.addToMap(mapNameModels, sideModels);
                         context.setData(COMMITTEE_SHARED_MODELS_KEY, mapNameModels);
                     },
                     transformFn: (_sideModels, mainModels) => mainModels,
@@ -126,7 +126,9 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                     },
                     pipeModelsFn: (models, context) => {
                         const _models = models.map(({ model }) => model);
-                        const _dictionary = _models.mapToObject(model => ({ [model[NAME]]: model }));
+                        const _dictionary = {};
+                        this.addToMap(_dictionary, _models);
+                        this.addToMap(_dictionary, this.repo.getViewModelList());
                         context.setData(COMMITTEE_SHARED_MODELS_KEY, _dictionary);
                     },
                     getModelsToCreateAmountFn: (models: ImportModel<CommitteeCsvPort>[]) => {
@@ -203,6 +205,19 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             return new Date(toDate).getTime() / 1000;
         } else if (!!dateString) {
             return new Date(dateString).getTime() / 1000;
+        }
+    }
+
+    /**
+     * Adds models a given map by reference.
+     */
+    private addToMap(mapReference: any, models: any[]): void {
+        for (const model of models) {
+            if (!mapReference[model[NAME]]) {
+                mapReference[model[NAME]] = model;
+            } else {
+                mapReference[model[NAME]].id = model.id;
+            }
         }
     }
 }
