@@ -16,28 +16,21 @@ import { CommitteeSortService } from 'app/management/services/committee-sort.ser
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 
 import { Follow } from '../../../core/core-services/model-request-builder.service';
+import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
 import { MeetingRepositoryService } from '../../../core/repositories/management/meeting-repository.service';
 import { CommitteeExportService } from '../../services/committee-export.service';
 
 export const NAVIGATION_FROM_LIST = `list`;
 
 const getCommitteesModelRequest = (fellowship?: Follow) => {
-    const FOLLOW: Follow[] = [
-        {
-            idField: `user_ids`,
-            fieldset: `committeeList`
-        },
-        {
-            idField: `organization_tag_ids`
-        }
-    ];
+    const FOLLOW: Follow[] = [{ idField: `user_ids`, fieldset: `committeeList` }];
     if (fellowship) {
         FOLLOW.push(fellowship);
     }
 
     return {
         viewModelCtor: ViewOrganization,
-        ids: [1],
+        ids: [ORGANIZATION_ID],
         follow: [
             {
                 idField: `committee_ids`,
@@ -94,6 +87,12 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
 
     public ngOnInit(): void {
         super.ngOnInit();
+        this.subscribe({
+            viewModelCtor: ViewOrganization,
+            ids: [ORGANIZATION_ID],
+            fieldset: [],
+            follow: [`organization_tag_ids`]
+        });
     }
 
     public editSingle(committee: ViewCommittee): void {
