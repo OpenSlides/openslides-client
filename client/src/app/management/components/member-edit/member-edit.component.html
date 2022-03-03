@@ -141,12 +141,11 @@
 </os-user-detail-view>
 
 <ng-template #modelListTemplate let-models="models">
-    <div class="flex-vertical-center">
-        <span *ngFor="let model of models; let last = last" class="flex-vertical-center">
+    <ol>
+        <li *ngFor="let model of models">
             {{ model.getTitle() | translate }}
-            <span *ngIf="!last">,&nbsp;</span>
-        </span>
-    </div>
+        </li>
+    </ol>
 </ng-template>
 
 <mat-menu #userExtraMenu="matMenu">

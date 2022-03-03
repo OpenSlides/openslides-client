@@ -46,17 +46,14 @@
     </div>
     <!-- Info column -->
     <div *pblNgridCellDef="'info'; row as user" class="committee-wrapper">
-        <div class="flex-center">
-            <os-icon-container
-                icon="auto_awesome_mosaic"
-                iconTooltip="{{ 'Committees' | translate }}"
-                [showIcon]="!!user.committee_ids?.length"
-                [noWrap]="true"
-            >
-                <span *ngFor="let committee of user.committees; last as last">
-                    {{ committee.name | translate }}
-                    <span *ngIf="!last">,&nbsp;</span>
-                </span>
+        <div class="flex-center" *ngIf="getAmountOfMeetings(user) as meetingAmount">
+            <os-icon-container icon="event_available" iconTooltip="{{ 'Is present' | translate }}">
+                <span>{{ meetingAmount }}</span>
+            </os-icon-container>
+        </div>
+        <div class="flex-center" *ngIf="getAmountOfCommitteeManagement(user) as committeeAmount">
+            <os-icon-container icon="engineering" iconTooltip="{{ 'Committee management' | translate }}">
+                <span>{{ committeeAmount }}</span>
             </os-icon-container>
         </div>
         <div *osOmlPerms="OML.can_manage_users; and: getOmlByUser(user)" class="flex-center">
