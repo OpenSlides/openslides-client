@@ -120,7 +120,7 @@ export class MemberService {
             viewModelCtor: ViewUser,
             ids: userIds,
             fieldset: `orgaList`,
-            follow: [{ idField: `committee_ids` }, { idField: `is_present_in_meeting_ids` }]
+            follow: [{ idField: `is_present_in_meeting_ids` }]
         };
     }
 }

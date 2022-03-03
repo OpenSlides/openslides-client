@@ -43,7 +43,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return this.mediafile.pdf_information?.pages || null;
     }
 
-    public get timestamp(): string {
+    private get timestamp(): number {
         return this.mediafile.create_timestamp ? this.mediafile.create_timestamp : null;
     }
 
@@ -52,7 +52,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         const properties = [
             { key: `Title`, value: this.getTitle() },
             { key: `Type`, value: type },
-            { key: `Timestamp`, value: this.timestamp },
+            { key: `Timestamp`, value: this.timestamp.toString() },
             { key: `Size`, value: this.filesize ? this.filesize : `0` }
         ];
         return {
