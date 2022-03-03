@@ -46,7 +46,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public description: string;
     public min_votes_amount: number;
     public max_votes_amount: number;
-    public max_votes_per_person: number;
+    public max_votes_per_option: number;
     public global_yes: boolean;
     public global_no: boolean;
     public global_abstain: boolean;
@@ -129,7 +129,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     }
 
     public get moreThanOneVotePerPerson(): boolean {
-        return this.max_votes_per_person > 1;
+        return this.max_votes_per_option > 1;
     }
 
     public get hasGlobalOptionEnabled(): boolean {

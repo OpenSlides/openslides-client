@@ -70,7 +70,7 @@ export namespace PollAction {
         description?: string;
         min_votes_amount?: number;
         max_votes_amount?: number;
-        max_votes_per_person?: number;
+        max_votes_per_option?: number;
 
         onehundred_percent_base?: string;
     }
@@ -87,7 +87,7 @@ export namespace PollAction {
         pollmethod?: string;
         min_votes_amount?: number;
         max_votes_amount?: number;
-        max_votes_per_person?: number;
+        max_votes_per_option?: number;
         allow_multiple_votes_per_candidate?: boolean;
     }
 

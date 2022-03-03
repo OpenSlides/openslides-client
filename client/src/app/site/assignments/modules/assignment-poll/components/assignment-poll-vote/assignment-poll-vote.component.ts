@@ -136,7 +136,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             this.formControls[optionId] = new FormControl(0,
                 [Validators.required,
                 Validators.min(0),
-                Validators.max(this.poll.max_votes_per_person)]
+                Validators.max(this.poll.max_votes_per_option)]
             );
         }
         return this.formControls[optionId];
@@ -153,7 +153,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public getVotesCount(user: ViewUser = this.user): number {
         if (this.voteRequestData[user?.id]) {
-            if (this.poll.isMethodY && this.poll.max_votes_per_person > 1){
+            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1){
                 return Object.keys(this.voteRequestData[user.id].value).map(
                     key => parseInt(this.voteRequestData[user.id].value[key])).reduce((a,b) => (a+b),0);
             } else {
@@ -174,7 +174,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
-        if (this.poll.isMethodY && this.poll.max_votes_per_person > 1
+        if (this.poll.isMethodY && this.poll.max_votes_per_option > 1
                 && this.isErrorInVoteEntry()){
             this.raiseError(
                     this.translate.instant(`There is an error in your vote.`)
@@ -258,7 +258,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     public saveMultipleVote(optionId: number, event: any, user: ViewUser = this.user): void {
         let vote = parseInt(event.target.value);
 
-        if (isNaN(vote) || vote > this.poll.max_votes_per_person || vote < 0){
+        if (isNaN(vote) || vote > this.poll.max_votes_per_option || vote < 0){
             vote = 0;
         }
 
@@ -270,10 +270,10 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             delete this.voteRequestData[user.id].value;
         }
 
-        if (this.poll.isMethodY && this.poll.max_votes_per_person > 1) {
+        if (this.poll.isMethodY && this.poll.max_votes_per_option > 1) {
             // Another option is not expected here
             const maxVotesAmount = this.poll.max_votes_amount;
-            const maxVotesAmountPP = this.poll.max_votes_per_person;
+            const maxVotesAmountPP = this.poll.max_votes_per_option;
             const tmpVoteRequest = this.poll.options
                 .map(option => option.id)
                 .reduce((o, n) => {

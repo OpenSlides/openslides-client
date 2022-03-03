@@ -84,7 +84,7 @@
                                 [formControl]="getFormControl(option.id)"
                                 (change)="saveMultipleVote(option.id, $event, delegation)"
                                 min="0"
-                                max="{{poll.max_votes_per_person}}"
+                                max="{{poll.max_votes_per_option}}"
                                 value="0"
                                 required
                                 [errorStateMatcher]="parentErrorStateMatcher"

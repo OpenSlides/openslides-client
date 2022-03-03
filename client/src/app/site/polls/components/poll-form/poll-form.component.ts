@@ -220,7 +220,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         return (selectedPollMethod === `Y` || selectedPollMethod === `N`) && (!data || !data.state || data.isCreated);
     }
 
-    public showMaxVotesPerPerson(data: any): boolean {
+    public showMaxVotesPerOption(data: any): boolean {
         const selectedPollMethod: PollMethod = this.pollMethodControl.value;
         return (selectedPollMethod === `Y`) && (!data || !data.state || data.isCreated);
     }
@@ -351,8 +351,8 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
             if (pollMethod === PollMethod.Y || pollMethod === PollMethod.N) {
                 this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`max_votes_per_person`),
-                    data.max_votes_per_person
+                    this.pollService.getVerboseNameForKey(`max_votes_per_option`),
+                    data.max_votes_per_option
                 ]);
             }
         }
@@ -368,7 +368,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                 {
                     max_votes_amount: [1, [Validators.required, Validators.min(1)]],
                     min_votes_amount: [1, [Validators.required, Validators.min(1)]],
-                    max_votes_per_person: [1, [Validators.required, Validators.min(1)]]
+                    max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
                 },
                 { validators: isNumberRange(`min_votes_amount`, `max_votes_amount`) }
             ),
