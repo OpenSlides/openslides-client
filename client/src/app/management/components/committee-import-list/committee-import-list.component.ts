@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
+import { MemberService } from 'app/core/core-services/member.service';
 import { Committee } from 'app/shared/models/event-management/committee';
 import { ImportStepPhase } from 'app/shared/utils/import/import-step';
 
@@ -78,7 +79,8 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
-        public importer: CommitteeImportService
+        public importer: CommitteeImportService,
+        private memberService: MemberService
     ) {
         super(componentServiceCollector, translate, importer);
     }
@@ -89,6 +91,7 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
             this.importer.currentImportPhaseObservable.subscribe(phase => (this._currentImportPhase = phase)),
             this.importer.isImportValidObservable.subscribe(isValid => (this._isImportValid = isValid))
         );
+        this.requestExistingUsers();
     }
 
     public getForwardingTooltip(committees: Committee[] = []): string {
@@ -112,5 +115,10 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
             fieldset: ``,
             follow: [{ idField: `committee_ids` }, { idField: `organization_tag_ids` }]
         };
+    }
+
+    private async requestExistingUsers(): Promise<void> {
+        const request = await this.memberService.getAllOrgaUsersModelRequest();
+        this.subscribe(request);
     }
 }
