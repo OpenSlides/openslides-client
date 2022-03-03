@@ -141,7 +141,11 @@ export class UserRepositoryService
             `comment`,
             `default_password`
         ]);
-        const orgaListFields = listFields.concat([`committee_ids`, `organization_management_level`]);
+        const orgaListFields = listFields.concat([
+            `committee_ids`,
+            { templateField: `committee_$_management_level` },
+            `organization_management_level`
+        ]);
         const orgaEditFields = orgaListFields.concat([
             `default_password`,
             { templateField: `committee_$_management_level` }
