@@ -80,7 +80,7 @@ export class MotionFormatService {
 
     public getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
         const changeRecommendation = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
-        const amendments: any[] = this.motionRepo
+        const amendedParagraphs = this.motionRepo
             .getAmendmentsByMotionInstantly(motion.id)
             .flatMap((amendment: ViewMotion) => {
                 const changeRecos = this.changeRecoRepo
@@ -92,7 +92,7 @@ export class MotionFormatService {
         const sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
             lineLength,
             changeRecommendation,
-            amendments
+            amendedParagraphs.map(amendment => amendment.amendment)
         );
 
         return sortedChangingObjects;

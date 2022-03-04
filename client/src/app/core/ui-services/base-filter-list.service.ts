@@ -283,6 +283,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
                 ++count;
             }
         }
+        return count;
     }
 
     /**

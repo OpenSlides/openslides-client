@@ -143,8 +143,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
 
     private find(name: string, props: ImportFindProperties<MainModel>): CsvMapping<SideModel> {
         const { importModel } = props;
-        const existingModel = (this._findFn(name, importModel.model) ||
-            this._findFn(this.translateFn(name), importModel.model)) as any;
+        const existingModel = this._findFn(name, importModel.model) as any;
         if (existingModel?.id) {
             return {
                 name: existingModel.getTitle(),
@@ -215,7 +214,10 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
         if (findFn) {
             this._findFn = findFn;
         } else if (fallbackRepo) {
-            this._findFn = name => fallbackRepo.getViewModelList().find(model => model.getTitle() === name);
+            this._findFn = name =>
+                fallbackRepo
+                    .getViewModelList()
+                    .find(model => model.getTitle() === name || this.translateFn(model.getTitle()) === name);
         }
     }
 
