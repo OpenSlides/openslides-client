@@ -21,7 +21,6 @@ import { ImportServiceCollector } from '../../../core/ui-services/import-service
 import { BaseUserExport } from '../base/base-user-export';
 import { BaseUserImportService } from '../base/base-user-import.service';
 import { userExportExample } from '../export/user-export-example';
-import { GroupImportHelper } from '../import/group-import-helper';
 import { userHeadersAndVerboseNames } from '../users.constants';
 
 const GROUP_PROPERTY = `group_ids`;
@@ -94,6 +93,10 @@ export class UserImportService extends BaseUserImportService {
             createFn: async () => [],
             updateFn: models => this.updateUsers(models)
         });
+        this.registerBeforeImportHelper(GROUP_PROPERTY, {
+            idProperty: GROUP_PROPERTY,
+            repo: this.groupRepo as any
+        });
     }
 
     /**
@@ -114,12 +117,6 @@ export class UserImportService extends BaseUserImportService {
             verboseNameFn: plural => this.repo.getVerboseName(plural),
             createFn: (entries: any[]) => this.createUsers(entries),
             shouldCreateModelFn: user => user.status === `new`
-        };
-    }
-
-    protected getBeforeImportHelpers(): { [key: string]: BeforeImportHandler } {
-        return {
-            [GROUP_PROPERTY]: new GroupImportHelper(this.groupRepo, this.translate)
         };
     }
 
