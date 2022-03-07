@@ -4,7 +4,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { MemberService } from 'app/core/core-services/member.service';
-import { getOmlVerboseName, OML } from 'app/core/core-services/organization-permission';
+import { CML, getOmlVerboseName, OML } from 'app/core/core-services/organization-permission';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { UserRepositoryService } from 'app/core/repositories/users/user-repository.service';
 import { ChoiceService } from 'app/core/ui-services/choice.service';
@@ -18,7 +18,14 @@ import { ViewUser } from 'app/site/users/models/view-user';
 
 import { ORGANIZATION_ID } from '../../../core/core-services/organization.service';
 import { OMLMapping } from '../../../core/core-services/organization-permission';
+import { Organization } from '../../../shared/models/event-management/organization';
 import { ViewOrganization } from '../../models/view-organization';
+
+const getMeetingRequest = (idField: keyof Organization) => ({
+    idField,
+    fieldset: ``,
+    follow: [{ idField: `user_ids`, fieldset: `shortName` }, { idField: `default_group_id` }]
+});
 
 @Component({
     selector: `os-members`,
@@ -119,27 +126,20 @@ export class MemberListComponent extends BaseListViewComponent<ViewUser> impleme
         return getOmlVerboseName(user.organization_management_level as keyof OMLMapping);
     }
 
+    public getAmountOfMeetings(user: ViewUser): number {
+        return user.group_$_ids?.length || 0;
+    }
+
+    public getAmountOfCommitteeManagement(user: ViewUser): number {
+        return user.committee_management_level_ids(CML.can_manage)?.length || 0;
+    }
+
     private async loadMeetings(): Promise<void> {
         await this.subscribe(
             {
                 viewModelCtor: ViewOrganization,
                 ids: [ORGANIZATION_ID],
-                follow: [
-                    {
-                        idField: `committee_ids`,
-                        fieldset: ``,
-                        follow: [
-                            {
-                                idField: `meeting_ids`,
-                                fieldset: ``,
-                                follow: [
-                                    { idField: `user_ids`, fieldset: `shortName` },
-                                    { idField: `default_group_id` }
-                                ]
-                            }
-                        ]
-                    }
-                ]
+                follow: [getMeetingRequest(`active_meeting_ids`)]
             },
             `load_meetings`
         );
