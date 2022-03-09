@@ -98,7 +98,7 @@
                                 required
                                 [errorStateMatcher]="parentErrorStateMatcher"
                             />
-                            <mat-error *ngIf="isErrorInVoteEntry(option.id)">
+                            <mat-error>
                                 {{ getErrorInVoteEntry(option.id) }}
                             </mat-error>
                         </mat-form-field>

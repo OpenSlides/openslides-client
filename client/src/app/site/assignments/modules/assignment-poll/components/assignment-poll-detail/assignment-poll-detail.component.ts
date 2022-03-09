@@ -23,7 +23,6 @@ import { ViewUser } from 'app/site/users/models/view-user';
 import { BaseVoteData } from '../../../../../polls/components/base-poll-detail.component';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
-import { CountdownSlideComponent } from 'app/slides/projector-countdown/projector-countdown-slide.component';
 
 @Component({
     selector: `os-assignment-poll-detail`,
@@ -118,7 +117,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
                     const optionContent: ViewUser = option.content_object;
                     if (this.poll.isMethodY) {
                         if (this.poll.max_votes_per_option > 1){ // Show how often the option was selected
-                            votes[token].votes.push(Math.floor(vote.weight).toString() + "x " + optionContent.getFullName());
+                            votes[token].votes.push(Math.floor(vote.weight).toString() + `x ` + optionContent.getFullName());
                         } else {
                             if (vote.value === `Y`) {
                                 votes[token].votes.push(optionContent.getFullName());

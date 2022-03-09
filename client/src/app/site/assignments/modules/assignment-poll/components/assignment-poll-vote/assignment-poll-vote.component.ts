@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormControl, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { PollAction } from 'app/core/actions/poll-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { PollRepositoryService } from 'app/core/repositories/polls/poll-repository.service';
@@ -14,7 +14,6 @@ import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/bas
 import { ViewUser } from 'app/site/users/models/view-user';
 
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
-import { VoteValuesVerbose } from 'app/site/polls/services/poll.service';
 
 const voteOptions = {
     Yes: {
@@ -144,30 +143,32 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public isErrorInVoteEntry(): boolean{
-        for (var key in this.formControls){
-            if (this.formControls[key].invalid){
-                return true;
+        for (const key in this.formControls){
+            if (this.formControls.hasOwnProperty(key)){
+                if (this.formControls[key].invalid){
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public getErrorInVoteEntry(optionId: number): String {
-        if (this.formControls[optionId].hasError('required')){
-            return this.translate.instant("This is not a number.");
-        } else if (this.formControls[optionId].hasError('min')){
-            return this.translate.instant("Negative votes are not allowed.");
-        } else if (this.formControls[optionId].hasError('max')){
-            return this.translate.instant("Too many votes on one option.");
+        if (this.formControls[optionId].hasError(`required`)){
+            return this.translate.instant(`This is not a number.`);
+        } else if (this.formControls[optionId].hasError(`min`)){
+            return this.translate.instant(`Negative votes are not allowed.`);
+        } else if (this.formControls[optionId].hasError(`max`)){
+            return this.translate.instant(`Too many votes on one option.`);
         }
-        return "";
+        return ``;
     }
 
     public getVotesCount(user: ViewUser = this.user): number {
         if (this.voteRequestData[user?.id]) {
             if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user)){
                 return Object.keys(this.voteRequestData[user.id].value).map(
-                    key => parseInt(this.voteRequestData[user.id].value[key])).reduce((a,b) => (a+b),0);
+                    key => parseInt(this.voteRequestData[user.id].value[key], 10)).reduce((a,b) => (a+b),0);
             } else {
                 return Object.keys(this.voteRequestData[user.id].value).filter(
                     key => this.voteRequestData[user.id].value[key]
@@ -178,7 +179,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public getVotesAvailable(user: ViewUser = this.user): number | String {
         if (this.isGlobalOptionSelected()){
-            return "-";
+            return `-`;
         }
         return this.poll.max_votes_amount - this.getVotesCount(user);
     }
@@ -271,7 +272,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public saveMultipleVote(optionId: number, event: any, user: ViewUser = this.user): void {
-        let vote = parseInt(event.target.value);
+        let vote = parseInt(event.target.value, 10);
 
         if (isNaN(vote) || vote > this.poll.max_votes_per_option || vote < 0){
             vote = 0;
@@ -305,7 +306,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 }, {});
 
             // check if you can still vote
-            const countedVotes = Object.keys(tmpVoteRequest).map(key => parseInt(tmpVoteRequest[key])).reduce((a,b) => (a+b),0);
+            const countedVotes = Object.keys(tmpVoteRequest).map(key => parseInt(tmpVoteRequest[key], 10)).reduce((a,b) => (a+b),0);
             if (countedVotes <= maxVotesAmount) {
                 this.voteRequestData[user.id].value = tmpVoteRequest;
 
@@ -326,17 +327,21 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         if (this.voteRequestData[user.id].value && this.voteRequestData[user.id].value === globalVote) {
             this.voteRequestData[user.id].value = {};
             if (this.poll.isMethodY && this.poll.max_votes_per_option > 1){
-                for (var key in this.formControls){
-                    this.formControls[key].enable();
+                for (const key in this.formControls){
+                    if (this.formControls.hasOwnProperty(key)){
+                        this.formControls[key].enable();
+                    }
                 }
             }
 
         } else {
             this.voteRequestData[user.id].value = globalVote;
             if (this.poll.isMethodY && this.poll.max_votes_per_option > 1){
-                for (var key in this.formControls){
-                    this.formControls[key].setValue(0);
-                    this.formControls[key].disable();
+                for (const key in this.formControls){
+                    if (this.formControls.hasOwnProperty(key)){
+                        this.formControls[key].setValue(0);
+                        this.formControls[key].disable();
+                    }
                 }
             }
             this.submitVote(user);
