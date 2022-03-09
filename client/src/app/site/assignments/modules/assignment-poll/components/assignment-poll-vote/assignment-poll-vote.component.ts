@@ -14,6 +14,7 @@ import { BasePollVoteComponent, VoteOption } from 'app/site/polls/components/bas
 import { ViewUser } from 'app/site/users/models/view-user';
 
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
+import { VoteValuesVerbose } from 'app/site/polls/services/poll.service';
 
 const voteOptions = {
     Yes: {
@@ -151,9 +152,20 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return false;
     }
 
+    public getErrorInVoteEntry(optionId: number): String {
+        if (this.formControls[optionId].hasError('required')){
+            return this.translate.instant("This is not a number.");
+        } else if (this.formControls[optionId].hasError('min')){
+            return this.translate.instant("Negative votes are not allowed.");
+        } else if (this.formControls[optionId].hasError('max')){
+            return this.translate.instant("Too many votes on one option.");
+        }
+        return "";
+    }
+
     public getVotesCount(user: ViewUser = this.user): number {
         if (this.voteRequestData[user?.id]) {
-            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1){
+            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user)){
                 return Object.keys(this.voteRequestData[user.id].value).map(
                     key => parseInt(this.voteRequestData[user.id].value[key])).reduce((a,b) => (a+b),0);
             } else {
@@ -164,7 +176,10 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         }
     }
 
-    public getVotesAvailable(user: ViewUser = this.user): number {
+    public getVotesAvailable(user: ViewUser = this.user): number | String {
+        if (this.isGlobalOptionSelected()){
+            return "-";
+        }
         return this.poll.max_votes_amount - this.getVotesCount(user);
     }
 
@@ -308,11 +323,22 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public saveGlobalVote(globalVote: GlobalVote, user: ViewUser = this.user): void {
-        this.voteRequestData[user.id].value = {};
         if (this.voteRequestData[user.id].value && this.voteRequestData[user.id].value === globalVote) {
-            delete this.voteRequestData[user.id].value;
+            this.voteRequestData[user.id].value = {};
+            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1){
+                for (var key in this.formControls){
+                    this.formControls[key].enable();
+                }
+            }
+
         } else {
             this.voteRequestData[user.id].value = globalVote;
+            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1){
+                for (var key in this.formControls){
+                    this.formControls[key].setValue(0);
+                    this.formControls[key].disable();
+                }
+            }
             this.submitVote(user);
         }
     }

@@ -56,6 +56,12 @@
             </ng-container>
         </small>
 
+        <!-- Max Votes per Option -->
+        <small *ngIf="poll.max_votes_per_option > 1">
+            <span>{{ pollPropertyVerbose.max_votes_per_option | translate }}: {{ poll.max_votes_per_option }}</span>
+            <br />
+        </small>
+
         <!-- 100% base -->
         <ng-container *ngIf="poll.onehundred_percent_base">
             <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>

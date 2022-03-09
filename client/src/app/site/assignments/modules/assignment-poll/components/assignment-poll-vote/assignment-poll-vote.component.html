@@ -38,6 +38,12 @@
                     <b>{{ poll.min_votes_amount }}</b>
                     )
                 </span>
+
+                <span *ngIf="poll.max_votes_per_option > 1">
+                    ({{ 'At most' | translate }}
+                    <b>{{ poll.max_votes_per_option }}</b>
+                    {{ 'votes per option' | translate }})
+                </span>
             </h4>
 
             <!-- Options and Actions -->
@@ -76,11 +82,14 @@
                                 </span>
                             </div>
                         </ng-container>
-                        <mat-form-field appearance="outline" *ngIf="poll.moreThanOneVotePerPerson">
+                        <mat-form-field
+                            appearance="outline"
+                            *ngIf="poll.moreThanOneVotePerPerson"
+                            class="vote-input"
+                        >
                             <input
                                 type="number"
                                 matInput
-                                
                                 [formControl]="getFormControl(option.id)"
                                 (change)="saveMultipleVote(option.id, $event, delegation)"
                                 min="0"
@@ -90,7 +99,7 @@
                                 [errorStateMatcher]="parentErrorStateMatcher"
                             />
                             <mat-error *ngIf="isErrorInVoteEntry(option.id)">
-                                {{ 'Invalid Input.' | translate }}
+                                {{ getErrorInVoteEntry(option.id) }}
                             </mat-error>
                         </mat-form-field>
                         
