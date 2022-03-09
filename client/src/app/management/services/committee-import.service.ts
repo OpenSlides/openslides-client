@@ -100,12 +100,15 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                             [committeeName: string]: Committee;
                         };
                         const updates = models
-                            .map(committee => ({
-                                id: committee.id,
-                                [FORWARD_TO_COMMITTEE_IDS]: committee.forward_to_committee_ids
+                            .map(committee => {
+                                const forwardings = committee.forward_to_committee_ids
                                     .map((value: any) => mapNameModels[value.name].id)
-                                    .filter(value => !!value)
-                            }))
+                                    .filter(value => !!value);
+                                return {
+                                    id: committee.id,
+                                    [FORWARD_TO_COMMITTEE_IDS]: Array.from(new Set(forwardings))
+                                };
+                            })
                             .filter(update => !!update.id);
                         return await this.repo.update(null, ...(updates as any));
                     },

@@ -113,12 +113,12 @@ export class UserRepositoryService
             { templateField: `structure_level_$` },
             { templateField: `number_$` }
         ]);
+        const listOfSpeakersFields = singleVotesFields.concat([`gender`]);
         /**
          * TODO: Some of thouse are not needed in the lists
          */
-        const listFields = shortNameFields.concat(singleVotesFields, [
+        const listFields = listOfSpeakersFields.concat([
             `email`,
-            `gender`,
             `is_active`,
             `is_physical_person`,
             `is_present_in_meeting_ids`,
@@ -126,9 +126,7 @@ export class UserRepositoryService
             `default_number`,
             `default_structure_level`,
             `default_vote_weight`,
-            { templateField: `comment_$` },
-            { templateField: `structure_level_$` },
-            { templateField: `number_$` }
+            { templateField: `comment_$` }
         ]);
         const committeeEditFields = shortNameFields.concat([
             `committee_ids`,
@@ -165,7 +163,8 @@ export class UserRepositoryService
             singleVotes: singleVotesFields,
             committeeEdit: committeeEditFields,
             committeeList: committeeListFields,
-            voteProgress: voteProgressFields
+            voteProgress: voteProgressFields,
+            listOfSpeakers: listOfSpeakersFields
         };
     }
 

@@ -130,7 +130,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
                 CURRENT_LIST_OF_SPEAKERS_FOLLOW,
                 {
                     idField: `reference_projector_id`,
-                    fieldset: ``,
+                    fieldset: [],
                     follow: [
                         {
                             idField: `current_projection_ids`,
@@ -140,7 +140,7 @@ export class CinemaComponent extends BaseModelContextComponent implements OnInit
                     ]
                 }
             ],
-            fieldset: ``
+            fieldset: []
         };
     }
 }

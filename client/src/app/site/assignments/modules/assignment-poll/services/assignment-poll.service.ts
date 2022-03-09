@@ -111,6 +111,7 @@ export class AssignmentPollService extends PollService {
         if (!poll.options?.length) {
             return 0;
         }
-        return poll.options.reduce((previousValue, currentOption) => previousValue + (currentOption.yes ?? 0), 0);
+        const generalOptions = poll.global_option.abstain + poll.global_option.no;
+        return poll.votesvalid - generalOptions;
     }
 }
