@@ -82,4 +82,8 @@ export class BannerService {
             this.activeBanners.next(newBanners);
         }
     }
+
+    public clear(): void {
+        this.activeBanners.next([]);
+    }
 }
