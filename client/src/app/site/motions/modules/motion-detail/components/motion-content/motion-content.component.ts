@@ -334,8 +334,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                 this.contentForm.get(`text`).clearValidators(); // manually adjust validators
             }
 
-            const statuteAmendmentFieldName = `statute_amendment`;
-            contentPatch[statuteAmendmentFieldName] = this.isExisting && this.motion.isStatuteAmendment();
+            if (this.isExisting && this.motion.isStatuteAmendment()) {
+                const statuteAmendmentFieldName = `statute_amendment`;
+                contentPatch[statuteAmendmentFieldName] = true;
+            }
             this.contentForm.patchValue(contentPatch);
         }
     }

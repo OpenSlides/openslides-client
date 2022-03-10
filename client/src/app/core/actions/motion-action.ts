@@ -16,6 +16,7 @@ export namespace MotionAction {
     export const SET_RECOMMENDATION = `motion.set_recommendation`;
     export const RESET_RECOMMENDATION = `motion.reset_recommendation`;
     export const FOLLOW_RECOMMENDATION = `motion.follow_recommendation`;
+    export const SET_SUPPORT_SELF = `motion.set_support_self`;
 
     interface OptionalPayload {
         number?: string;
@@ -81,4 +82,9 @@ export namespace MotionAction {
     export interface ResetStatePayload extends Identifiable {}
     export interface SortPayload extends HasMeetingId, BaseSortPayload {}
     export interface FollowRecommendationPayload extends Identifiable {}
+
+    export interface SetSupportSelfPayload {
+        motion_id: Id;
+        support: boolean;
+    }
 }
