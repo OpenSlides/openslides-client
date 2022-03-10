@@ -121,7 +121,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * Observes the operator, if a user was already logged in, recreate to user and skip the login
      */
     public ngOnInit(): void {
-        this.bannerService.clear()
+        this.bannerService.clear();
         this.subscriptions.push(
             this.orgaSettings.get(`login_text`).subscribe(notice => (this.installationNotice = notice))
         );
