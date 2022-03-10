@@ -7,6 +7,7 @@ import { ActiveMeetingService } from 'app/core/core-services/active-meeting.serv
 import { AuthService } from 'app/core/core-services/auth.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { OrganizationService } from 'app/core/core-services/organization.service';
+import { BannerService } from 'app/core/ui-services/banner.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { OrganizationSettingsService } from 'app/core/ui-services/organization-settings.service';
 import { SpinnerService } from 'app/core/ui-services/spinner.service';
@@ -19,8 +20,6 @@ import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { BrowserSupportService } from '../../services/browser-support.service';
-
-import { BannerService } from 'app/core/ui-services/banner.service';
 
 const HttpWarning = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
 
