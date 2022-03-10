@@ -20,6 +20,8 @@ import { filter } from 'rxjs/operators';
 
 import { BrowserSupportService } from '../../services/browser-support.service';
 
+import { BannerService } from 'app/core/ui-services/banner.service';
+
 const HttpWarning = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
 
 /**
@@ -105,7 +107,8 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
         private browserSupport: BrowserSupportService,
-        private spinnerService: SpinnerService
+        private spinnerService: SpinnerService,
+        private bannerService: BannerService
     ) {
         super(componentServiceCollector, translate);
         // Hide the spinner if the user is at `login-mask`
@@ -119,6 +122,7 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
      * Observes the operator, if a user was already logged in, recreate to user and skip the login
      */
     public ngOnInit(): void {
+        this.bannerService.clear()
         this.subscriptions.push(
             this.orgaSettings.get(`login_text`).subscribe(notice => (this.installationNotice = notice))
         );
