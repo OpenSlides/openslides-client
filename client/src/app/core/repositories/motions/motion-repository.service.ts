@@ -140,22 +140,17 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         update: Partial<MotionAction.UpdatePayload>,
         viewMotion: ViewMotion
     ): MotionAction.UpdatePayload {
+        const updatePayload = Object.keys(update).mapToObject(key => {
+            if (JSON.stringify(update[key]) !== JSON.stringify(viewMotion[key])) {
+                return { [key]: update[key] };
+            }
+        });
         return {
             id: viewMotion.id,
-            title: update.title,
-            number: update.number,
-            text: update.text,
-            reason: update.reason,
-            modified_final_version: update.modified_final_version,
-            state_extension: update.state_extension,
-            recommendation_extension: update.recommendation_extension,
-            category_id: update.category_id,
-            block_id: update.block_id,
-            supporter_ids: update.supporter_ids === null ? [] : update.supporter_ids,
-            tag_ids: update.tag_ids === null ? [] : update.tag_ids,
-            attachment_ids: update.attachment_ids === null ? [] : update.attachment_ids,
-            workflow_id: update.workflow_id,
-            amendment_paragraph_$: update.amendment_paragraph_$
+            ...updatePayload,
+            supporter_ids: updatePayload.supporter_ids === null ? [] : updatePayload.supporter_ids,
+            tag_ids: updatePayload.tag_ids === null ? [] : updatePayload.tag_ids,
+            attachment_ids: updatePayload.attachment_ids === null ? [] : updatePayload.attachment_ids
         };
     }
 
@@ -416,8 +411,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      */
     public async support(viewMotion: ViewMotion): Promise<void> {
-        const nextSupporterIds = [...(viewMotion.supporter_ids || []), this.operator.operatorId];
-        return this.update({ supporter_ids: nextSupporterIds }, viewMotion);
+        const payload: MotionAction.SetSupportSelfPayload = { motion_id: viewMotion.id, support: true };
+        await this.sendActionToBackend(MotionAction.SET_SUPPORT_SELF, payload);
     }
 
     /**
@@ -426,13 +421,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
      * @param viewMotion target motion
      */
     public async unsupport(viewMotion: ViewMotion): Promise<void> {
-        if (!viewMotion.supporter_ids || !viewMotion.supporter_ids.length) {
-            return;
-        }
-        const nextSupporterIds = viewMotion.supporter_ids.filter(
-            supporterId => supporterId !== this.operator.operatorId
-        );
-        return this.update({ supporter_ids: nextSupporterIds }, viewMotion);
+        const payload: MotionAction.SetSupportSelfPayload = { motion_id: viewMotion.id, support: false };
+        await this.sendActionToBackend(MotionAction.SET_SUPPORT_SELF, payload);
     }
 
     /**
