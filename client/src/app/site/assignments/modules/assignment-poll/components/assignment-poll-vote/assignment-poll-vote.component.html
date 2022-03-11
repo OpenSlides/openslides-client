@@ -66,7 +66,7 @@
                             <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
                         </div>
 
-                        <ng-container *ngIf="!poll.moreThanOneVotePerPerson">
+                        <ng-container *ngIf="!poll.hasMoreThanOneVotePerOption">
                             <div *ngFor="let action of voteActions">
                                 <button
                                     class="vote-button"
@@ -84,14 +84,14 @@
                         </ng-container>
                         <mat-form-field
                             appearance="outline"
-                            *ngIf="poll.moreThanOneVotePerPerson"
+                            *ngIf="poll.hasMoreThanOneVotePerOption"
                             class="vote-input"
                         >
                             <input
                                 type="number"
                                 matInput
                                 [formControl]="getFormControl(option.id)"
-                                (change)="saveMultipleVote(option.id, $event, delegation)"
+                                (change)="saveMultipleVotes(option.id, $event, delegation)"
                                 min="0"
                                 max="{{poll.max_votes_per_option}}"
                                 value="0"

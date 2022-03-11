@@ -16,6 +16,7 @@ import { ChartData } from 'app/shared/components/charts/charts.component';
 import { VoteValue } from 'app/shared/models/poll/poll-constants';
 import { ViewOption } from 'app/shared/models/poll/view-option';
 import { ViewPoll } from 'app/shared/models/poll/view-poll';
+import { ViewVote } from 'app/shared/models/poll/view-vote';
 import { ViewAssignment } from 'app/site/assignments/models/view-assignment';
 import { BasePollDetailComponentDirective } from 'app/site/polls/components/base-poll-detail.component';
 import { ViewUser } from 'app/site/users/models/view-user';
@@ -116,15 +117,7 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
                 if (vote.weight > 0) {
                     const optionContent: ViewUser = option.content_object;
                     if (this.poll.isMethodY) {
-                        if (this.poll.max_votes_per_option > 1){ // Show how often the option was selected
-                            votes[token].votes.push(Math.floor(vote.weight).toString() + `x ` + optionContent.getFullName());
-                        } else {
-                            if (vote.value === `Y`) {
-                                votes[token].votes.push(optionContent.getFullName());
-                            } else {
-                                votes[token].votes.push(this.voteValueToLabel(vote.value));
-                            }
-                        }
+                        votes[token].votes.push(this.getMethodYVoteLabel(vote, optionContent));
                     } else {
                         const candidate_name = optionContent?.getShortName() ?? this.translate.instant(`Deleted user`);
                         votes[token].votes.push(`${candidate_name}: ${this.voteValueToLabel(vote.value)}`);
@@ -133,6 +126,18 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
             }
         }
         return Object.values(votes);
+    }
+
+    private getMethodYVoteLabel(vote: ViewVote, optionContent: ViewUser): string {
+        if (this.poll.max_votes_per_option > 1){ // Show how often the option was selected
+            return Math.floor(vote.weight).toString() + `x ` + optionContent.getFullName();
+        } else {
+            if (vote.value === `Y`) {
+                return optionContent.getFullName();
+            } else {
+                return this.voteValueToLabel(vote.value);
+            }
+        }
     }
 
     protected onAfterSetVotesData(): void {
