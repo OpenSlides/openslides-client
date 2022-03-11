@@ -103,7 +103,7 @@ export class SearchRepoSelectorComponent extends BaseSearchValueSelectorComponen
         if (this.defaultDataConfigKey) {
             this.subscriptions.push(
                 this.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
-                    if (!this.value) {
+                    if (this.empty) {
                         this.value = value as any;
                     }
                 })

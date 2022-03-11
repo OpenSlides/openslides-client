@@ -79,6 +79,9 @@ export abstract class BaseFormFieldControlComponent<T>
         return this._disabled;
     }
 
+    @Input()
+    public shouldPropagateOnRegistering = true;
+
     public abstract get empty(): boolean;
 
     public abstract get controlType(): string;
@@ -131,20 +134,32 @@ export abstract class BaseFormFieldControlComponent<T>
         this.stateChanges.complete();
     }
 
+    ///////////////////////////////////////////////////////
+    // Functions to fulfill the ControlValueAccessor interface
+    ///////////////////////////////////////////////////////
+
     public writeValue(value: T): void {
         this.value = value;
     }
     public registerOnChange(fn: any): void {
         this._onChange = fn;
-        this.push(this.value);
+        if (this.shouldPropagateOnRegistering) {
+            this.push(this.value);
+        }
     }
     public registerOnTouched(fn: any): void {
         this._onTouched = fn;
-        this.push(this.value);
+        if (this.shouldPropagateOnRegistering) {
+            this.push(this.value);
+        }
     }
-    public setDisabledState?(isDisabled: boolean): void {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
+
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
 
     public setDescribedByIds(ids: string[]): void {
         this.describedBy = ids.join(` `);

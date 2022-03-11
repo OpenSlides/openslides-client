@@ -64,7 +64,7 @@ export class OrganizationService {
         return {
             viewModelCtor: ViewOrganization,
             ids: [ORGANIZATION_ID],
-            follow: [{ idField: `resource_ids` }, `theme_ids`, `theme_id`],
+            follow: [`theme_ids`, `theme_id`],
             fieldset: `settings`
         };
     }
