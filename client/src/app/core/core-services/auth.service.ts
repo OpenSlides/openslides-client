@@ -76,8 +76,7 @@ export class AuthService {
             if (response.success) {
                 // Shutdowning kills all connections. The operator is listening for token changes, so
                 // we must hold them back to this point.
-                this.lifecycleService.shutdown();
-                this.lifecycleService.bootup();
+                this.lifecycleService.reboot();
                 this.resumeTokenSubscription();
                 this.redirectUser(meetingId);
             }

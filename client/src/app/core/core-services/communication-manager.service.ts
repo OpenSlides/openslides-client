@@ -17,6 +17,7 @@ class StreamHandler<T> {
     }
 
     private _currentActiveStream: HttpStream<T> | null = null;
+    private _refreshTimer: NodeJS.Timeout | null = null;
 
     private readonly _afterOpenedFn: (stream: HttpStream<T>) => void;
     private readonly _afterClosedFn: (stream: HttpStream<T>) => void;
@@ -34,21 +35,40 @@ class StreamHandler<T> {
 
     public closeCurrentStream(): void {
         const stream = this._currentActiveStream;
-        this._currentActiveStream?.close();
-        this._currentActiveStream = null;
+        this.destroyStream();
+        if (this._refreshTimer) {
+            clearInterval(this._refreshTimer);
+        }
         if (this._afterClosedFn) {
             this._afterClosedFn(stream);
         }
     }
 
     public openCurrentStream(): void {
+        this.reboot();
+        if (!this._refreshTimer) {
+            this._refreshTimer = setInterval(() => this.reboot(), 1000 * 60 * 30); // 30 min
+        }
+        if (this._afterOpenedFn) {
+            this._afterOpenedFn(this._currentActiveStream);
+        }
+    }
+
+    private reboot(): void {
+        this.destroyStream();
+        this.openStream();
+    }
+
+    private openStream(): void {
         if (!this._currentActiveStream) {
             this.build();
         }
         this._currentActiveStream.open();
-        if (this._afterOpenedFn) {
-            this._afterOpenedFn(this._currentActiveStream);
-        }
+    }
+
+    private destroyStream(): void {
+        this._currentActiveStream?.close();
+        this._currentActiveStream = null;
     }
 
     private build(): void {
@@ -73,13 +93,17 @@ class StreamHandler<T> {
 })
 export class CommunicationManagerService {
     private _isRunning = false;
+    private _isAlive = false;
 
     private _activeStreamHandlers: { [id: number]: StreamHandler<any> } = {};
 
     public constructor(offlineService: OfflineService, lifecycleService: LifecycleService) {
         offlineService.offlineGone.subscribe(() => this.stopCommunication());
         offlineService.onlineGone.subscribe(() => this.startCommunication());
-        lifecycleService.openslidesBooted.subscribe(() => this.startCommunication());
+        lifecycleService.openslidesBooted.subscribe(() => {
+            this._isAlive = true;
+            this.startCommunication();
+        });
         lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
     }
 
@@ -89,7 +113,7 @@ export class CommunicationManagerService {
             afterOpenedFn: stream => this.printStreamInformation(stream, `OPENED`),
             afterClosedFn: stream => this.printStreamInformation(stream, `CLOSED`)
         });
-        if (this._isRunning) {
+        if (this._isAlive) {
             this._activeStreamHandlers[nextId].openCurrentStream();
         }
         return {

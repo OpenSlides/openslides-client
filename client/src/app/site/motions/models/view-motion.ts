@@ -28,6 +28,7 @@ import { ViewMotionCommentSection } from './view-motion-comment-section';
 import { ViewMotionState } from './view-motion-state';
 import { ViewMotionStatuteParagraph } from './view-motion-statute-paragraph';
 import { ViewMotionSubmitter } from './view-motion-submitter';
+import { ViewMotionWorkflow } from './view-motion-workflow';
 
 export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
     referenced_in_motion_recommendation_extension: ViewMotion[];
@@ -46,6 +47,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get motion(): Motion {
         return this._model;
+    }
+
+    public get workflow_id(): Id {
+        return this.state?.workflow_id;
+    }
+
+    public get workflow(): ViewMotionWorkflow {
+        return this.state?.workflow;
     }
 
     public get submittersAsUsers(): ViewUser[] {

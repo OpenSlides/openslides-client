@@ -117,7 +117,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     }
 
     public get empty(): boolean {
-        return Array.isArray(this.contentForm.value) ? !this.contentForm.value.length : !this.contentForm.value;
+        return Array.isArray(this._snapshotValue) ? !this._snapshotValue.length : !this._snapshotValue;
     }
 
     public get selectedItems(): Selectable[] {
@@ -153,6 +153,11 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
         id: null
     };
 
+    /**
+     * The synchronized value of the contentForm form control.
+     * Used to determine, if this form control is empty before the timeout is fulfilled.
+     */
+    private _snapshotValue = null;
     private _isFirstUpdate = true;
 
     private _selectableItemsIdMap: { [id: number]: Selectable } = {};
@@ -245,7 +250,6 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
         }
         this.setNextValue(nextValue);
         this.selectedIds = (nextValue as []) ?? [];
-        this.triggerUpdate();
     }
 
     /**
@@ -270,6 +274,10 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     }
 
     private setNextValue(value: any): void {
-        setTimeout(() => this.contentForm.setValue(value));
+        this._snapshotValue = value;
+        setTimeout(() => {
+            this.contentForm.setValue(value);
+            this.triggerUpdate();
+        });
     }
 }

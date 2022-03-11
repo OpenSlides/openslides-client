@@ -170,7 +170,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
             motion_block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
             amendment_paragraph_$: amendmentParagraphs,
-            workflow_id: this.meetingSettingsService.instant(`motions_default_workflow_id`)
+            workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 
         const response = await this.repo.createParagraphBased(motionCreate);
