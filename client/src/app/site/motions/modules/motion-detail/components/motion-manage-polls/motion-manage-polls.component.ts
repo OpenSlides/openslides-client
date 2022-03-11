@@ -16,6 +16,10 @@ export class MotionManagePollsComponent extends BaseComponent {
     @Input()
     public motion: ViewMotion;
 
+    public get canStateHavePolls(): boolean {
+        return this.motion.state?.allow_create_poll || false;
+    }
+
     public constructor(
         componentCollector: ComponentServiceCollector,
         translate: TranslateService,

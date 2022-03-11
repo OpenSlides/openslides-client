@@ -437,6 +437,9 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                         idField: `state_id`,
                         follow: [
                             {
+                                idField: `previous_state_ids`
+                            },
+                            {
                                 idField: `next_state_ids`
                             },
                             GET_POSSIBLE_RECOMMENDATIONS

@@ -117,15 +117,6 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     private _firstValue: any;
 
-    /**
-     * The usual component constructor. datetime pickers will set their locale
-     * to the current language chosen
-     *
-     * @param titleService Title
-     * @param translate TranslateService
-     * @param formBuilder FormBuilder
-     * @param cd ChangeDetectorRef
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
@@ -172,10 +163,13 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
             time: [``]
         });
         this.translatedValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
-        if (this.setting.type === `string` || this.setting.type === `markupText` || this.setting.type === `text`) {
-            if (typeof this.value === `string` && this.value !== ``) {
-                this.translatedValue = this.translate.instant(this.value);
-            }
+        if (
+            (typeof this.value === `string` && this.value !== ``) ||
+            this.setting.type === `string` ||
+            this.setting.type === `markupText` ||
+            this.setting.type === `text`
+        ) {
+            this.translatedValue = this.translate.instant(this.value);
         }
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
