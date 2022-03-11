@@ -128,10 +128,6 @@ export class Poll extends BaseDecimalModel<Poll> {
         return this.pollmethod === PollMethod.YNA;
     }
 
-    public get hasMoreThanOneVotePerOption(): boolean {
-        return this.max_votes_per_option > 1;
-    }
-
     public get hasGlobalOptionEnabled(): boolean {
         return this.global_yes || this.global_no || this.global_abstain;
     }
