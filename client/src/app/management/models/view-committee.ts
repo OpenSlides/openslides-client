@@ -26,11 +26,11 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     }
 
     public get hasForwardings(): boolean {
-        return this.forward_to_committee_ids.length > 0;
+        return (this.forward_to_committee_ids || []).length > 0;
     }
 
     public get hasReceivings(): boolean {
-        return this.receive_forwardings_from_committee_ids.length > 0;
+        return (this.receive_forwardings_from_committee_ids || []).length > 0;
     }
 
     public get managerObservable(): Observable<ViewUser[]> {

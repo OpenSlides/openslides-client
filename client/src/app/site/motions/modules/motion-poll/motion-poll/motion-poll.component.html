@@ -75,7 +75,12 @@
 
     <!-- Detail link -->
     <div class="poll-detail-button-wrapper">
-        <a mat-icon-button [routerLink]="pollLink" matTooltip="{{ 'More' | translate }}" *ngIf="poll.isPublished">
+        <a
+            mat-icon-button
+            [routerLink]="getDetailLink()"
+            matTooltip="{{ 'More' | translate }}"
+            *ngIf="poll.isPublished"
+        >
             <mat-icon class="icon-18">visibility</mat-icon>
         </a>
     </div>
@@ -88,7 +93,7 @@
 </ng-template>
 
 <ng-template #viewTemplate>
-    <os-motion-poll-detail-content [poll]="poll" [routerLink]="pollLink"></os-motion-poll-detail-content>
+    <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()"></os-motion-poll-detail-content>
 </ng-template>
 
 <ng-template #emptyTemplate>
