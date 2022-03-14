@@ -1,33 +1,24 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Optional,
-    Output,
-    Self,
-    TemplateRef
-} from '@angular/core';
-import { FormBuilder, NgControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, TemplateRef } from '@angular/core';
+import { forwardRef, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldControl } from '@angular/material/form-field';
 import { Permission } from 'app/core/core-services/permission';
 import { MediafileRepositoryService } from 'app/core/repositories/mediafiles/mediafile-repository.service';
-import { BaseFormFieldControlComponent } from 'app/shared/components/base-form-field-control';
 import { mediumDialogSettings } from 'app/shared/utils/dialog-settings';
 import { ViewMediafile } from 'app/site/mediafiles/models/view-mediafile';
 import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { BaseFormControlComponent } from '../base-form-control';
+
 @Component({
     selector: `os-attachment-control`,
     templateUrl: `./attachment-control.component.html`,
     styleUrls: [`./attachment-control.component.scss`],
-    providers: [{ provide: MatFormFieldControl, useExisting: AttachmentControlComponent }],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AttachmentControlComponent), multi: true }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttachmentControlComponent extends BaseFormFieldControlComponent<ViewMediafile[]> {
+export class AttachmentControlComponent extends BaseFormControlComponent<ViewMediafile[]> implements OnInit {
     /**
      * Output for an error handler
      */
@@ -50,15 +41,22 @@ export class AttachmentControlComponent extends BaseFormFieldControlComponent<Vi
         return `attachment-control`;
     }
 
+    public formGroup: FormGroup;
+
     public constructor(
         formBuilder: FormBuilder,
-        focusMonitor: FocusMonitor,
-        element: ElementRef<HTMLElement>,
-        @Optional() @Self() public ngControl: NgControl,
         private dialogService: MatDialog,
         public readonly mediaService: MediafileRepositoryService
     ) {
-        super(formBuilder, focusMonitor, element, ngControl);
+        super(formBuilder);
+    }
+
+    public ngOnInit(): void {
+        this.subscriptions.push(
+            this.formGroup.get(`mediafile_ids`).valueChanges.subscribe(value => {
+                this.push(value);
+            })
+        );
     }
 
     public getMediafilesPipeFn(): OperatorFunction<ViewMediafile[], ViewMediafile[]> {
@@ -94,16 +92,17 @@ export class AttachmentControlComponent extends BaseFormFieldControlComponent<Vi
         this.errorHandler.emit(error);
     }
 
-    /**
-     * Declared as abstract in MatFormFieldControl and not required for this component
-     */
-    public onContainerClick(event: MouseEvent): void {}
-
     protected initializeForm(): void {
         this.contentForm = this.fb.control([]);
+        this.formGroup = this.fb.group({
+            mediafile_ids: []
+        });
     }
 
     protected updateForm(value: ViewMediafile[] | null): void {
-        this.contentForm.setValue(value || []);
+        this.contentForm.setValue(value ?? []);
+        this.formGroup.patchValue({
+            mediafile_ids: value ?? []
+        });
     }
 }

@@ -1,14 +1,16 @@
 <div class="attachment-container" *ngIf="contentForm">
-    <mat-form-field>
-        <os-search-repo-selector
-            class="selector"
-            [multiple]="true"
-            placeholder="{{ 'Attachments' | translate }}"
-            [formControl]="contentForm"
-            [repo]="mediaService"
-            [pipeFn]="getMediafilesPipeFn()"
-        ></os-search-repo-selector>
-    </mat-form-field>
+    <form [formGroup]="formGroup">
+        <mat-form-field>
+            <os-search-repo-selector
+                class="selector"
+                [multiple]="true"
+                placeholder="{{ 'Attachments' | translate }}"
+                formControlName="mediafile_ids"
+                [repo]="mediaService"
+                [pipeFn]="getMediafilesPipeFn()"
+            ></os-search-repo-selector>
+        </mat-form-field>
+    </form>
     <button
         type="button"
         mat-icon-button

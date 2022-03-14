@@ -306,7 +306,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasAttachments(): boolean {
-        return !!(this.attachments && this.attachments.length > 0);
+        return this.attachment_ids?.length > 0;
     }
 
     public hasTags(): boolean {
