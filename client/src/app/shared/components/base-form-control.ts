@@ -1,10 +1,23 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, Input, OnDestroy } from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 
+/**
+ * Register a custom form control by providing it as NG_VALUE_ACCESSOR:
+ *
+ * @example
+ * ```ts
+ * Component ({
+ *    selector: `os-custom-control`,
+ *    templateUrl: `./custom-control.component.html`,
+ *    styleUrls: [`./custom-control.component.scss`],
+ *    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CustomControlComponent), multi: true }],
+ * })
+ * ```
+ */
 @Directive()
-export abstract class BaseFormControlComponent<T> implements ControlValueAccessor, OnDestroy {
+export abstract class BaseFormControlComponent<T> implements ControlValueAccessor, OnInit, OnDestroy {
     public static formControlId = 0;
 
     @Input()
@@ -47,6 +60,9 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
     public constructor(protected fb: FormBuilder) {
         this._id = ++BaseFormControlComponent.formControlId;
         this.initializeForm();
+    }
+
+    public ngOnInit(): void {
         this.subscriptions.push(this.contentForm.valueChanges.subscribe(nextValue => this.push(nextValue)));
     }
 

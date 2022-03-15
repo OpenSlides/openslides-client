@@ -192,30 +192,6 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      */
     private recommender?: string;
 
-    /**
-     * Constructor implements title and translation Module.
-     *
-     * @param titleService Title
-     * @param translate Translation
-     * @param matSnackBar showing errors
-     * @param sortService sorting
-     * @param filterService filtering
-     * @param router Router
-     * @param route Current route
-     * @param meetingSettingsService The configuration provider
-     * @param repo Motion Repository
-     * @param tagRepo Tag Repository
-     * @param motionBlockRepo
-     * @param categoryRepo
-     * @param categoryRepo: Repo for categories. Used to define filters
-     * @param workflowRepo: Repo for Workflows. Used to define filters
-     * @param motionCsvExport
-     * @param pdfExport To export motions as PDF
-     * @param multiselectService Service for the multiSelect actions
-     * @param userRepo
-     * @param vp
-     * @param perms LocalPermissionService
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,

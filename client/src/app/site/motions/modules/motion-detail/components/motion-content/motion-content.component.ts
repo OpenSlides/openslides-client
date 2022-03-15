@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MotionAction } from 'app/core/actions/motion-action';
+import { Permission } from 'app/core/core-services/permission';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
 import { RawUser } from 'app/core/repositories/users/user-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -21,6 +22,7 @@ import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.cons
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { Subscription } from 'rxjs';
 
+import { OperatorService } from '../../../../../../core/core-services/operator.service';
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
 import {
@@ -67,8 +69,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         return this.perms.isAllowed(`change_metadata`, this.motion);
     }
 
-    public get canManage(): boolean {
-        return this.perms.isAllowed(`manage`, this.motion);
+    public get canManageMediafiles(): boolean {
+        return this.operator.hasPerms(Permission.mediafileCanManage);
     }
 
     /**
@@ -140,8 +142,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     private _canSaveParagraphBasedAmendment = true;
     private _paragraphBasedAmendmentContent: any = {};
     private _motionContent = {};
+    private _initialState = {};
 
-    private editSubscription: Subscription | null = null;
+    private _editSubscriptions: Subscription[] = [];
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -151,7 +154,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private dialogService: MatDialog,
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
-        private perms: PermissionsService
+        private perms: PermissionsService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
     }
@@ -326,8 +330,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         }
         if (this.motion) {
             const contentPatch: { [key: string]: any } = {};
+            const copy = JSON.parse(JSON.stringify(this.motion.motion));
             Object.keys(this.contentForm.controls).forEach(ctrl => {
-                contentPatch[ctrl] = this.motion[ctrl];
+                contentPatch[ctrl] = copy[ctrl];
             });
 
             if (this.isParagraphBasedAmendment) {
@@ -338,6 +343,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                 const statuteAmendmentFieldName = `statute_amendment`;
                 contentPatch[statuteAmendmentFieldName] = true;
             }
+            this._initialState = JSON.parse(JSON.stringify(contentPatch));
             this.contentForm.patchValue(contentPatch);
         }
     }
@@ -360,14 +366,22 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     private initContentFormSubscription(): void {
-        if (this.editSubscription) {
-            this.editSubscription.unsubscribe();
-            this.editSubscription = null;
+        for (const subscription of this._editSubscriptions) {
+            subscription.unsubscribe();
         }
-        this.editSubscription = this.contentForm.valueChanges.subscribe(value => {
-            this._motionContent = value;
-            this.propagateChanges();
-        });
+        this._editSubscriptions = [];
+        for (const controlName of Object.keys(this.contentForm.controls)) {
+            this._editSubscriptions.push(
+                this.contentForm.get(controlName).valueChanges.subscribe(value => {
+                    if (JSON.stringify(value) !== JSON.stringify(this._initialState[controlName])) {
+                        this._motionContent[controlName] = value;
+                    } else {
+                        delete this._motionContent[controlName];
+                    }
+                    this.propagateChanges();
+                })
+            );
+        }
     }
 
     private propagateChanges(): void {

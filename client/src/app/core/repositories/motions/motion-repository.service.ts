@@ -198,7 +198,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             `sort_weight`,
             `category_weight`,
             `lead_motion_id`, // needed for filtering
-            `amendment_ids`
+            `amendment_ids`,
+            `attachment_ids`
         ]);
         const blockListFields: TypedFieldset<Motion> = titleFields.concat([`block_id`]);
         const detailFields: TypedFieldset<Motion> = titleFields.concat([
