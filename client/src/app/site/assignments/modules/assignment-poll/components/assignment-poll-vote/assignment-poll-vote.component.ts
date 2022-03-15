@@ -149,7 +149,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return false;
     }
 
-    public getErrorInVoteEntry(optionId: number): String {
+    public getErrorInVoteEntry(optionId: number): string {
         if (this.formControlMap[optionId].hasError(`required`)){
             return this.translate.instant(`This is not a number.`);
         } else if (this.formControlMap[optionId].hasError(`min`)){
@@ -173,7 +173,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         }
     }
 
-    public getVotesAvailable(user: ViewUser = this.user): number | String {
+    public getVotesAvailable(user: ViewUser = this.user): number | string {
         if (this.isGlobalOptionSelected()){
             return `-`;
         }
