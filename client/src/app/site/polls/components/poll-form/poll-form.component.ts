@@ -222,7 +222,7 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public showMaxVotesPerOption(data: any): boolean {
         const selectedPollMethod: PollMethod = this.pollMethodControl.value;
-        return (selectedPollMethod === `Y`) && (!data || !data.state || data.isCreated);
+        return selectedPollMethod === `Y` && (!data || !data.state || data.isCreated);
     }
 
     /**

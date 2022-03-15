@@ -129,7 +129,8 @@ export class AssignmentPollDetailComponent extends BasePollDetailComponentDirect
     }
 
     private getMethodYVoteLabel(vote: ViewVote, optionContent: ViewUser): string {
-        if (this.poll.max_votes_per_option > 1){ // Show how often the option was selected
+        if (this.poll.max_votes_per_option > 1) {
+            // Show how often the option was selected
             return Math.floor(vote.weight).toString() + `x ` + optionContent.getFullName();
         } else {
             if (vote.value === `Y`) {
