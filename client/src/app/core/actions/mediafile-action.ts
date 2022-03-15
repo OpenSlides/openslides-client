@@ -1,4 +1,5 @@
 import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
+import { HasOwnerId } from 'app/shared/models/base/has-owner-id';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 
 import { Base64Encoded, Id } from '../definitions/key-types';
@@ -18,18 +19,18 @@ export namespace MediafileAction {
         access_group_ids?: Id[];
     }
 
-    export interface CreateFilePayload extends HasMeetingId, MediafileAttributes, HaveParent {
+    export interface CreateFilePayload extends HasOwnerId, MediafileAttributes, HaveParent {
         file: Base64Encoded; // base64 encoded
         filename: string;
     }
-    export interface CreateDirectoryPayload extends HasMeetingId, MediafileAttributes, HaveParent {}
+    export interface CreateDirectoryPayload extends HasOwnerId, MediafileAttributes, HaveParent {}
     export interface UpdatePayload extends Identifiable {
         title?: string;
         access_group_ids?: Id[];
     }
     export interface DeletePayload extends Identifiable {}
 
-    export interface MovePayload extends HasMeetingId, HaveParent {
+    export interface MovePayload extends HasOwnerId, HaveParent {
         ids: Id[];
     }
 }

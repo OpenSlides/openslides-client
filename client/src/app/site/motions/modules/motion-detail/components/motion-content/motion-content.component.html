@@ -189,7 +189,7 @@
                     </mat-list-item>
                 </mat-list>
             </div>
-            <div *ngIf="canManage && editMotion">
+            <div *ngIf="canManageMediafiles && editMotion">
                 <os-attachment-control
                     formControlName="attachment_ids"
                     (errorHandler)="showUploadError($event)"
