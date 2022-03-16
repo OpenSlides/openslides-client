@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AgendaItemAction } from 'app/core/actions/agenda-item-action';
-import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
+import {
+    DEFAULT_FIELDSET,
+    Fieldsets,
+    SimplifiedModelRequest
+} from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode, TreeService } from 'app/core/ui-services/tree.service';
@@ -9,7 +13,9 @@ import { Identifiable } from 'app/shared/models/base/identifiable';
 import { HasAgendaItem, ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
 import { BaseViewModel } from 'app/site/base/base-view-model';
 
+import { ViewMeeting } from '../../../management/models/view-meeting';
 import { BaseRepositoryWithActiveMeeting } from '../base-repository-with-active-meeting';
+import { ModelRequestRepository } from '../model-request-repository';
 import { RepositoryServiceCollector } from '../repository-service-collector';
 
 export interface AgendaListTitle {
@@ -25,7 +31,10 @@ export interface AgendaListTitle {
 @Injectable({
     providedIn: `root`
 })
-export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting<ViewAgendaItem, AgendaItem> {
+export class AgendaItemRepositoryService
+    extends BaseRepositoryWithActiveMeeting<ViewAgendaItem, AgendaItem>
+    implements ModelRequestRepository
+{
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollector,
         private meetingSettingsService: MeetingSettingsService,
@@ -127,12 +136,12 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
         return await this.actions.sendRequest(AgendaItemAction.CREATE, payload);
     }
 
-    public async removeFromAgenda(...items: (ViewAgendaItem | Id)[]): Promise<void> {
+    public async removeFromAgenda(...items: (Identifiable | Id)[]): Promise<void> {
         let payload: AgendaItemAction.DeletePayload[];
-        if (items[0] instanceof ViewAgendaItem) {
-            payload = items.map(item => ({ id: (item as ViewAgendaItem).id }));
-        } else {
+        if (typeof items[0] === `number`) {
             payload = items.map(item => ({ id: item as Id }));
+        } else {
+            payload = items.map(item => ({ id: (item as Identifiable).id }));
         }
         await this.actions.sendBulkRequest(AgendaItemAction.DELETE, payload);
     }
@@ -194,6 +203,29 @@ export class AgendaItemRepositoryService extends BaseRepositoryWithActiveMeeting
     public bulkSetAgendaType(items: ViewAgendaItem[], agendaType: AgendaItemType): Promise<void> {
         const payload: AgendaItemAction.UpdatePayload[] = items.map(item => ({ id: item.id, type: agendaType }));
         return this.sendBulkActionToBackend(AgendaItemAction.UPDATE, payload);
+    }
+
+    public getRequestToGetAllModels(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            follow: [
+                {
+                    idField: `agenda_item_ids`,
+                    follow: [
+                        {
+                            idField: `content_object_id`,
+                            fieldset: `title`,
+
+                            // To enable the reverse relation from content_object->agenda_item.
+                            // Needed for getItemNumberPrefix
+                            additionalFields: [`agenda_item_id`]
+                        }
+                    ]
+                }
+            ],
+            fieldset: []
+        };
     }
 
     protected tapViewModels(viewModels: ViewAgendaItem[]): void {

@@ -32,19 +32,6 @@ export class BlockDetailFilterListService extends MotionFilterListService {
         this._blockId = id;
     }
 
-    /**
-     *
-     * @param store
-     * @param historyService
-     * @param categoryRepo
-     * @param motionBlockRepo
-     * @param commentRepo
-     * @param tagRepo
-     * @param workflowRepo
-     * @param translate
-     * @param operator
-     * @param config
-     */
     public constructor(
         store: StorageService,
         historyService: HistoryService,

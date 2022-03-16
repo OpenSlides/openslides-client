@@ -260,6 +260,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
 
     protected push(value: Selectable): void {
         const nextValue = this.transformPropagateFn(value);
+        this._snapshotValue = nextValue;
         setTimeout(() => super.push(nextValue));
     }
 
