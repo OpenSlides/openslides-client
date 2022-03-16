@@ -4,6 +4,11 @@
     .attachment-container {
         justify-content: space-between;
         display: flex;
+
+        form {
+            flex: 1;
+        }
+
         .selector {
             width: 95%;
         }
