@@ -22,6 +22,7 @@ import { ChangeRecoMode, LineNumberingMode } from 'app/site/motions/motions.cons
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { Subscription } from 'rxjs';
 
+import { deepCopy } from '../../../../../../core/core-services/key-transforms';
 import { OperatorService } from '../../../../../../core/core-services/operator.service';
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
@@ -328,11 +329,11 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         if (!this.contentForm) {
             this.contentForm = this.createForm();
         }
-        if (this.motion) {
+        if (this.isExisting) {
             const contentPatch: { [key: string]: any } = {};
-            const copy = JSON.parse(JSON.stringify(this.motion.motion));
+            const tmp = deepCopy(this.motion.motion);
             Object.keys(this.contentForm.controls).forEach(ctrl => {
-                contentPatch[ctrl] = copy[ctrl];
+                contentPatch[ctrl] = tmp[ctrl];
             });
 
             if (this.isParagraphBasedAmendment) {
@@ -343,7 +344,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                 const statuteAmendmentFieldName = `statute_amendment`;
                 contentPatch[statuteAmendmentFieldName] = true;
             }
-            this._initialState = JSON.parse(JSON.stringify(contentPatch));
+            this._initialState = deepCopy(contentPatch);
             this.contentForm.patchValue(contentPatch);
         }
     }

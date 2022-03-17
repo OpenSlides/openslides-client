@@ -3,8 +3,30 @@ import { Collection, Field, Fqfield, Fqid, Id } from '../definitions/key-types';
 export const KEYSEPERATOR = `/`;
 export const TEMPLATE_FIELD_INDICATOR = `$`;
 
-export function copy<T>(model: T, modelHeaders: (keyof T)[]): T {
+export function copy<T>(model: T, modelHeaders: (keyof T)[] = []): T {
+    if (!modelHeaders.length) {
+        modelHeaders = Object.keys(model) as (keyof T)[];
+    }
     return modelHeaders.mapToObject(header => ({ [header]: model[header] })) as T;
+}
+
+export function deepCopy<T>(model: T): T {
+    let tmp: any;
+    if (!model) {
+        return model;
+    }
+    if (Array.isArray(model)) {
+        tmp = [];
+        model.forEach((entry, index) => (tmp[index] = deepCopy(entry)));
+    } else if (model instanceof Map) {
+        throw new Error(`Currently not supported!`);
+    } else if (model instanceof Object) {
+        tmp = {};
+        Object.keys(model).forEach(key => (tmp[key] = deepCopy(model[key])));
+    } else {
+        return model; // Assuming it's just a value
+    }
+    return tmp;
 }
 
 export function fqidFromCollectionAndId(collection: string, id: number | string): string {
