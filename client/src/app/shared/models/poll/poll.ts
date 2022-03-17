@@ -46,6 +46,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public description: string;
     public min_votes_amount: number;
     public max_votes_amount: number;
+    public max_votes_per_option: number;
     public global_yes: boolean;
     public global_no: boolean;
     public global_abstain: boolean;

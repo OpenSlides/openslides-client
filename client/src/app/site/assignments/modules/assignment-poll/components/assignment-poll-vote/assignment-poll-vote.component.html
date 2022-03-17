@@ -38,6 +38,12 @@
                     <b>{{ poll.min_votes_amount }}</b>
                     )
                 </span>
+
+                <span *ngIf="poll.max_votes_per_option > 1">
+                    ({{ 'At most' | translate }}
+                    <b>{{ poll.max_votes_per_option }}</b>
+                    {{ 'votes per option' | translate }})
+                </span>
             </h4>
 
             <!-- Options and Actions -->
@@ -60,20 +66,43 @@
                             <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
                         </div>
 
-                        <div *ngFor="let action of voteActions">
-                            <button
-                                class="vote-button"
-                                mat-raised-button
-                                (click)="saveSingleVote(option.id, action.vote, delegation)"
-                                [disabled]="isDeliveringVote(delegation)"
-                                [ngClass]="getActionButtonClass(action, option, delegation)"
-                            >
-                                <mat-icon>{{ action.icon }}</mat-icon>
-                            </button>
-                            <span *ngIf="poll.isMethodYN || poll.isMethodYNA" class="vote-label">
-                                {{ action.label | translate }}
-                            </span>
-                        </div>
+                        <ng-container *ngIf="(poll.max_votes_per_option <= 1)">
+                            <div *ngFor="let action of voteActions">
+                                <button
+                                    class="vote-button"
+                                    mat-raised-button
+                                    (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                    [disabled]="isDeliveringVote(delegation)"
+                                    [ngClass]="getActionButtonClass(action, option, delegation)"
+                                >
+                                    <mat-icon>{{ action.icon }}</mat-icon>
+                                </button>
+                                <span *ngIf="poll.isMethodYN || poll.isMethodYNA" class="vote-label">
+                                    {{ action.label | translate }}
+                                </span>
+                            </div>
+                        </ng-container>
+                        <mat-form-field
+                            appearance="outline"
+                            *ngIf="poll.max_votes_per_option > 1"
+                            class="vote-input"
+                        >
+                            <input
+                                type="number"
+                                matInput
+                                [formControl]="getFormControl(option.id)"
+                                (change)="saveMultipleVotes(option.id, $event, delegation)"
+                                min="0"
+                                max="{{poll.max_votes_per_option}}"
+                                value="0"
+                                required
+                                [errorStateMatcher]="parentErrorStateMatcher"
+                            />
+                            <mat-error>
+                                {{ getErrorInVoteEntry(option.id) }}
+                            </mat-error>
+                        </mat-form-field>
+                        
                     </div>
                     <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
                 </div>

@@ -1831,6 +1831,9 @@ msgstr "Als persönlichen Favorit markieren"
 msgid "Maximum amount of votes"
 msgstr "Maximale Stimmenanzahl"
 
+msgid "Maximum amount of votes per option"
+msgstr "Maximale Stimmenanzahl pro Option"
+
 msgid "Media access is denied"
 msgstr "Medienzugriff verweigert"
 
