@@ -98,6 +98,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
      */
     private _blockId: number;
     private _dialogRef: MatDialogRef<any>;
+    private _oldSubscribedMotionIds: Id[] = [];
 
     /**
      * Constructor for motion block details
@@ -119,12 +120,6 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         public vp: ViewportService
     ) {
         super(componentServiceCollector, translate);
-        this._blockId = Number(this.route.snapshot.params.id);
-
-        /**
-         * TODO: This "might" nit be needed anymore, since filtering can now work implicitly using the requests
-         */
-        this.filterService.blockId = this._blockId;
     }
 
     /**
@@ -141,34 +136,10 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
         (<any>window).comp = this;
     }
 
-    protected getModelRequest(): SimplifiedModelRequest {
-        return {
-            viewModelCtor: ViewMotionBlock,
-            ids: [this._blockId],
-            follow: [
-                {
-                    idField: `motion_ids`,
-                    fieldset: `blockList`,
-                    follow: [
-                        {
-                            idField: `state_id`,
-                            fieldset: `blockList`
-                        },
-                        {
-                            idField: `recommendation_id`,
-                            fieldset: `list`
-                        },
-                        SUBMITTER_FOLLOW,
-                        SPEAKER_BUTTON_FOLLOW
-                    ]
-                },
-                `agenda_item_id`
-            ]
-        };
-    }
-
     public onIdFound(id: Id): void {
         this._blockId = id;
+        this.filterService.blockId = id;
+        this.subscribe(this.getMotionBlockRequest(), `motion_block:detail`);
         this.loadMotionBlock();
     }
 
@@ -286,7 +257,7 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
     }
 
     public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.block.agenda_item).catch(this.raiseError);
+        this.itemRepo.removeFromAgenda(this.block.agenda_item_id).catch(this.raiseError);
     }
 
     private loadMotionBlock(): void {
@@ -296,8 +267,45 @@ export class MotionBlockDetailComponent extends BaseListViewComponent<ViewMotion
                 if (newBlock) {
                     super.setTitle(`${this.translate.instant(`Motion block`)} - ${newBlock.getTitle()}`);
                     this.block = newBlock;
+                    this.updateSubscriptionToMotions(this.block.motion_ids);
                 }
             })
         );
+    }
+
+    private updateSubscriptionToMotions(motionIds: Id[] = []): void {
+        const difference = motionIds.difference(this._oldSubscribedMotionIds);
+        if (!this._oldSubscribedMotionIds.length || difference.length > 0) {
+            this._oldSubscribedMotionIds = Array.from(new Set(this._oldSubscribedMotionIds.concat(motionIds)));
+            this.subscribeToMotions(this._oldSubscribedMotionIds);
+        }
+    }
+
+    private subscribeToMotions(motionIds: Id[]): void {
+        this.subscribe({
+            viewModelCtor: ViewMotion,
+            ids: motionIds,
+            fieldset: `blockList`,
+            follow: [
+                {
+                    idField: `state_id`,
+                    fieldset: `blockList`
+                },
+                {
+                    idField: `recommendation_id`,
+                    fieldset: `list`
+                },
+                SUBMITTER_FOLLOW,
+                SPEAKER_BUTTON_FOLLOW
+            ]
+        });
+    }
+
+    private getMotionBlockRequest(): SimplifiedModelRequest {
+        return {
+            viewModelCtor: ViewMotionBlock,
+            ids: [this._blockId],
+            follow: [`agenda_item_id`]
+        };
     }
 }

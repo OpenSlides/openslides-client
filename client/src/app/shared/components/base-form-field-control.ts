@@ -4,6 +4,7 @@ import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } 
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * Abstract class to implement some simple logic and provide the subclass as a controllable
@@ -119,7 +120,7 @@ export abstract class BaseFormFieldControlComponent<T>
                 this.focused = origin === `mouse` || origin === `touch`;
                 this.stateChanges.next();
             }),
-            this.contentForm.valueChanges.subscribe(nextValue => this.push(nextValue))
+            this.contentForm.valueChanges.pipe(distinctUntilChanged()).subscribe(nextValue => this.push(nextValue))
         );
     }
 

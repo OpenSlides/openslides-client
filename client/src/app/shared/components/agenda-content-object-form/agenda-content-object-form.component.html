@@ -21,7 +21,7 @@
             </div>
 
             <!-- Parent item -->
-            <div *ngIf="itemObserver.value.length > 0" [formGroup]="form">
+            <div *ngIf="isShown" [formGroup]="form">
                 <mat-form-field>
                     <os-search-value-selector
                         formControlName="agenda_parent_id"

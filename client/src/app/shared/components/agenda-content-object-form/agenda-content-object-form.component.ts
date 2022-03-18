@@ -1,20 +1,31 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { AutoupdateService } from 'app/core/core-services/autoupdate.service';
 import { Permission } from 'app/core/core-services/permission';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { ViewAgendaItem } from 'app/site/agenda/models/view-agenda-item';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
+import { ModelSubscription } from '../../../core/core-services/autoupdate.service';
 
 @Component({
     selector: `os-agenda-content-object-form`,
     templateUrl: `./agenda-content-object-form.component.html`,
     styleUrls: [`./agenda-content-object-form.component.scss`]
 })
-export class AgendaContentObjectFormComponent implements OnInit {
+export class AgendaContentObjectFormComponent implements OnInit, OnDestroy {
     @Input()
     public form: FormGroup;
+
+    public get isShown(): boolean {
+        return this._itemsSubject.value.length > 0;
+    }
+
+    public get itemObserver(): Observable<ViewAgendaItem[]> {
+        return this._itemsSubject.asObservable();
+    }
 
     public permission = Permission;
 
@@ -30,11 +41,14 @@ export class AgendaContentObjectFormComponent implements OnInit {
     /**
      * Subject for agenda items
      */
-    public itemObserver: BehaviorSubject<ViewAgendaItem[]>;
+    private _itemsSubject = new BehaviorSubject<ViewAgendaItem[]>([]);
+    private _internalSubscription: Subscription | null = null;
+    private _internalModelSubscription: ModelSubscription | null = null;
 
     public constructor(
         private meetingSettingsService: MeetingSettingsService,
-        private itemRepo: AgendaItemRepositoryService
+        private autoupdate: AutoupdateService,
+        public itemRepo: AgendaItemRepositoryService
     ) {}
 
     public ngOnInit(): void {
@@ -63,6 +77,31 @@ export class AgendaContentObjectFormComponent implements OnInit {
             this.form.get(`agenda_type`).setValue(visibility);
         });
 
-        this.itemObserver = this.itemRepo.getViewModelListBehaviorSubject();
+        this.setupModelSubscription();
+        this.setupSubscription();
+    }
+
+    public ngOnDestroy(): void {
+        if (this._internalSubscription) {
+            this._internalSubscription.unsubscribe();
+            this._internalSubscription = null;
+        }
+        if (this._internalModelSubscription) {
+            this._internalModelSubscription.close();
+            this._internalModelSubscription = null;
+        }
+    }
+
+    private setupSubscription(): void {
+        this._internalSubscription = this.itemRepo
+            .getViewModelListObservable()
+            .subscribe(agendaItems => this._itemsSubject.next(agendaItems));
+    }
+
+    private async setupModelSubscription(): Promise<void> {
+        this._internalModelSubscription = await this.autoupdate.subscribe(
+            this.itemRepo.getRequestToGetAllModels(),
+            `AgendaItemContentComponent:AgendaItems`
+        );
     }
 }
