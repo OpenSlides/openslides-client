@@ -223,8 +223,8 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
      * @return The lines of the amendment
      */
     public getChangeLines(): string {
-        if (this.diffLines) {
-            return this.diffLines
+        if (this.getAmendmentParagraphLines()?.length) {
+            return this.getAmendmentParagraphLines()
                 .map(diffLine => {
                     if (diffLine.diffLineTo === diffLine.diffLineFrom + 1) {
                         return `` + diffLine.diffLineFrom;

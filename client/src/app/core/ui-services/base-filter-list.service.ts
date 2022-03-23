@@ -18,6 +18,7 @@ export interface OsFilter<V> {
     label?: string;
     options: OsFilterOptions;
     count?: number;
+    isAndConnected?: boolean;
 }
 
 /**
@@ -61,7 +62,7 @@ interface HierarchyModel extends BaseViewModel {
 /**
  * Define the type of a filter condition
  */
-export type OsFilterOptionCondition = string | boolean | number | number[];
+export type OsFilterOptionCondition = null | string | boolean | number | number[];
 
 /**
  * Filter for the list view. List views can subscribe to its' dataService (providing filter definitions)
@@ -151,12 +152,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     protected abstract readonly storageKey: string;
 
-    /**
-     * Constructor.
-     *
-     * @param name the name of the filter service
-     * @param store storage service, to read saved filter variables
-     */
     public constructor(private store: StorageService, private historyService: HistoryService) {}
 
     /**
@@ -433,7 +428,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
     /**
      * Remove a filter option.
      *
-     * @param filterName The property name of this filter
+     * @param filterProperty The property name of this filter
      * @param option The option to disable
      */
     protected removeFilterOption(filterProperty: keyof V, option: OsFilterOption): void {
@@ -474,61 +469,47 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @returns true if the item is to be displayed according to the filter
      */
     private isPassingFilter(item: V, filter: OsFilter<V>): boolean {
-        const nullFilter = filter.options.find(
-            option => typeof option !== `string` && option.isActive && option.condition === null
-        );
-        let passesNullFilter = true;
-        for (const option of filter.options) {
-            // ignored options
-            if (typeof option === `string`) {
-                continue;
-            } else if (nullFilter && option === nullFilter) {
-                continue;
-                // active option. The item is included if it passes this test
-            } else if (option.isActive) {
-                if (this.isPassingFilterOption(item, filter, option)) {
-                    return true;
-                }
-                // if a null filter is set, the item needs to not pass all inactive filters
-            } else if (
-                nullFilter &&
-                (item[filter.property] !== null || item[filter.property] !== undefined) &&
-                this.isPassingFilterOption(item, filter, option)
-            ) {
-                passesNullFilter = false;
+        const relevantOptions = filter.options.filter(
+            option => typeof option !== `string` && option.isActive
+        ) as OsFilterOption[];
+        for (const option of relevantOptions) {
+            const isPassingFilterOption = this.isPassingFilterOption(item, item[filter.property], option.condition);
+            if (!filter.isAndConnected && isPassingFilterOption) {
+                return true;
+            } else if (filter.isAndConnected && !isPassingFilterOption) {
+                return false;
             }
         }
-        return nullFilter && passesNullFilter;
+
+        return filter.isAndConnected;
     }
 
     /**
      * Checks an item against a single filter option.
      *
      * @param item A BaseModel to be checked
-     * @param filter The parent filter
-     * @param option The option to be checked
+     * @param property The parent filter
+     * @param condition The option to be checked
      * @returns true if the filter condition matches the item
      */
-    private isPassingFilterOption(item: V, filter: OsFilter<V>, option: OsFilterOption): boolean {
-        const property = item[filter.property] as unknown;
-        const conditions = Array.isArray(option.condition) ? option.condition : [option.condition];
+    private isPassingFilterOption(item: V, property: unknown, condition: OsFilterOptionCondition): boolean {
+        const conditions = Array.isArray(condition) ? condition : [condition];
         let toCheck = property;
 
-        if (toCheck === undefined || toCheck === null) {
-            return false;
-        }
         if (typeof toCheck === `function`) {
             toCheck = toCheck.bind(item)();
         }
         if (!Array.isArray(toCheck)) {
-            toCheck = [toCheck];
+            toCheck = toCheck ? [toCheck] : [];
         }
-
+        if (condition === null) {
+            return (<any[]>toCheck).length === 0 || toCheck === null;
+        }
         return (toCheck as any[]).some(value => {
             if (conditions.includes(value)) {
                 return true;
             }
-            if (conditions.includes(value.toString())) {
+            if (conditions.includes(value?.toString())) {
                 return true;
             }
             if (typeof value === `object` && `id` in value && conditions.includes(value.id)) {

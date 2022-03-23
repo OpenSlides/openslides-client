@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { MotionService } from 'app/core/repositories/motions/motion.service';
 import {
@@ -82,6 +81,8 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
      * To filter stuff
      */
     public filterProps = [`submitters`, `title`, `number`];
+
+    private _amendmentDiffLinesMap: { [amendmentId: number]: string } = {};
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -163,12 +164,10 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
      * @returns the amendments as string, if they are multiple they gonna be separated by `[...]`
      */
     public getAmendmentSummary(amendment: ViewMotion): string {
-        const diffLines = amendment.diffLines;
-        if (diffLines.length) {
-            return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
-        } else {
-            return amendment.text;
+        if (!this._amendmentDiffLinesMap[amendment.id]) {
+            this._amendmentDiffLinesMap[amendment.id] = this.getAmendmentDiffLines(amendment);
         }
+        return this._amendmentDiffLinesMap[amendment.id];
     }
 
     // todo put in own file
@@ -194,5 +193,14 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
     public exportAmendmentListPdf(): void {
         const parentMotion = this.parentMotionId ? this.motionRepo.getViewModel(this.parentMotionId) : undefined;
         this.pdfExport.exportAmendmentList(this.dataSource.filteredData, parentMotion);
+    }
+
+    public getAmendmentDiffLines(amendment: ViewMotion): string {
+        const diffLines = amendment.getAmendmentParagraphLines();
+        if (diffLines.length) {
+            return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
+        } else {
+            return amendment.text;
+        }
     }
 }
