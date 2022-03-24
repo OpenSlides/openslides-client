@@ -31,7 +31,19 @@
         </ng-container>
         <ng-container *ngIf="versionInfo | async as version">
             <mat-divider></mat-divider>
-            <div class="version-text">OpenSlides Version: {{ version }}</div>
+            <div class="version-text">
+                OpenSlides Version: {{ version }}
+                <a
+                    target="_blank"
+                    class="italic"
+                    href="https://support.openslides.com/help/de-de/11-basisfunktionen-openslides/80-versionshistorie"
+                >
+                    ({{ 'What is new?' | translate }})
+                </a>
+            </div>
+            <a target="_blank" href="https://support.openslides.com/help/">
+                <p>{{ 'OpenSlides help (FAQ)' | translate }}</p>
+            </a>
         </ng-container>
     </div>
 </mat-card>

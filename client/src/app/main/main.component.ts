@@ -1,4 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, EmbeddedViewRef, HostListener, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { ActivationEnd, Event, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
@@ -20,6 +21,9 @@ interface RoutingData {
     styleUrls: [`./main.component.scss`]
 })
 export class MainComponent extends BaseComponent implements OnInit {
+    @ViewChild(`updateNotificationTemplate`, { static: true })
+    private _updateNotificationTemplate: TemplateRef<any>;
+
     /**
      * Hold the current routing data to make certain checks
      */
@@ -29,6 +33,8 @@ export class MainComponent extends BaseComponent implements OnInit {
      * Set to true if an update was suppressed
      */
     private delayedUpdateAvailable = false;
+
+    private _globalSnackbarInstance: MatSnackBarRef<EmbeddedViewRef<any>> | null = null;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -45,6 +51,14 @@ export class MainComponent extends BaseComponent implements OnInit {
             this.updateService.updateObservable.subscribe(() => this.handleUpdate()),
             this.router.events.subscribe(routerEvent => this.handleRouterEvents(routerEvent))
         );
+    }
+
+    public dismissSnackbar(): void {
+        if (this._globalSnackbarInstance) {
+            this._globalSnackbarInstance.dismiss();
+            // Enforces an update
+            this.updateService.applyUpdate();
+        }
     }
 
     private handleRouterEvents(routerEvent: Event): void {
@@ -67,17 +81,8 @@ export class MainComponent extends BaseComponent implements OnInit {
     }
 
     private showUpdateNotification(): void {
-        const ref = this.matSnackBar.open(
-            this.translate.instant(`A new update is available!`),
-            this.translate.instant(`Refresh`),
-            {
-                duration: 0
-            }
-        );
-
-        // Enforces an update
-        ref.onAction().subscribe(() => {
-            this.updateService.applyUpdate();
+        this._globalSnackbarInstance = this.matSnackBar.openFromTemplate(this._updateNotificationTemplate, {
+            duration: 0
         });
     }
 
