@@ -3,16 +3,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { SimplifiedModelRequest } from 'app/core/core-services/model-request-builder.service';
 import { OperatorService } from 'app/core/core-services/operator.service';
 import { Permission } from 'app/core/core-services/permission';
 import { MotionCategoryRepositoryService } from 'app/core/repositories/motions/motion-category-repository.service';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { TreeService } from 'app/core/ui-services/tree.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { infoDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { ViewMotionCategory } from 'app/site/motions/models/view-motion-category';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * Table for categories
@@ -27,6 +29,12 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
     private newCategoryDialog: TemplateRef<string>;
 
     private dialogRef: MatDialogRef<any>;
+
+    public get categoriesObservable(): Observable<ViewMotionCategory[]> {
+        return this.repo
+            .getViewModelListObservable()
+            .pipe(map(agendaItems => this.treeService.makeFlatTree(agendaItems, `weight`, `parent_id`)));
+    }
 
     /**
      * Holds the create form
@@ -61,24 +69,14 @@ export class CategoryListComponent extends BaseListViewComponent<ViewMotionCateg
         return this.operator.hasPerms(Permission.motionCanManage);
     }
 
-    /**
-     * The usual component constructor
-     * @param titleService
-     * @param translate
-     * @param matSnackBar
-     * @param route
-     * @param storage
-     * @param repo
-     * @param formBuilder
-     * @param operator
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
         public repo: MotionCategoryRepositoryService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private treeService: TreeService
     ) {
         super(componentServiceCollector, translate);
 

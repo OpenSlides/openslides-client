@@ -16,6 +16,7 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
     private orgaTagFilterOptions: OsFilter<ViewCommittee> = {
         property: `organization_tag_ids`,
         label: this.translate.instant(`Tags`),
+        isAndConnected: true,
         options: []
     };
 
