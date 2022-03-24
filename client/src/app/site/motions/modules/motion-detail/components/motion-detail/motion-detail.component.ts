@@ -413,7 +413,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                         idField: `change_recommendation_ids`
                     },
                     {
-                        idField: `lead_motion_id`
+                        idField: `lead_motion_id`,
+                        additionalFields: [`text`]
                     },
                     {
                         idField: `amendment_ids`,
