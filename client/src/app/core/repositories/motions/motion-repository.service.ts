@@ -295,8 +295,8 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph) =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
 
-        viewModel.getAmendmentParagraphLines = (includeUnchanged: boolean = false) => {
-            if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
+        if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
+            viewModel.getAmendmentParagraphLines = (includeUnchanged: boolean = false) => {
                 const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
                 return this.motionLineNumbering.getAmendmentParagraphLines(
                     viewModel,
@@ -305,10 +305,10 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
                     changeRecos,
                     includeUnchanged
                 );
-            } else {
-                return [];
-            }
-        };
+            };
+        } else {
+            viewModel.getAmendmentParagraphLines = () => [];
+        }
 
         return viewModel;
     }

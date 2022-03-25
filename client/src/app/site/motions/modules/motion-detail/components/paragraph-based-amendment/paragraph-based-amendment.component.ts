@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'app/core/definitions/key-types';
@@ -20,7 +20,8 @@ interface ParagraphBasedAmendmentContent {
 @Component({
     selector: `os-paragraph-based-amendment`,
     templateUrl: `./paragraph-based-amendment.component.html`,
-    styleUrls: [`./paragraph-based-amendment.component.scss`]
+    styleUrls: [`./paragraph-based-amendment.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildComponent {
     public readonly LineNumberingMode = LineNumberingMode;
@@ -53,6 +54,10 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     public contentForm: FormGroup;
 
     public amendmentErrorMessage: string | null = null;
+
+    public get amendmentLines(): DiffLinesInParagraph[] | undefined {
+        return this.motion?.changedAmendmentLines;
+    }
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,

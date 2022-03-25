@@ -18,7 +18,7 @@ import { ItemTypeChoices } from 'app/shared/models/agenda/agenda-item';
 import { largeDialogSettings } from 'app/shared/utils/dialog-settings';
 import { BaseListViewComponent } from 'app/site/base/components/base-list-view.component';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { ViewMotion } from '../../models/view-motion';
 import { AmendmentFilterListService } from '../../services/amendment-filter-list.service';
@@ -121,9 +121,18 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
             this.amendmentFilterService.parentMotionId = undefined;
         }
 
-        this.meetingSettingService
-            .get(`motions_show_sequential_number`)
-            .subscribe(show => (this.showSequentialNumber = show));
+        this.subscriptions.push(
+            this.amendmentFilterService.outputObservable
+                .pipe(distinctUntilChanged((x, y) => x.length === y.length))
+                .subscribe(amendments => {
+                    for (const amendment of amendments) {
+                        this._amendmentDiffLinesMap[amendment.id] = this.getAmendmentDiffLines(amendment);
+                    }
+                }),
+            this.meetingSettingService
+                .get(`motions_show_sequential_number`)
+                .subscribe(show => (this.showSequentialNumber = show))
+        );
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -164,9 +173,6 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
      * @returns the amendments as string, if they are multiple they gonna be separated by `[...]`
      */
     public getAmendmentSummary(amendment: ViewMotion): string {
-        if (!this._amendmentDiffLinesMap[amendment.id]) {
-            this._amendmentDiffLinesMap[amendment.id] = this.getAmendmentDiffLines(amendment);
-        }
         return this._amendmentDiffLinesMap[amendment.id];
     }
 
@@ -202,5 +208,9 @@ export class AmendmentListComponent extends BaseListViewComponent<ViewMotion> im
         } else {
             return amendment.text;
         }
+    }
+
+    public getChangedLinesFromAmendment(amendment: ViewMotion): string | null {
+        return amendment.getChangedLines();
     }
 }
