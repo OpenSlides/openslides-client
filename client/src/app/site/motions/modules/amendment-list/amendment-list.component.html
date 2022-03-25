@@ -46,10 +46,10 @@
             <!-- number and line -->
             <div class="title-line one-line">
                 <span>{{ motion.number }}</span>
-                <span *ngIf="motion.diffLines && motion.diffLines.length">
+                <span *ngIf="getChangedLinesFromAmendment(motion)">
                     <span *ngIf="motion.number">&nbsp;&middot;&nbsp;</span>
                     <span>{{ 'Line' | translate }}</span>
-                    <span>&nbsp;{{ motion.getChangeLines() }}</span>
+                    <span>&nbsp;{{ getChangedLinesFromAmendment(motion) }}</span>
                 </span>
             </div>
 
