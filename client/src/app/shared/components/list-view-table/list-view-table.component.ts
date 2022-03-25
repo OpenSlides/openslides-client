@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { PblNgridRowContext } from '@pebula/ngrid/lib/grid';
@@ -72,6 +72,7 @@ export interface ColumnRestriction {
     selector: `os-list-view-table`,
     templateUrl: `./list-view-table.component.html`,
     styleUrls: [`../basic-list-view-table/basic-list-view-table.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class ListViewTableComponent<

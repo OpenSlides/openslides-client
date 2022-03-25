@@ -24,8 +24,8 @@ export class AmendmentListPdfService {
      * @return rendered PDF text
      */
     private renderDiffLines(amendment: ViewMotion): object {
-        if (amendment.diffLines && amendment.diffLines.length) {
-            const linesHtml = amendment.diffLines.map(line => line.text).join(`<br />[...]<br />`);
+        if (amendment.affectedAmendmentLines?.length) {
+            const linesHtml = amendment.affectedAmendmentLines.map(line => line.text).join(`<br />[...]<br />`);
             return this.htmlToPdfService.convertHtml(linesHtml);
         }
     }
@@ -50,7 +50,7 @@ export class AmendmentListPdfService {
                 text: amendment.numberOrTitle
             },
             {
-                text: amendment.getChangeLines()
+                text: amendment.getChangedLines()
             },
             {
                 text: amendment.submittersAsUsers.toString()

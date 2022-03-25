@@ -187,23 +187,36 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         }
     }
 
-    public get diffLines(): DiffLinesInParagraph[] | null {
-        return this.getAmendmentParagraphLines(true);
+    public get changedAmendmentLines(): DiffLinesInParagraph[] | null {
+        if (!this._changedAmendmentLines) {
+            this._changedAmendmentLines = this.getAmendmentParagraphLines();
+        }
+        return this._changedAmendmentLines;
+    }
+
+    public get affectedAmendmentLines(): DiffLinesInParagraph[] | null {
+        if (!this._affectedAmendmentLines) {
+            this._affectedAmendmentLines = this.getAmendmentParagraphLines(true);
+        }
+        return this._affectedAmendmentLines;
     }
 
     /**
      * Get the number of the first diff line, in case a motion is an amendment
      */
     public get parentAndLineNumber(): string | null {
-        if (this.isParagraphBasedAmendment() && this.lead_motion && this.diffLines && this.diffLines.length) {
-            return `${this.lead_motion.number} ${this.diffLines[0].diffLineFrom}`;
+        if (this.isParagraphBasedAmendment() && this.lead_motion && this.changedAmendmentLines?.length) {
+            return `${this.lead_motion.number} ${this.changedAmendmentLines[0].diffLineFrom}`;
         } else {
             return null;
         }
     }
 
+    private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
+    private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
+
     /**
-     * This is injected. Use it wisely.
+     * @warning This is injected. Do not use it!
      */
     public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] | null;
     public getParagraphTitleByParagraph: (paragraph: DiffLinesInParagraph) => string | null;
@@ -222,9 +235,9 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
      *
      * @return The lines of the amendment
      */
-    public getChangeLines(): string {
-        if (this.getAmendmentParagraphLines()?.length) {
-            return this.getAmendmentParagraphLines()
+    public getChangedLines(): string | null {
+        if (this.changedAmendmentLines?.length) {
+            return this.changedAmendmentLines
                 .map(diffLine => {
                     if (diffLine.diffLineTo === diffLine.diffLineFrom + 1) {
                         return `` + diffLine.diffLineFrom;
@@ -234,6 +247,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
                 })
                 .toString();
         }
+        return null;
     }
 
     /**
