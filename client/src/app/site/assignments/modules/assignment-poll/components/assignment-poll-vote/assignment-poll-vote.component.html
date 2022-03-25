@@ -66,7 +66,7 @@
                             <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
                         </div>
 
-                        <ng-container *ngIf="(poll.max_votes_per_option <= 1)">
+                        <ng-container *ngIf="(!poll.max_votes_per_option || poll.max_votes_per_option <= 1)">
                             <div *ngFor="let action of voteActions">
                                 <button
                                     class="vote-button"
