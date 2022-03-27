@@ -357,7 +357,6 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             }
 
             if (pollMethod === PollMethod.Y || pollMethod === PollMethod.N) {
-                console.log("Here: ", data.max_votes_per_option);
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`max_votes_per_option`),
                     data.max_votes_per_option
