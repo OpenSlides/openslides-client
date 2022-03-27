@@ -59,6 +59,9 @@ export class AssignmentPollService extends PollService {
         this.meetingSettingsService
             .get(`assignment_poll_sort_poll_result_by_votes`)
             .subscribe(sort => (this.sortByVote = sort));
+        this.meetingSettingsService
+            .get(`assignment_poll_enable_max_votes_per_option`)
+            .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option))
     }
 
     public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
