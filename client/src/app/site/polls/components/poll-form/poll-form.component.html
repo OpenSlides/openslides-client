@@ -86,20 +86,25 @@
                             [errorStateMatcher]="parentErrorStateMatcher"
                         />
                     </mat-form-field>
-
-                    <!-- Max Amount of Votes per Person -->
-                    <mat-form-field *ngIf="showMaxVotesPerOption(data)">
-                        <input
-                            type="number"
-                            matInput
-                            placeholder="{{ PollPropertyVerbose.max_votes_per_option | translate }}"
-                            formControlName="max_votes_per_option"
-                            min="1"
-                            required
-                            [errorStateMatcher]="parentErrorStateMatcher"
-                        />
-                    </mat-form-field>
                 </ng-container>
+
+                <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
+                <div *ngIf="isEVotingSelected && showMaxVotesPerOption(data)" class="third-option">
+                    <ng-container formGroupName="votes_amount" >
+                        <!-- Max Amount of Votes per Option -->
+                        <mat-form-field>
+                            <input
+                                type="number"
+                                matInput
+                                placeholder="{{ PollPropertyVerbose.max_votes_per_option | translate }}"
+                                formControlName="max_votes_per_option"
+                                min="1"
+                                required
+                                [errorStateMatcher]="parentErrorStateMatcher"
+                            />
+                        </mat-form-field>
+                    </ng-container>
+                </div>
             </div>
 
             <!-- Amount of Votes and global options -->

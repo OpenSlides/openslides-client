@@ -16,4 +16,9 @@
     .global-options {
         margin-bottom: 1em;
     }
+
+    .third-option {
+        grid-column: 2 / 4;
+        grid-row: 2 / 3;
+    }
 }
