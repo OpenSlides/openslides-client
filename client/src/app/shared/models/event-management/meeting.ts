@@ -163,6 +163,7 @@ export interface Settings {
     assignment_poll_ballot_paper_selection: BallotPaperSelection;
     assignment_poll_ballot_paper_number: number;
     assignment_poll_add_candidates_to_list_of_speakers: boolean;
+    assignment_poll_enable_max_votes_per_option: boolean;
     assignment_poll_sort_poll_result_by_votes: boolean;
     assignment_poll_default_type: PollType;
     assignment_poll_default_method: PollMethod;

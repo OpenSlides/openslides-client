@@ -193,7 +193,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `agenda_show_internal_items_on_projector`,
-                        label: _(`Show internal items when projecting subitems`),
+                        label: _(`Show internal items when projecting agenda`),
                         type: `boolean`
                     },
                     {
@@ -635,6 +635,11 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: `assignment_poll_add_candidates_to_list_of_speakers`,
                         label: _(`Put all candidates on the list of speakers`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `assignment_poll_enable_max_votes_per_option`,
+                        label: _(`Enable elections which allow to accumulate several votes on one option`),
                         type: `boolean`
                     },
                     {

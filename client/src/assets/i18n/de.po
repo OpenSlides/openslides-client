@@ -510,8 +510,14 @@ msgstr "Zugewiesene Accounts"
 msgid "At least"
 msgstr "Mindestens"
 
+msgid "At most"
+msgstr "Höchstens"
+
 msgid "Attachments"
 msgstr "Anhänge"
+
+msgid "Attention: You can NOT be undone this action!"
+msgstr "Achtung: Sie können diese Aktion NICHT rückgängig machen!"
 
 msgid "Automatically open the microphone for new conference speakers"
 msgstr "Mikrofon automatisch öffnen beim Eintreten in die Livekonferenz"
@@ -709,7 +715,7 @@ msgid "Cancel editing without saving"
 msgstr "Bearbeitung ohne Speichern abbrechen"
 
 msgid "Candidates"
-msgstr "Kandidaten/innen"
+msgstr "Kandidaten*innen"
 
 msgid "Cannot create PDF files on this browser."
 msgstr "In diesem Browser können keine PDF-Dateien erstellt werden."
@@ -1226,9 +1232,6 @@ msgstr "Wahl"
 
 msgid "Election documents"
 msgstr "Wahlunterlagen"
-
-msgid "Election not found"
-msgstr "Wahl nicht gefunden"
 
 msgid "Elections"
 msgstr "Wahlen"
@@ -1832,7 +1835,7 @@ msgid "Maximum amount of votes"
 msgstr "Maximale Stimmenanzahl"
 
 msgid "Maximum amount of votes per option"
-msgstr "Maximale Stimmenanzahl pro Option"
+msgstr "Max. Stimmenanzahl pro Option"
 
 msgid "Media access is denied"
 msgstr "Medienzugriff verweigert"
@@ -1911,9 +1914,6 @@ msgstr "Antrag weitergeleitet an"
 msgid "Motion forwarding"
 msgstr "Antragsweiterleitung"
 
-msgid "Motion not found"
-msgstr "Antrag nicht gefunden"
-
 msgid "Motion number"
 msgstr "Antragsnummer"
 
@@ -1976,6 +1976,9 @@ msgstr "natürliche Person"
 
 msgid "Needs review"
 msgstr "Benötigt Review"
+
+msgid "Negative votes are not allowed."
+msgstr "Negative Stimmen sind nicht zulässig."
 
 msgid "Never"
 msgstr "Nie"
@@ -2168,7 +2171,7 @@ msgid "Number"
 msgstr "Bezeichner"
 
 msgid "Number candidates"
-msgstr "Kandidat/innen nummerieren"
+msgstr "Kandidat*innen nummerieren"
 
 msgid "Number motions"
 msgstr "Anträge nummerieren"
@@ -2274,6 +2277,9 @@ msgstr "OpenSlides-URL"
 
 msgid "OpenSlides access data"
 msgstr "OpenSlides-Zugangsdaten"
+
+msgid "OpenSlides help (FAQ)"
+msgstr "OpenSlides Hilfe (FAQ)"
 
 msgid "OpenSlides is temporarily reset to following timestamp"
 msgstr "OpenSlides ist vorübergehend auf folgenden Zeitpunkt zurückgesetzt:"
@@ -2503,9 +2509,6 @@ msgstr "Projektor-Kopfgrafik"
 
 msgid "Projector logo"
 msgstr "Projektor-Logo"
-
-msgid "Projector not found"
-msgstr "Projektor nicht gefunden"
 
 msgid "Projectors"
 msgstr "Projektoren"
@@ -3072,8 +3075,8 @@ msgstr "Antragsteller*in"
 msgid "Submitters changed"
 msgstr "Antragsteller*in geändert"
 
-msgid "Sum of votes including general No/Abstain"
-msgstr "Summe der Stimmen einschließlich generelles Nein/Enthaltung"
+msgid "Sum of votes without general options"
+msgstr "Summe der Stimmen ohne generelle Optionen"
 
 msgid "Summary"
 msgstr "Zusammenfassung"
@@ -3196,6 +3199,9 @@ msgstr "Es sind keine Einträge ausgewählt."
 msgid "There are some columns that do not match the template"
 msgstr "Es gibt einige Spalten, die nicht mit der Vorlage übereinstimmen"
 
+msgid "There is an error in your vote."
+msgstr "Es gibt ein Fehler in Ihrer Stimme."
+
 msgid "There is an error with this amendment. Please edit it manually."
 msgstr ""
 "In diesem Änderungsantrag ist ein Fehler. Bitte bearbeiten Sie den Text "
@@ -3237,6 +3243,9 @@ msgstr "Dieses Gremium hat keine Gremiumverwalter!"
 
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich."
+
+msgid "This is not a number."
+msgstr "Dies ist keine Zahl."
 
 msgid "This meeting is archived"
 msgstr "Diese Veranstaltung ist archiviert"
@@ -3325,11 +3334,11 @@ msgstr "Titel für PDF-Dokumente von Anträgen"
 msgid "Title for access data and welcome PDF"
 msgstr "Titel für das Zugangsdaten- und Begrüßungs-PDF"
 
+msgid "Too many votes on one option."
+msgstr "Zu viele Stimmen für eine Option."
+
 msgid "Topic"
 msgstr "Thema"
-
-msgid "Topic not found"
-msgstr "Thema nicht gefunden"
 
 msgid "Topics"
 msgstr "Themen"
@@ -3385,9 +3394,9 @@ msgstr ""
 msgid "Used for WLAN QRCode in PDF of access data."
 msgstr "Wird für WLAN-QR-Code im Zugangsdaten-PDF verwendet."
 
-msgid "Used for invitation email and QRCode in PDF of access data."
+msgid "Used for invitation emails and QRCode in PDF of access data."
 msgstr ""
-"Wird für die Einladungs-E-Mail sowie WLAN-QR-Code im Zugangsdaten-PDF "
+"Wird für Einladungs-E-Mails sowie WLAN-QR-Code im Zugangsdaten-PDF "
 "verwendet."
 
 msgid "User permission"
@@ -3508,6 +3517,9 @@ msgstr "Web-Interface-Kopfzeilen-Logo"
 
 msgid "Welcome to OpenSlides"
 msgstr "Willkommen bei OpenSlides"
+
+msgid "What is new?"
+msgstr "Was ist neu?"
 
 msgid "Which version?"
 msgstr "Welche Fassung?"
@@ -3644,6 +3656,12 @@ msgstr "Sie düfen den ersten Status eines Arbeitsablaufs nicht löschen."
 
 msgid "You cannot delete the last workflow."
 msgstr "Sie dürfen den letzten Arbeitsablauf nicht löschen."
+
+msgid ""
+"You cannot enter this meeting because you are not assigned to any group."
+msgstr ""
+"Sie können diese Veranstaltung nicht öffnen, da Sie keiner Gruppe zugewiesen"
+" sind."
 
 msgid "You cannot vote since your vote right is delegated."
 msgstr "Sie können nicht abstimmen, solange Ihr Stimmrecht übertragen ist."
@@ -3977,6 +3995,9 @@ msgstr "nicht erfasst"
 
 msgid "version"
 msgstr "Version"
+
+msgid "votes per candidate"
+msgstr "Stimmen pro Kandidat*in"
 
 msgid "will be created"
 msgstr "werden erstellt"

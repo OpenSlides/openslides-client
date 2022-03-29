@@ -95,6 +95,7 @@ export class PollService {
     public isElectronicVotingEnabled: boolean;
 
     protected sortByVote = false;
+    protected enableMaxVotesPerOption = false;
 
     /**
      * list of poll keys that are numbers and can be part of a quorum calculation
@@ -396,6 +397,10 @@ export class PollService {
 
     public isVoteDocumented(vote: number): boolean {
         return vote !== null && vote !== undefined && vote !== VOTE_UNDOCUMENTED;
+    }
+
+    public isMaxVotesPerOptionEnabled(): boolean {
+        return this.enableMaxVotesPerOption;
     }
 
     private transformToOptionData(data: PollTableData): OptionData {
