@@ -22,6 +22,10 @@ export abstract class BaseSlideComponent<T extends object> {
 
     private _data: SlideData<T>;
 
+    protected get slideData(): T {
+        return this._data.data;
+    }
+
     /**
      * The projector where this slide is projected on.
      */

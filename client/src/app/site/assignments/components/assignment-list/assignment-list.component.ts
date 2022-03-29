@@ -33,7 +33,13 @@ const ASSIGNMENT_TO_PDF_REQUEST = (meetingId: Id): SimplifiedModelRequest => ({
                     follow: [{ idField: `user_id`, fieldset: `shortName` }]
                 },
                 {
-                    idField: `poll_ids`
+                    idField: `poll_ids`,
+                    follow: [
+                        `voted_ids`,
+                        `entitled_group_ids`,
+                        { idField: `option_ids`, follow: [`vote_ids`] },
+                        { idField: `global_option_id`, follow: [`vote_ids`] }
+                    ]
                 }
             ],
             fieldset: `list`
