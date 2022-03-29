@@ -3,7 +3,7 @@
         <!-- navigation -->
         <mat-nav-list class="main-nav">
             <ng-container *ngIf="showMeetingNav">
-                <a [@navItemAnim] class="foreground-warn" mat-list-item (click)="mobileAutoCloseNav()" [routerLink]="['/']">
+                <a [@navItemAnim] mat-list-item (click)="mobileAutoCloseNav()" [routerLink]="['/']">
                     <mat-icon>apps</mat-icon>
                     <span>{{ 'Meetings' | translate }}</span>
                 </a>
