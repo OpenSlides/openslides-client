@@ -152,6 +152,13 @@ export class PollFormComponent extends BaseComponent implements OnInit {
                 }
             }
 
+            if (this.data.max_votes_per_option > 1 && !this.pollService.isMaxVotesPerOptionEnabled()) {
+                // Reset max_votes_per_option if a poll has been created with max_votes_per_option>1 but
+                // afterwards this features was disabled. The value will be reset as soon as the options
+                // of this poll are edited.
+                this.data.max_votes_per_option = 1;
+            }
+
             this.patchFormValues(this.contentForm);
             this.updateFormControls(this.data);
         }

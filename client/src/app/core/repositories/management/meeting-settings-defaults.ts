@@ -64,6 +64,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     assignment_poll_default_100_percent_base: `valid`,
     assignment_poll_sort_poll_result_by_votes: true,
     assignment_poll_add_candidates_to_list_of_speakers: false,
+    assignment_poll_enable_max_votes_per_option: false,
     assignment_poll_default_backend: `fast`,
     assignment_poll_ballot_paper_selection: `CUSTOM_NUMBER`,
     assignment_poll_ballot_paper_number: 8,

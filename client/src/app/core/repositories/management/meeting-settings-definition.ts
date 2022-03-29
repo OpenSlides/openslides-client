@@ -638,6 +638,11 @@ export const meetingSettings: SettingsGroup[] = [
                         type: `boolean`
                     },
                     {
+                        key: `assignment_poll_enable_max_votes_per_option`,
+                        label: _(`Enable elections which allow to accumulate several votes on one option`),
+                        type: `boolean`
+                    },
+                    {
                         key: `assignment_poll_default_backend`,
                         label: _(`Default voting duration`),
                         type: `choice`,
