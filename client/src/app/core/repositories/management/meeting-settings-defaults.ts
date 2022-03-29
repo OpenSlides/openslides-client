@@ -4,7 +4,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export const meetingSettingsDefaults: { [key: string]: any } = {
     enable_anonymous: false,
-    export_csv_separator: `,`,
+    export_csv_separator: `;`,
     export_csv_encoding: `utf-8`,
     export_pdf_pagenumber_alignment: `center`,
     export_pdf_fontsize: 10,
@@ -13,7 +13,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     agenda_numeral_system: `arabic`,
     agenda_item_creation: `default_no`,
     agenda_new_items_default_visibility: `internal`,
-    agenda_show_internal_items_on_projector: true,
+    agenda_show_internal_items_on_projector: false,
     agenda_show_subtitles: false,
     list_of_speakers_enable_point_of_order_speakers: true,
     list_of_speakers_enable_pro_contra_speech: false,

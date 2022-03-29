@@ -193,7 +193,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `agenda_show_internal_items_on_projector`,
-                        label: _(`Show internal items when projecting subitems`),
+                        label: _(`Show internal items when projecting agenda`),
                         type: `boolean`
                     },
                     {
