@@ -137,6 +137,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
      * All items
      */
     protected set selectableItems(items: Selectable[]) {
+        this._selectableItemsIdMap = {};
         const allItems = !this.multiple && this.includeNone ? [this.noneItem].concat(items) : items;
         for (const item of allItems) {
             this._selectableItemsIdMap[item.id] = item;
