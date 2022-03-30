@@ -69,10 +69,10 @@ export class MotionSlideComponent
 
     public get showMetaTable(): boolean {
         return (
-            !this.data.data.show_sidebox &&
-            (this.data.data?.submitters.length > 0 ||
-                (!!this.data.data.recommendation_label && !!this.data.data.recommender) ||
-                !!this.data.data.recommendation_referencing_motions)
+            !this.slideData.show_sidebox &&
+            (!!this.slideData?.submitters?.length ||
+                (!!this.slideData.recommendation_label && !!this.slideData.recommender) ||
+                !!this.slideData.recommendation_referencing_motions)
         );
     }
 

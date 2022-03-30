@@ -52,7 +52,15 @@ export class VotingService {
      * @returns null if no errors exist (= user can vote) or else a VotingError
      */
     public getVotePermissionError(poll: ViewPoll, user: ViewUser = this.currentUser): VotingError | void {
-        if (poll.hasVoted) {
+        if (this.currentUser.id === user.id) {
+            if (user.isVoteRightDelegated) {
+                return VotingError.USER_HAS_DELEGATED_RIGHT;
+            }
+            if (poll.hasVoted) {
+                return VotingError.USER_HAS_VOTED;
+            }
+        }
+        if (this.currentUser.id !== user.id && poll.hasVotedForDelegations(user.id)) {
             return VotingError.USER_HAS_VOTED;
         }
         if (this.operator.isAnonymous) {
@@ -69,9 +77,6 @@ export class VotingService {
         }
         if (!user.isPresentInMeeting() && !this.currentUser.canVoteFor(user)) {
             return VotingError.USER_NOT_PRESENT;
-        }
-        if (user.isVoteRightDelegated && this.currentUser.id === user.id) {
-            return VotingError.USER_HAS_DELEGATED_RIGHT;
         }
     }
 

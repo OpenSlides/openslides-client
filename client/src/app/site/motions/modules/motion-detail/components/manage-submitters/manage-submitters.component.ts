@@ -177,11 +177,9 @@ export class ManageSubmittersComponent extends BaseComponent implements OnInit {
 
     /**
      * Adds the user to the submitters, if he isn't already in there.
-     *
-     * @param user The user to add
      */
     private async addUserAsSubmitter(submitter: Submitter): Promise<void> {
-        if (!submitter.user_id) {
+        if (!submitter?.user_id) {
             if (this._oldSubmitters.has(submitter.id)) {
                 delete this._removeSubmittersMap[submitter.id];
             } else {

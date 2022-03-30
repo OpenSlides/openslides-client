@@ -429,7 +429,29 @@ export class MotionListComponent extends BaseListViewComponent<ViewMotion> imple
      * The export will be limited to the selected data if multiselect modus is
      * active and there are rows selected
      */
-    public openExportDialog(): void {
+    public async openExportDialog(): Promise<void> {
+        await this.instant({
+            viewModelCtor: ViewMeeting,
+            ids: [this.activeMeetingId],
+            fieldset: [],
+            follow: [
+                {
+                    idField: `motion_ids`,
+                    follow: [
+                        {
+                            idField: `poll_ids`,
+                            follow: [
+                                `voted_ids`,
+                                `entitled_group_ids`,
+                                { idField: `option_ids`, follow: [`vote_ids`] },
+                                { idField: `global_option_id`, follow: [`vote_ids`] }
+                            ]
+                        }
+                    ],
+                    additionalFields: [`text`]
+                }
+            ]
+        });
         const exportDialogRef = this.dialog.open(MotionExportDialogComponent, {
             ...largeDialogSettings,
             data: this.dataSource
