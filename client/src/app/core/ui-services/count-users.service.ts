@@ -30,8 +30,6 @@ const RESPONSE_NAME = `count-user-response`;
 export class CountUsersService {
     private activeCounts: { [token: string]: Subject<CountUserData> } = {};
 
-    private currentUserId: number;
-
     /**
      * Sets up all listeners
      *
@@ -47,7 +45,7 @@ export class CountUsersService {
                     {
                         token: request.message.token,
                         data: {
-                            userId: this.currentUserId
+                            userId: operator.operatorId
                         }
                     },
                     request.sender_channel_id
@@ -61,9 +59,6 @@ export class CountUsersService {
                 this.activeCounts[response.message.token].next(response.message.data);
             }
         });
-
-        // Look for the current user.
-        operator.operatorIdObservable.subscribe(id => (this.currentUserId = id));
     }
 
     /**

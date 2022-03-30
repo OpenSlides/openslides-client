@@ -108,6 +108,7 @@ export class UserRepositoryService
             `pronoun`,
             `username` /* Required! To getShortName */
         ];
+        const shortGroupFields: TypedFieldset<User> = shortNameFields.concat([{ templateField: `group_$_ids` }]);
         const singleVotesFields = shortNameFields.concat([
             { templateField: `vote_weight_$` },
             { templateField: `structure_level_$` },
@@ -157,6 +158,7 @@ export class UserRepositoryService
         return {
             [DEFAULT_FIELDSET]: detailFields,
             shortName: shortNameFields,
+            shortGroup: shortGroupFields,
             list: listFields,
             orgaList: orgaListFields,
             orgaEdit: orgaEditFields,
