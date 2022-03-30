@@ -45,9 +45,6 @@ export interface Settings {
     jitsi_room_name: string;
     jitsi_room_password: string;
 
-    // Chat
-    enable_chat: boolean;
-
     conference_show: boolean;
     conference_auto_connect: boolean;
     conference_los_restriction: boolean;
