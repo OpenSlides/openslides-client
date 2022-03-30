@@ -284,7 +284,6 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
             rawForm.jitsi_domain = [``];
             rawForm.jitsi_room_name = [``];
             rawForm.jitsi_room_password = [``];
-            rawForm.enable_chat = [false];
         }
 
         this.meetingForm = this.formBuilder.group(rawForm);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Permission } from 'app/core/core-services/permission';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { OperatorService } from '../../../core/core-services/operator.service';
 import { ChatGroupRepositoryService } from '../../../core/repositories/chat/chat-groups/chat-group-repository.service';
@@ -36,11 +36,7 @@ export class ChatService {
             this.update();
         });
 
-        combineLatest([_meetingSettingService.get(`enable_chat`), _orgaSettingService.get(`enable_chat`)]).subscribe(
-            ([isMeetingEnabled, isOrgaEnabled]) => {
-                this._isChatEnabled = isMeetingEnabled && isOrgaEnabled;
-            }
-        );
+        _orgaSettingService.get(`enable_chat`).subscribe(isChatEnabled => (this._isChatEnabled = isChatEnabled));
     }
 
     private update(): void {
