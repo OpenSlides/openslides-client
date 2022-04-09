@@ -66,7 +66,7 @@
         "jszip": "^3.7.1",
         "lz4js": "^0.2.0",
         "material-design-icons-iconfont": "6.1.0",
-        "moment": "^2.27.0",
+        "moment": "^2.29.2",
         "ng-particles": "^2.13.4",
         "ng2-charts": "^2.4.0",
         "ng2-pdf-viewer": "~7.0.1",
