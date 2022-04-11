@@ -67,6 +67,7 @@ export class MotionExportDialogComponent implements OnInit {
         format: ExportFileFormat.PDF,
         content: [`text`, `reason`],
         pdfOptions: [`toc`, `page`, `addBreaks`],
+        lineHeight: 1.25,
         metaInfo: [`submitters`, `state`, `recommendation`, `category`, `origin`, `tags`, `block`, `polls`]
     };
 
@@ -161,6 +162,7 @@ export class MotionExportDialogComponent implements OnInit {
             this.disableControl(`lnMode`);
             this.disableControl(`crMode`);
             this.disableControl(`pdfOptions`);
+            this.disableControl(`lineHeight`);
 
             // remove the selection of "votingResult"
             if (format === ExportFileFormat.CSV) {
@@ -175,6 +177,7 @@ export class MotionExportDialogComponent implements OnInit {
             this.enableControl(`lnMode`);
             this.enableControl(`crMode`);
             this.enableControl(`pdfOptions`);
+            this.enableControl(`lineHeight`);
             this.votingResultButton.disabled = false;
         }
     }
@@ -251,6 +254,7 @@ export class MotionExportDialogComponent implements OnInit {
             content: [],
             metaInfo: [],
             pdfOptions: [],
+            lineHeight: [],
             comments: []
         });
 

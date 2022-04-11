@@ -87,6 +87,11 @@
         </div>
 
         <div>
+            <p class="toggle-group-head">{{ 'PDF line height' | translate }}</p>
+            <input type="number" matInput placeholder="1.25" formControlName="lineHeight">
+        </div>
+
+        <div>
             <p class="toggle-group-head">{{ 'Comments' | translate }}</p>
             <mat-button-toggle-group class="smaller-buttons" multiple formControlName="comments">
                 <mat-button-toggle [value]="PERSONAL_NOTE_ID">

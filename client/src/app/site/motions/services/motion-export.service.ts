@@ -17,6 +17,7 @@ export interface MotionExportInfo {
     content?: string[];
     metaInfo?: InfoToExport[];
     pdfOptions?: string[];
+    lineHeight?: number;
     comments?: number[];
 }
 

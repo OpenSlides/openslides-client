@@ -74,6 +74,7 @@ export class MotionPdfService {
     public motionToDocDef(motion: ViewMotion, exportInfo?: MotionExportInfo): object {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
+        const lineHeight = exportInfo && exportInfo.lineHeight ? exportInfo.lineHeight : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
         const contentToExport = exportInfo ? exportInfo.content : null;
         let commentsToExport = exportInfo ? exportInfo.comments : null;
@@ -126,7 +127,7 @@ export class MotionPdfService {
                 const preamble = this.createPreamble(motion);
                 motionPdfContent.push(preamble);
             }
-            const text = this.createText(motion, lineLength, lnMode, crMode);
+            const text = this.createText(motion, lineLength, lnMode, crMode, lineHeight);
             motionPdfContent.push(text);
         }
 
@@ -551,7 +552,8 @@ export class MotionPdfService {
         motion: ViewMotion,
         lineLength: number,
         lnMode: LineNumberingMode,
-        crMode: ChangeRecoMode
+        crMode: ChangeRecoMode,
+        lineHeight: number
     ): object {
         let motionText = ``;
 
@@ -602,7 +604,7 @@ export class MotionPdfService {
             motionText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
 
-        return this.htmlToPdfService.convertHtml(motionText, lnMode);
+        return this.htmlToPdfService.convertHtml(motionText, lnMode, lineHeight);
     }
 
     /**
