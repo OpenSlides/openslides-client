@@ -248,7 +248,7 @@ export class UserRepositoryService
                 comment_$: { [this.activeMeetingId]: partialUser.comment as string },
                 vote_delegated_$_to_id: { [this.activeMeetingId]: partialUser.vote_delegated_to_id },
                 vote_delegations_$_from_ids: { [this.activeMeetingId]: partialUser.vote_delegations_from_ids },
-                group_$_ids: { [this.activeMeetingId]: partialUser.group_ids }
+                group_$_ids: { [this.activeMeetingId]: partialUser.group_$_ids || partialUser.group_ids }
             };
         }
         return partialPayload;

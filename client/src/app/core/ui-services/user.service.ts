@@ -16,6 +16,18 @@ import { UserRepositoryService } from '../repositories/users/user-repository.ser
  */
 export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`, `pronoun`];
 
+export const MEETING_RELATED_FORM_CONTROLS = [
+    `structure_level`,
+    `number`,
+    `vote_weight`,
+    `about_me`,
+    `comment`,
+    `group_ids`,
+    `vote_delegations_from_ids`,
+    `vote_delegated_to_id`,
+    `is_present`
+];
+
 @Injectable({ providedIn: `root` })
 export class UserService {
     private get activeMeeting(): ViewMeeting {
@@ -99,11 +111,11 @@ export class UserService {
      */
     public async isUserInSameScope(...userIds: Id[]): Promise<boolean> {
         const result = await this.presenter.call({ user_ids: [...userIds, this.operator.operatorId] });
-        const ownScope = result[this.operator.operatorId].collection;
+        const ownScope = result[this.operator.operatorId];
         return !Object.keys(result)
             .map(userId => parseInt(userId, 10))
             .some(userId => {
-                const toCompare = result[userId].collection;
+                const toCompare = result[userId];
                 return this.presenter.compareScope(ownScope, toCompare) === -1;
             });
     }

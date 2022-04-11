@@ -5,6 +5,7 @@ import { Permission } from 'app/core/core-services/permission';
 import { GroupListComponent } from './components/group-list/group-list.component';
 import { PasswordComponent } from './components/password/password.component';
 import { PresenceDetailComponent } from './components/presence-detail/presence-detail.component';
+import { UserCreateWizardComponent } from './components/user-create-wizard/user-create-wizard.component';
 import { UserDetailComponent } from './components/user-detail/user-detail.component';
 import { UserImportListComponent } from './components/user-import/user-import-list.component';
 import { UserListComponent } from './components/user-list/user-list.component';
@@ -26,7 +27,7 @@ const routes: Route[] = [
     },
     {
         path: `new`,
-        component: UserDetailComponent,
+        component: UserCreateWizardComponent,
         data: { basePerm: Permission.userCanManage }
     },
     {

@@ -113,12 +113,11 @@
                 />
                 <mat-hint *ngIf="isNewUser" align="end">Generate</mat-hint>
                 <button
-                    *ngIf="isNewUser"
+                    *ngIf="isNewUser && generatePasswordFn"
                     type="button"
                     mat-button
                     matSuffix
                     mat-icon-button
-                    [disabled]="!generatePasswordFn"
                     (click)="setRandomPassword()"
                 >
                     <mat-icon>sync_problem</mat-icon>

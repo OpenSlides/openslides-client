@@ -287,16 +287,6 @@
             ></os-search-value-selector>
         </mat-form-field>
         <mat-form-field>
-            <mat-select
-                placeholder="{{ 'Gender' | translate }}"
-                [disabled]="!isUserInScope"
-                [(ngModel)]="infoDialog.gender"
-            >
-                <mat-option>-</mat-option>
-                <mat-option *ngFor="let gender of genderList" [value]="gender">{{ gender | translate }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field>
             <input
                 type="text"
                 matInput

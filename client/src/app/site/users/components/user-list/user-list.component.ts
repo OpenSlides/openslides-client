@@ -44,11 +44,6 @@ interface InfoDialog {
     group_ids: number[];
 
     /**
-     * The gender of the user.
-     */
-    gender: string;
-
-    /**
      * The participant number of the user.
      */
     number: string;
@@ -299,7 +294,6 @@ export class UserListComponent extends BaseListViewComponent<ViewUser> implement
         this.infoDialog = {
             name: user.username,
             group_ids: user.group_ids(this.activeMeetingId),
-            gender: user.gender,
             structure_level: user.structure_level(),
             number: user.number(),
             vote_delegations_from_ids: user.vote_delegations_from_ids(),

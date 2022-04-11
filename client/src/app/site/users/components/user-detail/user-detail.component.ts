@@ -11,28 +11,16 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
+import { MEETING_RELATED_FORM_CONTROLS, PERSONAL_FORM_CONTROLS, UserService } from 'app/core/ui-services/user.service';
 import { ViewMeeting } from 'app/management/models/view-meeting';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { PollService } from 'app/site/polls/services/poll.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { MemberService } from '../../../../core/core-services/member.service';
-import { PERSONAL_FORM_CONTROLS, UserService } from '../../../../core/ui-services/user.service';
 import { ViewGroup } from '../../models/view-group';
 import { ViewUser } from '../../models/view-user';
 import { UserPdfExportService } from '../../services/user-pdf-export.service';
-
-const MEETING_RELATED_FORM_CONTROLS = [
-    `structure_level`,
-    `number`,
-    `vote_weight`,
-    `about_me`,
-    `comment`,
-    `group_ids`,
-    `vote_delegations_from_ids`,
-    `vote_delegated_to_id`,
-    `is_present`
-];
 
 /**
  * Users detail component for both new and existing users
