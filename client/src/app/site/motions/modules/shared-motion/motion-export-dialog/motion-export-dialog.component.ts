@@ -255,6 +255,10 @@ export class MotionExportDialogComponent implements OnInit {
             metaInfo: [],
             pdfOptions: [],
             lineHeight: [],
+            pageMarginLeft: [],
+            pageMarginTop: [],
+            pageMarginRight: [],
+            pageMarginBottom: [],
             comments: []
         });
 

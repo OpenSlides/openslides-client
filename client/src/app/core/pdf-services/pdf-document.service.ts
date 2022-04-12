@@ -128,26 +128,25 @@ export class PdfDocumentService {
      */
     private async getStandardPaper(
         documentContent: object,
+        pageMargins: [number, number, number, number],
         metadata?: object,
         exportInfo?: MotionExportInfo,
         imageUrls?: string[],
-        customMargins?: [number, number, number, number],
         landscape?: boolean
     ): Promise<object> {
         this.imageUrls = imageUrls ? imageUrls : [];
         const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
-        const defaultMargins = pageSize === `A5` ? [45, 30, 45, 45] : [75, 90, 75, 75];
         const result = {
             pageSize: pageSize || `A4`,
             pageOrientation: landscape ? `landscape` : `portrait`,
-            pageMargins: customMargins || defaultMargins,
+            pageMargins: pageMargins,
             defaultStyle: {
                 font: `PdfFont`,
                 fontSize: this.meetingSettingsService.instant(`export_pdf_fontsize`)
             },
-            header: this.getHeader(customMargins ? [customMargins[0], customMargins[2]] : null),
+            header: this.getHeader(landscape ? [pageMargins[0], pageMargins[2]] : null),
             // real footer gets created in the worker
-            tmpfooter: this.getFooter(customMargins ? [customMargins[0], customMargins[2]] : null, exportInfo),
+            tmpfooter: this.getFooter(landscape ? [pageMargins[0], pageMargins[2]] : null, exportInfo),
             info: metadata,
             content: documentContent,
             styles: this.getStandardPaperStyles()
@@ -405,7 +404,22 @@ export class PdfDocumentService {
      */
     public download(docDefinition: object, filename: string, metadata?: object, exportInfo?: MotionExportInfo): void {
         this.showProgress();
-        this.getStandardPaper(docDefinition, metadata, exportInfo).then(doc => {
+
+        const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
+        let pageMarginLeft = pageSize === `A5` ? 45 : 75;
+        let pageMarginTop = pageSize === `A5` ? 30 : 90;
+        let pageMarginRight = pageSize === `A5` ? 45 : 75;
+        let pageMarginBottom = pageSize === `A5` ? 45 : 75;
+
+        pageMarginLeft = exportInfo.pageMarginLeft || pageMarginLeft;
+        pageMarginTop = exportInfo.pageMarginTop || pageMarginTop;
+        pageMarginRight = exportInfo.pageMarginRight || pageMarginRight;
+        pageMarginBottom = exportInfo.pageMarginBottom || pageMarginBottom;
+
+        const pageMargins: [number, number, number, number] = [pageMarginLeft, pageMarginTop, pageMarginRight, pageMarginBottom];
+
+
+        this.getStandardPaper(docDefinition, pageMargins, metadata, exportInfo, null ).then(doc => {
             this.createPdf(doc, filename);
         });
     }
@@ -419,7 +433,7 @@ export class PdfDocumentService {
      */
     public downloadLandscape(docDefinition: object, filename: string, metadata?: object): void {
         this.showProgress();
-        this.getStandardPaper(docDefinition, metadata, null, null, [50, 80, 50, 75], true).then(doc => {
+        this.getStandardPaper(docDefinition, [50, 80, 50, 75], metadata, null, null, true).then(doc => {
             this.createPdf(doc, filename);
         });
     }
