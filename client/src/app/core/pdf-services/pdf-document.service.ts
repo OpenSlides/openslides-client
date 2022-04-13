@@ -406,15 +406,10 @@ export class PdfDocumentService {
         this.showProgress();
 
         const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
-        let pageMarginLeft = pageSize === `A5` ? 45 : 75;
-        let pageMarginTop = pageSize === `A5` ? 30 : 90;
-        let pageMarginRight = pageSize === `A5` ? 45 : 75;
-        let pageMarginBottom = pageSize === `A5` ? 45 : 75;
-
-        pageMarginLeft = exportInfo.pageMarginLeft || pageMarginLeft;
-        pageMarginTop = exportInfo.pageMarginTop || pageMarginTop;
-        pageMarginRight = exportInfo.pageMarginRight || pageMarginRight;
-        pageMarginBottom = exportInfo.pageMarginBottom || pageMarginBottom;
+        const pageMarginLeft = this.meetingSettingsService.instant(`export_pdf_page_margin_left`);
+        const pageMarginTop = this.meetingSettingsService.instant(`export_pdf_page_margin_top`);
+        const pageMarginRight = this.meetingSettingsService.instant(`export_pdf_page_margin_right`);
+        const pageMarginBottom = this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`);
 
         const pageMargins: [number, number, number, number] = [pageMarginLeft, pageMarginTop, pageMarginRight, pageMarginBottom];
 

@@ -74,7 +74,6 @@ export class MotionPdfService {
     public motionToDocDef(motion: ViewMotion, exportInfo?: MotionExportInfo): object {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
-        const lineHeight = exportInfo && exportInfo.lineHeight ? exportInfo.lineHeight : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
         const contentToExport = exportInfo ? exportInfo.content : null;
         let commentsToExport = exportInfo ? exportInfo.comments : null;
@@ -127,6 +126,7 @@ export class MotionPdfService {
                 const preamble = this.createPreamble(motion);
                 motionPdfContent.push(preamble);
             }
+            const lineHeight = this.meetingSettingsService.instant(`export_pdf_line_height`);
             const text = this.createText(motion, lineLength, lnMode, crMode, lineHeight);
             motionPdfContent.push(text);
         }

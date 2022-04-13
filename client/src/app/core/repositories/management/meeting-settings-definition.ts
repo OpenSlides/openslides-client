@@ -125,6 +125,35 @@ export const meetingSettings: SettingsGroup[] = [
                         }
                     },
                     {
+                        key: `export_pdf_line_height`,
+                        label: _(`Standard line height in PDF`),
+                        type: `integer`,
+                    },
+                    {
+                        key: `export_pdf_page_margin_left`,
+                        label: _(`Standard page margin left in PDF`),
+                        type: `integer`,
+                        helpText: _(`Default value for A5: 45`),
+                    },
+                    {
+                        key: `export_pdf_page_margin_top`,
+                        label: _(`Standard page margin top in PDF`),
+                        type: `integer`,
+                        helpText: _(`Default value for A5: 30`),
+                    },
+                    {
+                        key: `export_pdf_page_margin_right`,
+                        label: _(`Standard page margin right in PDF`),
+                        type: `integer`,
+                        helpText: _(`Default value for A5: 45`),
+                    },
+                    {
+                        key: `export_pdf_page_margin_bottom`,
+                        label: _(`Standard page margin bottom in PDF`),
+                        type: `integer`,
+                        helpText: _(`Default value for A5: 45`),
+                    },
+                    {
                         key: `export_pdf_pagesize`,
                         label: _(`Standard page size in PDF`),
                         type: `choice`,

@@ -74,6 +74,11 @@ export interface Settings {
     export_pdf_pagenumber_alignment: string;
     export_pdf_fontsize: number;
     export_pdf_pagesize: string;
+    export_pdf_line_height: number;
+    export_pdf_page_margin_left: number;
+    export_pdf_page_margin_top: number;
+    export_pdf_page_margin_right: number;
+    export_pdf_page_margin_bottom: number;
 
     // Agenda
     agenda_show_subtitles: boolean;

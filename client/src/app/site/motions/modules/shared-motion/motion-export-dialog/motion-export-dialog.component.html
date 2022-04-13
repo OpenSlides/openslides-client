@@ -87,31 +87,6 @@
         </div>
 
         <div>
-            <p class="toggle-group-head">{{ 'PDF line height' | translate }}</p>
-            <input type="number" matInput placeholder="1.25" formControlName="lineHeight">
-        </div>
-
-        <div>
-            <p class="toggle-group-head">{{ 'PDF page margin left' | translate }}</p>
-            <input type="number" matInput placeholder="75" formControlName="pageMarginLeft">
-        </div>
-
-        <div>
-            <p class="toggle-group-head">{{ 'PDF page margin top' | translate }}</p>
-            <input type="number" matInput placeholder="90" formControlName="pageMarginTop">
-        </div>
-
-        <div>
-            <p class="toggle-group-head">{{ 'PDF page margin right' | translate }}</p>
-            <input type="number" matInput placeholder="75" formControlName="pageMarginRight">
-        </div>
-
-        <div>
-            <p class="toggle-group-head">{{ 'PDF page margin bottom' | translate }}</p>
-            <input type="number" matInput placeholder="75" formControlName="pageMarginBottom">
-        </div>
-
-        <div>
             <p class="toggle-group-head">{{ 'Comments' | translate }}</p>
             <mat-button-toggle-group class="smaller-buttons" multiple formControlName="comments">
                 <mat-button-toggle [value]="PERSONAL_NOTE_ID">

@@ -17,11 +17,6 @@ export interface MotionExportInfo {
     content?: string[];
     metaInfo?: InfoToExport[];
     pdfOptions?: string[];
-    lineHeight?: number;
-    pageMarginLeft?: number;
-    pageMarginTop?: number;
-    pageMarginRight?: number;
-    pageMarginBottom?: number;
     comments?: number[];
 }
 
