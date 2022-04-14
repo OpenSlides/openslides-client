@@ -415,10 +415,14 @@ export class PdfDocumentService {
         const pageMarginRight = this.meetingSettingsService.instant(`export_pdf_page_margin_right`);
         const pageMarginBottom = this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`);
 
-        const pageMargins: [number, number, number, number] = [pageMarginLeft, pageMarginTop, pageMarginRight, pageMarginBottom];
+        const pageMargins: [number, number, number, number] = [
+            pageMarginLeft,
+            pageMarginTop,
+            pageMarginRight,
+            pageMarginBottom
+        ];
 
-
-        this.getStandardPaper(docDefinition, pageMargins, metadata, exportInfo, null ).then(doc => {
+        this.getStandardPaper(docDefinition, pageMargins, metadata, exportInfo, null).then(doc => {
             this.createPdf(doc, filename);
         });
     }
