@@ -151,6 +151,10 @@ export class PdfDocumentService {
             content: documentContent,
             styles: this.getStandardPaperStyles()
         };
+
+        // DEBUG: printing the following. Do not remove, just comment out
+        // console.log('MakePDF result :\n---\n', JSON.stringify(result), '\n---\n');
+
         return result;
     }
 
@@ -520,7 +524,7 @@ export class PdfDocumentService {
             },
             subtitle: {
                 fontSize: 9,
-                margin: [0, -20, 0, 20],
+                margin: [0, -20, 0, 10],
                 color: `grey`
             },
             preamble: {
@@ -701,7 +705,7 @@ export class PdfDocumentService {
     public getSpacer(): Object {
         return {
             text: ``,
-            margin: [0, 10]
+            margin: [0, 5]
         };
     }
 

@@ -13,7 +13,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     export_pdf_page_margin_left: 75,
     export_pdf_page_margin_top: 90,
     export_pdf_page_margin_right: 75,
-    export_pdf_page_margin_bottom: 75,
+    export_pdf_page_margin_bottom: 50,
     agenda_enable_numbering: true,
     agenda_numeral_system: `arabic`,
     agenda_item_creation: `default_no`,

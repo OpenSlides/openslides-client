@@ -519,7 +519,7 @@ export class MotionPdfService {
                     widths: [`35%`, `65%`],
                     body: metaTableBody
                 },
-                margin: [0, 0, 0, 20],
+                margin: [0, 0, 0, 10],
                 layout: `metaboxLayout`
             };
         }
@@ -622,7 +622,7 @@ export class MotionPdfService {
             reason.push({
                 text: this.translate.instant(`Reason`),
                 style: `heading3`,
-                margin: [0, 25, 0, 10]
+                margin: [0, 10, 0, 10]
             });
 
             reason.push(this.htmlToPdfService.addPlainText(motion.reason));
@@ -774,7 +774,7 @@ export class MotionPdfService {
                 content = section && section.comment;
             }
             if (name && content) {
-                result.push({ text: name, style: `heading3`, margin: [0, 25, 0, 10] });
+                result.push({ text: name, style: `heading3`, margin: [0, 10, 0, 10] });
                 result.push(this.htmlToPdfService.addPlainText(content));
             }
         }
