@@ -20,6 +20,8 @@ interface IOrganizationRelations {
     committees: ViewCommittee[];
     resources: ViewResource[];
     organization_tags: ViewOrganizationTag[];
+    template_meetings: ViewMeeting[];
+    template_meetings_as_observable: Observable<ViewMeeting[]>;
     active_meetings: ViewMeeting[];
     active_meetings_as_observable: Observable<ViewMeeting[]>;
     archived_meetings: ViewMeeting[];

@@ -1,6 +1,7 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
 
-import { Permission, PermissionsMap } from './permission';
+import { Permission } from './permission';
+import { PermissionsMap } from './permission.config';
 
 export const childPermissions: PermissionsMap = {
     'agenda_item.can_see': [],
@@ -26,17 +27,17 @@ export const childPermissions: PermissionsMap = {
     'motion.can_manage_metadata': [Permission.motionCanSee],
     'motion.can_manage_polls': [Permission.motionCanSee],
     'motion.can_see_internal': [Permission.motionCanSee],
-    'motion.can_forward_into_this_meeting': [Permission.motionCanSee],
-    'motion.can_create': [Permission.motionCanForwardIntoThisMeeting, Permission.motionCanSee],
+    'motion.can_create': [Permission.motionCanSee],
     'motion.can_create_amendments': [Permission.motionCanSee],
+    'motion.can_forward': [Permission.motionCanSee],
     'motion.can_manage': [
         Permission.motionCanManageMetadata,
         Permission.motionCanSee,
         Permission.motionCanManagePolls,
         Permission.motionCanSeeInternal,
         Permission.motionCanCreate,
-        Permission.motionCanForwardIntoThisMeeting,
-        Permission.motionCanCreateAmendments
+        Permission.motionCanCreateAmendments,
+        Permission.motionCanForward
     ],
     'motion.can_support': [Permission.motionCanSee],
     'poll.can_manage': [],

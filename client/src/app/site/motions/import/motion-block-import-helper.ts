@@ -54,7 +54,7 @@ export class MotionBlockImportHelper extends BaseBeforeImportHandler<Motion, Mot
             return { id: existingBlocks[0].id, name: existingBlocks[0].title };
         } else {
             if (!this.modelsToCreate.find(newBlock => newBlock.name === name)) {
-                this.modelsToCreate.push({ name });
+                this.modelsToCreate.push({ name } as any);
             }
             return { name };
         }

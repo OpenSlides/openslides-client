@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MeetingAction } from 'app/core/actions/meeting-action';
 import { UserAction } from 'app/core/actions/user-action';
-import { ActionRequest } from 'app/core/core-services/action.service';
+import { Action, ActionRequest } from 'app/core/core-services/action.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'app/core/core-services/model-request-builder.service';
 import { Id } from 'app/core/definitions/key-types';
 import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
@@ -55,7 +55,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `start_time`,
             `end_time`,
             `is_active_in_organization_id`,
-            `is_archived_organization_id`
+            `is_archived_organization_id`,
+            `template_for_organization_id`
         ]);
         const listFields: (keyof Meeting)[] = nameFields.concat(`user_ids`, `organization_tag_ids`);
         const editFields: (keyof Meeting)[] = listFields.concat([
@@ -64,7 +65,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `location`,
             `url_name`,
             `enable_anonymous`,
-            `is_template`,
             `default_group_id`, // needed for adding users
             `jitsi_domain`,
             `jitsi_room_name`,
@@ -119,13 +119,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return { title };
     };
 
-    public create(...meetings: Partial<MeetingAction.CreatePayload>[]): Promise<Identifiable[]> {
-        const payload = meetings.map(meetingPayload => ({
-            ...meetingPayload,
-            start_time: this.anyDateToUnix(meetingPayload.start_time),
-            end_time: this.anyDateToUnix(meetingPayload.end_time)
-        }));
-        return this.sendBulkActionToBackend(MeetingAction.CREATE, payload);
+    public create(...meetings: Partial<MeetingAction.CreatePayload>[]): Action<Identifiable[]> {
+        const payload = meetings.map(meetingPayload => this.getPartialPayload(meetingPayload));
+        return this.actions.create({ action: MeetingAction.CREATE, data: payload });
     }
 
     public import(committeeId: Id, meeting: ImportMeeting): Promise<Identifiable> {
@@ -206,17 +202,23 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionToBackend(MeetingAction.DELETE_ALL_SPEAKERS_OF_ALL_LISTS, payload);
     }
 
-    public duplicate(...meetings: ViewMeeting[]): Promise<Identifiable[]> {
-        const payload: MeetingAction.ClonePayload[] = meetings.map(meeting => ({ meeting_id: meeting.id }));
-        return this.sendBulkActionToBackend(MeetingAction.CLONE, payload);
+    public duplicate(...meetings: (Partial<Meeting> & Identifiable)[]): Action<Identifiable[]> {
+        const payload: MeetingAction.ClonePayload[] = meetings.map(meeting => ({
+            meeting_id: meeting.id,
+            ...this.getPartialPayload(meeting)
+        }));
+        return this.actions.create({ action: MeetingAction.CLONE, data: payload });
     }
 
-    public duplicateFrom(committeeId: Id, ...meetings: ViewMeeting[] | Id[]): Promise<Identifiable[]> {
-        const payload: MeetingAction.ClonePayload[] = meetings.map((meeting: ViewMeeting | Id) => ({
-            meeting_id: typeof meeting === `number` ? meeting : meeting.id,
-            committee_id: committeeId
+    public duplicateFrom(
+        committeeId: Id,
+        ...meetings: (Partial<Meeting> & { meeting_id: Id })[]
+    ): Action<Identifiable[]> {
+        const payload: MeetingAction.ClonePayload[] = meetings.map(meeting => ({
+            committee_id: committeeId,
+            ...this.getPartialPayload(meeting)
         }));
-        return this.sendBulkActionToBackend(MeetingAction.CLONE, payload);
+        return this.actions.create({ action: MeetingAction.CLONE, data: payload });
     }
 
     public archive(...meetings: ViewMeeting[]): Promise<void> {
@@ -242,6 +244,14 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         const viewModel = super.createViewModel(model);
         viewModel.getProjectorTitle = (projection: Projection) => this.getProjectorTitle(viewModel, projection);
         return viewModel;
+    }
+
+    private getPartialPayload(meeting: any): any {
+        return {
+            ...meeting,
+            start_time: this.anyDateToUnix(meeting.start_time),
+            end_time: this.anyDateToUnix(meeting.end_time)
+        };
     }
 
     /**

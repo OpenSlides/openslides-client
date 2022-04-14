@@ -16,16 +16,25 @@ export interface ImportStep {
     getDescription(): string;
 }
 
+interface ImportStepDescriptorConfig {
+    verboseNameFn?: VerboseNameFn;
+    labelFn?: LabelFn;
+    translateFn?: TranslateFn;
+}
+
 type LabelFn = string | ((phase: ImportStepPhase, plural?: boolean) => string);
 type VerboseNameFn = string | ((plural?: boolean) => string);
+type TranslateFn = (key: string) => string;
 
 export class ImportStepDescriptor {
     private readonly _verboseNameFn: VerboseNameFn;
     private readonly _labelFn: LabelFn;
+    private readonly _translateFn: TranslateFn;
 
-    public constructor({ verboseNameFn, labelFn }: { verboseNameFn?: VerboseNameFn; labelFn?: LabelFn }) {
+    public constructor({ verboseNameFn, labelFn, translateFn }: ImportStepDescriptorConfig) {
         this._verboseNameFn = verboseNameFn;
         this._labelFn = labelFn;
+        this._translateFn = translateFn ?? (key => key);
     }
 
     public getDescription(phase: ImportStepPhase, plural?: boolean): string {

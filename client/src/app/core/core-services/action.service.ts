@@ -40,7 +40,7 @@ export class Action<T = void> extends Promise<T[]> {
         super(resolve => {
             resolveFn = value => (console.log(`Action is resolved`, value), resolve(value));
         });
-        this._actions = actions;
+        this._actions = actions.filter(action => !!action.data?.length);
         this._sendActionFn = sendActionFn;
     }
 

@@ -91,11 +91,6 @@
                     </button>
                 </div>
                 <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
-                <!-- Forward to meeting -->
-                <button mat-menu-item (click)="forwardMotionToMeetings()" *ngIf="perms.isAllowed('manage')">
-                    <mat-icon>forward</mat-icon>
-                    <span>{{ 'Forward' | translate }}</span>
-                </button>
                 <!-- Edit-->
                 <button mat-menu-item (click)="enterEditMotion()" *ngIf="perms.isAllowed('update', motion)">
                     <mat-icon>edit</mat-icon>

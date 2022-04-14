@@ -31,7 +31,7 @@ export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
                 continue;
             }
             if (!this.modelsToCreate.find(entry => entry.name === tag)) {
-                this.modelsToCreate.push({ name: tag });
+                this.modelsToCreate.push({ name: tag } as any);
             }
             result.push({ name: tag });
         }

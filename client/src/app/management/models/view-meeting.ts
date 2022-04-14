@@ -127,6 +127,7 @@ interface IMeetingRelations {
     projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;
+    template_for_organization: ViewOrganization;
     is_active_in_organization: ViewOrganization;
     is_archived_in_organization: ViewOrganization;
 }

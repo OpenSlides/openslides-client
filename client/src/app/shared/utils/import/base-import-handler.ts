@@ -32,6 +32,7 @@ export interface BaseImportHandlerConfig<MainModel = any, SideModel = any> {
      * function.
      */
     transformFn?: TransformFn<MainModel, SideModel>;
+    translateFn?: (key: string) => string;
 }
 
 type TransformFn<MainModel, SideModel> = <K>(sideModels: CsvMapping<SideModel>[], mainModels: MainModel[]) => K[];
@@ -55,7 +56,8 @@ export abstract class BaseImportHandler<MainModel = any, SideModel = any> implem
     public constructor(config: BaseImportHandlerConfig<MainModel, SideModel>) {
         this._importStepDescriptor = new ImportStepDescriptor({
             verboseNameFn: config.verboseNameFn,
-            labelFn: config.labelFn
+            labelFn: config.labelFn,
+            translateFn: config.translateFn
         });
         this._fixedChunkSize = config.fixedChunkSize;
         this._transformFn = config.transformFn ?? (models => models as any);

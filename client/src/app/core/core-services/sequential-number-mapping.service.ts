@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HasMeetingId } from 'app/shared/models/base/has-meeting-id';
 import { HasSequentialNumber, isSequentialNumberHaving } from 'app/shared/models/base/has-sequential-number';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 
@@ -9,7 +10,7 @@ import { BaseRepository } from '../repositories/base-repository';
 import { ActiveMeetingService } from './active-meeting.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate.service';
 import { CollectionMapperService } from './collection-mapper.service';
-import { ROUTING_FIELDSET, SimplifiedModelRequest } from './model-request-builder.service';
+import { SimplifiedModelRequest } from './model-request-builder.service';
 
 const SEQUENTIAL_NUMBER_ID_FIELDS: (keyof ViewMeeting)[] = [
     `motion_ids`,
@@ -23,7 +24,15 @@ const SEQUENTIAL_NUMBER_ID_FIELDS: (keyof ViewMeeting)[] = [
     `list_of_speakers_ids`
 ];
 
+const SEQUENTIAL_NUMBER_REQUIRED_FIELDS = [`sequential_number`, `meeting_id`];
+
 const MODEL_REQUEST_DESCRIPTION = `SequentialNumberMappingService:prepare`;
+
+interface SequentialNumberMappingConfig {
+    collection: Collection;
+    sequentialNumber: number;
+    meetingId: number;
+}
 
 @Injectable({ providedIn: `root` })
 export class SequentialNumberMappingService {
@@ -31,8 +40,9 @@ export class SequentialNumberMappingService {
         return this.activeMeeting.meetingId;
     }
 
-    private _mapSequentialNumberId: { [collection: string]: { [sequential_number: number]: BehaviorSubject<number> } } =
-        {};
+    private _mapSequentialNumberId: {
+        [collection: string]: { [meeting_id_sequential_number: string]: BehaviorSubject<number> };
+    } = {};
 
     private _modelRequestSubscription: ModelSubscription | null = null;
     private _subscriptions: Subscription[] = [];
@@ -53,14 +63,16 @@ export class SequentialNumberMappingService {
         });
     }
 
-    public getIdObservableBySequentialNumber(
-        collection: Collection,
-        sequentialNumber: number
-    ): Observable<Id | undefined> {
-        if (!collection || !sequentialNumber) {
+    public getIdObservableBySequentialNumber({
+        collection,
+        meetingId,
+        sequentialNumber
+    }: SequentialNumberMappingConfig): Observable<Id | undefined> {
+        if (!collection || !meetingId || !sequentialNumber) {
             return of();
         }
-        return this.getBehaviorSubject(collection, sequentialNumber);
+        const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
+        return this.getBehaviorSubject(collection, meetingIdSequentialNumber);
     }
 
     private async prepareSequentialNumberMapping(): Promise<void> {
@@ -76,12 +88,12 @@ export class SequentialNumberMappingService {
 
     private getSequentialNumberRequest(): SimplifiedModelRequest {
         const createRoutingFollow = (idField: keyof ViewMeeting) => {
-            return { idField, fieldset: ROUTING_FIELDSET };
+            return { idField, fieldset: [], additionalFields: SEQUENTIAL_NUMBER_REQUIRED_FIELDS };
         };
         return {
             ids: [this.activeMeetingId],
             viewModelCtor: ViewMeeting,
-            fieldset: ``,
+            fieldset: [],
             follow: SEQUENTIAL_NUMBER_ID_FIELDS.map(idField => createRoutingFollow(idField))
         };
     }
@@ -102,7 +114,7 @@ export class SequentialNumberMappingService {
 
     private doSequentialNumberMapping(
         collection: Collection,
-        viewModels: (BaseViewModel & Partial<HasSequentialNumber>)[]
+        viewModels: (BaseViewModel & HasMeetingId & Partial<HasSequentialNumber>)[]
     ): void {
         if (!this._mapSequentialNumberId[collection]) {
             this._mapSequentialNumberId[collection] = {};
@@ -114,14 +126,18 @@ export class SequentialNumberMappingService {
         }
     }
 
-    private insertViewModelId(viewModel: BaseViewModel & HasSequentialNumber): void {
-        this.getBehaviorSubject(viewModel.collection, viewModel.sequential_number).next(viewModel.id);
+    private insertViewModelId(viewModel: BaseViewModel & HasSequentialNumber & HasMeetingId): void {
+        const meetingIdSequentialNumber = `${viewModel.meeting_id}/${viewModel.sequential_number}`;
+        this.getBehaviorSubject(viewModel.collection, meetingIdSequentialNumber).next(viewModel.id);
     }
 
-    private getBehaviorSubject(collection: Collection, sequentialNumber: number): BehaviorSubject<number> {
-        if (!this._mapSequentialNumberId[collection][sequentialNumber]) {
-            this._mapSequentialNumberId[collection][sequentialNumber] = new BehaviorSubject(null);
+    private getBehaviorSubject(collection: Collection, meetingIdSequentialNumber: string): BehaviorSubject<number> {
+        if (!this._mapSequentialNumberId[collection]) {
+            this._mapSequentialNumberId[collection] = {};
         }
-        return this._mapSequentialNumberId[collection][sequentialNumber];
+        if (!this._mapSequentialNumberId[collection][meetingIdSequentialNumber]) {
+            this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = new BehaviorSubject(null);
+        }
+        return this._mapSequentialNumberId[collection][meetingIdSequentialNumber];
     }
 }

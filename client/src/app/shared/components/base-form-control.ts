@@ -2,6 +2,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
  * Register a custom form control by providing it as NG_VALUE_ACCESSOR:
@@ -63,7 +64,9 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
     }
 
     public ngOnInit(): void {
-        this.subscriptions.push(this.contentForm.valueChanges.subscribe(nextValue => this.push(nextValue)));
+        this.subscriptions.push(
+            this.contentForm.valueChanges.pipe(distinctUntilChanged()).subscribe(nextValue => this.push(nextValue))
+        );
     }
 
     public ngOnDestroy(): void {

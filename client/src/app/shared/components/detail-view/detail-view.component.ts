@@ -50,6 +50,10 @@ export class DetailViewComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.activeMeetingIdService.meetingIdObservable.subscribe(() => this.onMeetingChanged());
+    }
+
+    private onMeetingChanged(): void {
         const subscription = this.route.params.subscribe(params => {
             this.parseSequentialNumber(params);
         });
@@ -63,8 +67,9 @@ export class DetailViewComponent extends BaseComponent implements OnInit {
             this._shouldShowContent = true;
             this.idFound.next(null);
         }
+        const config = { collection: this.collection, sequentialNumber, meetingId: this.activeMeetingId };
         const subscription = this.sequentialNumberMappingService
-            .getIdObservableBySequentialNumber(this.collection, sequentialNumber)
+            .getIdObservableBySequentialNumber(config)
             .subscribe(id => {
                 if (id) {
                     if (this._id !== id) {

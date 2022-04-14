@@ -96,7 +96,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     public tooltipFn: (value: Selectable, source: MatOption) => string | null = () => null;
 
     @Input()
-    public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b) =>
+    public sortFn: false | ((valueA: Selectable, valueB: Selectable) => number) = (a, b) =>
         a && typeof a.getTitle() === `string` ? a.getTitle().localeCompare(b.getTitle()) : 0;
 
     /**
@@ -142,10 +142,11 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
         for (const item of allItems) {
             this._selectableItemsIdMap[item.id] = item;
         }
+        this._selectableItemsList = this.sortFn ? allItems.sort(this.sortFn) : allItems;
     }
 
     protected get selectableItems(): Selectable[] {
-        return Object.values(this._selectableItemsIdMap).sort(this.sortFn);
+        return this._selectableItemsList;
     }
 
     protected noneItem: Selectable = {
@@ -162,6 +163,7 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     private _isFirstUpdate = true;
 
     private _selectableItemsIdMap: { [id: number]: Selectable } = {};
+    private _selectableItemsList: Selectable[] = [];
 
     /**
      * Function to get a list filtered by the entered search value.
@@ -171,6 +173,9 @@ export abstract class BaseSearchValueSelectorComponent extends BaseFormFieldCont
     public getFilteredItemsBySearchValue(): Selectable[] {
         if (!this.selectableItems) {
             return [];
+        }
+        if (!this.searchValueForm.value) {
+            return this.selectableItems;
         }
         const searchValue: string = this.searchValueForm.value.trim().toLowerCase();
         const filteredItems = this.selectableItems.filter(item => {

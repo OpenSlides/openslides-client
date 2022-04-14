@@ -57,7 +57,6 @@ interface ICommitteeRelations {
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
-    template_meeting: ViewMeeting;
     // user_management_levels: (cml: CML) => ViewUser[]; // Not working yet!
 }
 export interface ViewCommittee extends Committee, ICommitteeRelations, HasOrganizationTags {}

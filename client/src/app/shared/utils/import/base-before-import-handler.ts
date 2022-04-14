@@ -8,7 +8,7 @@ export function isBeforeImportHandler(instance: any): instance is BeforeImportHa
 }
 
 export interface BeforeImportHandler<ToCreate = any, ToImport = any> extends SideImportHandler<ToCreate, ToImport> {
-    readonly name: `BeforeImportHandler`;
+    readonly name: typeof BEFORE_IMPORT_HANDLER_NAME;
     doResolve(item: ToCreate, propertyName: string): ImportResolveInformation<ToCreate>;
 }
 

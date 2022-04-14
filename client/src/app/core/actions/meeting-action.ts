@@ -25,15 +25,15 @@ export namespace MeetingAction {
         end_time?: number;
         organization_tag_ids?: Id[];
         url_name?: string;
+
+        // Optional, modified the template_for_committee_id relation
+        set_as_template: boolean;
     }
 
     export interface CreatePayload extends MetaPayload {
         // Required
         committee_id: Id;
         name: string;
-
-        // Optional, modified the template_for_committee_id relation
-        set_as_template: boolean;
 
         // Optional
         user_ids?: Id[];
@@ -42,7 +42,7 @@ export namespace MeetingAction {
     export interface CreateFromTemplatePayload {
         committee_id: Id;
     }
-    export interface UpdatePayload extends OptionalUpdatePayload, Identifiable {}
+    export interface UpdatePayload extends OptionalUpdatePayload, Identifiable, MetaPayload {}
     export interface OptionalUpdatePayload extends MetaPayload {
         welcome_title?: string;
         welcome_text?: UnsafeHtml;

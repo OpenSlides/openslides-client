@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActiveMeetingIdService } from 'app/core/core-services/active-meeting-id.service';
 import { copy } from 'app/core/core-services/key-transforms';
-import { SearchUsersByNameOrEmailPresenterService } from 'app/core/core-services/presenters/search-users-by-name-or-email-presenter.service';
 import { Id } from 'app/core/definitions/key-types';
 import { GroupRepositoryService } from 'app/core/repositories/users/group-repository.service';
 import {
@@ -13,11 +12,11 @@ import { ImportConfig } from 'app/core/ui-services/base-import.service';
 import { CsvExportService } from 'app/core/ui-services/csv-export.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { User } from 'app/shared/models/users/user';
-import { BeforeImportHandler } from 'app/shared/utils/import/base-before-import-handler';
 import { ImportModel } from 'app/shared/utils/import/import-model';
 import { ImportStepPhase } from 'app/shared/utils/import/import-step';
 
 import { ImportServiceCollector } from '../../../core/ui-services/import-service-collector';
+import { UserSearchService } from '../../../core/ui-services/user-search.service';
 import { BaseUserExport } from '../base/base-user-export';
 import { BaseUserImportService } from '../base/base-user-import.service';
 import { userExportExample } from '../export/user-export-example';
@@ -54,22 +53,13 @@ export class UserImportService extends BaseUserImportService {
 
     private _existingUserMap: { [userEmailUsername: string]: Partial<User>[] } = {};
 
-    /**
-     * Constructor. Calls parent and sets the expected header
-     *
-     * @param repo The User repository
-     * @param groupRepo the Group repository
-     * @param translate TranslationService
-     * @param papa csvParser
-     * @param matSnackbar MatSnackBar for displaying error messages
-     */
     public constructor(
         importServiceCollector: ImportServiceCollector,
         repo: UserRepositoryService,
         private groupRepo: GroupRepositoryService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private exporter: CsvExportService,
-        private presenter: SearchUsersByNameOrEmailPresenterService
+        private searchService: UserSearchService
     ) {
         super(importServiceCollector, repo);
 
@@ -93,7 +83,7 @@ export class UserImportService extends BaseUserImportService {
             createFn: async () => [],
             updateFn: models => this.updateUsers(models)
         });
-        this.registerBeforeImportHelper(GROUP_PROPERTY, {
+        this.registerBeforeImportHandler(GROUP_PROPERTY, {
             idProperty: GROUP_PROPERTY,
             repo: this.groupRepo as any
         });
@@ -121,7 +111,7 @@ export class UserImportService extends BaseUserImportService {
     }
 
     protected async onBeforeCreatingImportModels(_entries: User[]): Promise<void> {
-        this._existingUserMap = await this.getDuplicates(_entries);
+        this._existingUserMap = await this.searchService.getDuplicates(_entries);
     }
 
     protected async onCreateImportModel({
@@ -140,16 +130,6 @@ export class UserImportService extends BaseUserImportService {
             !!this.repo.getViewModelList().find(existingUser => existingUser.username === username);
         const status = !hasDuplicates && duplicates.length === 1 ? `merge` : `new`;
         return new ImportModel<User>({ model: newEntry, importTrackId, duplicates, hasDuplicates, status });
-    }
-
-    private async getDuplicates(entries: Partial<User>[]): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
-        const result = await this.presenter.call({
-            searchCriteria: entries.map(entry => {
-                const username = !!entry.username ? entry.username : `${entry.first_name} ${entry.last_name}`;
-                return { username, email: entry.email };
-            })
-        });
-        return result;
     }
 
     private createUsers(users: any[]): Promise<Identifiable[]> {
