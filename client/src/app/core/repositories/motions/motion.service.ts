@@ -25,13 +25,14 @@ export class MotionService {
     ) {}
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
+        const toForward = motions.filter(motion => motion.state?.allow_motion_forwarding);
         const dialogRef = this.dialog.open(MotionForwardDialogComponent, {
             ...mediumDialogSettings
         });
         const toMeetingIds = (await dialogRef.afterClosed().toPromise()) as Id[];
         if (toMeetingIds) {
             try {
-                const forwardMotions = motions.map(motion => this.motionFormatService.formatMotionForForward(motion));
+                const forwardMotions = toForward.map(motion => this.motionFormatService.formatMotionForForward(motion));
                 await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
                 const verboseName =
                     motions.length === 1 ? this.translate.instant(`Motion`) : this.translate.instant(`Motions`);
