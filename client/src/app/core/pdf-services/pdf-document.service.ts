@@ -68,8 +68,6 @@ export class PdfDocumentService {
 
     private pdfWorker: Worker;
 
-    private PDF_PAGE_MARGINS: [number, number, number, number] = [75, 90, 75, 50];
-
     public constructor(
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
@@ -116,6 +114,17 @@ export class PdfDocumentService {
     private getFontName(place: FontPlace): string {
         const url = this.mediaManageService.getFontUrl(place);
         return url.split(`/`).pop();
+    }
+
+    /**
+     * Calculates millimeters in points for pdfmake.
+     *
+     * @param millimeters
+     * @return points
+     */
+    private mmToPoints(mm: number): number {
+        const inches = mm / 25.4;
+        return inches * 72;
     }
 
     /**
@@ -412,14 +421,10 @@ export class PdfDocumentService {
         this.showProgress();
 
         const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
-        const pageMarginLeft =
-            this.meetingSettingsService.instant(`export_pdf_page_margin_left`) + this.PDF_PAGE_MARGINS[0];
-        const pageMarginTop =
-            this.meetingSettingsService.instant(`export_pdf_page_margin_top`) + this.PDF_PAGE_MARGINS[1];
-        const pageMarginRight =
-            this.meetingSettingsService.instant(`export_pdf_page_margin_right`) + this.PDF_PAGE_MARGINS[2];
-        const pageMarginBottom =
-            this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`) + this.PDF_PAGE_MARGINS[3];
+        const pageMarginLeft = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`));
+        const pageMarginTop = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`));
+        const pageMarginRight = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_right`));
+        const pageMarginBottom = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`));
 
         const pageMargins: [number, number, number, number] = [
             pageMarginLeft,

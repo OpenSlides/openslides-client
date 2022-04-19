@@ -131,27 +131,27 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `export_pdf_page_margin_left`,
-                        label: _(`Adjust the page margin left of the PDF in pixels`),
+                        label: _(`Standard page margin left of the PDF in mm`),
                         type: `integer`,
-                        helpText: _(`Default value for A5: -30`)
+                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
                     },
                     {
                         key: `export_pdf_page_margin_top`,
-                        label: _(`Adjust the page margin top of the PDF in pixels`),
+                        label: _(`Standard page margin top of the PDF in mm`),
                         type: `integer`,
-                        helpText: _(`Default value for A5: -60`)
+                        helpText: _(`Default values: A4 = 25mm, A5 = 10mm`)
                     },
                     {
                         key: `export_pdf_page_margin_right`,
-                        label: _(`Adjust the page margin right of the PDF in pixels`),
+                        label: _(`Standard page margin right of the PDF in mm`),
                         type: `integer`,
-                        helpText: _(`Default value for A5: -30`)
+                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
                     },
                     {
                         key: `export_pdf_page_margin_bottom`,
-                        label: _(`Adjust the page margin bottom of the PDF in pixels`),
+                        label: _(`Standard page margin bottom of the PDF in mm`),
                         type: `integer`,
-                        helpText: _(`Default value for A5: -30`)
+                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
                     },
                     {
                         key: `export_pdf_pagesize`,
