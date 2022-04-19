@@ -196,7 +196,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get affectedAmendmentLines(): DiffLinesInParagraph[] | null {
         if (!this._affectedAmendmentLines) {
-            this._affectedAmendmentLines = this.getAmendmentParagraphLines(true);
+            this._affectedAmendmentLines = this.getAmendmentParagraphLines();
         }
         return this._affectedAmendmentLines;
     }
