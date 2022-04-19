@@ -40,8 +40,8 @@ interface DialogResult {
  */
 interface StatePerm {
     name: string;
-    selector: string;
-    type: string;
+    selector: keyof MotionState;
+    type: `input` | `check` | `restrictions` | `color` | `amendment` | `state`;
     reference?: string;
 }
 
@@ -142,7 +142,9 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         { name: `Allow support`, selector: `allow_support`, type: `check` },
         { name: `Allow create poll`, selector: `allow_create_poll`, type: `check` },
         { name: `Allow submitter edit`, selector: `allow_submitter_edit`, type: `check` },
+        { name: `Allow forwarding of motions`, selector: `allow_motion_forwarding`, type: `check` },
         { name: `Set number`, selector: `set_number`, type: `check` },
+        { name: `Set timestamp of creation`, selector: `set_created_timestamp`, type: `check` },
         { name: `Show state extension field`, selector: `show_state_extension_field`, type: `check` },
         {
             name: `Show recommendation extension field`,
@@ -155,17 +157,6 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         { name: `Next states`, selector: `next_states_id`, type: `state` }
     ] as StatePerm[];
 
-    /**
-     * Constructor
-     *
-     * @param title Set the page title
-     * @param translate Handle translations
-     * @param matSnackBar Showing error
-     * @param promptService Promts
-     * @param dialog Opening dialogs
-     * @param workflowRepo The repository for workflows
-     * @param route Read out URL paramters
-     */
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
@@ -173,7 +164,6 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         private dialog: MatDialog,
         private workflowRepo: MotionWorkflowRepositoryService,
         private stateRepo: MotionStateRepositoryService,
-        private route: ActivatedRoute,
         private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);
@@ -242,7 +232,7 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
      * @param state The selected workflow state
      */
     public onClickInputPerm(perm: StatePerm, state: ViewMotionState): void {
-        this.openEditDialog(state[perm.selector], `Edit`, perm.name, false, true).subscribe(result => {
+        this.openEditDialog(state[perm.selector] as string, `Edit`, perm.name, false, true).subscribe(result => {
             if (!result) {
                 return;
             }

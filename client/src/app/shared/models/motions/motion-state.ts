@@ -39,6 +39,8 @@ export class MotionState extends BaseModel<MotionState> {
     public allow_create_poll: boolean;
     public allow_submitter_edit: boolean;
     public set_number: boolean;
+    public set_created_timestamp: boolean;
+    public allow_motion_forwarding: boolean;
     public show_state_extension_field: boolean;
     public merge_amendment_into_final: MergeAmendment;
     public show_recommendation_extension_field: boolean;
