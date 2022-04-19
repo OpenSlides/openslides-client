@@ -117,12 +117,9 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: `export_pdf_fontsize`,
                         label: _(`Standard font size in PDF`),
-                        type: `choice`,
-                        choices: {
-                            10: 10,
-                            11: 11,
-                            12: 12
-                        }
+                        type: `integer`,
+                        validators: [Validators.min(10), Validators.max(12)],
+                        helpText: _(`Available sizes are 10 ,11 and 12.`)
                     },
                     {
                         key: `export_pdf_line_height`,
