@@ -123,25 +123,20 @@ export class CategoryDetailComponent extends BaseModelContextComponent {
         this.subscriptions.push(
             this.repo.getViewModelListObservable().subscribe(categories => {
                 // Extract all sub-categories: The selected one and all child categories
-                const selectedCategoryIndex = categories.findIndex(category => category.id === this._categoryId);
+                const selectedCategory = categories.find(category => category.id === this._categoryId);
 
-                if (selectedCategoryIndex < 0) {
+                if (!selectedCategory) {
                     return;
                 }
 
                 // Find index of last child. This can be easily done by searching, because this
                 // is the flat sorted tree
-                this.selectedCategory = categories[selectedCategoryIndex];
+                this.selectedCategory = selectedCategory;
                 super.setTitle(this.selectedCategory.prefixedName);
 
-                let lastChildIndex: number;
-                for (
-                    lastChildIndex = selectedCategoryIndex + 1;
-                    lastChildIndex < categories.length &&
-                    categories[lastChildIndex].level > this.selectedCategory.level;
-                    lastChildIndex++
-                ) {}
-                this.categories = categories.slice(selectedCategoryIndex, lastChildIndex);
+                this.categories = categories
+                    .filter(category => category.oldestParent.id === this._categoryId)
+                    .sort((a, b) => a.level - b.level);
 
                 // setup datasources:
                 this.categories.forEach(category => {

@@ -152,6 +152,23 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      */
     protected abstract readonly storageKey: string;
 
+    private readonly _defaultCreateFilterPropertiesFn = (
+        viewModels: BaseViewModel[],
+        filterFn?: (model: BaseViewModel) => boolean
+    ) =>
+        viewModels.filter(filterFn ? filterFn : () => true).map((model: HierarchyModel) => ({
+            condition: model.id,
+            label: model.getTitle(),
+            isChild: !!model.parent,
+            children:
+                model.children && model.children.length
+                    ? model.children.map(child => ({
+                          label: child.getTitle(),
+                          condition: child.id
+                      }))
+                    : undefined
+        }));
+
     public constructor(private store: StorageService, private historyService: HistoryService) {}
 
     /**
@@ -290,33 +307,22 @@ export abstract class BaseFilterListService<V extends BaseViewModel> {
      * @param noneOptionLabel The label of the non option, if set
      * @param filterFn custom filter function if required
      */
-    protected updateFilterForRepo({
+    protected updateFilterForRepo<VM extends BaseViewModel & Partial<HierarchyModel>, M extends BaseModel>({
         repo,
         filter,
         noneOptionLabel,
-        filterFn
+        filterFn,
+        createFilterPropertiesFn = viewModels => this._defaultCreateFilterPropertiesFn(viewModels, filterFn)
     }: {
-        repo: BaseRepository<BaseViewModel, BaseModel>;
+        repo: BaseRepository<VM, M>;
         filter: OsFilter<V>;
         noneOptionLabel?: string;
         filterFn?: (filter: BaseViewModel<any>) => boolean;
+        createFilterPropertiesFn?: (viewModels: VM[]) => (OsFilterOption | string)[];
     }): void {
         repo.getViewModelListObservable().subscribe(viewModels => {
             if (viewModels && viewModels.length) {
-                const filterProperties: (OsFilterOption | string)[] = viewModels
-                    .filter(filterFn ? filterFn : () => true)
-                    .map((model: HierarchyModel) => ({
-                        condition: model.id,
-                        label: model.getTitle(),
-                        isChild: !!model.parent,
-                        children:
-                            model.children && model.children.length
-                                ? model.children.map(child => ({
-                                      label: child.getTitle(),
-                                      condition: child.id
-                                  }))
-                                : undefined
-                    }));
+                const filterProperties: (OsFilterOption | string)[] = createFilterPropertiesFn(viewModels);
 
                 if (noneOptionLabel) {
                     filterProperties.push(`-`);
