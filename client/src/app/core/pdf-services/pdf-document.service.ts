@@ -68,6 +68,8 @@ export class PdfDocumentService {
 
     private pdfWorker: Worker;
 
+    private PDF_PAGE_MARGINS: [number, number, number, number] = [75, 90, 75, 50];
+
     public constructor(
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
@@ -144,9 +146,9 @@ export class PdfDocumentService {
                 font: `PdfFont`,
                 fontSize: this.meetingSettingsService.instant(`export_pdf_fontsize`)
             },
-            header: this.getHeader(landscape ? [pageMargins[0], pageMargins[2]] : null),
+            header: this.getHeader([pageMargins[0], pageMargins[2]]),
             // real footer gets created in the worker
-            tmpfooter: this.getFooter(landscape ? [pageMargins[0], pageMargins[2]] : null, exportInfo),
+            tmpfooter: this.getFooter([pageMargins[0], pageMargins[2]], exportInfo),
             info: metadata,
             content: documentContent,
             styles: this.getStandardPaperStyles()
@@ -227,7 +229,7 @@ export class PdfDocumentService {
      * @param lrMargin optional margin overrides
      * @returns an object that contains the necessary header definition
      */
-    private getHeader(lrMargin?: [number, number]): object {
+    private getHeader(lrMargin: [number, number]): object {
         // check for the required logos
         let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
         let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
@@ -277,7 +279,7 @@ export class PdfDocumentService {
             });
             this.imageUrls.push(logoHeaderRightUrl);
         }
-        const margin = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
+        const margin = [lrMargin[0], 30, lrMargin[1], 10];
         // pdfmake order: [left, top, right, bottom]
 
         return {
@@ -410,10 +412,14 @@ export class PdfDocumentService {
         this.showProgress();
 
         const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
-        const pageMarginLeft = this.meetingSettingsService.instant(`export_pdf_page_margin_left`);
-        const pageMarginTop = this.meetingSettingsService.instant(`export_pdf_page_margin_top`);
-        const pageMarginRight = this.meetingSettingsService.instant(`export_pdf_page_margin_right`);
-        const pageMarginBottom = this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`);
+        const pageMarginLeft =
+            this.meetingSettingsService.instant(`export_pdf_page_margin_left`) + this.PDF_PAGE_MARGINS[0];
+        const pageMarginTop =
+            this.meetingSettingsService.instant(`export_pdf_page_margin_top`) + this.PDF_PAGE_MARGINS[1];
+        const pageMarginRight =
+            this.meetingSettingsService.instant(`export_pdf_page_margin_right`) + this.PDF_PAGE_MARGINS[2];
+        const pageMarginBottom =
+            this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`) + this.PDF_PAGE_MARGINS[3];
 
         const pageMargins: [number, number, number, number] = [
             pageMarginLeft,
