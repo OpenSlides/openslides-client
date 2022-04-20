@@ -13,7 +13,7 @@ import {
     LineNumberingMode,
     PERSONAL_NOTE_ID
 } from 'app/site/motions/motions.constants';
-import { motionImportExportHeaderOrder, noMetaData } from 'app/site/motions/motions.constants';
+import { motionImportExportHeaderOrder, noMetaData, PDF_OPTIONS } from 'app/site/motions/motions.constants';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
 import { BehaviorSubject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
@@ -101,6 +101,12 @@ export class MotionExportDialogComponent implements OnInit {
     public speakersButton: MatButtonToggle;
 
     /**
+     * To deactivate the toc button.
+     */
+    @ViewChild(`toc`, { static: true })
+    public tocButton: MatButtonToggle;
+
+    /**
      * Constructor
      * Sets the default values for the lineNumberingMode and changeRecoMode and creates the form.
      * This uses "instant" over observables to prevent on-fly-changes by auto update while
@@ -141,6 +147,7 @@ export class MotionExportDialogComponent implements OnInit {
         });
 
         this.exportForm.get(`format`).valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value));
+        this.exportForm.get(`pdfOptions`).valueChanges.subscribe((value: string[]) => this.onPdfOptionsChange(value));
     }
 
     /**
@@ -176,6 +183,18 @@ export class MotionExportDialogComponent implements OnInit {
             this.enableControl(`crMode`);
             this.enableControl(`pdfOptions`);
             this.votingResultButton.disabled = false;
+        }
+    }
+
+    /**
+     * React to changes on the content selection
+     * @param pdfOptions
+     */
+    private onPdfOptionsChange(pdfOptions: string[]): void {
+        if (pdfOptions && pdfOptions.includes(PDF_OPTIONS.ContinuousText)) {
+            this.tocButton.disabled = true;
+        } else {
+            this.tocButton.disabled = false;
         }
     }
 

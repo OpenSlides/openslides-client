@@ -34,7 +34,7 @@ export class MotionPdfExportService {
      * @param crMode the desired change recomendation mode
      */
     public exportSingleMotion(motion: ViewMotion, exportInfo?: MotionExportInfo): void {
-        const doc = this.motionPdfService.motionToDocDef(motion, exportInfo);
+        const doc = this.motionPdfService.motionToDocDef({ motion: motion, exportInfo: exportInfo });
         const filename = `${this.translate.instant(`Motion`)} ${motion.numberOrTitle}`;
         const metadata = {
             title: filename

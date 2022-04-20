@@ -17,6 +17,17 @@ export enum ExportFileFormat {
 export const PERSONAL_NOTE_ID = -1;
 
 /**
+ * String String from the PDF option `flowText`
+ */
+export const PDF_OPTIONS = {
+    Toc: `toc`,
+    Page: `page`,
+    Date: `date`,
+    AddBreaks: `addBreaks`,
+    ContinuousText: `continuousText`
+};
+
+/**
  * Type declaring which strings are valid options for metainfos to be exported into a pdf
  */
 export type InfoToExport =

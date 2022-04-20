@@ -30,6 +30,12 @@ interface CreateTextData {
     lineHeight: number;
 }
 
+interface MotionToDocDefData {
+    motion: ViewMotion;
+    exportInfo?: MotionExportInfo;
+    continuousText?: boolean;
+}
+
 /**
  * Converts a motion to pdf. Can be used from the motion detail view or executed on a list of motions
  * Provides the public method `motionToDocDef(motion: Motion)` which should be convenient to use.
@@ -79,12 +85,13 @@ export class MotionPdfService {
      *                         this selection will be ignored and all comments exported
      * @returns doc def for the motion
      */
-    public motionToDocDef(motion: ViewMotion, exportInfo?: MotionExportInfo): object {
-        let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
-        let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
-        const infoToExport = exportInfo ? exportInfo.metaInfo : null;
-        const contentToExport = exportInfo ? exportInfo.content : null;
-        let commentsToExport = exportInfo ? exportInfo.comments : null;
+    public motionToDocDef(data: MotionToDocDefData): object {
+        let lnMode = data.exportInfo && data.exportInfo.lnMode ? data.exportInfo.lnMode : null;
+        let crMode = data.exportInfo && data.exportInfo.crMode ? data.exportInfo.crMode : null;
+        const infoToExport = data.exportInfo ? data.exportInfo.metaInfo : null;
+        const contentToExport = data.exportInfo ? data.exportInfo.content : null;
+        let commentsToExport = data.exportInfo ? data.exportInfo.comments : null;
+        const continuousText = data.continuousText ? data.continuousText : false;
 
         // get the line length from the config
         const lineLength = this.meetingSettingsService.instant(`motions_line_length`);
@@ -96,7 +103,7 @@ export class MotionPdfService {
         let motionPdfContent = [];
 
         // Enforces that statutes should always have Diff Mode and no line numbers
-        if (motion.isStatuteAmendment()) {
+        if (data.motion.isStatuteAmendment()) {
             lnMode = LineNumberingMode.None;
             crMode = ChangeRecoMode.Diff;
         }
@@ -111,16 +118,18 @@ export class MotionPdfService {
             crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
         }
 
-        const title = this.createTitle(motion, crMode, lineLength);
-        const sequential =
-            infoToExport?.includes(`id`) ?? this.meetingSettingsService.instant(`motions_show_sequential_number`);
-        const subtitle = this.createSubtitle(motion, sequential);
+        if (!continuousText) {
+            const title = this.createTitle(data.motion, crMode, lineLength);
+            const sequential =
+                infoToExport?.includes(`id`) ?? this.meetingSettingsService.instant(`motions_show_sequential_number`);
+            const subtitle = this.createSubtitle(data.motion, sequential);
 
-        motionPdfContent = [title, subtitle];
+            motionPdfContent = [title, subtitle];
+        }
 
-        if ((infoToExport && infoToExport.length > 0) || !infoToExport) {
+        if (((infoToExport && infoToExport.length > 0) || !infoToExport) && !continuousText) {
             const metaInfo = this.createMetaInfoTable(
-                motion,
+                data.motion,
                 lineLength,
                 crMode,
                 infoToExport,
@@ -130,13 +139,14 @@ export class MotionPdfService {
         }
 
         if (!contentToExport || contentToExport.includes(`text`)) {
-            if (motion.showPreamble) {
-                const preamble = this.createPreamble(motion);
+            if (data.motion.showPreamble && !continuousText) {
+                const preamble = this.createPreamble(data.motion);
                 motionPdfContent.push(preamble);
             }
             const lineHeight = this.meetingSettingsService.instant(`export_pdf_line_height`);
+
             const text = this.createText({
-                motion: motion,
+                motion: data.motion,
                 lineLength: lineLength,
                 lnMode: lnMode,
                 crMode: crMode,
@@ -146,7 +156,7 @@ export class MotionPdfService {
         }
 
         if (!contentToExport || contentToExport.includes(`reason`)) {
-            const reason = this.createReason(motion);
+            const reason = this.createReason(data.motion);
             motionPdfContent.push(reason);
         }
 
@@ -154,7 +164,7 @@ export class MotionPdfService {
             commentsToExport = this.commentRepo.getViewModelList().map(vm => vm.id);
         }
         if (commentsToExport) {
-            motionPdfContent.push(this.createComments(motion, commentsToExport));
+            motionPdfContent.push(this.createComments(data.motion, commentsToExport));
         }
 
         return motionPdfContent;
