@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { ViewMotion } from '../models/view-motion';
 import { ViewMotionCategory } from '../models/view-motion-category';
+import { PDF_OPTIONS } from '../motions.constants';
 import { MotionExportInfo } from './motion-export.service';
 import { MotionPdfService } from './motion-pdf.service';
 
@@ -53,20 +54,20 @@ export class MotionPdfCatalogService {
         const motionDocList = [];
         const printToc = exportInfo.pdfOptions.includes(`toc`);
         const enforcePageBreaks = exportInfo.pdfOptions.includes(`addBreaks`);
-        const contentFlowText = exportInfo.content.includes(`flowText`);
+        const hasContinuousText = exportInfo.pdfOptions.includes(PDF_OPTIONS.ContinuousText);
 
         for (let motionIndex = 0; motionIndex < motions.length; ++motionIndex) {
-            let flowText = contentFlowText;
-            try {
-                if (motionIndex === 0) {
-                    flowText = false;
-                }
+            let continuousText = hasContinuousText;
+            if (motionIndex === 0) {
+                continuousText = false;
+            }
 
-                const motionDocDef: any = this.motionPdfService.motionToDocDef(
-                    motions[motionIndex],
-                    exportInfo,
-                    flowText
-                );
+            try {
+                const motionDocDef: any = this.motionPdfService.motionToDocDef({
+                    motion: motions[motionIndex],
+                    exportInfo: exportInfo,
+                    continuousText: continuousText
+                });
 
                 // add id field to the first page of a motion to make it findable over TOC
                 motionDocDef[0].id = `${motions[motionIndex].id}`;
@@ -89,7 +90,7 @@ export class MotionPdfCatalogService {
 
         // print extra data (title, preamble, categories, toc) only if there are more than 1 motion
         // and if not flow text.
-        if (motions.length > 1 && (!exportInfo.pdfOptions || printToc) && !contentFlowText) {
+        if (motions.length > 1 && (!exportInfo.pdfOptions || printToc) && !hasContinuousText) {
             doc.push(
                 this.pdfService.createTitle(this.meetingSettingsService.instant(`motions_export_title`)),
                 this.pdfService.createPreamble(this.meetingSettingsService.instant(`motions_export_preamble`)),

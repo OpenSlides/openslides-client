@@ -13,7 +13,7 @@ import {
     LineNumberingMode,
     PERSONAL_NOTE_ID
 } from 'app/site/motions/motions.constants';
-import { motionImportExportHeaderOrder, noMetaData } from 'app/site/motions/motions.constants';
+import { motionImportExportHeaderOrder, noMetaData, PDF_OPTIONS } from 'app/site/motions/motions.constants';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
 import { BehaviorSubject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
@@ -147,7 +147,7 @@ export class MotionExportDialogComponent implements OnInit {
         });
 
         this.exportForm.get(`format`).valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value));
-        this.exportForm.get(`content`).valueChanges.subscribe((value: string[]) => this.onContentChange(value));
+        this.exportForm.get(`pdfOptions`).valueChanges.subscribe((value: string[]) => this.onPdfOptionsChange(value));
     }
 
     /**
@@ -188,10 +188,10 @@ export class MotionExportDialogComponent implements OnInit {
 
     /**
      * React to changes on the content selection
-     * @param format
+     * @param pdfOptions
      */
-    private onContentChange(content: string[]): void {
-        if (content && content.includes(`flowText`)) {
+    private onPdfOptionsChange(pdfOptions: string[]): void {
+        if (pdfOptions && pdfOptions.includes(PDF_OPTIONS.ContinuousText)) {
             this.tocButton.disabled = true;
         } else {
             this.tocButton.disabled = false;
