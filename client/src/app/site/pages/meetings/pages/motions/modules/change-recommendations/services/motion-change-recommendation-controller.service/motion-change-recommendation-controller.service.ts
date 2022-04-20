@@ -150,7 +150,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
 
         const changeReco: any = {};
         changeReco.line_from = lineRange.from;
-        changeReco.line_to = lineRange.to;
+        changeReco.line_to = lineRange.to - 1;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
         changeReco.text = this.diffService.extractMotionLineRange(motionText, lineRange, false, lineLength);
         changeReco.rejected = false;
@@ -185,7 +185,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
 
         const changeReco: any = {};
         changeReco.line_from = lineRange.from;
-        changeReco.line_to = lineRange.to;
+        changeReco.line_to = lineRange.to - 1;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
         changeReco.rejected = false;
         changeReco.motion_id = amendment.id;
