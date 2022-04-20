@@ -341,7 +341,8 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
                         fieldset: `title`
                     },
                     {
-                        idField: `motion_category_ids`
+                        idField: `motion_category_ids`,
+                        additionalFields: [`parent_id`, `child_ids`]
                     },
                     {
                         idField: `motion_workflow_ids`

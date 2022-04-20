@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
+import { TreeService } from 'app/core/ui-services/tree.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
 import { MotionBlock } from 'app/shared/models/motions/motion-block';
 import { Tag } from 'app/shared/models/tag/tag';
@@ -10,6 +11,7 @@ import { ViewMotionState } from 'app/site/motions/models/view-motion-state';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
 import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { MotionServiceCollectorService } from '../../../services/motion-service-collector.service';
 import { BaseMotionDetailChildComponent } from '../base/base-motion-detail-child.component';
@@ -94,7 +96,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
-        public perms: PermissionsService
+        public perms: PermissionsService,
+        private treeService: TreeService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
     }
@@ -230,7 +233,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return [
             this.repo.getAmendmentsByMotionAsObservable(this.motion.id).subscribe(value => (this.amendments = value)),
             this.tagRepo.getViewModelListObservable().subscribe(value => (this.tags = value)),
-            this.categoryRepo.getViewModelListObservable().subscribe(value => (this.categories = value)),
+            this.categoryRepo
+                .getViewModelListObservable()
+                .pipe(map(categories => this.treeService.makeFlatTree(categories, `weight`, `parent_id`)))
+                .subscribe(value => (this.categories = value)),
             this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
             this.motionService
                 .getRecommendationReferencingMotions(this.motion?.id)

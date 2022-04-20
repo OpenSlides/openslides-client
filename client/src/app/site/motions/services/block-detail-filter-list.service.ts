@@ -9,6 +9,7 @@ import { MotionCommentSectionRepositoryService } from 'app/core/repositories/mot
 import { MotionWorkflowRepositoryService } from 'app/core/repositories/motions/motion-workflow-repository.service';
 import { TagRepositoryService } from 'app/core/repositories/tags/tag-repository.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { TreeService } from 'app/core/ui-services/tree.service';
 
 import { ViewMotion } from '../models/view-motion';
 import { MotionFilterListService } from './motion-filter-list.service';
@@ -39,6 +40,7 @@ export class BlockDetailFilterListService extends MotionFilterListService {
         motionBlockRepo: MotionBlockRepositoryService,
         commentRepo: MotionCommentSectionRepositoryService,
         tagRepo: TagRepositoryService,
+        treeService: TreeService,
         workflowRepo: MotionWorkflowRepositoryService,
         translate: TranslateService,
         operator: OperatorService,
@@ -51,6 +53,7 @@ export class BlockDetailFilterListService extends MotionFilterListService {
             motionBlockRepo,
             commentRepo,
             tagRepo,
+            treeService,
             workflowRepo,
             translate,
             operator,

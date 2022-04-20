@@ -18,6 +18,7 @@ import {
     OsFilterOptions
 } from 'app/core/ui-services/base-filter-list.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
+import { TreeService } from 'app/core/ui-services/tree.service';
 import { Restriction } from 'app/shared/models/motions/motion-state';
 
 import { ViewMotion } from '../models/view-motion';
@@ -163,6 +164,7 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         motionBlockRepo: MotionBlockRepositoryService,
         commentRepo: MotionCommentSectionRepositoryService,
         tagRepo: TagRepositoryService,
+        treeService: TreeService,
         private workflowRepo: MotionWorkflowRepositoryService,
         private translate: TranslateService,
         private operator: OperatorService,
@@ -175,7 +177,18 @@ export class MotionFilterListService extends BaseFilterListService<ViewMotion> {
         this.updateFilterForRepo({
             repo: categoryRepo,
             filter: this.categoryFilterOptions,
-            noneOptionLabel: this.translate.instant(`No category set`)
+            noneOptionLabel: this.translate.instant(`No category set`),
+            createFilterPropertiesFn: viewModels => {
+                const flatTree = treeService.makeFlatTree(viewModels, `weight`, `parent_id`);
+                return flatTree.map(model => ({
+                    condition: model.id,
+                    label: model.getTitle(),
+                    isChild: !!model.parent,
+                    children: model.children?.length
+                        ? model.children.map(child => ({ label: child.getTitle(), condition: child.id }))
+                        : undefined
+                }));
+            }
         });
 
         this.updateFilterForRepo({
