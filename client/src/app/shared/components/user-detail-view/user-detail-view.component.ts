@@ -83,7 +83,19 @@ export class UserDetailViewComponent extends BaseComponent {
     public generatePasswordFn: () => string;
 
     @Input()
-    public shouldEnableFormControlFn: (controlName: string) => boolean = () => true;
+    public set shouldEnableFormControlFn(fn: (controlName: string) => boolean) {
+        const fnChanged =
+            JSON.stringify(this._lastFormControlsCheck) !== JSON.stringify(this.getNextFormControlsCheck(fn));
+        if (this.isEditing && fnChanged) {
+            this._lastFormControlsCheck = this.getNextFormControlsCheck(fn);
+            this.updateFormControlsAccessibility(fn);
+            this._shouldEnableFormControlFn = fn;
+        }
+    }
+
+    public get shouldEnableFormControlFn(): (controlName: string) => boolean {
+        return this._shouldEnableFormControlFn;
+    }
 
     @Output()
     public changeEvent = new EventEmitter();
@@ -113,10 +125,17 @@ export class UserDetailViewComponent extends BaseComponent {
     private _hasChanges = false;
     private _initialStateString: string | null = null;
 
+    /**
+     * Holds a custom check to identify if an update should be triggered
+     */
+    private _lastFormControlsCheck: { [controlName: string]: boolean } = {};
+
     private _user: ViewUser;
     private _additionalValidators: ValidatorFn[] = [];
     private _additionalFormControls: any = {};
     private _formValueChangeSubscription: Subscription | null = null;
+
+    private _shouldEnableFormControlFn: (controlName: string) => boolean = () => true;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollector,
@@ -125,7 +144,11 @@ export class UserDetailViewComponent extends BaseComponent {
         private fb: FormBuilder
     ) {
         super(componentServiceCollector, translate);
-        this.subscriptions.push(operator.operatorUpdatedEvent.subscribe(() => this.updateFormControlsAccessibility()));
+        this.subscriptions.push(
+            operator.operatorUpdatedEvent.subscribe(() =>
+                this.updateFormControlsAccessibility(this.shouldEnableFormControlFn)
+            )
+        );
     }
 
     public isAllowed(permission: string): boolean {
@@ -153,7 +176,7 @@ export class UserDetailViewComponent extends BaseComponent {
 
     private enterEditMode(): void {
         this.prepareForm();
-        this.updateFormControlsAccessibility();
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
         if (this.user) {
             this.patchFormValues();
         }
@@ -201,10 +224,16 @@ export class UserDetailViewComponent extends BaseComponent {
         return patchValue;
     }
 
+    private getNextFormControlsCheck(fn: (controlName: string) => boolean): { [controlName: string]: boolean } {
+        return Object.keys(this.personalInfoForm.controls).mapToObject(controlName => ({
+            [controlName]: fn(controlName)
+        }));
+    }
+
     /**
      * Makes the form editable
      */
-    private updateFormControlsAccessibility(): void {
+    private updateFormControlsAccessibility(fn: (controlName: string) => boolean): void {
         const formControlNames = Object.keys(this.personalInfoForm.controls);
 
         // Enable all controls.
@@ -214,7 +243,8 @@ export class UserDetailViewComponent extends BaseComponent {
 
         // Disable not permitted controls
         formControlNames.forEach(formControlName => {
-            if (!this.shouldEnableFormControlFn(formControlName)) {
+            this._lastFormControlsCheck[formControlName] = fn(formControlName);
+            if (!this._lastFormControlsCheck[formControlName]) {
                 this.personalInfoForm.get(formControlName).disable();
             }
         });
@@ -252,7 +282,7 @@ export class UserDetailViewComponent extends BaseComponent {
         setTimeout(() => {
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
             this.changeEvent.emit(this.personalInfoForm.value);
-            this.validEvent.emit(this.personalInfoForm.valid && this._hasChanges);
+            this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser || this._hasChanges));
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
     }

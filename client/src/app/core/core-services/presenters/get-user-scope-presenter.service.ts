@@ -13,11 +13,13 @@ interface PresenterPayload {
     user_ids: Id[];
 }
 
+interface GetUserScopeIdentifiedScope {
+    collection: UserScope;
+    id: Id;
+}
+
 interface GetUserScopePresenterResult {
-    [user_id: number]: {
-        collection: UserScope;
-        id: Id;
-    };
+    [user_id: number]: GetUserScopeIdentifiedScope;
 }
 
 @Injectable({ providedIn: `root` })
@@ -36,15 +38,15 @@ export class GetUserScopePresenterService {
      * @param toCompare A scope to compare with the first scope
      * @returns The result of the comparison
      */
-    public compareScope(scope: UserScope, toCompare: UserScope): number {
-        if (scope === toCompare) {
+    public compareScope(scope: GetUserScopeIdentifiedScope, toCompare: GetUserScopeIdentifiedScope): number {
+        if (scope.collection === toCompare.collection && scope.id === toCompare.id) {
             return 0;
         }
-        if (scope === UserScope.ORGANIZATION) {
+        if (scope.collection === UserScope.ORGANIZATION) {
             return 1;
         }
-        if (scope === UserScope.COMMITTEE) {
-            return toCompare === UserScope.ORGANIZATION ? -1 : 1;
+        if (scope.collection === UserScope.COMMITTEE && toCompare.collection === UserScope.MEETING) {
+            return 1;
         }
         return -1;
     }
