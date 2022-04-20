@@ -105,7 +105,7 @@ export class GroupRepositoryService
         const payload: GroupAction.SetPermissionPayload = {
             id: group.id,
             permission,
-            set: !group.permissions.includes(permission)
+            set: !group.hasPermission(permission)
         };
         return this.sendActionToBackend(GroupAction.SET_PERMISSION, payload);
     }
