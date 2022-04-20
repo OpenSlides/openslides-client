@@ -53,10 +53,20 @@ export class MotionPdfCatalogService {
         const motionDocList = [];
         const printToc = exportInfo.pdfOptions.includes(`toc`);
         const enforcePageBreaks = exportInfo.pdfOptions.includes(`addBreaks`);
+        const contentFlowText = exportInfo.content.includes(`flowText`);
 
         for (let motionIndex = 0; motionIndex < motions.length; ++motionIndex) {
+            let flowText = contentFlowText;
             try {
-                const motionDocDef: any = this.motionPdfService.motionToDocDef(motions[motionIndex], exportInfo);
+                if (motionIndex === 0) {
+                    flowText = false;
+                }
+
+                const motionDocDef: any = this.motionPdfService.motionToDocDef(
+                    motions[motionIndex],
+                    exportInfo,
+                    flowText
+                );
 
                 // add id field to the first page of a motion to make it findable over TOC
                 motionDocDef[0].id = `${motions[motionIndex].id}`;
@@ -78,7 +88,8 @@ export class MotionPdfCatalogService {
         }
 
         // print extra data (title, preamble, categories, toc) only if there are more than 1 motion
-        if (motions.length > 1 && (!exportInfo.pdfOptions || printToc)) {
+        // and if not flow text.
+        if (motions.length > 1 && (!exportInfo.pdfOptions || printToc) && !contentFlowText) {
             doc.push(
                 this.pdfService.createTitle(this.meetingSettingsService.instant(`motions_export_title`)),
                 this.pdfService.createPreamble(this.meetingSettingsService.instant(`motions_export_preamble`)),

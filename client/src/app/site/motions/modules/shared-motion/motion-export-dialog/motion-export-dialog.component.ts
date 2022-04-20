@@ -101,6 +101,12 @@ export class MotionExportDialogComponent implements OnInit {
     public speakersButton: MatButtonToggle;
 
     /**
+     * To deactivate the toc button.
+     */
+    @ViewChild(`toc`, { static: true })
+    public tocButton: MatButtonToggle;
+
+    /**
      * Constructor
      * Sets the default values for the lineNumberingMode and changeRecoMode and creates the form.
      * This uses "instant" over observables to prevent on-fly-changes by auto update while
@@ -141,6 +147,7 @@ export class MotionExportDialogComponent implements OnInit {
         });
 
         this.exportForm.get(`format`).valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value));
+        this.exportForm.get(`content`).valueChanges.subscribe((value: string[]) => this.onContentChange(value));
     }
 
     /**
@@ -176,6 +183,18 @@ export class MotionExportDialogComponent implements OnInit {
             this.enableControl(`crMode`);
             this.enableControl(`pdfOptions`);
             this.votingResultButton.disabled = false;
+        }
+    }
+
+    /**
+     * React to changes on the content selection
+     * @param format
+     */
+    private onContentChange(content: string[]): void {
+        if (content && content.includes(`flowText`)) {
+            this.tocButton.disabled = true;
+        } else {
+            this.tocButton.disabled = false;
         }
     }
 

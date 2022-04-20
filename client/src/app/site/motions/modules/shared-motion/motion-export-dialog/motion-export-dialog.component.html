@@ -51,6 +51,9 @@
                 <mat-button-toggle value="reason">
                     <span>{{ 'Reason' | translate }}</span>
                 </mat-button-toggle>
+                <mat-button-toggle value="flowText">
+                    <span>{{ 'Flow text' | translate }}</span>
+                </mat-button-toggle>
             </mat-button-toggle-group>
         </div>
 
@@ -71,7 +74,7 @@
         <div>
             <p class="toggle-group-head">{{ 'PDF options' | translate }}</p>
             <mat-button-toggle-group class="smaller-buttons" multiple formControlName="pdfOptions">
-                <mat-button-toggle value="toc">
+                <mat-button-toggle value="toc" #toc>
                     <span>{{ 'Table of contents' | translate }}</span>
                 </mat-button-toggle>
                 <mat-button-toggle value="page">

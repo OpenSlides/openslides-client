@@ -79,7 +79,7 @@ export class MotionPdfService {
      *                         this selection will be ignored and all comments exported
      * @returns doc def for the motion
      */
-    public motionToDocDef(motion: ViewMotion, exportInfo?: MotionExportInfo): object {
+    public motionToDocDef(motion: ViewMotion, exportInfo?: MotionExportInfo, flowText: boolean = false): object {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
         let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
         const infoToExport = exportInfo ? exportInfo.metaInfo : null;
@@ -111,14 +111,18 @@ export class MotionPdfService {
             crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`);
         }
 
-        const title = this.createTitle(motion, crMode, lineLength);
-        const sequential =
-            infoToExport?.includes(`id`) ?? this.meetingSettingsService.instant(`motions_show_sequential_number`);
-        const subtitle = this.createSubtitle(motion, sequential);
+        if (!flowText) {
+            const title = this.createTitle(motion, crMode, lineLength);
+            const sequential =
+                infoToExport?.includes(`id`) ?? this.meetingSettingsService.instant(`motions_show_sequential_number`);
+            const subtitle = this.createSubtitle(motion, sequential);
 
-        motionPdfContent = [title, subtitle];
+            motionPdfContent = [title, subtitle];
+        } else {
+            motionPdfContent = [];
+        }
 
-        if ((infoToExport && infoToExport.length > 0) || !infoToExport) {
+        if (((infoToExport && infoToExport.length > 0) || !infoToExport) && !flowText) {
             const metaInfo = this.createMetaInfoTable(
                 motion,
                 lineLength,
@@ -130,7 +134,7 @@ export class MotionPdfService {
         }
 
         if (!contentToExport || contentToExport.includes(`text`)) {
-            if (motion.showPreamble) {
+            if (motion.showPreamble && !flowText) {
                 const preamble = this.createPreamble(motion);
                 motionPdfContent.push(preamble);
             }
