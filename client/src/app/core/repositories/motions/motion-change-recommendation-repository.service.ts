@@ -147,7 +147,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
 
         const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = lineRange.from;
-        changeReco.line_to = lineRange.to;
+        changeReco.line_to = lineRange.to - 1;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
         changeReco.text = this.diffService.extractMotionLineRange(motionText, lineRange, false, lineLength, null);
         changeReco.rejected = false;
@@ -183,7 +183,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
 
         const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = lineRange.from;
-        changeReco.line_to = lineRange.to;
+        changeReco.line_to = lineRange.to - 1;
         changeReco.type = ModificationType.TYPE_REPLACEMENT;
         changeReco.rejected = false;
         changeReco.motion_id = amendment.id;

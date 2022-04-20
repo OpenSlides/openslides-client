@@ -77,6 +77,7 @@ export abstract class BaseChangeRecommendationDialogComponent<
         await this.repo.create({
             ...this.changeReco,
             ...this.contentForm.value,
+            line_to: this.changeReco.line_to,
             internal: !this.contentForm.value.public
         });
     }

@@ -113,7 +113,7 @@ export interface LineRange {
     /**
      * The end line number.
      * HINT: As this object is usually referring to actual line numbers, not lines,
-     * the line starting by `to` is not included in the extracted content anymore,
+     * the line starting by `to` is included in the extracted content anymore,
      * only the text between `from` and `to`.
      */
     to: number;

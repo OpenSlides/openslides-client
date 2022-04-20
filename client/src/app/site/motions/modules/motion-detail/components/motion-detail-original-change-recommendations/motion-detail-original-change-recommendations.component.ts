@@ -57,9 +57,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
 
     @Output()
-    public gotoChangeRecommendation: EventEmitter<ViewMotionChangeRecommendation> = new EventEmitter<
-        ViewMotionChangeRecommendation
-    >(); // prettier-ignore
+    public gotoChangeRecommendation = new EventEmitter<ViewMotionChangeRecommendation>();
 
     @Input()
     public html: string;
