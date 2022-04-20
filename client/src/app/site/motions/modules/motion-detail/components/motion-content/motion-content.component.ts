@@ -278,7 +278,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             data.changeRecommendation = this.changeRecoRepo.createMotionChangeRecommendationTemplate(
                 this.motion,
                 lineRange,
-                this.lineLength
+                this.lineLength,
+                this.motion.start_line_number ?? 1
             );
         }
         this.dialogService.open(MotionChangeRecommendationDialogComponent, {

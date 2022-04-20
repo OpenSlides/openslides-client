@@ -137,13 +137,15 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
      * @param {ViewMotion} motion
      * @param {LineRange} lineRange
      * @param {number} lineLength
+     * @param {number} firstLine
      */
     public createMotionChangeRecommendationTemplate(
         motion: ViewMotion,
         lineRange: LineRange,
-        lineLength: number
+        lineLength: number,
+        firstLine: number
     ): Partial<MotionChangeRecommendationAction.CreatePayload> {
-        const motionText = this.lineNumbering.insertLineNumbers({ html: motion.text, lineLength });
+        const motionText = this.lineNumbering.insertLineNumbers({ html: motion.text, lineLength, firstLine });
 
         const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = lineRange.from;
