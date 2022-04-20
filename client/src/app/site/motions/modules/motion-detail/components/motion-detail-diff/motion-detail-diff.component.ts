@@ -149,7 +149,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
                 return ``;
             }
         } else {
-            baseText = this.lineNumbering.insertLineNumbers(this.motion.text, this.lineLength);
+            baseText = this.lineNumbering.insertLineNumbers({ html: this.motion.text, lineLength: this.lineLength });
         }
 
         return this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine);
@@ -176,7 +176,7 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
         } else {
             motionHtml = this.motion.text;
         }
-        const baseHtml = this.lineNumbering.insertLineNumbers(motionHtml, this.lineLength);
+        const baseHtml = this.lineNumbering.insertLineNumbers({ html: motionHtml, lineLength: this.lineLength });
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }
 
@@ -198,7 +198,11 @@ export class MotionDetailDiffComponent extends BaseComponent implements AfterVie
                 return ``;
             }
         } else {
-            baseText = this.lineNumbering.insertLineNumbers(this.motion.text, this.lineLength);
+            baseText = this.lineNumbering.insertLineNumbers({
+                html: this.motion.text,
+                lineLength: this.lineLength,
+                firstLine: this.motion.start_line_number
+            });
         }
         return this.diff.getTextRemainderAfterLastChange(baseText, this.changes, this.lineLength, this.highlightedLine);
     }

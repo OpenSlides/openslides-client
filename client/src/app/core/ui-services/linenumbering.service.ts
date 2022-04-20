@@ -58,6 +58,14 @@ interface SectionHeading {
     text: string;
 }
 
+interface InsertLineNumbersConfig {
+    html: string;
+    lineLength: number;
+    highlight?: number;
+    callback?: () => void;
+    firstLine?: number;
+}
+
 /**
  * Functionality regarding adding and removing line numbers and highlighting single lines.
  *
@@ -900,13 +908,13 @@ export class LinenumberingService {
      * @param {number} firstLine
      * @returns {string}
      */
-    public insertLineNumbers(
-        html: string,
-        lineLength: number,
-        highlight?: number,
-        callback?: () => void,
-        firstLine?: number
-    ): LineNumberedString {
+    public insertLineNumbers({
+        html,
+        lineLength,
+        highlight,
+        callback,
+        firstLine
+    }: InsertLineNumbersConfig): LineNumberedString {
         let newHtml;
         let newRoot;
 

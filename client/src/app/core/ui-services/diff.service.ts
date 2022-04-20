@@ -1519,7 +1519,7 @@ export class DiffService {
      */
     public formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
         let text = this.formatDiff(diff);
-        text = this.lineNumberingService.insertLineNumbers(text, lineLength, null, null, firstLine);
+        text = this.lineNumberingService.insertLineNumbers({ html: text, lineLength, firstLine });
         return text;
     }
 
@@ -2180,12 +2180,17 @@ export class DiffService {
 
         changes.forEach((change: ViewUnifiedChange) => {
             if (!change.isTitleChange()) {
-                html = this.lineNumberingService.insertLineNumbers(html, lineLength, null, null, 1);
+                html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: 1 });
                 html = this.replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
             }
         });
 
-        html = this.lineNumberingService.insertLineNumbers(html, lineLength, highlightLine, null, 1);
+        html = this.lineNumberingService.insertLineNumbers({
+            html,
+            lineLength,
+            highlight: highlightLine,
+            firstLine: 1
+        });
 
         return html;
     }
@@ -2304,7 +2309,11 @@ export class DiffService {
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
-        oldText = this.lineNumberingService.insertLineNumbers(oldText, lineLength, null, null, change.getLineFrom());
+        oldText = this.lineNumberingService.insertLineNumbers({
+            html: oldText,
+            lineLength,
+            firstLine: change.getLineFrom()
+        });
         let diff = this.diff(oldText, change.getChangeNewText());
 
         // If an insertion makes the line longer than the line length limit, we need two line breaking runs:
@@ -2377,7 +2386,7 @@ export class DiffService {
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
-            html = this.lineNumberingService.insertLineNumbers(html, lineLength, highlight, null, maxLine);
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine });
         } else {
             // Prevents empty lines at the end of the motion
             html = ``;
@@ -2409,7 +2418,12 @@ export class DiffService {
             extracted.innerContextEnd +
             extracted.outerContextEnd;
         if (lineNumbers) {
-            html = this.lineNumberingService.insertLineNumbers(html, lineLength, highlightedLine, null, lineRange.from);
+            html = this.lineNumberingService.insertLineNumbers({
+                html,
+                lineLength,
+                highlight: highlightedLine,
+                firstLine: lineRange.from
+            });
         }
         return html;
     }

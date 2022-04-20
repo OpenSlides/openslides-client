@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { LinenumberingService } from 'app/core/ui-services/linenumbering.service';
@@ -24,6 +25,9 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     public readonly LineNumberingMode = LineNumberingMode;
     public readonly ChangeRecoMode = ChangeRecoMode;
 
+    @ViewChild(MatMenuTrigger)
+    private readonly lineNumberMenuTrigger: MatMenuTrigger;
+
     public get crMode(): ChangeRecoMode {
         return this.viewService.currentChangeRecommendationMode;
     }
@@ -38,6 +42,8 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         }
         return this.changeRecoRepo.hasMotionChangeRecommendations(this.motion.id);
     }
+
+    public startLineNumber: number;
 
     /**
      * Indicates the currently highlighted line, if any.
@@ -164,13 +170,13 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         const changes: ViewUnifiedChange[] = this.getAllChangingObjectsSorted().filter(changingObject =>
             changingObject.showInFinalView()
         );
-        let finalVersion = this.motionFormatService.formatMotion(
-            this.motion,
-            ChangeRecoMode.Final,
+        let finalVersion = this.motionFormatService.formatMotion({
+            targetMotion: this.motion,
+            crMode: ChangeRecoMode.Final,
             changes,
-            this.lineLength,
-            this.highlightedLine
-        );
+            lineLength: this.lineLength,
+            highlightedLine: this.highlightedLine
+        });
         finalVersion = this.linenumberingService.stripLineNumbers(finalVersion);
 
         // Update the motion
@@ -210,6 +216,16 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         this.isEditingFinalVersion = true;
     }
 
+    public updateStartLineNumber(): void {
+        this.repo.update({ start_line_number: this.startLineNumber }, this.motion);
+        this.lineNumberMenuTrigger.closeMenu();
+    }
+
+    public resetStartLineNumber(): void {
+        this.startLineNumber = this.motion?.start_line_number ?? 1;
+        this.lineNumberMenuTrigger.closeMenu();
+    }
+
     /**
      * Cancels the final version edit and resets the form value
      */
@@ -240,6 +256,10 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
             this.gotoHighlightedLine(parseInt(this.highlightedLineTyping as string, 10));
             this.highlightedLineTyping = ``;
         }
+    }
+
+    protected onAfterInit(): void {
+        this.startLineNumber = this.motion?.start_line_number ?? 1;
     }
 
     /**

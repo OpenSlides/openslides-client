@@ -168,7 +168,7 @@ describe(`LinenumberingService`, () => {
     describe(`line numbering: inline nodes`, () => {
         it(`leaves a simple SPAN untouched`, inject([LinenumberingService], (service: LinenumberingService) => {
             const inHtml = `<span>Test</span>`;
-            const outHtml = service.insertLineNumbers(inHtml, 5);
+            const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 5 });
             expect(outHtml).toBe(noMarkup(1) + `<span>Test</span>`);
             expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
             expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);

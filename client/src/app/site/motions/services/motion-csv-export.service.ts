@@ -57,7 +57,7 @@ export class MotionCsvExportService {
         // get the line length from the config
         const lineLength = this.meetingSettingsService.instant(`motions_line_length`);
         const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
-        const text = this.motionFormatService.formatMotion(motion, crMode, changes, lineLength);
+        const text = this.motionFormatService.formatMotion({ targetMotion: motion, crMode, changes, lineLength });
         const strippedLines = this.linenumberingService.stripLineNumbers(text);
         return strippedLines;
     }

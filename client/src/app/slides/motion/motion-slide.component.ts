@@ -172,7 +172,7 @@ export class MotionSlideComponent
         }
 
         let baseHtml = this.data.data.text;
-        baseHtml = this.lineNumbering.insertLineNumbers(baseHtml, this.lineLength);
+        baseHtml = this.lineNumbering.insertLineNumbers({ html: baseHtml, lineLength: this.lineLength });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
         const paragraphNumbers = Object.keys(amendment.amendment_paragraphs)
@@ -237,13 +237,13 @@ export class MotionSlideComponent
 
     private recalcMotionText(): void {
         const changes = this.crMode === ChangeRecoMode.Original ? [] : this.getAllTextChangingObjects();
-        this.formattedMotionTextPlain = this.motionFormatService.formatMotion(
-            this.data.data,
-            this.crMode,
+        this.formattedMotionTextPlain = this.motionFormatService.formatMotion({
+            targetMotion: this.data.data,
+            crMode: this.crMode,
             changes,
-            this.lineLength,
-            this.highlightedLine
-        );
+            lineLength: this.lineLength,
+            highlightedLine: this.highlightedLine
+        });
     }
 
     /**
@@ -313,7 +313,7 @@ export class MotionSlideComponent
             extracted.innerContextEnd +
             extracted.outerContextEnd;
         if (lineNumbers) {
-            html = this.lineNumbering.insertLineNumbers(html, lineLength, null, null, lineRange.from);
+            html = this.lineNumbering.insertLineNumbers({ html, lineLength, firstLine: lineRange.from });
         }
         return html;
     }
@@ -346,7 +346,10 @@ export class MotionSlideComponent
             return [];
         }
 
-        const baseHtml = this.lineNumbering.insertLineNumbers(motion.lead_motion?.text, this.lineLength);
+        const baseHtml = this.lineNumbering.insertLineNumbers({
+            html: motion.lead_motion?.text,
+            lineLength: this.lineLength
+        });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
         const paragraphNumbers = Object.keys(motion.amendment_paragraphs)
@@ -410,7 +413,10 @@ export class MotionSlideComponent
      */
     public getAmendmentDiff(change: ViewUnifiedChange): string {
         const motion = this.data.data;
-        const baseHtml = this.lineNumbering.insertLineNumbers(motion.lead_motion?.text, this.lineLength);
+        const baseHtml = this.lineNumbering.insertLineNumbers({
+            html: motion.lead_motion?.text,
+            lineLength: this.lineLength
+        });
 
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
     }

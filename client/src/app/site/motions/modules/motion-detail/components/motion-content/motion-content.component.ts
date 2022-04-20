@@ -238,13 +238,14 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         } else {
             changes = Object.assign([], this.getAllTextChangingObjects());
         }
-        const formattedText = this.motionFormatService.formatMotion(
-            this.motion,
-            this.changeRecoMode,
+        const formattedText = this.motionFormatService.formatMotion({
+            targetMotion: this.motion,
+            crMode: this.changeRecoMode,
             changes,
-            this.lineLength,
-            this.highlightedLine
-        );
+            lineLength: this.lineLength,
+            highlightedLine: this.highlightedLine,
+            firstLine: this.motion.start_line_number ?? 1
+        });
         return formattedText;
     }
 

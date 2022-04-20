@@ -59,6 +59,7 @@ export namespace MotionAction {
         reason?: UnsafeHtml;
         amendment_paragraph_$?: { [paragraph_number: number]: UnsafeHtml };
         modified_final_version?: string;
+        start_line_number?: number;
     }
 
     export interface DeletePayload extends Identifiable {}

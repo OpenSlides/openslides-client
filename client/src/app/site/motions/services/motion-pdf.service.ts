@@ -617,12 +617,12 @@ export class MotionPdfService {
                     changedTitle +
                     `</span><br>`;
             }
-            const formattedText = this.motionFormatService.formatMotion(
-                createTextData.motion,
-                createTextData.crMode,
-                textChanges,
-                createTextData.lineLength
-            );
+            const formattedText = this.motionFormatService.formatMotion({
+                targetMotion: createTextData.motion,
+                changes: textChanges,
+                firstLine: createTextData.motion.start_line_number,
+                ...createTextData
+            });
             // reformat motion text to split long HTML elements to easier convert into PDF
             motionText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
