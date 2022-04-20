@@ -22,6 +22,14 @@ import { MotionExportInfo } from './motion-export.service';
 import { MotionFormatService } from './motion-format.service';
 import { MotionPollService } from './motion-poll.service';
 
+interface CreateTextData {
+    motion: ViewMotion;
+    lineLength: number;
+    lnMode: LineNumberingMode;
+    crMode: ChangeRecoMode;
+    lineHeight: number;
+}
+
 /**
  * Converts a motion to pdf. Can be used from the motion detail view or executed on a list of motions
  * Provides the public method `motionToDocDef(motion: Motion)` which should be convenient to use.
@@ -126,7 +134,14 @@ export class MotionPdfService {
                 const preamble = this.createPreamble(motion);
                 motionPdfContent.push(preamble);
             }
-            const text = this.createText(motion, lineLength, lnMode, crMode);
+            const lineHeight = this.meetingSettingsService.instant(`export_pdf_line_height`);
+            const text = this.createText({
+                motion: motion,
+                lineLength: lineLength,
+                lnMode: lnMode,
+                crMode: crMode,
+                lineHeight: lineHeight
+            });
             motionPdfContent.push(text);
         }
 
@@ -518,7 +533,7 @@ export class MotionPdfService {
                     widths: [`35%`, `65%`],
                     body: metaTableBody
                 },
-                margin: [0, 0, 0, 20],
+                margin: [0, 0, 0, 10],
                 layout: `metaboxLayout`
             };
         }
@@ -547,23 +562,18 @@ export class MotionPdfService {
      * @param crMode determine the used change Recommendation mode
      * @returns doc def for the "the assembly may decide" preamble
      */
-    private createText(
-        motion: ViewMotion,
-        lineLength: number,
-        lnMode: LineNumberingMode,
-        crMode: ChangeRecoMode
-    ): object {
+    private createText(createTextData: CreateTextData): object {
         let motionText = ``;
 
-        if (motion.isParagraphBasedAmendment()) {
+        if (createTextData.motion.isParagraphBasedAmendment()) {
             // this is logically redundant with the formation of amendments in the motion-detail html.
             // Should be refactored in a way that a service returns the correct html for both cases
             try {
-                const changeRecos = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
+                const changeRecos = this.changeRecoRepo.getChangeRecoOfMotion(createTextData.motion.id);
                 const amendmentParas = this.motionLineNumbering.getAmendmentParagraphLines(
-                    motion,
-                    lineLength,
-                    crMode,
+                    createTextData.motion,
+                    createTextData.lineLength,
+                    createTextData.crMode,
                     changeRecos,
                     false
                 );
@@ -577,19 +587,29 @@ export class MotionPdfService {
             } catch (e) {
                 motionText += `<em style="color: red; font-weight: bold;">` + e.toString() + `</em>`;
             }
-        } else if (motion.isStatuteAmendment()) {
+        } else if (createTextData.motion.isStatuteAmendment()) {
             // statute amendments
             const statutes = this.statuteRepo.getViewModelList();
-            motionText = this.motionLineNumbering.formatStatuteAmendment(statutes, motion, lineLength);
+            motionText = this.motionLineNumbering.formatStatuteAmendment(
+                statutes,
+                createTextData.motion,
+                createTextData.lineLength
+            );
         } else {
             // lead motion or normal amendments
 
-            const changes = this.motionFormatService.getUnifiedChanges(motion, lineLength);
+            const changes = this.motionFormatService.getUnifiedChanges(
+                createTextData.motion,
+                createTextData.lineLength
+            );
             const textChanges = changes.filter(change => !change.isTitleChange());
             const titleChange = changes.find(change => change.isTitleChange());
 
-            if (crMode === ChangeRecoMode.Diff && titleChange) {
-                const changedTitle = this.changeRecoRepo.getTitleChangesAsDiff(motion.title, titleChange);
+            if (createTextData.crMode === ChangeRecoMode.Diff && titleChange) {
+                const changedTitle = this.changeRecoRepo.getTitleChangesAsDiff(
+                    createTextData.motion.title,
+                    titleChange
+                );
                 motionText +=
                     `<span><strong>` +
                     this.translate.instant(`Changed title`) +
@@ -597,12 +617,17 @@ export class MotionPdfService {
                     changedTitle +
                     `</span><br>`;
             }
-            const formattedText = this.motionFormatService.formatMotion(motion, crMode, textChanges, lineLength);
+            const formattedText = this.motionFormatService.formatMotion(
+                createTextData.motion,
+                createTextData.crMode,
+                textChanges,
+                createTextData.lineLength
+            );
             // reformat motion text to split long HTML elements to easier convert into PDF
             motionText += this.linenumberingService.splitInlineElementsAtLineBreaks(formattedText);
         }
 
-        return this.htmlToPdfService.convertHtml(motionText, lnMode);
+        return this.htmlToPdfService.convertHtml(motionText, createTextData.lnMode, createTextData.lineHeight);
     }
 
     /**
@@ -620,7 +645,7 @@ export class MotionPdfService {
             reason.push({
                 text: this.translate.instant(`Reason`),
                 style: `heading3`,
-                margin: [0, 25, 0, 10]
+                margin: [0, 10, 0, 10]
             });
 
             reason.push(this.htmlToPdfService.addPlainText(motion.reason));
@@ -772,7 +797,7 @@ export class MotionPdfService {
                 content = section && section.comment;
             }
             if (name && content) {
-                result.push({ text: name, style: `heading3`, margin: [0, 25, 0, 10] });
+                result.push({ text: name, style: `heading3`, margin: [0, 10, 0, 10] });
                 result.push(this.htmlToPdfService.addPlainText(content));
             }
         }

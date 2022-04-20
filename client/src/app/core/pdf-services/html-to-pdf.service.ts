@@ -34,7 +34,7 @@ export class HtmlToPdfService {
     /**
      * Normal line height for paragraphs
      */
-    private LINE_HEIGHT = 1.25;
+    private lineHeight = 1.25;
 
     /**
      * space between paragraphs
@@ -152,9 +152,13 @@ export class HtmlToPdfService {
      * @param lnMode determines the line numbering
      * @returns pdfmake doc definition as object
      */
-    public convertHtml(htmlText: string, lnMode?: LineNumberingMode): object {
+    public convertHtml(htmlText: string, lnMode?: LineNumberingMode, lineHeight?: number): object {
         const docDef = [];
         this.lineNumberingMode = lnMode || LineNumberingMode.None;
+
+        if (lineHeight) {
+            this.lineHeight = lineHeight;
+        }
 
         // Cleanup of dirty html would happen here
 
@@ -269,7 +273,7 @@ export class HtmlToPdfService {
                     newParagraph.margin[3] = 0;
                 }
 
-                newParagraph.lineHeight = this.LINE_HEIGHT;
+                newParagraph.lineHeight = this.lineHeight;
                 newParagraph = {
                     ...newParagraph,
                     ...this.computeStyle(styles),
@@ -344,7 +348,7 @@ export class HtmlToPdfService {
                 newParagraph = this.create(`text`);
                 // yep thats all
                 newParagraph.text = `\n`;
-                newParagraph.lineHeight = this.LINE_HEIGHT;
+                newParagraph.lineHeight = this.lineHeight;
                 break;
             }
             case `ul`:
@@ -482,7 +486,7 @@ export class HtmlToPdfService {
                 }
             ],
             marginBottom: line.marginBottom,
-            lineHeight: this.LINE_HEIGHT
+            lineHeight: this.lineHeight
         };
     }
 

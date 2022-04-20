@@ -117,12 +117,38 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: `export_pdf_fontsize`,
                         label: _(`Standard font size in PDF`),
-                        type: `choice`,
-                        choices: {
-                            10: 10,
-                            11: 11,
-                            12: 12
-                        }
+                        type: `integer`,
+                        validators: [Validators.min(10), Validators.max(12)],
+                        helpText: _(`Available sizes are 10 ,11 and 12.`)
+                    },
+                    {
+                        key: `export_pdf_line_height`,
+                        label: _(`Standard line height in PDF`),
+                        type: `integer`
+                    },
+                    {
+                        key: `export_pdf_page_margin_left`,
+                        label: _(`Standard page margin left of the PDF in mm`),
+                        type: `integer`,
+                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
+                    },
+                    {
+                        key: `export_pdf_page_margin_top`,
+                        label: _(`Standard page margin top of the PDF in mm`),
+                        type: `integer`,
+                        helpText: _(`Default values: A4 = 25mm, A5 = 10mm`)
+                    },
+                    {
+                        key: `export_pdf_page_margin_right`,
+                        label: _(`Standard page margin right of the PDF in mm`),
+                        type: `integer`,
+                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
+                    },
+                    {
+                        key: `export_pdf_page_margin_bottom`,
+                        label: _(`Standard page margin bottom of the PDF in mm`),
+                        type: `integer`,
+                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
                     },
                     {
                         key: `export_pdf_pagesize`,

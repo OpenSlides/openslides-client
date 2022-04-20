@@ -117,6 +117,17 @@ export class PdfDocumentService {
     }
 
     /**
+     * Calculates millimeters in points for pdfmake.
+     *
+     * @param millimeters
+     * @return points
+     */
+    private mmToPoints(mm: number): number {
+        const inches = mm / 25.4;
+        return inches * 72;
+    }
+
+    /**
      * Overall document definition and styles for the most PDF documents
      *
      * @param documentContent the content of the pdf as object
@@ -128,30 +139,33 @@ export class PdfDocumentService {
      */
     private async getStandardPaper(
         documentContent: object,
+        pageMargins: [number, number, number, number],
         metadata?: object,
         exportInfo?: MotionExportInfo,
         imageUrls?: string[],
-        customMargins?: [number, number, number, number],
         landscape?: boolean
     ): Promise<object> {
         this.imageUrls = imageUrls ? imageUrls : [];
         const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
-        const defaultMargins = pageSize === `A5` ? [45, 30, 45, 45] : [75, 90, 75, 75];
         const result = {
             pageSize: pageSize || `A4`,
             pageOrientation: landscape ? `landscape` : `portrait`,
-            pageMargins: customMargins || defaultMargins,
+            pageMargins: pageMargins,
             defaultStyle: {
                 font: `PdfFont`,
                 fontSize: this.meetingSettingsService.instant(`export_pdf_fontsize`)
             },
-            header: this.getHeader(customMargins ? [customMargins[0], customMargins[2]] : null),
+            header: this.getHeader([pageMargins[0], pageMargins[2]]),
             // real footer gets created in the worker
-            tmpfooter: this.getFooter(customMargins ? [customMargins[0], customMargins[2]] : null, exportInfo),
+            tmpfooter: this.getFooter([pageMargins[0], pageMargins[2]], exportInfo),
             info: metadata,
             content: documentContent,
             styles: this.getStandardPaperStyles()
         };
+
+        // DEBUG: printing the following. Do not remove, just comment out
+        // console.log('MakePDF result :\n---\n', JSON.stringify(result), '\n---\n');
+
         return result;
     }
 
@@ -224,7 +238,7 @@ export class PdfDocumentService {
      * @param lrMargin optional margin overrides
      * @returns an object that contains the necessary header definition
      */
-    private getHeader(lrMargin?: [number, number]): object {
+    private getHeader(lrMargin: [number, number]): object {
         // check for the required logos
         let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
         let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
@@ -274,7 +288,7 @@ export class PdfDocumentService {
             });
             this.imageUrls.push(logoHeaderRightUrl);
         }
-        const margin = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
+        const margin = [lrMargin[0], 30, lrMargin[1], 10];
         // pdfmake order: [left, top, right, bottom]
 
         return {
@@ -405,7 +419,21 @@ export class PdfDocumentService {
      */
     public download(docDefinition: object, filename: string, metadata?: object, exportInfo?: MotionExportInfo): void {
         this.showProgress();
-        this.getStandardPaper(docDefinition, metadata, exportInfo).then(doc => {
+
+        const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
+        const pageMarginLeft = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`));
+        const pageMarginTop = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`));
+        const pageMarginRight = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_right`));
+        const pageMarginBottom = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`));
+
+        const pageMargins: [number, number, number, number] = [
+            pageMarginLeft,
+            pageMarginTop,
+            pageMarginRight,
+            pageMarginBottom
+        ];
+
+        this.getStandardPaper(docDefinition, pageMargins, metadata, exportInfo, null).then(doc => {
             this.createPdf(doc, filename);
         });
     }
@@ -419,7 +447,7 @@ export class PdfDocumentService {
      */
     public downloadLandscape(docDefinition: object, filename: string, metadata?: object): void {
         this.showProgress();
-        this.getStandardPaper(docDefinition, metadata, null, null, [50, 80, 50, 75], true).then(doc => {
+        this.getStandardPaper(docDefinition, [50, 80, 50, 75], metadata, null, null, true).then(doc => {
             this.createPdf(doc, filename);
         });
     }
@@ -511,7 +539,7 @@ export class PdfDocumentService {
             },
             subtitle: {
                 fontSize: 9,
-                margin: [0, -20, 0, 20],
+                margin: [0, -20, 0, 10],
                 color: `grey`
             },
             preamble: {
@@ -692,7 +720,7 @@ export class PdfDocumentService {
     public getSpacer(): Object {
         return {
             text: ``,
-            margin: [0, 10]
+            margin: [0, 5]
         };
     }
 
