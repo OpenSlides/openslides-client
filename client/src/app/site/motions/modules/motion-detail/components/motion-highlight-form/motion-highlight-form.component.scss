@@ -6,3 +6,17 @@
         align-items: center;
     }
 }
+
+#lineNumberItem {
+    padding: 0 16px;
+
+    mat-form-field {
+        text-align: center;
+        margin: 0 12px;
+        max-width: 50px;
+    }
+
+    mat-icon {
+        font-size: 18px;
+    }
+}

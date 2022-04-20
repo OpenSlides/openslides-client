@@ -115,7 +115,7 @@ export class MotionLineNumberingService {
      * @return {number}
      */
     public getLastLineNumber(motion: ViewMotion, lineLength: number): number {
-        const numberedHtml = this.lineNumberingService.insertLineNumbers(motion.text, lineLength);
+        const numberedHtml = this.lineNumberingService.insertLineNumbers({ html: motion.text, lineLength });
         const range = this.lineNumberingService.getLineNumberRange(numberedHtml);
         return range.to;
     }
@@ -134,7 +134,7 @@ export class MotionLineNumberingService {
         }
         let html = motion.text;
         if (lineBreaks) {
-            html = this.lineNumberingService.insertLineNumbers(html, lineLength);
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength });
         }
         return this.lineNumberingService.splitToParagraphs(html);
     }

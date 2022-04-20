@@ -143,7 +143,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         lineRange: LineRange,
         lineLength: number
     ): Partial<MotionChangeRecommendationAction.CreatePayload> {
-        const motionText = this.lineNumbering.insertLineNumbers(motion.text, lineLength);
+        const motionText = this.lineNumbering.insertLineNumbers({ html: motion.text, lineLength });
 
         const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = lineRange.from;

@@ -45,6 +45,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public sort_weight: number;
     public created: number;
     public last_modified: number;
+    public start_line_number: number;
     public amendment_paragraph_$: number[];
 
     public lead_motion_id: Id; // motion/amendment_ids;

@@ -28,7 +28,7 @@
             <mat-icon>cancel</mat-icon>
         </button>
 
-        <button type="button" mat-button [matMenuTriggerFor]="lineNumberingMenu">
+        <button type="button" mat-button [matMenuTriggerFor]="lineNumberingMenu" #trigger="matMenuTrigger">
             <mat-icon>format_list_numbered</mat-icon>
             <ng-container *ngIf="!isMobile">
                 &nbsp;
@@ -115,34 +115,59 @@
 
 <!-- Line number Menu -->
 <mat-menu #lineNumberingMenu="matMenu">
-    <div *ngIf="motion">
-        <button
-            mat-menu-item
-            (click)="setLineNumberingMode(LineNumberingMode.None)"
-            [ngClass]="{ selected: lnMode === LineNumberingMode.None }"
-        >
-            {{ 'none' | translate }}
-        </button>
-        <button
-            mat-menu-item
-            (click)="setLineNumberingMode(LineNumberingMode.Inside)"
-            [ngClass]="{ selected: lnMode === LineNumberingMode.Inside }"
-        >
-            {{ 'inline' | translate }}
-        </button>
-        <button
-            mat-menu-item
-            (click)="setLineNumberingMode(LineNumberingMode.Outside)"
-            [ngClass]="{ selected: lnMode === LineNumberingMode.Outside }"
-        >
-            {{ 'outside' | translate }}
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item *ngIf="!highlightedLineOpened" (click)="highlightedLineOpened = true">
-            <mat-icon>redo</mat-icon>
-            <span>{{ 'Go to line' | translate }}</span>
-        </button>
-    </div>
+    <ng-template matMenuContent>
+        <div *ngIf="motion">
+            <button
+                mat-menu-item
+                (click)="setLineNumberingMode(LineNumberingMode.None)"
+                [ngClass]="{ selected: lnMode === LineNumberingMode.None }"
+            >
+                {{ 'none' | translate }}
+            </button>
+            <button
+                mat-menu-item
+                (click)="setLineNumberingMode(LineNumberingMode.Inside)"
+                [ngClass]="{ selected: lnMode === LineNumberingMode.Inside }"
+            >
+                {{ 'inline' | translate }}
+            </button>
+            <button
+                mat-menu-item
+                (click)="setLineNumberingMode(LineNumberingMode.Outside)"
+                [ngClass]="{ selected: lnMode === LineNumberingMode.Outside }"
+            >
+                {{ 'outside' | translate }}
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item *ngIf="!highlightedLineOpened" (click)="highlightedLineOpened = true">
+                <mat-icon>redo</mat-icon>
+                <span>{{ 'Go to line' | translate }}</span>
+            </button>
+            <div
+                mat-list-item
+                id="lineNumberItem"
+                *osPerms="permission.motionCanManage"
+                (click)="$event.stopPropagation()"
+            >
+                <span>{{ 'Begin at' | translate }}</span>
+                <mat-form-field>
+                    <input
+                        matInput
+                        type="number"
+                        min="1"
+                        placeholder="{{ 'Linenumber' | translate }}"
+                        [(ngModel)]="startLineNumber"
+                    />
+                </mat-form-field>
+                <button mat-icon-button (click)="updateStartLineNumber()">
+                    <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="resetStartLineNumber()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </ng-template>
 </mat-menu>
 
 <!-- Diff View Menu
