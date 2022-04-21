@@ -420,17 +420,11 @@ export class PdfDocumentService {
     public download(docDefinition: object, filename: string, metadata?: object, exportInfo?: MotionExportInfo): void {
         this.showProgress();
 
-        const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
-        const pageMarginLeft = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`));
-        const pageMarginTop = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`));
-        const pageMarginRight = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_right`));
-        const pageMarginBottom = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`));
-
         const pageMargins: [number, number, number, number] = [
-            pageMarginLeft,
-            pageMarginTop,
-            pageMarginRight,
-            pageMarginBottom
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`)),
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`)),
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`)),
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`))
         ];
 
         this.getStandardPaper(docDefinition, pageMargins, metadata, exportInfo, null).then(doc => {
