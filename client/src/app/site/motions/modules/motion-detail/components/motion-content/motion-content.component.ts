@@ -244,7 +244,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             changes,
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine,
-            firstLine: this.motion.start_line_number ?? 1
+            firstLine: this.motion.firstLine
         });
         return formattedText;
     }
@@ -259,7 +259,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             editChangeRecommendation: false,
             newChangeRecommendation: true,
             lineRange,
-            changeRecommendation: null
+            changeRecommendation: null,
+            firstLine: this.motion.firstLine
         };
         if (this.motion.isParagraphBasedAmendment()) {
             try {
@@ -278,8 +279,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             data.changeRecommendation = this.changeRecoRepo.createMotionChangeRecommendationTemplate(
                 this.motion,
                 lineRange,
-                this.lineLength,
-                this.motion.start_line_number ?? 1
+                this.lineLength
             );
         }
         this.dialogService.open(MotionChangeRecommendationDialogComponent, {

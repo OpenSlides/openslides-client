@@ -149,7 +149,6 @@
                 *osPerms="permission.motionCanManage"
                 (click)="$event.stopPropagation()"
             >
-                <span>{{ 'Begin at' | translate }}</span>
                 <mat-form-field>
                     <input
                         matInput
@@ -158,13 +157,10 @@
                         placeholder="{{ 'Linenumber' | translate }}"
                         [(ngModel)]="startLineNumber"
                     />
+                    <button mat-icon-button matSuffix (click)="updateStartLineNumber()">
+                        <mat-icon>check</mat-icon>
+                    </button>
                 </mat-form-field>
-                <button mat-icon-button (click)="updateStartLineNumber()">
-                    <mat-icon>check</mat-icon>
-                </button>
-                <button mat-icon-button (click)="resetStartLineNumber()">
-                    <mat-icon>close</mat-icon>
-                </button>
             </div>
         </div>
     </ng-template>

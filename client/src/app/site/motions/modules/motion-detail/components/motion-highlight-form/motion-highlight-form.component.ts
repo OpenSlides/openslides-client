@@ -222,7 +222,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public resetStartLineNumber(): void {
-        this.startLineNumber = this.motion?.start_line_number ?? 1;
+        this.startLineNumber = this.motion?.start_line_number || 1;
         this.lineNumberMenuTrigger.closeMenu();
     }
 
@@ -259,7 +259,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     protected onAfterInit(): void {
-        this.startLineNumber = this.motion?.start_line_number ?? 1;
+        this.startLineNumber = this.motion?.start_line_number || 1;
     }
 
     /**

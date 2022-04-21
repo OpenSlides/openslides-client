@@ -44,11 +44,11 @@ export class ViewMotionChangeRecommendation
     }
 
     public getLineFrom(): number {
-        return this.line_from;
+        return this.line_from + this.motion.firstLine - 1;
     }
 
     public getLineTo(): number {
-        return this.line_to;
+        return this.line_to + this.motion.firstLine - 1;
     }
 
     public getChangeNewText(): string {

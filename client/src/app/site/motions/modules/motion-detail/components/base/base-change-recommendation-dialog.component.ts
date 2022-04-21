@@ -64,6 +64,14 @@ export abstract class BaseChangeRecommendationDialogComponent<
             | removeformat | bullist numlist | outdent indent | link charmap code`;
     }
 
+    protected async createChangeRecommendation(): Promise<void> {
+        await this.repo.create({
+            ...this.changeReco,
+            ...this.contentForm.value,
+            internal: !this.contentForm.value.public
+        });
+    }
+
     private async saveChangeRecommendation(): Promise<void> {
         if (this.newReco) {
             await this.handleRequest(this.createChangeRecommendation());
@@ -71,14 +79,6 @@ export abstract class BaseChangeRecommendationDialogComponent<
             await this.handleRequest(this.updateChangeRecommmendation());
         }
         this.dialogRef.close();
-    }
-
-    private async createChangeRecommendation(): Promise<void> {
-        await this.repo.create({
-            ...this.changeReco,
-            ...this.contentForm.value,
-            internal: !this.contentForm.value.public
-        });
     }
 
     private async updateChangeRecommmendation(): Promise<void> {
