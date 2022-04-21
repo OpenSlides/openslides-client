@@ -161,6 +161,7 @@ export class HtmlToPdfService {
         }
 
         // Cleanup of dirty html would happen here
+        htmlText = htmlText.replace(/\s+<br class="os-line-break">/g, `<br class="os-line-break">`);
 
         // Create a HTML DOM tree out of html string
         const parser = new DOMParser();
