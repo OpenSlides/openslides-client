@@ -21,6 +21,7 @@ export const PERSONAL_NOTE_ID = -1;
  */
 export const PDF_OPTIONS = {
     Toc: `toc`,
+    Header: `header`,
     Page: `page`,
     Date: `date`,
     AddBreaks: `addBreaks`,

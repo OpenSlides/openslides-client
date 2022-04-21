@@ -66,7 +66,7 @@ export class MotionExportDialogComponent implements OnInit {
     private defaults: MotionExportInfo = {
         format: ExportFileFormat.PDF,
         content: [`text`, `reason`],
-        pdfOptions: [PDF_OPTIONS.Toc, PDF_OPTIONS.Page, PDF_OPTIONS.AddBreaks],
+        pdfOptions: [PDF_OPTIONS.Toc, PDF_OPTIONS.Header, PDF_OPTIONS.Page, PDF_OPTIONS.AddBreaks],
         metaInfo: [`submitters`, `state`, `recommendation`, `category`, `origin`, `tags`, `block`, `polls`]
     };
 
