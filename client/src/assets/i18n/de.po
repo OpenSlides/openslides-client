@@ -241,6 +241,9 @@ msgstr "Antragsteller*in darf bearbeiten"
 msgid "Allow support"
 msgstr "Unterstützung möglich"
 
+msgid "Allow to accumulate several votes on one candidate (\"comulative voting\")"
+msgstr "Mehrere Stimmen auf einen Kandidaten erlauben (\"kumulieren\")"
+
 msgid "Allow users to set themselves as present"
 msgstr "Teilnehmende erlauben sich selbst auf anwesend zu setzen"
 
@@ -528,6 +531,9 @@ msgstr "Kamera automatisch öffnen beim Eintreten in die Livekonferenz"
 msgid "Autopilot"
 msgstr "Autopilot"
 
+msgid "Available sizes are 10, 11 and 12"
+msgstr "Verfügbaren Größen sind 10, 11 und 12"
+
 msgid "Available votes"
 msgstr "Verfügbare Stimmen"
 
@@ -555,11 +561,17 @@ msgstr "Wahlgänge"
 msgid "Base folder"
 msgstr "Basisverzeichnis"
 
+msgid "Begin at"
+msgstr ""
+
 msgid "Begin speech"
 msgstr "Rede beginnen"
 
 msgid "Blank between prefix and number, e.g. 'A 001'."
 msgstr "Leerzeichen zwischen Präfix und Nummer, z. B. 'A 001'."
+
+msgid "CSV export options"
+msgstr "CSV-Exportoptionen"
 
 msgid "CSV import"
 msgstr "CSV-Import"
@@ -781,6 +793,9 @@ msgid "Check in or check out participants based on their participant numbers:"
 msgstr ""
 "An- oder Abmeldung von Teilnehmenden basierend auf ihren Teilnehmernummern:"
 
+msgid "Choice"
+msgstr "Auswahl"
+
 msgid "Choose 0 to disable the supporting system."
 msgstr "Zum Deaktivieren des Unterstützersystems '0' eingeben."
 
@@ -883,6 +898,9 @@ msgstr "Inhalt"
 msgid "Continue livestream"
 msgstr "Livestream fortsetzen"
 
+msgid "Continuous text"
+msgstr "Fortlaufender Text"
+
 msgid "Contra speech"
 msgstr "Gegenrede"
 
@@ -939,6 +957,9 @@ msgstr "Nutzer anlegen"
 
 msgid "Creating PDF file ..."
 msgstr "PDF-Datei wird erstellt ..."
+
+msgid "Creation"
+msgstr "Erstellung"
 
 msgid "Creation date"
 msgstr "Erstellungsdatum"
@@ -1256,9 +1277,6 @@ msgstr "Betreff"
 msgid "Empty text field"
 msgstr "Leeres Textfeld"
 
-msgid "Enable chat"
-msgstr "Chat aktivieren"
-
 msgid "Enable chat globally"
 msgstr "Chat global aktivieren"
 
@@ -1302,6 +1320,9 @@ msgstr "Rede beenden"
 
 msgid "Enforce page breaks"
 msgstr "Seitenumbrüche erzwingen"
+
+msgid "Enter"
+msgstr "Eingabe"
 
 msgid "Enter conference room"
 msgstr "Konferenzraum beitreten"
@@ -1384,9 +1405,6 @@ msgstr "Kommentar exportieren"
 msgid "Export motions"
 msgstr "Anträge exportieren"
 
-msgid "Export options"
-msgstr "Exportoptionen"
-
 msgid "Export personal note only"
 msgstr "Nur persönliche Notiz exportieren"
 
@@ -1434,6 +1452,9 @@ msgstr "Empfehlungen für alle Anträge folgen"
 
 msgid "Following users are currently editing this motion:"
 msgstr "Folgende Nutzer bearbeiten aktuell diesen Antrag:"
+
+msgid "Font size in pt"
+msgstr "Schriftgröße in pt"
 
 msgid "Foreground color"
 msgstr "Vordergrundfarbe"
@@ -1536,6 +1557,9 @@ msgstr "Wortmeldungen vorhanden"
 
 msgid "Has unchanged vote weight"
 msgstr "Stimmgewicht unverändert"
+
+msgid "Header"
+msgstr "Kopfzeile"
 
 msgid "Header background color"
 msgstr "Hintergrundfarbe Kopfbereich"
@@ -1774,6 +1798,12 @@ msgstr "Zeilenlänge"
 
 msgid "Line numbering"
 msgstr "Zeilennummerierung"
+
+msgid "Line spacing"
+msgstr "Zeilenabstand"
+
+msgid "Linenumber"
+msgstr "Zeilennummer"
 
 msgid "List of electronic votes"
 msgstr "Elektronische Stimmabgaben"
@@ -2320,6 +2350,9 @@ msgstr "PDF-Stimmzettel-Logo"
 msgid "PDF export"
 msgstr "PDF-Export"
 
+msgid "PDF export options"
+msgstr "PDF-Exportoptionen"
+
 msgid "PDF footer logo (left)"
 msgstr "PDF-Logo Fußzeile (links)"
 
@@ -2338,8 +2371,23 @@ msgstr "PDF-Optionen"
 msgid "Page"
 msgstr "Seite"
 
-msgid "Page number alignment in PDF"
-msgstr "Seitenzahl-Ausrichtung im PDF"
+msgid "Page format"
+msgstr "Papierformat"
+
+msgid "Page margin bottom in mm"
+msgstr "Seitenrand unten in mm"
+
+msgid "Page margin left in mm"
+msgstr "Seitenrand links in mm"
+
+msgid "Page margin right in mm"
+msgstr "Seitenrand rechts in mm"
+
+msgid "Page margin top in mm"
+msgstr "Seitenrand oben in mm"
+
+msgid "Page number alignment in footer"
+msgstr "Seitenzahl-Ausrichtung in der Fußzeile"
 
 msgid "Page numbers"
 msgstr "Seitenzahlen"
@@ -2719,6 +2767,9 @@ msgstr "Auf Kandidatensuche"
 msgid "Secret voting can not be guaranteed"
 msgstr "Geheime Stimmabgaben können nicht garantiert werden"
 
+msgid "Select"
+msgstr "Auswählen"
+
 msgid "Select a new candidate"
 msgstr "Kandidat/in auswählen ..."
 
@@ -2882,8 +2933,8 @@ msgstr "Kopf- und Fußzeile anzeigen"
 msgid "Show hint »first speech« in the list of speakers management view"
 msgstr "Hinweis »Erstredner*in« in der Redelistenverwaltung anzeigen "
 
-msgid "Show internal items when projecting subitems"
-msgstr "Interne Einträge anzeigen bei der Projektion von Untereinträgen"
+msgid "Show internal items when projecting agenda"
+msgstr "Interne Einträge anzeigen bei der Projektion der Tagesordnung"
 
 msgid "Show live conference window"
 msgstr "Livekonferenz-Fenster anzeigen"
@@ -3006,12 +3057,6 @@ msgstr "Redner*innen"
 msgid "Staff"
 msgstr "Mitarbeitende"
 
-msgid "Standard font size in PDF"
-msgstr "Standard-Schriftgröße im PDF"
-
-msgid "Standard page size in PDF"
-msgstr "Standard-PDF-Papierformat"
-
 msgid "Start date"
 msgstr "Anfangsdatum"
 
@@ -3074,6 +3119,9 @@ msgstr "Antragsteller*in"
 
 msgid "Submitters changed"
 msgstr "Antragsteller*in geändert"
+
+msgid "Suitable accounts found"
+msgstr "Passende Accounts gefunden"
 
 msgid "Sum of votes without general options"
 msgstr "Summe der Stimmen ohne generelle Optionen"
