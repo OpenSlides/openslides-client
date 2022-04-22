@@ -217,6 +217,9 @@ msgstr ""
 msgid "Allow support"
 msgstr ""
 
+msgid "Allow to accumulate several votes on one candidate (\"comulative voting\")"
+msgstr ""
+
 msgid "Allow users to set themselves as present"
 msgstr ""
 
@@ -484,6 +487,9 @@ msgstr ""
 msgid "Autopilot"
 msgstr ""
 
+msgid "Available sizes are 10, 11 and 12"
+msgstr ""
+
 msgid "Available votes"
 msgstr ""
 
@@ -511,10 +517,16 @@ msgstr ""
 msgid "Base folder"
 msgstr ""
 
+msgid "Begin at"
+msgstr ""
+
 msgid "Begin speech"
 msgstr ""
 
 msgid "Blank between prefix and number, e.g. 'A 001'."
+msgstr ""
+
+msgid "CSV export options"
 msgstr ""
 
 msgid "CSV import"
@@ -736,6 +748,9 @@ msgstr ""
 msgid "Check in or check out participants based on their participant numbers:"
 msgstr ""
 
+msgid "Choice"
+msgstr ""
+
 msgid "Choose 0 to disable the supporting system."
 msgstr ""
 
@@ -838,6 +853,9 @@ msgstr ""
 msgid "Continue livestream"
 msgstr ""
 
+msgid "Continuous text"
+msgstr ""
+
 msgid "Contra speech"
 msgstr ""
 
@@ -893,6 +911,9 @@ msgid "Create user"
 msgstr ""
 
 msgid "Creating PDF file ..."
+msgstr ""
+
+msgid "Creation"
 msgstr ""
 
 msgid "Creation date"
@@ -1187,9 +1208,6 @@ msgstr ""
 msgid "Empty text field"
 msgstr ""
 
-msgid "Enable chat"
-msgstr ""
-
 msgid "Enable chat globally"
 msgstr ""
 
@@ -1230,6 +1248,9 @@ msgid "End speech"
 msgstr ""
 
 msgid "Enforce page breaks"
+msgstr ""
+
+msgid "Enter"
 msgstr ""
 
 msgid "Enter conference room"
@@ -1305,9 +1326,6 @@ msgstr ""
 msgid "Export motions"
 msgstr ""
 
-msgid "Export options"
-msgstr ""
-
 msgid "Export personal note only"
 msgstr ""
 
@@ -1354,6 +1372,9 @@ msgid "Follow recommendations for all motions"
 msgstr ""
 
 msgid "Following users are currently editing this motion:"
+msgstr ""
+
+msgid "Font size in pt"
 msgstr ""
 
 msgid "Foreground color"
@@ -1456,6 +1477,9 @@ msgid "Has speakers"
 msgstr ""
 
 msgid "Has unchanged vote weight"
+msgstr ""
+
+msgid "Header"
 msgstr ""
 
 msgid "Header background color"
@@ -1692,6 +1716,12 @@ msgid "Line length"
 msgstr ""
 
 msgid "Line numbering"
+msgstr ""
+
+msgid "Line spacing"
+msgstr ""
+
+msgid "Linenumber"
 msgstr ""
 
 msgid "List of electronic votes"
@@ -2227,6 +2257,9 @@ msgstr ""
 msgid "PDF export"
 msgstr ""
 
+msgid "PDF export options"
+msgstr ""
+
 msgid "PDF footer logo (left)"
 msgstr ""
 
@@ -2245,7 +2278,22 @@ msgstr ""
 msgid "Page"
 msgstr ""
 
-msgid "Page number alignment in PDF"
+msgid "Page format"
+msgstr ""
+
+msgid "Page margin bottom in mm"
+msgstr ""
+
+msgid "Page margin left in mm"
+msgstr ""
+
+msgid "Page margin right in mm"
+msgstr ""
+
+msgid "Page margin top in mm"
+msgstr ""
+
+msgid "Page number alignment in footer"
 msgstr ""
 
 msgid "Page numbers"
@@ -2617,6 +2665,9 @@ msgstr ""
 msgid "Secret voting can not be guaranteed"
 msgstr ""
 
+msgid "Select"
+msgstr ""
+
 msgid "Select a new candidate"
 msgstr ""
 
@@ -2779,7 +2830,7 @@ msgstr ""
 msgid "Show hint »first speech« in the list of speakers management view"
 msgstr ""
 
-msgid "Show internal items when projecting subitems"
+msgid "Show internal items when projecting agenda"
 msgstr ""
 
 msgid "Show live conference window"
@@ -2893,12 +2944,6 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-msgid "Standard font size in PDF"
-msgstr ""
-
-msgid "Standard page size in PDF"
-msgstr ""
-
 msgid "Start date"
 msgstr ""
 
@@ -2960,6 +3005,9 @@ msgid "Submitters"
 msgstr ""
 
 msgid "Submitters changed"
+msgstr ""
+
+msgid "Suitable accounts found"
 msgstr ""
 
 msgid "Sum of votes without general options"
