@@ -66,7 +66,7 @@ export class MotionExportDialogComponent implements OnInit {
     private defaults: MotionExportInfo = {
         format: ExportFileFormat.PDF,
         content: [`text`, `reason`],
-        pdfOptions: [`toc`, `page`, `addBreaks`],
+        pdfOptions: [PDF_OPTIONS.Toc, PDF_OPTIONS.Header, PDF_OPTIONS.Page, PDF_OPTIONS.AddBreaks],
         metaInfo: [`submitters`, `state`, `recommendation`, `category`, `origin`, `tags`, `block`, `polls`]
     };
 
@@ -103,8 +103,14 @@ export class MotionExportDialogComponent implements OnInit {
     /**
      * To deactivate the toc button.
      */
-    @ViewChild(`toc`, { static: true })
+    @ViewChild(PDF_OPTIONS.Toc)
     public tocButton: MatButtonToggle;
+
+    /**
+     * To deactivate the addBreaks button.
+     */
+    @ViewChild(PDF_OPTIONS.AddBreaks)
+    public addBreaksButton: MatButtonToggle;
 
     /**
      * Constructor
@@ -192,9 +198,13 @@ export class MotionExportDialogComponent implements OnInit {
      */
     private onPdfOptionsChange(pdfOptions: string[]): void {
         if (pdfOptions && pdfOptions.includes(PDF_OPTIONS.ContinuousText)) {
+            this.tocButton.checked = false;
             this.tocButton.disabled = true;
+            this.addBreaksButton.checked = false;
+            this.addBreaksButton.disabled = true;
         } else {
             this.tocButton.disabled = false;
+            this.addBreaksButton.disabled = false;
         }
     }
 

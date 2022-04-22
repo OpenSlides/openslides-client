@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { ProgressSnackBarComponent } from 'app/shared/components/progress-snack-bar/progress-snack-bar.component';
+import { PDF_OPTIONS } from 'app/site/motions/motions.constants';
 import { MotionExportInfo } from 'app/site/motions/services/motion-export.service';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
@@ -155,13 +156,17 @@ export class PdfDocumentService {
                 font: `PdfFont`,
                 fontSize: this.meetingSettingsService.instant(`export_pdf_fontsize`)
             },
-            header: this.getHeader([pageMargins[0], pageMargins[2]]),
+            header: {},
             // real footer gets created in the worker
             tmpfooter: this.getFooter([pageMargins[0], pageMargins[2]], exportInfo),
             info: metadata,
             content: documentContent,
             styles: this.getStandardPaperStyles()
         };
+
+        if (exportInfo && exportInfo.pdfOptions && exportInfo.pdfOptions.includes(PDF_OPTIONS.Header)) {
+            result.header = this.getHeader([pageMargins[0], pageMargins[2]]);
+        }
 
         // DEBUG: printing the following. Do not remove, just comment out
         // console.log('MakePDF result :\n---\n', JSON.stringify(result), '\n---\n');
@@ -420,17 +425,11 @@ export class PdfDocumentService {
     public download(docDefinition: object, filename: string, metadata?: object, exportInfo?: MotionExportInfo): void {
         this.showProgress();
 
-        const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
-        const pageMarginLeft = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`));
-        const pageMarginTop = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`));
-        const pageMarginRight = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_right`));
-        const pageMarginBottom = this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`));
-
         const pageMargins: [number, number, number, number] = [
-            pageMarginLeft,
-            pageMarginTop,
-            pageMarginRight,
-            pageMarginBottom
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`)),
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`)),
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`)),
+            this.mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`))
         ];
 
         this.getStandardPaper(docDefinition, pageMargins, metadata, exportInfo, null).then(doc => {

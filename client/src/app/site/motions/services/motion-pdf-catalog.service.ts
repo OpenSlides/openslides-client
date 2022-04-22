@@ -52,9 +52,10 @@ export class MotionPdfCatalogService {
     public motionListToDocDef(motions: ViewMotion[], exportInfo: MotionExportInfo): object {
         let doc = [];
         const motionDocList = [];
-        const printToc = exportInfo.pdfOptions.includes(`toc`);
-        const enforcePageBreaks = exportInfo.pdfOptions.includes(`addBreaks`);
+        const printToc = exportInfo.pdfOptions.includes(PDF_OPTIONS.Toc);
         const hasContinuousText = exportInfo.pdfOptions.includes(PDF_OPTIONS.ContinuousText);
+        // Do not enforce page breaks when continuous text is selected.
+        const enforcePageBreaks = exportInfo.pdfOptions.includes(PDF_OPTIONS.AddBreaks) && !hasContinuousText;
 
         for (let motionIndex = 0; motionIndex < motions.length; ++motionIndex) {
             let continuousText = hasContinuousText;
