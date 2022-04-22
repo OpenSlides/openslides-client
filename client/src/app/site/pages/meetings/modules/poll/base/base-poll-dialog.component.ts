@@ -1,6 +1,7 @@
 import { Directive, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -19,11 +20,16 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { OneOfValidator } from 'src/app/ui/modules/user-components';
 
-import { PollFormComponent } from '../components/poll-form/poll-form.component';
+import { BasePollFormComponent } from '../components/base-poll-form/base-poll-form.component';
 
 export interface OptionsObject {
-    fqid: Fqid;
+    fqid?: Fqid; //Obligatory if optionTypeText===false
+    text?: string; //Obligatory if optionTypeText===true
     content_object?: BaseModel;
+}
+
+export interface OptionsObjectForText {
+    text: string;
 }
 
 /**
@@ -33,7 +39,19 @@ export interface OptionsObject {
 export abstract class BasePollDialogComponent extends BaseUiComponent implements OnInit {
     public dialogVoteForm!: FormGroup;
 
+    /**
+     * Behaviorsubject for the view:
+     * Is fed with current keys for the options subgroup of dialogVoteForm upon update.
+     */
+    public dialogVoteFormOptionKeysSubject = new BehaviorSubject<string[]>([]);
+
     public publishImmediately: boolean = false;
+
+    /**
+     * If the options of the finished poll should hold text instead of content_object_id,
+     * this variable should be changed to true in the constructor.
+     */
+    protected optionTypeText = false;
 
     public voteValueVerbose = VoteValueVerbose;
 
@@ -57,8 +75,8 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         return this.pollForm.contentForm.get(`type`)!.value === PollType.Analog || false;
     }
 
-    @ViewChild(PollFormComponent, { static: true })
-    protected pollForm: PollFormComponent | null = null;
+    @ViewChild(BasePollFormComponent, { static: true })
+    protected pollForm: BasePollFormComponent | null = null;
 
     protected _options: OptionsObject[] = [];
 
@@ -135,7 +153,11 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         return this.replaceEmptyValues(this.dialogVoteForm.value);
     }
 
-    protected abstract getContentObjectsForOptions(): BaseModel[];
+    /**
+     * @return Must return BaseModel in case of object-based options (optionTypeText===false)
+     * and string in case of text-based options (optionTypeText===true)
+     */
+    protected abstract getContentObjectsForOptions(): BaseModel[] | { text: string }[];
     protected abstract getAnalogVoteFields(): VoteValue[];
     protected onBeforeInit(): void {}
 
@@ -191,11 +213,18 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         const result: any[] = [];
         const optionKeys = Object.keys(options);
         for (let index = 0; index < optionKeys.length; ++index) {
-            result.push({
-                ...options[optionKeys[index]],
-                id: this.pollData.poll?.option_ids[index],
-                content_object_id: optionKeys[index]
-            });
+            if (this.optionTypeText === false) {
+                result.push({
+                    ...options[optionKeys[index]],
+                    id: this.pollData.poll?.option_ids[index],
+                    content_object_id: optionKeys[index]
+                });
+            } else {
+                result.push({
+                    ...options[optionKeys[index]],
+                    id: this.pollData.poll?.option_ids[index]
+                });
+            }
         }
         return result;
     }
@@ -204,7 +233,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         if (this.pollData) {
             if (this.pollData instanceof ViewPoll) {
                 this._options = this.pollData.options;
-            } else {
+            } else if (this.optionTypeText === false) {
                 this._options = this.getContentObjectsForOptions().map(
                     contentObject => ({
                         fqid: contentObject.fqid,
@@ -212,7 +241,45 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
                     }),
                     {}
                 );
+            } else {
+                this._options = this.getContentObjectsForOptions();
             }
+        }
+    }
+
+    /**
+     * Create a form group for each option with the user id as key
+     */
+    private createOptionsForVoteForm(): { [key: string]: any } {
+        if (this.optionTypeText === false) {
+            //with content_object_id
+            return this.options?.mapToObject(option => ({
+                [option.fqid]: this.formBuilder.group(
+                    // for each user, create a form group with a control for each valid input (Y, N, A)
+                    this.analogVoteFields?.mapToObject(value => ({
+                        [value]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
+                    }))
+                )
+            }));
+        } else {
+            //with text
+            //get a unique key
+            let key = 0;
+            return this.options?.mapToObject(option => {
+                key++;
+                return {
+                    [key.toString(10)]: this.formBuilder.group(
+                        // The text for the option
+                        {
+                            text: [[option.text], [Validators.required]],
+                            // for each user, create a form group with a control for each valid input (Y, N, A)
+                            ...this.analogVoteFields?.mapToObject(value => ({
+                                [value]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
+                            }))
+                        }
+                    )
+                };
+            });
         }
     }
 
@@ -224,14 +291,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
             this.dialogVoteForm = this.formBuilder.group({
                 options: this.formBuilder.group(
                     // create a form group for each option with the user id as key
-                    this._options?.mapToObject(option => ({
-                        [option.fqid]: this.formBuilder.group(
-                            // for each user, create a form group with a control for each valid input (Y, N, A)
-                            this.analogVoteFields?.mapToObject(value => ({
-                                [value]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
-                            }))
-                        )
-                    }))
+                    this.createOptionsForVoteForm()
                 ),
                 amount_global_yes: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
                 amount_global_no: [``, [Validators.min(LOWEST_VOTE_VALUE)]],
@@ -241,6 +301,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
                     [sumValue]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
                 }))
             });
+            this.updateDialogVoteFormOptionKeysSubject();
             setTimeout(() => {
                 if (this.isAnalogPoll && this.pollData instanceof ViewPoll) {
                     this.updateDialogVoteForm(this.pollData);
@@ -275,5 +336,18 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
             const result = this.undoReplaceEmptyValues(update);
             this.dialogVoteForm.patchValue(result);
         }
+    }
+
+    public get optionsFromVoteForm(): FormGroup | null {
+        const dialogVoteFormControls = this.dialogVoteForm?.controls;
+        if (dialogVoteFormControls && !!dialogVoteFormControls[`options`]) {
+            return dialogVoteFormControls[`options`] as FormGroup;
+        } else {
+            return null;
+        }
+    }
+
+    public updateDialogVoteFormOptionKeysSubject(): void {
+        this.dialogVoteFormOptionKeysSubject.next(Object.keys(this.optionsFromVoteForm.controls));
     }
 }

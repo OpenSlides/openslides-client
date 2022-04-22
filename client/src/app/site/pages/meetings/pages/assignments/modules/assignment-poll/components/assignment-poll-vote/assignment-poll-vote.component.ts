@@ -17,7 +17,11 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
-const voteOptions = {
+const voteOptions: {
+    Yes: VoteOption;
+    No: VoteOption;
+    Abstain: VoteOption;
+} = {
     Yes: {
         vote: `Y`,
         css: `voted-yes`,

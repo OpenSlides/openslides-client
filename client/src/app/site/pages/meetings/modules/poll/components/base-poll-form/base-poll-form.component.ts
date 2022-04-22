@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Directive, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
 import {
     PollBackendDurationChoices,
@@ -7,29 +8,40 @@ import {
     PollMethod,
     PollPercentBase,
     PollPropertyVerbose,
+    PollPropertyVerboseKey,
     PollType,
     PollTypeVerbose
-} from 'src/app/domain/models/poll/poll-constants';
+} from 'src/app/domain/models/poll';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
-import { GroupControllerService } from '../../../../pages/participants/modules/groups/services/group-controller.service';
+import { GroupControllerService } from '../../../../pages/participants';
+import { ViewPoll } from '../../../../pages/polls';
+import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollService } from '../../services/poll.service';
 
-@Component({
-    selector: `os-poll-form`,
-    templateUrl: `./poll-form.component.html`,
-    styleUrls: [`./poll-form.component.scss`]
-})
-export class PollFormComponent extends BaseUiComponent implements OnInit {
+/**
+ * Interface for determining, which choices are presented to the user in the poll-form.
+ * If a certain choice needs to be hidden, the corresponding attribute in this interface needs to be set to true.
+ */
+export interface PollFormHideSelectsData {
+    type?: boolean;
+    entitledGroups?: boolean;
+    pollMethod?: boolean;
+    globalOptions?: boolean;
+    hundredPercentBase?: boolean;
+    backendDuration?: boolean;
+}
+
+@Directive()
+export abstract class BasePollFormComponent extends BaseComponent implements OnInit {
     /**
      * The form-group for the meta-info.
      */
-    public contentForm!: FormGroup;
+    public contentForm: FormGroup;
     public parentErrorStateMatcher = new ParentErrorStateMatcher();
 
     public PollType = PollType;
@@ -40,32 +52,33 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
      * The different methods for this poll.
      */
     @Input()
-    public pollMethods: { [key: string]: string } | undefined;
+    public pollMethods: { [key: string]: string };
 
     /**
      * The different percent bases for this poll.
      */
     @Input()
-    public percentBases: { [key: string]: string } = {};
+    public percentBases: { [key: string]: string };
 
     @Input()
-    public data!: Partial<ViewPoll>;
+    public data: Partial<ViewPoll>;
 
     @Input()
     public pollService!: PollService;
 
     @Input()
-    public pollClassType!: PollClassType;
+    public pollClassType: PollClassType;
 
     /**
      * The different types the poll can accept.
      */
+    @Input()
     public pollTypes = PollTypeVerbose;
 
     /**
      * the filtered `percentBases`.
      */
-    public validPercentBases: { [key: string]: string } = {};
+    public validPercentBases: { [key: string]: string };
 
     /**
      * An twodimensional array to handle constant values for this poll.
@@ -73,10 +86,6 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
     public pollValues: [string, unknown][] = [];
 
     public showNonNominalWarning = false;
-
-    public get isAssignmentPoll(): boolean {
-        return this.pollClassType === PollClassType.Assignment;
-    }
 
     public get isEVotingEnabled(): boolean {
         if (this.pollService) {
@@ -87,7 +96,7 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
     }
 
     public get isCreated(): boolean {
-        return !this.data.state || !!this.data.isCreated; // no state means, its under creation
+        return !this.data.state || this.data.isCreated; // no state means, its under creation
     }
 
     public get isEVotingSelected(): boolean {
@@ -95,40 +104,44 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
     }
 
     private get pollTypeControl(): AbstractControl {
-        return this.contentForm.get(`type`)!;
+        return this.contentForm.get(`type`);
     }
 
     private get pollMethodControl(): AbstractControl {
-        return this.contentForm.get(`pollmethod`)!;
+        return this.contentForm.get(`pollmethod`);
     }
 
     private get globalYesControl(): AbstractControl {
-        return this.contentForm.get(`global_yes`)!;
+        return this.contentForm.get(`global_yes`);
     }
 
     private get globalNoControl(): AbstractControl {
-        return this.contentForm.get(`global_no`)!;
+        return this.contentForm.get(`global_no`);
     }
 
     private get globalAbstainControl(): AbstractControl {
-        return this.contentForm.get(`global_abstain`)!;
+        return this.contentForm.get(`global_abstain`);
     }
 
     private get percentBaseControl(): AbstractControl {
-        return this.contentForm.get(`onehundred_percent_base`)!;
+        return this.contentForm.get(`onehundred_percent_base`);
     }
+
+    public abstract get hideSelects(): PollFormHideSelectsData;
 
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
      * injects the poll itself
      */
     public constructor(
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService,
         private fb: FormBuilder,
         public groupRepo: GroupControllerService,
         private dialog: VotingPrivacyWarningDialogService,
-        private meetingSettingService: MeetingSettingsService
+        protected meetingSettingService: MeetingSettingsService
     ) {
-        super();
+        super(componentServiceCollector, translate);
         this.initContentForm();
     }
 
@@ -141,17 +154,7 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
             this.checkPollState();
             this.checkPollBackend();
 
-            // if (this.data.isAssignmentPoll) {
-            //     if (!!this.data.getContentObject?.() && !this.data.max_votes_amount) {
-            //         const assignment = this.data.getContentObject() as ViewAssignment;
-            //         this.data.max_votes_amount = assignment.open_posts;
-            //     }
-            //     if (!this.data.pollmethod) {
-            //         this.data.pollmethod = this.meetingSettingService.instant(`assignment_poll_default_method`)!;
-            //     }
-            // }
-
-            if (this.data.max_votes_per_option! > 1 && !this.pollService.isMaxVotesPerOptionEnabled()) {
+            if (this.data.max_votes_per_option > 1 && !this.pollService.isMaxVotesPerOptionEnabled()) {
                 // Reset max_votes_per_option if a poll has been created with max_votes_per_option>1 but
                 // afterwards this features was disabled. The value will be reset as soon as the options
                 // of this poll are edited.
@@ -195,8 +198,8 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
         for (const key of Object.keys(formGroup.controls)) {
             const currentControl = formGroup.controls[key];
             if (currentControl instanceof FormControl) {
-                if (this.data[key as keyof ViewPoll]) {
-                    currentControl.patchValue(this.data[key as keyof ViewPoll]);
+                if (this.data[key]) {
+                    currentControl.patchValue(this.data[key]);
                 }
             } else if (currentControl instanceof FormGroup) {
                 this.patchFormValues(currentControl);
@@ -207,7 +210,7 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
     private checkPollBackend(): void {
         if (!this.data.backend) {
             const pollType = this.data.content_object?.collection as PollClassType;
-            this.data.backend = this.meetingSettingService.instant(`${pollType}_poll_default_backend`)!;
+            this.data.backend = this.meetingSettingService.instant(`${pollType}_poll_default_backend`);
         }
     }
 
@@ -242,7 +245,7 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
             return;
         }
 
-        let forbiddenBases: any[] = [];
+        let forbiddenBases = [];
         if (method === PollMethod.YN) {
             forbiddenBases = [PollPercentBase.YNA, PollPercentBase.Y];
         } else if (method === PollMethod.YNA) {
@@ -255,7 +258,7 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
             forbiddenBases.push(PollPercentBase.Entitled);
         }
 
-        const bases: any = {};
+        const bases = {};
         for (const [key, value] of Object.entries(this.percentBases)) {
             if (!forbiddenBases.includes(key)) {
                 bases[key] = value;
@@ -314,7 +317,7 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
      *
      * @param data Passing the properties of the poll.
      */
-    private updatePollValues(data: { [key: string]: any }): void {
+    protected updatePollValues(data: { [key: string]: any }, additionalPollValues?: PollPropertyVerboseKey[]): void {
         if (this.data) {
             const pollMethod: PollMethod = data[`pollmethod`];
             const pollType: PollType = data[`type`];
@@ -324,12 +327,14 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
                     this.pollService.getVerboseNameForValue(`type`, data[`type`])
                 ]
             ];
-            // show pollmethod only for assignment polls
-            if (this.isAssignmentPoll) {
-                this.pollValues.push([
-                    this.pollService.getVerboseNameForKey(`pollmethod`),
-                    this.pollService.getVerboseNameForValue(`pollmethod`, data[`pollmethod`])
-                ]);
+            // optional pollValues
+            if (additionalPollValues) {
+                additionalPollValues.forEach(value => {
+                    this.pollValues.push([
+                        this.pollService.getVerboseNameForKey(value),
+                        this.pollService.getVerboseNameForValue(value, data[value])
+                    ]);
+                });
             }
             if (pollType !== PollType.Analog) {
                 this.pollValues.push([

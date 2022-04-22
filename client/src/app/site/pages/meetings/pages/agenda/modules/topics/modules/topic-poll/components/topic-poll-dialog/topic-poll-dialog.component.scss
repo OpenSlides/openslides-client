@@ -1,0 +1,41 @@
+.option-selection {
+    margin-top: 20px !important;
+    overflow: hidden;
+
+    .mat-form-field,
+    .mat-select {
+        width: 100%;
+    }
+}
+
+.topic-poll-preview-meta-info-form {
+    .info-grid {
+        display: grid;
+        column-gap: 1em;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .option-list {
+        height: 10em;
+        overflow-y: scroll;
+        padding: 10px 25px 0 25px;
+
+        .single-option-line {
+            display: grid;
+            grid-template-columns: auto min-content;
+            grid-column-gap: 0.5em;
+
+            span {
+                margin: auto 0;
+            }
+
+            .delete-button {
+                float: right;
+            }
+        }
+    }
+}
+
+.potential-warning {
+    height: 25px;
+}

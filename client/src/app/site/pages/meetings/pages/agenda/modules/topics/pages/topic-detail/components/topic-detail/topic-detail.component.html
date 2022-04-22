@@ -104,6 +104,26 @@
             </div>
         </form>
     </mat-card>
+
+    <div *ngIf="!editTopic">
+        <ng-container *ngIf="topic && topic.poll_ids?.length">
+            <ng-container *ngFor="let poll of topic.poll_ids | reverse; trackBy: trackById">
+                <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>
+            </ng-container>
+        </ng-container>
+        <div class="create-poll-button" *ngIf="isEVotingEnabled">
+            <button
+                *ngIf="topic && permission.pollCanManage && permission.agendaItemCanManage"
+                create-poll-button
+                mat-stroked-button
+                (click)="openDialog()"
+            >
+                <mat-icon class="main-nav-color">add</mat-icon>
+                <span>{{ 'New poll' | translate }}</span>
+            </button>
+        </div>
+    </div>
+
 </os-detail-view>
 
 <mat-menu #topicExtraMenu="matMenu">

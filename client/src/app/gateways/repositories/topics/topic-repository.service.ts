@@ -51,7 +51,8 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
                 `attachment_ids`,
                 `tag_ids`,
                 `agenda_item_id`,
-                `list_of_speakers_id`
+                `list_of_speakers_id`,
+                `poll_ids`
             ]),
             [ROUTING_FIELDSET]: routingFields
         };

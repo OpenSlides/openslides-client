@@ -1,0 +1,45 @@
+@import 'src/assets/styles/poll-styles-common.scss';
+
+.result-table {
+    margin-top: 2em;
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+    width: 50% th {
+        font-weight: initial;
+    }
+
+    tr {
+        height: 48px;
+
+        td:first-child {
+            padding-right: 1em;
+        }
+    }
+
+    .result {
+        text-align: right;
+        padding-left: 1em;
+    }
+
+    .mat-divider-horizontal {
+        position: initial;
+        padding-bottom: 1em;
+    }
+}
+
+:host {
+    outline: none;
+}
+
+.result-wrapper {
+    cursor: pointer;
+    display: grid;
+    grid-gap: 2em;
+    margin: 2em;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+    .doughnut-chart {
+        display: block;
+    }
+}

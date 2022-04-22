@@ -8,13 +8,19 @@ import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/ag
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
+import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../../services';
+import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
+import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
 import { TopicControllerService } from '../../../../services/topic-controller.service';
 
 @Component({
@@ -24,6 +30,15 @@ import { TopicControllerService } from '../../../../services/topic-controller.se
 })
 export class TopicDetailComponent extends BaseMeetingComponent {
     public readonly COLLECTION = ViewTopic.COLLECTION;
+
+    /**
+     * Determine if the topic-poll-creation functionality should be activated
+     */
+    private _isEVotingEnabled: boolean;
+
+    public get isEVotingEnabled(): boolean {
+        return this._isEVotingEnabled;
+    }
 
     /**
      * Determine if the topic is in edit mode
@@ -63,16 +78,24 @@ export class TopicDetailComponent extends BaseMeetingComponent {
      * Constructor for the topic detail page.
      */
     public constructor(
+        organizationSettingsService: OrganizationSettingsService,
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private formBuilder: FormBuilder,
         private repo: TopicControllerService,
         private promptService: PromptService,
         private operator: OperatorService,
-        private itemRepo: AgendaItemControllerService
+        private itemRepo: AgendaItemControllerService,
+        private pollDialog: TopicPollDialogService,
+        private topicPollService: TopicPollService,
+        private pollController: PollControllerService
     ) {
         super(componentServiceCollector, translate);
         this.createForm();
+
+        organizationSettingsService
+            .get(`enable_electronic_voting`)
+            .subscribe(isEnabled => (this._isEVotingEnabled = isEnabled));
 
         this.itemObserver = this.itemRepo.getViewModelListObservable();
     }
@@ -238,5 +261,24 @@ export class TopicDetailComponent extends BaseMeetingComponent {
     public async updateTopic(): Promise<void> {
         await this.repo.update(this.topicForm!.value, this.topic!);
         this.setEditMode(false);
+    }
+
+    /**
+     * Creates a new Poll
+     */
+    public openDialog(pollId?: Id): void {
+        this.pollDialog.open(this.getDialogData(pollId));
+    }
+
+    private getDialogData(pollId?: Id): Partial<PollDialogData> | ViewPoll {
+        if (pollId) {
+            return this.pollController.getViewModel(pollId)!;
+        } else {
+            return {
+                collection: ViewPoll.COLLECTION,
+                content_object_id: this.topic.fqid,
+                ...this.topicPollService.getDefaultPollData(this.topic)
+            } as Partial<PollDialogData>;
+        }
     }
 }

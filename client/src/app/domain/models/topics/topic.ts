@@ -1,3 +1,4 @@
+import { HasPollIds } from 'src/app/domain/interfaces/has-poll-ids';
 import { HasSequentialNumber } from '../../interfaces';
 import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
 import { HasAttachmentIds } from '../../interfaces/has-attachment-ids';
@@ -26,4 +27,5 @@ export interface Topic
         HasListOfSpeakersId,
         HasAttachmentIds,
         HasTagIds,
-        HasSequentialNumber {}
+        HasSequentialNumber,
+        HasPollIds {}

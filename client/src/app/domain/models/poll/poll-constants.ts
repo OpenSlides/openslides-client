@@ -23,7 +23,8 @@ export type GlobalVote = 'Y' | 'A' | 'N';
 
 export enum PollClassType {
     Motion = `motion`,
-    Assignment = `assignment`
+    Assignment = `assignment`,
+    Topic = `topic`
 }
 
 export enum PollColor {
@@ -34,6 +35,31 @@ export enum PollColor {
     votesinvalid = `#e2e2e2`,
     votescast = `#e2e2e2`
 }
+
+/**
+ * Colors for chart color generation
+ * Keys are freely invented and not in sync with html color names
+ */
+export const pollChartColors: Map<string, string> = new Map([
+    [`green1`, `#5fbfa2`],
+    [`red1`, `#f94144`],
+    [`blue1`, `#317796`],
+    [`orange1`, `#d4520c`],
+    [`blue2`, `#509191`],
+    [`orange2`, `#f9ac4e`],
+    [`blue3`, `#6788a2`],
+    [`orange3`, `#f8793a`],
+    [`blue4`, `#6bbadb`],
+    [`yellow1`, `#eca809`]
+]);
+
+export const pollChartGreys: Map<string, string> = new Map([
+    [`grey1`, `#969696`],
+    [`grey2`, `#b0b0b0`],
+    [`grey3`, `#c2c2c2`],
+    [`grey4`, `#e4e4e4`],
+    [`grey5`, `#f5f5f5`]
+]);
 
 export enum PollState {
     Created = `created`,
