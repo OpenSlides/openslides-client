@@ -1226,11 +1226,11 @@ export class MotionDiffService {
     }
 
     /**
-     * Returns the HTML snippet between two given line numbers.
+     * Returns the HTML snippet ranging from one given line to another.
      * extractRangeByLineNumbers
      * Hint:
-     * - The last line (toLine) is not included anymore, as the number refers to the line breaking element at the end
-     *   of the line
+     * - The last line (toLine) is included, the content between line number "from" to the line number element "to + 1"
+     *   is returned.
      * - if toLine === null, then everything from fromLine to the end of the fragment is returned
      *
      * In addition to the HTML snippet, additional information is provided regarding the most specific DOM element
@@ -1273,6 +1273,8 @@ export class MotionDiffService {
 
         const fragment = this.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
+
+        let toLineNumber;
         if (toLine === null) {
             const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
             const lastMarker = <Element>internalLineMarkers[internalLineMarkers.length - 1];
@@ -1461,7 +1463,7 @@ export class MotionDiffService {
     }
 
     /**
-     * This is a workardoun to prevent the last word of the inserted text from accidently being merged with the
+     * This is a workaround to prevent the last word of the inserted text from accidentally being merged with the
      * first word of the following line.
      *
      * This happens as trailing spaces in the change recommendation's text are frequently stripped,
@@ -2145,6 +2147,7 @@ export class MotionDiffService {
      * @param {string} origText The original text - needs to be line-numbered
      * @param {string} newText The changed text
      * @param {number} lineLength the line length
+     * @param {ViewUnifiedChange[]} changeRecos
      * @return {DiffLinesInParagraph|null}
      */
     public getAmendmentParagraphsLines(
@@ -2159,7 +2162,7 @@ export class MotionDiffService {
         const affected_lines = this.detectAffectedLineRange(diff) as LineRange;
 
         /**
-         * If the affect line has change recos, overwirte the diff with the change reco
+         * If the affect line has change recos, overwrite the diff with the change reco
          */
         if (changeRecos && changeRecos.length) {
             const recoToThisLine = changeRecos.find(reco => reco.getLineFrom() === affected_lines.from);
@@ -2185,7 +2188,7 @@ export class MotionDiffService {
             textPost = this.formatDiffWithLineNumbers(
                 this.extractRangeByLineNumbers(diff, affected_lines.to, paragraph_line_range.to!),
                 lineLength,
-                affected_lines.to
+                affected_lines.to + 1
             );
         }
         const text = this.formatDiffWithLineNumbers(
@@ -2305,7 +2308,7 @@ export class MotionDiffService {
         let data;
 
         try {
-            data = this.extractRangeByLineNumbers(motionHtml, maxLine, null);
+            data = this.extractRangeByLineNumbers(motionHtml, maxLine + 1, null);
         } catch (e) {
             // This only happens (as far as we know) when the motion text has been altered (shortened)
             // without modifying the change recommendations accordingly.
@@ -2328,7 +2331,7 @@ export class MotionDiffService {
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
-            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine });
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
         } else {
             // Prevents empty lines at the end of the motion
             html = ``;

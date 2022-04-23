@@ -319,12 +319,12 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             if (lineNumber > this.selectedFrom) {
                 this.createChangeRecommendation.emit({
                     from: this.selectedFrom,
-                    to: lineNumber + 1
+                    to: lineNumber
                 });
             } else {
                 this.createChangeRecommendation.emit({
                     from: lineNumber,
-                    to: this.selectedFrom + 1
+                    to: this.selectedFrom
                 });
             }
             this.selectedFrom = null;

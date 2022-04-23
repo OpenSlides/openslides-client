@@ -269,7 +269,7 @@ export class MotionLineNumberingService {
         const motion = amendment.lead_motion as ViewMotion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
-        let amendmentParagraphs: string[] = [];
+        let amendmentParagraphs: string[];
         if (crMode === ChangeRecoMode.Changed) {
             amendmentParagraphs = this.applyChangesToAmendment(
                 amendment,
@@ -324,7 +324,7 @@ export class MotionLineNumberingService {
     }
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
-        if (paragraph.diffLineTo === paragraph.diffLineFrom + 1) {
+        if (paragraph.diffLineTo === paragraph.diffLineFrom) {
             return this.translate.instant(`Line`) + ` ` + paragraph.diffLineFrom.toString(10);
         } else {
             return (
@@ -332,7 +332,7 @@ export class MotionLineNumberingService {
                 ` ` +
                 paragraph.diffLineFrom.toString(10) +
                 ` - ` +
-                (paragraph.diffLineTo - 1).toString(10)
+                paragraph.diffLineTo.toString(10)
             );
         }
     }

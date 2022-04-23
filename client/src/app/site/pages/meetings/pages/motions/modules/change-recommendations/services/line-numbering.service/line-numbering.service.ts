@@ -391,7 +391,7 @@ export class LineNumberingService {
             if (range.from === null) {
                 range.from = parseInt(foundLineNumber[1], 10);
             }
-            range.to = parseInt(foundLineNumber[1], 10) + 1;
+            range.to = parseInt(foundLineNumber[1], 10);
         }
 
         return range;

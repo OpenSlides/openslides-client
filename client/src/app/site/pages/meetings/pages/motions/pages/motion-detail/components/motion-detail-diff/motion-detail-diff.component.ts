@@ -206,8 +206,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * @returns string
      */
     public formatLineRange(change: ViewUnifiedChange): string {
-        if (change.getLineFrom() < change.getLineTo() - 1) {
-            return change.getLineFrom().toString(10) + ` - ` + (change.getLineTo() - 1).toString(10);
+        if (change.getLineFrom() < change.getLineTo()) {
+            return change.getLineFrom().toString(10) + ` - ` + change.getLineTo().toString(10);
         } else {
             return change.getLineFrom().toString(10);
         }
