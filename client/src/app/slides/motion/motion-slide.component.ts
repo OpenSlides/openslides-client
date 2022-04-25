@@ -172,7 +172,11 @@ export class MotionSlideComponent
         }
 
         let baseHtml = this.data.data.text;
-        baseHtml = this.lineNumbering.insertLineNumbers({ html: baseHtml, lineLength: this.lineLength });
+        baseHtml = this.lineNumbering.insertLineNumbers({
+            html: baseHtml,
+            lineLength: this.lineLength,
+            firstLine: this.data.data.start_line_number
+        });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
         const paragraphNumbers = Object.keys(amendment.amendment_paragraphs)
@@ -348,7 +352,8 @@ export class MotionSlideComponent
 
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motion.lead_motion?.text,
-            lineLength: this.lineLength
+            lineLength: this.lineLength,
+            firstLine: motion.start_line_number
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
@@ -415,7 +420,8 @@ export class MotionSlideComponent
         const motion = this.data.data;
         const baseHtml = this.lineNumbering.insertLineNumbers({
             html: motion.lead_motion?.text,
-            lineLength: this.lineLength
+            lineLength: this.lineLength,
+            firstLine: motion.start_line_number
         });
 
         return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);

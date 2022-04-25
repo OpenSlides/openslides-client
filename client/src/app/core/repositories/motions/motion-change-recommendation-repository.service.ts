@@ -137,13 +137,18 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
      * @param {ViewMotion} motion
      * @param {LineRange} lineRange
      * @param {number} lineLength
+     * @param {number} firstLine
      */
     public createMotionChangeRecommendationTemplate(
         motion: ViewMotion,
         lineRange: LineRange,
         lineLength: number
     ): Partial<MotionChangeRecommendationAction.CreatePayload> {
-        const motionText = this.lineNumbering.insertLineNumbers({ html: motion.text, lineLength });
+        const motionText = this.lineNumbering.insertLineNumbers({
+            html: motion.text,
+            lineLength,
+            firstLine: motion.firstLine
+        });
 
         const changeReco: Partial<MotionChangeRecommendationAction.CreatePayload> = {};
         changeReco.line_from = lineRange.from;
@@ -212,11 +217,14 @@ export class MotionChangeRecommendationRepositoryService extends BaseRepositoryW
         return changeReco;
     }
 
-    public create(model: Partial<Partial<MotionChangeRecommendationAction.CreatePayload>>): Promise<Identifiable> {
+    public create(
+        model: Partial<Partial<MotionChangeRecommendationAction.CreatePayload>>,
+        firstLine: number = 1
+    ): Promise<Identifiable> {
         const payload: MotionChangeRecommendationAction.CreatePayload = {
             internal: model.internal,
-            line_from: model.line_from,
-            line_to: model.line_to,
+            line_from: model.line_from - firstLine + 1,
+            line_to: model.line_to - firstLine + 1,
             motion_id: model.motion_id,
             other_description: model.other_description,
             rejected: model.rejected,

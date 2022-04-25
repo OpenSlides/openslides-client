@@ -630,7 +630,7 @@ export class MotionPdfService {
             const formattedText = this.motionFormatService.formatMotion({
                 targetMotion: createTextData.motion,
                 changes: textChanges,
-                firstLine: createTextData.motion.start_line_number,
+                firstLine: createTextData.motion.firstLine,
                 ...createTextData
             });
             // reformat motion text to split long HTML elements to easier convert into PDF

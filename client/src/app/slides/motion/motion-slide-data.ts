@@ -59,9 +59,7 @@ export interface AmendmentData {
 export interface MotionSlideData extends MotionFormattingRepresentation {
     number: string;
     title: string;
-    text: string;
     reason: string;
-    modified_final_version: string;
     submitters: string[];
     amendment_paragraphs: { [paragraphNumber: string]: string };
     lead_motion: LeadMotionData;
@@ -77,4 +75,5 @@ export interface MotionSlideData extends MotionFormattingRepresentation {
     line_length: number;
     preamble: string;
     line_numbering: LineNumberingMode;
+    start_line_number: number;
 }

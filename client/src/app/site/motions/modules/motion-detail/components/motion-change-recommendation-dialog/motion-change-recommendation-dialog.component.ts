@@ -17,6 +17,7 @@ import {
  */
 export interface MotionChangeRecommendationDialogComponentData extends BaseChangeRecommendationData {
     lineRange: LineRange;
+    firstLine: number;
 }
 
 /**
@@ -93,5 +94,16 @@ export class MotionChangeRecommendationDialogComponent extends BaseChangeRecomme
     protected initializeDialogData(): void {
         super.initializeDialogData();
         this.lineRange = this.data.lineRange;
+    }
+
+    protected async createChangeRecommendation(): Promise<void> {
+        await this.repo.create(
+            {
+                ...this.changeReco,
+                ...this.contentForm.value,
+                internal: !this.contentForm.value.public
+            },
+            this.data.firstLine
+        );
     }
 }

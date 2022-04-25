@@ -70,6 +70,10 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public statute_paragraph_id: Id; // motion_statute_paragraph/motion_ids;
     public comment_ids: Id[]; // (motion_comment/motion_id)[];
 
+    public get firstLine(): number {
+        return this.start_line_number || 1;
+    }
+
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
     }

@@ -61,9 +61,9 @@ interface SectionHeading {
 interface InsertLineNumbersConfig {
     html: string;
     lineLength: number;
+    firstLine: number;
     highlight?: number;
     callback?: () => void;
-    firstLine?: number;
 }
 
 /**
@@ -159,10 +159,9 @@ export class LinenumberingService {
      */
     public djb2hash(str: string): string {
         let hash = 5381;
-        let char;
+        let char: number;
         for (let i = 0; i < str.length; i++) {
             char = str.charCodeAt(i);
-            // tslint:disable-next-line:no-bitwise
             hash = (hash << 5) + hash + char;
         }
         return hash.toString();
@@ -901,12 +900,6 @@ export class LinenumberingService {
 
     /**
      * Adds line number nodes to the given html string.
-     * @param {string} html
-     * @param {number} lineLength
-     * @param {number} highlight
-     * @param {function} callback
-     * @param {number} firstLine
-     * @returns {string}
      */
     public insertLineNumbers({
         html,
@@ -923,7 +916,7 @@ export class LinenumberingService {
             newRoot = this.insertLineNumbersNode(html, lineLength, highlight, firstLine);
             newHtml = newRoot.innerHTML;
         } else {
-            const firstLineStr = firstLine === undefined ? `` : firstLine.toString();
+            const firstLineStr = !firstLine ? `` : firstLine.toString();
             const cacheKey = this.djb2hash(firstLineStr + `-` + lineLength.toString() + html);
             newHtml = this.lineNumberCache.get(cacheKey);
 

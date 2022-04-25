@@ -77,7 +77,7 @@ export class MotionFormatService {
                 this.diffService.extractMotionLineRange(
                     motionText,
                     {
-                        from: i === 0 ? 1 : changesToShow[i - 1].getLineTo(),
+                        from: i === 0 ? firstLine : changesToShow[i - 1].getLineTo(),
                         to: changesToShow[i].getLineFrom()
                     },
                     true,
@@ -153,14 +153,7 @@ export class MotionFormatService {
      * @param lineLength the current line
      * @param highlightedLine the currently highlighted line (default: none)
      */
-    public formatMotion({
-        targetMotion,
-        crMode,
-        changes,
-        lineLength,
-        highlightedLine,
-        firstLine
-    }: FormatMotionConfig): string | null {
+    public formatMotion({ targetMotion, crMode, ...args }: FormatMotionConfig): string | null {
         if (!targetMotion?.text) {
             return null;
         }
@@ -177,7 +170,7 @@ export class MotionFormatService {
             throw new Error(`unrecognized ChangeRecoMode option (${crMode})`);
         }
 
-        return fn(targetMotion, { changes, lineLength, highlightedLine, firstLine });
+        return fn(targetMotion, args);
     }
 
     private getFinalView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
