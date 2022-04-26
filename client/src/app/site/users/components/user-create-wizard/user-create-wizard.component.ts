@@ -13,7 +13,6 @@ import { MEETING_RELATED_FORM_CONTROLS, PERSONAL_FORM_CONTROLS, UserService } fr
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { User } from 'app/shared/models/users/user';
 import { OneOfValidator } from 'app/shared/validators/one-of-validator';
-import { BaseComponent } from 'app/site/base/components/base.component';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -126,7 +125,7 @@ export class UserCreateWizardComponent extends BaseModelContextComponent impleme
                 email: [``]
             },
             {
-                validators: [OneOfValidator.validation([`username`, `first_name`, `last_name`], `name`)]
+                validators: [OneOfValidator.validation([`username`, `first_name`, `last_name`, `email`], `name`)]
             }
         );
     }
@@ -158,7 +157,7 @@ export class UserCreateWizardComponent extends BaseModelContextComponent impleme
     public async onChooseAccount(): Promise<void> {
         if (this._formHasChanged) {
             const { username, first_name, last_name, email } = this.createUserForm.value;
-            const _username = username ? username : `${first_name} ${last_name}`;
+            const _username = username ? username : `${first_name}${last_name}`;
             const result = await this.presenter.call({
                 searchCriteria: [{ username: _username, email }]
             });

@@ -651,35 +651,31 @@ export class UserRepositoryService
         const newUser: FullNameInformation = {
             username: ``,
             structure_level: () => ``,
-            number: () => ``
+            number: () => ``,
+            first_name: ``,
+            last_name: ``
+        };
+        const assignName = (nameParts: string[]) => {
+            switch (nameParts.length) {
+                case 1:
+                    newUser.first_name = nameParts[0];
+                    break;
+                case 2:
+                    newUser.first_name = nameParts[0];
+                    newUser.last_name = nameParts[1];
+                    break;
+                default:
+                    newUser.first_name = inputUser;
+            }
         };
         if (schema === `lastCommaFirst`) {
             const commaSeparated = inputUser.split(`,`);
-            switch (commaSeparated.length) {
-                case 1:
-                    newUser.first_name = commaSeparated[0];
-                    break;
-                case 2:
-                    newUser.last_name = commaSeparated[0];
-                    newUser.first_name = commaSeparated[1];
-                    break;
-                default:
-                    newUser.first_name = inputUser;
-            }
+            assignName(commaSeparated.slice().reverse());
         } else if (schema === `firstSpaceLast`) {
             const splitUser = inputUser.split(` `);
-            switch (splitUser.length) {
-                case 1:
-                    newUser.first_name = splitUser[0];
-                    break;
-                case 2:
-                    newUser.first_name = splitUser[0];
-                    newUser.last_name = splitUser[1];
-                    break;
-                default:
-                    newUser.first_name = inputUser;
-            }
+            assignName(splitUser);
         }
+        newUser.username = newUser.first_name + newUser.last_name;
         return newUser;
     }
 

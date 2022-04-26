@@ -49,7 +49,7 @@ export class CommitteeRepositoryService
             `user_ids`,
             { templateField: `user_$_management_level` }
         ]);
-        const editFields = titleFields.concat([`default_meeting_id`, `template_meeting_id`]);
+        const editFields = titleFields.concat([`default_meeting_id`]);
         return {
             [DEFAULT_FIELDSET]: titleFields,
             list: listFields,

@@ -13,6 +13,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MotionAction } from 'app/core/actions/motion-action';
 import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import { Deferred } from 'app/core/promises/deferred';
 import { AgendaItemRepositoryService } from 'app/core/repositories/agenda/agenda-item-repository.service';
@@ -38,7 +39,7 @@ import { MotionFilterListService } from 'app/site/motions/services/motion-filter
 import { MotionPdfExportService } from 'app/site/motions/services/motion-pdf-export.service';
 import { MotionSortListService } from 'app/site/motions/services/motion-sort-list.service';
 import { PermissionsService } from 'app/site/motions/services/permissions.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
 import { MotionViewService } from '../../../services/motion-view.service';
@@ -95,7 +96,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
      */
     public previousMotion: ViewMotion;
 
-    public hasLoaded = new Deferred<boolean>();
+    public hasLoaded = new BehaviorSubject(false);
 
     /**
      * Subject for (other) motions
@@ -151,6 +152,11 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         super.ngOnInit();
         this.requestAdditionalModels();
         this.init();
+        this.subscriptions.push(
+            this.activeMeetingIdService.meetingIdObservable.subscribe(() => {
+                this.hasLoaded.next(false);
+            })
+        );
     }
 
     /**
@@ -308,7 +314,7 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         } else {
             this.initNewMotion();
         }
-        this.hasLoaded.resolve(true);
+        this.hasLoaded.next(true);
     }
 
     private registerSubjects(): void {
@@ -493,10 +499,6 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         } catch (e) {
             this.raiseError(e);
         }
-    }
-
-    public async forwardMotionToMeetings(): Promise<void> {
-        await this.motionService.forwardMotionsToMeetings(this.motion);
     }
 
     private async updateMotion(

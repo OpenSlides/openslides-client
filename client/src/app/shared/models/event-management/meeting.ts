@@ -37,7 +37,6 @@ export interface Settings {
     // TODO: Move to meeting. these are not setrtings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
     url_name: string; // For unique urls.
-    is_template: boolean; // Unique within a committee
     enable_anonymous: boolean;
 
     // Jitsi/Livestream settings
@@ -217,7 +216,6 @@ export class Meeting extends BaseModel<Meeting> {
 
     // Other relations
     public committee_id: Id; // committee/meeting_ids;
-    public template_meeting_for_committee_id: Id; // committee/template_meeting_id;
     public default_meeting_for_committee_id: Id; // committee/default_meeting_id;
     public present_user_ids: Id[]; // (user/is_present_in_meeting_ids)[];
     public user_ids: Id[]; // Calculated: All ids all users assigned to groups.
@@ -228,6 +226,7 @@ export class Meeting extends BaseModel<Meeting> {
     public admin_group_id: Id; // group/admin_group_for_meeting_id;
 
     public organization_tag_ids: Id[]; // (organization_tag/meeting_ids)[];
+    public template_for_organization_id: Id; // (organization/template_meeting_ids)[];
     public is_active_in_organization_id: Id; // (organization/active_meeting_ids)[];
     public is_archived_organization_id: Id; // (organization/archived_meeting_ids)[];
 

@@ -73,6 +73,12 @@
             </div>
         </span>
     </os-extension-field>
+
+    <!-- Forward to meeting -->
+    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="canForwardMotion()" class="spacer-top-10">
+        <mat-icon>forward</mat-icon>
+        <span>{{ 'Forward' | translate }}</span>
+    </button>
 </div>
 
 <!-- Recommendation -->
@@ -249,6 +255,7 @@
     <div>
         <div *ngFor="let derived of motion.derived_motions; let last = last">
             <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
+            <span>({{ derived.created | localizedDate }})</span>
         </div>
     </div>
 </div>
@@ -276,7 +283,6 @@
         <a [routerLink]="motion.getDetailStateUrl()">
             {{ motion.meeting?.name }}
         </a>
-        <span>({{ motion.created | localizedDate }})</span>
     </span>
     <div *ngIf="!motion.meeting?.canAccess()">
         {{ motion.meeting?.name }}

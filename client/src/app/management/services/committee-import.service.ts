@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
+import {
+    SearchUsersByNameOrEmailPresenterScope,
+    SearchUsersByNameOrEmailPresenterService
+} from 'app/core/core-services/presenters/search-users-by-name-or-email-presenter.service';
+import { Identifiable } from 'app/shared/models/base/identifiable';
+import { User } from 'app/shared/models/users/user';
 import { ImportModel } from 'app/shared/utils/import/import-model';
 import { ImportStepPhase } from 'app/shared/utils/import/import-step';
 import { toBoolean } from 'app/shared/utils/parser';
@@ -20,15 +27,47 @@ import {
     FORWARD_TO_COMMITTEE_IDS,
     MANAGER_IDS,
     MEETING,
+    MEETING_ADMIN_IDS,
     MEETING_END_DATE,
     MEETING_START_DATE,
+    MEETING_TEMPLATE_ID,
     NAME,
     ORGANIZATION_TAG_IDS
 } from '../../shared/models/event-management/committee.constants';
-import { UserImportHelper } from '../../site/motions/import/user-import-helper';
+import { UserImportHelper, UserSearchService } from '../../site/motions/import/user-import-helper';
 import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../export/committee-csv-export-example';
 
 const COMMITTEE_SHARED_MODELS_KEY = `mapNameModels`;
+
+class CommitteeUserSearchService implements UserSearchService {
+    public constructor(private readonly presenter: SearchUsersByNameOrEmailPresenterService) {}
+
+    public async getDuplicates(users: Partial<User>[]): Promise<{ [username: string]: Partial<User>[] }> {
+        return await this.presenter.call({
+            searchCriteria: users.map(user => {
+                const username = this.getUsername(user);
+                return { username, email: user.email };
+            }),
+            permissionRelatedId: ORGANIZATION_ID,
+            permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
+        });
+    }
+
+    private getUsername(user: Partial<User>): string | undefined {
+        if (user.username) {
+            return user.username;
+        } else {
+            let username = ``;
+            if (user.first_name) {
+                username += user.first_name;
+            }
+            if (user.last_name) {
+                username += user.last_name;
+            }
+            return !!username ? username : undefined;
+        }
+    }
+}
 
 @Injectable({
     providedIn: `root`
@@ -47,22 +86,35 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         organizationTagRepo: OrganizationTagRepositoryService,
         userRepo: UserRepositoryService,
         meetingRepo: MeetingRepositoryService,
-        operator: OperatorService
+        operator: OperatorService,
+        presenter: SearchUsersByNameOrEmailPresenterService
     ) {
         super(serviceCollector);
-        this.registerBeforeImportHelper(ORGANIZATION_TAG_IDS, {
+        const userSearchService = new CommitteeUserSearchService(presenter);
+        this.registerBeforeImportHandler(ORGANIZATION_TAG_IDS, {
             repo: organizationTagRepo,
             idProperty: ORGANIZATION_TAG_IDS,
             nameDelimiter: `;`
         });
-        this.registerBeforeImportHelper(
+        this.registerBeforeImportHandler(
             MANAGER_IDS,
             new UserImportHelper({
                 repo: userRepo,
                 verboseName: _(`Committee management`),
                 property: MANAGER_IDS,
                 useDefault: [operator.operatorId],
+                searchService: userSearchService,
                 mapPropertyToFn: (committee, ids) => (committee.user_$_management_level = { [CML.can_manage]: ids })
+            })
+        );
+        this.registerBeforeImportHandler(
+            MEETING_ADMIN_IDS,
+            new UserImportHelper({
+                repo: userRepo,
+                verboseName: _(`Meeting administrator`),
+                property: MEETING_ADMIN_IDS,
+                useDefault: [operator.operatorId],
+                searchService: userSearchService
             })
         );
         this.registerAfterImportHandler(
@@ -149,25 +201,39 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             ]
         );
         this.registerAfterImportHandler(MEETING, {
-            repo: meetingRepo,
             useArray: true,
             fixedChunkSize: 1,
+            verboseNameFn: plural => meetingRepo.getVerboseName(plural),
             findFn: (name, committee) => ({ name: name === `1` ? committee.name : name }),
             transformFn: (_entries, originalEntries: any[]) => {
                 let meetingPayload = [];
                 for (const committee of originalEntries) {
                     if (committee.meeting && committee.meeting.length > 0) {
+                        const templateId = meetingRepo
+                            .getViewModelList()
+                            .find(_meeting => _meeting.name === committee[MEETING_TEMPLATE_ID])?.id;
+                        const adminIds = committee[MEETING_ADMIN_IDS].map((account: Identifiable) => account.id);
                         meetingPayload = meetingPayload.concat(
                             committee.meeting.map((meeting: CsvMapping) => ({
                                 name: toBoolean(meeting.name) ? `${committee.name}` : meeting.name,
                                 committee_id: committee.id,
-                                start_time: committee.meeting_start_date,
-                                end_time: committee.meeting_end_date
+                                start_time: committee[MEETING_START_DATE],
+                                end_time: committee[MEETING_END_DATE],
+                                admin_ids: adminIds,
+                                meeting_id: templateId
                             }))
                         );
                     }
                 }
                 return meetingPayload;
+            },
+            createFn: (entries: any[]) => {
+                const toCreate = entries.filter(entry => !entry.meeting_id);
+                const toClone = entries.filter(entry => !!entry.meeting_id);
+                return meetingRepo
+                    .create(...toCreate)
+                    .concat(meetingRepo.duplicate(...toClone))
+                    .resolve() as Promise<Identifiable[]>;
             }
         });
     }
@@ -187,6 +253,26 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         if (header === MEETING_START_DATE || header === MEETING_END_DATE) {
             return this.getDate(value);
         }
+    }
+
+    protected async onCreateImportModel({
+        input,
+        importTrackId
+    }: {
+        input: CommitteeCsvPort;
+        importTrackId: number;
+    }): Promise<ImportModel<CommitteeCsvPort>> {
+        const existingCommittee = this.repo
+            .getViewModelList()
+            .find(_committee => _committee.name === input[NAME]) as any;
+        const status = !!existingCommittee ? `merge` : `new`;
+        return new ImportModel({
+            model: input,
+            importTrackId,
+            status,
+            hasDuplicates: false,
+            duplicates: [existingCommittee]
+        });
     }
 
     protected getConfig(): ImportConfig<CommitteeCsvPort> {

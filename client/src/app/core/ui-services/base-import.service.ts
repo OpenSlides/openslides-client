@@ -22,6 +22,7 @@ import {
 } from '../../shared/utils/import/base-additional-import-handler';
 import { AfterImportHandler, BaseAfterImportHandler } from '../../shared/utils/import/base-after-import-handler';
 import { ImportStep, ImportStepPhase } from '../../shared/utils/import/import-step';
+import { hasBeforeFindAction } from '../../shared/utils/import/import-utils';
 import {
     StaticAfterImportConfig,
     StaticAfterImportHandler
@@ -501,7 +502,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> {
 
     protected pipeParseValue(_value: string, _header: keyof MainModel): any {}
 
-    protected registerBeforeImportHelper<ToImport>(
+    protected registerBeforeImportHandler<ToImport>(
         header: string,
         handler: StaticBeforeImportConfig<MainModel, ToImport> | BaseBeforeImportHandler
     ): void {
@@ -530,7 +531,10 @@ export abstract class BaseImportService<MainModel extends Identifiable> {
             if (_handler instanceof BaseAdditionalImportHandler) {
                 return _handler;
             } else {
-                return new StaticAdditionalImportHandler<MainModel, SideModel>(_handler);
+                return new StaticAdditionalImportHandler<MainModel, SideModel>({
+                    ..._handler,
+                    translateFn: key => this.translate.instant(key)
+                });
             }
         };
         const _additionalHandlers = (additionalHandlers ?? []).map(_handler => getAfterImportHandler(_handler));
@@ -556,6 +560,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> {
         } else {
             this._otherMainImportHelper.push(
                 new StaticMainImportHandler({
+                    translateFn: key => this.translate.instant(key),
                     resolveEntryFn: importModel => this.resolveEntry(importModel),
                     ...handler
                 })
@@ -632,9 +637,6 @@ export abstract class BaseImportService<MainModel extends Identifiable> {
      * Maps incoming data of probably manual typed headers and values into headers, used by the rest of an import
      * process.
      *
-     * @param line An incoming header <-> value map
-     * @param importTrackId The number of an import object
-     *
      * @returns A new model which values are linked to any helpers if needed.
      */
     private mapData(importModel: ImportModel<MainModel>): void {
@@ -685,6 +687,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> {
             shouldCreateModelFn,
             createFn,
             updateFn,
+            translateFn: key => this.translate.instant(key),
             resolveEntryFn: importModel => this.resolveEntry(importModel)
         });
         this.updateSummary();
@@ -799,6 +802,11 @@ export abstract class BaseImportService<MainModel extends Identifiable> {
                 errors: []
             });
             this.pushNextNewEntry(nextEntry);
+        }
+        for (const importHandler of this.getEveryImportHandler()) {
+            if (hasBeforeFindAction(importHandler)) {
+                await importHandler.onBeforeFind(this.importModels);
+            }
         }
         this.importModels.forEach(importModel => this.mapData(importModel));
         for (const importHandler of this.getEveryImportHandler()) {

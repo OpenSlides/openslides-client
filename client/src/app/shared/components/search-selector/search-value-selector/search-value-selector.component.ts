@@ -12,7 +12,7 @@ import { FormBuilder, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
+import { auditTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Selectable } from '../../selectable';
 import { BaseSearchValueSelectorComponent } from '../base-search-value-selector/base-search-value-selector.component';
@@ -63,7 +63,7 @@ export class SearchValueSelectorComponent extends BaseSearchValueSelectorCompone
             this.selectableItems = value;
         } else {
             this.subscriptions.push(
-                value.pipe(auditTime(10)).subscribe(items => {
+                value.pipe(auditTime(10), distinctUntilChanged()).subscribe(items => {
                     this.selectableItems = items;
                     if (this.contentForm) {
                         this.disabled = !items || (!!items && !items.length);

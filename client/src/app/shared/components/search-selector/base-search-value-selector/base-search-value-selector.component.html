@@ -53,7 +53,7 @@
             #currentOption
             *cdkVirtualFor="let selectableItem of getFilteredItemsBySearchValue()"
             [value]="selectableItem.id"
-            [disabled]="disableOptionWhenFn(selectableItem)"
+            [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
         >

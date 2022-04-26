@@ -23,6 +23,14 @@ export interface ImportCleanup {
     doCleanup: () => void;
 }
 
+export interface BeforeFindAction<MainModel> {
+    onBeforeFind: (allImportModels: ImportModel<MainModel>[]) => void | Promise<void>;
+}
+
+export function hasBeforeFindAction<MainModel>(instance: any): instance is BeforeFindAction<MainModel> {
+    return typeof instance?.onBeforeFind === `function`;
+}
+
 export interface ImportResolveInformation<M> {
     model: M;
     unresolvedModels: number;

@@ -40,7 +40,7 @@ export class StreamService {
             .pipe(distinctUntilChanged());
 
         operator.userObservable.subscribe(() => {
-            this.canSeeLiveStreamSubject.next(operator.hasPerms(Permission.meetingCanSeeLiveStream));
+            this.canSeeLiveStreamSubject.next(operator.hasPerms(Permission.meetingCanSeeLivestream));
         });
     }
 

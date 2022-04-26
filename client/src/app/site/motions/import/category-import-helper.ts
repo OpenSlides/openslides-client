@@ -37,7 +37,7 @@ export class CategoryImportHelper extends BaseBeforeImportHandler<Motion, Motion
             };
         } else {
             if (!this.modelsToCreate.find(newCat => newCat.name === name)) {
-                this.modelsToCreate.push({ name });
+                this.modelsToCreate.push({ name } as any);
             }
             return { name };
         }

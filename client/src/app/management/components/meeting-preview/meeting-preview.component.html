@@ -11,10 +11,10 @@
             <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
                 <button
                     mat-icon-button
-                    (click)="toggleDefaultMeeting()"
-                    matTooltip="{{ (isDefaultMeeting ? 'Default meeting' : 'Set as default meeting') | translate }}"
+                    (click)="toggleTemplateMeeting()"
+                    matTooltip="{{ (isTemplateMeeting ? 'Template meeting' : 'Set as template meeting') | translate }}"
                 >
-                    <mat-icon>{{ isDefaultMeeting ? 'star' : 'star_outline' }}</mat-icon>
+                    <mat-icon>{{ isTemplateMeeting ? 'star' : 'star_outline' }}</mat-icon>
                 </button>
                 <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
                     <mat-icon>more_vert</mat-icon>

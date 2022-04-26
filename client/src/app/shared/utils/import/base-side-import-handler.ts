@@ -1,3 +1,4 @@
+import { deepCopy } from 'app/core/core-services/key-transforms';
 import { CsvMapping } from 'app/core/ui-services/base-import.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -48,11 +49,11 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
         return this.importContext.phaseObservable;
     }
 
-    protected set modelsToCreate(next: CsvMapping<any>[]) {
+    protected set modelsToCreate(next: CsvMapping<SideModel>[]) {
         this._modelsToCreateSubject.next(next);
     }
 
-    protected get modelsToCreate(): CsvMapping<any>[] {
+    protected get modelsToCreate(): CsvMapping<SideModel>[] {
         return this._modelsToCreateSubject.value;
     }
 
@@ -134,7 +135,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
         }
         if (this.isArray) {
             const names = this.parseName(name);
-            const existingModels = names.map(n => this.find(n, props));
+            const existingModels = names.map(_name => this.find(_name, props));
             return this.getReturnValue(existingModels);
         } else {
             return this.getReturnValue(this.find(name.trim(), props));
@@ -170,6 +171,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
             );
             return model;
         });
+        console.log(`createImportProcess`, models.slice(), deepCopy(models));
         return new ImportProcess({
             importFn: this._createFn,
             chunkSize: this.chunkSize,
@@ -179,6 +181,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
 
     private async import(): Promise<void> {
         const ids = await this._importProcess.doImport();
+        console.log(`import`, ids);
         this.modelsToCreate = this.modelsToCreate.map((model, index) => ({
             name: model.name,
             id: ids[index]?.id

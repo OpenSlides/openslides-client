@@ -11,6 +11,8 @@ export const MANAGER_IDS = `manager_ids`;
 export const MEETING = `meeting`;
 export const MEETING_START_DATE = `meeting_start_date`;
 export const MEETING_END_DATE = `meeting_end_date`;
+export const MEETING_ADMIN_IDS = `meeting_admin_ids`;
+export const MEETING_TEMPLATE_ID = `meeting_template_id`;
 
 export interface CommitteeCsvPort {
     [ID]: Id;
@@ -22,6 +24,8 @@ export interface CommitteeCsvPort {
     [MEETING]?: string | number;
     [MEETING_START_DATE]?: string | number;
     [MEETING_END_DATE]?: string | number;
+    [MEETING_ADMIN_IDS]?: string | number[];
+    [MEETING_TEMPLATE_ID]?: string | number;
 }
 
 export const COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES: Partial<CommitteeCsvPort> = {
@@ -32,5 +36,7 @@ export const COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES: Partial<CommitteeCsvPort>
     [MANAGER_IDS]: _(`Administrators`),
     [MEETING]: _(`Meeting`),
     [MEETING_START_DATE]: _(`Start date`),
-    [MEETING_END_DATE]: _(`End date`)
+    [MEETING_END_DATE]: _(`End date`),
+    [MEETING_ADMIN_IDS]: _(`Meeting administrator`),
+    [MEETING_TEMPLATE_ID]: _(`Template for meeting`)
 };

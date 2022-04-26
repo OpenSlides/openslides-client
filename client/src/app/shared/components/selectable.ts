@@ -6,4 +6,4 @@ import { Identifiable } from '../models/base/identifiable';
  * in Shared Components
  */
 
-export type Selectable = Displayable & Identifiable;
+export type Selectable = Displayable & Identifiable & { disabled?: boolean };

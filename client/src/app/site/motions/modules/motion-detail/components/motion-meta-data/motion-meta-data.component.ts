@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { TreeService } from 'app/core/ui-services/tree.service';
 import { Settings } from 'app/shared/models/event-management/meeting';
@@ -97,7 +99,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         protected translate: TranslateService,
         motionServiceCollector: MotionServiceCollectorService,
         public perms: PermissionsService,
-        private treeService: TreeService
+        private treeService: TreeService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
     }
@@ -210,6 +213,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             this.motion.recommendation &&
             !!this.motion.recommendation.recommendation_label
         );
+    }
+
+    public canForwardMotion(): boolean {
+        return this.motion.state?.allow_motion_forwarding && this.operator.hasPerms(Permission.motionCanForward);
+    }
+
+    public async forwardMotionToMeetings(): Promise<void> {
+        await this.motionService.forwardMotionsToMeetings(this.motion);
     }
 
     /**

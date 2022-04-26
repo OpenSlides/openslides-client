@@ -1,5 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { ORGANIZATION_ID } from 'app/core/core-services/organization.service';
 import { CML } from 'app/core/core-services/organization-permission';
 import { MeetingRepositoryService } from 'app/core/repositories/management/meeting-repository.service';
 import { PromptService } from 'app/core/ui-services/prompt.service';
@@ -7,7 +8,6 @@ import { ViewMeeting } from 'app/management/models/view-meeting';
 
 import { OperatorService } from '../../../core/core-services/operator.service';
 import { OML } from '../../../core/core-services/organization-permission';
-import { CommitteeRepositoryService } from '../../../core/repositories/management/committee-repository.service';
 import { ViewCommittee } from '../../models/view-committee';
 import { MeetingService } from '../../services/meeting.service';
 
@@ -44,8 +44,8 @@ export class MeetingPreviewComponent {
         return (this.userAmount > 0 && this.userAmount < 1000) || false;
     }
 
-    public get isDefaultMeeting(): boolean {
-        return this.meeting.id === this.committee.default_meeting_id;
+    public get isTemplateMeeting(): boolean {
+        return this.meeting.template_for_organization_id === ORGANIZATION_ID;
     }
 
     public get canEnter(): boolean {
@@ -55,7 +55,6 @@ export class MeetingPreviewComponent {
     public constructor(
         protected translate: TranslateService,
         private meetingRepo: MeetingRepositoryService,
-        private committeeRepo: CommitteeRepositoryService,
         private promptService: PromptService,
         private meetingService: MeetingService,
         private operator: OperatorService
@@ -87,7 +86,7 @@ export class MeetingPreviewComponent {
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
-            await this.meetingRepo.duplicate(this.meeting);
+            await this.meetingRepo.duplicate(this.meeting).resolve();
         }
     }
 
@@ -101,11 +100,11 @@ export class MeetingPreviewComponent {
         }
     }
 
-    public async toggleDefaultMeeting(): Promise<void> {
-        if (this.isDefaultMeeting) {
-            await this.committeeRepo.update({ default_meeting_id: null }, this.committee);
+    public async toggleTemplateMeeting(): Promise<void> {
+        if (this.isTemplateMeeting) {
+            await this.meetingRepo.update({ set_as_template: false }, this.meeting);
         } else {
-            await this.committeeRepo.update({ default_meeting_id: this.meeting.id }, this.committee);
+            await this.meetingRepo.update({ set_as_template: true }, this.meeting);
         }
     }
 

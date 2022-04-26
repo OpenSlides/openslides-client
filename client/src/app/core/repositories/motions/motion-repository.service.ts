@@ -7,14 +7,12 @@ import {
     ROUTING_FIELDSET,
     TypedFieldset
 } from 'app/core/core-services/model-request-builder.service';
-import { OperatorService } from 'app/core/core-services/operator.service';
 import { Id } from 'app/core/definitions/key-types';
 import { DiffLinesInParagraph } from 'app/core/ui-services/diff.service';
 import { MeetingSettingsService } from 'app/core/ui-services/meeting-settings.service';
 import { TreeIdNode } from 'app/core/ui-services/tree.service';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { Motion } from 'app/shared/models/motions/motion';
-import { Projection } from 'app/shared/models/projector/projection';
 import { createAgendaItem } from 'app/shared/utils/create-agenda-item';
 import { ViewMotion } from 'app/site/motions/models/view-motion';
 import { ChangeRecoMode } from 'app/site/motions/motions.constants';
@@ -81,8 +79,7 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         repositoryServiceCollector: RepositoryServiceCollector,
         agendaItemRepo: AgendaItemRepositoryService,
         private meetingsSettingsService: MeetingSettingsService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private operator: OperatorService
+        private motionLineNumbering: MotionLineNumberingService
     ) {
         super(repositoryServiceCollector, Motion, agendaItemRepo);
         this.meetingsSettingsService.get(`motions_default_sorting`).subscribe(conf => {
@@ -93,6 +90,14 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
         this.meetingsSettingsService.get(`motions_line_length`).subscribe(lineLength => {
             this.motionLineLength = lineLength;
         });
+    }
+
+    public getViewModelList(): ViewMotion[] {
+        return this.getCurrentMotions(super.getViewModelList());
+    }
+
+    public getViewModelListObservable(): Observable<ViewMotion[]> {
+        return super.getViewModelListObservable().pipe(map(motions => this.getCurrentMotions(motions)));
     }
 
     public create(partialMotion: Partial<MotionAction.CreatePayload>): Promise<Identifiable> {
@@ -547,5 +552,9 @@ export class MotionRepositoryService extends BaseIsAgendaItemAndListOfSpeakersCo
             return;
         }
         return data.map(node => ({ id: node.id, children: this.createSortTree(node.children) }));
+    }
+
+    private getCurrentMotions(motions: ViewMotion[]): ViewMotion[] {
+        return motions.filter(motion => motion.meeting_id === this.activeMeetingId);
     }
 }

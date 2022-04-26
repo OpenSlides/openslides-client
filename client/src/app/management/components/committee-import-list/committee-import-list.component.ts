@@ -13,6 +13,7 @@ import {
     COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
     CommitteeCsvPort
 } from '../../../shared/models/event-management/committee.constants';
+import { MEETING_ADMIN_IDS, MEETING_TEMPLATE_ID } from '../../../shared/models/event-management/committee.constants';
 import { BaseImportListComponent } from '../../../site/base/components/base-import-list.component';
 import { ViewOrganization } from '../../models/view-organization';
 import { CommitteeImportService } from '../../services/committee-import.service';
@@ -62,6 +63,18 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
         {
             prop: `meeting_end_date`,
             label: _(`End date`)
+        },
+        {
+            prop: MEETING_ADMIN_IDS,
+            label: _(`Meeting administrators`),
+            isTableColumn: true,
+            minWidth: 250
+        },
+        {
+            prop: MEETING_TEMPLATE_ID,
+            label: _(`Meeting template`),
+            isTableColumn: true,
+            minWidth: 250
         }
     ];
 
@@ -112,13 +125,19 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
         return {
             viewModelCtor: ViewOrganization,
             ids: [ORGANIZATION_ID],
-            fieldset: ``,
-            follow: [{ idField: `committee_ids` }, { idField: `organization_tag_ids` }]
+            fieldset: [],
+            follow: [
+                { idField: `committee_ids` },
+                { idField: `organization_tag_ids` },
+                `active_meeting_ids`,
+                `archived_meeting_ids`,
+                `template_meeting_ids`
+            ]
         };
     }
 
     private async requestExistingUsers(): Promise<void> {
         const request = await this.memberService.getAllOrgaUsersModelRequest();
-        this.subscribe(request);
+        this.subscribe(request, `accounts`);
     }
 }

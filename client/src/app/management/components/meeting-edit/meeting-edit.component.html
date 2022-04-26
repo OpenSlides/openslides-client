@@ -24,6 +24,7 @@
             <os-search-value-selector
                 [inputListValues]="availableMeetingsObservable"
                 [includeNone]="true"
+                [sortFn]="false"
                 [ngModel]="theDuplicateFromId"
                 [ngModelOptions]="{ standalone: true }"
                 (ngModelChange)="onUpdateDuplicateFrom($event)"

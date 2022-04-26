@@ -152,6 +152,12 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
+        MViewModel: ViewMeeting,
+        OField: `template_meetings`,
+        MField: `template_for_organization`
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
         MViewModel: ViewTheme,
         OField: `themes`,
         MField: `organization`,
@@ -282,12 +288,6 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewMeeting,
         AField: `default_meeting`,
         BField: `default_meeting_for_committee`
-    }),
-    ...makeO2O({
-        AViewModel: ViewCommittee,
-        BViewModel: ViewMeeting,
-        AField: `template_meeting_id`,
-        BField: `template_meeting_for_committee_id`
     }),
     ...makeM2M({
         AViewModel: ViewCommittee,

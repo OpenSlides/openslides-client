@@ -17,6 +17,7 @@ import { UserRepositoryService } from 'app/core/repositories/users/user-reposito
 import { ComponentServiceCollector } from 'app/core/ui-services/component-service-collector';
 import { ViewCommittee } from 'app/management/models/view-committee';
 import { ViewMeeting } from 'app/management/models/view-meeting';
+import { Selectable } from 'app/shared/components/selectable';
 import { Identifiable } from 'app/shared/models/base/identifiable';
 import { BaseModelContextComponent } from 'app/site/base/components/base-model-context.component';
 import { ViewUser } from 'app/site/users/models/view-user';
@@ -36,6 +37,28 @@ const USER_GROUPS_FOLLOW_FN = (meetingId: Id) => ({
     fieldset: `shortName`,
     follow: [{ idField: { templateIdField: `group_$_ids`, templateValue: meetingId.toString() } }]
 });
+
+const TEMPLATE_MEETINGS_LABEL: Selectable = {
+    id: -1,
+    getTitle: () => `Template meetings`,
+    getListTitle: () => `Template meetings`,
+    disabled: true
+};
+
+const ACTIVE_MEETINGS_LABEL: Selectable = {
+    id: -2,
+    getTitle: () => `Active meetings`,
+    getListTitle: () => `Active meetings`,
+    disabled: true
+};
+
+const ARCHIVED_MEETINGS_LABEL: Selectable = {
+    id: -3,
+    getTitle: () => `Archived meetings`,
+    getListTitle: () => `Archived meetings`,
+    disabled: true
+};
+
 @Component({
     selector: `os-meeting-edit`,
     templateUrl: `./meeting-edit.component.html`,
@@ -47,12 +70,20 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
     public readonly OML = OML;
     public readonly availableUsers: Observable<ViewUser[]>;
 
-    public get availableMeetingsObservable(): Observable<ViewMeeting[]> {
+    public get availableMeetingsObservable(): Observable<Selectable[]> {
         return combineLatest(
+            this.orga.organization?.template_meetings_as_observable,
             this.orga.organization?.active_meetings_as_observable,
             this.orga.organization?.archived_meetings_as_observable,
-            (activeMeetings, archivedMeetings) => {
-                return [...activeMeetings, ...archivedMeetings];
+            (templateMeetings, activeMeetings, archivedMeetings) => {
+                return [
+                    TEMPLATE_MEETINGS_LABEL,
+                    ...templateMeetings,
+                    ACTIVE_MEETINGS_LABEL,
+                    ...activeMeetings,
+                    ARCHIVED_MEETINGS_LABEL,
+                    ...archivedMeetings
+                ];
             }
         );
     }
@@ -150,13 +181,6 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     public onUpdateDuplicateFrom(id: Id | null): void {
         this.theDuplicateFromId = id;
-        if (id) {
-            this.meetingForm.get(`user_ids`).disable();
-            this.meetingForm.get(`admin_ids`).disable();
-        } else if (id === null) {
-            this.meetingForm.get(`user_ids`).enable();
-            this.meetingForm.get(`admin_ids`).enable();
-        }
     }
 
     protected getModelRequest(): SimplifiedModelRequest {
@@ -326,19 +350,11 @@ export class MeetingEditComponent extends BaseModelContextComponent implements O
 
     private async doCreateMeeting(): Promise<void> {
         if (this.theDuplicateFromId) {
-            const identifiable = (await this.meetingRepo.duplicateFrom(this.committeeId, this.theDuplicateFromId))[0];
-            const payload: MeetingAction.UpdatePayload = {
-                id: identifiable.id,
-                ...this.meetingForm.value
-            };
-            await this.meetingRepo.update(this.sanitizePayload(payload));
+            const from = { meeting_id: this.theDuplicateFromId, ...this.meetingForm.value };
+            await this.meetingRepo.duplicateFrom(this.committeeId, from).resolve();
         } else {
-            const payload: MeetingAction.CreatePayload = {
-                committee_id: this.committeeId,
-                ...this.meetingForm.value
-            };
-
-            await this.meetingRepo.create(payload);
+            const payload: MeetingAction.CreatePayload = { committee_id: this.committeeId, ...this.meetingForm.value };
+            await this.meetingRepo.create(payload).resolve();
         }
         this.goBack();
     }
