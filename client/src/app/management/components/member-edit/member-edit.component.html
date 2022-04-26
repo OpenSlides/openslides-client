@@ -141,8 +141,8 @@
 </os-user-detail-view>
 
 <ng-template #modelListTemplate let-models="models">
-    <div class="flex-vertical-center">
-        <span *ngFor="let model of models; let last = last" class="flex-vertical-center">
+    <div>
+        <span *ngFor="let model of models; let last = last" class="inline-flex">
             {{ model.getTitle() | translate }}
             <span *ngIf="!last">,&nbsp;</span>
         </span>

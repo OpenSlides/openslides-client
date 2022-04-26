@@ -11,14 +11,20 @@
 
     <!-- Menu -->
     <div class="menu-slot">
-        <button type="button" mat-icon-button [matMenuTriggerFor]="committeeMenu" *ngIf="canManageCommittee">
+        <button
+            type="button"
+            data-cy="committeeMenuTrigger"
+            mat-icon-button
+            [matMenuTriggerFor]="committeeMenu"
+            *ngIf="canManageCommittee"
+        >
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
 
     <mat-menu #committeeMenu="matMenu">
         <ng-container *ngIf="currentCommitteeObservable | async as committee">
-            <a mat-menu-item [routerLink]="['edit-committee']">
+            <a mat-menu-item data-cy="committeeEditAnchor" [routerLink]="['edit-committee']">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit committee' | translate }}</span>
             </a>

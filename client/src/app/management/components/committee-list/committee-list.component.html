@@ -108,6 +108,7 @@
             [matMenuTriggerFor]="singleCommitteeMenu"
             [matMenuTriggerData]="{ committee: committee }"
             (click)="$event.stopPropagation()"
+            data-cy="committeeListSingleMenuTrigger"
         >
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -116,14 +117,20 @@
 
 <mat-menu #singleCommitteeMenu="matMenu">
     <ng-template matMenuContent let-committee="committee">
-        <button mat-menu-item type="button" (click)="editSingle(committee)">
+        <button mat-menu-item type="button" data-cy="committeeListSingleEditButton" (click)="editSingle(committee)">
             <mat-icon>edit</mat-icon>
             <span>
                 {{ 'Edit' | translate }}
             </span>
         </button>
 
-        <button mat-menu-item type="button" class="red-warning-text" (click)="doDelete(committee)">
+        <button
+            mat-menu-item
+            type="button"
+            data-cy="committeeListSingleDeleteButton"
+            class="red-warning-text"
+            (click)="doDelete(committee)"
+        >
             <mat-icon>delete</mat-icon>
             <span>
                 {{ 'Delete' | translate }}

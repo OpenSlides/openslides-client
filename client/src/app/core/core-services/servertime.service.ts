@@ -27,16 +27,16 @@ export class ServertimeService {
     /**
      * The server offset in milliseconds
      */
-    private serverOffsetSubject = new BehaviorSubject<number>(0);
+    private readonly _serverOffsetSubject = new BehaviorSubject<number>(0);
 
-    public constructor(private lifecycleService: LifecycleService, private presenter: PresenterService) {
-        this.lifecycleService.appLoaded.subscribe(() => this.startScheduler());
+    public constructor(lifecycleService: LifecycleService, private presenter: PresenterService) {
+        lifecycleService.appLoaded.subscribe(() => this.startScheduler());
     }
 
     /**
      * Starts the scheduler to sync with the server.
      */
-    public startScheduler(): void {
+    private startScheduler(): void {
         this.scheduleNextRefresh(0.1);
     }
 
@@ -44,7 +44,7 @@ export class ServertimeService {
      * Get an observable for the server offset.
      */
     public getServerOffsetObservable(): Observable<number> {
-        return this.serverOffsetSubject.asObservable();
+        return this._serverOffsetSubject.asObservable();
     }
 
     /**
@@ -75,13 +75,13 @@ export class ServertimeService {
             throw new Error();
         }
         const servertime = servertimeResponse.server_time;
-        this.serverOffsetSubject.next(Math.floor(Date.now() - servertime * 1000));
+        this._serverOffsetSubject.next(Math.floor(Date.now() - servertime * 1000));
     }
 
     /**
      * Calculate the time of the server.
      */
     public getServertime(): number {
-        return Date.now() - this.serverOffsetSubject.getValue();
+        return Date.now() - this._serverOffsetSubject.getValue();
     }
 }

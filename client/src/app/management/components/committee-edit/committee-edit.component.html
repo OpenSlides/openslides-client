@@ -16,13 +16,13 @@
     <form class="committee-form" [formGroup]="committeeForm" (ngSubmit)="onSubmit()" *ngIf="committeeForm">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
-            <input matInput formControlName="name" required osAutofocus />
+            <input matInput formControlName="name" data-cy="committeeName" required osAutofocus />
             <mat-error>{{ 'The title is required' | translate }}</mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>{{ 'Description' | translate }}</mat-label>
-            <input matInput formControlName="description" />
+            <input matInput formControlName="description" data-cy="committeeDescription" />
         </mat-form-field>
 
         <mat-form-field *osCmlPerms="CML.can_manage; committeeId: editCommittee?.id">

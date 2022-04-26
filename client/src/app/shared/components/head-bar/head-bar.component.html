@@ -14,13 +14,18 @@
             </ng-container>
 
             <!-- Exit / Back button -->
-            <button mat-icon-button *ngIf="showBackButton" (click)="onBackButton()">
+            <button mat-icon-button data-cy="headbarBackButton" *ngIf="showBackButton" (click)="onBackButton()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
         </ng-container>
 
         <!-- Cancel edit button -->
-        <button mat-icon-button *ngIf="editMode" (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()">
+        <button
+            mat-icon-button
+            data-cy="headbarCloseButton"
+            *ngIf="editMode"
+            (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()"
+        >
             <mat-icon>close</mat-icon>
         </button>
 
@@ -48,6 +53,7 @@
             [disabled]="!isMainButtonEnabled"
             (click)="sendMainEvent()"
             matTooltip="{{ mainActionTooltip | translate }}"
+            data-cy="headbarMainButton"
         >
             <mat-icon>{{ mainButtonIcon }}</mat-icon>
         </button>
@@ -68,7 +74,7 @@
     </div>
 </ng-template>
 <ng-template #isNotSavingTemplate>
-    <button mat-button *ngIf="editMode" [disabled]="!isSaveButtonEnabled" (click)="save()">
+    <button mat-button *ngIf="editMode" data-cy="headbarSaveButton" [disabled]="!isSaveButtonEnabled" (click)="save()">
         <strong class="upper">{{ saveText | translate }}</strong>
     </button>
 </ng-template>
