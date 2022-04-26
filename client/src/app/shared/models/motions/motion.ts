@@ -44,6 +44,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public recommendation_extension: string;
     public sort_weight: number;
     public created: number;
+    public forwarded: number;
     public last_modified: number;
     public start_line_number: number;
     public amendment_paragraph_$: number[];
