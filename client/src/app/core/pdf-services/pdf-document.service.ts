@@ -86,7 +86,7 @@ export class PdfDocumentService {
     private async initVfs(): Promise<object> {
         const fontPathList: string[] = Array.from(
             // create a list without redundancies
-            new Set(this.mediaManageService.allFontPlaces.map(place => `/${this.mediaManageService.getFontUrl(place)}`))
+            new Set(this.mediaManageService.allFontPlaces.map(place => `${this.mediaManageService.getFontUrl(place)}`))
         );
 
         const promises = fontPathList.map(fontPath =>
