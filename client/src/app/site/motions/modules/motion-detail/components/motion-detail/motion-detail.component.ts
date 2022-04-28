@@ -532,7 +532,9 @@ export class MotionDetailComponent extends BaseModelContextComponent implements 
         motion.lead_motion_id = this._parentId;
         const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
         motion.title = defaultTitle;
-        motion.category_id = parentMotion.category_id;
+        if (this.operator.hasPerms(Permission.motionCanManage)) {
+            motion.category_id = parentMotion.category_id;
+        }
         motion.tag_ids = parentMotion.tag_ids;
         motion.block_id = parentMotion.block_id;
         const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
