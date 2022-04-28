@@ -33,7 +33,7 @@
                 />
                 <mat-error>{{ 'The title is required' | translate }}</mat-error>
             </mat-form-field>
-            <editor formControlName="welcome_text" [init]="tinyMceSettings"></editor>
+            <os-editor _formControlName="welcome_text" [init]="tinyMceSettings"></os-editor>
         </form>
     </ng-container>
 </mat-card>

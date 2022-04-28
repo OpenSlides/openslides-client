@@ -43,6 +43,7 @@ import { C4DialogComponent, CopyrightSignComponent } from './components/copyrigh
 import { CustomTranslationComponent } from './components/custom-translation/custom-translation.component';
 import { DetailNavigatorComponent } from './components/detail-navigator/detail-navigator.component';
 import { DetailViewComponent } from './components/detail-view/detail-view.component';
+import { OsEditorComponent } from './components/editor/editor.component';
 import { EeComponent } from './components/ee/ee.component';
 import { ExtensionFieldComponent } from './components/extension-field/extension-field.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
@@ -219,7 +220,8 @@ const declarations = [
     VerticalTabGroupComponent,
     VerticalTabGroupLabelHeaderDirective,
     DetailNavigatorComponent,
-    DetailViewComponent
+    DetailViewComponent,
+    OsEditorComponent
 ];
 
 const sharedModules = [

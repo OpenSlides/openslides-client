@@ -221,7 +221,7 @@
                             <div *ngIf="isAllowedFn('seePersonal')" class="spacer-bottom-20">
                                 <!-- The HTML Editor -->
                                 <h4>{{ 'About me' | translate }}</h4>
-                                <editor formControlName="about_me" [init]="tinyMceSettings"></editor>
+                                <os-editor _formControlName="about_me" [init]="tinyMceSettings"></os-editor>
                             </div>
 
                             <div *ngIf="isAllowedFn('seeExtra')">

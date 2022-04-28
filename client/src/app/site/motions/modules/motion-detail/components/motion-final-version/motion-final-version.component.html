@@ -4,12 +4,12 @@
 </ng-template>
 <ng-template #editTemplate>
     <form [formGroup]="contentForm">
-        <editor
+        <os-editor
             [hidden]="!isEditMode"
-            formControlName="modified_final_version"
+            _formControlName="modified_final_version"
             [init]="tinyMceSettings"
             required
-        ></editor>
+        ></os-editor>
         <div
             *ngIf="
                 contentForm.get('modified_final_version').invalid &&
