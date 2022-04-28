@@ -74,6 +74,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         return this.operator.hasPerms(Permission.mediafileCanManage);
     }
 
+    public get canManageMotions(): boolean {
+        return this.operator.hasPerms(Permission.motionCanManage);
+    }
+
     /**
      * check if the 'final version edit mode' is active
      *
