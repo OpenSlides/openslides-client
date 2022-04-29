@@ -74,36 +74,6 @@ export abstract class BaseComponent implements OnDestroy {
 
     private subscriptionMap: { [name: string]: Subscription | null } = {};
 
-    /**
-     * Settings for the TinyMCE editor selector
-     */
-    public tinyMceSettings = {
-        base_url: `/tinymce`, // Root for resources
-        suffix: `.min`, // Suffix to use when loading resources
-        theme: `silver`,
-        language: null,
-        language_url: null,
-        inline: false,
-        statusbar: false,
-        browser_spellcheck: true,
-        image_advtab: true,
-        image_description: false,
-        link_title: false,
-        height: 320,
-        plugins: `autolink charmap code fullscreen image imagetools
-        lists link paste searchreplace`,
-        menubar: false,
-        contextmenu: false,
-        toolbar: `styleselect | bold italic underline strikethrough |
-            forecolor backcolor removeformat | bullist numlist |
-            link image charmap | code fullscreen`,
-        mobile: {
-            theme: `mobile`,
-            plugins: [`autosave`, `lists`, `autolink`]
-        },
-        paste_preprocess: this.onPastePreprocess
-    };
-
     public get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
     }
@@ -143,10 +113,7 @@ export abstract class BaseComponent implements OnDestroy {
     public constructor(
         protected componentServiceCollector: ComponentServiceCollector,
         protected translate: TranslateService
-    ) {
-        this.tinyMceSettings.language_url = `/assets/tinymce/langs/` + this.translate.currentLang + `.js`;
-        this.tinyMceSettings.language = this.translate.currentLang;
-    }
+    ) {}
 
     /**
      * automatically dismisses the error snack bar and clears subscriptions
@@ -272,28 +239,5 @@ export abstract class BaseComponent implements OnDestroy {
      */
     public trackById(_index: number, item: Id | BaseModel): Id {
         return typeof item === `number` ? item : item.id;
-    }
-
-    /**
-     * Clean pasted HTML.
-     * If the user decides to copy-paste HTML (like from another OpenSlides motion detail)
-     * - remove all classes
-     * - remove data-line-number="X"
-     * - remove contenteditable="false"
-     *
-     * Not doing so would save control sequences from diff/linenumbering into the
-     * model which will open pandoras pox during PDF generation (and potentially web view)
-     * @param _
-     * @param args
-     */
-    private onPastePreprocess(_: any, args: any): void {
-        const getClassesRe = new RegExp(/\s*class\=\"[\w\W]*?\"/, `gi`);
-        const getDataLineNumberRe = new RegExp(/\s*data-line-number\=\"\d+\"/, `gi`);
-        const getContentEditableRe = new RegExp(/\s*contenteditable\=\"\w+\"/, `gi`);
-        const cleanedContent = (args.content as string)
-            .replace(getClassesRe, ``)
-            .replace(getDataLineNumberRe, ``)
-            .replace(getContentEditableRe, ``);
-        args.content = cleanedContent;
     }
 }

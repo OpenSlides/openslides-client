@@ -25,7 +25,7 @@
         <ng-container *ngIf="isEditing">
             <div>
                 <form [formGroup]="formGroup">
-                    <editor formControlName="legalNotice" [init]="tinyMceSettings"></editor>
+                    <os-editor formControlName="legalNotice"></os-editor>
                 </form>
             </div>
         </ng-container>
@@ -42,10 +42,10 @@
                 </a>
             </div>
             <a target="_blank" href="https://support.openslides.com/help/">
-                <br>
+                <br />
                 <os-icon-container icon="help">
                     {{ 'OpenSlides help (FAQ)' | translate }}
-                </os-icon-container> 
+                </os-icon-container>
             </a>
         </ng-container>
     </div>

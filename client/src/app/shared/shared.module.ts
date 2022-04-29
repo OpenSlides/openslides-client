@@ -43,6 +43,7 @@ import { C4DialogComponent, CopyrightSignComponent } from './components/copyrigh
 import { CustomTranslationComponent } from './components/custom-translation/custom-translation.component';
 import { DetailNavigatorComponent } from './components/detail-navigator/detail-navigator.component';
 import { DetailViewComponent } from './components/detail-view/detail-view.component';
+import { EditorComponent } from './components/editor/editor.component';
 import { EeComponent } from './components/ee/ee.component';
 import { ExtensionFieldComponent } from './components/extension-field/extension-field.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
@@ -219,11 +220,11 @@ const declarations = [
     VerticalTabGroupComponent,
     VerticalTabGroupLabelHeaderDirective,
     DetailNavigatorComponent,
-    DetailViewComponent
+    DetailViewComponent,
+    EditorComponent
 ];
 
 const sharedModules = [
-    EditorModule,
     PblNgridModule,
     PblNgridMaterialModule,
     PblNgridTargetEventsModule,
@@ -246,7 +247,7 @@ const sharedModules = [
  * No dependency to the rest of our application.
  */
 @NgModule({
-    imports: [CommonModule, OpenSlidesTranslateModule.forChild(), RouterModule, ...sharedModules],
+    imports: [CommonModule, OpenSlidesTranslateModule.forChild(), RouterModule, ...sharedModules, EditorModule],
     exports: [TranslateModule, OpenSlidesTranslateModule, PdfViewerModule, ...sharedModules, ...declarations],
     declarations: [...declarations],
     providers: [
