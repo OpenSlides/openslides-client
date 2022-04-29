@@ -231,7 +231,7 @@
 
             <!-- description: HTML Editor -->
             <h4>{{ 'Description' | translate }}:</h4>
-            <editor formControlName="description" [init]="tinyMceSettings"></editor>
+            <os-editor formControlName="description"></os-editor>
 
             <!-- searchValueSelector: tags -->
             <div class="content-field" *ngIf="tagsAvailable" [formGroup]="assignmentForm">

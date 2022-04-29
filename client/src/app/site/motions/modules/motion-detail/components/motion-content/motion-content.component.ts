@@ -392,8 +392,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     private propagateChanges(): void {
-        this.formChanged.emit({ ...this._motionContent, ...this._paragraphBasedAmendmentContent });
-        this.validStateChanged.emit(this.contentForm.valid && this._canSaveParagraphBasedAmendment);
+        setTimeout(() => {
+            this.formChanged.emit({ ...this._motionContent, ...this._paragraphBasedAmendmentContent });
+            this.validStateChanged.emit(this.contentForm.valid && this._canSaveParagraphBasedAmendment);
+        });
     }
 
     private addNewUserToFormCtrl(newUserObj: RawUser, controlName: string): void {

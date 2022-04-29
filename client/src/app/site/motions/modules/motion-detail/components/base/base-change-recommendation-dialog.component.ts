@@ -55,13 +55,17 @@ export abstract class BaseChangeRecommendationDialogComponent<
         this.saveChangeRecommendation();
     }
 
+    public getTinyMceSettings(): object {
+        return {
+            toolbar: `undo redo | bold italic underline strikethrough
+            | removeformat | bullist numlist | outdent indent | link charmap code`
+        };
+    }
+
     protected initializeDialogData(): void {
         this.editReco = this.data.editChangeRecommendation;
         this.newReco = this.data.newChangeRecommendation;
         this.changeReco = this.data.changeRecommendation;
-
-        this.tinyMceSettings.toolbar = `undo redo | bold italic underline strikethrough
-            | removeformat | bullist numlist | outdent indent | link charmap code`;
     }
 
     protected async createChangeRecommendation(): Promise<void> {

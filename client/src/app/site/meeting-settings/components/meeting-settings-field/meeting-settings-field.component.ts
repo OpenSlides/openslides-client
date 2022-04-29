@@ -339,7 +339,6 @@ export class MeetingSettingsFieldComponent extends BaseComponent implements OnIn
      */
     public getTinyMceSettings(): object {
         return {
-            ...this.tinyMceSettings,
             setup: editor => {
                 editor.on(`Blur`, ev => {
                     if (ev.target.getContent() !== this.translatedValue) {
