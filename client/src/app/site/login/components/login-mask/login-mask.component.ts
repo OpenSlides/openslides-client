@@ -17,10 +17,16 @@ import { ParentErrorStateMatcher } from 'app/shared/parent-error-state-matcher';
 import { BaseComponent } from 'app/site/base/components/base.component';
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { string } from 'yargs';
 
 import { BrowserSupportService } from '../../services/browser-support.service';
 
 const HttpWarning = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
+
+interface LoginValues {
+    username: string;
+    password: string;
+}
 
 /**
  * Login mask component.
@@ -162,12 +168,17 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         this.loginErrorMsg = ``;
         try {
             this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
-            const { username, password }: { username: string; password: string } = this.loginForm.value;
+            const { username, password } = this.formatLoginInputValues(this.loginForm.value);
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e) {
             this.spinnerService.hide();
             this.loginErrorMsg = e;
         }
+    }
+
+    private formatLoginInputValues(info: LoginValues): LoginValues {
+        const newName = info.username.trim();
+        return { username: newName, password: info.password };
     }
 
     public async guestLogin(): Promise<void> {
