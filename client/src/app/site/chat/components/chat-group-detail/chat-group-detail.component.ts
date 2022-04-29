@@ -103,7 +103,10 @@ export class ChatGroupDetailComponent extends BaseComponent implements OnInit, O
 
     public ngOnInit(): void {
         this._hasWritePermissionsObservable = this.chatGroupObservable.pipe(
-            map(chatGroup => this.canManage || this.operator.isInGroupIds(...(chatGroup.write_group_ids || [])))
+            map(
+                chatGroup =>
+                    chatGroup && (this.canManage || this.operator.isInGroupIds(...(chatGroup.write_group_ids || [])))
+            )
         );
         this.chatNotificationService.openChatGroup(this.chatGroup.id);
         this.newMessageForm = this.fb.control(``, [Validators.required, Validators.maxLength(CHAT_MESSAGE_MAX_LENGTH)]);
@@ -150,10 +153,11 @@ export class ChatGroupDetailComponent extends BaseComponent implements OnInit, O
         this.cancelEditingChatMessage();
     }
 
-    public async clearChatGroup(): Promise<void> {
+    public async clearChatGroup(chatGroup: ViewChatGroup): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to clear all messages in this chat?`);
-        if (await this.promptService.open(title)) {
-            await this.repo.clear(this.chatGroup.id).catch(this.raiseError);
+        const content = chatGroup.name;
+        if (await this.promptService.open(title, content)) {
+            await this.repo.clear(chatGroup.id).catch(this.raiseError);
             this.triggerUpdateView();
         }
     }

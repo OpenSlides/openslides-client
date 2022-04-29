@@ -101,12 +101,12 @@
             <span>{{ 'Edit' | translate }}</span>
         </button>
         <!-- clear history -->
-        <button mat-menu-item (click)="clearChatGroup()" class="red-warning-text">
+        <button mat-menu-item (click)="clearChatGroup(chatGroup)" class="red-warning-text">
             <mat-icon>format_clear</mat-icon>
             <span>{{ 'Clear' | translate }}</span>
         </button>
         <!-- delete -->
-        <button mat-menu-item (click)="deleteChatGroup()" class="red-warning-text">
+        <button mat-menu-item (click)="deleteChatGroup(chatGroup)" class="red-warning-text">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
