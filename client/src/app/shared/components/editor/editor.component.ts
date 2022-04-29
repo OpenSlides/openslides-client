@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { AfterViewInit,Component, Input, ViewEncapsulation } from '@angular/core';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 
 @Component({
