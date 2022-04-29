@@ -1,19 +1,16 @@
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { StorageModule } from '@ngx-pwa/local-storage';
 
-import { environment } from '../environments/environment';
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { CoreModule } from './core/core.module';
-import { AppLoadService } from './core/core-services/app-load.service';
-import { httpInterceptorProviders } from './core/core-services/http-interceptors';
-import { OpenSlidesTranslateModule } from './core/translate/openslides-translate-module';
-import { LoginModule } from './site/login/login.module';
-import { SlidesModule } from './slides/slides.module';
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { OpenSlidesTranslationModule } from './site/modules/translations';
+import { HttpClientModule } from '@angular/common/http';
+import { AppLoadService } from './openslides-main-module/services/app-load.service';
+import { httpInterceptorProviders } from './site/interceptors';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { OpenSlidesOverlayModule } from 'src/app/ui/modules/openslides-overlay/openslides-overlay.module';
+import { SlidesModule } from './site/pages/meetings/modules/projector/modules/slides/slides.module';
 
 /**
  * Returns a function that returns a promis that will be resolved, if all apps are loaded.
@@ -23,26 +20,18 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
     return () => appLoadService.loadApps();
 }
 
-/**
- * Global App Module. Keep it as clean as possible.
- */
+const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, OpenSlidesOverlayModule];
+
 @NgModule({
     declarations: [AppComponent],
     imports: [
         BrowserModule,
-        HttpClientModule,
-        HttpClientXsrfModule.withOptions({
-            cookieName: `OpenSlidesCsrfToken`,
-            headerName: `X-CSRFToken`
-        }),
-        BrowserAnimationsModule,
-        OpenSlidesTranslateModule.forRoot(),
         AppRoutingModule,
-        CoreModule,
-        LoginModule,
-        ServiceWorkerModule.register(`ngsw-worker.js`, { enabled: environment.production }),
-        SlidesModule.forRoot(),
-        StorageModule.forRoot({ IDBNoWrap: false })
+        BrowserAnimationsModule,
+        HttpClientModule,
+        SlidesModule, // TODO: We should remove this!
+        OpenSlidesTranslationModule.forRoot(),
+        ...NOT_LAZY_LOADED_MODULES
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },

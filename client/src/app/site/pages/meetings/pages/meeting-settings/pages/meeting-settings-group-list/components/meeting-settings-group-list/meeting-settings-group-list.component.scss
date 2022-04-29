@@ -1,0 +1,16 @@
+.link-wrapper {
+    text-decoration: none;
+    padding: 10% 0;
+    display: block;
+    text-align: center;
+}
+
+.settings-group-card {
+    cursor: pointer;
+    height: 100%;
+    padding: 0;
+
+    .flex-center {
+        height: 50%;
+    }
+}

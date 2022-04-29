@@ -1,0 +1,8 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+    selector: 'os-detail-view-not-found',
+    templateUrl: './detail-view-not-found.component.html',
+    styleUrls: ['./detail-view-not-found.component.scss']
+})
+export class DetailViewNotFoundComponent {}

@@ -1,11 +1,11 @@
-FROM node:16-alpine
+FROM node:16.10-alpine
+ENV NODE_VERSION=16.10.0
 
 WORKDIR /app
 
 COPY client/package.json .
 COPY client/package-lock.json .
 RUN npm ci
-RUN npm run postinstall
 
 COPY client ./
 

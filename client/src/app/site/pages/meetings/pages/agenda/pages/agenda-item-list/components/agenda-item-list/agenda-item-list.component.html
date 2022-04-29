@@ -1,0 +1,299 @@
+<os-head-bar [hasMainButton]="canManage" (mainEvent)="onPlusButton()" [multiSelectMode]="isMultiSelect">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Agenda' | translate }}</h2>
+    </div>
+    <!-- Menu -->
+    <div class="menu-slot">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="agendaMenu"><mat-icon>more_vert</mat-icon></button>
+    </div>
+
+    <!-- Multiselect info -->
+    <div class="central-info-slot">
+        <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
+    </div>
+</os-head-bar>
+
+<os-projectable-list
+    [listObservable]="agendaItemsObservable"
+    [vScrollFixed]="76"
+    [filterService]="filterService"
+    [columns]="tableColumnDefinition"
+    [multiSelect]="isMultiSelect"
+    [restricted]="restrictedColumns"
+    [hiddenInMobile]="['info']"
+    [alwaysShowMenu]="true"
+    [filterProps]="filterProps"
+    [(selectedRows)]="selectedRows"
+    (dataSourceChange)="onDataSourceChange($event)"
+    [getSpeakerButtonObject]="getSpeakerButtonObject"
+>
+    <!-- Title column -->
+    <div *pblNgridCellDef="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
+        <os-detail-view-navigator [model]="item.content_object" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        <div [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }" class="innerTable">
+            <!-- Title line -->
+            <div class="title-line ellipsis-overflow">
+                <!-- Is Closed -->
+                <span class="icon-prefix" *ngIf="item.closed">
+                    <mat-icon>check</mat-icon>
+                </span>
+
+                <!-- Title -->
+                <span>
+                    {{ item.getListTitle() }}
+                </span>
+            </div>
+
+            <!-- Subtitle line -->
+            <div class="subtitle ellipsis-overflow" *ngIf="showSubtitles | async">
+                {{ item.getSubtitle() }}
+            </div>
+
+            <!-- Comment line -->
+            <div class="subtitle ellipsis-overflow" *ngIf="item.comment">
+                <os-icon-container size="small" icon="comment" [noWrap]="true">
+                    {{ item.comment }}
+                </os-icon-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Column -->
+    <div *pblNgridCellDef="'info'; row as item" class="cell-slot fill clickable" (click)="openEditInfo(item)">
+        <div class="info-col-items">
+            <!-- Tags -->
+            <div *ngIf="item.tags && item.tags.length">
+                <os-icon-container icon="local_offer">
+                    <span *ngFor="let tag of item.tags; let last = last">
+                        {{ tag.getTitle() }}
+                        <span *ngIf="!last">,&nbsp;</span>
+                    </span>
+                </os-icon-container>
+            </div>
+
+            <!-- Visibility (Internal, Public, Hidden) -->
+            <div *osPerms="permission.agendaItemCanManage; and: item.verboseType" class="spacer-top-5">
+                <os-icon-container icon="visibility">{{ item.verboseType | translate }}</os-icon-container>
+            </div>
+
+            <!-- Duration -->
+            <div *ngIf="item.duration" class="spacer-top-5">
+                <os-icon-container icon="access_time">
+                    {{ durationService.durationToString(item.duration, 'h') }}
+                </os-icon-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <div *pblNgridCellDef="'menu'; row as item" class="cell-slot fill">
+        <button
+            mat-icon-button
+            [disabled]="isMultiSelect"
+            [matMenuTriggerFor]="singleItemMenu"
+            (click)="$event.stopPropagation()"
+            [matMenuTriggerData]="{ item: item }"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+</os-projectable-list>
+
+<mat-menu #agendaMenu="matMenu">
+    <div *ngIf="!isMultiSelect">
+        <div *osPerms="permission.agendaItemCanManage">
+            <!-- Enable multi select -->
+            <button mat-menu-item (click)="toggleMultiSelect()">
+                <mat-icon>library_add</mat-icon>
+                <span>{{ 'Multiselect' | translate }}</span>
+            </button>
+
+            <mat-divider></mat-divider>
+
+            <!-- automatic numbering -->
+            <button mat-menu-item *ngIf="isNumberingAllowed" (click)="onAutoNumbering()">
+                <mat-icon>format_list_numbered</mat-icon>
+                <span>{{ 'Numbering' | translate }}</span>
+            </button>
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'agenda', 'sort']">
+                <mat-icon>sort</mat-icon>
+                <span>{{ 'Sort' | translate }}</span>
+            </button>
+        </div>
+
+        <!-- Project agenda -->
+        <os-projector-button [object]="itemListSlide" [menuItem]="true"></os-projector-button>
+
+        <!-- Tags -->
+        <button
+            mat-menu-item
+            [routerLink]="['/', activeMeetingId, 'motions', 'tags']"
+            *osPerms="permission.tagCanManage"
+        >
+            <mat-icon>local_offer</mat-icon>
+            <span>{{ 'Tags' | translate }}</span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+        <!-- CSV export -->
+        <button mat-menu-item *osPerms="permission.agendaItemCanManage" (click)="csvExportItemList()">
+            <mat-icon>archive</mat-icon>
+            <span>{{ 'Export as CSV' | translate }}</span>
+        </button>
+        <!-- PDF export -->
+        <button mat-menu-item (click)="onDownloadPdf()">
+            <mat-icon>archive</mat-icon>
+            <span>{{ 'Export as PDF' | translate }}</span>
+        </button>
+        <!-- Import -->
+        <button
+            mat-menu-item
+            *osPerms="permission.agendaItemCanManage"
+            [routerLink]="['/', activeMeetingId, 'agenda', 'import']"
+        >
+            <mat-icon>cloud_upload</mat-icon>
+            <span>{{ 'Import' | translate }}</span>
+        </button>
+        <div *osPerms="permission.agendaItemCanManage">
+            <mat-divider></mat-divider>
+            <button mat-menu-item class="red-warning-text" (click)="deleteAllSpeakersOfAllListsOfSpeakers()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Clear all list of speakers' | translate }}</span>
+            </button>
+        </div>
+        <div *osPerms="permission.meetingCanManageSettings">
+            <mat-divider></mat-divider>
+            <!-- Settings -->
+            <button mat-menu-item [routerLink]="['/', activeMeetingId, 'settings', 'agenda']">
+                <mat-icon>settings</mat-icon>
+                <span>{{ 'Settings' | translate }}</span>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="isMultiSelect">
+        <!-- Select all -->
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+
+        <!-- Deselect all -->
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <div *osPerms="permission.agendaItemCanManage">
+            <!-- Close selected -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="closeSelectedItems()">
+                <mat-icon>done</mat-icon>
+                <span>{{ 'Done' | translate }}</span>
+            </button>
+
+            <!-- Open selected -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="openSelectedItems()">
+                <mat-icon>redo</mat-icon>
+                <span>{{ 'Reopen' | translate }}</span>
+            </button>
+
+            <mat-divider></mat-divider>
+
+            <!-- Open selected list of speakers -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setLosClosed(false)">
+                <mat-icon>record_voice_over</mat-icon>
+                <span>{{ 'Open list of speakers' | translate }}</span>
+            </button>
+
+            <!-- Close selected list of speakers -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setLosClosed(true)">
+                <mat-icon>voice_over_off</mat-icon>
+                <span>{{ 'Close list of speakers' | translate }}</span>
+            </button>
+
+            <mat-divider></mat-divider>
+
+            <!-- Set multiple to public -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_PUBLIC)">
+                <mat-icon>public</mat-icon>
+                <span>{{ 'Set public' | translate }}</span>
+            </button>
+
+            <!-- Set multiple to internal -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_INTERNAL)">
+                <mat-icon>visibility</mat-icon>
+                <span>{{ 'Set internal' | translate }}</span>
+            </button>
+
+            <!-- Set multiple to hidden -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_HIDDEN)">
+                <mat-icon>visibility_off</mat-icon>
+                <span>{{ 'Set hidden' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+
+            <!-- Duplicate items -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="duplicateMultipleTopics(selectedRows)">
+                <mat-icon>file_copy</mat-icon>
+                <span>{{ 'Duplicate' | translate }}</span>
+            </button>
+
+            <!-- Delete selected -->
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="removeSelected()">
+                <mat-icon>remove</mat-icon>
+                <span>{{ 'Remove from agenda' | translate }}</span>
+            </button>
+        </div>
+    </div>
+</mat-menu>
+
+<mat-menu #singleItemMenu="matMenu">
+    <ng-template matMenuContent let-item="item">
+        <!-- Mobile entries -->
+        <div *ngIf="vp.isMobile">
+            <os-projector-button [object]="item.content_object" [menuItem]="true"></os-projector-button>
+            <os-speaker-button [object]="item.content_object" [menuItem]="true"></os-speaker-button>
+        </div>
+
+        <!-- Agenda entries -->
+        <div *osPerms="permission.agendaItemCanManage">
+            <!-- Done check -->
+            <button mat-menu-item (click)="onDoneSingleButton(item)">
+                <mat-icon color="accent">{{ item.closed ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+                <span>{{ 'Done' | translate }}</span>
+            </button>
+
+            <!-- Edit button -->
+            <button mat-menu-item (click)="openEditInfo(item)">
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit details' | translate }}</span>
+            </button>
+
+            <!-- Duplicate button -->
+            <button mat-menu-item (click)="duplicateTopic(item)" *ngIf="isTopic(item.content_object)">
+                <mat-icon>file_copy</mat-icon>
+                <span>{{ 'Duplicate' | translate }}</span>
+            </button>
+
+            <!-- Delete Button -->
+            <button mat-menu-item (click)="removeFromAgenda(item)" *ngIf="!isTopic(item.content_object)">
+                <mat-icon>remove</mat-icon>
+                <span>{{ 'Remove from agenda' | translate }}</span>
+            </button>
+
+            <button
+                mat-menu-item
+                class="red-warning-text"
+                (click)="deleteTopic(item)"
+                *ngIf="isTopic(item.content_object)"
+            >
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </div>
+    </ng-template>
+</mat-menu>

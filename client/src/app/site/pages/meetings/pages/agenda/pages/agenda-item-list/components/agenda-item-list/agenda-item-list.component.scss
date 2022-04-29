@@ -1,0 +1,16 @@
+@import 'src/assets/styles/tables.scss';
+
+.info-col-items {
+    display: inline-block;
+    white-space: nowrap;
+
+    font-size: 14px;
+    .mat-icon {
+        display: inline-flex;
+        vertical-align: middle;
+        $icon-size: 18px;
+        font-size: $icon-size;
+        height: $icon-size;
+        width: $icon-size;
+    }
+}

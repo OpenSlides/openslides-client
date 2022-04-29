@@ -1,21 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@include mat.core();
+
 /** theming */
-@import '~assets/styles/component-themes.scss';
+@import './assets/styles/theme-styles.scss';
 
 /** Useful default classes */
-@import '~assets/styles/default-classes.scss';
+@import 'assets/styles/default-classes.scss';
 
 /** fonts */
-@import '~assets/styles/fonts.scss';
+@import 'assets/styles/fonts.scss';
 @import '~material-design-icons-iconfont/dist/material-design-icons.css';
 
 /** Videojs */
 @import '~video.js/dist/video-js.css';
 
 /** Load projector specific SCSS values */
-@import '~assets/styles/projector.scss';
+@import 'assets/styles/projector.scss';
 
 /** Load global scss variables and device mixing */
-@import '~assets/styles/variables.scss';
+@import 'assets/styles/variables.scss';
+
+@import 'assets/styles/tables.scss';
+
+/**
+* Must be cleaned up
+*/
 
 .pbl-ngrid-cell {
     .fill {
@@ -808,7 +818,6 @@ button.mat-menu-item.selected {
 .hide {
     display: none;
 }
-
 
 .flex-vertical-center {
     display: flex;

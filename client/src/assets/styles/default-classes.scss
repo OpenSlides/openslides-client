@@ -1,4 +1,4 @@
-@for $i from 1 to 100 {
+@for $i from 0 to 100 {
     .padding-#{$i} {
         padding: #{$i}px;
     }

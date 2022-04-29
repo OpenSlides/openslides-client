@@ -1,0 +1,17 @@
+<div *ngIf="data">
+    <div *ngIf="isImage" [ngClass]="isFullscreen ? 'fullscreen' : 'nofullscreen'">
+        <img [src]="url" alt="" />
+    </div>
+    <div *ngIf="isPdf" class="fullscreen">
+        <pdf-viewer
+            [show-all]="false"
+            [original-size]="false"
+            [fit-to-page]="true"
+            [autoresize]="true"
+            [page]="page"
+            [zoom]="zoom"
+            [src]="url"
+            style="display: block"
+        ></pdf-viewer>
+    </div>
+</div>

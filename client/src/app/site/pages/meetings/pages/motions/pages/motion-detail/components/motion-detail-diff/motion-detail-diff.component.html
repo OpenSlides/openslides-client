@@ -1,0 +1,253 @@
+<!-- A summary of all changes -->
+<div class="motion-detail-diff">
+    <div class="change-recommendation-summary outlined" *ngIf="changes?.length">
+        <strong [matBadge]="changes.length" matBadgeOverlap="false">
+            {{ 'Summary of changes' | translate }}&nbsp;
+        </strong>
+
+        <cdk-virtual-scroll-viewport
+            itemSize="22"
+            minBufferPx="100"
+            maxBufferPx="300"
+            class="summary-of-changes-scroll"
+        >
+            <ul>
+                <li *cdkVirtualFor="let change of changes; let index = index">
+                    <span class="one-line">
+                        <a href="" (click)="scrollToChangeClicked(change, $event)" *ngIf="!change.isTitleChange()">
+                            <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
+                            <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
+                            <span *ngIf="isChangeRecommendation(change)">
+                                ({{ 'Change recommendation' | translate }})
+                            </span>
+                            <span *ngIf="isAmendment(change)">
+                                ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})
+                            </span>
+                        </a>
+                        <i class="user-subtitle" *ngIf="isChangeRecommendation(change)">
+                            – {{ getRecommendationTypeName(change) | translate }}
+                        </i>
+                        <i class="user-subtitle">
+                            <ng-container *ngIf="change.isRejected() && !isAmendment(change)">
+                                –
+                                <span>{{ 'Rejected' | translate }}</span>
+                            </ng-container>
+                            <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change.stateName">
+                                – {{ change.stateName | translate }}
+                            </ng-container>
+                        </i>
+                        <a
+                            mat-icon-button
+                            [routerLink]="change.amendment.getDetailStateUrl()"
+                            [state]="{ back: 'true' }"
+                            class="smaller-icon-button amendment-link"
+                            *ngIf="isAmendment(change)"
+                        >
+                            <mat-icon>arrow_forward</mat-icon>
+                        </a>
+                    </span>
+                </li>
+            </ul>
+        </cdk-virtual-scroll-viewport>
+        <div *ngIf="changes.length === 0" class="no-changes">{{ 'No change recommendations yet' | translate }}</div>
+    </div>
+
+    <span class="text-prefix-label" *ngIf="showPreamble">{{ preamble | translate }}</span>
+
+    <!-- The actual diff view -->
+    <div class="motion-text-with-diffs">
+        <div *ngIf="getTitleChangingObject() as changedTitle">
+            <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-border">
+                <div class="action-row" *osPerms="permission.motionCanManage">
+                    <button
+                        mat-icon-button
+                        *ngIf="isRecommendation(changedTitle)"
+                        type="button"
+                        [matMenuTriggerFor]="changeRecommendationMenu"
+                        [matMenuTriggerData]="{ change: changedTitle }"
+                    >
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+                </div>
+                <div class="status-row" *ngIf="changedTitle.isRejected()">
+                    <i class="grey">{{ 'Rejected' | translate }}</i>
+                </div>
+
+                <div
+                    class="motion-text motion-text-diff"
+                    [class.line-numbers-none]="isLineNumberingNone()"
+                    [class.line-numbers-inline]="isLineNumberingInline()"
+                    [class.line-numbers-outside]="isLineNumberingOutside()"
+                    [attr.data-change-id]="changedTitle.getChangeId()"
+                >
+                    <div class="bold">{{ 'Changed title' | translate }}:</div>
+                    <div [innerHTML]="getFormattedTitleDiff() | trust: 'html'"></div>
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let change of getAllTextChangingObjects(); let i = index">
+            <div
+                class="motion-text"
+                [class.line-numbers-none]="isLineNumberingNone()"
+                [class.line-numbers-inline]="isLineNumberingInline()"
+                [class.line-numbers-outside]="isLineNumberingOutside()"
+            >
+                <os-motion-detail-original-change-recommendations
+                    [html]="getTextBetweenChanges(getAllTextChangingObjects()[i - 1], change)"
+                    [changeRecommendations]="[]"
+                    (createChangeRecommendation)="onCreateChangeRecommendation($event)"
+                ></os-motion-detail-original-change-recommendations>
+            </div>
+
+            <div
+                class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-border"
+                [class.collides]="hasCollissions(change, getAllTextChangingObjects())"
+            >
+                <div class="collission-hint" *ngIf="hasCollissions(change, getAllTextChangingObjects())">
+                    <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">warning</mat-icon>
+                </div>
+                <div class="action-row">
+                    <button
+                        mat-icon-button
+                        *osPerms="permission.motionCanManage; and: isRecommendation(change)"
+                        type="button"
+                        [matMenuTriggerFor]="changeRecommendationMenu"
+                        [matMenuTriggerData]="{ change: change }"
+                    >
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+                    <button
+                        mat-icon-button
+                        *ngIf="isAmendment(change)"
+                        type="button"
+                        [matMenuTriggerFor]="amendmentMenu"
+                        [matMenuTriggerData]="{ change: change }"
+                    >
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+                </div>
+                <div class="status-row" *ngIf="isChangeRecommendation(change) && change.isRejected()">
+                    <i class="grey">{{ 'Rejected' | translate }}</i>
+                </div>
+
+                <!-- If it's an amendment, only accepted ones will be passed to this component
+                 by default (== !showAllAmendments). In this case, don't show the prefix.
+                 However, if showAllAmendments === true, the prefix should be shown alwayes,
+                 even if it's accepted -->
+                <div class="status-row" *ngIf="isAmendment(change) && showAllAmendments">
+                    <i class="grey">{{ change.amendment.number }} - {{ change.amendment.state!.name | translate }}</i>
+                </div>
+
+                <div
+                    class="motion-text motion-text-diff"
+                    [class.line-numbers-none]="isLineNumberingNone()"
+                    [class.line-numbers-inline]="isLineNumberingInline()"
+                    [class.line-numbers-outside]="isLineNumberingOutside()"
+                    [attr.data-change-id]="change.getChangeId()"
+                    [innerHTML]="getDiff(change) | trust: 'html'"
+                ></div>
+            </div>
+        </div>
+
+        <div
+            class="motion-text"
+            [class.line-numbers-none]="isLineNumberingNone()"
+            [class.line-numbers-inline]="isLineNumberingInline()"
+            [class.line-numbers-outside]="isLineNumberingOutside()"
+        >
+            <os-motion-detail-original-change-recommendations
+                [html]="getTextRemainderAfterLastChange()"
+                [changeRecommendations]="[]"
+                (createChangeRecommendation)="onCreateChangeRecommendation($event)"
+            ></os-motion-detail-original-change-recommendations>
+        </div>
+    </div>
+
+    <mat-menu #amendmentMenu="matMenu">
+        <ng-template matMenuContent let-change="change">
+            <a
+                type="button"
+                mat-menu-item
+                [routerLink]="change.amendment.getDetailStateUrl()"
+                [state]="{ back: 'true' }"
+            >
+                <mat-icon>visibility_on</mat-icon>
+                <ng-container *ngIf="!change?.amendment?.identifier">
+                    <span>{{ 'Show amendment' | translate }}</span>
+                </ng-container>
+
+                <ng-container *ngIf="change?.amendment?.identifier">
+                    <span>{{ change.amendment.identifier }}</span>
+                </ng-container>
+            </a>
+
+            <!-- perms.isAllowed('change_state', motion) (which does not exist)-->
+            <ng-container *osPerms="permission.motionCanManage">
+                <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
+                <button
+                    *ngFor="let state of change.amendment.state.next_states"
+                    mat-menu-item
+                    (click)="setAmendmentState(change, state.id)"
+                >
+                    {{ state.name | translate }}
+                    <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                </button>
+                <mat-divider *ngIf="change.amendment.state.next_states.length > 0"></mat-divider>
+                <button
+                    *ngFor="let state of change.amendment.state.previous_states"
+                    mat-menu-item
+                    (click)="setAmendmentState(change, state.id)"
+                >
+                    <mat-icon>arrow_back</mat-icon>
+                    {{ state.name | translate }}
+                    <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                </button>
+                <button mat-menu-item (click)="setAmendmentState(change, null)">
+                    <mat-icon>replay</mat-icon>
+                    {{ 'Reset state' | translate }}
+                </button>
+            </ng-container>
+        </ng-template>
+    </mat-menu>
+
+    <mat-menu #changeRecommendationMenu="matMenu">
+        <ng-template matMenuContent let-change="change">
+            <button type="button" mat-menu-item (click)="setAcceptanceValue(change, 'accepted')">
+                <mat-icon>thumb_up</mat-icon>
+                <span>{{ 'Accept' | translate }}</span>
+                <mat-icon class="active-indicator">{{ change.isAccepted() ? 'done' : '' }}</mat-icon>
+            </button>
+            <button type="button" mat-menu-item (click)="setAcceptanceValue(change, 'rejected')">
+                <mat-icon>thumb_down</mat-icon>
+                <span>{{ 'Reject' | translate }}</span>
+                <mat-icon class="active-indicator">{{ change.isRejected() ? 'done' : '' }}</mat-icon>
+            </button>
+            <button type="button" mat-menu-item (click)="setInternal(change, !change.internal)">
+                <mat-icon>{{ change.internal ? 'check_box_outline_blank' : 'check_box' }}</mat-icon>
+                <span>{{ 'Public' | translate }}</span>
+            </button>
+            <button type="button" mat-menu-item (click)="deleteChangeRecommendation(change, $event)">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+            <button
+                type="button"
+                mat-menu-item
+                (click)="editChangeRecommendation(change, $event)"
+                *ngIf="!change.isTitleChange()"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit' | translate }}</span>
+            </button>
+            <button
+                type="button"
+                mat-menu-item
+                (click)="editTitleChangeRecommendation(change, $event)"
+                *ngIf="change.isTitleChange()"
+            >
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit' | translate }}</span>
+            </button>
+        </ng-template>
+    </mat-menu>
+</div>

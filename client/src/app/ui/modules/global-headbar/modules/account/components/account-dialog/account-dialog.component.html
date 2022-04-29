@@ -1,0 +1,101 @@
+<div class="account-dialog-title flex-container">
+    <h2 mat-dialog-title class="left-align no-margin">{{ self?.short_name }}</h2>
+    <button mat-icon-button [matDialogClose]="null">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-content class="account-dialog-container">
+    <div class="account-dialog-menu-items">
+        <mat-selection-list [multiple]="false">
+            <ng-container *ngFor="let item of menuItems">
+                <mat-list-option
+                    [value]="item"
+                    [selected]="activeMenuItem === item.name"
+                    (click)="activeMenuItem = item.name"
+                >
+                    {{ item.name | translate }}
+                </mat-list-option>
+                <mat-divider></mat-divider>
+            </ng-container>
+        </mat-selection-list>
+    </div>
+    <mat-divider [vertical]="true"></mat-divider>
+    <div class="account-dialog-content">
+        <div class="content-wrapper">
+            <ng-container [ngSwitch]="activeMenuItem">
+                <ng-container
+                    *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
+                    [ngTemplateOutlet]="showProfileView"
+                ></ng-container>
+                <ng-container
+                    *ngSwitchCase="menuItemsRef.SHOW_MEETINGS"
+                    [ngTemplateOutlet]="showMeetingsView"
+                ></ng-container>
+                <ng-container
+                    *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
+                    [ngTemplateOutlet]="changePasswordView"
+                ></ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-template #showProfileView>
+    <div class="flex-container">
+        <h2 class="left-align">{{ 'My profile' | translate }}</h2>
+        <button mat-icon-button (click)="isEditing = !isEditing">
+            <mat-icon>{{ isEditing ? 'close' : 'edit' }}</mat-icon>
+        </button>
+    </div>
+    <os-user-detail-view
+        [user]="self"
+        [isEditing]="isEditing"
+        [isAllowedFn]="isAllowedFn"
+        [shouldEnableFormControlFn]="shouldEnableFormControlFn"
+        [useMatcard]="false"
+        (validEvent)="isUserFormValid = $event"
+        (changeEvent)="userPersonalForm = $event"
+    ></os-user-detail-view>
+    <div *ngIf="isEditing" class="margin-top-16">
+        <button mat-button [disabled]="!isUserFormValid" (click)="saveUserChanges()">
+            {{ 'Save' | translate }}
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #showMeetingsView>
+    <h2>{{ 'My meetings' | translate }}</h2>
+    <div>
+        <cdk-virtual-scroll-viewport [itemSize]="50">
+            <ng-container *cdkVirtualFor="let meeting of getAllMeetings()">
+                <div class="meeting-group-block">
+                    <a (click)="closeDialog()" [routerLink]="[meeting.id]">{{ meeting.name }}</a>
+                    <div class="flex-vertical-center">
+                        <span
+                            class="flex-vertical-center"
+                            *ngFor="let group of getGroupsForMeeting(meeting); let last = last"
+                        >
+                            {{ group.name | translate }}
+                            <span *ngIf="!last">,&nbsp;</span>
+                        </span>
+                    </div>
+                </div>
+            </ng-container>
+        </cdk-virtual-scroll-viewport>
+    </div>
+</ng-template>
+
+<ng-template #changePasswordView>
+    <h2>{{ 'Change password' | translate }}</h2>
+    <os-password-form
+        #changePasswordComponent
+        (validEvent)="isUserPasswordValid = $event"
+        (changeEvent)="userPasswordForm = $event"
+    ></os-password-form>
+    <div>
+        <button mat-button [disabled]="!isUserPasswordValid" (click)="changePassword()">
+            {{ 'Save' | translate }}
+        </button>
+    </div>
+</ng-template>

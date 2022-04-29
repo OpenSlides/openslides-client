@@ -1,0 +1,63 @@
+import { ViewUser } from '../../../../../view-models/view-user';
+import { ViewListOfSpeakers } from './view-list-of-speakers';
+import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
+import { HasMeeting } from '../../../../../view-models/has-meeting';
+import { BaseViewModel } from '../../../../../../../base/base-view-model';
+import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
+import { Id } from '../../../../../../../../domain/definitions/key-types';
+/**
+ * Provides "safe" access to a speaker with all it's components
+ */
+export class ViewSpeaker extends BaseViewModel<Speaker> {
+    public static COLLECTION = Speaker.COLLECTION;
+    protected _collection = Speaker.COLLECTION;
+
+    public get speaker(): Speaker {
+        return this._model;
+    }
+
+    /**
+     * @returns
+     *  - waiting if there is no begin nor end time
+     *  - current if there is a begin time and not end time
+     *  - finished if there are both begin and end time
+     */
+    public get state(): SpeakerState {
+        if (!this.speaker.begin_time && !this.speaker.end_time) {
+            return SpeakerState.WAITING;
+        } else if (this.speaker.begin_time && !this.speaker.end_time) {
+            return SpeakerState.CURRENT;
+        } else {
+            return SpeakerState.FINISHED;
+        }
+    }
+
+    public get isFinished(): boolean {
+        return this.state === SpeakerState.FINISHED;
+    }
+
+    public get name(): string {
+        return this.user ? this.user.full_name : ``;
+    }
+
+    public get userId(): Id {
+        return this.user.user.id;
+    }
+
+    public get gender(): string {
+        return this.user ? this.user.gender : ``;
+    }
+
+    public getBeginTimeAsDate(): Date | null {
+        return this.speaker.begin_time ? new Date(this.speaker.begin_time * 1000) : null;
+    }
+
+    public getEndTimeAsDate(): Date | null {
+        return this.speaker.end_time ? new Date(this.speaker.end_time * 1000) : null;
+    }
+}
+interface ISpeakerRelations {
+    user: ViewUser;
+    list_of_speakers: ViewListOfSpeakers;
+}
+export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}

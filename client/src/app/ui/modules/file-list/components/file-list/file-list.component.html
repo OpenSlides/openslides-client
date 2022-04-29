@@ -1,0 +1,218 @@
+<!-- Folder navigation bar -->
+<div>
+    <div class="custom-table-header">
+        <!-- Scrollable folder bar -->
+        <span class="folder-nav-bar h-scroller">
+            <button class="folder" mat-button (click)="changeDirectory(null)" [disabled]="isMultiSelect">
+                <mat-icon class="foreground-icon">home</mat-icon>
+            </button>
+            <span class="folder-section" *ngFor="let directory of directoryChain; let last = last">
+                <span class="arrow">
+                    <mat-icon>chevron_right</mat-icon>
+                </span>
+                <button
+                    class="folder"
+                    mat-button
+                    (click)="changeDirectory(directory.id)"
+                    [disabled]="isMultiSelect"
+                    *ngIf="!last"
+                >
+                    <span class="folder-text">
+                        {{ directory.getTitle() }}
+                    </span>
+                </button>
+                <button
+                    class="folder"
+                    mat-button
+                    [matMenuTriggerFor]="singleMediafileMenu"
+                    [matMenuTriggerData]="{ mediafile: directory }"
+                    [disabled]="isMultiSelect"
+                    *ngIf="last && shouldShowFileMenuFn(directory)"
+                >
+                    <os-icon-container icon="arrow_drop_down" [swap]="true" size="large" [noWrap]="true">
+                        {{ directory.getTitle() }}
+                    </os-icon-container>
+                </button>
+                <span class="folder fake-folder folder-text" *ngIf="last && !shouldShowFileMenuFn(directory)">
+                    {{ directory.getTitle() }}
+                </span>
+            </span>
+        </span>
+
+        <!-- Visibility as button -->
+        <!-- Space for custom templates -->
+    </div>
+</div>
+
+<!-- the actual file manager -->
+<pbl-ngrid
+    class="file-manager-table"
+    showHeader="false"
+    vScrollAuto
+    [dataSource]="dataSource"
+    matCheckboxSelection="selection"
+    [columns]="columnSet"
+    [hideColumns]="hiddenColumns"
+    (rowClick)="onSelectRow($event)"
+>
+    <!-- Icon column -->
+    <div *pblNgridCellDef="'icon'; row as mediafile" class="fill clickable">
+        <a
+            class="detail-link"
+            target="_blank"
+            [routerLink]="getMediaUrl(mediafile)"
+            *ngIf="!mediafile.is_directory && !isMultiSelect"
+        ></a>
+        <a
+            class="detail-link"
+            (click)="changeDirectory(mediafile.id)"
+            *ngIf="mediafile.is_directory && !isMultiSelect"
+        ></a>
+        <mat-icon class="foreground-icon">{{ mediafile.getIcon() }}</mat-icon>
+    </div>
+
+    <!-- Title column -->
+    <div *pblNgridCellDef="'title'; row as mediafile" class="fill clickable">
+        <a
+            class="detail-link"
+            target="_blank"
+            [routerLink]="['/system', 'media', 'get', mediafile.id]"
+            *ngIf="!mediafile.is_directory && !isMultiSelect"
+        ></a>
+        <a
+            class="detail-link"
+            (click)="changeDirectory(mediafile.id)"
+            *ngIf="mediafile.is_directory && !isMultiSelect"
+        ></a>
+        <div class="innerTable">
+            <div class="file-title ellipsis-overflow">
+                {{ mediafile.title }}
+            </div>
+            <div class="foreground-icon" *ngIf="!mediafile.is_directory">
+                <span>{{ mediafile.create_timestamp | time }} · {{ mediafile.filesize | readableBytes }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mimetype (usually hidden) -->
+    <div *pblNgridCellDef="'minetype'; row as mediafile" class="fill clickable">
+        {{ mediafile.mimetype }}
+    </div>
+
+    <!-- Info column -->
+    <ng-content></ng-content>
+
+    <!-- Indicator column -->
+    <div *pblNgridCellDef="'indicator'; row as mediafile" class="fill">
+        <div
+            [matMenuTriggerFor]="singleMediafileMenu"
+            [matMenuTriggerData]="{ mediafile: mediafile }"
+            [matTooltip]="tooltipFn(mediafile)"
+        >
+            <mat-icon class="foreground-icon" *ngIf="mediafile.isFont()">text_fields</mat-icon>
+            <mat-icon class="foreground-icon" *ngIf="mediafile.isImage()">insert_photo</mat-icon>
+        </div>
+    </div>
+
+    <!-- Menu column -->
+    <div *pblNgridCellDef="'menu'; row as mediafile" class="fill">
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="singleMediafileMenu"
+            [matMenuTriggerData]="{ mediafile: mediafile }"
+            [disabled]="isMultiSelect"
+            *ngIf="shouldShowFileMenuFn(mediafile)"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+
+    <!-- No Results -->
+    <div *pblNgridNoDataRef class="pbl-ngrid-no-data">
+        <span>{{ 'No data' | translate }}</span>
+    </div>
+</pbl-ngrid>
+
+<!-- Menu for single files in the list -->
+<mat-menu #singleMediafileMenu="matMenu">
+    <ng-template matMenuContent let-mediafile="mediafile">
+        <!-- Space for custom content -->
+        <ng-container *ngTemplateOutlet="fileMenuTemplate; context: { mediafile: mediafile }"></ng-container>
+
+        <div *ngIf="canEdit">
+            <button mat-menu-item (click)="onEditFile(mediafile, fileEditDialog)">
+                <mat-icon>edit</mat-icon>
+                <span>{{ 'Edit' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="move(moveDialog, [mediafile])">
+                <mat-icon>near_me</mat-icon>
+                <span>{{ 'Move' | translate }}</span>
+            </button>
+            <button mat-menu-item class="red-warning-text" (click)="onDelete(mediafile)">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </div>
+    </ng-template>
+</mat-menu>
+
+<!-- File edit dialog -->
+<ng-template #fileEditDialog>
+    <h1 mat-dialog-title>{{ 'Edit details for' | translate }}</h1>
+    <div class="os-form-card-mobile" mat-dialog-content>
+        <form class="edit-file-form" [formGroup]="fileEditForm">
+            <mat-form-field>
+                <input
+                    type="text"
+                    matInput
+                    osAutofocus
+                    required
+                    formControlName="title"
+                    placeholder="{{ 'New file name' | translate }}"
+                />
+                <mat-error *ngIf="fileEditForm.invalid">{{ 'Required' | translate }}</mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+    <div mat-dialog-actions>
+        <button
+            type="submit"
+            mat-button
+            [disabled]="!fileEditForm.valid"
+            color="accent"
+            [mat-dialog-close]="fileEditForm.value"
+        >
+            <span>{{ 'Save' | translate }}</span>
+        </button>
+        <button type="button" mat-button [mat-dialog-close]="null">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
+</ng-template>
+
+<!-- Move dialog -->
+<ng-template #moveDialog>
+    <h1 mat-dialog-title>
+        <span>{{ 'Move into directory' | translate }}</span>
+    </h1>
+    <div class="os-form-card-mobile" [formGroup]="moveForm" mat-dialog-content>
+        <p>{{ 'Please select the directory:' | translate }}</p>
+        <mat-form-field>
+            <os-list-search-selector
+                formControlName="directory_id"
+                [includeNone]="true"
+                [noneTitle]="'Base folder'"
+                placeholder="{{ 'Parent directory' | translate }}"
+                [inputListValues]="filteredDirectoryBehaviorSubject"
+            ></os-list-search-selector>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button type="submit" mat-button color="accent" [mat-dialog-close]="true">
+            <span>{{ 'Move' | translate }}</span>
+        </button>
+        <button type="button" mat-button [mat-dialog-close]="null">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
+</ng-template>

@@ -1,0 +1,11 @@
+<ng-container *ngIf="shouldShowContent">
+    <ng-content></ng-content>
+</ng-container>
+<ng-container *ngIf="!shouldShowContent">
+    <os-head-bar [goBack]="true" [nav]="false">
+        <div class="title-slot">{{ errorMessage | translate }}</div>
+    </os-head-bar>
+    <os-detail-view-not-found>
+        <p>{{ errorMessage | translate }}</p>
+    </os-detail-view-not-found>
+</ng-container>

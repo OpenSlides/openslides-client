@@ -1,0 +1,32 @@
+<!-- Template for new motion block dialog -->
+<h1 mat-dialog-title>
+    <span>{{ 'New motion block' | translate }}</span>
+</h1>
+<form [formGroup]="createBlockForm" (keydown)="onKeyDown($event)">
+    <div mat-dialog-content>
+        <!-- Title -->
+        <mat-form-field>
+            <input formControlName="title" matInput placeholder="{{ 'Title' | translate }}" required />
+            <mat-error *ngIf="createBlockForm.get('title')!.hasError('required')">
+                {{ 'A title is required' | translate }}
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Internal -->
+        <p>
+            <mat-checkbox formControlName="internal">
+                <span>{{ 'Internal' | translate }}</span>
+            </mat-checkbox>
+        </p>
+
+        <os-agenda-content-object-form [form]="createBlockForm"></os-agenda-content-object-form>
+    </div>
+</form>
+<div mat-dialog-actions>
+    <button mat-button [disabled]="!createBlockForm.valid" (click)="saveBlock()">
+        <span>{{ 'Save' | translate }}</span>
+    </button>
+    <button mat-button [mat-dialog-close]="null">
+        <span>{{ 'Cancel' | translate }}</span>
+    </button>
+</div>

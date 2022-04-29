@@ -1,0 +1,19 @@
+<os-head-bar [nav]="false">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Import accounts' | translate }}</h2>
+    </div>
+
+    <div class="menu-slot">
+        <button *ngIf="canImport" mat-button (click)="doImport()">
+            <span class="upper">{{ 'Import' | translate }}</span>
+        </button>
+    </div>
+</os-head-bar>
+
+<os-import-list
+    [columns]="generateImportColumns"
+    [importer]="importer"
+    [possibleFields]="possibleFields"
+    modelName="Account"
+></os-import-list>

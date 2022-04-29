@@ -1,0 +1,39 @@
+<os-head-bar [nav]="true" [hasMainButton]="canManage" (mainEvent)="createNewProjector(projectorDialog)">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Projectors' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<!-- Create projector dialog -->
+<ng-template #projectorDialog>
+    <h1 mat-dialog-title>
+        <span>{{ 'New Projector' | translate }}</span>
+    </h1>
+
+    <form [formGroup]="createForm">
+        <div mat-dialog-content>
+            <mat-form-field>
+                <input formControlName="name" matInput placeholder="{{ 'Name' | translate }}" required />
+                <mat-error>
+                    <span>{{ 'Required' | translate }}</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div mat-dialog-actions>
+            <button type="submit" mat-button [disabled]="!createForm.valid" color="accent" [mat-dialog-close]="true">
+                <span>{{ 'Create' | translate }}</span>
+            </button>
+            <button type="button" mat-button [mat-dialog-close]="null">
+                <span>{{ 'Cancel' | translate }}</span>
+            </button>
+        </div>
+    </form>
+</ng-template>
+
+<div id="card-wrapper">
+    <div class="projector-card" *ngFor="let projector of projectors | async; trackBy: trackByIndex">
+        <os-projector-list-entry [projector]="projector"></os-projector-list-entry>
+    </div>
+</div>

@@ -1,7 +1,7 @@
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
-@import '~assets/styles/color-palettes/os-dynamic-palette';
-@import '~assets/styles/color-palettes/os-background';
+@import '../color-palettes/os-dynamic-palette';
+@import '../color-palettes/os-background';
 
 $openslides-primary: mat.define-palette($dynamic-theme-primary);
 $openslides-accent: mat.define-palette($dynamic-theme-accent);

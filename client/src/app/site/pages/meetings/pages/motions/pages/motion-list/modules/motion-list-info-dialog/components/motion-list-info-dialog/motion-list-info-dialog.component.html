@@ -1,0 +1,65 @@
+<!-- Template for dialog for quick editing -->
+<h1 mat-dialog-title>
+    <span>{{ 'Edit details for' | translate }} {{ infoDialog.title }}</span>
+</h1>
+<div class="os-form-card-mobile" mat-dialog-content>
+    <!-- Category -->
+    <ng-container *ngIf="categoriesObservable | async as categories">
+        <mat-form-field *ngIf="categories.length > 0">
+            <mat-select placeholder="{{ 'Category' | translate }}" [(ngModel)]="infoDialog.update.category_id">
+                <mat-option [value]="null">-</mat-option>
+                <mat-option *ngFor="let category of categories" [value]="category.id">
+                    {{ category.getTitle() | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+    <!-- Motion block -->
+    <ng-container *ngIf="motionBlocksObservable | async as motionBlocks">
+        <mat-form-field *ngIf="motionBlocks.length > 0">
+            <mat-select placeholder="{{ 'Motion block' | translate }}" [(ngModel)]="infoDialog.update.block_id">
+                <mat-option [value]="null">-</mat-option>
+                <mat-option *ngFor="let block of motionBlocks" [value]="block.id">
+                    {{ block.getTitle() | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+    <!-- Tag -->
+    <ng-container *ngIf="tagsObservable | async as tags">
+        <mat-form-field *ngIf="tags.length > 0">
+            <mat-select multiple placeholder="{{ 'Tags' | translate }}" [(ngModel)]="infoDialog.update.tag_ids">
+                <mat-option *ngFor="let tag of tags" [value]="tag.id">
+                    {{ tag.getTitle() | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+
+    <!-- State -->
+    <mat-form-field *ngIf="isAllowed('change_state')">
+        <mat-select placeholder="{{ 'State' | translate }}" [(ngModel)]="infoDialog.state_id">
+            <mat-option *ngFor="let state of selectedMotion.state!.next_states" [value]="state.id">
+                {{ state.getTitle() | translate }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- Recommendation -->
+    <mat-form-field *osMeetingSetting="'motions_recommendations_by'; and: hasRecommendations()">
+        <mat-select placeholder="{{ 'Recommendation' | translate }}" [(ngModel)]="infoDialog.recommendation_id">
+            <mat-option *ngFor="let recommendation of getPossibleRecommendations()" [value]="recommendation.id">
+                {{ recommendation.recommendation_label | translate }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+    <button type="submit" mat-button color="accent" [mat-dialog-close]="infoDialog">
+        <span>{{ 'Save' | translate }}</span>
+    </button>
+    <button type="button" mat-button [mat-dialog-close]="null">
+        <span>{{ 'Cancel' | translate }}</span>
+    </button>
+</div>

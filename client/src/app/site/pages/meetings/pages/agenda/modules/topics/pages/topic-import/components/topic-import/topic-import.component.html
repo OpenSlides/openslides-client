@@ -1,0 +1,56 @@
+<os-head-bar [nav]="false">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Import topics' | translate }}</h2>
+    </div>
+
+    <div class="menu-slot">
+        <button *ngIf="canImport" mat-button (click)="doImport()">
+            <span class="upper">{{ 'Import' | translate }}</span>
+        </button>
+    </div>
+</os-head-bar>
+
+<os-import-list
+    [importer]="importer"
+    [columns]="columns"
+    [possibleFields]="possibleFields"
+    [showUnknownHeaders]="!isTextImportSelected"
+    (selectedTabChanged)="selectedTabIndex = $event"
+>
+    <mat-tab label="{{ 'Text import' | translate }}" osImportListViewFirstTab>
+        <ng-template matTabLabel>{{ 'Text import' | translate }}</ng-template>
+        <ng-template matTabContent>
+            <div [formGroup]="textAreaForm">
+                <div>
+                    <div>{{ 'Paste/write your topics in this textbox.' | translate }}</div>
+                    <div>{{ 'Keep each item in a single line.' | translate }}</div>
+                </div>
+                <mat-form-field>
+                    <textarea
+                        matInput
+                        osAutofocus
+                        formControlName="inputtext"
+                        placeholder="{{ 'Insert topics here' | translate }}"
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="3"
+                        cdkAutosizeMaxRows="10"
+                    ></textarea>
+                </mat-form-field>
+            </div>
+            <div>
+                <button mat-button color="accent" (click)="parseTextArea()">
+                    <span>{{ 'Preview' | translate }}</span>
+                </button>
+            </div>
+        </ng-template>
+    </mat-tab>
+
+    <div *pblNgridCellDef="'newEntry.agenda_duration'; row as entry">
+        {{ getDuration(entry.newEntry.agenda_duration) }}
+    </div>
+
+    <div *pblNgridCellDef="'newEntry.agenda_type'; row as entry">
+        {{ getTypeString(entry.newEntry.agenda_type) | translate }}
+    </div>
+</os-import-list>

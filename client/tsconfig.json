@@ -2,32 +2,29 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./src",
-        "downlevelIteration": true,
-        "outDir": "./dist/out-tsc",
-        "forceConsistentCasingInFileNames": true,
-        "strict": false,
-        "noImplicitReturns": false,
-        "noFallthroughCasesInSwitch": true,
-        "sourceMap": true,
+        "baseUrl": "./",
         "declaration": false,
+        "downlevelIteration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "lib": ["es2020", "dom"],
         "module": "es2020",
         "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "target": "es2017",
-        "lib": ["es2018", "dom"],
-        "paths": {
-            "exceljs": ["../node_modules/exceljs/dist/exceljs.min"],
-            "core-js/es7/*": ["../node_modules/core-js/proposals/reflect-metadata"],
-            "core-js/es6/*": ["../node_modules/core-js/es/*"]
-        }
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "strict": false,
+        "target": "ES2017"
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false,
-        "strictInjectionParameters": false,
-        "strictInputAccessModifiers": false,
-        "strictPropertyInitialization": false,
-        "strictTemplates": false
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
     }
 }

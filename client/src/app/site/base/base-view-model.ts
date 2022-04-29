@@ -1,10 +1,10 @@
-import { Fqid, Id } from 'app/core/definitions/key-types';
-import { BaseModel } from 'app/shared/models/base/base-model';
-import { HasCollection } from 'app/shared/models/base/collection';
-
-import { Identifiable } from '../../shared/models/base/identifiable';
-import { DetailNavigable } from './detail-navigable';
-import { Displayable } from './displayable';
+import { BaseModel } from '../../domain/models/base/base-model';
+import { Fqid, Id } from '../../domain/definitions/key-types';
+import { Displayable } from '../../domain/interfaces/displayable';
+import { Identifiable } from '../../domain/interfaces/identifiable';
+import { HasCollection } from '../../domain/interfaces/has-collection';
+import { DetailNavigable } from '../../domain/interfaces/detail-navigable';
+import { Collection } from 'src/app/domain/definitions/key-types';
 
 export interface ViewModelConstructor<T extends BaseViewModel> {
     COLLECTION: string;
@@ -19,10 +19,10 @@ export abstract class BaseViewModel<M extends BaseModel = any> implements Detail
         return this.getModel().fqid;
     }
 
-    /**
-     * @param collection
-     * @param model
-     */
+    public get COLLECTION(): Collection {
+        return this.getModel().collection;
+    }
+
     public constructor(protected _model: M) {}
 
     /**
@@ -46,7 +46,7 @@ export abstract class BaseViewModel<M extends BaseModel = any> implements Detail
     /**
      * Override in children
      */
-    public getDetailStateUrl(): string | null {
+    public getDetailStateUrl(): string {
         return ``;
     }
 }
@@ -61,5 +61,5 @@ export interface BaseViewModel<M extends BaseModel = any> extends Displayable, I
      * @returns the verbose name of the model
      */
     getVerboseName: (plural?: boolean) => string;
-    getActiveMeetingId: () => Id;
+    getActiveMeetingId: () => Id | null;
 }

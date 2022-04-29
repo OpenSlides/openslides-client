@@ -1,10 +1,10 @@
 // Material theming import
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 /**
  *  Mixin-style to style global classes and tags with theme-related colors.
  */
-@mixin os-components-style($theme) {
+@mixin os-component-themes($theme) {
     $primary: map-get($theme, primary);
     $accent: map-get($theme, accent);
     $warn: map-get($theme, warn);
@@ -85,14 +85,6 @@
         padding: 0;
     }
 
-    .underline {
-        border-bottom: 1px solid mat.get-color-from-palette($foreground, divider, if($is-dark-theme, 0.7, 0.42));
-    }
-
-    .hint {
-        color: mat.get-color-from-palette($foreground, secondary-text);
-    }
-
     /* Custom hint and error classes. Same values as .mat-hint and -mat-error */
     .hint,
     .error {
@@ -121,19 +113,11 @@
         color: mat.get-color-from-palette($foreground, text);
     }
 
-    .tile-text {
-        color: mat.get-color-from-palette($foreground, text);
-    }
-
     .subtitle-text {
         font-size: 125%;
         margin-top: 0;
         margin-bottom: 15px;
         color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
-    }
-
-    .tile-color {
-        background-color: mat.get-color-from-palette($background, selected-button);
     }
 
     .main-nav-color {
@@ -280,9 +264,28 @@
      * CLEANUP:
      * whole theme-related stylesheets can be replaced using classes like this one
      */
+    .outlined {
+        background: mat.get-color-from-palette($background, background);
+
+        &:hover {
+            background-color: mat.get-color-from-palette($background, selected-button);
+        }
+    }
+
+    .outlined-border {
+        @extend .outlined;
+        border: 1px solid mat.get-color-from-palette($background, selected-button);
+    }
+
     .background-default {
         background: mat.get-color-from-palette($background, background);
         color: mat.get-color-from-palette($foreground, text);
+    }
+
+    .background-hover {
+        &:hover {
+            background-color: mat.get-color-from-palette($background, background);
+        }
     }
 
     .background-primary {
@@ -312,6 +315,10 @@
     .background-card {
         background: mat.get-color-from-palette($background, card);
         color: mat.get-color-from-palette($foreground, text);
+    }
+
+    .background-selected {
+        background-color: mat.get-color-from-palette($background, selected-button);
     }
 
     .foreground-active {
@@ -347,7 +354,31 @@
     }
 
     .foreground-icon {
-        color: mat.get-color-from-palette($foreground, icon);
+        mat-icon {
+            color: mat.get-color-from-palette($foreground, icon);
+        }
+        * {
+            color: mat.get-color-from-palette($foreground, text);
+        }
+        &.active {
+            $color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
+            color: $color;
+            * {
+                color: $color;
+            }
+        }
+    }
+
+    .text {
+        color: mat.get-color-from-palette($foreground, text);
+
+        &-center {
+            text-align: center;
+        }
+    }
+
+    .hint {
+        color: mat.get-color-from-palette($foreground, secondary-text);
     }
 
     .svg-primary {
@@ -358,6 +389,10 @@
 
     .light-gray-by-theme {
         color: if($is-dark-theme, white, rgba(0, 0, 0, 0.65));
+    }
+
+    .underline {
+        border-bottom: 1px solid mat.get-color-from-palette($foreground, divider, if($is-dark-theme, 0.7, 0.42));
     }
 
     /** remove unwanted spaces from group displays */
