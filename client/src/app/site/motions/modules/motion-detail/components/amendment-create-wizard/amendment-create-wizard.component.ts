@@ -151,10 +151,14 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         }
     }
 
+    public getSaveAction(): () => Promise<void> {
+        return () => this.saveAmendment();
+    }
+
     /**
      * Saves the amendment and navigates to detail view of this amendment
      */
-    public async saveAmendment(): Promise<void> {
+    private async saveAmendment(): Promise<void> {
         const amendmentParagraphs: AmendmentParagraphs = {};
         this.paragraphs.forEach((paragraph: ParagraphToChoose, paraNo: number) => {
             if (this.contentForm.value.selectedParagraphs.find(para => para.paragraphNo === paraNo)) {
