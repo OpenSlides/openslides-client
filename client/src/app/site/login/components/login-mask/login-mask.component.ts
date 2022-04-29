@@ -176,9 +176,9 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         }
     }
 
-    private formatLoginInputValues(info: LoginValues): LoginValues{
+    private formatLoginInputValues(info: LoginValues): LoginValues {
         const newName = info.username.trim();
-        return { username: newName, password: info.password};
+        return { username: newName, password: info.password };
     }
 
     public async guestLogin(): Promise<void> {
