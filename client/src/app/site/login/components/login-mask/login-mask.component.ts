@@ -162,12 +162,17 @@ export class LoginMaskComponent extends BaseComponent implements OnInit, OnDestr
         this.loginErrorMsg = ``;
         try {
             this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
-            const { username, password }: { username: string; password: string } = this.loginForm.value;
+            const { username, password }: { username: string; password: string } = this.formatLoginInputValues(this.loginForm.value);
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e) {
             this.spinnerService.hide();
             this.loginErrorMsg = e;
         }
+    }
+
+    private formatLoginInputValues(info: {username: string; password: string}): { username: string; password: string }{
+        const newName = info.username.trim();
+        return { username: newName, password: info.password};
     }
 
     public async guestLogin(): Promise<void> {
