@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AmendmentAction } from 'app/core/actions/amendment-action';
+import { OperatorService } from 'app/core/core-services/operator.service';
+import { Permission } from 'app/core/core-services/permission';
 import { Id } from 'app/core/definitions/key-types';
 import {
     MotionLineNumberingService,
@@ -84,7 +86,8 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
         private motionLineNumbering: MotionLineNumberingService,
         private route: ActivatedRoute,
         private router: Router,
-        private promptService: PromptService
+        private promptService: PromptService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
         this.createForm();
@@ -169,7 +172,7 @@ export class AmendmentCreateWizardComponent extends BaseModelContextComponent im
             ...this.contentForm.value,
             title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
-            category_id: this.motion.category_id,
+            category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
