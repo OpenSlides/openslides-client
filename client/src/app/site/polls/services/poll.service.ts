@@ -113,23 +113,43 @@ export class PollService {
             .subscribe(isEnabled => (this.isElectronicVotingEnabled = isEnabled));
     }
 
+    /**
+     * Compares two numbers.
+     * @param a the first number
+     * @param b the number that needs to be compared with a
+     * @returns 0 if they are equal, a negative value if a>b, else a positive value
+     */
+    private compareValues(a: number, b: number): number{
+        if (!b){
+            if (!a){
+                return 0;
+            }
+            return -1;
+        }
+        if (!a){
+            return 1;
+        }
+        return b - a;
+    }
+
     public generateTableData(poll: PollData): PollTableData[] {
+        console.log(`tableData`);
         const tableData: PollTableData[] = poll.options
             .sort((a, b) => {
                 if (this.sortByVote) {
                     let compareValue;
                     if (poll.pollmethod === PollMethod.N) {
                         // least no on top:
-                        compareValue = a.no - b.no;
+                        compareValue = this.compareValues(b.no, a.no);
                     } else {
                         // most yes on top
-                        compareValue = b.yes - a.yes;
+                        compareValue = this.compareValues(a.yes, b.yes);
                     }
 
                     // Equal votes, sort by weight to have equal votes correctly sorted.
                     if (compareValue === 0 && a.weight && b.weight) {
                         // least weight on top
-                        return a.weight - b.weight;
+                        return this.compareValues(b.weight, a.weight);
                     } else {
                         return compareValue;
                     }
@@ -138,7 +158,7 @@ export class PollService {
                 // PollData does not have weight, we need to rely on the order of things.
                 if (a.weight && b.weight) {
                     // least weight on top
-                    return a.weight - b.weight;
+                        return this.compareValues(b.weight, a.weight);
                 } else {
                     return 0;
                 }
@@ -151,7 +171,7 @@ export class PollService {
                         key =>
                             ({
                                 vote: key.vote,
-                                amount: option[key.vote],
+                                amount: option[key.vote] ?? 0,
                                 icon: key.icon,
                                 hide: key.hide,
                                 showPercent: key.showPercent
