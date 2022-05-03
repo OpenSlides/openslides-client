@@ -193,9 +193,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionToBackend(MeetingAction.DELETE_ALL_SPEAKERS_OF_ALL_LISTS, payload);
     }
 
-    public duplicate(...meetings: (Partial<Meeting> & Identifiable)[]): Action<Identifiable[]> {
+    public duplicate(...meetings: (Partial<Meeting> & { meeting_id: Id })[]): Action<Identifiable[]> {
         const payload = meetings.map(meeting => ({
-            meeting_id: meeting.id,
             ...this.getPartialPayload(meeting)
         }));
         return this.actions.create({ action: MeetingAction.CLONE, data: payload });
@@ -228,6 +227,14 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return viewModel;
     }
 
+    private getPartialPayload(meeting: Partial<Meeting>): any {
+        return {
+            ...meeting,
+            start_time: this.anyDateToUnix(meeting.start_time),
+            end_time: this.anyDateToUnix(meeting.end_time)
+        };
+    }
+
     /**
      * If required again, out into service. Casting dates out of most things
      * DATE
@@ -248,14 +255,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             return null;
         }
         return null;
-    }
-
-    private getPartialPayload(meeting: any): any {
-        return {
-            ...meeting,
-            start_time: this.anyDateToUnix(meeting.start_time),
-            end_time: this.anyDateToUnix(meeting.end_time)
-        };
     }
 
     /**
