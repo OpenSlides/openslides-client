@@ -195,7 +195,13 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             return;
         }
         const title = this.translate.instant(`Submit selection now?`);
-        const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
+        let content = this.translate.instant(`Your decision cannot be changed afterwards.`);
+        if (this.poll.max_votes_amount > 1 && !this.isGlobalOptionSelected()) {
+            content =
+                this.translate.instant(`Your votes`) +
+                `: ${this.getVotesCount()}/${this.poll.max_votes_amount}<br>` +
+                content;
+        }
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
             this.deliveringVote[user.id] = true;
