@@ -10,6 +10,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { PasswordFormComponent, PasswordForm } from 'src/app/ui/modules/user-components';
 import { UserService } from 'src/app/site/services/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 interface MenuItem {
     name: string;
@@ -92,7 +94,9 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         private operator: OperatorService,
         private repo: UserControllerService,
         private meetingRepo: MeetingControllerService,
-        private userService: UserService
+        private userService: UserService,
+        private snackbar: MatSnackBar,
+        private translate: TranslateService
     ) {
         super();
     }
@@ -102,6 +106,21 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
             this.repo.getViewModelObservable(this.operator.operatorId!).subscribe(user => (this._self = user)),
             this.operator.operatorUpdated.subscribe(() => this.updateIsUserInScope())
         );
+    }
+
+    /**
+     * clicking Shift and Enter will save automatically
+     *
+     * @param event has the code
+     */
+    public onKeyDown(event: KeyboardEvent): void {
+        if (event.key === `Enter` && event.shiftKey) {
+            if (this.activeMenuItem === MenuItems.SHOW_PROFILE && this.isEditing && this.isUserFormValid) {
+                this.saveUserChanges();
+            } else if (this.activeMenuItem === MenuItems.CHANGE_PASSWORD && this.isUserPasswordValid) {
+                this.changePassword();
+            }
+        }
     }
 
     /**
@@ -127,8 +146,10 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
-        await this.repo.setPasswordSelf(this.self!, oldPassword, newPassword);
-        this.changePasswordComponent.reset();
+        this.repo.setPasswordSelf(this.self!, oldPassword, newPassword).then(() => {
+            this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
+            this.changePasswordComponent.reset();
+        });
     }
 
     public async saveUserChanges(): Promise<void> {
@@ -144,7 +165,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     }
 
     private async updateIsUserInScope(): Promise<void> {
-        this._isUserInScope = true;
-        // this._isUserInScope = await this.repo.isUserInSameScope(this.operator.operatorId);
+        this._isUserInScope = await this.userService.isUserInSameScope(this.operator.operatorId);
     }
 }
