@@ -33,6 +33,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         browser_spellcheck: true,
         image_advtab: true,
         image_description: false,
+        relative_urls: false,
         link_title: false,
         height: 320,
         plugins: `autolink charmap code fullscreen image imagetools
