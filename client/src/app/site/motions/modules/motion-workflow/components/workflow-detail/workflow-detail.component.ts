@@ -202,10 +202,10 @@ export class WorkflowDetailComponent extends BaseModelContextComponent implement
         this.openEditDialog(``, this.translate.instant(`New state`), this.translate.instant(`Name`)).subscribe(
             result => {
                 if (result && result.action === `update`) {
-                    const state = new MotionState({
+                    const state = {
                         name: result.value,
                         workflow_id: this.workflow.id
-                    });
+                    };
                     this.handleRequest(this.stateRepo.create(state));
                 }
             }
