@@ -119,14 +119,14 @@ export class PollService {
      * @param b the number that needs to be compared with a
      * @returns 0 if they are equal, a negative value if a>b, else a positive value
      */
-    private compareValues(a: number, b: number): number{
-        if (!b){
-            if (!a){
+    private compareValues(a: number, b: number): number {
+        if (!b) {
+            if (!a) {
                 return 0;
             }
             return -1;
         }
-        if (!a){
+        if (!a) {
             return 1;
         }
         return b - a;
@@ -157,7 +157,7 @@ export class PollService {
                 // PollData does not have weight, we need to rely on the order of things.
                 if (a.weight && b.weight) {
                     // least weight on top
-                        return this.compareValues(b.weight, a.weight);
+                    return this.compareValues(b.weight, a.weight);
                 } else {
                     return 0;
                 }
