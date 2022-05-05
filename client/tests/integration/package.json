@@ -1,0 +1,13 @@
+{
+    "scripts": {
+        "cypress:open": "cypress open",
+        "cypress:run": "wait-on -c resource-config.js && cypress run"
+    },
+    "devDependencies": {
+        "cypress": "^9.6.0",
+        "wait-on": "^6.0.1"
+    },
+    "dependencies": {
+        "typescript": "^4.5.5"
+    }
+}

@@ -1,0 +1,80 @@
+/** Imports the ngrid-theming */
+@use '~@pebula/ngrid' as ngrid;
+
+/** Imports the material-design-theming */
+@use '@angular/material' as mat;
+
+// /** Import brand theme */
+@import 'themes/default-light.scss';
+@import 'themes/default-dark.scss';
+
+/** Global component style definition */
+@import 'global-components-style.scss';
+
+/** Mix the component-related style-rules. Every single custom style goes here */
+@mixin openslides-components-theme($theme) {
+    @include os-component-themes($theme);
+
+    /** Components' concerning theme-files */
+    // @include os-site-theme($theme);
+    // @include os-list-of-speakers-style($theme);
+    // @include os-sorting-tree-style($theme);
+    // @include os-tile-style($theme);
+    // @include os-rounded-input-style($theme);
+    // @include os-meta-text-block-style($theme);
+    // @include os-settings-field-style($theme);
+    // @include os-amendment-create-wizard-style($theme);
+    // @include os-motion-detail-diff-style($theme);
+    // @include os-banner-style($theme);
+    // @include os-motion-poll-detail-style($theme);
+    // @include os-assignment-poll-detail-style($theme);
+    // @include os-progress-snack-bar-style($theme);
+    // @include os-list-view-table-theme($theme);
+    // @include os-user-statistics-style($theme);
+    // @include os-login-wrapper-theme($theme);
+    // @include os-progress-theme($theme);
+}
+
+@mixin ngrid-theme($theme) {
+    @include ngrid.ngrid-typography();
+    @include ngrid.ngrid-theme($theme);
+    @include ngrid.predefined-spacing($theme);
+}
+
+.openslides-light-theme {
+    @include mat.all-component-themes($openslides-light-theme);
+    @include openslides-components-theme($openslides-light-theme);
+    @include ngrid-theme(ngrid.define-light-theme(ngrid.define-palette(ngrid.$blue-palette)));
+}
+
+.openslides-dark-theme {
+    @include mat.all-component-themes($openslides-dark-theme);
+    @include openslides-components-theme($openslides-dark-theme);
+    @include ngrid-theme(ngrid.define-dark-theme(ngrid.define-palette(ngrid.$blue-palette)));
+}
+
+[class^='openslides-'][class*='-light-theme'] {
+    .logo-container {
+        img.dark {
+            display: none;
+        }
+        img.default {
+            display: inherit;
+        }
+    }
+}
+
+/**
+ * Custom configuration for dark themes
+ */
+[class^='openslides-'][class*='-dark-theme'] {
+    color: white;
+    .logo-container {
+        img.dark {
+            display: inherit;
+        }
+        img.default {
+            display: none;
+        }
+    }
+}

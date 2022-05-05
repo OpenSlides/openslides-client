@@ -1,0 +1,67 @@
+<mat-select
+    #matSelect
+    [formControl]="contentForm"
+    [multiple]="multiple"
+    [panelClass]="{ 'os-search-selector': multiple }"
+    [errorStateMatcher]="errorStateMatcher"
+    (openedChange)="onOpenChanged($event)"
+>
+    <!-- Custom display of selected items -->
+    <mat-select-trigger *ngIf="multiple">
+        <ng-container *ngIf="selectedItems?.length">
+            <span *ngFor="let item of selectedItems; let last = last">
+                {{ item.getTitle() | translate }}
+                <span *ngIf="!last">,</span>
+            </span>
+        </ng-container>
+    </mat-select-trigger>
+
+    <mat-option>
+        <ngx-mat-select-search [formControl]="searchValueForm" noEntriesFoundLabel=""></ngx-mat-select-search>
+    </mat-option>
+    <ng-container *ngIf="multiple && showChips">
+        <div #chipPlaceholder>
+            <div class="os-search-selector--chip-container">
+                <mat-chip-list class="chip-list" [selectable]="false">
+                    <mat-chip
+                        *ngFor="let item of selectedItems"
+                        class="one-line"
+                        [removable]="true"
+                        (removed)="onChipRemove(item.id)"
+                        [disableRipple]="true"
+                    >
+                        <span class="one-line">
+                            {{ item.getTitle() | translate }}
+                        </span>
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
+            <div class="os-search-selector--chip-placeholder"></div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="showNotFoundButton">
+        <button class="os-not-found-button" mat-button (click)="onNotFoundClick()">
+            <ng-container *ngTemplateOutlet="notFoundTemplate"></ng-container>
+        </button>
+    </ng-container>
+    <cdk-virtual-scroll-viewport class="vscroll-viewport" minBufferPx="400" maxBufferPx="600" [itemSize]="50">
+        <mat-option
+            *ngIf="(filteredItemsObservable | async)?.length === 0"
+            class="os-search-selector--no-options"
+            disabled
+        >
+            {{ noOptionsFoundLabel | translate }}
+        </mat-option>
+        <mat-option
+            #currentOption
+            *cdkVirtualFor="let selectableItem of filteredItemsObservable | async"
+            [value]="selectableItem.id"
+            [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
+            [matTooltip]="tooltipFn(selectableItem, currentOption)"
+            (onSelectionChange)="onSelectionChange(selectableItem, $event)"
+        >
+            {{ selectableItem.getTitle() | translate }}
+        </mat-option>
+    </cdk-virtual-scroll-viewport>
+</mat-select>

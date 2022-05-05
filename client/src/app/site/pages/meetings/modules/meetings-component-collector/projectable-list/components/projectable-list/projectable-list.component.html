@@ -1,0 +1,54 @@
+<os-list
+    [listObservableProvider]="listObservableProvider"
+    [listObservable]="listObservable"
+    [startColumnDefinitions]="startColumnDefinitions"
+    [endColumnDefinitions]="endColumnDefinitions"
+    [sortService]="sortService"
+    [filterService]="filterService"
+    [multiSelect]="multiSelect"
+    [hiddenInMobile]="hiddenInMobile"
+    [restricted]="restricted"
+    [selectedRows]="selectedRows"
+    [columns]="columns"
+    [filterProps]="filterProps"
+    [showFilterBar]="showFilterBar"
+    [alwaysShowMenu]="alwaysShowMenu"
+    [showMenu]="showMenu"
+    [vScrollFixed]="vScrollFixed"
+    [toHideFn]="toHideFn"
+    [toRestrictFn]="toRestrictFn"
+    (dataSourceChange)="dataSourceChange.emit($event)"
+    (selectedRowsChange)="selectedRowsChange.emit($event)"
+>
+    <ng-template #startColumnView>
+        <!-- Projector column -->
+        <div *pblNgridCellDef="'projector'; row as viewModel" class="fill ngrid-lg">
+            <os-projector-button
+                *osPerms="permission.projectorCanManage"
+                class="projector-button"
+                [object]="viewModel"
+                (changeEvent)="viewUpdateEvent()"
+            ></os-projector-button>
+            <!-- Projector indicator -->
+            <div class="projector-button" *osPerms="permission.projectorCanManage; complement: true">
+                <mat-icon
+                    color="accent"
+                    *ngIf="isProjectedFn(viewModel)"
+                    matTooltip="{{ 'Currently projected' | translate }}"
+                >
+                    videocam
+                </mat-icon>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #endColumnView>
+        <!-- Speaker -->
+        <div *pblNgridCellDef="'speaker'; row as viewModel; rowContext as rowContext" class="fill">
+            <os-speaker-button
+                [object]="_getSpeakerButtonObject(viewModel)"
+                [disabled]="multiSelect"
+            ></os-speaker-button>
+        </div>
+    </ng-template>
+</os-list>

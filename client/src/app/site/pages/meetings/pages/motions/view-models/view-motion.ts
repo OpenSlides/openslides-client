@@ -1,0 +1,363 @@
+import {
+    Motion,
+    HasReferencedMotionInRecommendationExtensionIds
+} from '../../../../../../domain/models/motions/motion';
+import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';
+import { Id } from '../../../../../../domain/definitions/key-types';
+import { AmendmentType } from '../../../../../../domain/models/motions/motions.constants';
+import { DiffLinesInParagraph } from '../definitions';
+import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import { BaseViewModel } from '../../../../../base/base-view-model';
+import { HasMeeting } from '../../../view-models/has-meeting';
+import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
+import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
+import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
+import { HasTags } from '../modules/tags/view-models/has-tags';
+import { ViewUser } from '../../../view-models/view-user';
+import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
+import { HasPersonalNote } from '../modules/personal-notes/view-models/has-personal-note';
+import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
+import { ViewMotionBlock } from '../modules/motion-blocks/view-models/view-motion-block';
+import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
+import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
+import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
+import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
+import { ViewPoll } from '../../polls/view-models/view-poll';
+import { ViewMotionSubmitter } from '../modules/submitters';
+import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { SlideOptions } from '../../../view-models/slide-options';
+
+export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
+    referenced_in_motion_recommendation_extension: ViewMotion[];
+}
+
+/**
+ * Motion class for the View
+ *
+ * Stores a motion including all (implicit) references
+ * Provides "safe" access to variables and functions in {@link Motion}
+ * @ignore
+ */
+export class ViewMotion extends BaseProjectableViewModel<Motion> {
+    public static COLLECTION = Motion.COLLECTION;
+    protected _collection = Motion.COLLECTION;
+
+    public get motion(): Motion {
+        return this._model;
+    }
+
+    public get workflow_id(): Id {
+        return this.state!.workflow_id;
+    }
+
+    public get workflow(): ViewMotionWorkflow {
+        return this.state!.workflow;
+    }
+
+    public get submittersAsUsers(): ViewUser[] {
+        return (this.submitters || []).map(submitter => submitter.user);
+    }
+
+    public get numberOrTitle(): string {
+        return this.number ? this.number : this.title;
+    }
+
+    public get agenda_type(): AgendaItemType | null {
+        return this.agenda_item ? this.agenda_item.type : null;
+    }
+
+    public get speakerAmount(): number {
+        return this.list_of_speakers?.waitingSpeakerAmount ?? 0;
+    }
+
+    /**
+     * Necessary for motion filters
+     */
+    public get isFavorite(): boolean {
+        return this.getPersonalNote()?.star || false;
+    }
+
+    /**
+     * Necessary for motion filters
+     */
+    public get hasNotes(): boolean {
+        return !!this.getPersonalNote()?.note;
+    }
+
+    /**
+     * @returns the creation date as Date object
+     */
+    public get creationDate(): Date | null {
+        if (!this.motion.created) {
+            return null;
+        }
+        return new Date(this.motion.created);
+    }
+
+    /**
+     * @returns the date of the last change as Date object, null if empty
+     */
+    public get lastChangeDate(): Date | null {
+        if (!this.motion.last_modified) {
+            return null;
+        }
+        return new Date(this.motion.last_modified);
+    }
+
+    /**
+     * @returns the current state extension if the workwlof allows for extenstion fields
+     */
+    public get stateExtension(): string | null {
+        if (this.state && this.state.show_state_extension_field) {
+            return this.motion.state_extension;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @returns the current recommendation extension if the workflow allows for extenstion fields
+     */
+    public get recommendationExtension(): string | null {
+        if (this.recommendation && this.recommendation.show_recommendation_extension_field) {
+            return this.motion.recommendation_extension;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets the comments' section ids of a motion. Used in filter by motionComment
+     *
+     * @returns an array of ids, or an empty array
+     */
+    public get usedCommentSectionIds(): Id[] {
+        if (!this.motion) {
+            return [];
+        }
+        return this.comments
+            .map(comment => comment.section_id)
+            .filter((value, index, self) => self.indexOf(value) === index);
+    }
+
+    public get hasSpeakers(): boolean {
+        return this.speakerAmount > 0;
+    }
+
+    public get showPreamble(): boolean {
+        return !this.state?.isFinalState ?? true;
+    }
+
+    /**
+     * Translate the state's css class into a color
+     *
+     * @returns a string representing a color
+     */
+    public get stateCssColor(): string {
+        return this.state ? this.state.css_class : ``;
+    }
+
+    /**
+     * Determine if a motion has a parent at all
+     */
+    public get hasLeadMotion(): boolean {
+        return !!this.lead_motion_id;
+    }
+
+    /**
+     * Determine if a motion has amenments
+     */
+    public get hasAmendments(): boolean {
+        return !!this.amendments && !!this.amendments.length;
+    }
+
+    /**
+     * Determine if the motion has parents, is a parent or neither
+     */
+    public get amendmentType(): AmendmentType {
+        if (this.hasLeadMotion) {
+            return AmendmentType.Amendment;
+        } else if (this.hasAmendments) {
+            return AmendmentType.Parent;
+        } else {
+            return AmendmentType.Lead;
+        }
+    }
+
+    public get changedAmendmentLines(): DiffLinesInParagraph[] | null {
+        if (!this._changedAmendmentLines) {
+            this._changedAmendmentLines = this.getAmendmentParagraphLines();
+        }
+        return this._changedAmendmentLines;
+    }
+
+    public get affectedAmendmentLines(): DiffLinesInParagraph[] | null {
+        if (!this._affectedAmendmentLines) {
+            this._affectedAmendmentLines = this.getAmendmentParagraphLines();
+        }
+        return this._affectedAmendmentLines;
+    }
+
+    /**
+     * Get the number of the first diff line, in case a motion is an amendment
+     */
+    public get parentAndLineNumber(): string | null {
+        if (this.isParagraphBasedAmendment() && this.lead_motion && this.changedAmendmentLines?.length) {
+            return `${this.lead_motion.number} ${this.changedAmendmentLines[0].diffLineFrom}`;
+        } else {
+            return null;
+        }
+    }
+
+    private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
+    private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
+
+    /**
+     * @warning This is injected. Do not use it!
+     */
+    public getAmendmentParagraphLines!: (includeUnchanged?: boolean) => DiffLinesInParagraph[] | null;
+    public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
+    // This is set by the repository
+    public getNumberOrTitle!: () => string;
+
+    public getPersonalNote(): ViewPersonalNote | null {
+        if (this.personal_notes?.length) {
+            return this.personal_notes[0] || null;
+        }
+        return null;
+    }
+
+    /**
+     * Extract the lines of the amendments
+     * If an amendments has multiple changes, they will be printed like an array of strings
+     *
+     * @return The lines of the amendment
+     */
+    public getChangedLines(): string | null {
+        if (this.changedAmendmentLines?.length) {
+            return this.changedAmendmentLines
+                .map(diffLine => {
+                    if (diffLine.diffLineTo === diffLine.diffLineFrom + 1) {
+                        return `` + diffLine.diffLineFrom;
+                    } else {
+                        return `${diffLine.diffLineFrom} - ${diffLine.diffLineTo - 1}`;
+                    }
+                })
+                .toString();
+        }
+        return null;
+    }
+
+    public override getDetailStateUrl(): string {
+        return `/${this.meeting_id ?? this.getActiveMeetingId()}/motions/${this.sequential_number}`;
+    }
+
+    /**
+     * Returns the motion comment for the given section. Null, if no comment exist.
+     *
+     * @param section The section to search the comment for.
+     */
+    public getCommentForSection(section: ViewMotionCommentSection): ViewMotionComment | undefined {
+        return this.comments.find(comment => comment.section_id === section.id);
+    }
+
+    public hasSupporters(): boolean {
+        return !!(this.supporters && this.supporters.length > 0);
+    }
+
+    public hasAttachments(): boolean {
+        return this.attachment_ids?.length > 0;
+    }
+
+    public hasTags(): boolean {
+        return !!(this.tags && this.tags.length > 0);
+    }
+
+    public isStatuteAmendment(): boolean {
+        return !!this.statute_paragraph_id;
+    }
+
+    /**
+     * Determine if the motion is in its final workflow state
+     */
+    public isInFinalState(): boolean {
+        return this.state ? this.state.isFinalState : false;
+    }
+
+    /**
+     * It's a paragraph-based amendments if only one paragraph is to be changed,
+     * specified by -array
+     */
+    public isParagraphBasedAmendment(): boolean {
+        return this.amendment_paragraph_$?.length > 0;
+    }
+
+    public override getProjectionBuildDescriptor(
+        meetingSettingsService: MeetingSettingsService
+    ): ProjectionBuildDescriptor {
+        const slideOptions: SlideOptions = [
+            {
+                key: `mode`,
+                displayName: _(`Which version?`),
+                default: meetingSettingsService.instant(`motions_recommendation_text_mode`)!,
+                choices: [
+                    { value: `original`, displayName: `Original version` },
+                    { value: `changed`, displayName: `Changed version` },
+                    { value: `diff`, displayName: `Diff version` },
+                    { value: `agreed`, displayName: `Final version` }
+                ]
+            }
+        ];
+
+        return {
+            content_object_id: this.fqid,
+            slideOptions,
+            projectionDefault: this.getProjectiondefault(),
+            getDialogTitle: this.getAgendaSlideTitle
+        };
+    }
+
+    public getProjectiondefault(): Projectiondefault {
+        if (this.isParagraphBasedAmendment()) {
+            return Projectiondefault.amendment;
+        } else {
+            return Projectiondefault.motion;
+        }
+    }
+}
+
+interface IMotionRelations {
+    lead_motion?: ViewMotion;
+    amendments: ViewMotion[]; // children to lead_motion
+    sort_parent?: ViewMotion;
+    sort_children: ViewMotion[];
+    origin?: ViewMotion;
+    derived_motions?: ViewMotion[];
+    all_derived_motions?: ViewMotion[];
+    all_origins?: ViewMotion[];
+    state?: ViewMotionState;
+    recommendation?: ViewMotionState;
+    recommendation_extension_reference: (BaseViewModel & HasReferencedMotionsInRecommendationExtension)[];
+    category?: ViewMotionCategory;
+    block?: ViewMotionBlock;
+    submitters: ViewMotionSubmitter[];
+    supporters: ViewUser[];
+    polls: ViewPoll[];
+    change_recommendations: ViewMotionChangeRecommendation[];
+    statute_paragraph?: ViewMotionStatuteParagraph;
+    comments: ViewMotionComment[];
+}
+
+export interface ViewMotion
+    extends Motion,
+        IMotionRelations,
+        HasMeeting,
+        HasAttachment,
+        HasPersonalNote,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasReferencedMotionsInRecommendationExtension {}

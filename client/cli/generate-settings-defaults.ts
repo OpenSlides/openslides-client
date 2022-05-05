@@ -4,13 +4,11 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import dedent from 'ts-dedent';
 
-import { MeetingSettingsDefinitionProvider } from 'app/core/ui-services/meeting-settings-definition-provider.service';
+import { MeetingSettingsDefinitionService } from '../src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 
 const SOURCE = 'https://raw.githubusercontent.com/OpenSlides/openslides-backend/main/global/meta/models.yml';
 
-const DESTINATION = path.resolve(
-    path.join(__dirname, '../src/app/core/repositories/management/meeting-settings-defaults.ts')
-);
+const DESTINATION = path.resolve(path.join(__dirname, '../src/app/domain/definitions/meeting-settings-defaults.ts'));
 
 const FILE_TEMPLATE = dedent`
     // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
@@ -22,10 +20,10 @@ const FILE_TEMPLATE = dedent`
 
 (async () => {
     const result = await axios.get(SOURCE);
-    const models = yaml.load(result.data);
+    const models: any = yaml.load(result.data);
     const meeting = models['meeting'];
 
-    const provider = new MeetingSettingsDefinitionProvider();
+    const provider = new MeetingSettingsDefinitionService();
 
     let content = FILE_TEMPLATE + '\n';
     for (const [key, value] of Object.entries(provider.getSettingsMap())) {

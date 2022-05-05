@@ -1,41 +1,31 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
-
-import { E2EImportsModule } from './../e2e-imports.module';
+import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { ServertimeService } from './core/core-services/servertime.service';
 
-describe(`AppComponent`, () => {
-    let servertimeService;
-    let translate;
+describe('AppComponent', () => {
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [RouterTestingModule],
+            declarations: [AppComponent]
+        }).compileComponents();
+    });
 
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [E2EImportsModule]
-            }).compileComponents();
-
-            servertimeService = TestBed.inject(ServertimeService);
-            translate = TestBed.inject(TranslateService);
-
-            /**
-             * FIXME: function does not work anymore
-             */
-            // spyOn(servertimeService, 'startScheduler').and.stub();
-            spyOn(translate, `addLangs`).and.stub();
-            spyOn(translate, `setDefaultLang`).and.stub();
-            spyOn(translate, `getBrowserLang`).and.stub();
-            spyOn(translate, `getLangs`).and.returnValue([]);
-            spyOn(translate, `use`).and.stub();
-        })
-    );
-    it(`should create the app`, fakeAsync(() => {
+    it('should create the app', () => {
         const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.debugElement.componentInstance;
+        const app = fixture.componentInstance;
         expect(app).toBeTruthy();
-        tick(1000);
-        // fixture.whenStable().then(() => {
-        //     expect(servertimeService.startScheduler).toHaveBeenCalled();
-        // });
-    }));
+    });
+
+    it(`should have as title 'client13'`, () => {
+        const fixture = TestBed.createComponent(AppComponent);
+        const app = fixture.componentInstance;
+        expect(app.title).toEqual('client13');
+    });
+
+    it('should render title', () => {
+        const fixture = TestBed.createComponent(AppComponent);
+        fixture.detectChanges();
+        const compiled = fixture.nativeElement as HTMLElement;
+        expect(compiled.querySelector('.content span')?.textContent).toContain('client13 app is running!');
+    });
 });

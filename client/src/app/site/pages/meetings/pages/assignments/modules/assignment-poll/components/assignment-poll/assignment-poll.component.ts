@@ -1,0 +1,106 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
+import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
+import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
+import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
+
+@Component({
+    selector: 'os-assignment-poll',
+    templateUrl: './assignment-poll.component.html',
+    styleUrls: ['./assignment-poll.component.scss']
+})
+export class AssignmentPollComponent extends BasePollComponent implements OnInit {
+    @Input()
+    public set pollId(id: Id) {
+        this.initializePoll(id);
+    }
+
+    @Output()
+    public readonly dialogOpened = new EventEmitter<void>();
+
+    public candidatesLabels: string[] = [];
+
+    /**
+     * Form for updating the poll's description
+     */
+    public descriptionForm!: FormGroup;
+
+    /**
+     * @returns true if the description on the form differs from the poll's description
+     */
+    public get dirtyDescription(): boolean {
+        return this.descriptionForm.get(`description`)?.value !== this.poll.description;
+    }
+
+    public get showPoll(): boolean {
+        if (this.poll) {
+            if (
+                this.operator.hasPerms(Permission.assignmentCanManage) ||
+                this.poll.isPublished ||
+                (this.poll.isEVoting && !this.poll.isCreated)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public get showMetaInfo(): boolean {
+        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.assignmentCanManage);
+    }
+
+    public get showCandidatesInMetaInfo(): boolean {
+        return !this.poll.stateHasVotes && !this.votingService.canVote(this.poll);
+    }
+
+    public constructor(
+        componentServiceCollector: MeetingComponentServiceCollectorService,
+        translate: TranslateService,
+        promptService: PromptService,
+        choiceService: ChoiceService,
+        repo: PollControllerService,
+        private formBuilder: FormBuilder,
+        private pdfService: AssignmentPollPdfService,
+        private operator: OperatorService,
+        private votingService: VotingService,
+        private votingPrivacyDialog: VotingPrivacyWarningDialogService
+    ) {
+        super(componentServiceCollector, translate, promptService, choiceService, repo);
+    }
+
+    public ngOnInit(): void {
+        this.descriptionForm = this.formBuilder.group({
+            description: this.poll ? this.poll.description : ``
+        });
+    }
+
+    /**
+     * Print the PDF of this poll with the corresponding options and numbers
+     */
+    public printBallot(): void {
+        try {
+            this.pdfService.printBallots(this.poll);
+        } catch (e: any) {
+            console.error(e);
+            this.raiseError(e);
+        }
+    }
+
+    public openVotingWarning(): void {
+        this.votingPrivacyDialog.open();
+    }
+
+    public getDetailLink(): string {
+        return `/${this.poll.meeting_id}/assignments/polls/${this.poll.sequential_number}`;
+    }
+}

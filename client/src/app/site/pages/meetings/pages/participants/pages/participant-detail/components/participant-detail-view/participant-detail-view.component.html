@@ -1,0 +1,257 @@
+<os-head-bar
+    [hasMainButton]="isAllowed('changePersonal') && !!user"
+    mainButtonIcon="edit"
+    [nav]="false"
+    [goBack]="!isAllowed('seeOtherUsers')"
+    [editMode]="isEditingSubject.value"
+    [isSaveButtonEnabled]="isFormValid"
+    [saveAction]="getSaveAction()"
+    (mainEvent)="setEditMode(!isEditingSubject.value)"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>
+            <span *ngIf="newUser">{{ 'New participant' | translate }}</span>
+            <span *ngIf="!newUser && user">{{ user.full_name }}</span>
+        </h2>
+    </div>
+
+    <!-- Menu -->
+    <div class="menu-slot">
+        <button
+            type="button"
+            mat-icon-button
+            *ngIf="isAllowed('changePersonal') && isAllowed('changePassword') && user"
+            [matMenuTriggerFor]="userExtraMenu"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+
+    <mat-menu #userExtraMenu="matMenu">
+        <button mat-menu-item *ngIf="isAllowed('changePassword')" (click)="changePassword()">
+            <mat-icon>security</mat-icon>
+            <span>{{ 'Change password' | translate }}</span>
+        </button>
+        <!-- invitation email -->
+        <button mat-menu-item *ngIf="isAllowed('manage') && user && user.email" (click)="sendInvitationEmail()">
+            <mat-icon>mail</mat-icon>
+            <span>{{ 'Send invitation email' | translate }}</span>
+        </button>
+        <!-- PDF -->
+        <button mat-menu-item *ngIf="isAllowed('manage')" (click)="onDownloadPdf()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <span>{{ 'PDF' | translate }}</span>
+        </button>
+        <!-- delete button -->
+        <div *ngIf="isAllowed('delete')">
+            <mat-divider></mat-divider>
+            <button mat-menu-item class="red-warning-text" (click)="deleteUserButton()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </div>
+    </mat-menu>
+</os-head-bar>
+
+<os-user-detail-view
+    [user]="user"
+    [isNewUser]="newUser"
+    [isEditing]="isEditingSubject | async"
+    [additionalFormControls]="additionalFormControls"
+    [isAllowedFn]="isAllowedFn"
+    [generatePasswordFn]="randomPasswordFn"
+    [patchFormValueFn]="patchFormValueFn"
+    [shouldEnableFormControlFn]="shouldEnableFormControlFn"
+    (changeEvent)="personalInfoFormValue = $event"
+    (validEvent)="isFormValid = $event"
+    (errorEvent)="formErrors = $event"
+    (submitEvent)="saveUser()"
+    *ngIf="user || newUser"
+>
+    <ng-template #editView let-form="form">
+        <div [formGroup]="form">
+            <h2>{{ 'Meeting specific information' | translate }}</h2>
+            <!-- Present? -->
+            <div [formGroup]="form">
+                <mat-checkbox
+                    formControlName="is_present"
+                    matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
+                >
+                    <span>{{ 'present' | translate }}</span>
+                </mat-checkbox>
+            </div>
+            <div>
+                <!-- Strucuture Level -->
+                <mat-form-field
+                    class="distance"
+                    [ngClass]="{
+                        form37: showVoteWeight,
+                        form70: !showVoteWeight
+                    }"
+                >
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="{{ 'Structure level' | translate }}"
+                        formControlName="structure_level"
+                    />
+                </mat-form-field>
+
+                <!-- Participant Number -->
+                <mat-form-field
+                    [ngClass]="{
+                        distance: showVoteWeight,
+                        form37: showVoteWeight,
+                        form25: !showVoteWeight
+                    }"
+                >
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="{{ 'Participant number' | translate }}"
+                        formControlName="number"
+                    />
+                </mat-form-field>
+
+                <!-- Vote weight -->
+                <!-- TODO Input type should be number with limited decimal spaces -->
+                <mat-form-field class="form16 force-min-with" *ngIf="showVoteWeight">
+                    <input
+                        type="number"
+                        matInput
+                        placeholder="{{ 'Vote weight' | translate }}"
+                        formControlName="vote_weight"
+                    />
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="isAllowed('seeName')">
+                <!-- Groups -->
+                <mat-form-field>
+                    <os-list-search-selector
+                        formControlName="group_ids"
+                        [multiple]="true"
+                        placeholder="{{ 'Groups' | translate }}"
+                        [inputListValues]="groups"
+                    ></os-list-search-selector>
+                </mat-form-field>
+
+                <!-- Delegate Vote -->
+                <mat-form-field>
+                    <os-repo-search-selector
+                        formControlName="vote_delegations_from_ids"
+                        [repo]="repo"
+                        [multiple]="true"
+                        placeholder="{{ 'Voting right received from (principals)' | translate }}"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+
+                <!-- Delegate Vote -->
+                <mat-form-field>
+                    <os-repo-search-selector
+                        formControlName="vote_delegated_to_id"
+                        [repo]="repo"
+                        [multiple]="false"
+                        [includeNone]="true"
+                        placeholder="{{ 'Voting right delegated to (proxy)' | translate }}"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+            </div>
+
+            <!-- About me -->
+            <div *ngIf="isAllowed('seePersonal')" class="spacer-bottom-20">
+                <!-- The HTML Editor -->
+                <h4>{{ 'About me' | translate }}</h4>
+                <os-editor formControlName="about_me"></os-editor>
+            </div>
+
+            <div *ngIf="isAllowed('seeExtra')">
+                <!-- Comment -->
+                <mat-form-field>
+                    <input matInput placeholder="{{ 'Comment' | translate }}" formControlName="comment" />
+                    <mat-hint>{{ 'Only for internal notes.' | translate }}</mat-hint>
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #showView>
+        <h2>{{ 'Meeting specific information' | translate }}</h2>
+        <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSend">
+            <div>
+                <h4>{{ 'Last email sent' | translate }}</h4>
+                <span>{{ getEmailSentTime() }}</span>
+            </div>
+        </div>
+
+        <!-- Structure Level -->
+        <div *ngIf="user?.structure_level()">
+            <h4>{{ 'Structure level' | translate }}</h4>
+            <span>{{ user!.structure_level() }}</span>
+        </div>
+
+        <!-- Participant number -->
+        <div *ngIf="user?.number()">
+            <h4>{{ 'Participant number' | translate }}</h4>
+            <span>{{ user!.number() }}</span>
+        </div>
+
+        <!-- Groups -->
+        <div *ngIf="usersGroups && usersGroups.length > 0">
+            <h4>{{ 'Groups' | translate }}</h4>
+            <span *ngFor="let group of usersGroups; let last = last" class="inline-flex">
+                {{ group.getTitle() | translate }}
+                <span *ngIf="!last">,&nbsp;</span>
+            </span>
+        </div>
+
+        <div *ngIf="!user?.groups || user?.groups?.length === 0">
+            <h4>{{ 'Groups' | translate }}</h4>
+            <span>{{ 'Default group' | translate }}</span>
+        </div>
+
+        <div *ngIf="isAllowed('manage') || ownPage">
+            <!-- Own Vote delegations -->
+            <div *ngIf="user?.vote_delegated_to()">
+                <h4>{{ 'Voting right delegated to (proxy)' | translate }}</h4>
+                <span>{{ user!.vote_delegated_to() }}</span>
+            </div>
+
+            <!-- Received Vote delegations -->
+            <div *ngIf="user!.vote_delegations_from().length > 0">
+                <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
+                <span>{{ user!.vote_delegations_from() }}</span>
+            </div>
+
+            <!-- Vote weight -->
+            <div *ngIf="showVoteWeight">
+                <h4>{{ 'Vote weight' | translate }}</h4>
+                <span>{{ user?.vote_weight() }}</span>
+            </div>
+        </div>
+
+        <div *ngIf="isAllowed('seeName')">
+            <!-- About me -->
+            <div *ngIf="user?.about_me()">
+                <h4>{{ 'About me' | translate }}</h4>
+                <div [innerHTML]="user!.about_me() | trust: 'html'"></div>
+            </div>
+        </div>
+
+        <div *ngIf="isAllowed('seeExtra')">
+            <!-- Comment -->
+            <div *ngIf="user?.comment()">
+                <h4>{{ 'Comment' | translate }}</h4>
+                <span>{{ user!.comment() }}</span>
+            </div>
+        </div>
+
+        <div *ngIf="isAllowed('seeName')" class="flex-vertical-center margin-top-12">
+            <span>{{ (user?.isPresentInMeeting() ? 'Is present' : 'Is not present') | translate }}</span>
+            <mat-icon class="margin-4">
+                {{ user!.isPresentInMeeting() ? 'check_box' : 'check_box_outline_blank' }}
+            </mat-icon>
+        </div>
+    </ng-template>
+</os-user-detail-view>

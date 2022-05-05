@@ -1,16 +1,16 @@
 .DS_STORE
 
-/dist/
+dist
 /bazel-out
 /integration/bazel/bazel-*
-.angular/cache
+client/.angular/cache
+.cache
 .vscode
 e2e_test.*
 *.log
 
 # node modules
 node_modules
-package-lock.json
 
 # Include when developing application packages.
 pubspec.lock
@@ -31,9 +31,6 @@ modules/.vscode
 .nvimrc
 *.code-workspace
 
-# Don't check in secret files
-*secret.js
-
 # Ignore npm/yarn debug log
 npm-debug.log
 yarn-error.log
@@ -48,3 +45,8 @@ yarn.lock
 # User specific bazel settings
 .bazelrc.user
 
+# Test results
+client/tests/integration/results
+client/tests/integration/cypress/downloads
+client/tests/integration/cypress/videos
+client/tests/integration/cypress/screenshots

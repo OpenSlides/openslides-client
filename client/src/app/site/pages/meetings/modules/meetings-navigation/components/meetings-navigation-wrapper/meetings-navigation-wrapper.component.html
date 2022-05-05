@@ -1,0 +1,71 @@
+<os-sidenav #sideNav>
+    <ng-template osSidenavDrawerContent>
+        <!-- navigation -->
+        <mat-nav-list class="main-nav">
+            <ng-container *ngIf="showMeetingNav">
+                <a [@navItemAnim] mat-list-item (click)="mobileAutoCloseNav()" [routerLink]="['/']">
+                    <mat-icon>apps</mat-icon>
+                    <span>{{ 'Meetings' | translate }}</span>
+                </a>
+                <mat-divider></mat-divider>
+            </ng-container>
+            <ng-container *ngFor="let entry of mainMenuEntries">
+                <span>
+                    <a
+                        [@navItemAnim]
+                        *osPerms="entry.permission"
+                        mat-list-item
+                        class="foreground-icon"
+                        (click)="mobileAutoCloseNav()"
+                        [routerLink]="entry.route"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
+                    >
+                        <mat-icon>{{ entry.icon }}</mat-icon>
+                        <span>{{ entry.displayName | translate }}</span>
+                    </a>
+                </span>
+            </ng-container>
+            <ng-container
+                *ngIf="{
+                    canSee: canSeeChatObservable | async,
+                    notifications: chatNotificationsObservable | async
+                } as chat"
+            >
+                <a
+                    [@navItemAnim]
+                    *ngIf="chat.canSee"
+                    class="foreground-icon"
+                    mat-list-item
+                    (click)="mobileAutoCloseNav()"
+                    routerLink="chat"
+                    routerLinkActive="active"
+                >
+                    <mat-icon
+                        [matBadgeHidden]="chat.notifications === 0"
+                        [matBadge]="chat.notifications"
+                        matBadgeColor="accent"
+                        matBadgeOverlap="false"
+                    >
+                        sms
+                    </mat-icon>
+                    <span>
+                        {{ 'Chat' | translate }}
+                    </span>
+                </a>
+            </ng-container>
+        </mat-nav-list>
+    </ng-template>
+    <ng-template osSidenavMainContent>
+        <div class="content">
+            <main>
+                <os-global-headbar></os-global-headbar>
+                <router-outlet #o="outlet"></router-outlet>
+            </main>
+        </div>
+        <div class="toolbars">
+            <os-action-bar></os-action-bar>
+            <os-interaction-container></os-interaction-container>
+        </div>
+    </ng-template>
+</os-sidenav>

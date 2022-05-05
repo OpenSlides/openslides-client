@@ -1,0 +1,10 @@
+<div class="progress-wrapper background-primary">
+    <mat-icon class="end-icon foreground-primary" *ngIf="endIcon">{{ endIcon }}</mat-icon>
+    <div class="slot foreground-primary">
+        <ng-content></ng-content>
+    </div>
+    <div class="progress-bar">
+        <div class="buffer bar background-primary-darker"></div>
+        <div class="progress bar background-accent" [style.height.%]="value"></div>
+    </div>
+</div>

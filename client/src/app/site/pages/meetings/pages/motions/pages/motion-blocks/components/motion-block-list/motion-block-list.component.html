@@ -1,0 +1,73 @@
+<os-head-bar [nav]="false" [hasMainButton]="canEdit" (mainEvent)="onPlusButton()">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Motion blocks' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<os-projectable-list
+    [vScrollFixed]="64"
+    [listObservableProvider]="repo"
+    [showFilterBar]="true"
+    [columns]="tableColumnDefinition"
+    [sortService]="sortService"
+    [multiSelect]="isMultiSelect"
+    [(selectedRows)]="selectedRows"
+    [filterProps]="filterProps"
+    (dataSourceChange)="onDataSourceChange($event)"
+>
+    <!-- Title column -->
+    <div *pblNgridCellDef="'title'; value as title; row as block; rowContext as rowContext" class="cell-slot fill">
+        <os-detail-view-navigator [model]="block" *ngIf="!isMultiSelect"></os-detail-view-navigator>
+        <!--
+        TODO: Tooltips do not work when hidden under the absolute link, but they can't be above it either,
+        because for some reason they don't delegate the click event. So no tooltips for now
+        -->
+        <div class="innerTable">
+            <os-icon-container
+                [noWrap]="true"
+                [icon]="getIndicatingIcon(block)"
+                size="large"
+                [iconTooltip]="getIndicatingTooltip(block) | translate"
+            >
+                <os-icon-container
+                    [noWrap]="true"
+                    icon="lock"
+                    size="large"
+                    [showIcon]="block.isFinished && block.internal"
+                    [iconTooltip]="'Internal' | translate"
+                >
+                    <div class="ellipsis-overflow">
+                        {{ title }}
+                    </div>
+                </os-icon-container>
+            </os-icon-container>
+        </div>
+    </div>
+
+    <!-- Amount -->
+    <div *pblNgridCellDef="'amount'; row as block" class="cell-slot fill">
+        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ getMotionAmount(block) }}</span>
+    </div>
+
+    <!-- Menu -->
+    <div *pblNgridCellDef="'menu'; row as block" class="cell-slot fill">
+        <button
+            mat-icon-button
+            [disabled]="isMultiSelect"
+            [matMenuTriggerFor]="singleItemMenu"
+            (click)="$event.stopPropagation()"
+            [matMenuTriggerData]="{ block: block }"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+</os-projectable-list>
+
+<!-- Menu for mobile entries -->
+<mat-menu #singleItemMenu="matMenu">
+    <ng-template matMenuContent let-block="block">
+        <os-projector-button [object]="block" [menuItem]="true"></os-projector-button>
+        <os-speaker-button [object]="block" [menuItem]="true"></os-speaker-button>
+    </ng-template>
+</mat-menu>

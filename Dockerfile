@@ -1,11 +1,11 @@
-FROM node:16 as build
+FROM node:16.10 as build
+ENV NODE_VERSION=16.10.0
 
 WORKDIR /app
 
 COPY client/package.json .
 COPY client/package-lock.json .
 RUN npm ci
-RUN npm run postinstall
 
 COPY client /app/
 
@@ -13,7 +13,7 @@ COPY client /app/
 RUN npm run build
 
 FROM nginx:latest
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/client /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 LABEL org.opencontainers.image.title="OpenSlides Client"

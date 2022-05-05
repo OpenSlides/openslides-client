@@ -1,0 +1,64 @@
+<h1 mat-dialog-title>
+    <span>{{ 'Edit details for' | translate }} {{ infoDialog.name }}</span>
+</h1>
+<div class="os-form-card-mobile" mat-dialog-content>
+    <mat-form-field>
+        <mat-select placeholder="{{ 'Groups' | translate }}" [(ngModel)]="infoDialog.group_ids" multiple>
+            <mat-option *ngFor="let group of groupsObservable | async" [value]="group.id">
+                {{ group.getTitle() | translate }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <os-list-search-selector
+            [(ngModel)]="infoDialog.vote_delegations_from_ids"
+            [multiple]="true"
+            placeholder="{{ 'Voting right received from (principals)' | translate }}"
+            [inputListValues]="getOtherUsersObservable()"
+        ></os-list-search-selector>
+    </mat-form-field>
+    <mat-form-field>
+        <os-list-search-selector
+            [(ngModel)]="infoDialog.vote_delegated_to_id"
+            [multiple]="false"
+            [includeNone]="true"
+            placeholder="{{ 'Voting right delegated to (proxy)' | translate }}"
+            [inputListValues]="getOtherUsersObservable()"
+        ></os-list-search-selector>
+    </mat-form-field>
+    <mat-form-field>
+        <input
+            type="text"
+            matInput
+            placeholder="{{ 'Structure level' | translate }}"
+            [(ngModel)]="infoDialog.structure_level"
+        />
+    </mat-form-field>
+    <mat-form-field>
+        <input
+            type="text"
+            matInput
+            placeholder="{{ 'Participant number' | translate }}"
+            [(ngModel)]="infoDialog.number"
+        />
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button
+        type="submit"
+        mat-button
+        color="accent"
+        [mat-dialog-close]="{
+            group_ids: infoDialog.group_ids,
+            vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
+            vote_delegated_to_id: infoDialog.vote_delegated_to_id,
+            number: infoDialog.number,
+            structure_level: infoDialog.structure_level
+        }"
+    >
+        <span>{{ 'Save' | translate }}</span>
+    </button>
+    <button type="button" mat-button [mat-dialog-close]="null">
+        <span>{{ 'Cancel' | translate }}</span>
+    </button>
+</div>
