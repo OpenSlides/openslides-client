@@ -56,6 +56,9 @@ export class SequentialNumberMappingService {
             this._mapSequentialNumberId = {};
             if (nextId) {
                 this.prepareSequentialNumberMapping();
+            } else if (!nextId && this._modelRequestSubscription) {
+                this._modelRequestSubscription.close();
+                this._modelRequestSubscription = null;
             }
         });
         collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {

@@ -9,8 +9,6 @@ const routes: Routes = [
     },
     {
         path: ``,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
         children: [
             {
                 path: ``,
@@ -19,7 +17,9 @@ const routes: Routes = [
             },
             {
                 path: `:meetingId`,
-                loadChildren: () => import(`./pages/meetings/meetings.module`).then(m => m.MeetingsModule)
+                loadChildren: () => import(`./pages/meetings/meetings.module`).then(m => m.MeetingsModule),
+                canActivate: [AuthGuard],
+                canActivateChild: [AuthGuard]
             }
         ]
     },

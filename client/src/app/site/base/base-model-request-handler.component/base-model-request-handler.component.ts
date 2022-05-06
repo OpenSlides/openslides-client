@@ -1,14 +1,32 @@
 import { Directive, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-import { filter, map, Observable, tap } from 'rxjs';
+import { filter, map, Observable, tap, combineLatest } from 'rxjs';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { SubscribeToConfig } from '../../services/model-request.service';
 import { OpenSlidesRouterService } from '../../services/openslides-router.service';
 
-export interface ModelRequestConfig extends SubscribeToConfig {
+export interface ModelRequestConfig extends SubscribeToConfig, HidingConfig {
+    /**
+     * If `true` it fires a request after a timeout. Defaults to `true`.
+     */
+    isDelayed?: boolean;
+}
+
+interface HidingConfig {
+    /**
+     * Optionally, an observable can be passed when a request should be closed.
+     */
+    hideWhen?: Observable<boolean> | null;
+    /**
+     * If `true` a request is automatically closed when a component is going to be deleted.
+     */
     hideWhenDestroyed?: boolean;
+    /**
+     * If `true` a request is automatically closed when the operator is being signed out. Defaults to `true`.
+     */
+    hideWhenUnauthenticated?: boolean;
 }
 
 @Directive()
@@ -45,10 +63,10 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     protected onParamsChanged(params: any): void {}
 
     protected async subscribeTo(...configs: ModelRequestConfig[]): Promise<void> {
-        for (const { modelRequest, subscriptionName, hideWhen, hideWhenDestroyed } of configs) {
+        for (const { modelRequest, subscriptionName, ...config } of configs) {
             if (!this._openedSubscriptions.includes(subscriptionName)) {
                 this._openedSubscriptions.push(subscriptionName);
-                const observable = this.createHideWhenObservable(hideWhen, hideWhenDestroyed);
+                const observable = this.createHideWhenObservable(config);
                 await this.modelRequestService.subscribeTo({ subscriptionName, modelRequest, hideWhen: observable });
             }
         }
@@ -92,20 +110,31 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
 
     private async setupSubscription(request: ModelRequestConfig): Promise<void> {
         request.modelRequest.fieldset = request.modelRequest.fieldset ?? [];
-        const observable = this.createHideWhenObservable(request.hideWhen, request.hideWhenDestroyed);
+        const observable = this.createHideWhenObservable(request);
         await this.modelRequestService.subscribeTo({ ...request, hideWhen: observable });
     }
 
-    private createHideWhenObservable(
-        hideWhen?: Observable<boolean> | null,
-        hideWhenDestroyed?: boolean
-    ): Observable<boolean> | null {
+    private createHideWhenObservable({
+        hideWhen,
+        hideWhenDestroyed,
+        hideWhenUnauthenticated
+    }: HidingConfig): Observable<boolean> | null {
+        let observable: Observable<boolean> | null = null;
         if (hideWhen) {
-            return hideWhen;
+            observable = hideWhen;
         } else if (hideWhenDestroyed) {
-            return this._destroyed.asObservable();
-        } else {
-            return null;
+            observable = this._destroyed.asObservable();
         }
+        if (hideWhenUnauthenticated) {
+            if (observable) {
+                const tmp = observable;
+                observable = combineLatest([tmp, this.openslidesRouter.beforeSignoutObservable]).pipe(
+                    map(([source1, source2]) => source1 || source2)
+                );
+            } else {
+                observable = this.openslidesRouter.beforeSignoutObservable;
+            }
+        }
+        return observable;
     }
 }

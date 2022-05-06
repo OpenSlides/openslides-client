@@ -64,12 +64,12 @@ export class ModelRequestService {
         }
     }
 
-    private async lazyLoadSubscription(
+    private lazyLoadSubscription(
         request: ModelRequestObject,
         subscriptionName: string,
         hideWhen?: Observable<boolean> | null
-    ): Promise<void> {
-        const modelSubscription = await this.autoupdateService.subscribe(request, `${subscriptionName}:subscription`);
+    ): void {
+        const modelSubscription = this.autoupdateService.subscribe(request, `${subscriptionName}:subscription`);
         this._modelSubscriptionMap[subscriptionName] = modelSubscription;
         if (hideWhen) {
             this.setCloseFn(subscriptionName, hideWhen);

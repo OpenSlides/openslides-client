@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized, ActivatedRouteSnapshot } from '@angular/router';
-import { BehaviorSubject, filter, map, Observable, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, distinctUntilChanged, Subject } from 'rxjs';
 import { Id } from '../../domain/definitions/key-types';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
+import { AuthService } from 'src/app/site/services/auth.service';
 
 const URL_LOGIN_PREFIX = `/login`;
+
+enum UrlTarget {
+    LOGIN = `login`
+}
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +17,10 @@ const URL_LOGIN_PREFIX = `/login`;
 export class OpenSlidesRouterService {
     public get currentParamMap(): Observable<{ [paramName: string]: any }> {
         return this._currentParamMap.asObservable();
+    }
+
+    public get beforeSignoutObservable(): Observable<boolean> {
+        return this._nextUrlTargetSubject.pipe(map(nextTarget => nextTarget === UrlTarget.LOGIN));
     }
 
     private get isAnonymousEnabled(): boolean {
@@ -22,9 +31,13 @@ export class OpenSlidesRouterService {
         return this.activeMeeting.meetingId;
     }
 
+    private readonly _nextUrlTargetSubject = new Subject<UrlTarget>();
     private readonly _currentParamMap = new BehaviorSubject<{ [paramName: string]: any }>({});
 
-    public constructor(private activeMeeting: ActiveMeetingService, private router: Router) {
+    public constructor(_auth: AuthService, private activeMeeting: ActiveMeetingService, private router: Router) {
+        _auth.logoutObservable.subscribe(() => {
+            this.navigateToLogin();
+        });
         router.events
             .pipe(
                 filter(event => event instanceof RoutesRecognized),
@@ -36,9 +49,8 @@ export class OpenSlidesRouterService {
             .subscribe(event => this._currentParamMap.next(event));
     }
 
-    public navigateToLogin(meetingId: Id | null = this.activeMeetingId): void {
+    public navigateToLogin(): void {
         const url = this.router.routerState.snapshot.url;
-        const urlFragments = url.split(`/`);
 
         // First, check if a user is already at the login page
         if (url.startsWith(URL_LOGIN_PREFIX) && url.length >= URL_LOGIN_PREFIX.length) {
@@ -47,15 +59,7 @@ export class OpenSlidesRouterService {
 
         // Then, check if a user is at any orga-specific route
         // if the first fragment is a number, we are in a meeting
-        if (!/\d+/g.test(urlFragments[1]) || !meetingId) {
-            this.router.navigate([`/`, `login`]);
-            return;
-        }
-        if (this.isAnonymousEnabled) {
-            this.router.navigate([`${meetingId}/`]);
-        } else {
-            this.router.navigate([meetingId, `login`]);
-        }
+        this.router.navigate([`/`, `login`]);
     }
 
     private buildParamMap(rootSnapshot: ActivatedRouteSnapshot): { [paramName: string]: any } {
