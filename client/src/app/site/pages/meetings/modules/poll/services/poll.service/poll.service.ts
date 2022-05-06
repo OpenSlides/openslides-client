@@ -60,16 +60,16 @@ export abstract class PollService {
                     let compareValue;
                     if (poll.pollmethod === PollMethod.N) {
                         // least no on top:
-                        compareValue = compareValues(b.no, a.no);;
+                        compareValue = compareValues(b.no, a.no);
                     } else {
                         // most yes on top
-                        compareValue = compareValues(a.yes, b.yes);;
+                        compareValue = compareValues(a.yes, b.yes);
                     }
 
                     // Equal votes, sort by weight to have equal votes correctly sorted.
                     if (compareValue === 0 && a.weight && b.weight) {
                         // least weight on top
-                        return compareValues(b.weight, a.weight);;
+                        return compareValues(b.weight, a.weight);
                     } else {
                         return compareValue;
                     }
@@ -78,7 +78,7 @@ export abstract class PollService {
                 // PollData does not have weight, we need to rely on the order of things.
                 if (a.weight && b.weight) {
                     // least weight on top
-                    return compareValues(b.weight, a.weight);;
+                    return compareValues(b.weight, a.weight);
                 } else {
                     return 0;
                 }

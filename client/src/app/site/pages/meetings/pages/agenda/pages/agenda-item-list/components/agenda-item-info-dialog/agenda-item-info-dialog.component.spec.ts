@@ -7,19 +7,21 @@ describe(`AgendaItemInfoDialogComponent`, () => {
     let component: AgendaItemInfoDialogComponent;
     let fixture: ComponentFixture<AgendaItemInfoDialogComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [E2EImportsModule],
-            declarations: [AgendaItemInfoDialogComponent],
-            providers: [
-                { provide: MatDialogRef, useValue: {} },
-                {
-                    provide: MAT_DIALOG_DATA,
-                    useValue: null
-                }
-            ]
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [E2EImportsModule],
+                declarations: [AgendaItemInfoDialogComponent],
+                providers: [
+                    { provide: MatDialogRef, useValue: {} },
+                    {
+                        provide: MAT_DIALOG_DATA,
+                        useValue: null
+                    }
+                ]
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(AgendaItemInfoDialogComponent);
