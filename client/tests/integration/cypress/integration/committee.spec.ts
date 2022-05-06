@@ -1,7 +1,7 @@
-const ACTION_URL = 'system/action/handle_request';
-const PRESENTER_URL = 'system/presenter/handle_request';
-
 describe('Testing committees', () => {
+    const ACTION_URL = 'system/action/handle_request';
+    const PRESENTER_URL = 'system/presenter/handle_request';
+
     let committee: { id: number; name: string };
 
     before(() => {

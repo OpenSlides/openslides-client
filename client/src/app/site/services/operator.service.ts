@@ -41,9 +41,9 @@ const OPERATOR_FIELDS: TypedFieldset<User> = [
     { templateField: `group_$_ids` }
 ];
 
-function getUserCML(user: ViewUser): { [id: number]: string } | undefined {
+function getUserCML(user: ViewUser): { [id: number]: string } | null {
     if (!user.committee_$_management_level) {
-        return undefined;
+        return null; // Explicit null to distinguish from undefined
     }
 
     const committeeManagementLevel: { [committeeId: number]: CML } = {};
@@ -221,9 +221,6 @@ export class OperatorService {
         private modelRequestBuilder: ModelRequestBuilderService
     ) {
         this.setNotReady();
-        this.authService.logoutObservable.subscribe(() =>
-            osRouter.navigateToLogin(this.activeMeetingId || this._lastActiveMeetingId)
-        );
         // General environment in which the operator moves
         this.authService.authTokenObservable.subscribe(token => {
             if (token === undefined) {
@@ -239,30 +236,30 @@ export class OperatorService {
                 this.checkReadyState();
             }
         });
-        // // The meeting observable (below) is too slow since it waits for updates from the
-        // // repos after the meeting id changes -> if the meeting id changes, set the operator
-        // // to not being ready. Do not call operatorStateChange since the meeting is not there yet.
-        // // The meeting observable below will trigger a bit later.
-        // this.activeMeetingService.meetingIdObservable.subscribe(meetingId => {
-        //     if (meetingId === undefined) {
-        //         return;
-        //     }
-        //     if (this._lastActiveMeetingId !== meetingId) {
-        //         console.debug(`operator: active meeting id changed from `, this._lastActiveMeetingId, `to`, meetingId);
-        //         this.setNotReady();
-        //     }
-        // });
-        // this.activeMeetingService.meetingObservable.subscribe(meeting => {
-        //     if (meeting === undefined) {
-        //         return;
-        //     }
-        //     const newMeetingId = meeting?.id || null;
-        //     if (this._lastActiveMeetingId !== newMeetingId) {
-        //         console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
-        //         this._lastActiveMeetingId = newMeetingId;
-        //         this.operatorStateChange();
-        //     }
-        // });
+        // The meeting observable (below) is too slow since it waits for updates from the
+        // repos after the meeting id changes -> if the meeting id changes, set the operator
+        // to not being ready. Do not call operatorStateChange since the meeting is not there yet.
+        // The meeting observable below will trigger a bit later.
+        this.activeMeetingService.meetingIdObservable.subscribe(meetingId => {
+            if (meetingId === undefined) {
+                return;
+            }
+            if (this._lastActiveMeetingId !== meetingId) {
+                console.debug(`operator: active meeting id changed from `, this._lastActiveMeetingId, `to`, meetingId);
+                this.setNotReady();
+            }
+        });
+        this.activeMeetingService.meetingObservable.subscribe(meeting => {
+            if (meeting === undefined) {
+                return;
+            }
+            const newMeetingId = meeting?.id || null;
+            if (this._lastActiveMeetingId !== newMeetingId) {
+                console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
+                this._lastActiveMeetingId = newMeetingId;
+                this.operatorStateChange();
+            }
+        });
         // Specific operator data: The user itself and the groups for permissions.
         this.userRepo.getGeneralViewModelObservable().subscribe(user => {
             if (user !== undefined && this.operatorId === user.id) {
@@ -300,11 +297,6 @@ export class OperatorService {
                 }
             }
         });
-        // this.authService.authTokenObservable.subscribe(token => {
-        //     if (token) {
-        //         this.checkReadyState();
-        //     }
-        // });
         this.operatorUpdated.subscribe(() => {
             this.checkReadyState();
         });
@@ -665,9 +657,10 @@ export class OperatorService {
             //         fieldset: []
             //     };
         } else {
+            console.log(`route to login`);
             // has active meeting without the anonymous enabled *and* not authenticated. This is
             // forbidden and can happen, if someone enters a URL of the meeting.
-            this.osRouter.navigateToLogin(this.activeMeetingId);
+            this.osRouter.navigateToLogin();
         }
         return operatorRequest;
     }

@@ -24,6 +24,7 @@
                 matInput
                 osAutofocus
                 required
+                data-cy="loginUsernameInput"
                 placeholder="{{ 'Username' | translate }}"
                 formControlName="username"
             />
@@ -33,6 +34,7 @@
             <input
                 matInput
                 required
+                data-cy="loginPasswordInput"
                 placeholder="{{ 'Password' | translate }}"
                 formControlName="password"
                 [type]="!hide ? 'password' : 'text'"
@@ -52,7 +54,14 @@
         <!-- login button -->
         <br />
         <!-- TODO: Next to each other...-->
-        <button mat-raised-button color="primary" class="login-button" type="submit" [disabled]="loginForm.invalid">
+        <button
+            mat-raised-button
+            color="primary"
+            class="login-button"
+            type="submit"
+            data-cy="loginButton"
+            [disabled]="loginForm.invalid"
+        >
             {{ 'Login' | translate }}
         </button>
         <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">

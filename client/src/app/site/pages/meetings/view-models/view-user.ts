@@ -88,7 +88,7 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get hasMultipleMeetings(): boolean {
-        return this.meeting_ids.length !== 1;
+        return this.meeting_ids?.length !== 1;
     }
 
     public get onlyMeeting(): Id {

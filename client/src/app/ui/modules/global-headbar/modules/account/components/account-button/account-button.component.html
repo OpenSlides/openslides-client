@@ -1,4 +1,4 @@
-<div class="flex-center" [matMenuTriggerFor]="userMenu">
+<div class="flex-center" [matMenuTriggerFor]="userMenu" data-cy="accountButton">
     <div class="operator-information flex-center">
         <div class="first-line one-line">
             {{ username }}
@@ -65,7 +65,7 @@
             </button>
 
             <!-- logout -->
-            <button (click)="logout()" mat-menu-item>
+            <button (click)="logout()" mat-menu-item data-cy="accountLogoutButton">
                 <mat-icon class="menu-icon">logout</mat-icon>
                 <span class="menu-text">{{ 'Logout' | translate }}</span>
             </button>
