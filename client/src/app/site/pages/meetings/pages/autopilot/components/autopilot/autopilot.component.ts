@@ -65,7 +65,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             if (this.operator.hasPerms(this.permission.projectorCanManage)) {
                 return `/${this.activeMeetingId}/projectors/detail/${this.projector.id}`;
             } else {
-                return `/projector/${this.projector.id}`;
+                return `/${this.activeMeetingId}/projector/${this.projector.id}`;
             }
         } else {
             return ``;
