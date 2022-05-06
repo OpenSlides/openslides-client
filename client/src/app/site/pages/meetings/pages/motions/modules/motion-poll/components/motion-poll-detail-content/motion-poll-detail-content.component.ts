@@ -92,6 +92,8 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     private setChartData(): void {
-        this._chartData = this.pollService.generateChartData(this.poll!).filter(result => result.data[0] !== VOTE_UNDOCUMENTED);
+        this._chartData = this.pollService
+            .generateChartData(this.poll!)
+            .filter(result => result.data[0] !== VOTE_UNDOCUMENTED);
     }
 }

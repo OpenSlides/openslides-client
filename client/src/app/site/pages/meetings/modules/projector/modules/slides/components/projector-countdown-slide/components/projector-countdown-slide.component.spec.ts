@@ -7,12 +7,14 @@ describe(`CountdownSlideComponent`, () => {
     let component: CountdownSlideComponent;
     let fixture: ComponentFixture<CountdownSlideComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [E2EImportsModule],
-            declarations: [CountdownSlideComponent]
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [E2EImportsModule],
+                declarations: [CountdownSlideComponent]
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(CountdownSlideComponent);

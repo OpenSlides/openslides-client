@@ -195,13 +195,13 @@ export abstract class PollService {
                 totalByBase = this.sumOptionsYNA(option);
                 break;
             case PollPercentBase.Valid:
-                totalByBase = poll.votesvalid >0 ? poll.votesvalid : 0;
+                totalByBase = poll.votesvalid > 0 ? poll.votesvalid : 0;
                 break;
             case PollPercentBase.Entitled:
                 totalByBase = poll.entitled_users_at_stop?.length || 0;
                 break;
             case PollPercentBase.Cast:
-                totalByBase = poll.votescast >0 ? poll.votescast : 0;
+                totalByBase = poll.votescast > 0 ? poll.votescast : 0;
                 break;
             default:
                 break;
