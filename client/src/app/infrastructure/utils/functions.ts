@@ -146,3 +146,22 @@ export function mmToPoints(mm: number, dense: number = 72): number {
     const inches = mm / MILLIMETERS_PER_INCH;
     return inches * dense;
 }
+
+/**
+ * Compares two numbers.
+ * @param a the first number
+ * @param b the number that needs to be compared with a
+ * @returns 0 if they are equal, a negative value if a>b, else a positive value
+ */
+export function compareValues(a: number, b: number): number {
+    if (!b) {
+        if (!a) {
+            return 0;
+        }
+        return -1;
+    }
+    if (!a) {
+        return 1;
+    }
+    return b - a;
+}
