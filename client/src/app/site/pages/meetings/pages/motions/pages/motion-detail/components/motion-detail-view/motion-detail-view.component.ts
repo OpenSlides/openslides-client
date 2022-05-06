@@ -150,6 +150,10 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         return () => this.saveMotion();
     }
 
+    public goToHistory(): void {
+        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.motion.fqid } });
+    }
+
     /**
      * In the ui are no distinct buttons for update or create. This is decided here.
      */
@@ -371,7 +375,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     }
 
     private async updateMotion(newMotionValues: any, motion: ViewMotion): Promise<void> {
-        await this.repo.update(newMotionValues, motion);
+        await this.repo.update(newMotionValues, motion).resolve();
     }
 
     private async ensureParentIsAvailable(parentId: Id): Promise<void> {

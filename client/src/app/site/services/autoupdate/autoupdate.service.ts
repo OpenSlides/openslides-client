@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService, HttpStreamService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
-import { HttpMethod } from '../../../infrastructure/definitions/http';
+import { formatQueryParams, HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
 import { CommunicationManagerService } from '../communication-manager.service';
 import { ModelRequestBuilderService, ModelRequestObject, SimplifiedModelRequest } from '../model-request-builder';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
+import { Fqid } from 'src/app/domain/definitions/key-types';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
 
@@ -45,16 +46,36 @@ export interface ModelSubscription {
 
 const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
 
+interface AutoupdateConnectConfig {
+    /**
+     * Selects one position for a model. This implies `single: 1`.
+     */
+    position?: number;
+    /**
+     * Selects the last n updates to the requested fields. `true` is equivalent to `n = 1`.
+     */
+    single?: true | number;
+}
+
+interface AutoupdateSubscriptionMap {
+    [id: number]: {
+        modelRequest: ModelRequestObject;
+        modelSubscription: ModelSubscription;
+        description: string;
+    };
+}
+
+interface AutoupdateIncomingMessage {
+    autoupdateData: AutoupdateModelData;
+    id: Id;
+    description?: string;
+}
+
 class AutoupdateEndpoint extends EndpointConfiguration {
     public constructor(url: string) {
         super(url, `/system/autoupdate/health`, HttpMethod.POST);
     }
 }
-
-const DUMMY_MODEL_SUBSCRIPTION: ModelSubscription = {
-    id: 0,
-    close: () => {}
-};
 
 const COLLECTION_INDEX = 0;
 const FIELD_INDEX = 2;
@@ -63,8 +84,9 @@ const FIELD_INDEX = 2;
     providedIn: 'root'
 })
 export class AutoupdateService {
-    private _activeRequestObjects: { [id: number]: ModelRequestObject } = {};
+    private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
+    private _currentQueryParams: QueryParams | null = null;
 
     public constructor(
         private communicationManager: CommunicationManagerService,
@@ -78,6 +100,25 @@ export class AutoupdateService {
         );
     }
 
+    public reconnect(config?: AutoupdateConnectConfig): void {
+        this.setAutoupdateConfig(config || null);
+        for (const id of Object.keys(this._activeRequestObjects)) {
+            const streamId = Number(id);
+            const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
+            modelSubscription.close();
+            const nextModelSubscription = this.request(modelRequest.getModelRequest(), description, streamId);
+            this._activeRequestObjects[streamId] = {
+                modelSubscription: nextModelSubscription,
+                modelRequest,
+                description
+            };
+        }
+    }
+
+    public setAutoupdateConfig(config: AutoupdateConnectConfig | null): void {
+        this._currentQueryParams = config as QueryParams;
+    }
+
     /**
      * Requests a new autoupdate and listen to incoming messages. This is a heavy task.
      * It needs to be closed when it is not needed anymore.
@@ -87,20 +128,20 @@ export class AutoupdateService {
      * Which component opens which stream?
      */
     public subscribe(modelRequest: ModelRequestObject, description: string): ModelSubscription {
-        if (modelRequest instanceof ModelRequestObject) {
-            const request = modelRequest.getModelRequest();
-            console.log(`autoupdate: new request:`, description, modelRequest, request);
-            const modelSubscription = this.request(request, description);
-            this._activeRequestObjects[modelSubscription.id] = modelRequest;
-            return modelSubscription;
-        }
-        return DUMMY_MODEL_SUBSCRIPTION;
+        const request = modelRequest.getModelRequest();
+        console.log(`autoupdate: new request:`, description, modelRequest, request);
+        const modelSubscription = this.request(request, description);
+        this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
+        return modelSubscription;
     }
 
-    private request(request: ModelRequest, description: string): ModelSubscription {
+    private request(request: ModelRequest, description: string, streamId?: Id): ModelSubscription {
         const buildStreamFn = (streamId: number) =>
             this.httpStreamService.create<AutoupdateModelData>(
-                AUTOUPDATE_DEFAULT_ENDPOINT,
+                {
+                    endpointIndex: AUTOUPDATE_DEFAULT_ENDPOINT,
+                    customUrlFn: endpointUrl => `${endpointUrl}${formatQueryParams(this._currentQueryParams)}`
+                },
                 {
                     onMessage: (data, stream) =>
                         this.handleAutoupdate({ autoupdateData: data, id: stream.id, description }),
@@ -109,7 +150,7 @@ export class AutoupdateService {
                 },
                 { bodyFn: () => [request] }
             );
-        const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
+        const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, streamId);
         return {
             id,
             close: () => {
@@ -119,28 +160,20 @@ export class AutoupdateService {
         };
     }
 
-    private async handleAutoupdate({
-        autoupdateData,
-        id,
-        description
-    }: {
-        autoupdateData: AutoupdateModelData;
-        id: number;
-        description?: string;
-    }): Promise<void> {
+    private async handleAutoupdate({ autoupdateData, id, description }: AutoupdateIncomingMessage): Promise<void> {
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
         const fullListUpdateCollections: { [collection: string]: Ids } = {};
         for (const key of Object.keys(autoupdateData)) {
             const data = key.split(`/`);
             const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
-            if (!this._activeRequestObjects[id]) {
+            const { modelRequest } = this._activeRequestObjects[id];
+            if (!modelRequest) {
                 continue;
             }
-            if (this._activeRequestObjects[id].getFullListUpdateCollectionRelations().includes(collectionRelation)) {
-                fullListUpdateCollections[
-                    this._activeRequestObjects[id].getForeignCollectionByRelation(collectionRelation)
-                ] = autoupdateData[key];
+            if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
+                fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
+                    autoupdateData[key];
             }
         }
         await this.prepareCollectionUpdates(modelData, fullListUpdateCollections);

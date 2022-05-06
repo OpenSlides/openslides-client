@@ -11,11 +11,11 @@ import { InteractionModule } from '../../pages/interaction/interaction.module';
 import { MatBadgeModule } from '@angular/material/badge';
 import { DirectivesModule } from 'src/app/ui/directives';
 
-const DECLARATONS = [MeetingsNavigationWrapperComponent];
+const EXPORTS = [MeetingsNavigationWrapperComponent];
 
 @NgModule({
-    declarations: DECLARATONS,
-    exports: DECLARATONS,
+    declarations: [...EXPORTS],
+    exports: EXPORTS,
     imports: [
         CommonModule,
         SidenavModule,

@@ -4,9 +4,12 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { getParticipantSubscriptionConfig } from '../../../participants/config/model-subscription';
 import { getAgendaSubscriptionConfig } from '../../../agenda/config/model-subscription';
-import { getMotionSubscriptionConfig } from '../../config/model-subscription';
-
-const MOTION_LIST_SUBSCRIPTION = `motion_list`;
+import {
+    getMotionBlockSubscriptionConfig,
+    getMotionListSubscriptionConfig,
+    getMotionWorkflowSubscriptionConfig,
+    getMotionsSubmodelSubscriptionConfig
+} from '../../config/model-subscription';
 
 @Component({
     selector: 'os-motion-main',
@@ -17,7 +20,10 @@ export class MotionMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
             this.subscribeTo(
-                getMotionSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
+                getMotionListSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
+                getMotionBlockSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
+                getMotionWorkflowSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
+                getMotionsSubmodelSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getParticipantSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getAgendaSubscriptionConfig(id, () => this.getNextMeetingIdObservable())
             );

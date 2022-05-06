@@ -90,6 +90,13 @@
                         <span>{{ 'Remove from agenda' | translate }}</span>
                     </button>
                 </div>
+                <!-- Go to the history -->
+                <div *osPerms="permission.meetingCanSeeHistory">
+                    <button mat-menu-item (click)="goToHistory()">
+                        <mat-icon>history</mat-icon>
+                        <span>{{ 'History' | translate }}</span>
+                    </button>
+                </div>
                 <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
                 <!-- Edit-->
                 <button mat-menu-item (click)="enterEditMotion()" *ngIf="perms.isAllowed('update', motion)">

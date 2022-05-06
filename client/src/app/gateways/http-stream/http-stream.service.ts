@@ -15,6 +15,9 @@ const lostConnectionToFn = (endpoint: EndpointConfiguration) => {
 
 type HttpParamsGetter = () => HttpParams | { [param: string]: string | string[] } | null;
 type HttpBodyGetter = () => any;
+
+type CreateEndpointFn = { endpointIndex: string; customUrlFn: (baseEndpointUrl: string) => string };
+
 interface RequestOptions {
     bodyFn?: HttpBodyGetter;
     paramsFn?: HttpParamsGetter;
@@ -32,7 +35,7 @@ export class HttpStreamService {
     ) {}
 
     public create<T>(
-        endpointConfiguration: string | EndpointConfiguration,
+        endpointConfiguration: string | CreateEndpointFn | EndpointConfiguration,
         {
             onError = (_, description) =>
                 this.onError(this.getEndpointConfiguration(endpointConfiguration), description),
@@ -98,11 +101,16 @@ export class HttpStreamService {
         return true;
     }
 
-    private getEndpointConfiguration(endpoint: string | EndpointConfiguration): EndpointConfiguration {
+    private getEndpointConfiguration(
+        endpoint: string | CreateEndpointFn | EndpointConfiguration
+    ): EndpointConfiguration {
         if (typeof endpoint === `string`) {
             return this.endpointService.getEndpoint(endpoint);
-        } else {
+        } else if (endpoint instanceof EndpointConfiguration) {
             return endpoint;
+        } else {
+            const configuration = this.endpointService.getEndpoint(endpoint.endpointIndex);
+            return { ...configuration, url: endpoint.customUrlFn(configuration.url) };
         }
     }
 }
