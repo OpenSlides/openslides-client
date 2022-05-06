@@ -84,7 +84,7 @@ export class MotionPollService extends PollService {
         return (
             !!poll &&
             poll.options &&
-            poll.options.some(option => option.yes! >= 0 && option.no! >= 0 && option.abstain! >= 0)
+            poll.options.some(option => option.yes! >= 0 || option.no! >= 0 || option.abstain! >= 0)
         );
     }
 

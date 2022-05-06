@@ -195,13 +195,13 @@ export abstract class PollService {
                 totalByBase = this.sumOptionsYNA(option);
                 break;
             case PollPercentBase.Valid:
-                totalByBase = poll.votesvalid;
+                totalByBase = poll.votesvalid >0 ? poll.votesvalid : 0;
                 break;
             case PollPercentBase.Entitled:
                 totalByBase = poll.entitled_users_at_stop?.length || 0;
                 break;
             case PollPercentBase.Cast:
-                totalByBase = poll.votescast;
+                totalByBase = poll.votescast >0 ? poll.votescast : 0;
                 break;
             default:
                 break;
@@ -210,11 +210,14 @@ export abstract class PollService {
     }
 
     private sumOptionsYN(option: OptionData): number {
-        return (option?.yes ?? 0) + (option?.no ?? 0);
+        const yes = option?.yes ?? 0;
+        const no = option?.no ?? 0;
+        return (yes >= 0 ? yes : 0) + (no >= 0 ? no : 0);
     }
 
     private sumOptionsYNA(option: OptionData): number {
-        return this.sumOptionsYN(option) + (option?.abstain ?? 0);
+        const abstain = option?.abstain ?? 0;
+        return this.sumOptionsYN(option) + (abstain >= 0 ? abstain : 0);
     }
 
     public getVoteValueInPercent(

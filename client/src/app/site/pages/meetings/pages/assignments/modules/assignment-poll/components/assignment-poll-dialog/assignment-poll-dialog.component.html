@@ -33,20 +33,6 @@
             </div>
         </div>
 
-        <!-- Global Values -->
-        <ng-container *ngIf="!isAnalogPoll">
-            <div *ngFor="let value of globalValues" class="votes-grid">
-                <os-check-input
-                    class="amount"
-                    [placeholder]="PollPropertyVerbose[value] | translate"
-                    [checkboxValue]="-1"
-                    inputType="number"
-                    [checkboxLabel]="'majority' | translate"
-                    [formControlName]="'amount_' + value"
-                ></os-check-input>
-            </div>
-        </ng-container>
-
         <!-- Sum Values -->
         <div *ngFor="let value of sumValues" class="votes-grid">
             <os-check-input
