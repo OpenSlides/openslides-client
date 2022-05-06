@@ -155,7 +155,12 @@ export class ChartComponent {
                         .filter(color => !!color) as string[]
                 }
             ];
-            this.chartData.datasets = [{ data }];
+            this.chartData.datasets = [{
+                data: data,
+                backgroundColor: this.circleColors[0].backgroundColor,
+                hoverBackgroundColor: this.circleColors[0].hoverBackgroundColor,
+                hoverBorderWidth: 0
+            }];
         } else {
             this.chartData.datasets = inputChartData;
         }
