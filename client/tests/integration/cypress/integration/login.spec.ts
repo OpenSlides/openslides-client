@@ -26,6 +26,7 @@ describe('Testing the sign in and out process', () => {
     });
 
     it('signs in as superadmin', () => {
+        cy.intercept(`${AUTH_URL}/login`).as(`login`);
         cy.getElement(`loginUsernameInput`).type(`admin`);
         cy.getElement(`loginPasswordInput`).type(`admin`);
         cy.getElement(`loginButton`).click();
