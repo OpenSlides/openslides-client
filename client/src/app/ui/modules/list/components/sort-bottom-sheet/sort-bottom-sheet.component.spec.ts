@@ -6,11 +6,13 @@ import { SortBottomSheetComponent } from './sort-bottom-sheet.component';
 describe(`SortBottomSheetComponent`, () => {
     let fixture: ComponentFixture<SortBottomSheetComponent<any>>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [E2EImportsModule]
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [E2EImportsModule]
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SortBottomSheetComponent);

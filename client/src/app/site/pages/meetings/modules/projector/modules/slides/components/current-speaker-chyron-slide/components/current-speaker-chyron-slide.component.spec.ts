@@ -7,12 +7,14 @@ describe(`CurrentSpeakerChyronSlideComponent`, () => {
     let component: CurrentSpeakerChyronSlideComponent;
     let fixture: ComponentFixture<CurrentSpeakerChyronSlideComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [E2EImportsModule],
-            declarations: [CurrentSpeakerChyronSlideComponent]
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [E2EImportsModule],
+                declarations: [CurrentSpeakerChyronSlideComponent]
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(CurrentSpeakerChyronSlideComponent);

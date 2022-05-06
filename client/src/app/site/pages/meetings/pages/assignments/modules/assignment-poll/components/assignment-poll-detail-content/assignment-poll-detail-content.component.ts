@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
     PollState,
@@ -10,6 +10,7 @@ import {
 import { Permission } from 'src/app/domain/definitions/permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
+import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 
 @Component({
     selector: 'os-assignment-poll-detail-content',
@@ -17,8 +18,29 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     styleUrls: ['./assignment-poll-detail-content.component.scss']
 })
 export class AssignmentPollDetailContentComponent {
+    private _poll: PollData;
+
+    private _tableData: PollTableData[] = [];
+    private _chartData: ChartData = null;
+
     @Input()
-    public poll: PollData | null = null;
+    public set poll(pollData: PollData) {
+        this._poll = pollData;
+        this.setupTableData();
+        this.cd.markForCheck();
+    }
+
+    public get poll(): PollData {
+        return this._poll;
+    }
+
+    public get chartData(): ChartData {
+        return this._chartData;
+    }
+
+    public get tableData(): PollTableData[] {
+        return this._tableData;
+    }
 
     private get method(): string | null {
         return this.poll?.pollmethod || null;
@@ -60,8 +82,8 @@ export class AssignmentPollDetailContentComponent {
         return this.state === PollState.Published;
     }
 
-    public get tableData(): PollTableData[] {
-        return this.pollService.generateTableData(this.poll!);
+    public get showChart(): boolean {
+        return this.poll.options.length === 1;
     }
 
     public get hasResults(): boolean {
@@ -76,7 +98,21 @@ export class AssignmentPollDetailContentComponent {
         return this.poll?.onehundred_percent_base === PollPercentBase.Entitled;
     }
 
-    public constructor(private pollService: AssignmentPollService, private operator: OperatorService) {}
+    public constructor(
+        private pollService: AssignmentPollService,
+        private cd: ChangeDetectorRef,
+        private operator: OperatorService
+    ) {}
+
+    private setupTableData(): void {
+        this._tableData = this.pollService.generateTableData(this.poll);
+        this.setChartData();
+        this.cd.markForCheck();
+    }
+
+    private setChartData(): void {
+        this._chartData = this.pollService.generateChartData(this.poll);
+    }
 
     public getVoteClass(votingResult: VotingResult): string {
         const votingClass = votingResult.vote as string;

@@ -7,12 +7,14 @@ describe(`UserSlideComponent`, () => {
     let component: UserSlideComponent;
     let fixture: ComponentFixture<UserSlideComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [E2EImportsModule],
-            declarations: [UserSlideComponent]
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [E2EImportsModule],
+                declarations: [UserSlideComponent]
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(UserSlideComponent);
