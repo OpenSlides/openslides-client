@@ -25,6 +25,7 @@ declare global {
              * @param password the password of the user to sign in as. Defaults to `admin`.
              */
             login(username?: string, password?: string): void;
+            logout(): void;
             /**
              * Sends a request to the backend.
              *
@@ -66,6 +67,8 @@ declare global {
              * @param name An optional name for the committee to create.
              */
             createCommittee(name?: string): Chainable<{ id: number; name: string }>;
+            createMeeting(name?: string, admin_ids?: number[]): Chainable<{ id: number; name: string }>;
+            createAccount(name?: string): Chainable<{ id: number; name: string }>;
         }
     }
 }

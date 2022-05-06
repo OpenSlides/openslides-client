@@ -221,9 +221,6 @@ export class OperatorService {
         private modelRequestBuilder: ModelRequestBuilderService
     ) {
         this.setNotReady();
-        // this.authService.logoutObservable.subscribe(() =>
-        //     osRouter.navigateToLogin(this.activeMeetingId || this._lastActiveMeetingId)
-        // );
         // General environment in which the operator moves
         this.authService.authTokenObservable.subscribe(token => {
             if (token === undefined) {
@@ -265,7 +262,6 @@ export class OperatorService {
         });
         // Specific operator data: The user itself and the groups for permissions.
         this.userRepo.getGeneralViewModelObservable().subscribe(user => {
-            console.log(`user`, user);
             if (user !== undefined && this.operatorId === user.id) {
                 this._shortName = this.userRepo.getShortName(user);
                 if (this.activeMeetingId) {
@@ -284,7 +280,6 @@ export class OperatorService {
             }
         });
         this.groupRepo.getGeneralViewModelObservable().subscribe(group => {
-            console.log(`groups`, group);
             if (!this.activeMeetingId || !group) {
                 return;
             }
@@ -302,18 +297,12 @@ export class OperatorService {
                 }
             }
         });
-        // this.authService.authTokenObservable.subscribe(token => {
-        //     if (token) {
-        //         this.checkReadyState();
-        //     }
-        // });
         this.operatorUpdated.subscribe(() => {
             this.checkReadyState();
         });
     }
 
     private checkReadyState(): void {
-        console.log(`check ready state`, this._ready);
         if (this._ready) {
             return;
         }

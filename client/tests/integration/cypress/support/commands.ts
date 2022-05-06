@@ -45,6 +45,21 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
         .should('eq', 200);
 });
 
+Cypress.Commands.add(`logout`, () => {
+    cy.request({
+        method: 'POST',
+        url: '/system/auth/secure/logout',
+        body: {}
+    })
+        .as('logoutResponse')
+        .then(response => {
+            Cypress.env('authToken', null);
+            return response;
+        })
+        .its('status')
+        .should('eq', 200);
+});
+
 /**
  * Create models
  */
@@ -162,6 +177,25 @@ Cypress.Commands.add('createCommittee', (name: string = Date.now().toString()) =
     cy.os4request('committee.create', committeeData).then(res => ({ id: res.id, name }));
 });
 
+Cypress.Commands.add(`createMeeting`, (name: string = `OS4Party`, admin_ids: number[] = [1]) => {
+    return cy.createCommittee().then(({ id }) => {
+        const meetingData = {
+            committee_id: id,
+            name,
+            admin_ids
+        };
+        return cy.os4request(`meeting.create`, meetingData).then(res => ({ id: res.id, name }));
+    });
+});
+
+Cypress.Commands.add(`createAccount`, (name: string = `Mississipi`) => {
+    const accountData = {
+        username: name,
+        default_password: name,
+        is_active: true
+    };
+    cy.os4request(`user.create`, accountData).then(res => ({ id: res.id, name }));
+});
 /**
  * Extend "request" with auth header
  */
