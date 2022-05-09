@@ -448,7 +448,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         if (!Array.isArray(toCheck)) {
             toCheck = toCheck ? [toCheck] : [];
         }
-        if (condition === null) {
+        if (conditions.includes(null)) {
             return (<any[]>toCheck).length === 0 || toCheck === null;
         }
         return (toCheck as any[]).some(value => {

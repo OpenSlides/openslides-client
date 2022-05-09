@@ -50,7 +50,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 label: this.translate.instant(`Active`),
                 options: [
                     { condition: true, label: `Is active` },
-                    { condition: false, label: this.translate.instant(`Is not active`) }
+                    { condition: [false, null], label: this.translate.instant(`Is not active`) }
                 ]
             },
             {
