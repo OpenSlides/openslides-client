@@ -83,7 +83,10 @@ export class AssignmentPollDetailContentComponent {
     }
 
     public get showChart(): boolean {
-        return this.poll.options.length === 1 && this.chartData.length > 0;
+        const validOptions = this.poll.options.some(
+            option => option.yes! >= 0 && option.no! >= 0 && option.abstain! >= 0
+        );
+        return this.poll.options.length === 1 && this.chartData.length > 0 && validOptions;
     }
 
     public get hasResults(): boolean {
@@ -111,8 +114,7 @@ export class AssignmentPollDetailContentComponent {
     }
 
     private setChartData(): void {
-        this._chartData = this.pollService.generateChartData(this.poll)
-            .filter(option => option.data[0] > 0);
+        this._chartData = this.pollService.generateChartData(this.poll).filter(option => option.data[0] > 0);
     }
 
     public getVoteClass(votingResult: VotingResult): string {

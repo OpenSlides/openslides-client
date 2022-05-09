@@ -67,13 +67,12 @@
     }
 
     .result-grid {
-        display: grid;
+        // display: grid;
         grid-gap: 2em;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
         .result-table {
-
-            // display: block;
+            display: block;
             th {
                 text-align: right;
                 font-weight: initial;
@@ -87,7 +86,6 @@
                 }
             }
 
-
             tr.result-cell-definition {
                 text-align: right;
             }
@@ -96,10 +94,6 @@
                 border-bottom: none;
                 height: 0;
             }
-
-            // .single-candidate {
-            //     white-space: pre;
-            // }
         }
 
         .doughnut-chart {
