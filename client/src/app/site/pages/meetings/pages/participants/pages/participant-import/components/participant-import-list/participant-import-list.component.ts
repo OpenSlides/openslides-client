@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { User } from 'src/app/domain/models/users/user';
+import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { BaseUserImportListComponent } from 'src/app/site/base/base-user-import-list.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
-import { PARTICIPANT_HEADERS_AND_VERBOSE_NAMES } from '../../definitions';
 import { ParticipantImportService } from '../../services';
 
 @Component({
@@ -17,13 +15,8 @@ export class ParticipantImportListComponent extends BaseUserImportListComponent 
     /**
      * Constructor for list view bases
      */
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        formBuilder: FormBuilder,
-        public override readonly importer: ParticipantImportService
-    ) {
-        super(componentServiceCollector, translate, importer, formBuilder, PARTICIPANT_HEADERS_AND_VERBOSE_NAMES);
+    public constructor(formBuilder: FormBuilder, public override readonly importer: ParticipantImportService) {
+        super(formBuilder, userHeadersAndVerboseNames);
     }
 
     /**

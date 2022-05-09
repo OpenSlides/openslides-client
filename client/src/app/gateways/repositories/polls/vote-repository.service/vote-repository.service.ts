@@ -6,7 +6,6 @@ import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 const VOTE_URL = `/system/vote`;
 const HAS_VOTED_URL = `${VOTE_URL}/voted`;
@@ -19,11 +18,8 @@ export interface HasVotedResponse {
     providedIn: `root`
 })
 export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private http: HttpService
-    ) {
-        super(repositoryServiceCollector, Vote);
+    public constructor(private http: HttpService) {
+        super(Vote);
     }
 
     public getTitle = (viewVote: object) => `Vote`;

@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -18,7 +17,6 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
@@ -92,8 +90,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public directoryObservable: Observable<ViewMediafile[]> = new Observable();
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
         private exporter: MediafileListExportService,
@@ -107,7 +103,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
 
         this.logoPlaces = this.mediaManage.allLogoPlaces;

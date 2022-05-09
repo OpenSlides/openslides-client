@@ -6,7 +6,6 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
 import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewGroup } from '../view-models';
 
@@ -32,11 +31,8 @@ export class MeetingGroupsObject {
     providedIn: `root`
 })
 export class GroupControllerService extends BaseMeetingControllerService<ViewGroup, Group> {
-    public constructor(
-        repositoryServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: GroupRepositoryService
-    ) {
-        super(repositoryServiceCollector, ViewGroup, repo);
+    public constructor(protected override repo: GroupRepositoryService) {
+        super(ViewGroup, repo);
     }
 
     public create(...groups: Partial<Group>[]): Promise<Identifiable[]> {

@@ -1,11 +1,10 @@
 import { Directive, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { auditTime, distinctUntilChanged } from 'rxjs';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 
 import { Identifiable } from '../../domain/interfaces';
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseImportService } from './base-import.service';
 
 @Directive()
@@ -31,12 +30,12 @@ export abstract class BaseImportListComponent<M extends Identifiable> extends Ba
     private _hasFile = false;
     private _modelsToCreateAmount = 0;
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected importer: BaseImportService<M>
-    ) {
-        super(componentServiceCollector, translate);
+    protected importer: BaseImportService<M>;
+
+    public constructor() {
+        super();
+        const injector = AppInjector.getInjector();
+        this.importer = injector.get<BaseImportService<M>>(BaseImportService);
     }
 
     public ngOnInit(): void {

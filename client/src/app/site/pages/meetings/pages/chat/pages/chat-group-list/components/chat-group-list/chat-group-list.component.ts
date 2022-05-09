@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewChatGroup } from 'src/app/site/pages/meetings/pages/chat';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { VerticalTabGroupContentState } from 'src/app/ui/modules/vertical-tab-group';
 
@@ -34,14 +32,12 @@ export class ChatGroupListComponent extends BaseMeetingComponent {
     private _isChatContentOpen = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private dialog: ChatGroupDialogService,
         private chatGroupRepo: ChatGroupControllerService,
         private vp: ViewPortService,
         private chatNotificationService: ChatNotificationService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public getNotificationsObservableForChatId(chatGroupId: Id): Observable<number> {

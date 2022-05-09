@@ -6,7 +6,6 @@ import { UserImportHelper } from 'src/app/infrastructure/utils/import/users';
 import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services/motion-category-controller.service';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services/motion-block-controller.service';
@@ -53,7 +52,6 @@ export class MotionImportService extends BaseImportService<Motion> {
      * @param userRepo Repository to query/ create users
      */
     public constructor(
-        serviceCollector: ImportServiceCollectorService,
         private repo: MotionControllerService,
         private categoryRepo: MotionCategoryControllerService,
         private motionBlockRepo: MotionBlockControllerService,
@@ -61,7 +59,7 @@ export class MotionImportService extends BaseImportService<Motion> {
         private tagRepo: TagControllerService,
         private exporter: MotionCsvExportService
     ) {
-        super(serviceCollector);
+        super();
     }
 
     public downloadCsvExample(): void {

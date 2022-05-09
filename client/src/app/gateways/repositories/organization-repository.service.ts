@@ -5,14 +5,13 @@ import { Organization, OrganizationAction, OrganizationSetting } from '../../dom
 import { ViewOrganization } from '../../site/pages/organization/view-models/view-organization';
 import { DEFAULT_FIELDSET, Fieldsets } from '../../site/services/model-request-builder';
 import { BaseRepository } from './base-repository';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
 @Injectable({
     providedIn: `root`
 })
 export class OrganizationRepositoryService extends BaseRepository<ViewOrganization, Organization> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
-        super(repositoryServiceCollector, Organization);
+    public constructor() {
+        super(Organization);
     }
 
     public getTitle = (viewOrganization: ViewOrganization) => viewOrganization.name;

@@ -1,5 +1,4 @@
-import { BaseMainImportHandler } from './base-main-import-handler';
-import { MainImportHandlerConfig } from './base-main-import-handler';
+import { BaseMainImportHandler, MainImportHandlerConfig } from './base-main-import-handler';
 import { ImportModel } from './import-model';
 import { ImportIdentifiable } from './import-utils';
 

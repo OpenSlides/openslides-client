@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/cor
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
@@ -19,14 +18,12 @@ import {
 } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -144,9 +141,6 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     private _editSubscriptions: Subscription[] = [];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: FormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
         private route: ActivatedRoute,
@@ -154,7 +148,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private perms: MotionPermissionService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate, motionServiceCollector);
+        super();
     }
 
     /**
@@ -234,19 +228,15 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         } else {
             changes = Object.assign([], this.getAllTextChangingObjects());
         }
-        if (this.lineLength) {
-            const formattedText = this.motionFormatService.formatMotion({
-                targetMotion: this.motion,
-                crMode: this.changeRecoMode,
-                changes,
-                lineLength: this.lineLength,
-                highlightedLine: this.highlightedLine,
-                firstLine: this.motion.firstLine
-            });
-            return formattedText;
-        } else {
-            return this.motion.text;
-        }
+        const formattedText = this.motionFormatService.formatMotion({
+            targetMotion: this.motion,
+            crMode: this.changeRecoMode,
+            changes,
+            lineLength: this.lineLength,
+            highlightedLine: this.highlightedLine,
+            firstLine: this.motion.firstLine
+        });
+        return formattedText;
     }
 
     /**

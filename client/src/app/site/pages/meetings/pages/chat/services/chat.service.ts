@@ -23,7 +23,7 @@ export class ChatService {
     public constructor(
         _chatGroupRepo: ChatGroupControllerService,
         _operator: OperatorService,
-        _meetingSettingService: MeetingSettingsService,
+        _meetingSettingsService: MeetingSettingsService,
         _orgaSettingService: OrganizationSettingsService
     ) {
         _chatGroupRepo.getViewModelListObservable().subscribe(groups => {

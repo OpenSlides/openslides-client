@@ -5,20 +5,15 @@ import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/age
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { createAgendaItem } from '../agenda';
-import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { TopicAction } from './topic.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<ViewTopic, Topic> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Topic, agendaItemRepo);
+    public constructor() {
+        super(Topic);
     }
 
     public create(...topics: any[]): Promise<Identifiable[]> {

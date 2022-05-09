@@ -5,18 +5,14 @@ import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { PollServiceModule } from '../poll-service.module';
 
 @Injectable({ providedIn: PollServiceModule })
 export class PollControllerService extends BaseMeetingControllerService<ViewPoll, Poll> {
-    constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: PollRepositoryService
-    ) {
-        super(controllerServiceCollector, Poll, repo);
+    constructor(protected override repo: PollRepositoryService) {
+        super(Poll, repo);
     }
 
     public create(payload: any): Promise<Identifiable> {

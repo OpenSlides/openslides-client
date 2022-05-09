@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from '../../../../services/meeting-component-service-collector.service';
 import { ViewListOfSpeakers } from '../../../agenda';
 import { CurrentListOfSpeakersService } from '../../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
@@ -64,9 +62,9 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public get projectorUrl(): string {
         if (this.projector) {
             if (this.operator.hasPerms(this.permission.projectorCanManage)) {
-                return `/${this.activeMeetingId}/projectors/detail/${this.projector.sequential_number}`;
+                return `/${this.activeMeetingId}/projectors/detail/${this.projector.id}`;
             } else {
-                return `/${this.activeMeetingId}/projectors/${this.projector.sequential_number}`;
+                return `/projector/${this.projector.id}`;
             }
         } else {
             return ``;
@@ -84,14 +82,12 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     private _currentProjection: ViewProjection | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private operator: OperatorService,
         projectorRepo: ProjectorControllerService,
         closService: CurrentListOfSpeakersService,
+        private operator: OperatorService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.subscriptions.push(
             projectorRepo.getReferenceProjectorObservable().subscribe(refProjector => {

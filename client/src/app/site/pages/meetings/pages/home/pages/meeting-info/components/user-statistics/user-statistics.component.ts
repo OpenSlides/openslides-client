@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 
 import { SpeakingTimeStructureLevelObject } from '../../../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
@@ -70,13 +68,8 @@ export class UserStatisticsComponent extends BaseComponent {
         IdentifiedSpeakingTimeStructureLevelObject[]
     >([]);
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private speakerRepo: SpeakerControllerService,
-        private durationService: DurationService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(private speakerRepo: SpeakerControllerService, private durationService: DurationService) {
+        super();
     }
 
     /**

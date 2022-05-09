@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML } from 'src/app/domain/definitions/organization-permission';
@@ -13,7 +12,6 @@ import { MeetingControllerService } from 'src/app/site/pages/meetings/services/m
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
 
@@ -49,8 +47,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     private navigatedFrom: string | undefined;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private formBuilder: FormBuilder,
         public committeeRepo: CommitteeControllerService,
         public orgaTagRepo: OrganizationTagControllerService,
@@ -58,7 +54,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         private route: ActivatedRoute,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createForm();
         this.getCommitteeByUrl();
 

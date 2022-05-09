@@ -12,14 +12,12 @@ import {
     ViewChild
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewChatGroup, ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -76,8 +74,6 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     private _hasWritePermissionsObservable: Observable<boolean> = of(false); // Not initialized
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private repo: ChatGroupControllerService,
         private chatMessageRepo: ChatMessageControllerService,
         private chatNotificationService: ChatNotificationService,
@@ -88,7 +84,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
         private vp: ViewPortService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

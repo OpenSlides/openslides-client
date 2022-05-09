@@ -5,7 +5,6 @@ import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/moti
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCommentSectionAction } from './motion-comment-section.action';
 
 @Injectable({
@@ -15,8 +14,8 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionCommentSection);
+    constructor() {
+        super(MotionCommentSection);
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection) => {
             if (a.weight === b.weight) {
@@ -28,15 +27,11 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
     }
 
     public override getFieldsets(): Fieldsets<ViewMotionCommentSection> {
-        const listFields: (keyof ViewMotionCommentSection)[] = [
-            `name`,
-            `weight`,
-            `read_group_ids`,
-            `write_group_ids`,
-            `comment_ids`
-        ];
+        const listFields: (keyof ViewMotionCommentSection)[] = [`name`, `weight`];
+        const commentFields: (keyof ViewMotionCommentSection)[] = [`name`, `read_group_ids`, `write_group_ids`];
         return {
-            [DEFAULT_FIELDSET]: listFields
+            [DEFAULT_FIELDSET]: listFields,
+            comment: commentFields
         };
     }
 

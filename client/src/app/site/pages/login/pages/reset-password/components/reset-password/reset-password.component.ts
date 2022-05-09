@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Component({
@@ -19,13 +17,8 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
     /**
      * Constructur for the reset password view. Initializes the form for the email.
      */
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        formBuilder: FormBuilder,
-        private userRepo: UserControllerService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(formBuilder: FormBuilder, private userRepo: UserControllerService) {
+        super();
         this.resetPasswordForm = formBuilder.group({
             email: [``, [Validators.required, Validators.email]]
         });

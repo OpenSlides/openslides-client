@@ -1,12 +1,11 @@
 import { Directive } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -48,14 +47,17 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     protected _id!: Id;
     protected _poll!: ViewPoll<C>;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected promptService: PromptService,
-        protected choiceService: ChoiceService,
-        protected repo: PollControllerService
-    ) {
-        super(componentServiceCollector, translate);
+    // Services which are injected manually to be available in all subclasses
+    protected promptService: PromptService;
+    protected choiceService: ChoiceService;
+    protected repo: PollControllerService;
+
+    public constructor() {
+        super();
+        const injector = AppInjector.getInjector();
+        this.promptService = injector.get(PromptService);
+        this.choiceService = injector.get(ChoiceService);
+        this.repo = injector.get(PollControllerService);
     }
 
     public async nextPollState(): Promise<void> {

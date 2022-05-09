@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -10,7 +9,6 @@ import {
     MEETING_RELATED_FORM_CONTROLS,
     ParticipantControllerService
 } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -110,8 +108,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     private _isUserInScope: boolean = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,
         private operator: OperatorService,
@@ -122,7 +118,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         private cd: ChangeDetectorRef,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.getUserByUrl();
 
         this.subscriptions.push(

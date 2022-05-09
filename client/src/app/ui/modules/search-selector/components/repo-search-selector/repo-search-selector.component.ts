@@ -45,7 +45,7 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
         focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl,
-        private meetingSettingService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
     }
@@ -58,7 +58,7 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
         this.initItems();
         if (this.defaultDataConfigKey) {
             this.subscriptions.push(
-                this.meetingSettingService.get(this.defaultDataConfigKey).subscribe(value => {
+                this.meetingSettingsService.get(this.defaultDataConfigKey).subscribe(value => {
                     if (this.empty) {
                         this.value = value as any;
                     }

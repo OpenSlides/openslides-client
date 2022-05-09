@@ -1,7 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { map, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -9,7 +8,6 @@ import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/p
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { GridTileDimension } from 'src/app/ui/modules/grid';
@@ -69,8 +67,6 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     private _projectorId: Id | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private repo: ProjectorControllerService,
         private projectionRepo: ProjectionControllerService,
         private countdownRepo: ProjectorCountdownControllerService,
@@ -85,8 +81,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private promptService: PromptService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
-
+        super();
         this.subscriptions.push(
             this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns)),
             this.messageRepo.getViewModelListObservable().subscribe(messages => (this.messages = messages)),

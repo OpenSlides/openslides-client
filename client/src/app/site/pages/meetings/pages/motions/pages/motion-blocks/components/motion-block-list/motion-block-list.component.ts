@@ -1,12 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable, of } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
@@ -64,15 +62,13 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
     ];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         public repo: MotionBlockControllerService,
         private dialog: MotionBlockCreateDialogService,
         private itemRepo: AgendaItemControllerService,
         private operator: OperatorService,
         public sortService: MotionBlockSortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.listStorageIndex = MOTION_BLOCK_LIST_STORAGE_INDEX;
     }
 

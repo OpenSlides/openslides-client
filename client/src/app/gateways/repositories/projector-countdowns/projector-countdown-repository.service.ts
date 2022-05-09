@@ -6,7 +6,6 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request
 
 import { ServerTimePresenterService } from '../../presenter/server-time-presenter.service';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorCountdownAction } from './projector-countdown.action';
 
 @Injectable({
@@ -16,11 +15,8 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
     ViewProjectorCountdown,
     ProjectorCountdown
 > {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private serverTimePresenter: ServerTimePresenterService
-    ) {
-        super(repositoryServiceCollector, ProjectorCountdown);
+    public constructor(private serverTimePresenter: ServerTimePresenterService) {
+        super(ProjectorCountdown);
     }
 
     public getTitle = (viewProjectorCountdown: ViewProjectorCountdown) =>

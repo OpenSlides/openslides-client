@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewVote } from '../../../../pages/polls';
 import { PollServiceModule } from '../poll-service.module';
@@ -11,10 +10,7 @@ import { PollServiceModule } from '../poll-service.module';
     providedIn: PollServiceModule
 })
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {
-    constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: VoteRepositoryService
-    ) {
-        super(controllerServiceCollector, Vote, repo);
+    constructor(protected override repo: VoteRepositoryService) {
+        super(Vote, repo);
     }
 }

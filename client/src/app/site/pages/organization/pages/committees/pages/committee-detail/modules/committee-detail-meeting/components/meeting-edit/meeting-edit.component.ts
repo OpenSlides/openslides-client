@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -15,7 +14,6 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -59,17 +57,20 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
 
     public get availableMeetingsObservable(): Observable<Selectable[]> {
-        return this.orga.organizationObservable.pipe(
-            map(organization => {
+        return combineLatest(
+            this.orga.organization!.template_meetings_as_observable,
+            this.orga.organization!.active_meetings_as_observable,
+            this.orga.organization!.archived_meetings_as_observable,
+            (templateMeetings, activeMeetings, archivedMeetings) => {
                 return [
                     TEMPLATE_MEETINGS_LABEL,
-                    ...organization.template_meetings,
+                    ...templateMeetings,
                     ACTIVE_MEETINGS_LABEL,
-                    ...organization.active_meetings,
+                    ...activeMeetings,
                     ARCHIVED_MEETINGS_LABEL,
-                    ...organization.archived_meetings
+                    ...archivedMeetings
                 ];
-            })
+            }
         );
     }
 
@@ -104,8 +105,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     private operatingUser: ViewUser | null = null;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private meetingRepo: MeetingControllerService,
@@ -114,9 +113,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private operator: OperatorService,
         private userRepo: UserControllerService,
         private openslidesRouter: OpenSlidesRouterService,
-        private orga: OrganizationService
+        private orga: OrganizationService // private memberService: AccountControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.checkCreateView();
         this.createForm();
         this.init();

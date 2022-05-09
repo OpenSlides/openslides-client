@@ -1,13 +1,10 @@
 import { AfterViewInit, Directive, ViewChild } from '@angular/core';
 import { NavigationStart } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 import { filter } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
-import { StorageService } from '../../gateways/storage.service';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseViewModel } from './base-view-model';
 
 const createStorageOffsetIndex = (prefix: string) => `${prefix}:offset`;
@@ -44,16 +41,12 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      * see {@link selectItem}.
      * Filled using double binding from list-view-tables
      */
-    public selectedRows: V[];
+    public selectedRows: V[] = [];
 
     /**
      * Force children to have a tableColumnDefinition
      */
     public abstract tableColumnDefinition: PblColumnDefinition[];
-
-    protected get storage(): StorageService {
-        return this.componentServiceCollector.storage;
-    }
 
     /**
      * Toggle for enabling the multiSelect mode. Defaults to false (inactive)
@@ -73,11 +66,6 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      * The source of the table data, will be filled by an event emitter
      */
     private _dataSource!: PblDataSource<V>;
-
-    public constructor(componentServiceCollector: ComponentServiceCollectorService, translate: TranslateService) {
-        super(componentServiceCollector, translate);
-        this.selectedRows = [];
-    }
 
     public ngAfterViewInit(): void {
         this.restoreScrollOffset();

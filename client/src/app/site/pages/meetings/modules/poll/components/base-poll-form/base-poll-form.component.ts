@@ -1,6 +1,5 @@
 import { Directive, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
 import {
     PollBackendDurationChoices,
@@ -14,7 +13,6 @@ import {
 } from 'src/app/domain/models/poll';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { GroupControllerService } from '../../../../pages/participants';
@@ -134,14 +132,12 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      * injects the poll itself
      */
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
         private fb: FormBuilder,
         public groupRepo: GroupControllerService,
         private dialog: VotingPrivacyWarningDialogService,
-        protected meetingSettingService: MeetingSettingsService
+        protected meetingSettingsService: MeetingSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.initContentForm();
     }
 
@@ -210,7 +206,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     private checkPollBackend(): void {
         if (!this.data.backend) {
             const pollType = this.data.content_object?.collection as PollClassType;
-            this.data.backend = this.meetingSettingService.instant(`${pollType}_poll_default_backend`);
+            this.data.backend = this.meetingSettingsService.instant(`${pollType}_poll_default_backend`)!;
         }
     }
 

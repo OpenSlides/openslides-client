@@ -5,7 +5,6 @@ import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/page
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionChangeRecommendationAction } from './motion-change-recommendation.action';
 
 @Injectable({
@@ -15,8 +14,8 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionChangeRecommendation);
+    constructor() {
+        super(MotionChangeRecommendation);
     }
 
     public getTitle = () => this.getVerboseName();

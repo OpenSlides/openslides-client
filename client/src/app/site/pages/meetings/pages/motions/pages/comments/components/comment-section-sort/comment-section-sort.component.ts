@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
 
@@ -17,12 +15,8 @@ export class CommentSectionSortComponent extends BaseComponent implements OnInit
      */
     public comments: ViewMotionCommentSection[];
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private repo: MotionCommentSectionControllerService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(private repo: MotionCommentSectionControllerService) {
+        super();
         super.setTitle(`Sort comments`);
     }
 

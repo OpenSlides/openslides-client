@@ -1,6 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, Observable, Subject } from 'rxjs';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
@@ -13,7 +14,6 @@ import { RelationManagerService } from '../../site/services/relation-manager.ser
 import { ViewModelStoreService } from '../../site/services/view-model-store.service';
 import { Action, ActionService } from '../actions';
 import { ActionRequest } from '../actions/action-utils';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
 const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
 
@@ -90,36 +90,25 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected baseViewModelCtor!: ViewModelConstructor<V>;
 
-    protected get DS(): DataStoreService {
-        return this.repositoryServiceCollector.DS;
-    }
-
-    protected get actions(): ActionService {
-        return this.repositoryServiceCollector.actionService;
-    }
-
-    protected get collectionMapperService(): CollectionMapperService {
-        return this.repositoryServiceCollector.collectionMapperService;
-    }
-
-    protected get viewModelStoreService(): ViewModelStoreService {
-        return this.repositoryServiceCollector.viewModelStoreService;
-    }
-
-    protected get translate(): TranslateService {
-        return this.repositoryServiceCollector.translate;
-    }
-
-    protected get relationManager(): RelationManagerService {
-        return this.repositoryServiceCollector.relationManager;
-    }
+    // Services which are injected manually to be available in all subclasses
+    protected DS: DataStoreService;
+    protected actions: ActionService;
+    protected collectionMapperService: CollectionMapperService;
+    protected viewModelStoreService: ViewModelStoreService;
+    protected translate: TranslateService;
+    protected relationManager: RelationManagerService;
 
     private _createViewModelPipes: ((viewModel: V) => void)[] = [];
 
-    public constructor(
-        private repositoryServiceCollector: RepositoryServiceCollectorService,
-        protected baseModelCtor: ModelConstructor<M>
-    ) {
+    public constructor(protected baseModelCtor: ModelConstructor<M>) {
+        const injector = AppInjector.getInjector();
+        this.DS = injector.get(DataStoreService);
+        this.actions = injector.get(ActionService);
+        this.collectionMapperService = injector.get(CollectionMapperService);
+        this.viewModelStoreService = injector.get(ViewModelStoreService);
+        this.translate = injector.get(TranslateService);
+        this.relationManager = injector.get(RelationManagerService);
+
         this._collection = baseModelCtor.COLLECTION;
 
         this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
@@ -412,11 +401,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendActionToBackend<T>(action: string, payload: T): Promise<any> {
-        try {
-            return await this.actions.sendRequest(action, payload);
-        } catch (e) {
-            throw e;
-        }
+        return await this.actions.sendRequest(action, payload);
     }
 
     /**
@@ -426,11 +411,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendBulkActionToBackend<T>(action: string, payload: T[]): Promise<any> {
-        try {
-            return await this.actions.sendBulkRequest(action, payload);
-        } catch (e) {
-            throw e;
-        }
+        return await this.actions.sendBulkRequest(action, payload);
     }
 
     /**
@@ -439,10 +420,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns
      */
     protected async sendActionsToBackend(actions: ActionRequest[]): Promise<any> {
-        try {
-            return await this.actions.sendRequests(actions);
-        } catch (e) {
-            throw e;
-        }
+        return await this.actions.sendRequests(actions);
     }
 }

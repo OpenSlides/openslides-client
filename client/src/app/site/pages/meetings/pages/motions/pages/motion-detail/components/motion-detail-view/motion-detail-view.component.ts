@@ -8,7 +8,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, first, firstValueFrom, Observable, of } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -17,7 +16,6 @@ import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motio
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -103,8 +101,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     private _hasModelSubscriptionInitiated = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         public vp: ViewPortService,
         public operator: OperatorService,
         public perms: MotionPermissionService,
@@ -121,7 +117,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private cd: ChangeDetectorRef,
         private pdfExport: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**
@@ -183,7 +179,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Goes to the amendment creation wizard. Executed via click.
      */
     public createAmendment(): void {
-        const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+        const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
         if (amendmentTextMode === `paragraph`) {
             this.router.navigate([`create-amendment`], { relativeTo: this.route });
         } else {
@@ -405,7 +401,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             motion.category_id = parentMotion.category_id;
             motion.tag_ids = parentMotion.tag_ids;
             motion.block_id = parentMotion.block_id;
-            const amendmentTextMode = this.meetingSettingService.instant(`motions_amendments_text_mode`);
+            const amendmentTextMode = this.meetingSettingsService.instant(`motions_amendments_text_mode`);
             if (amendmentTextMode === `fulltext`) {
                 motion.text = parentMotion.text;
             }

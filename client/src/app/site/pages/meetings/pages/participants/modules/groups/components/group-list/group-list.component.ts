@@ -2,13 +2,11 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AppPermission, DisplayPermission, PERMISSIONS } from 'src/app/domain/definitions/permission.config';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { GroupControllerService } from '../../services';
@@ -60,14 +58,12 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private dialog: MatDialog,
         private repo: GroupControllerService,
         private promptService: PromptService,
         private formBuilder: FormBuilder
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

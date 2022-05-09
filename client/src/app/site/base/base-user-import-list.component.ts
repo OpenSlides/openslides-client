@@ -1,11 +1,9 @@
 import { Directive } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 
 import { User } from '../../domain/models/users/user';
 import { ImportModel } from '../../infrastructure/utils/import/import-model';
 import { ImportListHeaderDefinition } from '../../ui/modules/import-list/definitions/import-list-header-definition';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseImportListComponent } from './base-import-list.component';
 import { BaseUserImportService } from './base-user-import.service';
 
@@ -32,14 +30,13 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
         return Object.keys(this.modelHeadersAndVerboseNames) as (keyof User)[];
     }
 
+    public override importer: BaseUserImportService;
+
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        public override importer: BaseUserImportService,
         protected formBuilder: FormBuilder,
         protected modelHeadersAndVerboseNames: { [key: string]: string }
     ) {
-        super(componentServiceCollector, translate, importer);
+        super();
         this.textAreaForm = formBuilder.control(``);
     }
 

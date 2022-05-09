@@ -6,7 +6,6 @@ import { Action } from 'src/app/gateways/actions';
 import { AssignmentCandidateRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-candidate-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { AssignmentDetailServiceModule } from './assignment-detail-service.module';
 
@@ -15,11 +14,8 @@ export class AssignmentCandidateControllerService extends BaseMeetingControllerS
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: AssignmentCandidateRepositoryService
-    ) {
-        super(controllerServiceCollector, AssignmentCandidate, repo);
+    constructor(protected override repo: AssignmentCandidateRepositoryService) {
+        super(AssignmentCandidate, repo);
     }
 
     public create(assignment: Identifiable, userId: Id): Promise<Identifiable> {

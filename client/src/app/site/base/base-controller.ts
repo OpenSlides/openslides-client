@@ -1,24 +1,21 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { BaseRepository } from '../../gateways/repositories/base-repository';
-import { ControllerServiceCollectorService } from '../services/controller-service-collector.service';
 import { BaseViewModel } from './base-view-model';
 
 @Directive()
 export abstract class BaseController<V extends BaseViewModel, M extends BaseModel> {
-    public get translate(): TranslateService {
-        return this.controllerServiceCollector.translate;
-    }
+    public translate: TranslateService;
 
-    public constructor(
-        protected controllerServiceCollector: ControllerServiceCollectorService,
-        protected baseModelCtor: ModelConstructor<M>,
-        protected repo: BaseRepository<V, M>
-    ) {}
+    public constructor(protected baseModelCtor: ModelConstructor<M>, protected repo: BaseRepository<V, M>) {
+        const injector = AppInjector.getInjector();
+        this.translate = injector.get(TranslateService);
+    }
 
     public getViewModel(id: Id): V | null {
         return this.repo.getViewModel(id);

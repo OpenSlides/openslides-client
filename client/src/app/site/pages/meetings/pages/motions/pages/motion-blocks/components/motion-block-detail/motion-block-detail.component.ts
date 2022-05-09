@@ -2,14 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMotion, ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction } from 'src/app/ui/modules/list/components';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -92,8 +90,6 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * Constructor for motion block details
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private route: ActivatedRoute,
         protected repo: MotionBlockControllerService,
         public motionRepo: MotionControllerService,
@@ -103,7 +99,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         public filterService: MotionBlockDetailFilterListService,
         public vp: ViewPortService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**
@@ -160,7 +156,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         const title = this.translate.instant(`Are you sure you want to remove this motion from motion block?`);
         const content = motion.getTitle();
         if (await this.promptService.open(title, content)) {
-            this.motionRepo.update({ block_id: null }, motion).resolve();
+            this.motionRepo.update({ block_id: null }, motion);
         }
     }
 

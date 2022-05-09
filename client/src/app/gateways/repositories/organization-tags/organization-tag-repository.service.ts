@@ -7,15 +7,14 @@ import { ViewOrganizationTag } from '../../../site/pages/organization/pages/orga
 import { DEFAULT_FIELDSET, Fieldsets } from '../../../site/services/model-request-builder';
 import { ThemeService } from '../../../site/services/theme.service';
 import { BaseRepository } from '../base-repository';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { OrganizationTagAction } from './organization-tag.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class OrganizationTagRepositoryService extends BaseRepository<ViewOrganizationTag, OrganizationTag> {
-    public constructor(serviceCollector: RepositoryServiceCollectorService, private theme: ThemeService) {
-        super(serviceCollector, OrganizationTag);
+    public constructor(private theme: ThemeService) {
+        super(OrganizationTag);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Tags` : `Tag`);

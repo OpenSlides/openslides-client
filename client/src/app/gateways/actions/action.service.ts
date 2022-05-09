@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { ErrorService } from 'src/app/site/services/error.service';
 
 import { HttpService } from '../http.service';
 import { Action } from './action';
-import { ActionRequest, isActionError, isActionResponse } from './action-utils';
+import { ActionRequest, isActionResponse } from './action-utils';
 
 type ActionFn = () => boolean;
 const ACTION_URL = `/system/action/handle_request`;
@@ -15,7 +16,7 @@ let uniqueFnId = 0;
 export class ActionService {
     private readonly _beforeActionFnMap: { [index: number]: ActionFn } = {};
 
-    public constructor(private http: HttpService) {}
+    public constructor(private http: HttpService, private errorService: ErrorService) {}
 
     public addBeforeActionFn(fn: () => boolean): number {
         this._beforeActionFnMap[++uniqueFnId] = fn;
@@ -31,10 +32,14 @@ export class ActionService {
             return null;
         }
         console.log(`send requests:`, requests);
-        const response = await this.http.post<T>(ACTION_URL, requests);
-        if (isActionError(response)) {
-            throw response.message;
-        } else if (isActionResponse<T>(response)) {
+        let response;
+        try {
+            response = await this.http.post<T>(ACTION_URL, requests);
+        } catch (error) {
+            this.errorService.showError(error);
+            throw error;
+        }
+        if (isActionResponse<T>(response)) {
             const results = response.results;
             if (!results) {
                 return null;

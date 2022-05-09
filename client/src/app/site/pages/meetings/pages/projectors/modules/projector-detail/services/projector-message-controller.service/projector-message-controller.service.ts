@@ -4,7 +4,6 @@ import { ProjectorMessage } from 'src/app/domain/models/projector/projector-mess
 import { ProjectorMessageRepositoryService } from 'src/app/gateways/repositories/projector-messages/projector-message-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ProjectorDetailServiceModule } from '../projector-detail-service.module';
 
@@ -13,11 +12,8 @@ export class ProjectorMessageControllerService extends BaseMeetingControllerServ
     ViewProjectorMessage,
     ProjectorMessage
 > {
-    constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: ProjectorMessageRepositoryService
-    ) {
-        super(controllerServiceCollector, ProjectorMessage, repo);
+    constructor(protected override repo: ProjectorMessageRepositoryService) {
+        super(ProjectorMessage, repo);
     }
 
     public create(payload: any): Promise<Identifiable> {

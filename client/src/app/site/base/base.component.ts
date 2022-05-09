@@ -4,13 +4,15 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { StorageService } from 'src/app/gateways/storage.service';
 import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
 import { BaseModel } from '../../domain/models/base/base-model';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
+import { ErrorService } from '../services/error.service';
 import { ModelRequestService } from '../services/model-request.service';
 
 @Directive()
@@ -62,26 +64,25 @@ export abstract class BaseComponent implements OnDestroy {
      */
     protected subscriptions = new SubscriptionMap();
 
-    protected get titleService(): Title {
-        return this.componentServiceCollector.titleService;
-    }
+    // Services which are injected manually to be available in all subclasses
+    public router: Router;
+    protected titleService: Title;
+    protected modelRequestService: ModelRequestService;
+    protected matSnackBar: MatSnackBar;
+    protected storage: StorageService;
+    protected translate: TranslateService;
+    protected errorService: ErrorService;
 
-    protected get modelRequestService(): ModelRequestService {
-        return this.componentServiceCollector.modelRequestService;
+    public constructor() {
+        const injector = AppInjector.getInjector();
+        this.router = injector.get(Router);
+        this.titleService = injector.get(Title);
+        this.modelRequestService = injector.get(ModelRequestService);
+        this.matSnackBar = injector.get(MatSnackBar);
+        this.storage = injector.get(StorageService);
+        this.translate = injector.get(TranslateService);
+        this.errorService = injector.get(ErrorService);
     }
-
-    protected get matSnackBar(): MatSnackBar {
-        return this.componentServiceCollector.matSnackBar;
-    }
-
-    public get router(): Router {
-        return this.componentServiceCollector.router;
-    }
-
-    public constructor(
-        protected componentServiceCollector: ComponentServiceCollectorService,
-        protected translate: TranslateService
-    ) {}
 
     /**
      * automatically dismisses the error snack bar and clears subscriptions
@@ -146,21 +147,7 @@ export abstract class BaseComponent implements OnDestroy {
      */
     public raiseError = (message: any): void => {
         console.log(`raiseError`, message);
-        let errorNotification: string;
-        if (message instanceof Error) {
-            if (message.message) {
-                errorNotification = message.message;
-            } else {
-                errorNotification = this.translate.instant(
-                    `A client error occurred. Please contact your system administrator.`
-                );
-            }
-        } else {
-            errorNotification = message;
-        }
-        this.messageSnackBar = this.matSnackBar.open(errorNotification, this.translate.instant(`OK`), {
-            duration: 0
-        });
+        this.errorService.showError(message);
     };
 
     /**

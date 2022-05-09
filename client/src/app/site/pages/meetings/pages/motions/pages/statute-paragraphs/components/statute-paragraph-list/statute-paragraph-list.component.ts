@@ -2,12 +2,10 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStatuteParagraphControllerService } from '../../../../modules/statute-paragraphs/services';
@@ -37,15 +35,13 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
     public statuteParagraphForm: FormGroup;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private repo: MotionStatuteParagraphControllerService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
         private csvExportService: StatuteParagraphCsvExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         const form = {
             title: [``, Validators.required],

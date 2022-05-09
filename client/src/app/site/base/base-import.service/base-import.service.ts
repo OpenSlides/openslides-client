@@ -2,6 +2,7 @@ import { Directive, EventEmitter } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 
 import { Identifiable } from '../../../domain/interfaces';
 import {
@@ -49,7 +50,6 @@ import {
     StaticMainImportHandler
 } from '../../../infrastructure/utils/import/static-main-import-handler';
 import { ImportService } from '../../../ui/base/import-service';
-import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
 
 @Directive()
 export abstract class BaseImportService<MainModel extends Identifiable> implements ImportService<MainModel> {
@@ -185,9 +185,6 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         | ((entry: Partial<MainModel>) => Partial<MainModel>[] | Promise<Partial<MainModel>[]>)
         | undefined;
 
-    protected readonly translate: TranslateService = this.importServiceCollector.translate;
-    // protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
-
     /**
      * The last parsed file object (may be reparsed with new encoding, thus kept in memory)
      */
@@ -218,13 +215,19 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
 
     private _selfImportHelper: MainImportHandler<MainModel> | null = null;
 
-    private readonly _papa: Papa = this.importServiceCollector.papa;
+    // Services which are injected manually to be available in all subclasses
+    protected readonly translate: TranslateService;
+    private readonly _papa: Papa;
 
     /**
      * Constructor. Creates a fileReader to subscribe to it for incoming parsed
      * strings
      */
-    public constructor(private importServiceCollector: ImportServiceCollectorService) {
+    public constructor() {
+        const injector = AppInjector.getInjector();
+        this._papa = injector.get(Papa);
+        this.translate = injector.get(TranslateService);
+
         this._reader.onload = (event: FileReaderProgressEvent) => {
             this.parseInput(event.target?.result as string);
         };
@@ -249,7 +252,14 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         }
         const result = this._papa.parse(file, papaConfig);
         this._csvLines = result.data;
-        this.parseCsvLines();
+        this._receivedHeaders = Object.keys(this._csvLines[0]);
+        const isValid = this.checkHeaderLength();
+        this.checkReceivedHeaders();
+        if (!isValid) {
+            return;
+        }
+        this.propagateNextNewEntries();
+        this.updateSummary();
     }
 
     public clearFile(): void {
@@ -258,11 +268,17 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         this._rawFileSubject.next(null);
     }
 
-    public addLines(...lines: { [header: string]: any }[]): void {
-        for (const line of lines) {
-            this._csvLines.push(line);
+    /**
+     * parses pre-prepared entries (e.g. from a textarea) instead of a csv structure
+     *
+     * @param entries: an array of prepared newEntry objects
+     */
+    public setParsedEntries(entries: { [importTrackId: number]: ImportModel<MainModel> }): void {
+        this.clearPreview();
+        if (!entries) {
+            return;
         }
-        this.parseCsvLines();
+        this.setNextEntries(entries);
     }
 
     /**
@@ -570,30 +586,6 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             const receivedHeader = this._mapReceivedExpectedHeaders[expectedHeader];
             return { [expectedHeader]: line[receivedHeader] };
         }) as { [key in keyof MainModel]?: any };
-    }
-
-    private parseCsvLines(): void {
-        this._receivedHeaders = Object.keys(this._csvLines[0]);
-        const isValid = this.checkHeaderLength();
-        this.checkReceivedHeaders();
-        if (!isValid) {
-            return;
-        }
-        this.propagateNextNewEntries();
-        this.updateSummary();
-    }
-
-    /**
-     * parses pre-prepared entries (e.g. from a textarea) instead of a csv structure
-     *
-     * @param entries: an array of prepared newEntry objects
-     */
-    private setParsedEntries(entries: { [importTrackId: number]: ImportModel<MainModel> }): void {
-        this.clearPreview();
-        if (!entries) {
-            return;
-        }
-        this.setNextEntries(entries);
     }
 
     /**

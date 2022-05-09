@@ -8,7 +8,6 @@ import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/p
 import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
 
 import { BaseMeetingControllerService } from '../../../base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '../../../services/meeting-controller-service-collector.service';
 import { isProjectable, Projectable, ProjectionBuildDescriptor } from '../../../view-models';
 import { ViewProjection, ViewProjector } from '../view-models';
 
@@ -17,11 +16,10 @@ import { ViewProjection, ViewProjector } from '../view-models';
 })
 export class ProjectorControllerService extends BaseMeetingControllerService<ViewProjector, Projector> {
     public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: ProjectorRepositoryService,
         private meetingRepo: MeetingRepositoryService
     ) {
-        super(controllerServiceCollector, Projector, repo);
+        super(Projector, repo);
     }
 
     public create(payload: any): Promise<Identifiable> {

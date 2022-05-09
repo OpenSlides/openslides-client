@@ -1,6 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, filter, first, firstValueFrom, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -17,7 +16,6 @@ import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -150,10 +148,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Constructor. Build forms and subscribe to needed configs and updates
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private operator: OperatorService,
         formBuilder: FormBuilder,
+        private operator: OperatorService,
         public assignmentRepo: AssignmentControllerService,
         private assignmentCandidateRepo: AssignmentCandidateControllerService,
         private userRepo: ParticipantControllerService,
@@ -164,7 +160,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         private assignmentPollService: AssignmentPollService,
         private pollController: PollControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.updateSubscription(
             `allUsers`,
             this.userRepo.getViewModelListObservable().subscribe(users => {

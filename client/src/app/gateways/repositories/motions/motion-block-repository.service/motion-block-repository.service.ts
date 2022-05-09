@@ -4,9 +4,8 @@ import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
-import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionBlockAction } from './motion-block.action';
 
 @Injectable({
@@ -16,11 +15,8 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     ViewMotionBlock,
     MotionBlock
 > {
-    constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
+    constructor() {
+        super(MotionBlock);
         this.initSorting();
     }
 

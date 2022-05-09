@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable, timer } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Projector } from 'src/app/domain/models/projector/projector';
@@ -18,7 +17,6 @@ import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -55,8 +53,6 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private repo: ProjectorControllerService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,
@@ -64,12 +60,10 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
         private cd: ChangeDetectorRef,
         private openslidesStatus: OpenSlidesStatusService
     ) {
-        super(componentServiceCollector, translate);
-
+        super();
         this.createForm = this.formBuilder.group({
             name: [``, Validators.required]
         });
-
         this.installUpdater();
     }
 

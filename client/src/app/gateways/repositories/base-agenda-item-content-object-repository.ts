@@ -1,11 +1,11 @@
 import { HasAgendaItemId } from 'src/app/domain/interfaces';
 import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 
 import { AgendaItemRepositoryService } from './agenda';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
 export function isAgendaItemContentObjectRepository(obj: any): obj is BaseAgendaItemContentObjectRepository<any, any> {
     const repo = obj as BaseAgendaItemContentObjectRepository<any, any>;
@@ -33,12 +33,12 @@ export abstract class BaseAgendaItemContentObjectRepository<
     extends BaseMeetingRelatedRepository<V, M>
     implements AgendaItemContentObjectRepository<V, M>
 {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        baseModelCtor: ModelConstructor<M>,
-        protected agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, baseModelCtor);
+    protected agendaItemRepo: AgendaItemRepositoryService;
+
+    public constructor(baseModelCtor: ModelConstructor<M>) {
+        super(baseModelCtor);
+        const injector = AppInjector.getInjector();
+        this.agendaItemRepo = injector.get(AgendaItemRepositoryService);
     }
 
     /**

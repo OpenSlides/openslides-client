@@ -8,7 +8,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { UserRepositoryService } from '../users';
 import { UserAction } from '../users/user-action';
 
@@ -16,11 +15,8 @@ import { UserAction } from '../users/user-action';
     providedIn: `root`
 })
 export class ParticipantRepositoryService extends BaseMeetingRelatedRepository<ViewUser, User> {
-    constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private userRepo: UserRepositoryService
-    ) {
-        super(repositoryServiceCollector, User);
+    constructor(private userRepo: UserRepositoryService) {
+        super(User);
     }
 
     public override getViewModel(participantId: Id): ViewUser | null {

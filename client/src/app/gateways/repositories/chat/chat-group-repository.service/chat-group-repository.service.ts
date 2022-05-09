@@ -6,15 +6,14 @@ import { ViewChatGroup } from 'src/app/site/pages/meetings/pages/chat';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { ChatGroupAction } from './chat-group.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<ViewChatGroup, ChatGroup> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ChatGroup);
+    constructor() {
+        super(ChatGroup);
     }
 
     public getVerboseName = (plural?: boolean) => (plural ? `Chat groups` : `Chat group`);

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -9,7 +8,6 @@ import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -113,8 +111,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     private _isUserInScope = true;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         public repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
         private choiceService: ChoiceService,
@@ -128,7 +124,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private organizationSettingsService: OrganizationSettingsService,
         private route: ActivatedRoute
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         // enable multiSelect for this listView
         this.canMultiSelect = true;

@@ -3,7 +3,6 @@ import { User } from 'src/app/domain/models/users/user';
 import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
 import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { AccountExportService } from '../../../../services/account-export.service';
@@ -22,12 +21,8 @@ export class AccountImportService extends BaseUserImportService {
         vote_weight: `The vote weight has too many decimal places (max.: 6).`
     };
 
-    public constructor(
-        importServiceCollector: ImportServiceCollectorService,
-        private repo: UserControllerService,
-        private exporter: AccountExportService
-    ) {
-        super(importServiceCollector);
+    public constructor(private repo: UserControllerService, private exporter: AccountExportService) {
+        super();
     }
 
     public downloadCsvExample(): void {

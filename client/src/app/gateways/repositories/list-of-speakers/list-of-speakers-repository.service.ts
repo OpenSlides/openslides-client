@@ -5,7 +5,6 @@ import { hasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetin
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ListOfSpeakersAction } from './list-of-speakers.action';
 
 /**
@@ -17,8 +16,8 @@ import { ListOfSpeakersAction } from './list-of-speakers.action';
     providedIn: `root`
 })
 export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepository<ViewListOfSpeakers, ListOfSpeakers> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ListOfSpeakers);
+    public constructor() {
+        super(ListOfSpeakers);
     }
 
     public override getFieldsets(): Fieldsets<ListOfSpeakers> {

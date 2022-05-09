@@ -12,7 +12,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -24,7 +23,6 @@ import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pag
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -139,8 +137,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public isCallEnabled: Observable<boolean> = this.interactionService.showLiveConfObservable;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private speakerRepo: SpeakerControllerService,
         private operator: OperatorService,
@@ -152,7 +148,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private dialog: PointOfOrderDialogService,
         private interactionService: InteractionService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
     }
 
@@ -449,18 +445,18 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     private subscribeToSettings(): void {
         this.subscriptions.push(
             // observe changes the agenda_present_speakers_only setting
-            this.meetingSettingService.get(`list_of_speakers_present_users_only`).subscribe(() => {
+            this.meetingSettingsService.get(`list_of_speakers_present_users_only`).subscribe(() => {
                 this.filterUsers();
             }),
             // observe changes to the agenda_show_first_contribution setting
             // observe point of order settings
-            this.meetingSettingService.get(`list_of_speakers_enable_point_of_order_speakers`).subscribe(show => {
+            this.meetingSettingsService.get(`list_of_speakers_enable_point_of_order_speakers`).subscribe(show => {
                 this.pointOfOrderEnabled = show;
             }),
-            this.meetingSettingService.get(`list_of_speakers_enable_pro_contra_speech`).subscribe(enabled => {
+            this.meetingSettingsService.get(`list_of_speakers_enable_pro_contra_speech`).subscribe(enabled => {
                 this.enableProContraSpeech = enabled;
             }),
-            this.meetingSettingService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
+            this.meetingSettingsService.get(`list_of_speakers_can_set_contribution_self`).subscribe(canSet => {
                 this.canMarkSelf = canSet;
             })
         );

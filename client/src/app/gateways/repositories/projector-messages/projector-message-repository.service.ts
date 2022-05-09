@@ -5,7 +5,6 @@ import { ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projecto
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorMessageAction } from './projector-message.action';
 
 @Injectable({
@@ -15,8 +14,8 @@ export class ProjectorMessageRepositoryService extends BaseMeetingRelatedReposit
     ViewProjectorMessage,
     ProjectorMessage
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ProjectorMessage);
+    public constructor() {
+        super(ProjectorMessage);
     }
     public getTitle = (viewProjectorMessage: ViewProjectorMessage) => this.getVerboseName();
 

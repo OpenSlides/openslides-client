@@ -5,7 +5,6 @@ import { Action } from 'src/app/gateways/actions';
 import { PersonalNoteRepositoryService } from 'src/app/gateways/repositories/motions/personal-note-repository.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { PersonalNoteServiceModule } from '../../personal-note-service.module';
 import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
@@ -14,11 +13,8 @@ import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
     providedIn: PersonalNoteServiceModule
 })
 export class PersonalNoteControllerService extends BaseMeetingControllerService<ViewPersonalNote, PersonalNote> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: PersonalNoteRepositoryService
-    ) {
-        super(controllerServiceCollector, PersonalNote, repo);
+    public constructor(protected override repo: PersonalNoteRepositoryService) {
+        super(PersonalNote, repo);
     }
 
     public async setPersonalNote(

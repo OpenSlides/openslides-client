@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { firstValueFrom, map } from 'rxjs';
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
@@ -12,7 +11,6 @@ import {
     ViewMotionWorkflow,
     ViewTag
 } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { GridBlockTileType } from 'src/app/ui/modules/grid';
@@ -57,7 +55,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     /**
      * String to define the current selected view.
      */
-    public selectedView: MotionListviewType = `tiles`;
+    public selectedView: MotionListviewType = `list`;
 
     /**
      * The motion, the user has currently selected in the quick-edit-dialog.
@@ -139,8 +137,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     private _hasCategories = false;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private route: ActivatedRoute,
         public filterService: MotionListFilterService,
         public sortService: MotionListSortService,
@@ -155,7 +151,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         public vp: ViewPortService,
         public operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.canMultiSelect = true;
         this.listStorageIndex = MOTION_LIST_STORAGE_INDEX;
     }
@@ -388,10 +384,9 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     }
 
     private setupTileView(isAvailable: boolean): void {
+        this.selectedView = `list`;
         if (isAvailable) {
-            this.storage.get<MotionListviewType>(`motionListView`).then(type => (this.selectedView = type || `tiles`));
-        } else {
-            this.selectedView = `list`;
+            this.storage.get<MotionListviewType>(`motionListView`).then(type => (this.selectedView = type ?? `tiles`));
         }
     }
 }

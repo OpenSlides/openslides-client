@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         private router: Router,
         private operator: OperatorService,
         private activeMeeting: ActiveMeetingService,
-        private meetingSettingService: MeetingSettingsService,
+        private meetingSettingsService: MeetingSettingsService,
         private fallbackRoutesService: FallbackRoutesService,
         private osRouter: OpenSlidesRouterService
     ) {}
@@ -113,7 +113,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         if (!meetingSetting) {
             return true;
         }
-        return this.meetingSettingService.instant(meetingSetting) as boolean;
+        return this.meetingSettingsService.instant(meetingSetting) as boolean;
     }
 
     /**

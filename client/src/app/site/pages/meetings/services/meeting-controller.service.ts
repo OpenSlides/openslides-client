@@ -8,7 +8,6 @@ import { BaseController } from 'src/app/site/base/base-controller';
 import { Identifiable } from '../../../../domain/interfaces';
 import { Meeting } from '../../../../domain/models/meetings/meeting';
 import { MeetingRepositoryService } from '../../../../gateways/repositories/meeting-repository.service';
-import { ControllerServiceCollectorService } from '../../../services/controller-service-collector.service';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ViewUser } from '../view-models/view-user';
 
@@ -23,11 +22,8 @@ export interface MeetingUserModifiedFields {
     providedIn: `root`
 })
 export class MeetingControllerService extends BaseController<ViewMeeting, Meeting> {
-    public constructor(
-        repositoryServiceCollector: ControllerServiceCollectorService,
-        protected override repo: MeetingRepositoryService
-    ) {
-        super(repositoryServiceCollector, Meeting, repo);
+    public constructor(protected override repo: MeetingRepositoryService) {
+        super(Meeting, repo);
     }
 
     public create(...payload: any[]): Action<Identifiable[]> {

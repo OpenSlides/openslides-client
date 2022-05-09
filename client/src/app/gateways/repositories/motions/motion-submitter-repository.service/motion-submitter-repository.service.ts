@@ -6,7 +6,6 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { ViewMotionSubmitter } from '../../../../site/pages/meetings/pages/motions/modules/submitters/view-models/view-motion-submitter';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionSubmitterAction } from './motion-submitter.action';
 
 @Injectable({
@@ -16,8 +15,8 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
     ViewMotionSubmitter,
     MotionSubmitter
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionSubmitter);
+    constructor() {
+        super(MotionSubmitter);
     }
 
     public override getFieldsets(): Fieldsets<MotionSubmitter> {

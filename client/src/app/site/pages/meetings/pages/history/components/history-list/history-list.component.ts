@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
@@ -17,7 +16,6 @@ import {
 } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
@@ -64,8 +62,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     private _fqid: Fqid | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private viewModelStore: ViewModelStoreService,
         private formBuilder: FormBuilder,
         private motionRepo: MotionRepositoryService,
@@ -74,7 +70,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         private operator: OperatorService,
         private historyService: HistoryService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         this.motionSelectForm = this.formBuilder.group({
             motion: []

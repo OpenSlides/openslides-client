@@ -1,10 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
@@ -45,13 +43,11 @@ export class MotionPersonalNoteComponent extends BaseComponent {
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         formBuilder: FormBuilder,
         private repo: PersonalNoteControllerService,
         private pdfService: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.personalNoteForm = formBuilder.group({
             note: [``]
         });

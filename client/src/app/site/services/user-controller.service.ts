@@ -16,7 +16,6 @@ import { User } from '../../domain/models/users/user';
 import { Action } from '../../gateways/actions';
 import { BaseController } from '../base/base-controller';
 import { ViewUser } from '../pages/meetings/view-models/view-user';
-import { ControllerServiceCollectorService } from './controller-service-collector.service';
 
 /**
  * type for determining the user name from a string during import.
@@ -29,12 +28,11 @@ type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
 })
 export class UserControllerService extends BaseController<ViewUser, User> {
     public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         private presenter: GetActiveUsersAmountPresenterService,
         private operator: OperatorService
     ) {
-        super(controllerServiceCollector, User, repo);
+        super(User, repo);
     }
 
     ///////////////////

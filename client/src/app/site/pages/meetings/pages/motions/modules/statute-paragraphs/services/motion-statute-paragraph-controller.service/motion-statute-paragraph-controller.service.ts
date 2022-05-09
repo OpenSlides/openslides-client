@@ -3,7 +3,6 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { MotionStatuteParagraphRepositoryService } from 'src/app/gateways/repositories/motions';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewMotionStatuteParagraph } from '../../view-models';
 
@@ -14,11 +13,8 @@ export class MotionStatuteParagraphControllerService extends BaseMeetingControll
     ViewMotionStatuteParagraph,
     MotionStatuteParagraph
 > {
-    constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionStatuteParagraphRepositoryService
-    ) {
-        super(controllerServiceCollector, MotionStatuteParagraph, repo);
+    constructor(protected override repo: MotionStatuteParagraphRepositoryService) {
+        super(MotionStatuteParagraph, repo);
     }
 
     public create(...statuteParagraphs: Partial<MotionStatuteParagraph>[]): Promise<Identifiable[]> {

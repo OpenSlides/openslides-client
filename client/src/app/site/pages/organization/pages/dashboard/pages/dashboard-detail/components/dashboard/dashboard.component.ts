@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
 @Component({
@@ -32,13 +30,8 @@ export class DashboardComponent extends BaseComponent {
     public futureMeetings: ViewMeeting[] = [];
     public noDateMeetings: ViewMeeting[] = [];
 
-    public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        private meetingRepo: MeetingControllerService,
-        private themeService: ThemeService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor(private meetingRepo: MeetingControllerService, private themeService: ThemeService) {
+        super();
         super.setTitle(`Calendar`);
         this.loadMeetings();
     }

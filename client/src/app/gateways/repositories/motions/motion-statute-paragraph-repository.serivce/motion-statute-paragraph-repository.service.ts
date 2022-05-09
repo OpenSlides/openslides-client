@@ -6,7 +6,6 @@ import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/mo
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionStatuteParagraphAction } from './motion-statute-paragraph.action';
 
 @Injectable({
@@ -16,8 +15,8 @@ export class MotionStatuteParagraphRepositoryService extends BaseMeetingRelatedR
     ViewMotionStatuteParagraph,
     MotionStatuteParagraph
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionStatuteParagraph);
+    constructor() {
+        super(MotionStatuteParagraph);
     }
 
     public override getFieldsets(): Fieldsets<MotionStatuteParagraph> {

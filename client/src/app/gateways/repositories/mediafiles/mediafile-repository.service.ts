@@ -7,7 +7,6 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
 
 @Injectable({
@@ -18,11 +17,8 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         return this.activeMeetingIdService.meetingId!;
     }
 
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService
-    ) {
-        super(repositoryServiceCollector, Mediafile);
+    public constructor(private activeMeetingIdService: ActiveMeetingIdService) {
+        super(Mediafile);
 
         this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile) => this.languageCollator.compare(a.title, b.title);
     }

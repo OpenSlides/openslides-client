@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog/services/choice.service';
 
@@ -40,8 +38,6 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     ];
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         public committeeController: CommitteeControllerService,
         public operator: OperatorService,
         public filterService: CommitteeFilterService,
@@ -51,7 +47,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         private choiceService: ChoiceService,
         private meetingRepo: MeetingControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Committees`);
         this.canMultiSelect = true;
     }

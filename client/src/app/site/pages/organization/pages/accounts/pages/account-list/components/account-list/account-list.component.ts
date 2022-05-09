@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 
 import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
@@ -38,8 +36,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     ];
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         public readonly controller: AccountControllerService,
         public readonly filterService: AccountFilterService,
         public readonly sortService: AccountSortService,
@@ -48,7 +44,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private meetingRepo: MeetingControllerService,
         private choiceService: ChoiceService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
     }

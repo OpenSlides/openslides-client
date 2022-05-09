@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ThemeBuilderDialogService } from '../../../../modules/theme-builder-dialog/services/theme-builder-dialog.service';
@@ -33,13 +31,11 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     ];
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         public readonly repo: ThemeControllerService,
         private dialog: ThemeBuilderDialogService,
         private prompt: PromptService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         super.setTitle(`Design`);
         this.canMultiSelect = true;
     }

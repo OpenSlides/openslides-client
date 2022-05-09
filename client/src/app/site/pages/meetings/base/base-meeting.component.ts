@@ -1,11 +1,10 @@
 import { Directive } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 
 import { ActiveMeetingService } from '../services/active-meeting.service';
 import { ActiveMeetingIdService } from '../services/active-meeting-id.service';
-import { MeetingComponentServiceCollectorService } from '../services/meeting-component-service-collector.service';
 import { MeetingSettingsService } from '../services/meeting-settings.service';
 import { ViewMeeting } from '../view-models/view-meeting';
 
@@ -19,29 +18,15 @@ export abstract class BaseMeetingComponent extends BaseComponent {
         return this.activeMeetingService.meeting;
     }
 
-    /**
-     * @deprecated Typo: use `meetingSettingsService` instead
-     */
-    protected get meetingSettingService(): MeetingSettingsService {
-        return this.componentServiceCollector.meetingSettingsService;
-    }
+    protected meetingSettingsService: MeetingSettingsService;
+    protected activeMeetingIdService: ActiveMeetingIdService;
+    protected activeMeetingService: ActiveMeetingService;
 
-    protected get meetingSettingsService(): MeetingSettingsService {
-        return this.componentServiceCollector.meetingSettingsService;
-    }
-
-    protected get activeMeetingIdService(): ActiveMeetingIdService {
-        return this.componentServiceCollector.activeMeetingIdService;
-    }
-
-    protected get activeMeetingService(): ActiveMeetingService {
-        return this.componentServiceCollector.activeMeetingService;
-    }
-
-    public constructor(
-        public override componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor() {
+        super();
+        const injector = AppInjector.getInjector();
+        this.meetingSettingsService = injector.get(MeetingSettingsService);
+        this.activeMeetingIdService = injector.get(ActiveMeetingIdService);
+        this.activeMeetingService = injector.get(ActiveMeetingService);
     }
 }

@@ -10,19 +10,14 @@ import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../site/services/
 import { OperatorService } from '../../site/services/operator.service';
 import { BaseRepository } from './base-repository';
 import { CommitteeAction } from './committees/committee.action';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { UserRepositoryService } from './users/user-repository.service';
 
 @Injectable({
     providedIn: `root`
 })
 export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Committee> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private operator: OperatorService,
-        private userRepo: UserRepositoryService
-    ) {
-        super(repositoryServiceCollector, Committee);
+    public constructor(private operator: OperatorService, private userRepo: UserRepositoryService) {
+        super(Committee);
     }
 
     public getTitle = (viewCommittee: ViewCommittee) => viewCommittee.name;

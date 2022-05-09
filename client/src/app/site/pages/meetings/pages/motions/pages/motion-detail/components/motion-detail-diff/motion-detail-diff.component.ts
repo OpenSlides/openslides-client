@@ -1,12 +1,10 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -89,8 +87,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private diff: MotionDiffService,
         private lineNumbering: LineNumberingService,
         private recoRepo: MotionChangeRecommendationControllerService,
@@ -100,7 +96,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         private promptService: PromptService,
         private dialog: MotionChangeRecommendationDialogService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this.lineLength = lineLength));
         this.meetingSettingsService.get(`motions_preamble`).subscribe(preamble => (this.preamble = preamble));
     }

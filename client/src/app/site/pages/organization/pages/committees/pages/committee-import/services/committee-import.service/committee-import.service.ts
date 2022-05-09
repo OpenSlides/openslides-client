@@ -31,7 +31,6 @@ import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
@@ -82,7 +81,6 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
     public override requiredHeaderLength = 1;
 
     public constructor(
-        serviceCollector: ImportServiceCollectorService,
         private exporter: CsvExportService,
         private repo: CommitteeControllerService,
         organizationTagRepo: OrganizationTagControllerService,
@@ -91,7 +89,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         operator: OperatorService,
         presenter: SearchUsersByNameOrEmailPresenterService
     ) {
-        super(serviceCollector);
+        super();
         const userSearchService = new CommitteeUserSearchService(presenter);
         this.registerBeforeImportHandler(ORGANIZATION_TAG_IDS, {
             repo: organizationTagRepo,

@@ -1,13 +1,11 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
@@ -67,15 +65,13 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         public repo: MotionCategoryControllerService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService,
         private treeService: TreeService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.listStorageIndex = CATEGORY_LIST_STORAGE_INDEX;
 
         this.createForm = this.formBuilder.group({

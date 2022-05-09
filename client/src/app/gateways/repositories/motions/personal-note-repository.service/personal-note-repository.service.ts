@@ -7,7 +7,6 @@ import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base
 import { ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { PersonalNoteAction } from './personal-note.action';
 
 /**
@@ -16,8 +15,8 @@ import { PersonalNoteAction } from './personal-note.action';
     providedIn: `root`
 })
 export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<ViewPersonalNote, PersonalNote> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, PersonalNote);
+    public constructor() {
+        super(PersonalNote);
     }
 
     public getTitle = (viewPersonalNote: ViewPersonalNote) => this.getVerboseName();

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { Assignment } from '../../../../domain/models/assignments/assignment';
 import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentAction } from './assignment.action';
 
 @Injectable({
@@ -17,11 +15,8 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     ViewAssignment,
     Assignment
 > {
-    constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Assignment, agendaItemRepo);
+    constructor() {
+        super(Assignment);
     }
 
     public override getFieldsets(): Fieldsets<Assignment> {

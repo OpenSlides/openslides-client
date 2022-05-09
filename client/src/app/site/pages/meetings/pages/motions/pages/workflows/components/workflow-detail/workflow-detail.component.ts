@@ -2,14 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, Vie
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/motions/motion-state';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
@@ -158,8 +156,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
     ] as StatePerm[];
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private promptService: PromptService,
         private dialog: MatDialog,
         private workflowRepo: MotionWorkflowControllerService,
@@ -167,7 +163,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         private exporter: WorkflowExportService,
         private cd: ChangeDetectorRef
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public onIdFound(id: Id | null): void {

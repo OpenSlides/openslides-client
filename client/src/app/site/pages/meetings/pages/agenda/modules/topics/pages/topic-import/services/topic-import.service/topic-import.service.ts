@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
+import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
 import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { DurationService } from 'src/app/site/services/duration.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicExportService } from '../topic-export.service';
@@ -35,12 +35,11 @@ export class TopicImportService extends BaseImportService<Topic> {
      * @param repo: The Agenda repository service
      */
     public constructor(
-        serviceCollector: ImportServiceCollectorService,
         private durationService: DurationService,
         private repo: TopicRepositoryService,
         private exporter: TopicExportService
     ) {
-        super(serviceCollector);
+        super();
     }
 
     public downloadCsvExample(): void {
@@ -108,8 +107,8 @@ export class TopicImportService extends BaseImportService<Topic> {
      * @param data a string as produced by textArea input
      */
     public parseTextArea(data: string): void {
+        const newEntries: { [importTrackId: number]: ImportModel<any> } = {};
         const lines = data.split(`\n`);
-        const csvLines = [];
         for (let i = 0; i < lines.length; ++i) {
             const line = lines[i];
             if (!line.length) {
@@ -119,8 +118,8 @@ export class TopicImportService extends BaseImportService<Topic> {
                 title: line,
                 agenda_type: AgendaItemType.COMMON
             };
-            csvLines.push(topic);
+            newEntries[i + 1] = new ImportModel({ model: topic, importTrackId: i + 1 });
         }
-        this.addLines(...csvLines);
+        this.setParsedEntries(newEntries);
     }
 }

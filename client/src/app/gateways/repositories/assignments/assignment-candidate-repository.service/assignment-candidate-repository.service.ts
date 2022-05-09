@@ -7,7 +7,6 @@ import { ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assig
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { AssignmentCandidate } from '../../../../domain/models/assignments/assignment-candidate';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentCandidateAction } from './assignment-candidate.action';
 
 @Injectable({
@@ -17,8 +16,8 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, AssignmentCandidate);
+    constructor() {
+        super(AssignmentCandidate);
     }
 
     public override getFieldsets(): Fieldsets<AssignmentCandidate> {

@@ -15,9 +15,8 @@ import {
 } from 'src/app/site/services/model-request-builder';
 
 import { Motion } from '../../../../domain/models/motions/motion';
-import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
 
@@ -35,11 +34,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      */
     protected sortProperty: SortProperty = `number`;
 
-    constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Motion, agendaItemRepo);
+    constructor() {
+        super(Motion);
         this.meetingSettingsService.get(`motions_default_sorting`).subscribe(conf => {
             this.sortProperty = conf as SortProperty;
             this.setConfigSortFn();
@@ -257,10 +253,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `list_of_speakers_id`,
             `agenda_item_id`, // for add/remove from agenda,
             { templateField: `amendment_paragraph_$` },
-            `origin_id`,
             `all_origin_ids`,
             `derived_motion_ids`,
             `poll_ids`,
+            `origin_id`,
             `sort_weight`,
             `sort_parent_id`,
             `state_id`,

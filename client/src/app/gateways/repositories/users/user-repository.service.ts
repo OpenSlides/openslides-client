@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Fqid } from 'src/app/domain/definitions/key-types';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 
 import { Id } from '../../../domain/definitions/key-types';
@@ -13,9 +11,9 @@ import { toDecimal } from '../../../infrastructure/utils';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
 import { Action } from '../../actions';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
+import { UserAction } from './user-action';
 
-export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid };
+export type RawUser = FullNameInformation & Identifiable & Displayable;
 
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
@@ -52,11 +50,8 @@ export type FullNameInformation = ShortNameInformation & LevelAndNumberInformati
     providedIn: `root`
 })
 export class UserRepositoryService extends BaseRepository<ViewUser, User> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService
-    ) {
-        super(repositoryServiceCollector, User);
+    public constructor(private activeMeetingIdService: ActiveMeetingIdService) {
+        super(User);
     }
 
     /**

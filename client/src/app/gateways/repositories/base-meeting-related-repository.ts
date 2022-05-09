@@ -1,3 +1,5 @@
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
+
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { BaseViewModel } from '../../site/base/base-view-model';
@@ -6,7 +8,6 @@ import { ActiveMeetingIdService } from '../../site/pages/meetings/services/activ
 import { MeetingSettingsService } from '../../site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting';
 import { BaseRepository } from './base-repository';
-import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
 /**
  * Extension of the base repository for all meeting specific models. Provides access
@@ -20,16 +21,8 @@ export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M ex
         return this.activeMeetingIdService.meetingId;
     }
 
-    protected get activeMeetingIdService(): ActiveMeetingIdService {
-        return this.repositoryMeetingServiceCollector.activeMeetingIdService;
-    }
-
     protected get activeMeeting(): ViewMeeting | null {
         return this.activeMeetingService.meeting;
-    }
-
-    protected get activeMeetingService(): ActiveMeetingService {
-        return this.repositoryMeetingServiceCollector.activeMeetingService;
     }
 
     protected get currentDefaultGroupId(): Id | null {
@@ -40,20 +33,22 @@ export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M ex
         return this.activeMeeting?.admin_group_id || null;
     }
 
-    protected get meetingSettingsService(): MeetingSettingsService {
-        return this.repositoryMeetingServiceCollector.meetingSettingsService;
-    }
+    // Services which are injected manually to be available in all subclasses
+    protected activeMeetingIdService: ActiveMeetingIdService;
+    protected activeMeetingService: ActiveMeetingService;
+    protected meetingSettingsService: MeetingSettingsService;
 
-    public constructor(
-        private repositoryMeetingServiceCollector: RepositoryMeetingServiceCollectorService,
-        baseModelCtor: ModelConstructor<M>
-    ) {
-        super(repositoryMeetingServiceCollector, baseModelCtor);
+    public constructor(baseModelCtor: ModelConstructor<M>) {
+        super(baseModelCtor);
+        const injector = AppInjector.getInjector();
+        this.activeMeetingIdService = injector.get(ActiveMeetingIdService);
+        this.activeMeetingService = injector.get(ActiveMeetingService);
+        this.meetingSettingsService = injector.get(MeetingSettingsService);
     }
 
     protected override createViewModel(model: M): V {
         const viewModel = super.createViewModel(model);
-        viewModel.getActiveMeetingId = () => this.repositoryMeetingServiceCollector.activeMeetingIdService.meetingId;
+        viewModel.getActiveMeetingId = () => this.activeMeetingIdService.meetingId;
         return viewModel;
     }
 }

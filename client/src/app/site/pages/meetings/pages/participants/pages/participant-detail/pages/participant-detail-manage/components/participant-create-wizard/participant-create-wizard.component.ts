@@ -2,7 +2,6 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
@@ -10,7 +9,6 @@ import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/prese
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
@@ -119,8 +117,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _currentUser: ViewUser | null = null;
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
         fb: FormBuilder,
         public readonly repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
@@ -128,7 +124,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         private presenter: SearchUsersByNameOrEmailPresenterService,
         private organizationSettingsService: OrganizationSettingsService
     ) {
-        super(componentServiceCollector, translate);
+        super();
         this.createUserForm = fb.group(
             {
                 username: [``],

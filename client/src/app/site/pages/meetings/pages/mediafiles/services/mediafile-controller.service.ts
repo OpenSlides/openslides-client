@@ -6,18 +6,14 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewMediafile } from '../view-models';
 import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 
 @Injectable({ providedIn: MediafileCommonServiceModule })
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {
-    constructor(
-        protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MediafileRepositoryService
-    ) {
-        super(controllerServiceCollector, Mediafile, repo);
+    constructor(protected override repo: MediafileRepositoryService) {
+        super(Mediafile, repo);
     }
 
     public move(files: Identifiable[], directoryId: Id | null): Promise<void> {

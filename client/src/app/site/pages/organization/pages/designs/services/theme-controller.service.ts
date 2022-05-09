@@ -5,7 +5,6 @@ import { Theme } from 'src/app/domain/models/theme/theme';
 import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
 
 import { ViewTheme } from '../view-models';
 import { ThemeCommonServiceModule } from './theme-common-service.module';
@@ -15,11 +14,10 @@ import { ThemeCommonServiceModule } from './theme-common-service.module';
 })
 export class ThemeControllerService extends BaseController<ViewTheme, Theme> {
     public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
         protected override repo: ThemeRepositoryService,
         private orgaRepo: OrganizationControllerService
     ) {
-        super(controllerServiceCollector, Theme, repo);
+        super(Theme, repo);
     }
 
     public create(...themes: any[]): Promise<Identifiable[]> {

@@ -5,15 +5,14 @@ import { ViewMotionComment } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCommentAction } from './motion-comment.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository<ViewMotionComment, MotionComment> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionComment);
+    constructor() {
+        super(MotionComment);
     }
 
     public getTitle = (viewMotionComment: ViewMotionComment) => `Comment`;

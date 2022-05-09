@@ -7,18 +7,14 @@ import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { MeetingControllerServiceCollectorService } from '../../../../../services/meeting-controller-service-collector.service';
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
 @Injectable({
     providedIn: `root`
 })
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
-    constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: SpeakerRepositoryService
-    ) {
-        super(controllerServiceCollector, Speaker, repo);
+    constructor(protected override repo: SpeakerRepositoryService) {
+        super(Speaker, repo);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

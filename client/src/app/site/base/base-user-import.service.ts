@@ -1,16 +1,11 @@
 import { Directive } from '@angular/core';
 
 import { User } from '../../domain/models/users/user';
-import { ImportServiceCollectorService } from '../services/import-service-collector.service';
 import { BaseImportService } from './base-import.service';
 
 @Directive()
 export abstract class BaseUserImportService extends BaseImportService<User> {
     public override requiredHeaderLength = 3;
-
-    public constructor(importServiceCollector: ImportServiceCollectorService) {
-        super(importServiceCollector);
-    }
 
     protected override pipeParseValue(value: string, header: keyof User): any {
         if (header === `is_active` || header === `is_physical_person`) {

@@ -1,12 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';
@@ -57,13 +55,11 @@ export class PollCollectionComponent<C extends BaseViewModel> extends BaseCompon
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private repo: PollControllerService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     public ngOnInit(): void {

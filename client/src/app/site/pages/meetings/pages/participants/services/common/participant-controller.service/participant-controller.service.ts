@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
@@ -15,7 +15,6 @@ import {
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
@@ -43,15 +42,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);
 
     public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         private userController: UserControllerService,
-        private userDeleteDialog: UserDeleteDialogService,
+        private prompt: UserDeleteDialogService,
         private presenter: GetUserScopePresenterService,
         private userService: UserService,
         private actions: ActionService
     ) {
-        super(controllerServiceCollector, User, repo);
+        super(User, repo);
         repo.getViewModelListObservable().subscribe(users => {
             const meetingUsers = users.filter(user => user.meeting_ids.includes(this.activeMeetingId));
             this._participantListSubject.next(meetingUsers);
@@ -72,11 +70,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
         if (typeof patch === `function`) {
-            const updatePatch = (user: ViewUser) => {
-                const participantPayload = patch(user);
-                return this.validatePayload(participantPayload);
-            };
-            return this.repo.update(updatePatch, ...users);
+            return this.repo.update(patch, ...users);
         }
         return this.repo.update(this.validatePayload(patch as Partial<User>), ...users);
     }
@@ -231,15 +225,15 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const toRemove = users.map(user => user.id).difference(toDelete);
         const toRemoveUsers = toRemove.map(id => this.getViewModel(id) as ViewUser);
 
-        const prompt = await this.userDeleteDialog.open({ toDelete: toDeleteUsers, toRemove: toRemoveUsers });
-        const answer = await firstValueFrom(prompt.afterClosed());
-        if (answer) {
+        if (await this.prompt.open({ toDelete: toDeleteUsers, toRemove: toRemoveUsers })) {
             const patch = { group_$_ids: { [this.activeMeetingId!]: [] } };
             await this.delete(...toDeleteUsers)
                 .concat(this.update(patch, ...toRemoveUsers))
                 .resolve();
+            return true;
+        } else {
+            return false;
         }
-        return answer;
     }
 
     /**
@@ -285,13 +279,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         };
         const identifiable = (await this.create(newUserPayload))[0];
         const getNameFn = () => this.userController.getShortName(newUser);
-        return {
-            id: identifiable.id,
-            ...newUser,
-            fqid: `${User.COLLECTION}/${identifiable.id}`,
-            getTitle: getNameFn,
-            getListTitle: getNameFn
-        };
+        return { id: identifiable.id, ...newUser, getTitle: getNameFn, getListTitle: getNameFn };
     }
 
     protected override onMeetingIdChanged(): void {
@@ -301,20 +289,17 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     private validatePayload(participant: Partial<User>): any {
         return {
             ...participant,
-            structure_level_$: participant.structure_level_$ || {
-                [this.activeMeetingId!]: participant.structure_level
-            },
-            group_$_ids: participant.group_$_ids || { [this.activeMeetingId!]: participant.group_ids },
-            number_$: participant.number_$ || { [this.activeMeetingId!]: participant.number },
-            vote_weight_$: participant.vote_weight_$ || {
-                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any)
-            },
-            vote_delegated_$_to_id: participant.vote_delegated_$_to_id || {
-                [this.activeMeetingId!]: participant.vote_delegated_to_id
-            },
-            vote_delegations_$_from_ids: participant.vote_delegations_$_from_ids || {
-                [this.activeMeetingId!]: participant.vote_delegations_from_ids
-            }
+            structure_level_$:
+                { [this.activeMeetingId!]: participant.structure_level } || participant.structure_level_$,
+            group_$_ids: { [this.activeMeetingId!]: participant.group_ids } || participant.group_$_ids,
+            number_$: { [this.activeMeetingId!]: participant.number } || participant.number_$,
+            vote_weight_$:
+                { [this.activeMeetingId!]: toDecimal(participant.vote_weight as any) } || participant.vote_weight_$,
+            vote_delegated_$_to_id:
+                { [this.activeMeetingId!]: participant.vote_delegated_to_id } || participant.vote_delegated_$_to_id,
+            vote_delegations_$_from_ids:
+                { [this.activeMeetingId!]: participant.vote_delegations_from_ids } ||
+                participant.vote_delegations_$_from_ids
         };
     }
 }

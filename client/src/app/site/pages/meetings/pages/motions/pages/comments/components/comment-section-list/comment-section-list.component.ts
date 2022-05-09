@@ -2,7 +2,6 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
@@ -11,7 +10,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
@@ -42,15 +40,13 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
     public groups: Observable<ViewGroup[]>;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
         private repo: MotionCommentSectionControllerService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
         private groupRepo: GroupControllerService
     ) {
-        super(componentServiceCollector, translate);
+        super();
 
         const form = {
             name: [``, Validators.required],

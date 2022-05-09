@@ -8,7 +8,6 @@ import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewAgendaItem } from '../../view-models';
 import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
@@ -17,11 +16,8 @@ import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.mod
     providedIn: AgendaItemCommonServiceModule
 })
 export class AgendaItemControllerService extends BaseMeetingControllerService<ViewAgendaItem, AgendaItem> {
-    constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: AgendaItemRepositoryService
-    ) {
-        super(controllerServiceCollector, AgendaItem, repo);
+    constructor(protected override repo: AgendaItemRepositoryService) {
+        super(AgendaItem, repo);
     }
 
     public update(update: any, item: ViewAgendaItem): Promise<void> {

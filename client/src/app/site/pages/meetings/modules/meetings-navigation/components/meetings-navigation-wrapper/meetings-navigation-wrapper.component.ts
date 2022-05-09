@@ -1,12 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { NotifyService } from 'src/app/gateways/notify.service';
 import { navItemAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -57,17 +55,15 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
      * Constructor
      */
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
         _loadFontService: LoadFontService, // just to initialize this service
         _notifyService: NotifyService, // just to initialize this service
-        protected override translate: TranslateService,
         private vp: ViewPortService,
         private mainMenuService: MainMenuService,
         private chatNotificationService: ChatNotificationService,
         private chatService: ChatService,
         private operator: OperatorService
     ) {
-        super(componentServiceCollector, translate);
+        super();
     }
 
     /**

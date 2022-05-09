@@ -1,11 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { AppInjector } from 'src/app/openslides-main-module/services/app-injector.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
@@ -18,7 +17,6 @@ import { AmendmentControllerService } from '../../../services/common/amendment-c
 import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
 import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { MotionDetailServiceCollectorService } from '../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { MotionDetailViewService } from '../services/motion-detail-view.service';
 
 @Directive()
@@ -83,56 +81,21 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     }
 
     ///////////////////////////////////////////////
-    /////// Getter to repos & services
+    /////// Repos & services
     ///////////////////////////////////////////////
 
-    protected get repo(): MotionControllerService {
-        return this.motionServiceCollector.motionRepo;
-    }
-
-    public get categoryRepo(): MotionCategoryControllerService {
-        return this.motionServiceCollector.categoryRepo;
-    }
-
-    public get workflowRepo(): MotionWorkflowControllerService {
-        return this.motionServiceCollector.workflowRepo;
-    }
-
-    public get participantRepo(): ParticipantControllerService {
-        return this.motionServiceCollector.participantRepo;
-    }
-
-    protected get amendmentRepo(): AmendmentControllerService {
-        return this.motionServiceCollector.amendmentRepo;
-    }
-
-    protected get blockRepo(): MotionBlockControllerService {
-        return this.motionServiceCollector.blockRepo;
-    }
-
-    protected get tagRepo(): TagControllerService {
-        return this.motionServiceCollector.tagRepo;
-    }
-
-    protected get statuteRepo(): MotionStatuteParagraphControllerService {
-        return this.motionServiceCollector.statuteRepo;
-    }
-
-    protected get changeRecoRepo(): MotionChangeRecommendationControllerService {
-        return this.motionServiceCollector.changeRecoRepo;
-    }
-
-    protected get motionLineNumbering(): MotionLineNumberingService {
-        return this.motionServiceCollector.motionLineNumbering;
-    }
-
-    protected get motionFormatService(): MotionFormatService {
-        return this.motionServiceCollector.motionFormatService;
-    }
-
-    protected get viewService(): MotionDetailViewService {
-        return this.motionServiceCollector.motionViewService;
-    }
+    protected repo: MotionControllerService;
+    protected amendmentRepo: AmendmentControllerService;
+    protected blockRepo: MotionBlockControllerService;
+    protected tagRepo: TagControllerService;
+    protected statuteRepo: MotionStatuteParagraphControllerService;
+    protected changeRecoRepo: MotionChangeRecommendationControllerService;
+    protected motionLineNumbering: MotionLineNumberingService;
+    protected motionFormatService: MotionFormatService;
+    protected viewService: MotionDetailViewService;
+    public categoryRepo: MotionCategoryControllerService;
+    public workflowRepo: MotionWorkflowControllerService;
+    public participantRepo: ParticipantControllerService;
 
     ///////////////////////////////////////////////
     /////// Settings variables
@@ -165,12 +128,21 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
     private _isEditing = false;
     private _motion: ViewMotion | null = null;
 
-    public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        protected override translate: TranslateService,
-        protected motionServiceCollector: MotionDetailServiceCollectorService
-    ) {
-        super(componentServiceCollector, translate);
+    public constructor() {
+        super();
+        const injector = AppInjector.getInjector();
+        this.repo = injector.get(MotionControllerService);
+        this.amendmentRepo = injector.get(AmendmentControllerService);
+        this.blockRepo = injector.get(MotionBlockControllerService);
+        this.tagRepo = injector.get(TagControllerService);
+        this.statuteRepo = injector.get(MotionStatuteParagraphControllerService);
+        this.changeRecoRepo = injector.get(MotionChangeRecommendationControllerService);
+        this.motionLineNumbering = injector.get(MotionLineNumberingService);
+        this.motionFormatService = injector.get(MotionFormatService);
+        this.viewService = injector.get(MotionDetailViewService);
+        this.categoryRepo = injector.get(MotionCategoryControllerService);
+        this.workflowRepo = injector.get(MotionWorkflowControllerService);
+        this.participantRepo = injector.get(ParticipantControllerService);
     }
 
     /**

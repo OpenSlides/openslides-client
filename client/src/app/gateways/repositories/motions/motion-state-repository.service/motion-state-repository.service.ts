@@ -5,15 +5,14 @@ import { ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionStateAction } from './motion-state.action';
 
 @Injectable({
     providedIn: `root`
 })
 export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<ViewMotionState, MotionState> {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MotionState);
+    constructor() {
+        super(MotionState);
     }
 
     public override getFieldsets(): Fieldsets<MotionState> {

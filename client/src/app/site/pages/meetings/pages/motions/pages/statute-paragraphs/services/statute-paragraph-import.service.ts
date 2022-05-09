@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
 import { BaseImportService } from 'src/app/site/base/base-import.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 
 import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
 import { statuteParagraphHeadersAndVerboseNames } from '../definitions/index';
@@ -30,10 +29,9 @@ export class StatuteParagraphImportService extends BaseImportService<MotionStatu
      */
     public constructor(
         private repo: MotionStatuteParagraphControllerService,
-        private exporter: StatuteParagraphCsvExportService,
-        serviceCollector: ImportServiceCollectorService
+        private exporter: StatuteParagraphCsvExportService
     ) {
-        super(serviceCollector);
+        super();
     }
 
     public downloadCsvExample(): void {
