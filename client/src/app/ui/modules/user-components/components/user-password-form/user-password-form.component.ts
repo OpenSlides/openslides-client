@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
-import { PasswordForm } from '../../../password-form';
+import { PasswordForm } from '../../definitions';
 import { Subscription } from 'rxjs';
 import { OperatorService } from '../../../../../site/services/operator.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';

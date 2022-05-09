@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { PasswordForm } from '../../definitions';
 import { PasswordValidator } from '../../validators';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 const UndesiredPasswords = [
     `123456`,
     `123456789`,
