@@ -10,6 +10,9 @@ import { VIDEO_MIMETYPES } from '../definitions/index';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { StructuredRelation } from '../../../../../../infrastructure/definitions/relations';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 
 export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public static COLLECTION = Mediafile.COLLECTION;
@@ -25,6 +28,17 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
 
     public get timestamp(): string | null {
         return this.mediafile.create_timestamp ? this.mediafile.create_timestamp : null;
+    }
+
+    /**
+     * Only use this if you are sure that you have a meeting mediafile
+     */
+    public get meeting_id(): Id {
+        const [collection, id] = collectionIdFromFqid(this.mediafile.owner_id);
+        if (collection != Meeting.COLLECTION) {
+            throw Error("Mediafile's owner_id is not a meeting");
+        }
+        return id;
     }
 
     // public formatForSearch(): SearchRepresentation {
