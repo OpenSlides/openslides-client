@@ -71,7 +71,7 @@
         grid-gap: 2em;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
-        .assignment-result-table {
+        .result-table {
 
             // display: block;
             th {
@@ -79,10 +79,14 @@
                 font-weight: initial;
             }
 
-            .result {
-                text-align: right !important;
-                padding-left: 1em;
+            tr {
+                height: 48px;
+                border-bottom: none !important;
+                .result {
+                    text-align: right !important;
+                }
             }
+
 
             tr.result-cell-definition {
                 text-align: right;
@@ -93,9 +97,9 @@
                 height: 0;
             }
 
-            .single-candidate {
-                white-space: pre;
-            }
+            // .single-candidate {
+            //     white-space: pre;
+            // }
         }
 
         .doughnut-chart {
