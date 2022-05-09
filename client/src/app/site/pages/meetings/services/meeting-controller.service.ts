@@ -46,7 +46,7 @@ export class MeetingControllerService extends BaseController<ViewMeeting, Meetin
         return this.repo.delete(...meetings);
     }
 
-    public duplicate(...meetings: (Partial<Meeting> & Identifiable)[]): Action<Identifiable[]> {
+    public duplicate(...meetings: (Partial<Meeting> & { meeting_id: Id })[]): Action<Identifiable[]> {
         return this.repo.duplicate(...meetings);
     }
 

@@ -85,7 +85,7 @@ export class CommitteeMeetingPreviewComponent {
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
-            await this.meetingRepo.duplicate(this.meeting).resolve();
+            await this.meetingRepo.duplicate({ meeting_id: this.meeting.id }).resolve();
         }
     }
 
