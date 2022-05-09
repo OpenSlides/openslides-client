@@ -59,38 +59,47 @@
 
 .result-wrapper {
     cursor: pointer;
-    display: grid;
-    grid-gap: 2em;
     margin: 2em;
     margin-top: 0;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
-    .assignment-result-table {
-        // display: block;
-        th {
-            text-align: right;
-            font-weight: initial;
-        }
-
-        tr.result-cell-definition {
-            text-align: right;
-        }
-
-        .entitled-users-row {
-            border-bottom: none;
-            height: 0;
-        }
-
-        .single-candidate {
-            white-space: pre;
-        }
+    .result-title {
+        text-align: left;
     }
 
-    .doughnut-chart {
-        display: block;
-    }
-}
+    .result-grid {
+        display: grid;
+        grid-gap: 2em;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
-.result-title {
-    text-align: center;
+        .assignment-result-table {
+
+            // display: block;
+            th {
+                text-align: right;
+                font-weight: initial;
+            }
+
+            .result {
+                text-align: right !important;
+                padding-left: 1em;
+            }
+
+            tr.result-cell-definition {
+                text-align: right;
+            }
+
+            .entitled-users-row {
+                border-bottom: none;
+                height: 0;
+            }
+
+            .single-candidate {
+                white-space: pre;
+            }
+        }
+
+        .doughnut-chart {
+            display: block;
+        }
+    }
 }

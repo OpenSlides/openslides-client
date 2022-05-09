@@ -71,16 +71,17 @@
     </table>
 
         <!-- Table with Chart -->
-        <div *ngIf="hasResults && canSeeResults && showChart">
+        <div *ngIf="hasResults && canSeeResults && showChart" class="result-wrapper">
             <h3 class="result-title">
                 <span class="candidate-name">
                     {{ tableData[0].votingOption | pollKeyVerbose | translate }}
                 </span>
+                <br>
                 <span class="user-subtitle" *ngIf="tableData[0].votingOptionSubtitle">
                     ({{ tableData[0].votingOptionSubtitle }})
                 </span>
             </h3>
-            <div class="doughnut-chart result-wrapper">
+            <div class="doughnut-chart result-grid">
                 <table class="assignment-result-table result-table">
                     <tbody>
                         <ng-container *ngFor="let row of tableData; let i = index">
@@ -90,7 +91,7 @@
                                         {{vote.vote | pollKeyVerbose | translate}}
                                     </td>
                                     <td>
-                                        <div class="single-result">
+                                        <div class="result">
                                             <span>
                                                 <span *ngIf="vote.showPercent">
                                                     {{ getVoteAmount(vote, row) | pollPercentBase: poll:row }}
@@ -109,7 +110,7 @@
                                         {{ row.votingOption | pollKeyVerbose | translate }}
                                     </td>
                                     <td>
-                                        <div class="single-result" [ngClass]="getVoteClass(vote)">
+                                        <div class="result" [ngClass]="getVoteClass(vote)">
                                             <span>
                                                 <span *ngIf="vote.showPercent">
                                                     {{ getVoteAmount(vote, row) | pollPercentBase: poll:row }}

@@ -83,7 +83,7 @@ export class AssignmentPollDetailContentComponent {
     }
 
     public get showChart(): boolean {
-        return this.poll.options.length === 1;
+        return this.poll.options.length === 1 && this.chartData.length > 0;
     }
 
     public get hasResults(): boolean {
@@ -111,7 +111,8 @@ export class AssignmentPollDetailContentComponent {
     }
 
     private setChartData(): void {
-        this._chartData = this.pollService.generateChartData(this.poll);
+        this._chartData = this.pollService.generateChartData(this.poll)
+            .filter(option => option.data[0] > 0);
     }
 
     public getVoteClass(votingResult: VotingResult): string {
