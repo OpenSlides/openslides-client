@@ -23,6 +23,7 @@ import { ChatAppConfig } from 'src/app/site/pages/meetings/pages/chat/chat.confi
 import { PollsAppConfig } from 'src/app/site/pages/meetings/pages/polls/polls.config';
 import { HomeAppConfig } from 'src/app/site/pages/meetings/pages/home/home.config';
 import { MeetingSettingsAppConfig } from 'src/app/site/pages/meetings/pages/meeting-settings/meeting-settings.config';
+import { HistoryAppConfig } from 'src/app/site/pages/meetings/pages/history/history.config';
 
 const servicesOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [ModelRequestBuilderService];
 
@@ -39,6 +40,7 @@ const appConfigs: AppConfig[] = [
     AgendaAppConfig,
     AssignmentsAppConfig,
     MotionsAppConfig,
+    HistoryAppConfig,
     ParticipantsAppConfig,
     PollsAppConfig,
     MediafileAppConfig,

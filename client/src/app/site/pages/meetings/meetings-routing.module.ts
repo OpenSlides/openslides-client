@@ -74,6 +74,11 @@ const routes: Routes = [
                 path: `chat`,
                 loadChildren: () => import(`./pages/chat/chat.module`).then(m => m.ChatModule),
                 canLoad: [PermissionGuard]
+            },
+            {
+                path: `history`,
+                loadChildren: () => import(`./pages/history/history.module`).then(m => m.HistoryModule),
+                canLoad: [PermissionGuard]
             }
         ]
     }

@@ -5,12 +5,12 @@ import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { LifecycleService } from '../../../services/lifecycle.service';
 import { MeetingControllerService } from './meeting-controller.service';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { BannerDefinition, BannerService } from 'src/app/site/services/banner.service';
 import { ArchiveStatusService } from './archive-status.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { getProjectorListSubscriptionConfig } from '../pages/projectors/config/model-subscription';
 import { getParticipantSubscriptionConfig } from '../pages/participants/config/model-subscription';
+import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
 
 const MEETING_DETAIL_SUBSCRIPTION = `meeting_detail`;
 const MEETING_DETAIL_GROUP_SUBSCRIPTION = `meeting_detail_group`; // Used for the active meeting service

@@ -3,7 +3,10 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { map } from 'rxjs';
 import { getAgendaSubscriptionConfig, getTopicSubscriptionConfig } from '../../config/model-subscription';
-import { getMotionSubscriptionConfig } from '../../../motions/config/model-subscription';
+import {
+    getMotionListSubscriptionConfig,
+    getMotionBlockSubscriptionConfig
+} from '../../../motions/config/model-subscription';
 import { getAssignmentSubscriptionConfig } from '../../../assignments/config/model-subscription';
 
 @Component({
@@ -17,7 +20,8 @@ export class AgendaMainComponent extends BaseModelRequestHandlerComponent {
             this.subscribeTo(
                 getAgendaSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getTopicSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
-                getMotionSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
+                getMotionListSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
+                getMotionBlockSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getAssignmentSubscriptionConfig(id, () => this.getNextMeetingIdObservable())
             );
         }

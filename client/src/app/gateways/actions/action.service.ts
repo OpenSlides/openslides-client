@@ -3,17 +3,34 @@ import { HttpService } from '../http.service';
 import { Action } from './action';
 import { ActionRequest, isActionError, isActionResponse } from './action-utils';
 
+type ActionFn = () => boolean;
+const ACTION_URL = `/system/action/handle_request`;
+
+let uniqueFnId = 0;
+
 @Injectable({
     providedIn: 'root'
 })
 export class ActionService {
-    private readonly ACTION_URL = `/system/action/handle_request`;
+    private readonly _beforeActionFnMap: { [index: number]: ActionFn } = {};
 
     public constructor(private http: HttpService) {}
 
+    public addBeforeActionFn(fn: () => boolean): number {
+        this._beforeActionFnMap[++uniqueFnId] = fn;
+        return uniqueFnId;
+    }
+
+    public removeBeforeActionFn(index: number): void {
+        delete this._beforeActionFnMap[index];
+    }
+
     public async sendRequests<T>(requests: ActionRequest[]): Promise<T[] | null> {
+        if (!this.isAllowed()) {
+            return null;
+        }
         console.log(`send requests:`, requests);
-        const response = await this.http.post<T>(this.ACTION_URL, requests);
+        const response = await this.http.post<T>(ACTION_URL, requests);
         if (isActionError(response)) {
             throw response.message;
         } else if (isActionResponse<T>(response)) {
@@ -31,6 +48,14 @@ export class ActionService {
 
     public create<T>(...requests: ActionRequest[]): Action<T> {
         return new Action<T>(r => this.sendRequests<T>(r) as any, ...requests);
+    }
+
+    private isAllowed(): boolean {
+        const functions = Object.values(this._beforeActionFnMap);
+        if (!functions.length) {
+            return true;
+        }
+        return functions.some(fn => !fn());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////

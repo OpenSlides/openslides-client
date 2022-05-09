@@ -143,54 +143,22 @@ export class NotifyService {
         });
     }
 
-    private async connect(meetingId: number): Promise<void> {
-        if (!meetingId) {
-            throw new Error(`Cannot connect to ICC, no meeting ID was provided`);
-        }
-
-        this.disconnect();
-
-        const iccMeeting = `${NOTIFY_PATH}?meeting_id=${meetingId}`;
-        this.httpEndpointService.registerEndpoint(ICC_ENDPOINT, iccMeeting, ICC_HEALTH_PATH, HttpMethod.GET);
-        const buildStreamFn = () =>
-            this.httpStreamService.create<NotifyResponse<any> | ChannelIdResponse>(ICC_ENDPOINT, {
-                onMessage: (notify: NotifyResponse<any> | ChannelIdResponse) => {
-                    console.log(`onMessage`, notify);
-                    if ((notify as ChannelIdResponse).channel_id) {
-                        this.handleChannelIdResponse(notify as ChannelIdResponse);
-                    } else {
-                        this.handleNotifyResponse(notify as NotifyResponse<any>);
-                    }
-                },
-                description: `NotifyService`
-            });
-        const { closeFn } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
-        this.connectionClosingFn = closeFn;
+    /**
+     * Returns a general observalbe of all notify messages.
+     */
+    public getObservable(): Observable<NotifyResponse<any>> {
+        return this.notifySubject.asObservable();
     }
 
-    private disconnect(): void {
-        if (this.connectionClosingFn) {
-            try {
-                this.connectionClosingFn();
-            } catch (e) {
-                console.warn(`Was not able to properly close previous ICC connection: `, e);
-            }
-            this.connectionClosingFn = undefined;
+    /**
+     * Returns an observable which gets updates for a specific topic.
+     * @param name The name of a topic to subscribe to.
+     */
+    public getMessageObservable<T>(name: string): Observable<NotifyResponse<T>> {
+        if (!this.messageSubjects[name]) {
+            this.messageSubjects[name] = new Subject<NotifyResponse<any>>();
         }
-    }
-
-    private handleChannelIdResponse(response: ChannelIdResponse): void {
-        this.channelId = response.channel_id;
-    }
-
-    private handleNotifyResponse(notify: NotifyResponse<any>): void {
-        notify = notify as NotifyResponse<any>;
-
-        notify.sendByThisUser = notify.sender_user_id === this.operator.operatorId || false;
-        this.notifySubject.next(notify);
-        if (this.messageSubjects[notify.name]) {
-            this.messageSubjects[notify.name].next(notify);
-        }
+        return this.messageSubjects[name].asObservable() as Observable<NotifyResponse<T>>;
     }
 
     /**
@@ -228,46 +196,78 @@ export class NotifyService {
         await this.send({ name, message: content, channels });
     }
 
+    public async connect(meetingId: number): Promise<void> {
+        if (!meetingId) {
+            throw new Error(`Cannot connect to ICC, no meeting ID was provided`);
+        }
+
+        this.disconnect();
+
+        const iccMeeting = `${NOTIFY_PATH}?meeting_id=${meetingId}`;
+        this.httpEndpointService.registerEndpoint(ICC_ENDPOINT, iccMeeting, ICC_HEALTH_PATH, HttpMethod.GET);
+        const buildStreamFn = () =>
+            this.httpStreamService.create<NotifyResponse<any> | ChannelIdResponse>(ICC_ENDPOINT, {
+                onMessage: (notify: NotifyResponse<any> | ChannelIdResponse) => {
+                    console.log(`onMessage`, notify);
+                    if ((notify as ChannelIdResponse).channel_id) {
+                        this.handleChannelIdResponse(notify as ChannelIdResponse);
+                    } else {
+                        this.handleNotifyResponse(notify as NotifyResponse<any>);
+                    }
+                },
+                description: `NotifyService`
+            });
+        const { closeFn } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
+        this.connectionClosingFn = closeFn;
+    }
+
+    public disconnect(): void {
+        if (this.connectionClosingFn) {
+            try {
+                this.connectionClosingFn();
+            } catch (e) {
+                console.warn(`Was not able to properly close previous ICC connection: `, e);
+            }
+            this.connectionClosingFn = undefined;
+        }
+    }
+
+    private handleChannelIdResponse(response: ChannelIdResponse): void {
+        this.channelId = response.channel_id;
+    }
+
+    private handleNotifyResponse(notify: NotifyResponse<any>): void {
+        notify = notify as NotifyResponse<any>;
+
+        notify.sendByThisUser = notify.sender_user_id === this.operator.operatorId || false;
+        this.notifySubject.next(notify);
+        if (this.messageSubjects[notify.name]) {
+            this.messageSubjects[notify.name].next(notify);
+        }
+    }
+
     /**
      * General send function for notify messages.
      */
     private async send<T>({ name, message, toAll, users, channels }: NotifySendOptions<T>): Promise<void> {
-        // if (!this.channelId) {
-        //     throw new Error(`No channel id!`);
-        // }
-        // const notify: NotifyRequest<T> = {
-        //     name,
-        //     message,
-        //     channel_id: this.channelId,
-        //     to_meeting: this.activeMeetingIdService.meetingId!
-        // };
-        // if (toAll === true) {
-        //     notify.to_all = true;
-        // }
-        // if (users) {
-        //     notify.to_users = users;
-        // }
-        // if (channels) {
-        //     notify.to_channels = channels;
-        // }
-        // await this.httpService.post<unknown>(PUBLISH_PATH, notify);
-    }
-
-    /**
-     * Returns a general observalbe of all notify messages.
-     */
-    public getObservable(): Observable<NotifyResponse<any>> {
-        return this.notifySubject.asObservable();
-    }
-
-    /**
-     * Returns an observable which gets updates for a specific topic.
-     * @param name The name of a topic to subscribe to.
-     */
-    public getMessageObservable<T>(name: string): Observable<NotifyResponse<T>> {
-        if (!this.messageSubjects[name]) {
-            this.messageSubjects[name] = new Subject<NotifyResponse<any>>();
+        if (!this.channelId) {
+            throw new Error(`No channel id!`);
         }
-        return this.messageSubjects[name].asObservable() as Observable<NotifyResponse<T>>;
+        const notify: NotifyRequest<T> = {
+            name,
+            message,
+            channel_id: this.channelId,
+            to_meeting: this.activeMeetingIdService.meetingId!
+        };
+        if (toAll === true) {
+            notify.to_all = true;
+        }
+        if (users) {
+            notify.to_users = users;
+        }
+        if (channels) {
+            notify.to_channels = channels;
+        }
+        await this.httpService.post<unknown>(PUBLISH_PATH, notify);
     }
 }

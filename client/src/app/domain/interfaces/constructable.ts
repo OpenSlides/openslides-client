@@ -1,7 +1,7 @@
 import { Fqid } from 'src/app/domain/definitions/key-types';
 export interface Constructable<T = any> {
     new (...args: any[]): T;
-    prototype: string;
+    prototype: T;
     name?: string;
 }
 

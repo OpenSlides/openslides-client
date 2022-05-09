@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, map, Observable } from 'rxjs';
+import { BehaviorSubject, filter, fromEvent, map, Observable, firstValueFrom } from 'rxjs';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { BannerDefinition, BannerService } from '../modules/site-wrapper/services/banner.service';
 
 export interface OfflineReasonConfig {
     /**
@@ -9,8 +11,18 @@ export interface OfflineReasonConfig {
     /**
      * A function to check if we are online again. This has to return a boolean.
      */
-    isOnlineFn: () => boolean | Promise<boolean>;
+    isOnlineFn: () => boolean | Promise<boolean> | Observable<boolean>;
 }
+
+const DEFAULT_OFFLINE_REASON: OfflineReasonConfig = {
+    reason: `Connection lost`,
+    isOnlineFn: () => fromEvent(window, `online`).pipe(map(event => !!event))
+};
+
+const OFFLINE_BANNER: BannerDefinition = {
+    text: _(`Offline mode`),
+    icon: `cloud_off`
+};
 
 /**
  * This service handles the status being connected to the internet.
@@ -41,6 +53,10 @@ export class ConnectionStatusService {
 
     private _config: OfflineReasonConfig | null = null;
 
+    public constructor(private bannerService: BannerService) {
+        fromEvent(window, 'offline').subscribe(() => this.goOffline(DEFAULT_OFFLINE_REASON));
+    }
+
     public isOffline(): boolean {
         return this._isOfflineSubject.value;
     }
@@ -60,23 +76,37 @@ export class ConnectionStatusService {
     }
 
     private deferCheckStillOffline(): void {
-        const timeout = Math.floor(Math.random() * 3000 + 2000);
-        console.warn(`Try to go online in ${timeout} ms`);
+        this._isOfflineSubject.next(true);
+        this.bannerService.addBanner(OFFLINE_BANNER);
+        if (this._config?.isOnlineFn instanceof Observable) {
+            const subscription = this._config.isOnlineFn.subscribe(is => {
+                if (is) {
+                    this.goOnline();
+                    subscription.unsubscribe();
+                }
+            });
+        } else {
+            const timeout = Math.floor(Math.random() * 3000 + 2000);
+            console.warn(`Try to go online in ${timeout} ms`);
+            setTimeout(async () => {
+                // Verifies that we are (still) offline
+                const isOnline = await this._config?.isOnlineFn();
+                console.warn(`Is online again? ->`, isOnline);
 
-        setTimeout(async () => {
-            // Verifies that we are (still) offline
-            const isOnline = await this._config?.isOnlineFn();
-            console.warn(`Is online again? ->`, isOnline);
+                if (isOnline) {
+                    this.goOnline();
+                } else {
+                    // continue trying.
+                    this.deferCheckStillOffline();
+                }
+            }, timeout);
+        }
+    }
 
-            if (isOnline) {
-                // stop trying.
-                this._config = null;
-                this._isOfflineSubject.next(false);
-            } else {
-                // continue trying.
-                this.deferCheckStillOffline();
-                this._isOfflineSubject.next(true);
-            }
-        }, timeout);
+    private goOnline(): void {
+        // stop trying.
+        this._config = null;
+        this._isOfflineSubject.next(false);
+        this.bannerService.removeBanner(OFFLINE_BANNER);
     }
 }
