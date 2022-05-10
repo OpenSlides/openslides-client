@@ -264,7 +264,8 @@ export class MotionSlideComponent
             crMode: this.crMode,
             changes,
             lineLength: this.lineLength,
-            highlightedLine: this.highlightedLine
+            highlightedLine: this.highlightedLine,
+            firstLine: 1
         });
     }
 
