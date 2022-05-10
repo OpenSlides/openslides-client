@@ -21,15 +21,6 @@ export class ViewMotionBlock extends BaseProjectableViewModel<MotionBlock> {
         return this.motions && !!this.motions.length && this.motions.every(motion => motion.isInFinalState());
     }
 
-    // /**
-    //  * Formats the category for search
-    //  *
-    //  * @override
-    //  */
-    // public formatForSearch(): SearchRepresentation {
-    //     return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
-    // }
-
     /**
      * Get the URL to the motion block
      *

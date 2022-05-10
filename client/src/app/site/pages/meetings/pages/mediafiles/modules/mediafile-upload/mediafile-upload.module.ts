@@ -10,6 +10,10 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MediaUploadContentModule } from 'src/app/ui/modules/media-upload-content/media-upload-content.module';
 import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PblNgridModule } from '@pebula/ngrid';
 
 @NgModule({
     declarations: [MediafileUploadComponent],
@@ -19,8 +23,12 @@ import { MatInputModule } from '@angular/material/input';
         MatMenuModule,
         MatIconModule,
         MatCardModule,
+        MatFormFieldModule,
+        PblNgridModule,
+        ReactiveFormsModule,
         HeadBarModule,
         MediaUploadContentModule,
+        SearchSelectorModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })

@@ -41,21 +41,6 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return id;
     }
 
-    // public formatForSearch(): SearchRepresentation {
-    //     const type = this.is_directory ? `directory` : this.mimetype;
-    //     const properties = [
-    //         { key: `Title`, value: this.getTitle() },
-    //         { key: `Type`, value: type },
-    //         { key: `Timestamp`, value: this.timestamp },
-    //         { key: `Size`, value: this.filesize ? this.filesize : `0` }
-    //     ];
-    //     return {
-    //         properties,
-    //         searchValue: properties.map(property => property.value),
-    //         type
-    //     };
-    // }
-
     public override getDetailStateUrl(): string {
         return this.url;
     }

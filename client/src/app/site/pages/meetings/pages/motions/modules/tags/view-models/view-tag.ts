@@ -11,10 +11,6 @@ export class ViewTag extends BaseViewModel<Tag> /* implements Searchable */ {
         return this._model;
     }
 
-    // public formatForSearch(): SearchRepresentation {
-    //     return { properties: [{ key: `Name`, value: this.name }], searchValue: [this.name] };
-    // }
-
     public override getDetailStateUrl(): string {
         return `${this.getActiveMeetingId()}/tags`;
     }

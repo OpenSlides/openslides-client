@@ -10,6 +10,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
     declarations: [LoginMaskComponent],
@@ -20,6 +21,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
         MatCardModule,
         MatFormFieldModule,
         MatInputModule,
+        MatIconModule,
         MatButtonModule,
         ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild()

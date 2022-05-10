@@ -82,9 +82,6 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
 
     public constructor(private formBuilder: FormBuilder, private translate: TranslateService) {
         super();
-        this.directorySelectionForm = this.formBuilder.group({
-            directoryId: this.directoryId || null
-        });
     }
 
     /**
@@ -92,6 +89,10 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
      * Creates a new uploadList as consumable data source
      */
     public async ngOnInit(): Promise<void> {
+        // Initialize the form here to have already the directory id and current directory
+        this.directorySelectionForm = this.formBuilder.group({
+            directoryId: this.directoryId || null
+        });
         // detect changes in the form
         this.subscriptions.push(
             this.directorySelectionForm.valueChanges.subscribe(formResult => {

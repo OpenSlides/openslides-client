@@ -4,6 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { Observable } from 'rxjs';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
 
 @Component({
     selector: 'os-mediafile-upload',
@@ -19,6 +22,10 @@ export class MediafileUploadComponent implements OnInit {
 
     public directoryId: number | null = null;
 
+    public get directoriesObservable(): Observable<ViewMediafile[]> {
+        return this.repo.getDirectoryListObservable();
+    }
+
     public get currentDirectory(): ViewMediafile | null {
         if (this.directoryId) {
             return this.repo.getViewModel(this.directoryId);
@@ -30,10 +37,15 @@ export class MediafileUploadComponent implements OnInit {
         return file => this.repo.createFile(file);
     }
 
+    public get availableGroups(): Observable<ViewGroup[]> {
+        return this.groupsRepo.getViewModelListObservable();
+    }
+
     public constructor(
         private location: Location,
         private route: ActivatedRoute,
-        private repo: MediafileControllerService
+        private repo: MediafileControllerService,
+        private groupsRepo: GroupControllerService
     ) {}
 
     public ngOnInit(): void {

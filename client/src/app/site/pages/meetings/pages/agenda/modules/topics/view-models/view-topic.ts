@@ -13,21 +13,6 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
         return this._model;
     }
 
-    // /**
-    //  * Formats the category for search
-    //  *
-    //  * @override
-    //  */
-    // public formatForSearch(): SearchRepresentation {
-    //     return {
-    //         properties: [
-    //             { key: `Title`, value: this.getTitle() },
-    //             { key: `Text`, value: this.text, trusted: true }
-    //         ],
-    //         searchValue: [this.getTitle(), this.text]
-    //     };
-    // }
-
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/agenda/topics/${this.sequential_number}`;
     }
