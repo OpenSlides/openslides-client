@@ -34,6 +34,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         const fileSelectionFields: TypedFieldset<Mediafile> = [`title`, `is_directory`];
         const fileCreationFields: TypedFieldset<Mediafile> = fileSelectionFields.concat([`parent_id`, `child_ids`]);
         const listFields: TypedFieldset<Mediafile> = fileCreationFields.concat([
+            `owner_id`,
             `mimetype`,
             `filesize`,
             `create_timestamp`,

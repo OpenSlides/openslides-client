@@ -3,6 +3,7 @@ import { Id, Fqid } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
+import { HasOwnerId } from '../../interfaces/has-owner-id';
 
 interface PdfInformation {
     pages?: number;
@@ -57,4 +58,4 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 }
-export interface Mediafile extends HasMeetingId, HasProjectionIds, HasListOfSpeakersId {}
+export interface Mediafile extends HasOwnerId, HasProjectionIds, HasListOfSpeakersId {}
