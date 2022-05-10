@@ -23,14 +23,6 @@ $action-row-height: 35px;
         }
     }
 
-    .chat-form-field {
-        .chat-form-field-prefix {
-            position: absolute;
-            z-index: 1000;
-            transform: translate(-1rem, -3rem) scale(0.75);
-        }
-    }
-
     .chat-group-label-wrapper {
         line-height: 1.25em;
         padding: 8px 16px;

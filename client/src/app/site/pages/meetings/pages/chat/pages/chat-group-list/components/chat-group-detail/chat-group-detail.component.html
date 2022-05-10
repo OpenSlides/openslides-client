@@ -60,38 +60,12 @@
         </div>
     </cdk-virtual-scroll-viewport>
 </div>
-<form (ngSubmit)="sendChatMessage()" *ngIf="hasWritePermissionsObservable | async">
-    <mat-form-field appearance="outline" class="chat-form-field full-width">
-        <div
-            *ngIf="isEditingChatMessageObservable | async"
-            matPrefix
-            class="chat-form-field-prefix flex-vertical-center"
-        >
-            {{ 'Edit' | translate }}
-            <button mat-icon-button type="button" [disableRipple]="true" (click)="cancelEditingChatMessage()">
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
-        <input #chatinput autocomplete="off" type="text" matInput [formControl]="newMessageForm" />
-        <mat-hint align="end" *ngIf="chatinput.value!.length >= chatMessageMaxLength - 100">
-            <span>{{ chatinput.value?.length || 0 }}/{{ chatMessageMaxLength }}</span>
-
-            <span class="warn" *ngIf="chatinput.value!.length > chatMessageMaxLength">
-                ({{ chatMessageMaxLength - chatinput.value!.length }})
-            </span>
-        </mat-hint>
-        <button
-            mat-icon-button
-            matSuffix
-            type="submit"
-            color="accent"
-            matTooltip=" {{ 'Send' | translate }}"
-            [disabled]="!chatinput.value?.trim()?.length || newMessageForm.invalid"
-        >
-            <mat-icon>send</mat-icon>
-        </button>
-    </mat-form-field>
-</form>
+<os-chat-group-detail-message-form
+    *ngIf="hasWritePermissionsObservable | async"
+    (messageSent)="sendChatMessage($event)"
+    (editingCanceled)="cancelEditingChatMessage()"
+    [currentMessage]="toEditChatMessageObservable | async"
+></os-chat-group-detail-message-form>
 
 <!-- The menu content -->
 <mat-menu #chatGroupMenu="matMenu">

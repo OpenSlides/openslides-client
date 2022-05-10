@@ -21,9 +21,15 @@ import { PipesModule } from 'src/app/ui/pipes';
 import { ChatGroupDialogModule } from '../../modules/chat-group-dialog/chat-group-dialog.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { ChatGroupDetailMessageFormComponent } from './components/chat-group-detail-message-form/chat-group-detail-message-form.component';
 
 @NgModule({
-    declarations: [ChatGroupListComponent, ChatGroupDetailComponent, ChatGroupDetailMessageComponent],
+    declarations: [
+        ChatGroupListComponent,
+        ChatGroupDetailComponent,
+        ChatGroupDetailMessageComponent,
+        ChatGroupDetailMessageFormComponent
+    ],
     imports: [
         CommonModule,
         ChatGroupListRoutingModule,

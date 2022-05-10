@@ -12,8 +12,7 @@ import {
 } from '@angular/core';
 import { CdkVirtualScrollViewport, ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { ViewChatGroup, ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
-import { FormControl, Validators, FormBuilder } from '@angular/forms';
-import { CHAT_MESSAGE_MAX_LENGTH } from 'src/app/gateways/repositories/chat/chat-message-repository.service';
+import { FormBuilder } from '@angular/forms';
 import { map, Observable, BehaviorSubject, of } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import {
@@ -47,18 +46,12 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     @Output()
     public backButtonClicked = new EventEmitter<void>();
 
-    public newMessageForm!: FormControl;
-
-    public get chatMessageMaxLength(): number {
-        return CHAT_MESSAGE_MAX_LENGTH;
-    }
-
     public get chatGroupObservable(): Observable<ViewChatGroup> {
         return this.repo.getViewModelObservable(this.chatGroup!.id) as Observable<ViewChatGroup>;
     }
 
-    public get isEditingChatMessageObservable(): Observable<boolean> {
-        return this._toEditChatMessageSubject.pipe(map(value => !!value));
+    public get toEditChatMessageObservable(): Observable<ViewChatMessage | null> {
+        return this._toEditChatMessageSubject.asObservable();
     }
 
     public get hasWritePermissionsObservable(): Observable<boolean> {
@@ -102,14 +95,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
             map(chatGroup => this.canManage || this.operator.isInGroupIds(...(chatGroup?.write_group_ids || [])))
         );
         this.chatNotificationService.openChatGroup(this.chatGroup.id);
-        this.newMessageForm = this.fb.control(``, [Validators.required, Validators.maxLength(CHAT_MESSAGE_MAX_LENGTH)]);
         this.subscriptions.push(
-            this.newMessageForm.valueChanges.subscribe(text => {
-                if (!text) {
-                    this.newMessageForm.markAsUntouched();
-                    this.newMessageForm.setErrors(null);
-                }
-            }),
             this.chatMessageRepo.getViewModelListObservable().subscribe(() => {
                 if (this._shouldScrollToBottom) {
                     this.scrollToBottom();
@@ -133,8 +119,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
         this._shouldScrollToBottom = this.isOnBottomOfChat;
     }
 
-    public async sendChatMessage(): Promise<void> {
-        const content = this.newMessageForm.value?.trim() as string;
+    public async sendChatMessage(content: string): Promise<void> {
         if (!content) {
             return;
         }
@@ -179,12 +164,10 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     }
 
     public prepareEditingChatMessage(message: ViewChatMessage): void {
-        this.newMessageForm.patchValue(message.content);
         this._toEditChatMessageSubject.next(message);
     }
 
     public cancelEditingChatMessage(): void {
-        this.newMessageForm.patchValue(``);
         this._toEditChatMessageSubject.next(null);
     }
 

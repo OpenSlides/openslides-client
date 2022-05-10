@@ -25,15 +25,17 @@
         <mat-form-field>
             <os-list-search-selector
                 formControlName="read_group_ids"
-                [multiple]="true"
                 placeholder="{{ 'Groups with read permissions' | translate }}"
+                [multiple]="true"
+                [inputListValues]="groupsRepo.getViewModelListObservable()"
             ></os-list-search-selector>
         </mat-form-field>
         <mat-form-field>
             <os-list-search-selector
                 formControlName="write_group_ids"
-                [multiple]="true"
                 placeholder="{{ 'Groups with write permissions' | translate }}"
+                [multiple]="true"
+                [inputListValues]="groupsRepo.getViewModelListObservable()"
             ></os-list-search-selector>
         </mat-form-field>
     </div>
