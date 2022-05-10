@@ -57,16 +57,6 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> /* impleme
         }
     }
 
-    // public formatForSearch(): SearchRepresentation {
-    //     return {
-    //         properties: [
-    //             { key: `Name`, value: this.name },
-    //             { key: `Prefix`, value: this.prefix }
-    //         ],
-    //         searchValue: [this.name, this.prefix]
-    //     };
-    // }
-
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/motions/categories/${this.sequential_number}`;
     }

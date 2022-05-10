@@ -27,6 +27,7 @@
         <span>{{ 'Upload files' | translate }}</span>
     </h1>
     <os-media-upload-content
+        [uploadFn]="uploadFn"
         (uploadSuccessEvent)="uploadSuccess($event)"
         (errorEvent)="uploadError($event)"
     ></os-media-upload-content>

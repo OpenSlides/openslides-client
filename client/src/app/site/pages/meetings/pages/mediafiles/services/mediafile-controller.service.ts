@@ -58,4 +58,8 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
     public getDirectoryList(): ViewMediafile[] {
         return this.getViewModelList().filter(file => file.is_directory);
     }
+
+    public getDirectoryListObservable(): Observable<ViewMediafile[]> {
+        return this.getViewModelListObservable().pipe(map(files => files.filter(file => file.is_directory)));
+    }
 }

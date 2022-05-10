@@ -10,10 +10,6 @@ export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParag
         return this._model;
     }
 
-    // public formatForSearch(): SearchRepresentation {
-    //     return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
-    // }
-
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/motions/statute-paragraphs`;
     }

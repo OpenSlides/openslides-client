@@ -53,10 +53,6 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
         return this.candidate_ids?.length || 0;
     }
 
-    // public formatForSearch(): SearchRepresentation {
-    //     return { properties: [{ key: `Title`, value: this.getTitle() }], searchValue: [this.getTitle()] };
-    // }
-
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/assignments/${this.sequential_number}`;
     }

@@ -124,7 +124,6 @@ export class FileUploadComponent implements OnInit {
     }
 
     public async onUploadButton(): Promise<void> {
-        console.log(`onUploadButton`);
         const files = [...this.filesSubject.value];
         this.errorMessage = ``;
         this.showProgress = true;

@@ -260,7 +260,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `state_id`,
             `workflow_id`,
             `text`,
-            `change_recommendation_ids`
+            `change_recommendation_ids`,
+            `attachment_ids`
         ]);
         return {
             [DEFAULT_FIELDSET]: detailFields,

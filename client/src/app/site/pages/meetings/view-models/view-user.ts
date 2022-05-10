@@ -222,23 +222,6 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
     // ### block end.
 
-    // /**
-    //  * Formats the category for search
-    //  *
-    //  * @override
-    //  */
-    // public formatForSearch(): SearchRepresentation {
-    //     const properties = [
-    //         { key: `Title`, value: this.getTitle() },
-    //         { key: `First name`, value: this.first_name },
-    //         { key: `Last name`, value: this.last_name },
-    //         { key: `Structure level`, value: this.structure_level() },
-    //         { key: `Number`, value: this.number() },
-    //         { key: `Delegation of vote`, value: this.delegationName() }
-    //     ];
-    //     return { properties, searchValue: properties.map(property => property.value) };
-    // }
-
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/users/${this.id}`;
     }

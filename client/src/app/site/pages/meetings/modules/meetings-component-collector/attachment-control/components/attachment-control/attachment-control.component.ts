@@ -15,6 +15,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { Identifiable } from 'src/app/domain/interfaces';
 
 @Component({
     selector: `os-attachment-control`,
@@ -32,12 +33,14 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
 
     public readonly permission = Permission;
 
-    private dialogRef: MatDialogRef<any> | null = null;
-
     /**
      * The file list that is necessary for the `SearchValueSelector`
      */
     public mediaFileList: Observable<ViewMediafile[]> | null = null;
+
+    public get uploadFn(): (file: any) => Promise<Identifiable> {
+        return file => this.repo.createFile(file);
+    }
 
     public get empty(): boolean {
         return !this.contentForm.value.length;
@@ -47,6 +50,8 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
     }
 
     public formGroup!: FormGroup;
+
+    private dialogRef: MatDialogRef<any> | null = null;
 
     public constructor(
         formBuilder: FormBuilder,

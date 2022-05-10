@@ -5,6 +5,11 @@ import { MediafileUploadComponent } from './components/mediafile-upload/mediafil
 const routes: Routes = [
     {
         path: ``,
+        pathMatch: `full`,
+        component: MediafileUploadComponent
+    },
+    {
+        path: `:id`,
         component: MediafileUploadComponent
     }
 ];
