@@ -265,7 +265,7 @@ export class MotionSlideComponent
             changes,
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine,
-            firstLine: 1
+            firstLine: this.data.data.start_line_number || 1
         });
     }
 
