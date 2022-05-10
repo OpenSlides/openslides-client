@@ -50,7 +50,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 label: this.translate.instant(`Active`),
                 options: [
                     { condition: true, label: `Is active` },
-                    { condition: false, label: this.translate.instant(`Is not active`) }
+                    { condition: [false, null], label: this.translate.instant(`Is not active`) }
                 ]
             },
             {
@@ -58,14 +58,14 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 label: this.translate.instant(`Last email send`),
                 options: [
                     { condition: true, label: this.translate.instant(`Got an email`) },
-                    { condition: false, label: this.translate.instant(`Didn't get an email`) }
+                    { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
                 ]
             },
             {
                 property: `isVoteWeightOne`,
                 label: this.translate.instant(`Vote weight`),
                 options: [
-                    { condition: false, label: this.translate.instant(`Has changed vote weight`) },
+                    { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
                     { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
                 ]
             },

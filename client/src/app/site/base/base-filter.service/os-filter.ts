@@ -45,4 +45,6 @@ export interface OsFilterIndicator<V> {
 /**
  * Define the type of a filter condition
  */
-export type OsFilterOptionCondition = null | string | boolean | number | number[];
+export type OsFilterOptionCondition = OsFilterOptionConditionType | OsFilterOptionConditionType[];
+
+export type OsFilterOptionConditionType = null | string | boolean | number;
