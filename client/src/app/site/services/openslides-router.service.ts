@@ -5,8 +5,6 @@ import { AuthService } from 'src/app/site/services/auth.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { Id } from 'src/app/domain/definitions/key-types';
 
-const URL_LOGIN_PREFIX = `/login`;
-
 enum UrlTarget {
     LOGIN = `login`,
     ORGANIZATION_LAYER = `organization_layer`
@@ -57,14 +55,10 @@ export class OpenSlidesRouterService {
     public navigateToLogin(): void {
         const url = this.router.routerState.snapshot.url;
 
-        // First, check if a user is already at the login page
-        if (url.startsWith(URL_LOGIN_PREFIX) && url.length >= URL_LOGIN_PREFIX.length) {
-            return;
+        // Navigate to login if the user is not already there
+        if (!url.startsWith(`/${UrlTarget.LOGIN}`)) {
+            this.router.navigate([`/`, UrlTarget.LOGIN]);
         }
-
-        // Then, check if a user is at any orga-specific route
-        // if the first fragment is a number, we are in a meeting
-        this.router.navigate([`/`, `login`]);
     }
 
     private buildParamMap(rootSnapshot: ActivatedRouteSnapshot): { [paramName: string]: any } {
@@ -83,7 +77,7 @@ export class OpenSlidesRouterService {
     }
 
     private checkNextTarget(event: RoutesRecognized): void {
-        if (event.url === URL_LOGIN_PREFIX && this._currentUrl !== event.url) {
+        if (event.url === `/${UrlTarget.LOGIN}` && this._currentUrl !== event.url) {
             this._nextUrlTargetSubject.next(UrlTarget.LOGIN);
         } else if (event.url === `/` && !!this._currentMeetingId && this.activeMeetingIdService.meetingId === null) {
             this._nextUrlTargetSubject.next(UrlTarget.ORGANIZATION_LAYER);
