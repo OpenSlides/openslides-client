@@ -26,6 +26,7 @@ import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { PollServiceModule } from '../poll-service.module';
 import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
 import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { compareNumber } from 'src/app/infrastructure/utils';
 
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
@@ -59,16 +60,16 @@ export abstract class PollService {
                     let compareValue;
                     if (poll.pollmethod === PollMethod.N) {
                         // least no on top:
-                        compareValue = a.no! - b.no!;
+                        compareValue = compareNumber(b.no, a.no);
                     } else {
                         // most yes on top
-                        compareValue = b.yes! - a.yes!;
+                        compareValue = compareNumber(a.yes, b.yes);
                     }
 
                     // Equal votes, sort by weight to have equal votes correctly sorted.
                     if (compareValue === 0 && a.weight && b.weight) {
                         // least weight on top
-                        return a.weight - b.weight;
+                        return compareNumber(b.weight, a.weight);
                     } else {
                         return compareValue;
                     }
@@ -77,7 +78,7 @@ export abstract class PollService {
                 // PollData does not have weight, we need to rely on the order of things.
                 if (a.weight && b.weight) {
                     // least weight on top
-                    return a.weight - b.weight;
+                    return compareNumber(b.weight, a.weight);
                 } else {
                     return 0;
                 }
@@ -90,7 +91,7 @@ export abstract class PollService {
                         key =>
                             ({
                                 vote: key.vote,
-                                amount: option[key.vote as OptionDataKey],
+                                amount: option[key.vote as OptionDataKey] ?? 0,
                                 icon: key.icon,
                                 hide: key.hide,
                                 showPercent: key.showPercent
