@@ -48,7 +48,7 @@ export interface OsFilterIndicator<V> {
  */
 type OsFilterOptionCondition = OsFilterOptionConditionType | OsFilterOptionConditionType[];
 
-type OsFilterOptionConditionType = null |string | boolean | number;
+type OsFilterOptionConditionType = null | string | boolean | number;
 
 export interface FilterListService<V> {
     readonly unfilteredCount: number;
