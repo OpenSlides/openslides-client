@@ -153,7 +153,7 @@ export function mmToPoints(mm: number, dense: number = 72): number {
  * @param b the number that needs to be compared with a
  * @returns 0 if they are equal, a negative value if a>b, else a positive value
  */
-export function compareValues(a: number, b: number): number {
+export function compareNumber(a: number, b: number): number {
     if (!b) {
         if (!a) {
             return 0;
