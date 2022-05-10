@@ -7,14 +7,12 @@ describe(`ListOfSpeakersSlideComponent`, () => {
     let component: CommonListOfSpeakersSlideComponent;
     let fixture: ComponentFixture<CommonListOfSpeakersSlideComponent>;
 
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [E2EImportsModule],
-                declarations: [CommonListOfSpeakersSlideComponent]
-            }).compileComponents();
-        })
-    );
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [E2EImportsModule],
+            declarations: [CommonListOfSpeakersSlideComponent]
+        }).compileComponents();
+    }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(CommonListOfSpeakersSlideComponent);

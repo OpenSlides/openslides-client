@@ -7,14 +7,12 @@ describe(`MediafileSlideComponent`, () => {
     let component: MediafileSlideComponent;
     let fixture: ComponentFixture<MediafileSlideComponent>;
 
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [PdfViewerModule],
-                declarations: [MediafileSlideComponent]
-            }).compileComponents();
-        })
-    );
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [PdfViewerModule],
+            declarations: [MediafileSlideComponent]
+        }).compileComponents();
+    }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(MediafileSlideComponent);
