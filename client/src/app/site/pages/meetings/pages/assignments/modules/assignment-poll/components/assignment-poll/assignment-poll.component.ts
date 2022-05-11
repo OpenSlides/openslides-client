@@ -12,7 +12,6 @@ import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { AssignmentPollDialogService } from '../../services/assignment-poll-dialog.service';
 
 @Component({
     selector: 'os-assignment-poll',

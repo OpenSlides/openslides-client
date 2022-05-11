@@ -21,8 +21,7 @@ export class OpenSlidesDateAdapter extends MomentDateAdapter {
         super(dateLocale, _options);
         // subscribe to language changes to change localisation of dates accordingly
         // DateAdapter seems not to be a singleton so we do that in this subclass instead of app.component
-        console.log(translate.defaultLang);
-        this.setLocale(translate.defaultLang);
+        this.setLocale(translate.currentLang);
         translate.onLangChange.subscribe((e: LangChangeEvent) => {
             this.setLocale(e.lang);
         });

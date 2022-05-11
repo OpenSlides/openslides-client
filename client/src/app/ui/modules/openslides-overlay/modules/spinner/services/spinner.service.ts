@@ -8,6 +8,7 @@ import { OverlayService } from '../../custom-overlay/services/overlay.service';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { SpinnerConfig } from '../definitions';
 import { SpinnerModule } from '../spinner.module';
+import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 
 @Injectable({
     providedIn: SpinnerModule
@@ -16,7 +17,7 @@ export class SpinnerService {
     private overlayInstance: OverlayInstance<SpinnerComponent> | null = null;
 
     private isOperatorReady = false;
-    private hasUpgradeChecked = false;
+    private isStable = false;
     private isOffline = false;
     private isOnLoginMask = false;
 
@@ -24,8 +25,8 @@ export class SpinnerService {
 
     public constructor(
         private overlay: OverlayService,
-        // private upgradeService: DataStoreUpgradeService,
         private offlineService: ConnectionStatusService,
+        private openslidesStatus: OpenSlidesStatusService,
         private operator: OperatorService,
         private router: Router
     ) {}
@@ -63,7 +64,7 @@ export class SpinnerService {
      * @returns True, if the three booleans are all true.
      */
     public isConnectionStable(): boolean {
-        return this.isOnLoginMask || (this.isOperatorReady && (this.isOffline || this.hasUpgradeChecked));
+        return this.isOnLoginMask || (this.isOperatorReady && (this.isOffline || this.isStable));
     }
 
     /**
@@ -80,12 +81,12 @@ export class SpinnerService {
         this.isStableSubscription = combineLatest([
             this.operator.isReadyObservable,
             this.offlineService.isOfflineObservable,
-            // this.upgradeService.upgradeChecked.pipe(distinctUntilChanged()),
+            this.openslidesStatus.isStableObservable,
             this.router.events.pipe(filter(event => event instanceof RoutesRecognized))
-        ]).subscribe(([isReady, isOffline, /*  hasUpgradeChecked, */ event]) => {
+        ]).subscribe(([isReady, isOffline, isStable, event]) => {
             this.isOperatorReady = isReady;
             this.isOffline = isOffline;
-            // this.hasUpgradeChecked = hasUpgradeChecked;
+            this.isStable = isStable;
             this.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
             this.checkConnection();
         });

@@ -9,11 +9,12 @@ export class Action<T = void> {
         this._sendActionFn = sendActionFn;
     }
 
-    public concat(...actions: (Action<any | any[]> | ActionRequest)[]): Action<T> {
+    public concat(...actions: (Action<any | any[]> | ActionRequest | null)[]): Action<T> {
         if (actions.length === 0) {
             return this;
         }
         const concatedActions = actions
+            .filter(action => action !== null)
             .flatMap(action => {
                 if (action instanceof Action) {
                     return action._actions;

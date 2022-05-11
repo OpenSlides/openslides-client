@@ -22,7 +22,8 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
         const detailFields: (keyof Group)[] = listFields.concat([
             `admin_group_for_meeting_id`,
             `default_group_for_meeting_id`,
-            `weight`
+            `weight`,
+            `user_ids`
         ]);
         return {
             title: titleFields,

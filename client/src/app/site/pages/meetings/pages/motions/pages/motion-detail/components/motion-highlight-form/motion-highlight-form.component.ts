@@ -185,7 +185,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         // Update the motion
         try {
             // Just confirm this, if there is one modified final version the user would override.
-            await this.repo.update({ modified_final_version: finalVersion }, this.motion);
+            this.repo.update({ modified_final_version: finalVersion }, this.motion).resolve();
         } catch (e) {
             this.raiseError(e);
         }

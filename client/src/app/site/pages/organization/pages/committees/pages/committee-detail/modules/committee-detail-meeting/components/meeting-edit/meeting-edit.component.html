@@ -59,22 +59,18 @@
 
         <mat-form-field>
             <mat-label>{{ 'Participants' | translate }}</mat-label>
-            <os-list-search-selector
+            <os-account-search-selector
                 formControlName="user_ids"
-                [multiple]="true"
                 placeholder="{{ 'Participants' | translate }}"
-                [inputListValues]="availableUsers"
-            ></os-list-search-selector>
+            ></os-account-search-selector>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>{{ 'Administrators' | translate }}</mat-label>
-            <os-list-search-selector
+            <os-account-search-selector
                 formControlName="admin_ids"
-                [multiple]="true"
                 placeholder="{{ 'Administrators' | translate }}"
-                [inputListValues]="availableUsers"
-            ></os-list-search-selector>
+            ></os-account-search-selector>
         </mat-form-field>
 
         <!-- Permission: CML.can_manage (implicit or OML.can_manage_organization or higher) -->

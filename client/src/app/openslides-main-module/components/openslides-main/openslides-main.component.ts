@@ -1,29 +1,27 @@
-import { Component, ApplicationRef, OnInit } from '@angular/core';
-import { first, tap, firstValueFrom } from 'rxjs';
-import { overloadJsFunctions } from './infrastructure/utils/overload-js-functions';
-import { Deferred } from './infrastructure/utils/promises';
-import { LifecycleService } from './site/services/lifecycle.service';
+import { ApplicationRef, Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { OpenSlidesService } from 'src/app/site/services/openslides.service';
+import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { MatIconRegistry } from '@angular/material/icon';
-import { OpenSlidesStatusService } from './site/services/openslides-status.service';
-import { OpenSlidesService } from './site/services/openslides.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerService } from 'src/app/ui/modules/openslides-overlay/modules/spinner/services/spinner.service';
+import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { firstValueFrom, first, tap } from 'rxjs';
 
 @Component({
     selector: 'os-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    templateUrl: './openslides-main.component.html',
+    styleUrls: ['./openslides-main.component.scss']
 })
-export class AppComponent implements OnInit {
+export class OpenSlidesMainComponent implements OnInit {
     private onInitDone = new Deferred();
 
     title = 'OpenSlides';
 
     public constructor(
-        // themeService: ThemeService,
-        // _spinnerService: SpinnerService,
-        openslidesService: OpenSlidesService,
+        _viewContainer: ViewContainerRef,
+        _openslidesService: OpenSlidesService,
         private appRef: ApplicationRef,
         private lifecycleService: LifecycleService,
         private domSanitizer: DomSanitizer,
@@ -31,7 +29,6 @@ export class AppComponent implements OnInit {
         private matIconRegistry: MatIconRegistry,
         private translate: TranslateService
     ) {
-        // _spinnerService.show(undefined, { hideWhenStable: true });
         overloadJsFunctions();
         this.waitForAppLoaded();
         this.loadTranslation();

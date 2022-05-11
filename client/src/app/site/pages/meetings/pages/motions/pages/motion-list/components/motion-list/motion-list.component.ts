@@ -20,7 +20,7 @@ import { MotionListSortService } from '../../../../services/list/motion-list-sor
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
-import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog/services/motion-list-info-dialog.service';
+import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog';
 import { firstValueFrom, map } from 'rxjs';
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
@@ -372,7 +372,8 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             await this.motionRepo
                 .update(result.update, motion)
                 .concat(this.motionRepo.setState(result.state_id!, motion))
-                .concat(this.motionRepo.setRecommendation(result.recommendation_id!, motion));
+                .concat(this.motionRepo.setRecommendation(result.recommendation_id!, motion))
+                .resolve();
         }
 
         this.selectedMotion = null;

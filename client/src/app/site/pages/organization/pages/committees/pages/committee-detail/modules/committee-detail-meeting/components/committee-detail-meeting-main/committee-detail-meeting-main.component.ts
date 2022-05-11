@@ -16,7 +16,15 @@ export class CommitteeDetailMeetingMainComponent extends BaseModelRequestHandler
                 modelRequest: {
                     viewModelCtor: ViewMeeting,
                     ids: [Number(params[`meetingId`])],
-                    fieldset: `detailEdit`
+                    fieldset: [],
+                    additionalFields: [
+                        `is_template`,
+                        `default_meeting_for_committee_id`,
+                        `jitsi_domain`,
+                        `jitsi_room_name`,
+                        `jitsi_room_password`
+                    ],
+                    follow: [`admin_group_id`, `default_group_id`]
                 },
                 subscriptionName: MEETING_DETAIL_EDIT_SUBSCRIPTION,
                 hideWhenDestroyed: true

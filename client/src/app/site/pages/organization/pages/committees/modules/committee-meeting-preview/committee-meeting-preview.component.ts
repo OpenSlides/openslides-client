@@ -106,7 +106,12 @@ export class CommitteeMeetingPreviewComponent {
             await this.meetingRepo.update({ set_as_template: true }, { meeting: this.meeting });
         }
     }
+
     public changeToMeetingUsers(): void {
         this.meetingService.navigateToMeetingUsers(this.meeting);
+    }
+
+    public exportMeeting(): void {
+        this.meetingService.exportMeeting(this.meeting);
     }
 }

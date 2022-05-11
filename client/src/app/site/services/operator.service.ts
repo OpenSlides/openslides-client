@@ -318,22 +318,22 @@ export class OperatorService {
             isReady = isReady && this._OML !== undefined && this._CML !== undefined;
         }
         // TODO: for developing some checks
-        // console.log(
-        //     `Operator updated. Authenticated?`,
-        //     this.isAuthenticated,
-        //     `CML:`,
-        //     this._CML,
-        //     `OML:`,
-        //     this._OML,
-        //     `ActiveMeetingId?`,
-        //     this.activeMeetingId,
-        //     `groupIds`,
-        //     this._groupIds,
-        //     `permissions`,
-        //     this._permissions,
-        //     `isReady`,
-        //     isReady
-        // );
+        console.log(
+            `Operator updated. Authenticated?`,
+            this.isAuthenticated,
+            `CML:`,
+            this._CML,
+            `OML:`,
+            this._OML,
+            `ActiveMeetingId?`,
+            this.activeMeetingId,
+            `groupIds`,
+            this._groupIds,
+            `permissions`,
+            this._permissions,
+            `isReady`,
+            isReady
+        );
         if (isReady) {
             this._ready = true;
             this._readyDeferred.resolve();

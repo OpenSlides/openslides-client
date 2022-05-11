@@ -254,7 +254,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         } else if (date === null) {
             return null;
         }
-        return null;
+        return undefined;
     }
 
     /**

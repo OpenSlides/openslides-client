@@ -1,24 +1,26 @@
-<ng-container *osPerms="permission.listOfSpeakersCanSee">
-    <ng-container *ngIf="listOfSpeakers">
+<ng-container *osPerms="permission.listOfSpeakersCanSee; and: hasInitialized">
+    <ng-container *ngIf="currentListOfSpeakersObservable | async as listOfSpeakers">
         <os-detail-view-navigator [model]="listOfSpeakers">
             <button
                 *ngIf="!menuItem"
                 type="button"
                 mat-icon-button
+                matTooltip="{{
+                    (listOfSpeakers.closed ? 'The list of speakers is closed' : 'List of speakers') | translate
+                }}"
                 [disabled]="disabled"
-                [matTooltip]="tooltip | translate"
                 class="anchor-button"
             >
                 <mat-icon
                     [matBadge]="listOfSpeakers.waitingSpeakerAmount > 0 ? listOfSpeakers.waitingSpeakerAmount : null"
                     matBadgeColor="accent"
                 >
-                    {{ icon }}
+                    {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
                 </mat-icon>
             </button>
 
             <button type="button" *ngIf="menuItem" mat-menu-item>
-                <mat-icon>{{ icon }}</mat-icon>
+                <mat-icon>{{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}</mat-icon>
                 <span>{{ 'List of speakers' | translate }}</span>
                 <span>&nbsp;</span>
                 <mat-basic-chip disableRipple class="lightblue" *ngIf="listOfSpeakers.waitingSpeakerAmount > 0">

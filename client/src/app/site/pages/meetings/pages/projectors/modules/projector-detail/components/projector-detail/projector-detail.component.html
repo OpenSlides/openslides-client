@@ -7,7 +7,7 @@
         (mainEvent)="editProjector()"
     >
         <!-- Title -->
-        <div class="title-slot">
+        <div class="title-slot" *ngIf="projector">
             <h2>{{ projector.name | translate }}</h2>
         </div>
 

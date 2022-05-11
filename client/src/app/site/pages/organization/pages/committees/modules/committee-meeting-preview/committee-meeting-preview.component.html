@@ -92,6 +92,10 @@
             <mat-icon>unarchive</mat-icon>
             <span>{{ 'Activate' | translate }}</span>
         </button>
+        <button mat-menu-item *osOmlPerms="OML.superadmin" (click)="exportMeeting()">
+            <mat-icon>file_download</mat-icon>
+            <span>{{ 'Export' | translate }}</span>
+        </button>
         <mat-divider></mat-divider>
         <button mat-menu-item class="red-warning-text" (click)="onDeleteMeeting()">
             <mat-icon>delete</mat-icon>

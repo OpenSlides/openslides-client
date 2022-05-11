@@ -68,18 +68,19 @@ export class RelationManagerService {
                 `Generic and/or structured relations are not yet implemented for detection of changing relations.`
             );
         }
-        return foreignRepo.getModifiedIdsObservable().pipe(
-            map(modifiedIds => {
+        return foreignRepo.getViewModelMapObservable().pipe(
+            map(modelMap => {
                 if (!model[relation.ownIdField as keyof BaseModel]) {
                     return true;
                 }
                 if (relation.many) {
-                    return (model[relation.ownIdField as keyof BaseModel] as any).intersect(modifiedIds).length > 0;
+                    const modelIds = Object.keys(modelMap);
+                    return (model[relation.ownIdField as keyof BaseModel] as any).intersect(modelIds).length > 0;
                 } else {
-                    return modifiedIds.includes(model[relation.ownIdField as keyof BaseModel] as any);
+                    return !!modelMap[model[relation.ownIdField as keyof BaseModel] as number];
                 }
             }),
-            filter(hasChanges => !!hasChanges),
+            filter(hasChanges => hasChanges),
             map(() => this.handleNormalRelation(model, relation, relation.ownIdField as keyof M))
         );
     }

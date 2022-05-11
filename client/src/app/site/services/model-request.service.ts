@@ -11,6 +11,7 @@ export interface SubscribeToConfig {
     modelRequest: SimplifiedModelRequest;
     subscriptionName: string;
     hideWhen?: Observable<boolean> | null;
+    isDelayed?: boolean;
 }
 
 @Injectable({
@@ -26,13 +27,12 @@ export class ModelRequestService {
         private DS: DataStoreService
     ) {}
 
-    public async subscribeTo({ modelRequest, subscriptionName, hideWhen }: SubscribeToConfig): Promise<void> {
+    public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
         if (this._modelSubscriptionMap[subscriptionName]) {
             console.warn(`A subscription already made for ${subscriptionName}. Aborting.`);
             return;
         }
         modelRequest.fieldset = modelRequest.fieldset || [];
-        const request = await this.modelRequestBuilder.build(modelRequest);
         if (modelRequest.lazyLoad) {
             const parentModel = this.DS.get(modelRequest.viewModelCtor, modelRequest.lazyLoad.specificId);
             const availableIds = parentModel[modelRequest.lazyLoad.keyOfParent] as Ids;
@@ -40,40 +40,57 @@ export class ModelRequestService {
                 console.warn(
                     `Either there are no child models for ${modelRequest.viewModelCtor.name}:${modelRequest.lazyLoad.keyOfParent} yet or they weren't requested`
                 );
-                this.lazyLoadSubscription(request, subscriptionName, hideWhen);
+                this.makeSubscription({ modelRequest, subscriptionName, ...config });
             } else if (availableIds.length > 20) {
-                const childModelRequest = await this.modelRequestBuilder.build({
-                    viewModelCtor: modelRequest.lazyLoad.ownViewModelCtor,
-                    ids: availableIds.slice(0, 20),
-                    fieldset: modelRequest.lazyLoad.fieldset
-                });
-                const childSubscriptionName = `${subscriptionName}_1`;
-                this.lazyLoadSubscription(
-                    childModelRequest,
-                    childSubscriptionName,
-                    timer(3000).pipe(concatMap(() => of(true)))
-                );
-                setTimeout(async () => {
-                    this.lazyLoadSubscription(request, subscriptionName, hideWhen);
-                }, Math.floor(Math.random() * 2000) + 2000);
+                this.lazyLoadSubscription({ modelRequest, subscriptionName, ...config }, availableIds);
             } else {
-                this.lazyLoadSubscription(request, subscriptionName, hideWhen);
+                this.makeSubscription({ modelRequest, subscriptionName, ...config });
             }
         } else {
-            this.lazyLoadSubscription(request, subscriptionName, hideWhen);
+            this.makeSubscription({ modelRequest, subscriptionName, ...config });
         }
     }
 
-    private lazyLoadSubscription(
-        request: ModelRequestObject,
-        subscriptionName: string,
-        hideWhen?: Observable<boolean> | null
-    ): void {
-        const modelSubscription = this.autoupdateService.subscribe(request, `${subscriptionName}:subscription`);
-        this._modelSubscriptionMap[subscriptionName] = modelSubscription;
-        if (hideWhen) {
-            this.setCloseFn(subscriptionName, hideWhen);
+    private async makeSubscription({
+        modelRequest,
+        subscriptionName,
+        hideWhen,
+        isDelayed = true
+    }: SubscribeToConfig): Promise<void> {
+        const fn = async () => {
+            const request = await this.modelRequestBuilder.build(modelRequest);
+            const modelSubscription = this.autoupdateService.subscribe(request, `${subscriptionName}:subscription`);
+            this._modelSubscriptionMap[subscriptionName] = modelSubscription;
+            if (hideWhen) {
+                this.setCloseFn(subscriptionName, hideWhen);
+            }
+        };
+        if (isDelayed) {
+            const delay = Math.floor(Math.random() * 390 + 110); // [110, 500]
+            setTimeout(() => fn(), delay);
+        } else {
+            fn();
         }
+    }
+
+    private async lazyLoadSubscription(
+        { modelRequest, subscriptionName, ...config }: SubscribeToConfig,
+        availableIds: Ids
+    ): Promise<void> {
+        const childModelRequest = {
+            viewModelCtor: modelRequest.lazyLoad.ownViewModelCtor,
+            ids: availableIds.slice(0, 20),
+            fieldset: modelRequest.lazyLoad.fieldset
+        };
+        const childSubscriptionName = `${subscriptionName}_1`;
+        this.makeSubscription({
+            modelRequest: childModelRequest,
+            subscriptionName: childSubscriptionName,
+            hideWhen: timer(3000).pipe(concatMap(() => of(true)))
+        });
+        setTimeout(async () => {
+            this.makeSubscription({ modelRequest, subscriptionName, ...config });
+        }, Math.floor(Math.random() * 2000) + 2000);
     }
 
     public closeSubscription(subscriptionName: string): void {
