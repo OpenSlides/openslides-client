@@ -47,10 +47,12 @@ interface MotionToDocDefData {
  * The total width of the exported PDF in points.
  * Is needed to calculate the width of the images in the attachment.
  *
- * A4/A5-width x 72  = points;
+ * The values are calculated from the width of the page in inches.
  *
- * A4: 8.268 x 72 = 595.296
- * A5: 5.827 x 72 = 419.544
+ * A4/A5-width-in-inch x 72 = points;
+ *
+ * A4: 8.268in x 72 = 595.296
+ * A5: 5.827in x 72 = 419.544
  */
 const PDF_A4_POINTS_WIDTH = 595.296;
 const PDF_A5_POINTS_WIDTH = 419.544;
@@ -695,7 +697,6 @@ export class MotionPdfService {
         for (const key of Object.keys(motion.attachments)) {
             const attachment = motion.attachments[key];
             const fileUrl = attachment.getDetailStateUrl();
-            debugger;
             if (this.pdfImagesService.isImageUsableForPdf(attachment.mimetype)) {
                 this.pdfImagesService.addImageUrl(fileUrl);
                 attachments.push({
