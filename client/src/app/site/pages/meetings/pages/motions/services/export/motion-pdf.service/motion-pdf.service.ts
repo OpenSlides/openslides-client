@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
+import {
+    ChangeRecoMode,
+    LineNumberingMode,
+    PERSONAL_NOTE_ID,
+    MOTION_PDF_OPTIONS
+} from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 import { InfoToExport } from '../definitions';
@@ -20,6 +25,9 @@ import { MotionStatuteParagraphControllerService } from '../../../modules/statut
 import { MotionsExportModule } from '../motions-export.module';
 import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { mmToPoints } from 'src/app/infrastructure/utils';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 
 interface CreateTextData {
     motion: ViewMotion;
@@ -34,6 +42,20 @@ interface MotionToDocDefData {
     exportInfo?: MotionExportInfo;
     continuousText?: boolean;
 }
+
+/**
+ * The total width of the exported PDF in points.
+ * Is needed to calculate the width of the images in the attachment.
+ *
+ * The values are calculated from the width of the page in inches.
+ *
+ * A4/A5-width-in-inch x 72 = points;
+ *
+ * A4: 8.268in x 72 = 595.296
+ * A5: 5.827in x 72 = 419.544
+ */
+const PDF_A4_POINTS_WIDTH = 595.296;
+const PDF_A5_POINTS_WIDTH = 419.544;
 
 /**
  * Converts a motion to pdf. Can be used from the motion detail view or executed on a list of motions
@@ -63,8 +85,10 @@ export class MotionPdfService {
         private commentRepo: MotionCommentSectionControllerService,
         private pollKeyVerbose: PollKeyVerbosePipe,
         private parsePollNumber: PollParseNumberPipe,
+        private organizationSettingsService: OrganizationSettingsService,
         private motionPollService: MotionPollService,
-        private motionFormatService: MotionFormatService
+        private motionFormatService: MotionFormatService,
+        private pdfImagesService: PdfImagesService
     ) {}
 
     /**
@@ -145,6 +169,15 @@ export class MotionPdfService {
             motionPdfContent.push(reason);
         }
 
+        if (
+            exportInfo &&
+            exportInfo.pdfOptions &&
+            exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) &&
+            motion.attachments.length > 0
+        ) {
+            motionPdfContent.push(this.createAttachments(motion));
+        }
+
         if (infoToExport && infoToExport.includes(`allcomments`)) {
             commentsToExport = this.commentRepo.getViewModelList().map(vm => vm.id);
         }
@@ -170,9 +203,8 @@ export class MotionPdfService {
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
         const number = motion.number ? ` ` + motion.number : ``;
-        const pageSize = this.meetingSettingsService.instant(`export_pdf_pagesize`);
         let title = ``;
-        if (pageSize === `A4`) {
+        if (this.pdfDocumentService.pageSize === `A4`) {
             title += `${this.translate.instant(`Motion`)} `;
         }
 
@@ -640,6 +672,52 @@ export class MotionPdfService {
         } else {
             return {};
         }
+    }
+
+    /**
+     * Creates the motion attachments.
+     *
+     * @param motion the target motion
+     *
+     * @returns doc def for the attachments as array
+     */
+
+    private createAttachments(motion: ViewMotion): object {
+        let width = this.pdfDocumentService.pageSize === `A5` ? PDF_A5_POINTS_WIDTH : PDF_A4_POINTS_WIDTH;
+        width = width - this.pdfDocumentService.pageMarginPointsLeft - this.pdfDocumentService.pageMarginPointsRight;
+        const instancUrl = this.organizationSettingsService.instant(`url`);
+
+        const attachments = [];
+        attachments.push({
+            text: this.translate.instant(`Attachments`),
+            style: `heading3`,
+            margin: [0, 10, 0, 10]
+        });
+
+        for (const key of Object.keys(motion.attachments)) {
+            const attachment = motion.attachments[key];
+            const fileUrl = attachment.getDetailStateUrl();
+            if (this.pdfImagesService.isImageUsableForPdf(attachment.mimetype)) {
+                this.pdfImagesService.addImageUrl(fileUrl);
+                attachments.push({
+                    image: fileUrl,
+                    width: width,
+                    margin: [0, 0, 0, 10]
+                });
+            } else {
+                attachments.push({
+                    ul: [
+                        {
+                            text: attachment.getTitle() + `: ` + instancUrl + fileUrl,
+                            link: instancUrl + fileUrl,
+                            margin: [0, 0, 0, 5]
+                        }
+                    ]
+                });
+            }
+        }
+
+        return attachments;
     }
 
     /**
