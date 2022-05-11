@@ -26,6 +26,10 @@ mat-icon {
     display: flex;
 }
 
+.meetingNavRow {
+    height: 40px !important;
+}
+
 /* The footer container only appears when custom logo is
    specified. It can only contain the standard logo */
 .os-footer-logo-container {
