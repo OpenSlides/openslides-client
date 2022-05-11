@@ -27,6 +27,7 @@ export const MOTION_PDF_OPTIONS = {
     Toc: `toc`,
     Page: `page`,
     Date: `date`,
+    Attachments: `attachments`,
     AddBreaks: `addBreaks`,
     Header: `header`,
     ContinuousText: `continuousText`

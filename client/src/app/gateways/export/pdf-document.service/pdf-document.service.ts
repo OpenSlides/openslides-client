@@ -6,6 +6,7 @@ import { ExportServiceModule } from '../export-service.module';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';
 import { ProgressSnackBarControlService } from '../progress-snack-bar/services/progress-snack-bar-control.service';
 import { Functionable } from 'src/app/infrastructure/utils';
+import { PdfImagesService } from './pdf-images.service';
 
 export const PDF_OPTIONS = {
     Toc: `toc`,
@@ -76,6 +77,7 @@ interface PaperConfig {
      * Defaults to `A4`
      */
     pageSize?: string;
+    imageUrls?: string[];
 }
 
 export interface DownloadConfig {
@@ -244,7 +246,8 @@ export class PdfDocumentService {
         private httpService: HttpService,
         // private matSnackBar: MatSnackBar,
         private progressSnackBarService: ProgressSnackBarService,
-        private progressService: ProgressSnackBarControlService
+        private progressService: ProgressSnackBarControlService,
+        private pdfImagesService: PdfImagesService
     ) {}
 
     /**
@@ -382,13 +385,16 @@ export class PdfDocumentService {
         ...config
     }: DownloadConfig & { pageMargins: [number, number, number, number] }): void {
         this.showProgress();
+        const imageUrls = this.pdfImagesService.getImageUrls();
+        this.pdfImagesService.clearImageUrls();
         new PdfCreator({
             ...config,
             document: this.getStandardPaper({
                 ...config,
                 documentContent: docDefinition,
-                pageMargins: [50, 80, 50, 75],
-                landscape: false
+                pageMargins: config.pageMargins,
+                landscape: false,
+                imageUrls: imageUrls
             }),
             filename: `${filetitle}.pdf`,
             loadImages: () => this.loadImages(),
@@ -447,9 +453,10 @@ export class PdfDocumentService {
         landscape,
         metadata,
         pageSize = `A4`,
-        fontSize
+        fontSize,
+        imageUrls
     }: PaperConfig): object {
-        this.imageUrls = [];
+        this.imageUrls = imageUrls ? imageUrls : [];
         const result = {
             pageSize,
             pageOrientation: landscape ? `landscape` : `portrait`,

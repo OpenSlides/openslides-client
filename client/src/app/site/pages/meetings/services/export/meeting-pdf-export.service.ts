@@ -31,6 +31,26 @@ export class MeetingPdfExportService {
         return this.meetingSettingsService.instant(`export_pdf_fontsize`);
     }
 
+    public get pageSize(): string | null {
+        return this.meetingSettingsService.instant(`export_pdf_pagesize`);
+    }
+
+    public get pageMarginPointsLeft(): number {
+        return mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`)!);
+    }
+
+    public get pageMarginPointsTop(): number {
+        return mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`)!);
+    }
+
+    public get pageMarginPointsRight(): number {
+        return mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_right`)!);
+    }
+
+    public get pageMarginPointsBottom(): number {
+        return mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`)!);
+    }
+
     constructor(
         private pdfExportService: PdfDocumentService,
         private meetingSettingsService: MeetingSettingsService,
@@ -39,16 +59,11 @@ export class MeetingPdfExportService {
     ) {}
 
     public download(config: MeetingDownloadConfig): void {
-        const pageMarginLeft = mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_left`)!);
-        const pageMarginTop = mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_top`)!);
-        const pageMarginRight = mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_right`)!);
-        const pageMarginBottom = mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`)!);
-
         const pageMargins: [number, number, number, number] = [
-            pageMarginLeft,
-            pageMarginTop,
-            pageMarginRight,
-            pageMarginBottom
+            this.pageMarginPointsLeft,
+            this.pageMarginPointsTop,
+            this.pageMarginPointsRight,
+            this.pageMarginPointsBottom
         ];
         this.pdfExportService.download({ ...config, ...this.createDownloadConfig(), pageMargins });
     }
