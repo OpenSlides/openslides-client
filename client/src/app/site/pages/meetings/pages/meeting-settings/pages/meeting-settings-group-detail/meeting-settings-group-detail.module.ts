@@ -22,12 +22,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PipesModule } from 'src/app/ui/pipes';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CustomTranslationComponent } from './components/custom-translation/custom-translation.component';
+import { MeetingSettingsGroupDetailMainComponent } from './components/meeting-settings-group-detail-main/meeting-settings-group-detail-main.component';
 
 @NgModule({
     declarations: [
         MeetingSettingsGroupDetailComponent,
         MeetingSettingsGroupDetailFieldComponent,
-        CustomTranslationComponent
+        CustomTranslationComponent,
+        MeetingSettingsGroupDetailMainComponent
     ],
     imports: [
         CommonModule,

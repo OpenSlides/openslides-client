@@ -6,6 +6,7 @@ import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     declarations: [MotionForwardDialogComponent],
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
         CommonModule,
         MatCheckboxModule,
         MatDialogModule,
+        MatButtonModule,
         FormsModule,
         IconContainerModule,
         OpenSlidesTranslationModule.forChild()

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { DomService } from '../../services/dom.service';
 import { FullscreenProjectorComponent } from '../fullscreen-projector/fullscreen-projector.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 
 @Component({
     selector: 'os-fullscreen-projector-detail',
@@ -38,7 +38,7 @@ export class FullscreenProjectorDetailComponent implements OnInit {
                     .subscribe(id => {
                         if (id) {
                             this._projectorId = id;
-                            this.domService.appendComponentToBody(FullscreenProjectorComponent, {
+                            this.domService.attachComponent(FullscreenProjectorComponent, {
                                 id: this._projectorId
                             });
                         }

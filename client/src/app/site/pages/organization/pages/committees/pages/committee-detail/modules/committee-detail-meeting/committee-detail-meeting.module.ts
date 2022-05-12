@@ -14,6 +14,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { MatInputModule } from '@angular/material/input';
 import { OrganizationTagCommonServiceModule } from '../../../../../organization-tags/services/organization-tag-common-service.module';
 import { CommitteeDetailMeetingMainComponent } from './components/committee-detail-meeting-main/committee-detail-meeting-main.component';
+import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
 
 @NgModule({
     declarations: [MeetingEditComponent, CommitteeDetailMeetingMainComponent],
@@ -24,13 +25,14 @@ import { CommitteeDetailMeetingMainComponent } from './components/committee-deta
         HeadBarModule,
         MatFormFieldModule,
         MatCardModule,
+        MatInputModule,
+        AccountSearchSelectorModule,
         SearchSelectorModule,
         ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild(),
         OpenSlidesDateAdapterModule,
         FormsModule,
-        DirectivesModule,
-        MatInputModule
+        DirectivesModule
     ]
 })
 export class CommitteeDetailMeetingModule {}

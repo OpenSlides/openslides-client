@@ -13,14 +13,18 @@ import { ViewModelStoreService } from '../../site/services/view-model-store.serv
 import { Action, ActionService } from '../actions';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
+import { Ids } from 'src/app/domain/definitions/key-types';
 
 const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
     /**
      * Stores all the viewModel in an object
+     * @deprecated use `viewModelStoreSubject` instead
      */
     protected viewModelStore: { [modelId: number]: V } = {};
+
+    protected viewModelStoreSubject = new BehaviorSubject<{ [modelId: number]: V }>({});
 
     /**
      * Stores subjects to viewModels in a list
@@ -241,6 +245,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         ids.forEach(id => {
             this.viewModelStore[id] = this.createViewModel(this.DS.get(this.collection, id));
         });
+        this.viewModelStoreSubject.next(this.viewModelStore);
     }
 
     /**
@@ -272,6 +277,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     public getModifiedIdsObservable(): Observable<Id[]> {
         return this.modifiedIdsSubject.asObservable();
+    }
+
+    public getViewModelMapObservable(): Observable<{ [id: number]: V }> {
+        return this.viewModelStoreSubject.asObservable();
     }
 
     /**
@@ -308,6 +317,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected clearViewModelStore(): void {
         this.viewModelStore = {};
+        this.viewModelStoreSubject.next(this.viewModelStore);
     }
     /**
      * The function used for sorting the data of this repository. The default sorts by ID.

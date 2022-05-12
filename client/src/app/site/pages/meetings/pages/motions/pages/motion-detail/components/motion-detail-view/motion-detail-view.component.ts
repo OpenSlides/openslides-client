@@ -279,7 +279,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     }
 
     public addToAgenda(): void {
-        this.itemRepo.addToAgenda(this.motion).resolve().catch(this.raiseError);
+        this.itemRepo.addToAgenda({}, this.motion).resolve().catch(this.raiseError);
     }
 
     public removeFromAgenda(): void {

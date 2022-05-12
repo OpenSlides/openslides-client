@@ -9,26 +9,31 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
-import { Observable, map } from 'rxjs';
+import { Observable, map, BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: MotionCategoryCommonServiceModule
 })
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {
+    private readonly _currentCategoriesSubject = new BehaviorSubject<ViewMotionCategory[]>([]);
+
     constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionCategoryRepositoryService,
         private treeService: TreeService
     ) {
         super(controllerServiceCollector, MotionCategory, repo);
+        repo.getViewModelListObservable().subscribe(categories =>
+            this._currentCategoriesSubject.next(this.createCategoriesTree(categories))
+        );
     }
 
     public override getViewModelList(): ViewMotionCategory[] {
-        return this.createCategoriesTree(super.getViewModelList());
+        return this._currentCategoriesSubject.value;
     }
 
     public override getViewModelListObservable(): Observable<ViewMotionCategory[]> {
-        return super.getViewModelListObservable().pipe(map(categories => this.createCategoriesTree(categories)));
+        return this._currentCategoriesSubject.asObservable();
     }
 
     public create(...categories: Partial<MotionCategory>[]): Promise<Identifiable[]> {

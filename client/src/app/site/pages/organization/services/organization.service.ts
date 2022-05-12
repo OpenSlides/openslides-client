@@ -65,7 +65,8 @@ export class OrganizationService {
                     fieldset: `settings`,
                     additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`]
                 },
-                subscriptionName: ORGANIZATION_SUBSCRIPTION
+                subscriptionName: ORGANIZATION_SUBSCRIPTION,
+                isDelayed: false
             });
             this.repo
                 .getViewModelObservable(ORGANIZATION_ID)

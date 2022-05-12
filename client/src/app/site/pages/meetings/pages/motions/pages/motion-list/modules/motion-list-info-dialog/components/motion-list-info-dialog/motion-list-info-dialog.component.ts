@@ -8,13 +8,13 @@ import {
 } from 'src/app/site/pages/meetings/pages/motions';
 import { MotionListInfoDialogConfig } from '../../definitions';
 import { Observable } from 'rxjs';
-import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
-import { MotionBlockControllerService } from '../../../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
-import { TagControllerService } from '../../../../../../modules/tags/services/tag-controller.service/tag-controller.service';
-import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
+import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service';
+import { MotionBlockControllerService } from '../../../../../../modules/motion-blocks/services/motion-block-controller.service';
+import { TagControllerService } from '../../../../../../modules/tags/services/tag-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
 
 @Component({
     selector: 'os-motion-list-info-dialog',

@@ -36,7 +36,7 @@ export class AgendaItemControllerService extends BaseMeetingControllerService<Vi
     }
 
     public addToAgenda(data: any, ...items: (BaseViewModel & HasAgendaItem)[]): Action<Identifiable[]> {
-        return this.repo.addItemToAgenda(data, ...items);
+        return this.repo.addToAgenda(data, ...items);
     }
 
     public removeFromAgenda(...items: (Identifiable | Id)[]): Promise<void> {

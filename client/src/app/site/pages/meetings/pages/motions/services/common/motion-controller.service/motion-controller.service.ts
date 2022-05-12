@@ -49,7 +49,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         return this.repo.delete(...motions);
     }
 
-    public setState(stateId: Id | null, ...viewMotions: Identifiable[]): Action<void> {
+    public setState(stateId: Id | null, ...viewMotions: ViewMotion[]): Action<void> {
         return this.repo.setState(stateId, ...viewMotions);
     }
 
@@ -57,11 +57,15 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         return this.repo.resetState(...viewMotions);
     }
 
-    public setRecommendation(recommendationId: number, ...viewMotions: ViewMotion[]): Action<void> {
-        return this.repo.setRecommendation(recommendationId, ...viewMotions);
+    public setRecommendation(recommendationId: number, ...viewMotions: ViewMotion[]): Action<void> | null {
+        if (recommendationId) {
+            return this.repo.setRecommendation(recommendationId, ...viewMotions);
+        } else {
+            return null;
+        }
     }
 
-    public resetRecommendation(...viewMotions: ViewMotion[]): Action<void> {
+    public resetRecommendation(...viewMotions: Identifiable[]): Action<void> {
         return this.repo.resetRecommendation(...viewMotions);
     }
 

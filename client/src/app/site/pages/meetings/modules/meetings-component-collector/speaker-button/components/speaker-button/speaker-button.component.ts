@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy } from '@angular/core';
-import { distinctUntilChanged, Subscription, Observable } from 'rxjs';
+import { Component, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { distinctUntilChanged, Subscription, Observable, of } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
@@ -7,7 +7,8 @@ import { HasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetin
 @Component({
     selector: 'os-speaker-button',
     templateUrl: './speaker-button.component.html',
-    styleUrls: ['./speaker-button.component.scss']
+    styleUrls: ['./speaker-button.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpeakerButtonComponent implements OnDestroy {
     @Input()
@@ -16,11 +17,9 @@ export class SpeakerButtonComponent implements OnDestroy {
         if (obj instanceof Observable) {
             this.setupLosSub(obj);
         } else {
-            this.listOfSpeakers = obj?.list_of_speakers || null;
+            this.setupLosObservable(obj);
         }
     }
-
-    public listOfSpeakers: ViewListOfSpeakers | null = null;
 
     @Input()
     public disabled: boolean = false;
@@ -28,39 +27,41 @@ export class SpeakerButtonComponent implements OnDestroy {
     @Input()
     public menuItem = false;
 
-    public get listOfSpeakersUrl(): string {
-        if (!this.disabled && this.listOfSpeakers) {
-            return this.listOfSpeakers.getDetailStateUrl();
-        }
-        return ``;
+    public get currentListOfSpeakersObservable(): Observable<ViewListOfSpeakers> | null {
+        return this._losObservable;
     }
-
-    public get icon(): string {
-        return this.listOfSpeakers?.closed ? `voice_over_off` : `record_voice_over`;
-    }
-
-    public get tooltip(): string {
-        return this.listOfSpeakers?.closed ? `The list of speakers is closed.` : `List of speakers`;
-    }
-
-    private losSub: Subscription | null = null;
 
     public readonly permission = Permission;
+
+    public hasInitialized = true;
+
+    private _losObservable: Observable<ViewListOfSpeakers | null> | null = of(null);
+    private _losSub: Subscription | null = null;
+
+    public constructor(private cd: ChangeDetectorRef) {}
 
     public ngOnDestroy(): void {
         this.cleanLosSub();
     }
 
     private setupLosSub(observable: Observable<BaseViewModel & HasListOfSpeakers>): void {
-        this.losSub = observable
+        this._losSub = observable
             .pipe(distinctUntilChanged())
-            .subscribe(los => (this.listOfSpeakers = los.list_of_speakers || null));
+            .subscribe(losWrapper => this.setupLosObservable(losWrapper));
     }
 
     private cleanLosSub(): void {
-        if (this.losSub) {
-            this.losSub.unsubscribe();
-            this.losSub = null;
+        if (this._losSub) {
+            this._losSub.unsubscribe();
+            this._losSub = null;
+        }
+    }
+
+    private setupLosObservable(model: HasListOfSpeakers): void {
+        if (model?.list_of_speakers_as_observable) {
+            this._losObservable = model.list_of_speakers_as_observable;
+        } else {
+            this._losObservable = of(model?.list_of_speakers);
         }
     }
 }

@@ -7,6 +7,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ViewMotionBlock, ViewTag, ViewMotionCategory, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MotionExportDialogService } from '../../../motion-export-dialog/services/motion-export-dialog.service';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
+import { Permission } from 'src/app/domain/definitions/permission';
 
 @Component({
     selector: 'os-motion-multiselect-actions',
@@ -14,6 +15,8 @@ import { MotionBlockControllerService } from '../../../../modules/motion-blocks/
     styleUrls: ['./motion-multiselect-actions.component.scss']
 })
 export class MotionMultiselectActionsComponent extends BaseUiComponent implements OnInit {
+    public readonly permission = Permission;
+
     /**
      * The list of the selected motions.
      */
@@ -77,11 +80,6 @@ export class MotionMultiselectActionsComponent extends BaseUiComponent implement
      * Opens the dialog to choose options for exporting selected motions.
      */
     public openExportDialog(): void {
-        // const exportDialogRef = this.dialog.open(MotionExportDialogComponent, largeDialogSettings);
-        // exportDialogRef
-        //     .afterClosed()
-        //     .subscribe((exportInfo: MotionExportInfo) =>
-        //         this.motionExport.evaluateExportRequest(exportInfo, this.selectedMotions)
-        //     );
+        this.exportDialog.export(this.selectedMotions);
     }
 }

@@ -193,7 +193,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 }
             })
         );
-        this.loadUsers();
     }
 
     private loadMeeting(): void {
@@ -216,16 +215,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 }
             })
         );
-    }
-
-    private async loadUsers(): Promise<void> {
-        // const userIds = await this.memberService.fetchAllOrgaUsers();
-        // this.subscribe({
-        //     viewModelCtor: ViewUser,
-        //     ids: userIds,
-        //     fieldset: `shortName`,
-        //     additionalFields: [`committee_$_management_level`]
-        // });
     }
 
     private createForm(): void {

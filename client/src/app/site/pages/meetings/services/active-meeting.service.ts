@@ -51,7 +51,8 @@ const getMeetingDetailGroupSubscriptionConfig = (id: Id, getNextMeetingIdObserva
         fieldset: `group`
     },
     subscriptionName: MEETING_DETAIL_GROUP_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
+    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id)),
+    isDelayed: false
 });
 
 @Injectable({
@@ -142,18 +143,11 @@ export class ActiveMeetingService {
         }
 
         // Even inaccessible meetings will be observed so that one is on the login-mask available.
-        this._meetingSubcription = this.repo
-            .getGeneralViewModelObservable()
-            .pipe(
-                distinctUntilChanged((prev, curr) => {
-                    return JSON.stringify(prev.meeting) === JSON.stringify(curr.meeting);
-                })
-            )
-            .subscribe(meeting => {
-                if (meeting?.id === this.meetingId) {
-                    this.setupActiveMeeting(meeting);
-                }
-            });
+        this._meetingSubcription = this.repo.getGeneralViewModelObservable().subscribe(meeting => {
+            if (meeting?.id === this.meetingId) {
+                this.setupActiveMeeting(meeting);
+            }
+        });
     }
 
     private async refreshAutoupdateSubscription(): Promise<void> {

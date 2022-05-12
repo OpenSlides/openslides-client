@@ -16,6 +16,7 @@ import { SpinnerModule } from 'src/app/ui/modules/openslides-overlay/modules/spi
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { MotionsCommonServiceModule } from '../../services/common/motions-service.module';
 import { MotionWorkflowCommonServiceModule } from '../../modules/workflows/motion-workflow-common-service.module';
+import { DirectivesModule } from 'src/app/ui/directives';
 
 const DECLARATIONS = [MotionMultiselectActionsComponent];
 
@@ -30,6 +31,7 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
         MatMenuModule,
         ChoiceDialogModule,
         SpinnerModule,
+        DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
         AgendaItemCommonServiceModule,
         MotionsCommonServiceModule,

@@ -46,7 +46,7 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     public override getFieldsets(): Fieldsets<MotionBlock> {
         const routingFields: (keyof MotionBlock)[] = [`sequential_number`];
         const titleFields: (keyof MotionBlock)[] = [`title`];
-        const listFields: (keyof MotionBlock)[] = titleFields.concat([`internal`]);
+        const listFields: (keyof MotionBlock)[] = titleFields.concat([`internal`, `agenda_item_id`]);
         return {
             [DEFAULT_FIELDSET]: listFields,
             [ROUTING_FIELDSET]: routingFields,

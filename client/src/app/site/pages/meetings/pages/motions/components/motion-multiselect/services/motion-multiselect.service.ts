@@ -22,6 +22,7 @@ import { MotionSubmitterControllerService } from '../../../modules/submitters/se
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
     providedIn: MotionMultiselectModule
@@ -44,7 +45,8 @@ export class MotionMultiselectService {
         private motionBlockRepo: MotionBlockControllerService,
         private treeService: TreeService,
         private spinnerService: SpinnerService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService
+        private listOfSpeakersRepo: ListOfSpeakersControllerService,
+        private snackbar: MatSnackBar
     ) {}
 
     /**
@@ -307,7 +309,7 @@ export class MotionMultiselectService {
         const partialTree = this.treeService.getTreeWithoutSelection(tree, motions);
         const availableMotions = this.treeService.getFlatItemsFromTree(partialTree);
         if (!availableMotions.length) {
-            throw new Error(this.translate.instant(`There are no items left to chose from`));
+            this.snackbar.open(`There are no motions left to choose`, `Ok`);
         } else {
             const selectedChoice = await this.choiceService.open(title, availableMotions, false, options);
             if (!selectedChoice) {

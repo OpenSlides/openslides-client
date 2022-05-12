@@ -1,6 +1,6 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Provider } from '@angular/core';
-import { AuthTokenService } from '../services/auth-token.service';
+import { AuthTokenService } from '../../site/services/auth-token.service';
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 
 export const httpInterceptorProviders: Provider[] = [

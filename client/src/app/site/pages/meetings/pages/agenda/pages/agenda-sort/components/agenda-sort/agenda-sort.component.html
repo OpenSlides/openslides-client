@@ -38,7 +38,9 @@
                             [(ngModel)]="option.state"
                             (change)="onFilterChange(option.id)"
                         >
-                            <mat-icon matTooltip="{{ option.label | translate }}">{{ getIcon(option.id) }}</mat-icon>
+                            <mat-icon matTooltip="{{ option.label | translate }}" class="icon-16">
+                                {{ getIcon(option.id) }}
+                            </mat-icon>
                             {{ option.label | translate }}
                         </mat-checkbox>
                     </div>

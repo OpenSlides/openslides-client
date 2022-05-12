@@ -84,11 +84,13 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      * @param viewMotions target motion
      * @param stateId the number that indicates the state
      */
-    public setState(stateId: Id | null, ...viewMotions: Identifiable[]): Action<void> {
-        const payload = viewMotions.map(viewMotion => ({
-            id: viewMotion.id,
-            state_id: stateId
-        }));
+    public setState(stateId: Id | null, ...viewMotions: Motion[]): Action<void> {
+        const payload = viewMotions
+            .filter(motion => motion.state_id !== stateId)
+            .map(viewMotion => ({
+                id: viewMotion.id,
+                state_id: stateId
+            }));
         return this.createAction(MotionAction.SET_STATE, payload);
     }
 
@@ -103,15 +105,17 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      * @param viewMotions target motion
      * @param recommendationId the number that indicates the recommendation
      */
-    public setRecommendation(recommendationId: number, ...viewMotions: ViewMotion[]): Action<void> {
-        const payload = viewMotions.map(viewMotion => ({
-            id: viewMotion.id,
-            recommendation_id: recommendationId
-        }));
+    public setRecommendation(recommendationId: number, ...viewMotions: Motion[]): Action<void> {
+        const payload = viewMotions
+            .filter(motion => motion.recommendation_id !== recommendationId)
+            .map(viewMotion => ({
+                id: viewMotion.id,
+                recommendation_id: recommendationId
+            }));
         return this.createAction(MotionAction.SET_RECOMMENDATION, payload);
     }
 
-    public resetRecommendation(...viewMotions: ViewMotion[]): Action<void> {
+    public resetRecommendation(...viewMotions: Identifiable[]): Action<void> {
         const payload = viewMotions.map(viewMotion => ({ id: viewMotion.id }));
         return this.createAction(MotionAction.RESET_RECOMMENDATION, payload);
     }

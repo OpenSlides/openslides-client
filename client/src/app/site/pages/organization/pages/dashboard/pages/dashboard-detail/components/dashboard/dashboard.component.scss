@@ -102,7 +102,6 @@ os-dashboard {
     .meeting-box {
         outline: none;
         cursor: pointer;
-        padding: 10px 20px;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -112,6 +111,14 @@ os-dashboard {
 
         > a {
             text-decoration: none;
+
+            &:first-child {
+                padding-left: 20px;
+                height: 100%;
+            }
+            &:last-child {
+                padding-right: 20px;
+            }
         }
 
         &--mid {
