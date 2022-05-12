@@ -4,6 +4,7 @@ import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionsExportModule } from '../motions-export.module';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Creates a PDF list for amendments
@@ -42,7 +43,7 @@ export class AmendmentListPdfService {
             if (amendment.recommendation.show_recommendation_extension_field && amendment.recommendationExtension) {
                 recommendationText += ` ${this.motionService.getExtendedRecommendationLabel(amendment)}`;
             } else {
-                recommendationText += this.translate.instant(amendment.recommendation.recommendation_label);
+                recommendationText += _(amendment.recommendation.recommendation_label);
             }
         }
 
@@ -80,23 +81,23 @@ export class AmendmentListPdfService {
         const amendmentTableBody: object[] = [
             [
                 {
-                    text: this.translate.instant(`Motion`),
+                    text: _(`Motion`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Line`),
+                    text: _(`Line`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Submitters`),
+                    text: _(`Submitters`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Changes`),
+                    text: _(`Changes`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Recommendation`),
+                    text: _(`Recommendation`),
                     style: `tableHeader`
                 }
             ]

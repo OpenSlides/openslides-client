@@ -15,6 +15,7 @@ import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { auditTime } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const ASPECT_RATIO_FORM_KEY = `aspectRatio`;
 
@@ -131,7 +132,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         if (this.projector) {
             this.updateForm.patchValue(this.projector.projector);
             this.updateForm.patchValue({
-                name: this.translate.instant(this.projector.name),
+                name: _(this.projector.name),
                 aspectRatio: this.projector.aspectRatio
             });
         }

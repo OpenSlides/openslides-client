@@ -24,6 +24,7 @@ import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * This component displays the original motion text with the change blocks inside.
@@ -319,7 +320,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public async deleteChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): Promise<void> {
         $event.stopPropagation();
         $event.preventDefault();
-        const title = this.translate.instant(`Are you sure you want to delete this change recommendation?`);
+        const title = _(`Are you sure you want to delete this change recommendation?`);
         if (await this.promptService.open(title)) {
             await this.recoRepo.delete(reco).catch(this.raiseError);
         }

@@ -9,6 +9,7 @@ import { createAgendaItem } from '../../agenda';
 import { AssignmentAction } from './assignment.action';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -69,7 +70,7 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
 
     public getTitle = (viewAssignment: ViewAssignment) => viewAssignment.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Elections` : `Election`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Elections` : `Election`);
 
     private getPartialPayload(model: Partial<ViewAssignment>): any {
         return {

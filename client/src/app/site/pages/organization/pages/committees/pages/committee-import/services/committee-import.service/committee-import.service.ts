@@ -241,7 +241,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         this.exporter.dummyCSVExport(
             COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
             COMMITTEE_CSV_EXPORT_EXAMPLE,
-            `${this.translate.instant(_(`committee-example`))}.csv`
+            `${_(_(`committee-example`))}.csv`
         );
     }
 

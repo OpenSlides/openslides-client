@@ -7,6 +7,7 @@ import { ProgressSnackBarService } from '../progress-snack-bar/services/progress
 import { ProgressSnackBarControlService } from '../progress-snack-bar/services/progress-snack-bar-control.service';
 import { Functionable } from 'src/app/infrastructure/utils';
 import { PdfImagesService } from './pdf-images.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export const PDF_OPTIONS = {
     Toc: `toc`,
@@ -162,7 +163,7 @@ class PdfCreator {
         } else {
             this._pdfWorker = null;
             this._progressSnackBarService.dismiss();
-            // this.matSnackBar.open(this.translate.instant(`Cannot create PDF files on this browser.`), ``, {
+            // this.matSnackBar.open(_(`Cannot create PDF files on this browser.`), ``, {
             //     duration: 0
             // });
         }
@@ -257,7 +258,7 @@ export class PdfDocumentService {
      */
     public createTitle(title: string): object {
         return {
-            text: this.translate.instant(title),
+            text: _(title),
             style: `title`
         };
     }
@@ -575,9 +576,7 @@ export class PdfDocumentService {
         let footerDate = {};
         if (showDate) {
             footerDate = {
-                text: `${this.translate.instant(`As of`)}: ${new Date().toLocaleDateString(
-                    this.translate.currentLang
-                )}`,
+                text: `${_(`As of`)}: ${new Date().toLocaleDateString(this.translate.currentLang)}`,
                 fontSize: 6
             };
         }
@@ -654,7 +653,7 @@ export class PdfDocumentService {
                 });
             });
 
-        this.progressService.message = this.translate.instant(`Creating PDF file ...`);
+        this.progressService.message = _(`Creating PDF file ...`);
         this.progressService.progressMode = `determinate`;
     }
 

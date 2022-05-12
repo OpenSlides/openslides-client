@@ -5,6 +5,7 @@ import { ViewOrganization } from '../../site/pages/organization/view-models/view
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { BaseRepository } from './base-repository';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
 
     public getTitle = (viewOrganization: ViewOrganization) => viewOrganization.name;
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Organizations` : `Organization`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Organizations` : `Organization`);
 
     public override getFieldsets(): Fieldsets<Organization> {
         const coreFieldset: (keyof Organization)[] = [`name`, `description`];

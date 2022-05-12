@@ -138,7 +138,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                             }
                         ],
                         projectionDefault: Projectiondefault.agendaAllItems,
-                        getDialogTitle: () => this.translate.instant(`Agenda`)
+                        getDialogTitle: () => _(`Agenda`)
                     };
                 } else {
                     this.itemListSlide = null;
@@ -194,7 +194,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * Click handler for the numbering button to enable auto numbering
      */
     public async onAutoNumbering(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to number all agenda items?`);
+        const title = _(`Are you sure you want to number all agenda items?`);
         if (await this.promptService.open(title)) {
             await this.repo.autoNumbering();
         }
@@ -221,7 +221,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * @param item The item to remove from the agenda
      */
     public async removeFromAgenda(item: ViewAgendaItem): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to remove this entry from the agenda?`);
+        const title = _(`Are you sure you want to remove this entry from the agenda?`);
         const content = item.content_object!.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.removeFromAgenda(item);
@@ -232,7 +232,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         if (!(item.content_object instanceof ViewTopic)) {
             return;
         }
-        const title = this.translate.instant(`Are you sure you want to delete this topic?`);
+        const title = _(`Are you sure you want to delete this topic?`);
         const content = item.content_object.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.topicRepo.delete(item.content_object);
@@ -244,8 +244,8 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * is only filled with any data in multiSelect mode
      */
     public async removeSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to remove all selected items from the agenda?`);
-        const content = this.translate.instant(`All topics will be deleted and won't be accessible afterwards.`);
+        const title = _(`Are you sure you want to remove all selected items from the agenda?`);
+        const content = _(`All topics will be deleted and won't be accessible afterwards.`);
         if (await this.promptService.open(title, content)) {
             try {
                 await this.repo.removeFromAgenda(...this.selectedRows);
@@ -329,11 +329,11 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         }
         const durationString = this.durationService.durationToString(duration, `h`);
         const endTime = this.repo.calculateEndTime();
-        const result = `${this.translate.instant(`Duration`)}: ${durationString}`;
+        const result = `${_(`Duration`)}: ${durationString}`;
         if (endTime) {
             return (
                 result +
-                ` (${this.translate.instant(`Estimated end`)}:
+                ` (${_(`Estimated end`)}:
             ${endTime.toLocaleTimeString(this.translate.currentLang, { hour: `numeric`, minute: `numeric` })} h)`
             );
         } else {
@@ -342,8 +342,8 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     }
 
     public async deleteAllSpeakersOfAllListsOfSpeakers(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to clear all speakers of all lists?`);
-        const content = this.translate.instant(`All lists of speakers will be cleared.`);
+        const title = _(`Are you sure you want to clear all speakers of all lists?`);
+        const content = _(`All lists of speakers will be cleared.`);
         if (await this.promptService.open(title, content)) {
             this.meetingRepo.deleteAllSpeakersOfAllListsOfSpeakersIn(this.activeMeetingId!);
         }

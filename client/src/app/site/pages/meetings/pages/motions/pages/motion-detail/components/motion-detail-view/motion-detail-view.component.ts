@@ -32,6 +32,7 @@ import { MotionPermissionService } from '../../../../services/common/motion-perm
 import { MotionDetailViewService } from '../../services/motion-detail-view.service';
 import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
 import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-motion-detail-view',
@@ -171,7 +172,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Trigger to delete the motion.
      */
     public async deleteMotionButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this motion?`);
+        const title = _(`Are you sure you want to delete this motion?`);
         const content = this.motion.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.motion);
@@ -400,7 +401,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         const parentMotion = this.repo.getViewModel(this._parentId!);
         motion.lead_motion_id = this._parentId;
         if (parentMotion) {
-            const defaultTitle = `${this.translate.instant(`Amendment to`)} ${parentMotion.numberOrTitle}`;
+            const defaultTitle = `${_(`Amendment to`)} ${parentMotion.numberOrTitle}`;
             motion.title = defaultTitle;
             motion.category_id = parentMotion.category_id;
             motion.tag_ids = parentMotion.tag_ids;
@@ -461,7 +462,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private showMotionEditConflictWarningIfNecessary(): void {
         if (this.motion.amendments?.filter(amend => amend.isParagraphBasedAmendment()).length > 0) {
-            const msg = this.translate.instant(
+            const msg = _(
                 `Warning: Amendments exist for this motion. Editing this text will likely impact them negatively. Particularily, amendments might become unusable if the paragraph they affect is deleted.`
             );
             this.raiseWarning(msg);

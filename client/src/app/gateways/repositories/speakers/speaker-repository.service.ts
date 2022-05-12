@@ -9,6 +9,7 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { SpeakerAction } from './speaker.action';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +32,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         return { [DEFAULT_FIELDSET]: defaultSet };
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Speakers` : `Speaker`);
 
     public getTitle = (viewSpeaker: ViewSpeaker) => (viewSpeaker.user ? viewSpeaker.user.getFullName() : ``);
 

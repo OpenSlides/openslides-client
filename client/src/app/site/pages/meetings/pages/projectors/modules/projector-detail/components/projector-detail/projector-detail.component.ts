@@ -23,6 +23,7 @@ import { GridTileDimension } from 'src/app/ui/modules/grid';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
 import { ProjectionControllerService } from '../../services/projection-controller.service';
 import { CurrentSpeakerChyronSlideService } from '../../services/current-speaker-chyron-slide.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * The projector detail view.
@@ -131,7 +132,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      * TODO: same with projector list entry
      */
     public async onDeleteProjectorButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this projector?`);
+        const title = _(`Are you sure you want to delete this projector?`);
         if (this.projector && (await this.promptService.open(title, this.projector.name))) {
             this.repo.delete(this.projector);
         }

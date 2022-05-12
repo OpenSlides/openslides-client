@@ -27,6 +27,7 @@ import {
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-mediafile-list',
@@ -246,7 +247,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * @param file the file to delete
      */
     public async onDeleteFile(file: ViewMediafile): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this file?`);
+        const title = _(`Are you sure you want to delete this file?`);
         const content = file.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(file);
@@ -257,7 +258,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected files and folders?`);
+        const title = _(`Are you sure you want to delete all selected files and folders?`);
         if (await this.promptService.open(title)) {
             await this.repo.delete(...this.selectedRows);
             this.deselectAll();
@@ -272,7 +273,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      */
     public formatIndicatorTooltip(file: ViewMediafile): string {
         const settings = this.mediaManage.getPlacesDisplayNames(file);
-        const optionNames = settings.map(displayName => this.translate.instant(displayName));
+        const optionNames = settings.map(displayName => _(displayName));
         return optionNames.join(`\n`);
     }
 
@@ -314,7 +315,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
     public downloadMultiple(mediafiles: ViewMediafile[] = this.dataSource!.source): void {
         const eventName = this.meetingSettingsService.instant(`name`);
-        const dirName = this.directory?.title ?? this.translate.instant(`Files`);
+        const dirName = this.directory?.title ?? _(`Files`);
         const archiveName = `${eventName} - ${dirName}`.trim();
         this.exporter.downloadArchive(archiveName, mediafiles);
     }

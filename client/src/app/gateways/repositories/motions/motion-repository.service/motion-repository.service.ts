@@ -19,6 +19,7 @@ import { Action } from 'src/app/gateways/actions';
 import { AmendmentAction } from './amendment.action';
 import { NullablePartial } from 'src/app/infrastructure/utils';
 import { Observable, map } from 'rxjs';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 type SortProperty = 'sort_weight' | 'number';
 
@@ -293,7 +294,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         const numberPrefix = this.agendaItemRepo.getItemNumberPrefix(viewMotion);
         // if the number is set, the title will be 'Motion <number>'.
         if (viewMotion.number) {
-            return `${numberPrefix} ${this.translate.instant(`Motion`)} ${viewMotion.number}`;
+            return `${numberPrefix} ${_(`Motion`)} ${viewMotion.number}`;
         } else {
             return `${numberPrefix} ${viewMotion.title}`;
         }
@@ -304,19 +305,19 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         // Append the verbose name only, if not the special format 'Motion <number>' is used.
         let title: string;
         if (viewMotion.number) {
-            title = `${numberPrefix}${this.translate.instant(`Motion`)} ${viewMotion.number} · ${viewMotion.title}`;
+            title = `${numberPrefix}${_(`Motion`)} ${viewMotion.number} · ${viewMotion.title}`;
         } else {
             title = `${numberPrefix}${viewMotion.title} (${this.getVerboseName()})`;
         }
         const agendaTitle: AgendaListTitle = { title };
 
         if (viewMotion.submittersAsUsers && viewMotion.submittersAsUsers.length) {
-            agendaTitle.subtitle = `${this.translate.instant(`by`)} ${viewMotion.submittersAsUsers.join(`, `)}`;
+            agendaTitle.subtitle = `${_(`by`)} ${viewMotion.submittersAsUsers.join(`, `)}`;
         }
         return agendaTitle;
     };
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Motions` : `Motion`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Motions` : `Motion`);
 
     public getProjectorTitle = (viewMotion: ViewMotion) => {
         const subtitle =

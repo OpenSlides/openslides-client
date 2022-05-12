@@ -19,6 +19,7 @@ import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/b
 import { MotionBlockEditDialogService } from '../motion-block-edit-dialog/services/motion-block-edit-dialog.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MotionBlockEditDialogComponent } from '../motion-block-edit-dialog/components/motion-block-edit-dialog/motion-block-edit-dialog.component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-motion-block-detail',
@@ -49,7 +50,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         },
         {
             prop: `recommendation`,
-            label: this.translate.instant(`Recommendation`),
+            label: _(`Recommendation`),
             width: `30%`,
             minWidth: 60
         },
@@ -129,9 +130,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * Click handler for recommendation button
      */
     public async onFollowRecButton(): Promise<void> {
-        const title = this.translate.instant(
-            `Are you sure you want to override the state of all motions of this motion block?`
-        );
+        const title = _(`Are you sure you want to override the state of all motions of this motion block?`);
         const content = this.block.title;
         if (await this.promptService.open(title, content)) {
             this.repo.followRecommendation(this.block);
@@ -142,7 +141,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * Click handler to delete motion blocks
      */
     public async onDeleteBlockButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this motion block?`);
+        const title = _(`Are you sure you want to delete this motion block?`);
         const content = this.block.title;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.block);
@@ -156,7 +155,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * @param motion the corresponding motion
      */
     public async onRemoveMotionButton(motion: ViewMotion): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to remove this motion from motion block?`);
+        const title = _(`Are you sure you want to remove this motion from motion block?`);
         const content = motion.getTitle();
         if (await this.promptService.open(title, content)) {
             this.motionRepo.update({ block_id: null }, motion);
@@ -227,7 +226,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         this.subscriptions.push(
             this.repo.getViewModelObservable(this._blockId).subscribe(newBlock => {
                 if (newBlock) {
-                    super.setTitle(`${this.translate.instant(`Motion block`)} - ${newBlock.getTitle()}`);
+                    super.setTitle(`${_(`Motion block`)} - ${newBlock.getTitle()}`);
                     this.block = newBlock;
                 }
             })

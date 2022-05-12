@@ -6,6 +6,7 @@ import { ViewAssignment } from '../view-models';
 import { AssignmentPdfService } from './assignment-pdf.service';
 import { AssignmentExportServiceModule } from './assignment-export-service.module';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Controls PDF export for assignments
@@ -13,7 +14,6 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 @Injectable({ providedIn: AssignmentExportServiceModule })
 export class AssignmentExportService {
     public constructor(
-        private translate: TranslateService,
         private assignmentPdfService: AssignmentPdfService,
         private pdfDocumentService: MeetingPdfExportService,
         private meetingSettingsService: MeetingSettingsService
@@ -26,7 +26,7 @@ export class AssignmentExportService {
      */
     public exportSingleAssignment(assignment: ViewAssignment): void {
         const doc = this.assignmentPdfService.assignmentToDocDef(assignment);
-        const filename = `${this.translate.instant(`Election`)}_${assignment.title}`;
+        const filename = `${_(`Election`)}_${assignment.title}`;
         const metadata = {
             title: filename
         };
@@ -41,7 +41,7 @@ export class AssignmentExportService {
     public exportMultipleAssignments(assignments: ViewAssignment[]): void {
         const doc = this.createDocOfMultipleAssignments(assignments);
 
-        const filename = this.translate.instant(`Elections`);
+        const filename = _(`Elections`);
         const metadata = {
             title: filename
         };
@@ -65,9 +65,7 @@ export class AssignmentExportService {
                     ? [assignmentDocDef, this.pdfDocumentService.getPageBreak()]
                     : [assignmentDocDef];
             } catch (error) {
-                const errorText = `${this.translate.instant(`Error during PDF creation of election:`)} ${
-                    assignment.title
-                }`;
+                const errorText = `${_(`Error during PDF creation of election:`)} ${assignment.title}`;
                 console.error(`${errorText}\nDebugInfo:\n`, error);
                 throw new PdfError(errorText);
             }
@@ -99,7 +97,7 @@ export class AssignmentExportService {
     private createToc(assignments: ViewAssignment[]): Object {
         const toc = [];
         const tocTitle = {
-            text: this.translate.instant(`Table of contents`),
+            text: _(`Table of contents`),
             style: `heading2`
         };
 

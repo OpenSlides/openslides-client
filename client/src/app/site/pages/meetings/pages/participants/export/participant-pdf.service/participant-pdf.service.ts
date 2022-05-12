@@ -4,6 +4,7 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ParticipantExportModule } from '../participant-export.module';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Creates a pdf for a user, containing greetings and initial login information
@@ -58,7 +59,7 @@ export class ParticipantPdfService {
      */
     public createUserListDocDef(users: ViewUser[]): object {
         const title = {
-            text: this.translate.instant(`List of participants`),
+            text: _(`List of participants`),
             style: `title`
         };
         return [title, this.createUserList(users)];
@@ -85,11 +86,11 @@ export class ParticipantPdfService {
     private createWifiAccessContent(): object {
         const wifiColumn: object[] = [
             {
-                text: this.translate.instant(`WLAN access data`),
+                text: _(`WLAN access data`),
                 style: `userDataHeading`
             },
             {
-                text: this.translate.instant(`WLAN name (SSID)`) + `:`,
+                text: _(`WLAN name (SSID)`) + `:`,
                 style: `userDataTopic`
             },
             {
@@ -97,7 +98,7 @@ export class ParticipantPdfService {
                 style: `userDataValue`
             },
             {
-                text: this.translate.instant(`WLAN password`) + `:`,
+                text: _(`WLAN password`) + `:`,
                 style: `userDataTopic`
             },
             {
@@ -105,7 +106,7 @@ export class ParticipantPdfService {
                 style: `userDataValue`
             },
             {
-                text: this.translate.instant(`WLAN encryption`) + `:`,
+                text: _(`WLAN encryption`) + `:`,
                 style: `userDataTopic`
             },
             {
@@ -135,7 +136,7 @@ export class ParticipantPdfService {
                     margin: [0, 0, 0, 8]
                 },
                 {
-                    text: this.translate.instant(`Scan this QR code to connect to WLAN.`),
+                    text: _(`Scan this QR code to connect to WLAN.`),
                     style: `small`
                 }
             );
@@ -153,11 +154,11 @@ export class ParticipantPdfService {
     private createUserAccessContent(user: ViewUser): object {
         const columnOpenSlides: object[] = [
             {
-                text: this.translate.instant(`OpenSlides access data`),
+                text: _(`OpenSlides access data`),
                 style: `userDataHeading`
             },
             {
-                text: this.translate.instant(`Username`) + `:`,
+                text: _(`Username`) + `:`,
                 style: `userDataTopic`
             },
             {
@@ -165,7 +166,7 @@ export class ParticipantPdfService {
                 style: `userDataValue`
             },
             {
-                text: this.translate.instant(`Initial password`) + `:`,
+                text: _(`Initial password`) + `:`,
                 style: `userDataTopic`
             },
             {
@@ -194,7 +195,7 @@ export class ParticipantPdfService {
                     margin: [0, 0, 0, 8]
                 },
                 {
-                    text: this.translate.instant(`Scan this QR code to open URL.`),
+                    text: _(`Scan this QR code to open URL.`),
                     style: `small`
                 }
             );
@@ -212,11 +213,11 @@ export class ParticipantPdfService {
         const users_pdf_welcometext = this.meetingSettingsService.instant(`users_pdf_welcometext`)!;
         return [
             {
-                text: this.translate.instant(users_pdf_welcometitle),
+                text: _(users_pdf_welcometitle),
                 style: `userDataHeading`
             },
             {
-                text: this.translate.instant(users_pdf_welcometext),
+                text: _(users_pdf_welcometext),
                 style: `userDataTopic`
             }
         ];
@@ -236,11 +237,11 @@ export class ParticipantPdfService {
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Name`),
+                    text: _(`Name`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Groups`),
+                    text: _(`Groups`),
                     style: `tableHeader`
                 }
             ]
@@ -266,7 +267,7 @@ export class ParticipantPdfService {
         const result: any[] = [];
         let counter = 1;
         users.forEach(user => {
-            const groupList = user.groups().map(grp => this.translate.instant(grp.name));
+            const groupList = user.groups().map(grp => _(grp.name));
             result.push([{ text: `` + counter }, { text: user.full_name }, { text: groupList.join(`, `) }]);
             counter += 1;
         });

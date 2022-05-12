@@ -6,6 +6,7 @@ import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const VOTE_URL = `/system/vote`;
 const HAS_VOTED_URL = `${VOTE_URL}/voted`;
@@ -27,7 +28,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
 
     public getTitle = (viewVote: object) => `Vote`;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Votes` : `Vote`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Votes` : `Vote`);
 
     public override getFieldsets(): Fieldsets<Vote> {
         const detail: (keyof Vote)[] = [`delegated_user_id`, `option_id`, `user_id`, `value`, `weight`, `user_token`];

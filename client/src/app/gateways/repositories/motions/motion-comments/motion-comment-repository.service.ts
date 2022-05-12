@@ -6,6 +6,7 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionCommentAction } from './motion-comment.action';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository
 
     public getTitle = (viewMotionComment: ViewMotionComment) => `Comment`;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Comments` : `Comment`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Comments` : `Comment`);
 
     public override getFieldsets(): Fieldsets<ViewMotionComment> {
         const commentFields: (keyof ViewMotionComment)[] = [`motion_id`, `section_id`, `comment`];

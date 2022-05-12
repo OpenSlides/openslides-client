@@ -10,6 +10,7 @@ import { Topic } from 'src/app/domain/models/topics/topic';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: AgendaItemListServiceModule
@@ -38,7 +39,7 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
         this.updateFilterForRepo({
             repo: tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: this.translate.instant(`No tags`)
+            noneOptionLabel: _(`No tags`)
         });
     }
 
@@ -51,8 +52,8 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
                 label: `Status`,
                 property: `closed`,
                 options: [
-                    { label: this.translate.instant(`Open items`), condition: false },
-                    { label: this.translate.instant(`Closed items`), condition: true }
+                    { label: _(`Open items`), condition: false },
+                    { label: _(`Closed items`), condition: true }
                 ]
             },
             this.tagFilterOptions,
@@ -62,13 +63,13 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
                 options: this.createVisibilityFilterOptions()
             },
             {
-                label: this.translate.instant(`Type`),
+                label: _(`Type`),
                 property: `getContentObjectCollection`,
                 options: [
-                    { label: this.translate.instant(`Motions`), condition: Motion.COLLECTION },
-                    { label: this.translate.instant(`Topics`), condition: Topic.COLLECTION },
-                    { label: this.translate.instant(`Motion blocks`), condition: MotionBlock.COLLECTION },
-                    { label: this.translate.instant(`Elections`), condition: Assignment.COLLECTION }
+                    { label: _(`Motions`), condition: Motion.COLLECTION },
+                    { label: _(`Topics`), condition: Topic.COLLECTION },
+                    { label: _(`Motion blocks`), condition: MotionBlock.COLLECTION },
+                    { label: _(`Elections`), condition: Assignment.COLLECTION }
                 ]
             }
         ];

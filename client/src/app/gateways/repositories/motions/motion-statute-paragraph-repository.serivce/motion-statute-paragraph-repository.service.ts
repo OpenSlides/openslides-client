@@ -7,6 +7,7 @@ import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionStatuteParagraphAction } from './motion-statute-paragraph.action';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -59,8 +60,7 @@ export class MotionStatuteParagraphRepositoryService extends BaseMeetingRelatedR
 
     public getTitle = (viewMotionStatuteParagraph: ViewMotionStatuteParagraph) => viewMotionStatuteParagraph.title;
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Statute paragraphs` : `Statute paragraph`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Statute paragraphs` : `Statute paragraph`);
 
     private getCreatePayload(partialStatuteParagraph: Partial<MotionStatuteParagraph>): any {
         return {

@@ -8,6 +8,7 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { AssignmentPollService } from '../modules/assignment-poll/services/assignment-poll.service';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { AssignmentExportServiceModule } from './assignment-export-service.module';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Creates a PDF document from a single assignment
@@ -61,7 +62,7 @@ export class AssignmentPdfService {
      * @returns the preamble part of the pdf document
      */
     private createPreamble(assignment: ViewAssignment): object {
-        const preambleText = `${this.translate.instant(`Number of persons to be elected`)}: `;
+        const preambleText = `${_(`Number of persons to be elected`)}: `;
         const memberNumber = `` + assignment.open_posts;
         const preamble = {
             text: [
@@ -89,7 +90,7 @@ export class AssignmentPdfService {
         if (assignment.description) {
             const descriptionDocDef = this.htmlToPdfService.addPlainText(assignment.description);
 
-            const descriptionText = `${this.translate.instant(`Description`)}: `;
+            const descriptionText = `${_(`Description`)}: `;
             const description = [
                 {
                     text: descriptionText,
@@ -112,7 +113,7 @@ export class AssignmentPdfService {
      */
     private createCandidateList(assignment: ViewAssignment): object {
         if (assignment.phase !== AssignmentPhase.Finished) {
-            const candidatesText = `${this.translate.instant(`Candidates`)}: `;
+            const candidatesText = `${_(`Candidates`)}: `;
             const userList = assignment.candidates.map(candidate => ({
                 text: candidate.user.full_name,
                 margin: [0, 0, 0, 10]
@@ -163,11 +164,11 @@ export class AssignmentPdfService {
                         style: `tableHeader`
                     },
                     {
-                        text: this.translate.instant(`Candidates`),
+                        text: _(`Candidates`),
                         style: `tableHeader`
                     },
                     {
-                        text: this.translate.instant(`Votes`),
+                        text: _(`Votes`),
                         style: `tableHeader`
                     }
                 ]);
@@ -175,7 +176,7 @@ export class AssignmentPdfService {
                 const tableData = this.assignmentPollService.generateTableData(poll);
                 for (const [index, pollResult] of tableData.entries()) {
                     const rank = pollResult.class === `user` ? index + 1 : ``;
-                    const voteOption = this.translate.instant(this.pollKeyVerbose.transform(pollResult.votingOption));
+                    const voteOption = _(this.pollKeyVerbose.transform(pollResult.votingOption));
                     const resultLine = this.getPollResult(pollResult, poll);
                     const tableLine = [
                         {
@@ -221,7 +222,7 @@ export class AssignmentPdfService {
                 }
             })
             .map((singleResult: VotingResult) => {
-                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(singleResult.vote!));
+                const votingKey = _(this.pollKeyVerbose.transform(singleResult.vote!));
                 const resultValue = this.parsePollNumber.transform(singleResult.amount!);
                 const resultInPercent = this.pollPercentBase.transform(singleResult.amount!, poll, votingResult);
                 return `${votingKey}${!!votingKey ? `: ` : ``}${resultValue} ${

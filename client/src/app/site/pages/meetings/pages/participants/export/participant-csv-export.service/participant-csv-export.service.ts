@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserExport } from 'src/app/domain/models/users/user.export';
 import { participantsExportExample } from '../participants-export-example';
 import { PARTICIPANT_HEADERS_AND_VERBOSE_NAMES } from '../../pages/participant-import/definitions/index';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export interface ParticipantExport extends UserExport {
     comment?: string;
@@ -46,7 +47,7 @@ export class ParticipantCsvExportService {
                 { property: `gender` },
                 { property: `vote_weight`, label: `Vote weight` }
             ],
-            this.translate.instant(`Participants`) + `.csv`
+            _(`Participants`) + `.csv`
         );
     }
 
@@ -55,7 +56,7 @@ export class ParticipantCsvExportService {
         this.csvExport.dummyCSVExport<UserExport>(
             PARTICIPANT_HEADERS_AND_VERBOSE_NAMES,
             rows,
-            `${this.translate.instant(`participants-example`)}.csv`
+            `${_(`participants-example`)}.csv`
         );
     }
 }

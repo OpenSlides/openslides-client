@@ -69,9 +69,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> implem
     }
 
     public async assignMeetingToUsers(): Promise<void> {
-        const content = this.translate.instant(
-            `This will add or remove the selected accounts to the following meeting:`
-        );
+        const content = _(`This will add or remove the selected accounts to the following meeting:`);
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);
         const choices = [ADD, REMOVE];

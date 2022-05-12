@@ -22,6 +22,7 @@ import { map, merge, Observable, of } from 'rxjs';
 import { OptionData, OptionDataKey, PollData, PollDataKey } from 'src/app/domain/models/poll/generic-poll';
 import { MotionPollServiceModule } from '../motion-poll-service.module';
 import { MotionPollControllerService } from '../motion-poll-controller.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Service class for motion polls.
@@ -52,7 +53,7 @@ export class MotionPollService extends PollService {
 
     public getDefaultPollData(contentObject?: Motion): Partial<Poll> {
         const poll: Partial<Poll> = {
-            title: this.translate.instant(`Vote`),
+            title: _(`Vote`),
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: this.defaultGroupIds,
             type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog,

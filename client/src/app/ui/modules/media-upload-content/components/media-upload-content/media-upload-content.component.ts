@@ -8,6 +8,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { Observable } from 'rxjs';
 import { FileData } from '../../../file-upload/components/file-upload/file-upload.component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-media-upload-content',
@@ -21,19 +22,19 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     public vScrollColumns: PblColumnDefinition[] = [
         {
             prop: `title`,
-            label: this.translate.instant(`Title`)
+            label: _(`Title`)
         },
         {
             prop: `filename`,
-            label: this.translate.instant(`Filename`)
+            label: _(`Filename`)
         },
         {
             prop: `information`,
-            label: this.translate.instant(`Information`)
+            label: _(`Information`)
         },
         {
             prop: `access_groups`,
-            label: this.translate.instant(`Access groups`)
+            label: _(`Access groups`)
         }
     ];
 

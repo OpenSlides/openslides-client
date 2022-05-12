@@ -28,6 +28,7 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { mmToPoints } from 'src/app/infrastructure/utils';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 interface CreateTextData {
     motion: ViewMotion;
@@ -205,7 +206,7 @@ export class MotionPdfService {
         const number = motion.number ? ` ` + motion.number : ``;
         let title = ``;
         if (this.pdfDocumentService.pageSize === `A4`) {
-            title += `${this.translate.instant(`Motion`)} `;
+            title += `${_(`Motion`)} `;
         }
 
         title += `${number}: ${changedTitle}`;
@@ -226,16 +227,14 @@ export class MotionPdfService {
     private createSubtitle(motion: ViewMotion, sequential?: boolean): object {
         const subtitleLines = [];
         if (sequential) {
-            subtitleLines.push(`${this.translate.instant(`Sequential number`)}: ${motion.id}`);
+            subtitleLines.push(`${_(`Sequential number`)}: ${motion.id}`);
         }
 
         if (motion.lead_motion) {
             if (sequential) {
                 subtitleLines.push(` • `);
             }
-            subtitleLines.push(
-                `${this.translate.instant(`Amendment to`)} ${motion.lead_motion.number || motion.lead_motion.title}`
-            );
+            subtitleLines.push(`${_(`Amendment to`)} ${motion.lead_motion.number || motion.lead_motion.title}`);
         }
 
         return {
@@ -265,7 +264,7 @@ export class MotionPdfService {
 
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`Submitters`)}:`,
+                    text: `${_(`Submitters`)}:`,
                     style: `boldText`
                 },
                 {
@@ -281,7 +280,7 @@ export class MotionPdfService {
 
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`Supporters`)}:`,
+                    text: `${_(`Supporters`)}:`,
                     style: `boldText`
                 },
                 {
@@ -294,7 +293,7 @@ export class MotionPdfService {
         if (!infoToExport || infoToExport.includes(`state`)) {
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`State`)}:`,
+                    text: `${_(`State`)}:`,
                     style: `boldText`
                 },
                 {
@@ -328,7 +327,7 @@ export class MotionPdfService {
         if (motion.category && (!infoToExport || infoToExport.includes(`category`))) {
             let categoryText = ``;
             if (motion.category.parent) {
-                categoryText = `${motion.category.parent.toString()}\n${this.translate.instant(
+                categoryText = `${motion.category.parent.toString()}\n${_(
                     `Subcategory`
                 )}: ${motion.category.toString()}`;
             } else {
@@ -336,7 +335,7 @@ export class MotionPdfService {
             }
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`Category`)}:`,
+                    text: `${_(`Category`)}:`,
                     style: `boldText`
                 },
                 {
@@ -351,7 +350,7 @@ export class MotionPdfService {
 
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`Tags`)}:`,
+                    text: `${_(`Tags`)}:`,
                     style: `boldText`
                 },
                 {
@@ -364,7 +363,7 @@ export class MotionPdfService {
         if (motion.block && (!infoToExport || infoToExport.includes(`block`))) {
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`Motion block`)}:`,
+                    text: `${_(`Motion block`)}:`,
                     style: `boldText`
                 },
                 {
@@ -377,7 +376,7 @@ export class MotionPdfService {
         if (motion.origin && (!infoToExport || infoToExport.includes(`origin`))) {
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`Origin`)}:`,
+                    text: `${_(`Origin`)}:`,
                     style: `boldText`
                 },
                 {
@@ -395,9 +394,7 @@ export class MotionPdfService {
                     const column2: any[] = [];
                     const column3: any[] = [];
                     tableData.forEach(votingResult => {
-                        const votingOption = this.translate.instant(
-                            this.pollKeyVerbose.transform(votingResult.votingOption)
-                        );
+                        const votingOption = _(this.pollKeyVerbose.transform(votingResult.votingOption));
                         const value = votingResult.value[0];
                         const resultValue = this.parsePollNumber.transform(value.amount!);
                         column1.push(`${votingOption}:`);
@@ -457,11 +454,9 @@ export class MotionPdfService {
                 if (change.isTitleChange()) {
                     // Is always a change recommendation
                     const changeReco = change as ViewMotionChangeRecommendation;
-                    columnLineNumbers.push(`${this.translate.instant(`Title`)}: `);
+                    columnLineNumbers.push(`${_(`Title`)}: `);
                     columnChangeType.push(
-                        `(${this.translate.instant(`Change recommendation`)}) - ${this.translate.instant(
-                            getRecommendationTypeName(changeReco)
-                        )}`
+                        `(${_(`Change recommendation`)}) - ${_(getRecommendationTypeName(changeReco))}`
                     );
                 } else {
                     // line numbers column
@@ -475,21 +470,19 @@ export class MotionPdfService {
                     // change type column
                     if (change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION) {
                         const changeReco = change as ViewMotionChangeRecommendation;
-                        columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line}: `);
+                        columnLineNumbers.push(`${_(`Line`)} ${line}: `);
                         columnChangeType.push(
-                            `(${this.translate.instant(`Change recommendation`)}) - ${this.translate.instant(
-                                getRecommendationTypeName(changeReco)
-                            )}`
+                            `(${_(`Change recommendation`)}) - ${_(getRecommendationTypeName(changeReco))}`
                         );
                     } else if (change.getChangeType() === ViewUnifiedChangeType.TYPE_AMENDMENT) {
                         const amendment = change as ViewMotionAmendedParagraph;
-                        let summaryText = `(${this.translate.instant(`Amendment`)} ${amendment.getNumber()}) -`;
+                        let summaryText = `(${_(`Amendment`)} ${amendment.getNumber()}) -`;
                         if (amendment.isRejected()) {
-                            summaryText += ` ${this.translate.instant(`Rejected`)}`;
+                            summaryText += ` ${_(`Rejected`)}`;
                         } else if (amendment.isAccepted()) {
-                            summaryText += ` ${this.translate.instant(amendment.stateName)}`;
+                            summaryText += ` ${_(amendment.stateName)}`;
                             // only append line and change, if the merge of the state of the amendment is accepted.
-                            columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line}: `);
+                            columnLineNumbers.push(`${_(`Line`)} ${line}: `);
                             columnChangeType.push(summaryText);
                         }
                     }
@@ -499,7 +492,7 @@ export class MotionPdfService {
             if (columnChangeType.length > 0) {
                 metaTableBody.push([
                     {
-                        text: this.translate.instant(`Summary of changes:`),
+                        text: _(`Summary of changes:`),
                         style: `boldText`
                     },
                     {
@@ -523,7 +516,7 @@ export class MotionPdfService {
         if (optionToFollowRecommendation) {
             metaTableBody.push([
                 {
-                    text: `${this.translate.instant(`Decision`)}:`,
+                    text: `${_(`Decision`)}:`,
                     style: `boldText`
                 },
                 {
@@ -535,7 +528,7 @@ export class MotionPdfService {
                         },
                         {
                             width: `auto`,
-                            text: this.translate.instant(`As recommendation`)
+                            text: _(`As recommendation`)
                         },
                         {
                             width: 20,
@@ -547,7 +540,7 @@ export class MotionPdfService {
                         },
                         {
                             width: `auto`,
-                            text: this.translate.instant(`Divergent:`)
+                            text: _(`Divergent:`)
                         }
                     ]
                 }
@@ -576,7 +569,7 @@ export class MotionPdfService {
     private createPreamble(): object {
         const motions_preamble = this.meetingSettingsService.instant(`motions_preamble`) as string;
         return {
-            text: `${this.translate.instant(motions_preamble)}`,
+            text: `${_(motions_preamble)}`,
             margin: [0, 10, 0, 10]
         };
     }
@@ -627,12 +620,7 @@ export class MotionPdfService {
 
             if (crMode === ChangeRecoMode.Diff && titleChange) {
                 const changedTitle = this.changeRecoRepo.getTitleChangesAsDiff(motion.title, titleChange);
-                htmlText +=
-                    `<span><strong>` +
-                    this.translate.instant(`Changed title`) +
-                    `:</strong><br>` +
-                    changedTitle +
-                    `</span><br>`;
+                htmlText += `<span><strong>` + _(`Changed title`) + `:</strong><br>` + changedTitle + `</span><br>`;
             }
             const formattedText = this.motionFormatService.formatMotion({
                 targetMotion: motion,
@@ -661,7 +649,7 @@ export class MotionPdfService {
 
             // add the reason "head line"
             reason.push({
-                text: this.translate.instant(`Reason`),
+                text: _(`Reason`),
                 style: `heading3`,
                 margin: [0, 10, 0, 10]
             });
@@ -689,7 +677,7 @@ export class MotionPdfService {
 
         const attachments = [];
         attachments.push({
-            text: this.translate.instant(`Attachments`),
+            text: _(`Attachments`),
             style: `heading3`,
             margin: [0, 10, 0, 10]
         });
@@ -731,33 +719,33 @@ export class MotionPdfService {
     public callListToDoc(motions: ViewMotion[]): object {
         motions.sort((a, b) => a.sort_weight - b.sort_weight);
         const title = {
-            text: this.translate.instant(`Call list`),
+            text: _(`Call list`),
             style: `title`
         };
         const callListTableBody: object[] = [
             [
                 {
-                    text: this.translate.instant(`Called`),
+                    text: _(`Called`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Called with`),
+                    text: _(`Called with`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Submitters`),
+                    text: _(`Submitters`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Title`),
+                    text: _(`Title`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Recommendation`),
+                    text: _(`Recommendation`),
                     style: `tableHeader`
                 },
                 {
-                    text: this.translate.instant(`Notes`),
+                    text: _(`Notes`),
                     style: `tableHeader`
                 }
             ]
@@ -840,7 +828,7 @@ export class MotionPdfService {
         const noteContent = this.htmlToPdfService.convertHtml({ htmlText: note, lnMode: LineNumberingMode.None });
 
         const subHeading = {
-            text: this.translate.instant(noteTitle),
+            text: _(noteTitle),
             style: `heading2`
         };
         return [title, subtitle, metaInfo, subHeading, noteContent];
@@ -852,7 +840,7 @@ export class MotionPdfService {
             let name = ``;
             let content = ``;
             if (comment === PERSONAL_NOTE_ID) {
-                name = this.translate.instant(`Personal note`);
+                name = _(`Personal note`);
                 content = motion && motion.getPersonalNote()! && motion.getPersonalNote()!.note;
             } else {
                 const viewComment = this.commentRepo.getViewModel(comment)!;

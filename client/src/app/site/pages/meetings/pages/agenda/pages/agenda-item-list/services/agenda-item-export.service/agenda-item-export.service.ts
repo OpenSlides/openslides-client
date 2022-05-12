@@ -6,6 +6,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * pdfMake structure for a content line in the pdf document.
@@ -41,12 +42,12 @@ export class AgendaItemExportService {
                 { label: `Item type`, property: `verboseCsvType` },
                 { label: `Tags`, property: `tags` }
             ],
-            this.translate.instant(`Agenda`) + `.csv`
+            _(`Agenda`) + `.csv`
         );
     }
 
     public exportAsPdf(source: ViewAgendaItem[]): void {
-        const filename = this.translate.instant(`Agenda`);
+        const filename = _(`Agenda`);
         this.pdfExportService.download({ docDefinition: this.agendaListToDocDef(source), filename });
     }
 
@@ -60,7 +61,7 @@ export class AgendaItemExportService {
     private agendaListToDocDef(items: ViewAgendaItem[]): object {
         const tree: OSTreeNode<ViewAgendaItem>[] = this.treeService.makeSortedTree(items, `weight`, `parent_id`);
         const title = {
-            text: this.translate.instant(`Agenda`),
+            text: _(`Agenda`),
             style: `title`
         };
         const entries = this.createEntries(tree);

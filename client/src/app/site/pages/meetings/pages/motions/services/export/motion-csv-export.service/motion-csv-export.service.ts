@@ -15,6 +15,7 @@ import { MotionControllerService } from '../../common/motion-controller.service'
 import { MotionFormatService } from '../../common/motion-format.service';
 import { getMotionExportHeadersAndVerboseNames, sortMotionPropertyList } from '../definitions';
 import { MotionsExportModule } from '../motions-export.module';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 interface MotionCsvExport {
     number?: string;
@@ -141,7 +142,7 @@ export class MotionCsvExportService {
             }))
         );
 
-        this.csvExport.export(motions, exportProperties, this.translate.instant(`Motions`) + `.csv`);
+        this.csvExport.export(motions, exportProperties, _(`Motions`) + `.csv`);
     }
     /**numberOrTitle
      * Exports the call list.
@@ -163,13 +164,13 @@ export class MotionCsvExportService {
                 },
                 { property: `block`, label: `Motion block` }
             ],
-            this.translate.instant(`Call list`) + `.csv`
+            _(`Call list`) + `.csv`
         );
     }
 
     public exportDummyMotion(): void {
         const rows: MotionCsvExport[] = MotionCsvExportExample;
-        const filename = `${this.translate.instant(`motions`)}-${this.translate.instant(`example`)}.csv`;
+        const filename = `${_(`motions`)}-${_(`example`)}.csv`;
         this.csvExport.dummyCSVExport<MotionCsvExport>(getMotionExportHeadersAndVerboseNames() as any, rows, filename);
     }
 }

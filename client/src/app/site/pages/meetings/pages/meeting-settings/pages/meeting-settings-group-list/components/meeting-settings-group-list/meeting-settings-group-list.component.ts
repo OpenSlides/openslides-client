@@ -6,6 +6,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { SettingsGroup } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-meeting-settings-group-list',
@@ -31,9 +32,9 @@ export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
      * Resets every config for all registered group.
      */
     public async resetAll(): Promise<void> {
-        const title = this.translate.instant(
-            `Are you sure you want to reset all options to factory defaults?`,
-            `Changes of all settings group will be lost!`
+        const title = _(
+            `Are you sure you want to reset all options to factory defaults?` +
+                `Changes of all settings group will be lost!`
         );
         if (await this.promptDialog.open(title)) {
             await this.meetingRepo.update(this.getDefaultValues(), { meeting: this.activeMeeting! });

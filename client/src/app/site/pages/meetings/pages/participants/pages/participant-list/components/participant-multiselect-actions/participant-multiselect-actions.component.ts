@@ -5,6 +5,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-participant-multiselect-actions',
@@ -37,16 +38,14 @@ export class ParticipantMultiselectActionsComponent extends BaseUiComponent {
      * Handler for bulk resetting passwords to the default ones. Needs multiSelect mode.
      */
     public async resetPasswordsToDefaultSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to reset all passwords to the default ones?`);
+        const title = _(`Are you sure you want to reset all passwords to the default ones?`);
         if (!(await this.promptService.open(title))) {
             return;
         }
 
         if (this.selectedUsers.find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
-                this.translate.instant(
-                    `Note: Your own password was not changed. Please use the password change dialog instead.`
-                )
+                _(`Note: Your own password was not changed. Please use the password change dialog instead.`)
             );
         }
         this.repo.resetPasswordToDefault(...this.selectedUsers).catch(this.raiseError);
@@ -56,21 +55,15 @@ export class ParticipantMultiselectActionsComponent extends BaseUiComponent {
      * Handler for bulk generating new passwords. Needs multiSelect mode.
      */
     public async generateNewPasswordsPasswordsSelected(): Promise<void> {
-        const title = this.translate.instant(
-            `Are you sure you want to generate new passwords for all selected participants?`
-        );
-        const content = this.translate.instant(
-            `Note, that the default password will be changed to the new generated one.`
-        );
+        const title = _(`Are you sure you want to generate new passwords for all selected participants?`);
+        const content = _(`Note, that the default password will be changed to the new generated one.`);
         if (!(await this.promptService.open(title, content))) {
             return;
         }
 
         if (this.selectedUsers.find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
-                this.translate.instant(
-                    `Note: Your own password was not changed. Please use the password change dialog instead.`
-                )
+                _(`Note: Your own password was not changed. Please use the password change dialog instead.`)
             );
         }
         const rows = this.selectedUsers.filter(row => row.user.id !== this.operator.operatorId);

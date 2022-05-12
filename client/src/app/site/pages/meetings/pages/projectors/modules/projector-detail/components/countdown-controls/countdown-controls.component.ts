@@ -8,6 +8,7 @@ import { DurationService } from 'src/app/site/services/duration.service';
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog/services/projector-countdown-dialog.service';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-countdown-controls',
@@ -117,7 +118,7 @@ export class CountdownControlsComponent {
      * On delete button
      */
     public async onDelete(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this countdown?`);
+        const title = _(`Are you sure you want to delete this countdown?`);
         const content = this.countdown.title;
 
         if (await this.promptService.open(title, content)) {
