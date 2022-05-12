@@ -134,8 +134,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         const meetingId = routeParams?.['meetingId'];
 
         if (meetingId) {
-            this.router.navigate([meetingId, `error`], {
+            this.router.navigate([`error`], {
                 queryParams: {
+                    meetingId,
                     error: `Authentication Error`,
                     msg: route.data['meetingPermissions']
                 }

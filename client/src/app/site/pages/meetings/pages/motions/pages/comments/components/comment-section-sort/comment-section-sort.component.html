@@ -1,0 +1,18 @@
+<os-head-bar [nav]="false">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Sort comments' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<!-- Content -->
+<mat-card class="os-form-card">
+    <!-- The sorting component -->
+    <os-sorting-list (sortEvent)="onSortingChange($event)" [live]="true" [input]="comments" #sorter>
+        <ng-template let-comment>
+            <span>
+                {{ comment.getTitle() }}
+            </span>
+        </ng-template>
+    </os-sorting-list>
+</mat-card>

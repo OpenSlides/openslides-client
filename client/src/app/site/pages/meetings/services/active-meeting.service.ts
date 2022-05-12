@@ -48,7 +48,8 @@ const getMeetingDetailGroupSubscriptionConfig = (id: Id, getNextMeetingIdObserva
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        fieldset: `group`
+        fieldset: `group`,
+        follow: [`group_ids`]
     },
     subscriptionName: MEETING_DETAIL_GROUP_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !id)),
@@ -100,9 +101,14 @@ export class ActiveMeetingService {
         this.lifecycle.openslidesBooted.subscribe(() => this.setupModelSubscription(this.meetingId));
     }
 
+    /**
+     * Only used in the `OperatorService`
+     */
     public async ensureActiveMeetingIsAvailable(): Promise<ViewMeeting | null> {
         if (!!this.meetingId) {
-            return firstValueFrom(this.meetingObservable.pipe(first(meeting => !!meeting)));
+            return await firstValueFrom(
+                this.meetingObservable.pipe(first(meeting => !!meeting && !!meeting.group_ids))
+            );
         }
         return null;
     }

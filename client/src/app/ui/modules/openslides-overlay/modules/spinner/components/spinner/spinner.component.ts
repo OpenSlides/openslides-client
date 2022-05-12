@@ -1,5 +1,15 @@
 import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { shuffle } from 'src/app/infrastructure/utils';
+
+const POSSIBLE_MESSAGES = [
+    `Loading data. Please wait ...`,
+    `An administrator has to be elected`,
+    `Motions are being written`,
+    `Change recommendations are being assigned`,
+    `A submitter has finally submitted their motion`,
+    `One topic on the agenda is to eat some cake`
+];
 
 /**
  * Component for the global spinner.
@@ -46,16 +56,9 @@ export class SpinnerComponent {
     private _height = `100px`;
     private _width = `100px`;
 
-    /**
-     * Constructor
-     *
-     * @param overlayService Reference to the service for this spinner.
-     * @param translate Service to get translations for the messages.
-     * @param cd Service to manual initiate a change of the UI.
-     */
-    public constructor(
-        protected translate: TranslateService // @Optional() @Inject(OVERLAY_COMPONENT_DATA) data: { text: string }
-    ) {
-        this.text = /* data?.text || */ `Loading data. Please wait ...`;
+    private readonly _possibleMessages = shuffle(POSSIBLE_MESSAGES);
+
+    public constructor() {
+        this.text = this.text || this._possibleMessages[0] /* `Loading data. Please wait ...` */;
     }
 }

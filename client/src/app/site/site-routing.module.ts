@@ -9,6 +9,10 @@ const routes: Routes = [
         loadChildren: () => import(`./pages/login/login.module`).then(m => m.LoginModule)
     },
     {
+        path: `error`,
+        loadChildren: () => import(`./pages/error/error.module`).then(m => m.ErrorModule)
+    },
+    {
         path: ``,
         component: SiteWrapperComponent,
         children: [

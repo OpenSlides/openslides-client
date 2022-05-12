@@ -1,6 +1,8 @@
 describe('Testing the sign in and out process', () => {
     const AUTH_URL = `/system/auth`;
     const ACTION_URL = 'system/action/handle_request';
+    const DELEGATE_NAME = `a`;
+    const DEFAULT_MEETING_ID = 1;
 
     const username = `Mississipi`;
     let secondAccountId: number;
@@ -45,5 +47,18 @@ describe('Testing the sign in and out process', () => {
         cy.wait(`@login`);
         cy.url().should(`not.include`, `login`);
         cy.url().should(`include`, meetingId);
+    });
+
+    it(`signs in as delegate`, () => {
+        cy.visit(`/login`);
+        cy.intercept(`${AUTH_URL}/login`).as(`login`);
+        cy.intercept({ method: 'POST', url: ACTION_URL }).as('action');
+
+        cy.getElement(`loginUsernameInput`).type(DELEGATE_NAME);
+        cy.getElement(`loginPasswordInput`).type(DELEGATE_NAME);
+        cy.getElement(`loginButton`).click();
+        cy.wait(`@login`);
+        cy.url().should(`not.include`, `login`);
+        cy.url().should(`include`, DEFAULT_MEETING_ID);
     });
 });

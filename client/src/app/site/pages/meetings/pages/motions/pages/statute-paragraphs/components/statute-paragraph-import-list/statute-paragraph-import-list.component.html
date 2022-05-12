@@ -1,0 +1,18 @@
+<os-head-bar [nav]="false">
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Import statute' | translate }}</h2>
+    </div>
+
+    <div class="menu-slot">
+        <button *ngIf="canImport" mat-button (click)="doImport()">
+            <span class="upper">{{ 'Import' | translate }}</span>
+        </button>
+    </div>
+</os-head-bar>
+
+<os-import-list [importer]="importer" [possibleFields]="possibleFields" [columns]="columns">
+    <div *pblNgridCellDef="'newEntry.text'; row as entry">
+        {{ getShortPreview(entry.newEntry.text) }}
+    </div>
+</os-import-list>

@@ -163,6 +163,7 @@ class PdfCreator {
         } else {
             this._pdfWorker = null;
             this._progressSnackBarService.dismiss();
+            console.log(_(`Cannot create PDF files on this browser.`));
             // this.matSnackBar.open(_(`Cannot create PDF files on this browser.`), ``, {
             //     duration: 0
             // });

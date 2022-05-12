@@ -24,23 +24,6 @@ import { ModelRequestBuilderService } from 'src/app/site/services/model-request-
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
-const OPERATOR_FIELDS: TypedFieldset<User> = [
-    `title`,
-    `first_name`,
-    `last_name`,
-    `username`,
-    `pronoun`,
-    `organization_management_level`,
-    { templateField: `committee_$_management_level` },
-    `committee_ids`,
-    `can_change_own_password`,
-    `is_present_in_meeting_ids`,
-    `default_structure_level`,
-    `is_physical_person`,
-    `meeting_ids`,
-    { templateField: `group_$_ids` }
-];
-
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
     if (!user.committee_$_management_level) {
         return null; // Explicit null to distinguish from undefined
@@ -204,11 +187,6 @@ export class OperatorService {
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
     private _CML: { [id: number]: string } | undefined = undefined;
 
-    /**
-     * Helper to identify if there is already one request fired if an active-meeting is present.
-     */
-    private _lockActiveMeeting = false;
-
     public constructor(
         private activeMeetingService: ActiveMeetingService,
         private DS: DataStoreService,
@@ -262,7 +240,7 @@ export class OperatorService {
         });
         // Specific operator data: The user itself and the groups for permissions.
         this.userRepo.getGeneralViewModelObservable().subscribe(user => {
-            if (user !== undefined && this.operatorId === user.id) {
+            if (user !== undefined && this.operatorId === user.id && !!user.username) {
                 this._shortName = this.userRepo.getShortName(user);
                 if (this.activeMeetingId) {
                     this._groupIds = user.group_ids(this.activeMeetingId);
@@ -312,28 +290,31 @@ export class OperatorService {
         let isReady = true;
         if (this.activeMeetingId) {
             isReady =
-                isReady && !!this.activeMeeting && this._groupIds !== undefined && this._permissions !== undefined;
+                isReady &&
+                !!this.activeMeeting?.group_ids &&
+                this._groupIds !== undefined &&
+                this._permissions !== undefined;
         }
         if (this.isAuthenticated) {
             isReady = isReady && this._OML !== undefined && this._CML !== undefined;
         }
         // TODO: for developing some checks
-        console.log(
-            `Operator updated. Authenticated?`,
-            this.isAuthenticated,
-            `CML:`,
-            this._CML,
-            `OML:`,
-            this._OML,
-            `ActiveMeetingId?`,
-            this.activeMeetingId,
-            `groupIds`,
-            this._groupIds,
-            `permissions`,
-            this._permissions,
-            `isReady`,
-            isReady
-        );
+        // console.log(
+        //     `Operator updated. Authenticated?`,
+        //     this.isAuthenticated,
+        //     `CML:`,
+        //     this._CML,
+        //     `OML:`,
+        //     this._OML,
+        //     `ActiveMeetingId?`,
+        //     this.activeMeetingId,
+        //     `groupIds`,
+        //     this._groupIds,
+        //     `permissions`,
+        //     this._permissions,
+        //     `isReady`,
+        //     isReady
+        // );
         if (isReady) {
             this._ready = true;
             this._readyDeferred.resolve();
@@ -342,7 +323,6 @@ export class OperatorService {
     }
 
     private setNotReady(): void {
-        this._lockActiveMeeting = false;
         this._ready = false;
         this._operatorReadySubject.next(false);
         this._meetingIds = undefined;
@@ -393,14 +373,8 @@ export class OperatorService {
             // present. Therefore, it is necessary to insert a second "lock" to prevent multiple
             // operator-requests will fire.
             await this.activeMeetingService.ensureActiveMeetingIsAvailable();
-            if (this._lockActiveMeeting) {
-                return;
-            }
-            this._lockActiveMeeting = true;
-            operatorRequest = this.getOperatorRequestWithActiveMeeting();
-        } else {
-            operatorRequest = this.getOperatorRequestWithoutActiveMeeting();
         }
+        operatorRequest = this.getOperatorRequestWithoutActiveMeeting();
 
         if (operatorRequest) {
             // Do not wait for the subscription to be done...
@@ -458,11 +432,11 @@ export class OperatorService {
      */
     public hasPerms(...checkPerms: Permission[]): boolean {
         if (!this._ready) {
-            console.warn(`has perms: Operator is not ready!`);
+            // console.warn(`has perms: Operator is not ready!`);
             return false;
         }
         if (!this.activeMeetingId) {
-            console.warn(`has perms: Usage outside of meeting!`);
+            // console.warn(`has perms: Usage outside of meeting!`);
             return false;
         }
         if (this.isSuperAdmin) {
@@ -617,57 +591,6 @@ export class OperatorService {
             return !!groupIds.find(id => id === this.defaultGroupId); // any anonymous is in the default group.
         }
         return groupIds.some(id => this._groupIds?.includes(id));
-    }
-
-    /**
-     * Function to build an operator-request, if an active-meeting is present.
-     * Requested fields depend on the active-meeting.
-     *
-     * @returns Either a `SimplifiedModelRequest` if staying at the startpage is allowed
-     * (e.g. when signed in or anonymous) or `null` if staying at the startpage is not allowed.
-     * Then a user will be redirected to `/login`.
-     */
-    private getOperatorRequestWithActiveMeeting(): SimplifiedModelRequest<ViewUser> | null {
-        let operatorRequest: SimplifiedModelRequest<ViewUser> | null = null;
-
-        if (this.isAuthenticated && this.operatorId) {
-            operatorRequest = {
-                ids: [this.operatorId],
-                viewModelCtor: ViewUser,
-                fieldset: [],
-                additionalFields: [
-                    ...OPERATOR_FIELDS,
-                    { templateField: `structure_level_$` },
-                    { templateField: `vote_delegated_$_to_id` },
-                    { templateField: `vote_delegations_$_from_ids` },
-                    { templateField: `group_$_ids` }
-                ]
-                // follow: [
-                //     {
-                //         idField: SpecificStructuredField(`group_$_ids`, this.activeMeetingId),
-                //         fieldset: [`permissions`]
-                //     }
-                // ]
-            };
-            // } else if (this.anonymousEnabled && this.activeMeetingId) {
-            //     operatorRequest = {
-            //         ids: [this.activeMeetingId],
-            //         viewModelCtor: ViewMeeting,
-            //         follow: [
-            //             {
-            //                 idField: `default_group_id`,
-            //                 fieldset: [`permissions`]
-            //             }
-            //         ],
-            //         fieldset: []
-            //     };
-        } else {
-            console.log(`route to login`);
-            // has active meeting without the anonymous enabled *and* not authenticated. This is
-            // forbidden and can happen, if someone enters a URL of the meeting.
-            this.osRouter.navigateToLogin();
-        }
-        return operatorRequest;
     }
 
     /**
