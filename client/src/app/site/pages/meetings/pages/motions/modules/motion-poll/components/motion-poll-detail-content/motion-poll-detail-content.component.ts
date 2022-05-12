@@ -6,6 +6,7 @@ import { MotionPollService } from '../../services';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 
 const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
 
@@ -83,7 +84,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
         this.updateSubscription(
             CHART_DATA_SUBSCRIPTION_NAME,
             this.pollService.generateTableDataAsObservable(this.poll!).subscribe(tableData => {
-                this._tableData = tableData;
+                this._tableData = tableData.filter(result => result.value[0].amount !== VOTE_UNDOCUMENTED);
                 this.setChartData();
                 this.cd.markForCheck();
             })
@@ -91,6 +92,8 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     }
 
     private setChartData(): void {
-        this._chartData = this.pollService.generateChartData(this.poll!);
+        this._chartData = this.pollService
+            .generateChartData(this.poll!)
+            .filter(result => result.data[0] !== VOTE_UNDOCUMENTED);
     }
 }
