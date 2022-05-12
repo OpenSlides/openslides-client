@@ -140,6 +140,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { name: `Recommendation label`, selector: `recommendation_label`, type: `input` },
         { name: `Allow support`, selector: `allow_support`, type: `check` },
         { name: `Allow create poll`, selector: `allow_create_poll`, type: `check` },
+        { name: `Allow submitter edit`, selector: `allow_submitter_edit`, type: `check` },
         { name: `Allow forwarding of motions`, selector: `allow_motion_forwarding`, type: `check` },
         { name: `Set number`, selector: `set_number`, type: `check` },
         { name: `Set timestamp of creation`, selector: `set_created_timestamp`, type: `check` },
