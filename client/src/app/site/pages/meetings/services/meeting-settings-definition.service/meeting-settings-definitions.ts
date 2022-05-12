@@ -102,7 +102,12 @@ export const meetingSettings: SettingsGroup[] = [
                             'utf-8': `UTF-8`,
                             'iso-8859-15': `ISO-8859-15`
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                label: _(`PDF export options`),
+                settings: [
                     {
                         key: `export_pdf_pagenumber_alignment`,
                         label: _(`Page number alignment in PDF`),
@@ -122,36 +127,32 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `export_pdf_line_height`,
-                        label: _(`Standard line height in PDF`),
+                        label: _(`Line spacing`),
                         type: `integer`
                     },
                     {
                         key: `export_pdf_page_margin_left`,
-                        label: _(`Standard page margin left of the PDF in mm`),
-                        type: `integer`,
-                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
-                    },
-                    {
-                        key: `export_pdf_page_margin_top`,
-                        label: _(`Standard page margin top of the PDF in mm`),
-                        type: `integer`,
-                        helpText: _(`Default values: A4 = 25mm, A5 = 10mm`)
+                        label: _(`Page margin left in mm`),
+                        type: `integer`
                     },
                     {
                         key: `export_pdf_page_margin_right`,
-                        label: _(`Standard page margin right of the PDF in mm`),
-                        type: `integer`,
-                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
+                        label: _(`Page margin right in mm`),
+                        type: `integer`
+                    },
+                    {
+                        key: `export_pdf_page_margin_top`,
+                        label: _(`Page margin top in mm`),
+                        type: `integer`
                     },
                     {
                         key: `export_pdf_page_margin_bottom`,
-                        label: _(`Standard page margin bottom of the PDF in mm`),
-                        type: `integer`,
-                        helpText: _(`Default values: A4 = 20mm, A5 = 15mm`)
+                        label: _(`Page margin bottom in mm`),
+                        type: `integer`
                     },
                     {
                         key: `export_pdf_pagesize`,
-                        label: _(`Standard page size in PDF`),
+                        label: _(`Page format`),
                         type: `choice`,
                         choices: {
                             A4: `DIN A4`,

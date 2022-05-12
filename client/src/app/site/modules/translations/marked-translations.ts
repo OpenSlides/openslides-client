@@ -101,8 +101,10 @@ _(`Rejection (not authorized)`);
 _(`Recommendation label`);
 _(`Allow support`);
 _(`Allow create poll`);
+_(`Allow forwarding of motions`)
 _(`Allow submitter edit`);
 _(`Set number`);
+_(`Set timestamp of creation`);
 _(`Show state extension field`);
 _(`Show recommendation extension field`);
 _(`Show amendment in parent motion`);

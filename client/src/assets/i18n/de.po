@@ -18,6 +18,9 @@ msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Accounts"
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Veranstaltungen"
 
+msgid "%num% emails were send sucessfully."
+msgstr "%num% E-Mails wurden erfolgreich versandt."
+
 msgid "-Ä"
 msgstr "-Ä"
 
@@ -228,6 +231,9 @@ msgstr "Leerzeichen im Bezeichner erlauben"
 msgid "Allow create poll"
 msgstr "Abstimmung möglich"
 
+msgid "Allow forwarding of motions"
+msgstr "Darf Anträge weiterleiten"
+
 msgid ""
 "Allow only current speakers and list of speakers managers to enter the live "
 "conference"
@@ -334,6 +340,9 @@ msgstr ""
 msgid "Are you sure you want to archive this meeting?"
 msgstr "Soll diese Veranstaltung wirklich archiviert werden?"
 
+msgid "Are you sure you want to clear all messages in this chat?"
+msgstr "Sollen wirklich alle Nachrichten in diesem Chat gelöscht werden?"
+
 msgid "Are you sure you want to clear all speakers of all lists?"
 msgstr "Sollen wirklich alle Redner*innen von allen Listen entfernt werden?"
 
@@ -346,6 +355,9 @@ msgstr ""
 
 msgid "Are you sure you want to delete all selected motions?"
 msgstr "Sollen alle ausgewählten Anträge wirklich gelöscht werden?"
+
+msgid "Are you sure you want to delete all selected tags?"
+msgstr "Sollen alle ausgewählten Schlagwörter wirklich gelöscht werden?"
 
 msgid ""
 "Are you sure you want to delete all speakers from this list of speakers?"
@@ -366,6 +378,9 @@ msgstr ""
 
 msgid "Are you sure you want to delete this change recommendation?"
 msgstr "Soll diese Änderungsempfehlung wirklich gelöscht werden?"
+
+msgid "Are you sure you want to delete this chat group?"
+msgstr "Soll diese Chat-Gruppe wirklich gelöscht werden?"
 
 msgid "Are you sure you want to delete this comment field?"
 msgstr "Soll dieses Kommentarfeld wirklich gelöscht werden?"
@@ -463,16 +478,19 @@ msgid "Are you sure you want to renumber all motions of this category?"
 msgstr ""
 "Sollen alle Anträge dieses Sachgebiets wirklich neu nummeriert werden?"
 
-msgid "Are you sure you want to reset all options to factory defaults?"
-msgstr ""
-"Sollen wirklich alle Optionen auf Werkseinstellung zurückgesetzt werden?"
-
 msgid ""
 "Are you sure you want to reset all options to factory defaults? All changes "
 "of this settings group will be lost!"
 msgstr ""
 "Sollen wirklich alle Optionen auf Werkseinstellung zurückgesetzt werden? "
 "Alle Änderungen auf dieser Einstellungsseite gehen verloren!"
+
+msgid ""
+"Are you sure you want to reset all options to factory defaults? Changes of "
+"all settings group will be lost!"
+msgstr ""
+"Wollen Sie wirklich alle Werte auf Werkseinstellungen zurücksetzen? "
+"Änderungen in allen Einstellungsrubriken gehen verloren!"
 
 msgid "Are you sure you want to reset all passwords to the default ones?"
 msgstr ""
@@ -560,9 +578,6 @@ msgstr "Wahlgänge"
 
 msgid "Base folder"
 msgstr "Basisverzeichnis"
-
-msgid "Begin at"
-msgstr ""
 
 msgid "Begin speech"
 msgstr "Rede beginnen"
@@ -726,6 +741,9 @@ msgstr "Bearbeitung abbrechen"
 msgid "Cancel editing without saving"
 msgstr "Bearbeitung ohne Speichern abbrechen"
 
+msgid "Candidate"
+msgstr "Kandidat*in"
+
 msgid "Candidates"
 msgstr "Kandidaten*innen"
 
@@ -737,6 +755,9 @@ msgstr "Diese Aktion ist im Demo-Modus nicht möglich!"
 
 msgid "Cannot forward motions"
 msgstr "Darf keine Anträge weiterleiten"
+
+msgid "Cannot navigate to the selected history element."
+msgstr "Das ausgewählte Chronikelement kann nicht geöffnet werden."
 
 msgid "Cannot receive motions"
 msgstr "Darf keine Anträge erhalten"
@@ -858,6 +879,12 @@ msgstr "Kommentar"
 
 msgid "Comment fields"
 msgstr "Kommentarfelder"
+
+msgid "Comment section"
+msgstr ""
+
+msgid "Comment sections"
+msgstr ""
 
 msgid "Comment {arg1} updated"
 msgstr "Kommentar {arg1} aktualisiert"
@@ -1342,6 +1369,9 @@ msgstr ""
 msgid "Enter participant number"
 msgstr "Teilnehmernummer eingeben"
 
+msgid "Enter the developer mode"
+msgstr "Entwicklermodus aufrufen"
+
 msgid "Enter your email to send the password reset link"
 msgstr ""
 "Geben Sie Ihre E-Mail-Adresse ein, um einen Link zum Zurücksetzen des "
@@ -1419,6 +1449,9 @@ msgstr "Erweiterung"
 
 msgid "Favorites"
 msgstr "Favoriten"
+
+msgid "File"
+msgstr "Datei"
 
 msgid "Filename"
 msgstr "Dateiname"
@@ -1527,6 +1560,9 @@ msgstr "Springe zur Zeile"
 
 msgid "Got an email"
 msgstr "Bekam eine E-Mail"
+
+msgid "Group"
+msgstr "Gruppe"
 
 msgid "Groups"
 msgstr "Gruppen"
@@ -1739,8 +1775,14 @@ msgstr "ist Redner*in"
 msgid "Is submitter"
 msgstr "ist Antragsteller*in"
 
+msgid "Item"
+msgstr "Eintrag"
+
 msgid "Item number"
 msgstr "Tagesordnungspunkt-Nummer"
+
+msgid "Items"
+msgstr "Einträge"
 
 msgid "Jitsi domain"
 msgstr "Jitsi-Domain"
@@ -1823,6 +1865,9 @@ msgstr "Redelisten sind zunächst geschlossen"
 msgid "List view"
 msgstr "Listenansicht"
 
+msgid "Lists of speakers"
+msgstr "Redeliste"
+
 msgid "Live conference"
 msgstr "Livekonferenz"
 
@@ -1876,8 +1921,14 @@ msgstr "Mediendatei"
 msgid "Meeting"
 msgstr "Veranstaltung"
 
+msgid "Meeting administrator"
+msgstr "Veranstaltungsadministrator"
+
 msgid "Meeting specific information"
 msgstr "Veranstaltungsspezifische Informationen"
+
+msgid "Meeting template"
+msgstr "Veranstaltungsvorlage"
 
 msgid "Meetings"
 msgstr "Veranstaltungen"
@@ -2127,6 +2178,9 @@ msgstr "Keine Stimmrechtsübertragungen"
 msgid "No email sent"
 msgstr "Keine E-Mail gesendet"
 
+msgid "No emails were send."
+msgstr "Es wurden keine E-Mails versandt."
+
 msgid "No encryption"
 msgstr "Keine Verschlüsselung"
 
@@ -2157,9 +2211,6 @@ msgstr "keine Empfehlung gesetzt"
 msgid "No results yet."
 msgstr "Noch keine Ergebnisse."
 
-msgid "No search result found"
-msgstr "Keine Suchergebnisse gefunden"
-
 msgid "No statute paragraphs"
 msgstr "Keine Satzungsabschnitte vorhanden"
 
@@ -2171,6 +2222,9 @@ msgstr "Es wurde kein Nutzer mit E-Mail-Adresse {0} gefunden."
 
 msgid "No verbose name is defined"
 msgstr "Es ist kein ausführlicher Name definiert"
+
+msgid "No."
+msgstr "Nr."
 
 msgid "None"
 msgstr "aus"
@@ -2269,6 +2323,9 @@ msgstr "Ok"
 msgid "Old password"
 msgstr "Altes Passwort"
 
+msgid "One email was send sucessfully."
+msgstr "Eine E-Mail wurde erfolgreich versandt."
+
 msgid "Only countdown"
 msgstr "Nur Countdown"
 
@@ -2317,6 +2374,9 @@ msgstr "OpenSlides ist vorübergehend auf folgenden Zeitpunkt zurückgesetzt:"
 msgid "OpenSlides recommends"
 msgstr "OpenSlides empfiehlt"
 
+msgid "Option"
+msgstr "Wahlmöglichkeit"
+
 msgid "Options"
 msgstr "Optionen"
 
@@ -2325,6 +2385,9 @@ msgstr "Organisation"
 
 msgid "Organization specific information"
 msgstr "Organisationsspezifische Informationen"
+
+msgid "Organizations"
+msgstr "Organisationen"
 
 msgid "Origin"
 msgstr "Herkunft"
@@ -2386,8 +2449,8 @@ msgstr "Seitenrand rechts in mm"
 msgid "Page margin top in mm"
 msgstr "Seitenrand oben in mm"
 
-msgid "Page number alignment in footer"
-msgstr "Seitenzahl-Ausrichtung in der Fußzeile"
+msgid "Page number alignment in PDF"
+msgstr "Seitenzahl-Ausrichtung im PDF"
 
 msgid "Page numbers"
 msgstr "Seitenzahlen"
@@ -2407,9 +2470,6 @@ msgstr "Elternverzeichnis"
 msgid "Participant"
 msgstr "Teilnehmer*in"
 
-msgid "Participant not found"
-msgstr "Teilnehmende*r nicht gefunden"
-
 msgid "Participant number"
 msgstr "Teilnehmernummer"
 
@@ -2428,6 +2488,9 @@ msgstr "Partikel"
 
 msgid "Password"
 msgstr "Passwort"
+
+msgid "Password changed successfully!"
+msgstr "Passwort erfolgreich geändert!"
 
 msgid "Passwords do not match"
 msgstr "Passwörter stimmen nicht überein"
@@ -2543,8 +2606,11 @@ msgstr "Projizieren"
 msgid "Project selection?"
 msgstr "Auswahl projizieren?"
 
-msgid "Projection defaults"
-msgstr "Projektionsvorgaben"
+msgid "Projection"
+msgstr "Projektion"
+
+msgid "Projections"
+msgstr "Projektionen"
 
 msgid "Projector"
 msgstr "Projektor"
@@ -2813,9 +2879,6 @@ msgid "Server settings required to activate Jitsi Meet integration."
 msgstr ""
 "Servereinstellungen erforderlich zur Aktivierung der Jitsi-Meet-Integration."
 
-msgid "Set as default meeting"
-msgstr "Als Standardveranstaltung markieren"
-
 msgid "Set as favorite"
 msgstr "Als Favorit markieren"
 
@@ -2827,6 +2890,9 @@ msgstr "Als Eltern setzen"
 
 msgid "Set as reference projector"
 msgstr "Als Referenzprojektor setzen"
+
+msgid "Set as template meeting"
+msgstr "Als Veranstaltungsvorlage markieren"
 
 msgid "Set category"
 msgstr "Sachgebiet setzen"
@@ -2872,6 +2938,9 @@ msgstr "Status setzen"
 
 msgid "Set status for selected participants:"
 msgstr "Status für ausgewählte Teilnehmende setzen:"
+
+msgid "Set timestamp of creation"
+msgstr "Erstellungszeitstempel setzen"
 
 msgid "Set workflow"
 msgstr "Arbeitsablauf setzen"
@@ -2958,9 +3027,6 @@ msgstr "Countdown in den letzten x Sekunden der Redezeit orange darstellen"
 msgid "Show password"
 msgstr "Passwort anzeigen"
 
-msgid "Show preview"
-msgstr "Vorschau anzeigen"
-
 msgid "Show reason on projector"
 msgstr "Begründung auf dem Projektor anzeigen"
 
@@ -3021,6 +3087,9 @@ msgstr "Einfacher Arbeitsablauf"
 msgid "Single votes"
 msgstr "Einzelstimmen"
 
+msgid "Size"
+msgstr "Größe"
+
 msgid "Slide"
 msgstr "Folie"
 
@@ -3050,6 +3119,9 @@ msgstr "Anträge sortieren nach"
 
 msgid "Sort name of participants by"
 msgstr "Namen der Teilnehmenden sortieren nach"
+
+msgid "Speaker"
+msgstr "Redner*in"
 
 msgid "Speakers"
 msgstr "Redner*innen"
@@ -3114,6 +3186,9 @@ msgstr "Auswahl jetzt senden?"
 msgid "Submit vote now"
 msgstr "Stimme(n) jetzt senden"
 
+msgid "Submitter"
+msgstr "Antragsteller*in"
+
 msgid "Submitters"
 msgstr "Antragsteller*in"
 
@@ -3159,6 +3234,9 @@ msgstr "Schlagwort"
 msgid "Tags"
 msgstr "Schlagwörter"
 
+msgid "Template meeting"
+msgstr "Veranstaltungsvorlage"
+
 msgid "Text"
 msgstr "Text"
 
@@ -3179,19 +3257,6 @@ msgstr "Der Veranstalter hat noch kein Impressum hinterlegt."
 
 msgid "The event manager has not set up a privacy policy yet."
 msgstr "Der Veranstalter hat noch keine Datenschutzerklärung hinterlegt."
-
-msgid "The file has too few columns to be parsed properly."
-msgstr "Die Datei enthält zu wenige Spalten, um richtig verwendet zu werden."
-
-msgid "The file seems to have additional columns. They will be ignored."
-msgstr ""
-"Die Datei scheint zusätzliche Spalten zu haben. Diese werden ignoriert."
-
-msgid ""
-"The file seems to have some ommitted columns. They will be considered empty."
-msgstr ""
-"Die Datei scheint einige ausgelassene Spalten zu haben. Sie werden als leer "
-"betrachtet."
 
 msgid "The link is broken. Please contact your system administrator."
 msgstr ""
@@ -3241,8 +3306,17 @@ msgstr "Der Antragstext darf nicht leer sein."
 msgid "The title is required"
 msgstr "Ein Titel ist erforderlich"
 
-msgid "There are no items left to chose from"
-msgstr "Es sind keine Einträge ausgewählt."
+msgid ""
+"The user %user% has no email, so the invitation email could not be send."
+msgstr ""
+"%user% besitzt keine E-Mail-Adresse; eine E-Mail konnte daher nicht gesendet"
+" werden."
+
+msgid ""
+"The users %user% have no email, so the invitation emails could not be send."
+msgstr ""
+"%user% besitzen keine E-Mail-Adressen; E-Mails konnte daher nicht gesendet "
+"werden."
 
 msgid "There are some columns that do not match the template"
 msgstr "Es gibt einige Spalten, die nicht mit der Vorlage übereinstimmen"
@@ -3467,9 +3541,6 @@ msgstr ""
 
 msgid "Valid votes"
 msgstr "Gültige Stimmen"
-
-msgid "View"
-msgstr "Anzeigen"
 
 msgid "Virtual applause"
 msgstr "Virtueller Applaus"
@@ -3717,9 +3788,6 @@ msgstr "Sie können nicht abstimmen, solange Ihr Stimmrecht übertragen ist."
 msgid "You do not have the permission to vote."
 msgstr "Sie haben nicht die Berechtigung zur Stimmabgabe."
 
-msgid "You do not have the required permission to see that page!"
-msgstr "Sie haben leider keine Berechtigung diese Seite zu sehen."
-
 msgid "You have already voted."
 msgstr "Sie haben bereits Ihre Stimme abgegeben."
 
@@ -3767,6 +3835,9 @@ msgstr "Ihre Eingabe entspricht nicht der folgenden Struktur: \"hh:mm\""
 msgid "Your password was resetted successfully!"
 msgstr "Ihr Passwort wurde erfolgreich zurückgesetzt!"
 
+msgid "Your votes"
+msgstr "Ihre Stimmen"
+
 msgid "Your voting right was delegated to another person."
 msgstr "Ihr Stimmrecht wurde an eine andere Person übertragen."
 
@@ -3792,6 +3863,9 @@ msgstr "abwesend"
 msgid "accepted"
 msgstr "angenommen"
 
+msgid "account-example"
+msgstr "Account-Beispiel"
+
 msgid "active"
 msgstr "aktiv"
 
@@ -3806,6 +3880,9 @@ msgstr "vertagt"
 
 msgid "analog"
 msgstr "analog"
+
+msgid "and"
+msgstr "und"
 
 msgid "are required"
 msgstr "sind erforderlich"
@@ -3833,6 +3910,9 @@ msgstr "konnten nicht erstellt werden"
 
 msgid "could not be defined"
 msgstr "konnten nicht definiert werden"
+
+msgid "could not be referenced"
+msgstr "konnte nicht referenziert werden"
 
 msgid "created"
 msgstr "erstellt"
@@ -3893,6 +3973,9 @@ msgstr "hat die Arbeit an diesem Antrag gespeichert."
 
 msgid "have been created"
 msgstr "wurden erstellt"
+
+msgid "have been referenced"
+msgstr "wurde referenziert"
 
 msgid "hidden"
 msgstr "versteckt"
@@ -3978,6 +4061,9 @@ msgstr "oder"
 msgid "outside"
 msgstr "außerhalb"
 
+msgid "participants-example"
+msgstr "Teilnehmende-Beispiel"
+
 msgid "permitted"
 msgstr "zugelassen"
 
@@ -4058,9 +4144,6 @@ msgstr "werden importiert"
 
 msgid "will be referenced"
 msgstr "werden referenziert"
-
-msgid "with filter"
-msgstr "mit Filter"
 
 msgid "withdrawn"
 msgstr "zurückgezogen"

@@ -34,7 +34,7 @@
         (selectionChange)="onStepChanged($event)"
     >
         <mat-step>
-            <ng-template matStepLabel>{{ 'Select participant' | translate }}</ng-template>
+            <ng-template matStepLabel>{{ 'Enter' | translate }}</ng-template>
             <ng-template matStepContent>
                 <mat-card class="os-card">
                     <div>
@@ -88,7 +88,7 @@
             </ng-template>
         </mat-step>
         <mat-step [optional]="true">
-            <ng-template matStepLabel>{{ 'Choose existing' | translate }}</ng-template>
+            <ng-template matStepLabel>{{ 'Choice' | translate }}</ng-template>
             <ng-template matStepContent>
                 <ng-container *ngIf="suitableAccountList.length">
                     <h3>{{ 'Suitable accounts found' | translate }}</h3>
@@ -112,7 +112,7 @@
             </ng-template>
         </mat-step>
         <mat-step>
-            <ng-template matStepLabel>{{ 'Create participant' | translate }}</ng-template>
+            <ng-template matStepLabel>{{ 'Creation' | translate }}</ng-template>
             <ng-template matStepContent>
                 <os-user-detail-view
                     [user]="createUserForm.value"
