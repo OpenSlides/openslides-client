@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/app/domain/models/users/user';
-import { RawUser, UserStateField, UserPatchFn, UserRepositoryService } from 'src/app/gateways/repositories/users';
+import {
+    RawUser,
+    UserStateField,
+    UserPatchFn,
+    UserRepositoryService,
+    FullNameInformation
+} from 'src/app/gateways/repositories/users';
 import { Action, ActionService } from 'src/app/gateways/actions';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -237,6 +243,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.userController.getRandomPassword();
     }
 
+    public parseStringIntoUser(name: string): FullNameInformation {
+        return this.userController.parseStringIntoUser(name);
+    }
+
     /**
      * Creates a new User from a string
      *
@@ -244,7 +254,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
      * @returns Promise with a created user id and the raw name used as input
      */
     public async createFromString(name: string): Promise<RawUser> {
-        const newUser = this.userController.parseStringIntoUser(name);
+        const newUser = this.parseStringIntoUser(name);
         const newUserPayload: any = {
             ...newUser,
             is_active: true,

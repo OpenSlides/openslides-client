@@ -86,7 +86,7 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: _(`Export options`),
+                label: _(`CSV export options`),
                 settings: [
                     {
                         key: `export_csv_separator`,
@@ -115,10 +115,10 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `export_pdf_fontsize`,
-                        label: _(`Standard font size in PDF`),
+                        label: _(`Font size in pt`),
                         type: `integer`,
                         validators: [Validators.min(10), Validators.max(12)],
-                        helpText: _(`Available sizes are 10 ,11 and 12.`)
+                        helpText: _(`Available sizes are 10, 11 and 12`)
                     },
                     {
                         key: `export_pdf_line_height`,
@@ -664,7 +664,7 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `assignment_poll_enable_max_votes_per_option`,
-                        label: _(`Enable elections which allow to accumulate several votes on one option`),
+                        label: _(`Allow to accumulate several votes on one candidate ("comulative voting")`),
                         type: `boolean`
                     },
                     {

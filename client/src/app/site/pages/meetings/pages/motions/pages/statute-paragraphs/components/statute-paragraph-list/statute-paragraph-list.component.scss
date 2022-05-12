@@ -1,0 +1,11 @@
+.statute-vscroll-wrapper {
+    height: calc(100vh - 64px);
+
+    .mat-card {
+        margin-bottom: 20px;
+
+        .mat-form-field {
+            width: 100%;
+        }
+    }
+}

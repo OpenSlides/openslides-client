@@ -55,6 +55,7 @@ export const getMotionsSubmodelSubscriptionConfig = (
             `motion_change_recommendation_ids`,
             `motion_comment_ids`,
             `motion_comment_section_ids`,
+            `motion_statute_paragraph_ids`,
             `tag_ids`,
             `personal_note_ids`
         ]

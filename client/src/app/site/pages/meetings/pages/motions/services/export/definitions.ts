@@ -72,7 +72,7 @@ export function sortMotionPropertyList(propertyList: string[]): string[] {
     return motionImportExportHeaderOrder.filter(property => propertyList.includes(property));
 }
 
-function getVerboseNameOfMotionProperty(propertyName: keyof ViewMotion): string {
+export function getVerboseNameOfMotionProperty(propertyName: keyof ViewMotion): string {
     return motionHeadersAndVerboseNames[propertyName];
 }
 

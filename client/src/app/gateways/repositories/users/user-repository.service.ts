@@ -252,13 +252,7 @@ export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser
         viewModel.getShortName = () => this.getShortName(viewModel);
         viewModel.getFullName = () => this.getFullName(viewModel);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
-        viewModel.getEnsuredActiveMeetingId = () => {
-            const meetingId = this.activeMeetingId;
-            if (!meetingId) {
-                throw new Error('No active meeting selected!'); // TODO: What is with "real" users?
-            }
-            return meetingId;
-        };
+        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingId;
         return viewModel;
     }
 

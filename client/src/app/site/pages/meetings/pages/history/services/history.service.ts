@@ -55,6 +55,10 @@ export class HistoryService {
         }
     }
 
+    public isInHistoryMode(): boolean {
+        return this._isInHistoryMode;
+    }
+
     private setHistoryMode(): void {
         this._actionFnIndex = this.actions.addBeforeActionFn(() => {
             if (this._isInHistoryMode) {

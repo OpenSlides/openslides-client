@@ -77,7 +77,6 @@ export class AuthService {
     }
 
     public redirectUser(meetingId: number | null): void {
-        console.log(`redirectuser`, this.isAuthenticated());
         if (this.isAuthenticated()) {
             const baseRoute = meetingId ? `${meetingId}/` : `/`;
             this.router.navigate([baseRoute]);

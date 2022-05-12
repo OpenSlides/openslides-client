@@ -27,7 +27,6 @@ export class AuthTokenInterceptor implements HttpInterceptor {
                 next: httpEvent => {
                     if (httpEvent instanceof HttpResponse && httpEvent.headers.get(`authentication`)) {
                         // Successful request
-                        console.log(`authToken:`, httpEvent.headers.get(`Authentication`));
                         this.authTokenService.setRawAccessToken(httpEvent.headers.get(`Authentication`));
                     }
                 },
