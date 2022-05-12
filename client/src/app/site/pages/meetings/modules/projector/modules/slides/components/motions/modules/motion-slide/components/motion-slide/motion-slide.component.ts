@@ -24,6 +24,7 @@ import { AmendmentParagraphUnifiedChange } from '../../amendment-paragraph-unifi
 import { ChangeRecommendationUnifiedChange } from '../../change-recommendation-unified-change';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-motion-slide',
@@ -122,7 +123,7 @@ export class MotionSlideComponent
     }
 
     public get recommendationLabel(): string {
-        let recommendation = this.translate.instant(this.data.data.recommendation_label!);
+        let recommendation = _(this.data.data.recommendation_label!);
         if (this.data.data.recommendation_extension) {
             recommendation +=
                 ` ` +

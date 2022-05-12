@@ -5,6 +5,7 @@ import { ViewPoll } from '../../../../view-models';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: PollListServiceModule
@@ -34,20 +35,20 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
         return [
             {
                 property: `state`,
-                label: this.translate.instant(`State`),
+                label: _(`State`),
                 options: [
-                    { condition: PollState.Created, label: this.translate.instant(`created`) },
-                    { condition: PollState.Started, label: this.translate.instant(`started`) },
-                    { condition: PollState.Finished, label: this.translate.instant(`finished (unpublished)`) },
-                    { condition: PollState.Published, label: this.translate.instant(`published`) }
+                    { condition: PollState.Created, label: _(`created`) },
+                    { condition: PollState.Started, label: _(`started`) },
+                    { condition: PollState.Finished, label: _(`finished (unpublished)`) },
+                    { condition: PollState.Published, label: _(`published`) }
                 ]
             },
             {
                 property: `hasVoted`,
-                label: this.translate.instant(`Votings`),
+                label: _(`Votings`),
                 options: [
-                    { condition: false, label: this.translate.instant(`Voting is currently in progress.`) },
-                    { condition: true, label: this.translate.instant(`You have already voted.`) }
+                    { condition: false, label: _(`Voting is currently in progress.`) },
+                    { condition: true, label: _(`You have already voted.`) }
                 ]
             }
         ];

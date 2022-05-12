@@ -13,6 +13,7 @@ import { RawEditorSettings } from 'tinymce';
 import { Router } from '@angular/router';
 import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Directive()
 export abstract class BaseComponent implements OnDestroy {
@@ -110,7 +111,7 @@ export abstract class BaseComponent implements OnDestroy {
      * @param prefix The title prefix. Should be translated here.
      */
     public setTitle(prefix: string): void {
-        const translatedPrefix = this.translate.instant(prefix);
+        const translatedPrefix = _(prefix);
         this.titleService.setTitle(translatedPrefix + this.titleSuffix);
     }
 
@@ -135,7 +136,7 @@ export abstract class BaseComponent implements OnDestroy {
      * @param original the original string to translate
      */
     public translateSync(original: string): string {
-        return this.translate.instant(original);
+        return _(original);
     }
 
     /**
@@ -152,14 +153,12 @@ export abstract class BaseComponent implements OnDestroy {
             if (message.message) {
                 errorNotification = message.message;
             } else {
-                errorNotification = this.translate.instant(
-                    `A client error occurred. Please contact your system administrator.`
-                );
+                errorNotification = _(`A client error occurred. Please contact your system administrator.`);
             }
         } else {
             errorNotification = message;
         }
-        this.messageSnackBar = this.matSnackBar.open(errorNotification, this.translate.instant(`OK`), {
+        this.messageSnackBar = this.matSnackBar.open(errorNotification, _(`OK`), {
             duration: 0
         });
     };
@@ -169,7 +168,7 @@ export abstract class BaseComponent implements OnDestroy {
      * This snack bar will only dismiss if the user clicks the 'OK'-button.
      */
     protected raiseWarning = (message: string): void => {
-        // this.messageSnackBar = this.matSnackBar.open(message, this.translate.instant(`OK`));
+        // this.messageSnackBar = this.matSnackBar.open(message, _(`OK`));
     };
 
     /**

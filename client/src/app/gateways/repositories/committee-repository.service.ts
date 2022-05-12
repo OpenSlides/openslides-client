@@ -11,6 +11,7 @@ import { RepositoryServiceCollectorService } from './repository-service-collecto
 import { UserRepositoryService } from './users/user-repository.service';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { CommitteeAction } from './committees/committee.action';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +27,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
 
     public getTitle = (viewCommittee: ViewCommittee) => viewCommittee.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Committees` : `Committee`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Committees` : `Committee`);
 
     public override getFieldsets(): Fieldsets<Committee> {
         const listFields: TypedFieldset<Committee> = [

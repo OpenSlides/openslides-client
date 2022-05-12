@@ -13,6 +13,7 @@ import { MeetingControllerService } from 'src/app/site/pages/meetings/services/m
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-meeting-settings-group-detail',
@@ -51,13 +52,13 @@ export class MeetingSettingsGroupDetailComponent
      * Sets the title, inits the table and calls the repo
      */
     public ngOnInit(): void {
-        const settings = this.translate.instant(`Settings`);
+        const settings = _(`Settings`);
 
         this.subscriptions.push(
             this.route.params.subscribe(params => {
                 if (params['group']) {
                     this.settingsGroup = this.meetingSettingsDefinitionProvider.getSettingsGroup(params['group'])!;
-                    const groupName = this.translate.instant(this.settingsGroup.label);
+                    const groupName = _(this.settingsGroup.label);
                     super.setTitle(`${settings} - ${groupName}`);
                     this.cd.markForCheck();
                 }
@@ -87,7 +88,7 @@ export class MeetingSettingsGroupDetailComponent
             this.cd.reattach();
             this.cd.markForCheck();
         } catch (e: any) {
-            this.matSnackBar.open(e, this.translate.instant(`Ok`), {
+            this.matSnackBar.open(e, _(`Ok`), {
                 duration: 0
             });
         }
@@ -97,7 +98,7 @@ export class MeetingSettingsGroupDetailComponent
      * This resets all values to their defaults.
      */
     public async resetAll(): Promise<void> {
-        const title = this.translate.instant(
+        const title = _(
             `Are you sure you want to reset all options to factory defaults? All changes of this settings group will be lost!`
         );
         if (await this.promptDialog.open(title)) {
@@ -127,8 +128,8 @@ export class MeetingSettingsGroupDetailComponent
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanges()) {
-            const title = this.translate.instant(`Do you really want to exit this page?`);
-            const content = this.translate.instant(`You made changes.`);
+            const title = _(`Do you really want to exit this page?`);
+            const content = _(`You made changes.`);
             return await this.promptDialog.open(title, content);
         }
         return true;

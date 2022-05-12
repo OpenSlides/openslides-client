@@ -6,6 +6,7 @@ import { NotifyService } from 'src/app/gateways/notify.service';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Enum to define different types of notifications.
@@ -169,9 +170,9 @@ export class ListenEditingDirective extends BaseUiComponent implements OnDestroy
                                 this.otherWorkOnBaseModel.push(content.senderName);
                             }
 
-                            warning = `${this.translate.instant(
-                                `Following users are currently editing this motion:`
-                            )} ${this.otherWorkOnBaseModel}`;
+                            warning = `${_(`Following users are currently editing this motion:`)} ${
+                                this.otherWorkOnBaseModel
+                            }`;
                             if (content.type === EditNotificationType.TYPE_BEGIN_EDITING) {
                                 this.sendEditNotification(
                                     EditNotificationType.TYPE_ALSO_EDITING,
@@ -185,9 +186,7 @@ export class ListenEditingDirective extends BaseUiComponent implements OnDestroy
                             break;
                         }
                         case EditNotificationType.TYPE_SAVING_EDITING: {
-                            warning = `${content.senderName} ${this.translate.instant(
-                                `has saved his work on this motion.`
-                            )}`;
+                            warning = `${content.senderName} ${_(`has saved his work on this motion.`)}`;
                             // Wait, to prevent overlapping snack bars
                             setTimeout(() => this.recognizeOtherWorkerOnMotion(content.senderName), 2000);
                             break;

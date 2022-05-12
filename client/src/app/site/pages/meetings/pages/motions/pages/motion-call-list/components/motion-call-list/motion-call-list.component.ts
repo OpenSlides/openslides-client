@@ -14,6 +14,7 @@ import { MotionPdfExportService } from '../../../../services/export/motion-pdf-e
 import { TagControllerService } from '../../../../modules/tags/services';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { FlatNode } from 'src/app/infrastructure/definitions/tree';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-motion-call-list',
@@ -107,7 +108,7 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
                             this.tagFilterOptions.some(tagfilter => tagfilter.id === tag.id && tagfilter.state === true)
                     }));
                     this.tagFilterOptions.push({
-                        label: this.translate.instant(`No tags`),
+                        label: _(`No tags`),
                         id: 0,
                         state:
                             this.tagFilterOptions &&
@@ -132,7 +133,7 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
                             )
                     }));
                     this.categoryFilterOptions.push({
-                        label: this.translate.instant(`No category`),
+                        label: _(`No category`),
                         id: 0,
                         state:
                             this.categoryFilterOptions &&
@@ -227,8 +228,8 @@ export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotio
      * in case of `true`.
      */
     public async sortMotionsByNumber(): Promise<void> {
-        const title = this.translate.instant(`Do you really want to go ahead?`);
-        const text = this.translate.instant(`This will reset all made changes and sort the call list.`);
+        const title = _(`Do you really want to go ahead?`);
+        const text = _(`This will reset all made changes and sort the call list.`);
         if (await this.promptService.open(title, text)) {
             this.forceSort.emit(`number`);
         }

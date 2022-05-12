@@ -4,6 +4,7 @@ import { BaseSortListService, OsSortingOption, OsSortingDefinition } from 'src/a
 import { ViewMediafile } from '../../../../view-models';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({ providedIn: MediafileListServiceModule })
 export class MediafileListSortService extends BaseSortListService<ViewMediafile> {
@@ -16,11 +17,11 @@ export class MediafileListSortService extends BaseSortListService<ViewMediafile>
         { property: `title` },
         {
             property: `mimetype`,
-            label: this.translate.instant(`Type`)
+            label: _(`Type`)
         },
         {
             property: `filesize`,
-            label: this.translate.instant(`Size`)
+            label: _(`Size`)
         }
     ];
 

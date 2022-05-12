@@ -6,6 +6,7 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { TagAction } from './tag.action';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -39,7 +40,7 @@ export class TagRepositoryService extends BaseMeetingRelatedRepository<ViewTag, 
 
     public getTitle = (viewTag: ViewTag) => viewTag.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Tags` : `Tag`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Tags` : `Tag`);
 
     /**
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'name'

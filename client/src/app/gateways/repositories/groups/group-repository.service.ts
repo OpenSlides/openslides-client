@@ -7,6 +7,7 @@ import { Group } from 'src/app/domain/models/users/group';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { GroupAction } from './group.action';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -34,12 +35,12 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
 
     public getTitle = (viewGroup: ViewGroup) => viewGroup.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Groups` : `Group`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Groups` : `Group`);
 
     public getNameForIds(...ids: number[]): string {
         return this.getSortedViewModelList()
             .filter(group => ids.includes(group.id))
-            .map(group => this.translate.instant(group.getTitle()))
+            .map(group => _(group.getTitle()))
             .join(`, `);
     }
 

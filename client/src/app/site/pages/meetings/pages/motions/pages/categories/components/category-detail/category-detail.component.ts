@@ -14,6 +14,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Detail component to display one motion block
@@ -127,7 +128,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
      * Click handler to delete a category
      */
     public async onDeleteButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this category and all subcategories?`);
+        const title = _(`Are you sure you want to delete this category and all subcategories?`);
         const content = this.selectedCategory.prefixedName;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.selectedCategory);
@@ -200,7 +201,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
      * Triggers a numbering of the motions
      */
     public async numberMotions(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to renumber all motions of this category?`);
+        const title = _(`Are you sure you want to renumber all motions of this category?`);
         const content = this.selectedCategory.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.numberMotionsInCategory(this.selectedCategory).catch(this.raiseError);

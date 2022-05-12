@@ -5,6 +5,7 @@ import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/pr
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { modifyAgendaItemNumber } from '../../../../../../definitions/agenda_item_number';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 // Layout:
 // 1) Long layout: Motion title is shown and the motions are
@@ -106,7 +107,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
             // Populate the motion with the recommendation_label
             value.data.motions.forEach(motion => {
                 if (motion.recommendation) {
-                    let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
+                    let recommendation = _(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
                         recommendation +=
                             ` ` + this.replaceReferencedMotions(motion.recommendation_extension, value.data.referenced);

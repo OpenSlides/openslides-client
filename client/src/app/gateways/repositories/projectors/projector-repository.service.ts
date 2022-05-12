@@ -9,6 +9,7 @@ import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/serv
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorAction, ScrollScaleDirection } from './projector.action';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Manages all projector instances.
@@ -23,7 +24,7 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
 
     public getTitle = (viewProjector: ViewProjector) => viewProjector.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Projectors` : `Projector`);
 
     public override getFieldsets(): Fieldsets<Projector> {
         const routingFields: (keyof Projector)[] = [`sequential_number`];

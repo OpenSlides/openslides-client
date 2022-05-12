@@ -92,7 +92,7 @@ export class OperatorMediaPermissionService {
     private throwPermError(error: Error = new Error(accessDeniedMessage)): void {
         this.hideAwaitPermInfo();
         console.error(error);
-        throw new Error(this.translate.instant(error.message));
+        throw new Error(_(error.message));
     }
 
     /**
@@ -100,7 +100,7 @@ export class OperatorMediaPermissionService {
      * Please allow OpenSlides to use your microphone
      */
     private showAwaitPermInfo(): void {
-        this.spinnerService.show(this.translate.instant(givePermsMessage));
+        this.spinnerService.show(_(givePermsMessage));
     }
 
     private hideAwaitPermInfo(): void {

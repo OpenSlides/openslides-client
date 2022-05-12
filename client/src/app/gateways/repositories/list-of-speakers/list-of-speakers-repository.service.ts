@@ -6,6 +6,7 @@ import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/serv
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ListOfSpeakersAction } from './list-of-speakers.action';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Repository service for lists of speakers
@@ -29,8 +30,7 @@ export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepositor
         };
     }
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Lists of speakers` : `List of speakers`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Lists of speakers` : `List of speakers`);
 
     public override getTitle = (viewListOfSpeakers: ViewListOfSpeakers) => {
         if (viewListOfSpeakers.content_object) {

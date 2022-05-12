@@ -18,6 +18,7 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-participant-detail-view',
@@ -266,8 +267,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      * (Re)- send an invitation email for this user after confirmation
      */
     public async sendInvitationEmail(): Promise<void> {
-        const title = this.translate.instant(`Sending an invitation email`);
-        const content = this.translate.instant(`Are you sure you want to send an invitation email to the user?`);
+        const title = _(`Sending an invitation email`);
+        const content = _(`Are you sure you want to send an invitation email to the user?`);
         if (await this.promptService.open(title, content)) {
             this.repo.sendInvitationEmails([this.user!]).then(this.raiseError, this.raiseError);
         }
@@ -280,7 +281,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      */
     public getEmailSentTime(): string {
         if (!this.user?.isLastEmailSend) {
-            return this.translate.instant(`No email sent`);
+            return _(`No email sent`);
         }
         return this.repo.getLastSentEmailTimeString(this.user);
     }
@@ -323,7 +324,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         if (this.formErrors) {
             hint = `At least one of username, first name or last name has to be set.`;
         }
-        this.raiseError(this.translate.instant(hint));
+        this.raiseError(_(hint));
     }
 
     private goToAllUsers(): void {

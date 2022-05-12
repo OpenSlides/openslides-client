@@ -15,6 +15,7 @@ import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const voteOptions = {
     Yes: {
@@ -153,11 +154,11 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public getErrorInVoteEntry(optionId: number): string {
         if (this.formControlMap[optionId].hasError(`required`)) {
-            return this.translate.instant(`This is not a number.`);
+            return _(`This is not a number.`);
         } else if (this.formControlMap[optionId].hasError(`min`)) {
-            return this.translate.instant(`Negative votes are not allowed.`);
+            return _(`Negative votes are not allowed.`);
         } else if (this.formControlMap[optionId].hasError(`max`)) {
-            return this.translate.instant(`Too many votes on one option.`);
+            return _(`Too many votes on one option.`);
         }
         return ``;
     }
@@ -191,16 +192,13 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
         if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
-            this.raiseError(this.translate.instant(`There is an error in your vote.`));
+            this.raiseError(_(`There is an error in your vote.`));
             return;
         }
-        const title = this.translate.instant(`Submit selection now?`);
-        let content = this.translate.instant(`Your decision cannot be changed afterwards.`);
+        const title = _(`Submit selection now?`);
+        let content: string = _(`Your decision cannot be changed afterwards.`);
         if (this.poll.max_votes_amount > 1 && !this.isGlobalOptionSelected()) {
-            content =
-                this.translate.instant(`Your votes`) +
-                `: ${this.getVotesCount()}/${this.poll.max_votes_amount}<br>` +
-                content;
+            content = _(`Your votes`) + `: ${this.getVotesCount()}/${this.poll.max_votes_amount}<br>` + content;
         }
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
@@ -252,9 +250,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                     this.submitVote(user);
                 }
             } else {
-                this.raiseError(
-                    this.translate.instant(`You reached the maximum amount of votes. Deselect somebody first.`)
-                );
+                this.raiseError(_(`You reached the maximum amount of votes. Deselect somebody first.`));
             }
         } else {
             // YN/YNA
@@ -306,9 +302,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                     this.submitVote(user);
                 }
             } else {
-                this.raiseError(
-                    this.translate.instant(`You reached the maximum amount of votes. Deselect somebody first.`)
-                );
+                this.raiseError(_(`You reached the maximum amount of votes. Deselect somebody first.`));
                 this.formControlMap[optionId].setValue(this.voteRequestData[user.id].value[optionId]);
             }
         }

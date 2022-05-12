@@ -71,13 +71,13 @@ export class ParticipantImportService extends BaseUserImportService {
                 let description = ``;
                 switch (phase) {
                     case ImportStepPhase.FINISHED:
-                        description = this.translate.instant(`have been referenced`);
+                        description = _(`have been referenced`);
                         break;
                     case ImportStepPhase.ERROR:
-                        description = this.translate.instant(`could not be referenced`);
+                        description = _(`could not be referenced`);
                         break;
                     default:
-                        description = this.translate.instant(`will be referenced`);
+                        description = _(`will be referenced`);
                 }
                 return `${verboseName} ${_(description)}`;
             },

@@ -11,6 +11,7 @@ import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { toDecimal } from '../../../infrastructure/utils';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export type RawUser = FullNameInformation & Identifiable & Displayable;
 
@@ -219,7 +220,7 @@ export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser
 
         const number = user.number ? user.number() : null;
         if (number) {
-            additions.push(`${this.translate.instant(`No.`)} ${number}`);
+            additions.push(`${_(`No.`)} ${number}`);
         }
 
         if (additions.length > 0) {
@@ -230,18 +231,17 @@ export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser
 
     private getLevelAndNumber(user: LevelAndNumberInformation): string {
         if (user.structure_level() && user.number()) {
-            return `${user.structure_level()} · ${this.translate.instant(`No.`)} ${user.number()}`;
+            return `${user.structure_level()} · ${_(`No.`)} ${user.number()}`;
         } else if (user.structure_level()) {
             return user.structure_level();
         } else if (user.number()) {
-            return `${this.translate.instant(`No.`)} ${user.number()}`;
+            return `${_(`No.`)} ${user.number()}`;
         } else {
             return ``;
         }
     }
 
-    public getVerboseName = (plural: boolean = false): string =>
-        this.translate.instant(plural ? `Participants` : `Participant`);
+    public getVerboseName = (plural: boolean = false): string => _(plural ? `Participants` : `Participant`);
 
     /**
      * Adds the short and full name to the view user.

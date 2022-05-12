@@ -21,6 +21,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { VoteValue } from 'src/app/domain/models/poll';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-assignment-poll-detail',
@@ -120,7 +121,7 @@ export class AssignmentPollDetailComponent
                     if (this.poll.isMethodY) {
                         votes[token].votes.push(this.getMethodYVoteLabel(vote, optionContent));
                     } else {
-                        const candidate_name = optionContent?.getShortName() ?? this.translate.instant(`Deleted user`);
+                        const candidate_name = optionContent?.getShortName() ?? _(`Deleted user`);
                         votes[token].votes.push(`${candidate_name}: ${this.voteValueToLabel(vote.value)}`);
                     }
                 }
@@ -145,11 +146,11 @@ export class AssignmentPollDetailComponent
 
     private voteValueToLabel(vote: VoteValue): string {
         if (vote === `Y`) {
-            return this.translate.instant(`Yes`);
+            return _(`Yes`);
         } else if (vote === `N`) {
-            return this.translate.instant(`No`);
+            return _(`No`);
         } else if (vote === `A`) {
-            return this.translate.instant(`Abstain`);
+            return _(`Abstain`);
         } else {
             throw new Error(`voteValueToLabel received illegal arguments: ${vote}`);
         }

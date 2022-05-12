@@ -10,6 +10,7 @@ import { MotionPdfService } from '../motion-pdf.service';
 import { MotionsExportModule } from '../motions-export.module';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Service to export a list of motions.
@@ -71,9 +72,7 @@ export class MotionPdfCatalogService {
                     motionDocList.push(this.pdfService.getSpacer());
                 }
             } catch (err) {
-                const errorText = `${this.translate.instant(`Error during PDF creation of motion:`)} ${
-                    motions[motionIndex].numberOrTitle
-                }`;
+                const errorText = `${_(`Error during PDF creation of motion:`)} ${motions[motionIndex].numberOrTitle}`;
                 console.error(`${errorText}\nDebugInfo:\n`, err);
                 throw new PdfError(errorText);
             }
@@ -107,7 +106,7 @@ export class MotionPdfCatalogService {
 
         // Create the toc title
         const tocTitle = {
-            text: this.translate.instant(`Table of contents`),
+            text: _(`Table of contents`),
             style: `heading2`
         };
         const exportSubmitterRecommendation = this.meetingSettingsService.instant(
@@ -229,15 +228,12 @@ export class MotionPdfCatalogService {
      */
     private getTocHeaderDefinition(): object {
         return [
-            { text: this.translate.instant(`Number`), style: `tocHeaderRow` },
+            { text: _(`Number`), style: `tocHeaderRow` },
             {
                 style: `tocHeaderRow`,
-                text: [
-                    `${this.translate.instant(`Title`)} · ${this.translate.instant(`Submitters`)} · `,
-                    { text: `${this.translate.instant(`Recommendation`)}`, italics: true }
-                ]
+                text: [`${_(`Title`)} · ${_(`Submitters`)} · `, { text: `${_(`Recommendation`)}`, italics: true }]
             },
-            { text: this.translate.instant(`Page`), style: `tocHeaderRow`, alignment: `right` }
+            { text: _(`Page`), style: `tocHeaderRow`, alignment: `right` }
         ];
     }
 

@@ -21,6 +21,7 @@ import { VoteControllerService } from '../services/vote-controller.service';
 import { EntitledUsersTableEntry } from '../definitions';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export interface BaseVoteData extends Identifiable {
     user?: ViewUser;
@@ -133,25 +134,18 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
     }
 
     public async deletePoll(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this vote?`);
+        const title = _(`Are you sure you want to delete this vote?`);
         if (await this.promptService.open(title)) {
             this.repo.delete(this.poll).then(() => this.onDeleted(), this.raiseError);
         }
     }
 
     public async pseudoanonymizePoll(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to anonymize all votes? This cannot be undone.`);
+        const title = _(`Are you sure you want to anonymize all votes? This cannot be undone.`);
         if (await this.promptService.open(title)) {
             this.repo.anonymize(this.poll).catch(this.raiseError);
         }
     }
-
-    // /**
-    //  * Opens dialog for editing the poll
-    //  */
-    // public openDialog(viewPoll: V): void {
-    //     this.pollDialog.openDialog(viewPoll);
-    // }
 
     public onIdFound(id: Id | null): void {
         if (id) {

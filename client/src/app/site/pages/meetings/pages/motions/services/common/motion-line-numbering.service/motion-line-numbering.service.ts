@@ -14,6 +14,7 @@ import {
 import { ViewMotion } from '../../../view-models';
 import { DiffLinesInParagraph } from '../../../definitions';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Describes the single paragraphs from the base motion.
@@ -324,14 +325,10 @@ export class MotionLineNumberingService {
 
     public getAmendmentParagraphLinesTitle(paragraph: DiffLinesInParagraph): string {
         if (paragraph.diffLineTo === paragraph.diffLineFrom + 1) {
-            return this.translate.instant(`Line`) + ` ` + paragraph.diffLineFrom.toString(10);
+            return _(`Line`) + ` ` + paragraph.diffLineFrom.toString(10);
         } else {
             return (
-                this.translate.instant(`Line`) +
-                ` ` +
-                paragraph.diffLineFrom.toString(10) +
-                ` - ` +
-                (paragraph.diffLineTo - 1).toString(10)
+                _(`Line`) + ` ` + paragraph.diffLineFrom.toString(10) + ` - ` + (paragraph.diffLineTo - 1).toString(10)
             );
         }
     }

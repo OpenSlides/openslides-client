@@ -6,6 +6,7 @@ import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectionAction } from './projection.action';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,7 @@ export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<Vi
         super(repositoryServiceCollector, Projection);
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projections` : `Projection`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Projections` : `Projection`);
 
     public getTitle = (viewProjection: ViewProjection) =>
         viewProjection.content_object?.getProjectorTitle(viewProjection.projection).title;

@@ -9,6 +9,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ViewTag } from '../../../../modules';
 import { TagControllerService } from '../../../../modules/tags/services';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-tag-list',
@@ -88,7 +89,7 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
      * Deletes the given Tag after a successful confirmation.
      */
     public async onDeleteButton(tag: ViewTag): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this tag?`);
+        const title = _(`Are you sure you want to delete this tag?`);
         const content = tag.name;
         if (await this.promptService.open(title, content)) {
             this.deleteTag(tag);

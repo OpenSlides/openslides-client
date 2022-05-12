@@ -172,7 +172,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     private checkForUnsecureConnection(): void {
         if (location.protocol === `http:`) {
-            this.raiseWarning(this.translate.instant(HTTP_WARNING));
+            this.raiseWarning(_(HTTP_WARNING));
         }
     }
 

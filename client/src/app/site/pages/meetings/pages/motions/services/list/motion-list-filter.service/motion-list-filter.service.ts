@@ -108,8 +108,8 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         property: `hasSpeakers`,
         label: `Speakers`,
         options: [
-            { condition: true, label: this.translate.instant(`Has speakers`) },
-            { condition: false, label: this.translate.instant(`Has no speakers`) }
+            { condition: true, label: _(`Has speakers`) },
+            { condition: false, label: _(`Has no speakers`) }
         ]
     };
 
@@ -117,38 +117,38 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         property: `amendmentType`,
         label: `Amendment`,
         options: [
-            { condition: AmendmentType.Amendment, label: this.translate.instant(`Is amendment`) },
-            { condition: AmendmentType.Parent, label: this.translate.instant(`Has amendments`) },
-            { condition: AmendmentType.Lead, label: this.translate.instant(`Is no amendment and has no amendments`) }
+            { condition: AmendmentType.Amendment, label: _(`Is amendment`) },
+            { condition: AmendmentType.Parent, label: _(`Has amendments`) },
+            { condition: AmendmentType.Lead, label: _(`Is no amendment and has no amendments`) }
         ]
     };
 
     private personalNoteFilterOptions: any[] = [
         {
             property: `isFavorite`,
-            label: this.translate.instant(`Favorites`),
+            label: _(`Favorites`),
             options: [
                 {
                     condition: true,
-                    label: this.translate.instant(`Is favorite`)
+                    label: _(`Is favorite`)
                 },
                 {
                     condition: false,
-                    label: this.translate.instant(`Is not favorite`)
+                    label: _(`Is not favorite`)
                 }
             ]
         },
         {
             property: `hasNotes`,
-            label: this.translate.instant(`Personal notes`),
+            label: _(`Personal notes`),
             options: [
                 {
                     condition: true,
-                    label: this.translate.instant(`Has notes`)
+                    label: _(`Has notes`)
                 },
                 {
                     condition: false,
-                    label: this.translate.instant(`Does not have notes`)
+                    label: _(`Does not have notes`)
                 }
             ]
         }
@@ -172,25 +172,25 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         this.updateFilterForRepo({
             repo: categoryRepo,
             filter: this.categoryFilterOptions,
-            noneOptionLabel: this.translate.instant(`No category set`)
+            noneOptionLabel: _(`No category set`)
         });
 
         this.updateFilterForRepo({
             repo: motionBlockRepo,
             filter: this.motionBlockFilterOptions,
-            noneOptionLabel: this.translate.instant(`No motion block set`)
+            noneOptionLabel: _(`No motion block set`)
         });
 
         this.updateFilterForRepo({
             repo: commentRepo,
             filter: this.motionCommentFilterOptions,
-            noneOptionLabel: this.translate.instant(`No comment`)
+            noneOptionLabel: _(`No comment`)
         });
 
         this.updateFilterForRepo({
             repo: tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: this.translate.instant(`No tags`)
+            noneOptionLabel: _(`No tags`)
         });
 
         this.subscribeWorkflows();

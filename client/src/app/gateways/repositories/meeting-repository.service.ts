@@ -15,6 +15,7 @@ import { ActionRequest } from '../actions/action-utils';
 import { MeetingSettingsDefinitionService } from '../../site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { Action } from 'src/app/gateways/actions';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_list_of_speakers`,
@@ -95,7 +96,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
     public getTitle = (viewMeeting: ViewMeeting) => viewMeeting.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Meetings` : `Meeting`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Meetings` : `Meeting`);
 
     public getProjectorTitle = (_: ViewMeeting, projection: Projection) => {
         let title: string;

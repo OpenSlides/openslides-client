@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserExport } from 'src/app/domain/models/users/user.export';
 import { AccountCsvExportExample } from '../../export/csv-export-example';
 import { AccountExportServiceModule } from '../account-export-service.module';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: AccountExportServiceModule
@@ -17,7 +18,7 @@ export class AccountExportService {
         this.csvExportService.dummyCSVExport<UserExport>(
             userHeadersAndVerboseNames,
             AccountCsvExportExample,
-            `${this.translate.instant(`account-example`)}.csv`
+            `${_(`account-example`)}.csv`
         );
     }
 
@@ -28,7 +29,7 @@ export class AccountExportService {
                 property: key as keyof ViewUser,
                 label: value
             })),
-            `${this.translate.instant(`Accounts`)}.csv`
+            `${_(`Accounts`)}.csv`
         );
     }
 }

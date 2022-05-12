@@ -14,6 +14,7 @@ import { map, Observable } from 'rxjs';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { Ids, Id } from 'src/app/domain/definitions/key-types';
 import { NullablePartial } from 'src/app/infrastructure/utils';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({ providedIn: MotionsCommonServiceModule })
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {
@@ -101,7 +102,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (!motion.state) {
             return ``;
         }
-        let state = this.translate.instant(motion.state.name);
+        let state = _(motion.state.name);
         if (motion.stateExtension && motion.state.show_state_extension_field) {
             state += ` ` + this.parseMotionPlaceholders(motion.stateExtension);
         }
@@ -187,7 +188,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
      */
     public getExtendedRecommendationLabel(motion: ViewMotion): string {
         if (motion.recommendation) {
-            let rec = this.translate.instant(motion.recommendation.recommendation_label);
+            let rec = _(motion.recommendation.recommendation_label);
             if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
                 rec += ` ` + this.parseMotionPlaceholders(motion.recommendationExtension);
             }
@@ -239,7 +240,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
             if (motion) {
                 return motion.getNumberOrTitle();
             } else {
-                return this.translate.instant(`<unknown motion>`);
+                return _(`<unknown motion>`);
             }
         });
     }

@@ -28,6 +28,7 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { AssignmentCandidateControllerService } from '../../services/assignment-candidate-controller.service';
 import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-assignment-detail',
@@ -418,7 +419,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Handler for deleting the assignment
      */
     public async onDeleteAssignmentButton(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this election?`);
+        const title = _(`Are you sure you want to delete this election?`);
         if (await this.promptService.open(title, this.assignment.getTitle())) {
             this.assignmentRepo
                 .delete(this.assignment)

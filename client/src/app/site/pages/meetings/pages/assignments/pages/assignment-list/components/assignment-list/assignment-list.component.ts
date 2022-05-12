@@ -14,6 +14,7 @@ import { AssignmentSortListService } from '../../services/assignment-sort-list.s
 import { AssignmentExportService } from '../../../../services/assignment-export.service';
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const ASSIGNMENT_LIST_STORAGE_INDEX = `assignment_list`;
 @Component({
@@ -121,7 +122,7 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      * is only filled with any data in multiSelect mode
      */
     public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected elections?`);
+        const title = _(`Are you sure you want to delete all selected elections?`);
         if (await this.promptService.open(title)) {
             await this.repo.delete(...this.selectedRows);
         }

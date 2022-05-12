@@ -12,6 +12,7 @@ import {
     ISO_8859_15_ENCODING,
     isPropertyDefinition
 } from './csv-export-utils';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: ExportServiceModule
@@ -109,7 +110,7 @@ export class CsvExportService {
         const encoding: `utf-8` | `iso-8859-15` = DEFAULT_ENCODING as any;
         const headerRow = [
             Object.values(headerAndVerboseNames)
-                .map(label => this.translate.instant(label as string))
+                .map(label => _(label as string))
                 .join(separator)
         ];
         const content = rows.map(row =>
@@ -152,7 +153,7 @@ export class CsvExportService {
      */
     private capitalizeTranslate(input: string): string {
         const temp = input.charAt(0).toUpperCase() + input.slice(1);
-        return this.translate.instant(temp);
+        return _(temp);
     }
 
     /**

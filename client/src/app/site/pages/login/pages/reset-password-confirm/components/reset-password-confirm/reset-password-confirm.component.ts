@@ -6,6 +6,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-reset-password-confirm',
@@ -55,8 +56,8 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                     setTimeout(() => {
                         this.matSnackBar.open(``);
                         this.matSnackBar.open(
-                            this.translate.instant(`The link is broken. Please contact your system administrator.`),
-                            this.translate.instant(`OK`),
+                            _(`The link is broken. Please contact your system administrator.`),
+                            _(`OK`),
                             {
                                 duration: 0
                             }
@@ -86,13 +87,9 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                 new_password: this.newPasswordForm.get(`password`)!.value
             });
             // TODO: Does we get a response for displaying?
-            this.matSnackBar.open(
-                this.translate.instant(`Your password was resetted successfully!`),
-                this.translate.instant(`OK`),
-                {
-                    duration: 0
-                }
-            );
+            this.matSnackBar.open(_(`Your password was resetted successfully!`), _(`OK`), {
+                duration: 0
+            });
             this.router.navigate([`..`]);
         } catch (e) {
             console.log(`error`, e);

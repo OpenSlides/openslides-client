@@ -33,6 +33,7 @@ import { InteractionService } from 'src/app/site/pages/meetings/pages/interactio
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-list-of-speakers-content',
@@ -226,8 +227,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      */
     public async removeSpeaker(speaker?: ViewSpeaker): Promise<void> {
         const title = speaker
-            ? this.translate.instant(`Are you sure you want to remove this speaker from the list of speakers?`)
-            : this.translate.instant(`Are you sure you want to remove yourself from this list of speakers?`);
+            ? _(`Are you sure you want to remove this speaker from the list of speakers?`)
+            : _(`Are you sure you want to remove yourself from this list of speakers?`);
         const speakerToDelete = speaker || this.findOperatorSpeaker();
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);

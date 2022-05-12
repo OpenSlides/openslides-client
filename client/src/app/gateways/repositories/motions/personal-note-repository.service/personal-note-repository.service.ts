@@ -9,6 +9,7 @@ import { Fqid } from 'src/app/domain/definitions/key-types';
 import { PersonalNoteAction } from './personal-note.action';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Action } from 'src/app/gateways/actions';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  */
@@ -22,8 +23,7 @@ export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<
 
     public getTitle = (viewPersonalNote: ViewPersonalNote) => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Personal notes` : `Personal note`);
+    public getVerboseName = (plural: boolean = false) => _(plural ? `Personal notes` : `Personal note`);
 
     public override getFieldsets(): Fieldsets<PersonalNote> {
         const detailFields: (keyof PersonalNote)[] = [`id`, `star`, `note`];

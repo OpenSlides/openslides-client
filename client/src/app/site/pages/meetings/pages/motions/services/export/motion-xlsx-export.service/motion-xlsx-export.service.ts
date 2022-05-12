@@ -9,6 +9,7 @@ import { MotionControllerService } from '../../common/motion-controller.service'
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { MotionsExportModule } from '../motions-export.module';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 interface MotionXlsxExportConfig {
     motions: ViewMotion[];
@@ -81,7 +82,7 @@ export class MotionXlsxExportService {
             ? sortMotionPropertyList([`number`, `title`].concat(infoToExport)).concat(`speakers`)
             : sortMotionPropertyList([`number`, `title`].concat(infoToExport));
 
-        const worksheet = workbook.addWorksheet(this.translate.instant(`Motions`), {
+        const worksheet = workbook.addWorksheet(_(`Motions`), {
             pageSetup: {
                 paperSize: 9,
                 orientation: `landscape`,
@@ -115,7 +116,7 @@ export class MotionXlsxExportService {
                         propertyHeader = property.charAt(0).toUpperCase() + property.slice(1);
                 }
                 return {
-                    header: this.translate.instant(propertyHeader)
+                    header: _(propertyHeader)
                 };
             })
         );
@@ -157,7 +158,7 @@ export class MotionXlsxExportService {
                         case `recommendation`:
                             return this.motionService.getExtendedRecommendationLabel(motion);
                         default:
-                            return this.translate.instant(motionProp.toString());
+                            return _(motionProp.toString());
                     }
                 })
             );
@@ -192,6 +193,6 @@ export class MotionXlsxExportService {
         }
 
         this.xlsx.autoSize(worksheet, 0);
-        this.xlsx.saveXlsx(workbook, this.translate.instant(`Motions`));
+        this.xlsx.saveXlsx(workbook, _(`Motions`));
     }
 }
