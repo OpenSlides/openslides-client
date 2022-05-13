@@ -18,10 +18,10 @@
             class="pointer"
             disableRipple
         >
-            {{ chipValue || '–' }}
+            {{ chipValue || '–' | translate }}
         </mat-basic-chip>
         <mat-basic-chip *ngIf="!canBeEdited" [ngClass]="classes" disableRipple>
-            {{ chipValue }}
+            {{ chipValue | translate }}
         </mat-basic-chip>
     </os-icon-container>
 </div>

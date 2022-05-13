@@ -112,7 +112,7 @@
                 <!-- Workflow state -->
                 <div class="ellipsis-overflow white">
                     <mat-basic-chip *ngIf="motion.state" [ngClass]="motion.stateCssColor" [disabled]="true">
-                        {{ motionRepo.getExtendedStateLabel(motion) }}
+                        {{ motionRepo.getExtendedStateLabel(motion) | translate }}
                     </mat-basic-chip>
                 </div>
 
@@ -122,7 +122,7 @@
                     class="ellipsis-overflow white spacer-top-3"
                 >
                     <mat-basic-chip class="bluegrey" [disabled]="true">
-                        {{ motionRepo.getExtendedRecommendationLabel(motion) }}
+                        {{ motionRepo.getExtendedRecommendationLabel(motion) | translate }}
                     </mat-basic-chip>
                 </div>
             </div>
