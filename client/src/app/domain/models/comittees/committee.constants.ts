@@ -37,5 +37,5 @@ export const COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES: Partial<CommitteeCsvPort>
     [MEETING_START_DATE]: _(`Start date`),
     [MEETING_END_DATE]: _(`End date`),
     [MEETING_ADMIN_IDS]: _(`Meeting administrator`),
-    [MEETING_TEMPLATE_ID]: _(`Template for meeting`)
+    [MEETING_TEMPLATE_ID]: _(`Meeting template`)
 };

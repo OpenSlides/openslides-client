@@ -209,6 +209,9 @@ msgstr ""
 msgid "Allow create poll"
 msgstr ""
 
+msgid "Allow forwarding of motions"
+msgstr ""
+
 msgid ""
 "Allow only current speakers and list of speakers managers to enter the live "
 "conference"
@@ -765,13 +768,13 @@ msgstr ""
 msgid "Check in or check out participants based on their participant numbers:"
 msgstr ""
 
+msgid "Choice"
+msgstr ""
+
 msgid "Choose 0 to disable the supporting system."
 msgstr ""
 
 msgid "Choose a header"
-msgstr ""
-
-msgid "Choose existing"
 msgstr ""
 
 msgid "Chyron"
@@ -930,13 +933,13 @@ msgstr ""
 msgid "Create new tag"
 msgstr ""
 
-msgid "Create participant"
-msgstr ""
-
 msgid "Create user"
 msgstr ""
 
 msgid "Creating PDF file ..."
+msgstr ""
+
+msgid "Creation"
 msgstr ""
 
 msgid "Creation date"
@@ -1027,12 +1030,6 @@ msgid "Default structure level"
 msgstr ""
 
 msgid "Default text version for change recommendations"
-msgstr ""
-
-msgid "Default values: A4 = 20mm, A5 = 15mm"
-msgstr ""
-
-msgid "Default values: A4 = 25mm, A5 = 10mm"
 msgstr ""
 
 msgid "Default visibility for new agenda items (except topics)"
@@ -1277,6 +1274,9 @@ msgid "End speech"
 msgstr ""
 
 msgid "Enforce page breaks"
+msgstr ""
+
+msgid "Enter"
 msgstr ""
 
 msgid "Enter conference room"
@@ -1757,6 +1757,9 @@ msgid "Line length"
 msgstr ""
 
 msgid "Line numbering"
+msgstr ""
+
+msgid "Line spacing"
 msgstr ""
 
 msgid "Linenumber"
@@ -2316,6 +2319,9 @@ msgstr ""
 msgid "PDF export"
 msgstr ""
 
+msgid "PDF export options"
+msgstr ""
+
 msgid "PDF footer logo (left)"
 msgstr ""
 
@@ -2332,6 +2338,21 @@ msgid "PDF options"
 msgstr ""
 
 msgid "Page"
+msgstr ""
+
+msgid "Page format"
+msgstr ""
+
+msgid "Page margin bottom in mm"
+msgstr ""
+
+msgid "Page margin left in mm"
+msgstr ""
+
+msgid "Page margin right in mm"
+msgstr ""
+
+msgid "Page margin top in mm"
 msgstr ""
 
 msgid "Page number alignment in PDF"
@@ -2730,9 +2751,6 @@ msgstr ""
 msgid "Select paragraphs"
 msgstr ""
 
-msgid "Select participant"
-msgstr ""
-
 msgid "Send"
 msgstr ""
 
@@ -2815,6 +2833,9 @@ msgid "Set status"
 msgstr ""
 
 msgid "Set status for selected participants:"
+msgstr ""
+
+msgid "Set timestamp of creation"
 msgstr ""
 
 msgid "Set workflow"
@@ -2994,24 +3015,6 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-msgid "Standard line height in PDF"
-msgstr ""
-
-msgid "Standard page margin bottom of the PDF in mm"
-msgstr ""
-
-msgid "Standard page margin left of the PDF in mm"
-msgstr ""
-
-msgid "Standard page margin right of the PDF in mm"
-msgstr ""
-
-msgid "Standard page margin top of the PDF in mm"
-msgstr ""
-
-msgid "Standard page size in PDF"
-msgstr ""
-
 msgid "Start date"
 msgstr ""
 
@@ -3117,9 +3120,6 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-msgid "Template for meeting"
-msgstr ""
-
 msgid "Template meeting"
 msgstr ""
 
@@ -3145,9 +3145,6 @@ msgid "The event manager has not set up a privacy policy yet."
 msgstr ""
 
 msgid "The link is broken. Please contact your system administrator."
-msgstr ""
-
-msgid "The list of speakers is closed"
 msgstr ""
 
 msgid "The list of speakers is closed."
@@ -3541,9 +3538,6 @@ msgid "You are not allowed to see the livestream"
 msgstr ""
 
 msgid "You are not authenticated."
-msgstr ""
-
-msgid "You are not supposed to be here"
 msgstr ""
 
 msgid "You are not supposed to be here..."
