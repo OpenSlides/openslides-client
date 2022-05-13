@@ -59,6 +59,6 @@ export class SpinnerComponent {
     private readonly _possibleMessages = shuffle(POSSIBLE_MESSAGES);
 
     public constructor() {
-        this.text = this.text || this._possibleMessages[0] /* `Loading data. Please wait ...` */;
+        this.text = this.text || _(`Loading data. Please wait ...`);
     }
 }

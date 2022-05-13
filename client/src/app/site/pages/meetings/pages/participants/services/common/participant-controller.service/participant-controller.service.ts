@@ -21,7 +21,6 @@ import { UserDeleteDialogService } from 'src/app/ui/modules/user-components';
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
     `structure_level`,
@@ -125,11 +124,11 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const noEmails = response.filter(email => !email.sent);
         let responseMessage: string;
         if (numEmails === 0) {
-            responseMessage = _(`No emails were send.`);
+            responseMessage = this.translate.instant(`No emails were send.`);
         } else if (numEmails === 1) {
-            responseMessage = _(`One email was send sucessfully.`);
+            responseMessage = this.translate.instant(`One email was send sucessfully.`);
         } else {
-            responseMessage = _(`%num% emails were send sucessfully.`);
+            responseMessage = this.translate.instant(`%num% emails were send sucessfully.`);
             responseMessage = responseMessage.replace(`%num%`, numEmails.toString());
         }
 
@@ -137,9 +136,13 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             responseMessage += ` `;
 
             if (noEmails.length === 1) {
-                responseMessage += _(`The user %user% has no email, so the invitation email could not be send.`);
+                responseMessage += this.translate.instant(
+                    `The user %user% has no email, so the invitation email could not be send.`
+                );
             } else {
-                responseMessage += _(`The users %user% have no email, so the invitation emails could not be send.`);
+                responseMessage += this.translate.instant(
+                    `The users %user% have no email, so the invitation emails could not be send.`
+                );
             }
 
             // This one builds a username string like "user1, user2 and user3" with the full names.
@@ -150,7 +153,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             let userString: string;
             if (usernames.length > 1) {
                 const lastUsername = usernames.pop();
-                userString = usernames.join(`, `) + ` ` + _(`and`) + ` ` + lastUsername;
+                userString = usernames.join(`, `) + ` ` + this.translate.instant(`and`) + ` ` + lastUsername;
             } else {
                 userString = usernames.join(`, `);
             }

@@ -4,7 +4,6 @@ import { CsvColumnsDefinition, CsvExportService } from 'src/app/gateways/export/
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewCommittee } from '../../../../view-models/view-committee';
 import { CommitteeListServiceModule } from '../committee-list-service.module';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: CommitteeListServiceModule
@@ -54,7 +53,7 @@ export class CommitteeExportService {
                 map: model => this.meetingRepo.parseUnixToMeetingTime(model.meetings[0]?.end_time * 1000)
             }
         ];
-        const filename = `${_(`Committees`)}.csv`;
+        const filename = `${this.translate.instant(`Committees`)}.csv`;
         this.csvExport.export(committees, properties, filename);
     }
 }

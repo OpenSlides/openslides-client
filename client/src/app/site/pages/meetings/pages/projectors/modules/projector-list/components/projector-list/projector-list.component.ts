@@ -56,7 +56,7 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private repo: ProjectorControllerService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,

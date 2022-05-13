@@ -7,7 +7,6 @@ import { BaseImportListComponent } from './base-import-list.component';
 import { ImportListHeaderDefinition } from '../../ui/modules/import-list/definitions/import-list-header-definition';
 import { BaseUserImportService } from './base-user-import.service';
 import { Directive } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Directive()
 export abstract class BaseUserImportListComponent extends BaseImportListComponent<User> {
@@ -18,7 +17,7 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
     public get generateImportColumns(): ImportListHeaderDefinition[] {
         return this.modelHeaders.map(property => {
             const singleColumnDef: ImportListHeaderDefinition = {
-                label: _(this.modelHeadersAndVerboseNames[property]),
+                label: this.translate.instant(this.modelHeadersAndVerboseNames[property]),
                 prop: `newEntry.${property}`,
                 type: this.guessType(property as keyof User),
                 isTableColumn: true
@@ -34,7 +33,7 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public override importer: BaseUserImportService,
         protected formBuilder: FormBuilder,
         protected modelHeadersAndVerboseNames: { [key: string]: string }

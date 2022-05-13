@@ -73,7 +73,7 @@ export class CallComponent extends BaseMeetingComponent implements OnInit, After
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private callRestrictionService: CallRestrictionService,
         private rtcService: RtcService,
         private applauseService: ApplauseService,

@@ -40,7 +40,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public committeeController: CommitteeControllerService,
         public operator: OperatorService,
         public filterService: CommitteeFilterService,
@@ -67,7 +67,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
     }
 
     public async forwardToCommittees(): Promise<void> {
-        const content = _(`Set or remove motion forwarding from the selected committees to:`);
+        const content = this.translate.instant(`Set or remove motion forwarding from the selected committees to:`);
         const ADD = _(`Set forward`);
         const REMOVE = _(`Remove forward`);
         const choices = [ADD, REMOVE];
@@ -91,7 +91,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         const toTranslate = committee
             ? `Are you sure you want to delete this committee?`
             : `Are you sure you want to delete all selected committees?`;
-        const title = _(toTranslate);
+        const title = this.translate.instant(toTranslate);
         const content = committee?.name ?? ``;
 
         const haveMeetings = toDelete.some(committeeDel => !!committeeDel.meeting_ids?.length);

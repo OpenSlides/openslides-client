@@ -48,7 +48,7 @@ export class StreamComponent extends BaseMeetingComponent implements AfterViewIn
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private streamService: StreamService,
         private applauseService: ApplauseService,
         private cd: ChangeDetectorRef

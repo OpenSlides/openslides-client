@@ -5,7 +5,6 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog/services/projector-message-dialog.service';
 import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 import { TranslateService } from '@ngx-translate/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-message-controls',
@@ -61,7 +60,7 @@ export class MessageControlsComponent {
      * On delete button
      */
     public async onDelete(): Promise<void> {
-        const title = _(`Are you sure you want to delete this message?`);
+        const title = this.translate.instant(`Are you sure you want to delete this message?`);
 
         if (await this.promptService.open(title)) {
             await this.repo.delete(this.message);

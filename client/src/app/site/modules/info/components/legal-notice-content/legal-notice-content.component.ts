@@ -72,8 +72,7 @@ export class LegalNoticeContentComponent extends BaseUiComponent implements OnIn
     private _value: string = ``;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected translate: TranslateService,
         private orgaSettings: OrganizationSettingsService,
         private httpClient: HttpClient,
         fb: FormBuilder

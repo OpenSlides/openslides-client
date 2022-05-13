@@ -12,7 +12,6 @@ import { PasswordFormComponent, PasswordForm } from 'src/app/ui/modules/user-com
 import { UserService } from 'src/app/site/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 interface MenuItem {
     name: string;
@@ -148,7 +147,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public async changePassword(): Promise<void> {
         const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
         this.repo.setPasswordSelf(this.self!, oldPassword, newPassword).then(() => {
-            this.snackbar.open(_(`Password changed successfully!`), `Ok`);
+            this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
             this.changePasswordComponent.reset();
         });
     }

@@ -40,7 +40,7 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
     protected activeFilters = new BehaviorSubject<SortTreeFilterId[]>([]);
 
     public constructor(
-        translate: TranslateService,
+        protected override translate: TranslateService,
         promptService: PromptService,
         private agendaRepo: AgendaItemControllerService
     ) {

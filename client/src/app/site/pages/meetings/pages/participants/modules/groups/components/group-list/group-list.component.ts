@@ -11,7 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { MatTableDataSource } from '@angular/material/table';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-group-list',
@@ -61,7 +60,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private dialog: MatDialog,
         private repo: GroupControllerService,
         private promptService: PromptService,
@@ -138,8 +137,8 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
      * Deletes the selected Group
      */
     public async deleteSelectedGroup(): Promise<void> {
-        const title = _(`Are you sure you want to delete this group?`);
-        const content = _(this.selectedGroup!.name);
+        const title = this.translate.instant(`Are you sure you want to delete this group?`);
+        const content = this.translate.instant(this.selectedGroup!.name);
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.selectedGroup!);
             this.cancelEditing();

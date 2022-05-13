@@ -4,7 +4,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export/meeting-pdf-export.service';
 import { ParticipantPdfService } from '../participant-pdf.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Export service to handle various kind of exporting necessities for participants.
@@ -23,7 +22,7 @@ export class ParticipantPdfExportService {
      * Export a participants list as PDF
      */
     public exportParticipants(...participants: ViewUser[]): void {
-        const filename = _(`List of participants`);
+        const filename = this.translate.instant(`List of participants`);
         const metadata = {
             title: filename
         };
@@ -56,8 +55,8 @@ export class ParticipantPdfExportService {
     private getPdfFilenameForAccessDocuments(participants: ViewUser[]): string {
         if (participants.length === 1) {
             const firstParticipant = participants[0];
-            return `${_(`Access-data`)} ${firstParticipant.short_name}`;
+            return `${this.translate.instant(`Access-data`)} ${firstParticipant.short_name}`;
         }
-        return `${_(`Access-data`)}`;
+        return `${this.translate.instant(`Access-data`)}`;
     }
 }

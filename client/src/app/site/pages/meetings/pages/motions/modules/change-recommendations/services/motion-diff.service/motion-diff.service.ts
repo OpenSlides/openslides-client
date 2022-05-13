@@ -5,7 +5,6 @@ import { LineNumberedString, LineNumberingService, LineNumberRange } from '../li
 import { ChangeRecommendationsModule } from '../../change-recommendations.module';
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
@@ -2239,11 +2238,15 @@ export class MotionDiffService {
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
             const msg =
-                _(`Inconsistent data.`) +
+                this.translate.instant(`Inconsistent data.`) +
                 ` ` +
-                _(`A change recommendation or amendment is probably referring to a non-existant line number.`) +
+                this.translate.instant(
+                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                ) +
                 ` ` +
-                _(`If it is an amendment, you can back up its content when editing it and delete it afterwards.`);
+                this.translate.instant(
+                    `If it is an amendment, you can back up its content when editing it and delete it afterwards.`
+                );
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
@@ -2308,9 +2311,11 @@ export class MotionDiffService {
             // That's a pretty serious inconsistency that should not happen at all,
             // we're just doing some basic damage control here.
             const msg =
-                _(`Inconsistent data.`) +
+                this.translate.instant(`Inconsistent data.`) +
                 ` ` +
-                _(`A change recommendation or amendment is probably referring to a non-existant line number.`);
+                this.translate.instant(
+                    `A change recommendation or amendment is probably referring to a non-existant line number.`
+                );
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 

@@ -17,7 +17,6 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 import { GlobalAccountService } from '../../services/global-account.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-account-button',
@@ -161,7 +160,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     private onOperatorUpdate(): void {
         this.isLoggedIn = !this.operator.isAnonymous;
-        this.username = this.isLoggedIn ? this.operator.shortName : _(`Guest`);
+        this.username = this.isLoggedIn ? this.operator.shortName : this.translate.instant(`Guest`);
         const userId = this.operator.operatorId;
         if (this._userId !== userId) {
             this._userId = userId;

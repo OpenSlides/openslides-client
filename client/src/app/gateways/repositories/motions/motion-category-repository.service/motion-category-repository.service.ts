@@ -7,7 +7,6 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { MotionCategoryAction } from './motion-category.action';
 import { Fieldsets, DEFAULT_FIELDSET, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -60,7 +59,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
             ? viewMotionCategory.prefix + ` - ` + viewMotionCategory.name
             : viewMotionCategory.name;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Categories` : `Category`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Categories` : `Category`);
 
     /**
      * Updates a categories numbering.

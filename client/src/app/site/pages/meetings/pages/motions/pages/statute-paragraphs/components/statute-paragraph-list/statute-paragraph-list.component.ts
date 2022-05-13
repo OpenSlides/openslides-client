@@ -37,7 +37,7 @@ export class StatuteParagraphListComponent extends BaseComponent implements OnIn
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private repo: MotionStatuteParagraphControllerService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,

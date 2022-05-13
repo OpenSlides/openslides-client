@@ -8,7 +8,6 @@ import { AssignmentCandidate } from '../../../../domain/models/assignments/assig
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentCandidateAction } from './assignment-candidate.action';
 import { Action } from 'src/app/gateways/actions';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +28,7 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
 
     public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) => viewAssignmentCandidate.user.getTitle();
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Candidates` : `Candidate`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Candidates` : `Candidate`);
 
     public async create(assignment: Identifiable, userId: Id): Promise<Identifiable> {
         const payload = {

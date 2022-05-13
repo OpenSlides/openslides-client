@@ -6,7 +6,6 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionStateAction } from './motion-state.action';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +42,7 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getTitle = (viewMotionState: ViewMotionState) => viewMotionState.name;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Workflows` : `Workflow`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     public async create(model: Partial<MotionState>): Promise<Identifiable> {
         const payload = {

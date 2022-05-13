@@ -27,7 +27,6 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -146,7 +145,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: FormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
@@ -189,7 +188,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public onStatuteParagraphChange(newValue: number): void {
         const selectedParagraph = this.statuteParagraphs.find(par => par.id === newValue);
         this.contentForm.patchValue({
-            title: _(`Statute amendment for`) + ` ${selectedParagraph!.title}`,
+            title: this.translate.instant(`Statute amendment for`) + ` ${selectedParagraph!.title}`,
             text: selectedParagraph?.text,
             workflow_id: this.getWorkflowIdForCreateFormByParagraph(newValue)
         });

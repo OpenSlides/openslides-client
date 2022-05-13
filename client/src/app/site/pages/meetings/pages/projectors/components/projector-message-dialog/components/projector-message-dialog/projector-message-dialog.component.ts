@@ -19,7 +19,7 @@ export class ProjectorMessageDialogComponent extends BaseComponent implements On
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: MessageDialogData
     ) {

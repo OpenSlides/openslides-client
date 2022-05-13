@@ -18,7 +18,7 @@ export class ParticipantImportListComponent extends BaseUserImportListComponent 
      */
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         formBuilder: FormBuilder,
         public override readonly importer: ParticipantImportService
     ) {

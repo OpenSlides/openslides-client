@@ -5,7 +5,6 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { DurationService } from 'src/app/site/services/duration.service';
 import { CountdownDialogData } from '../../definitions';
 import { TranslateService } from '@ngx-translate/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-projector-countdown-dialog',
@@ -38,7 +37,7 @@ export class ProjectorCountdownDialogComponent implements OnInit {
      */
     public ngOnInit(): void {
         const time = this.data.duration || this.durationService.durationToString(this.defaultTime, `m`);
-        const title = this.data.title || `${_(`Countdown`)} ${this.data.count || 0 + 1}`;
+        const title = this.data.title || `${this.translate.instant(`Countdown`)} ${this.data.count || 0 + 1}`;
 
         this.countdownForm = this.formBuilder.group({
             title: [title, Validators.required],

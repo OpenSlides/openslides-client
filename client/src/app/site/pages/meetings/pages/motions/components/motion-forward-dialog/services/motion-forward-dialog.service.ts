@@ -11,7 +11,6 @@ import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { TranslateService } from '@ngx-translate/core';
 import { MotionFormatService } from '../../../services/common/motion-format.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: MotionForwardDialogModule
@@ -48,9 +47,9 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     }
 
     private createForwardingSuccessMessage(toForwardLength: number, selectedMotionsLength: number): string {
-        const ofTranslated = _(`of`);
-        const successfulMessage = _(`successfully forwarded`);
-        const verboseName = _(this.repo.getVerboseName(selectedMotionsLength !== 1));
+        const ofTranslated = this.translate.instant(`of`);
+        const successfulMessage = this.translate.instant(`successfully forwarded`);
+        const verboseName = this.translate.instant(this.repo.getVerboseName(selectedMotionsLength !== 1));
         const additionalInfo = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
 
         return `${toForwardLength} ${additionalInfo}${verboseName} ${successfulMessage}`;

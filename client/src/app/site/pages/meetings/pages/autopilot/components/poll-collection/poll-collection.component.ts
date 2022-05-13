@@ -60,7 +60,7 @@ export class PollCollectionComponent<C extends BaseViewModel> extends BaseCompon
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private repo: PollControllerService,
         private cd: ChangeDetectorRef,
         private operator: OperatorService

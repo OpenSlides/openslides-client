@@ -10,7 +10,6 @@ import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PollControllerService } from '../services/poll-controller.service/poll-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Directive()
 export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseMeetingComponent {
@@ -50,7 +49,7 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         protected promptService: PromptService,
         protected choiceService: ChoiceService,
         protected repo: PollControllerService
@@ -63,9 +62,9 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
         if (currentState === PollState.Created || currentState === PollState.Finished) {
             await this.changeState(this._poll.nextState);
         } else if (currentState === PollState.Started) {
-            const title = _(`Are you sure you want to stop this voting?`);
-            const STOP_LABEL = _(`Stop`);
-            const STOP_PUBLISH_LABEL = _(`Stop & publish`);
+            const title = this.translate.instant(`Are you sure you want to stop this voting?`);
+            const STOP_LABEL = this.translate.instant(`Stop`);
+            const STOP_PUBLISH_LABEL = this.translate.instant(`Stop & publish`);
             const actions = [STOP_LABEL, STOP_PUBLISH_LABEL];
             const choice = await this.choiceService.open({ title, multiSelect: false, actions });
 
@@ -84,8 +83,8 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     }
 
     public async resetState(): Promise<void> {
-        const title = _(`Are you sure you want to reset this vote?`);
-        const content = _(`All votes will be lost.`);
+        const title = this.translate.instant(`Are you sure you want to reset this vote?`);
+        const content = this.translate.instant(`All votes will be lost.`);
         if (await this.promptService.open(title, content)) {
             this.changeState(PollState.Created);
         }
@@ -95,7 +94,7 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
      * Handler for the 'delete poll' button
      */
     public async deletePoll(): Promise<void> {
-        const title = _(`Are you sure you want to delete this vote?`);
+        const title = this.translate.instant(`Are you sure you want to delete this vote?`);
         const content = this._poll.getTitle();
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this._poll);

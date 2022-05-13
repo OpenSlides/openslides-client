@@ -69,7 +69,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: FormBuilder,
         private cd: ChangeDetectorRef

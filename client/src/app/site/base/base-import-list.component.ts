@@ -33,7 +33,7 @@ export abstract class BaseImportListComponent<M extends Identifiable> extends Ba
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         protected importer: BaseImportService<M>
     ) {
         super(componentServiceCollector, translate);

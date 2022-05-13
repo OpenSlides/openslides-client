@@ -9,7 +9,6 @@ import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/activ
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
 import { firstValueFrom } from 'rxjs';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-projector-list-entry',
@@ -93,7 +92,7 @@ export class ProjectorListEntryComponent {
      * Delete the projector.
      */
     public async onDeleteButton(): Promise<void> {
-        const title = _(`Are you sure you want to delete this projector?`);
+        const title = this.translate.instant(`Are you sure you want to delete this projector?`);
         if (await this.promptService.open(title, this.projector.name)) {
             this.repo.delete(this.projector);
         }

@@ -40,7 +40,7 @@ export class AssignmentPollService extends PollService {
 
     public constructor(
         organizationSettingsService: OrganizationSettingsService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: PollParseNumberPipe,
         pollServiceMapper: PollServiceMapperService,
@@ -71,7 +71,7 @@ export class AssignmentPollService extends PollService {
 
     public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
         const poll: Partial<Poll> = {
-            title: _(`Ballot`),
+            title: this.translate.instant(`Ballot`),
             onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: this.defaultGroupIds,
             pollmethod: this.defaultPollMethod,

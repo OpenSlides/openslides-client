@@ -9,7 +9,6 @@ import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/ag
 import { DurationService } from 'src/app/site/services/duration.service';
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicImportService } from '../../services/topic-import.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const TEXT_IMPORT_TAB_INDEX = 0;
 
@@ -28,7 +27,7 @@ export class TopicImportComponent extends BaseImportListComponent<Topic> {
 
     public columns: ImportListHeaderDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
         prop: `newEntry.${header}`,
-        label: _((<any>topicHeadersAndVerboseNames)[header]),
+        label: this.translate.instant((<any>topicHeadersAndVerboseNames)[header]),
         isTableColumn: true,
         isRequired: header === `title`
     }));
@@ -41,7 +40,7 @@ export class TopicImportComponent extends BaseImportListComponent<Topic> {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public override importer: TopicImportService,
         formBuilder: FormBuilder,
         private durationService: DurationService

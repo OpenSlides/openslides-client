@@ -3,7 +3,6 @@ import { MotionListSortService } from '../motion-list-sort.service';
 import { MotionsListServiceModule } from '../motions-list-service.module';
 import { OsSortingOption, OsSortingDefinition } from 'src/app/site/base/base-sort.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: MotionsListServiceModule
@@ -17,7 +16,7 @@ export class AmendmentListSortService extends MotionListSortService {
     private amendmentSortOptions: OsSortingOption<ViewMotion>[] = [
         {
             property: `parentAndLineNumber`,
-            label: _(`Main motion and line number`)
+            label: this.translate.instant(`Main motion and line number`)
         }
     ];
 

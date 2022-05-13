@@ -12,7 +12,6 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: MotionPollServiceModule
@@ -53,11 +52,13 @@ export class MotionPollPdfService extends BasePollPdfService {
      */
     public printBallots(viewPoll: ViewPoll, title?: string, subtitle?: string): void {
         const motion = this.motionRepo.getViewModel(viewPoll.content_object?.id)!;
-        const fileName = `${_(`Motion`)} - ${motion.number} - ${_(`ballot-paper`)}`;
+        const fileName = `${this.translate.instant(`Motion`)} - ${motion.number} - ${this.translate.instant(
+            `ballot-paper`
+        )}`;
         if (!title) {
-            title = `${_(`Motion`)} - ${motion.number}`;
+            title = `${this.translate.instant(`Motion`)} - ${motion.number}`;
             if (motion.polls.length > 1) {
-                title += ` (${_(`Vote`)} ${motion.polls.length})`;
+                title += ` (${this.translate.instant(`Vote`)} ${motion.polls.length})`;
             }
         }
         if (!subtitle) {
@@ -87,9 +88,9 @@ export class MotionPollPdfService extends BasePollPdfService {
                 this.getHeader(),
                 this.getTitle(data.title),
                 this.getSubtitle(data.subtitle),
-                this.createBallotOption(_(`Yes`)),
-                this.createBallotOption(_(`No`)),
-                this.createBallotOption(_(`Abstain`))
+                this.createBallotOption(this.translate.instant(`Yes`)),
+                this.createBallotOption(this.translate.instant(`No`)),
+                this.createBallotOption(this.translate.instant(`Abstain`))
             ],
             margin: [0, 0, 0, data.sheetend]
         };

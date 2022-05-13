@@ -15,7 +15,6 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ListOfSpeakersContentComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-list-of-speakers',
@@ -72,7 +71,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
      */
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
         private promptService: PromptService,
         private currentListOfSpeakersService: CurrentListOfSpeakersService,
@@ -144,7 +143,9 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
      * after a confirmation dialog
      */
     public async clearSpeakerList(): Promise<void> {
-        const title = _(`Are you sure you want to delete all speakers from this list of speakers?`);
+        const title = this.translate.instant(
+            `Are you sure you want to delete all speakers from this list of speakers?`
+        );
         if (await this.promptService.open(title)) {
             this.listOfSpeakersRepo.deleteAllSpeakers(this.viewListOfSpeakers);
         }
@@ -174,7 +175,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
     private setListOfSpeakers(listOfSpeakers: ViewListOfSpeakers): void {
         const title = this.isCurrentListOfSpeakers
             ? `Current list of speakers`
-            : listOfSpeakers.getTitle() + ` - ${_(`List of speakers`)}`;
+            : listOfSpeakers.getTitle() + ` - ${this.translate.instant(`List of speakers`)}`;
         super.setTitle(title);
         this.viewListOfSpeakers = listOfSpeakers;
     }

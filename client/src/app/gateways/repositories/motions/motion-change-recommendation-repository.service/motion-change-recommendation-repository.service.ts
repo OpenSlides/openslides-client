@@ -6,7 +6,6 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionChangeRecommendationAction } from './motion-change-recommendation.action';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +20,8 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
 
     public getTitle = () => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Change recommendations` : `Change recommendation`);
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? `Change recommendations` : `Change recommendation`);
 
     public create(model: Partial<MotionChangeRecommendation>, firstLine: number = 1): Promise<Identifiable> {
         const payload = {

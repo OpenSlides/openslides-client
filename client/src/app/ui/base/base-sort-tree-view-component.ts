@@ -6,7 +6,6 @@ import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.gu
 import { SortingTreeComponent } from '../modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export type SortTreeFilterId = string | number;
 
@@ -113,8 +112,8 @@ export abstract class BaseSortTreeViewComponent<V extends BaseViewModel>
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = _(`Do you really want to exit this page?`);
-            const content = _(`You made changes.`);
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
             return await this.promptService.open(title, content);
         }
         return true;

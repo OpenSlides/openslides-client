@@ -8,7 +8,6 @@ import { Group } from 'src/app/domain/models/users/group';
 import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export class MeetingGroupsObject {
     public readonly groups: { [groupName: string]: ViewGroup };
@@ -74,7 +73,7 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
         return this.repo
             .getSortedViewModelList()
             .filter(group => ids.includes(group.id))
-            .map(group => _(group.getTitle()))
+            .map(group => this.translate.instant(group.getTitle()))
             .join(`, `);
     }
 

@@ -66,7 +66,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public async onDeleteCommittee(committee: ViewCommittee): Promise<void> {
-        const title = _(`Are you sure you want to delete this committee?`);
+        const title = this.translate.instant(`Are you sure you want to delete this committee?`);
         const content = committee.name;
 
         const confirmed = await this.promptService.open(title, content);

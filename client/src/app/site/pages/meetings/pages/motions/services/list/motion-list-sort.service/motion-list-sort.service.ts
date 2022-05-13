@@ -50,7 +50,7 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      * @param config set the default sorting according to OpenSlides configuration
      */
     public constructor(
-        translate: TranslateService,
+        protected override translate: TranslateService,
         store: StorageService,
         private meetingSettingsService: MeetingSettingsService
     ) {

@@ -39,7 +39,7 @@ export abstract class BaseMeetingComponent extends BaseComponent {
 
     public constructor(
         public override componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService
+        protected override translate: TranslateService
     ) {
         super(componentServiceCollector, translate);
     }

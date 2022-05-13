@@ -8,7 +8,6 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { SortingTreeComponent } from 'src/app/ui/modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-category-list-sort',
@@ -34,7 +33,7 @@ export class CategoryListSortComponent extends BaseMeetingComponent {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private categoryRepo: MotionCategoryControllerService,
         private promptService: PromptService
     ) {
@@ -77,8 +76,8 @@ export class CategoryListSortComponent extends BaseMeetingComponent {
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = _(`Do you really want to exit this page?`);
-            const content = _(`You made changes.`);
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
             return await this.promptService.open(title, content);
         }
         return true;

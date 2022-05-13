@@ -27,7 +27,6 @@ import { PollServiceModule } from '../poll-service.module';
 import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
 import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { compareNumber } from 'src/app/infrastructure/utils';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
@@ -117,7 +116,7 @@ export abstract class PollService {
         return poll.options.map(option => {
             const votingResults = fields.map(field => {
                 const voteValue = option[field] as number;
-                const votingKey = _(this.pollKeyVerbose.transform(field));
+                const votingKey = this.translate.instant(this.pollKeyVerbose.transform(field));
                 const resultValue = this.pollParseNumber.transform(voteValue);
                 const resultInPercent = this.getVoteValueInPercent(voteValue, { poll, row: option });
                 let resultLabel = `${votingKey}: ${resultValue}`;

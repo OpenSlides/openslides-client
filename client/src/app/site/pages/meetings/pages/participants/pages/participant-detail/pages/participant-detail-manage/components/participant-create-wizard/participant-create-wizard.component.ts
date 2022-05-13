@@ -119,7 +119,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         fb: FormBuilder,
         public readonly repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,

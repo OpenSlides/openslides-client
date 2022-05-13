@@ -139,7 +139,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private route: ActivatedRoute,
         public filterService: MotionListFilterService,
         public sortService: MotionListSortService,

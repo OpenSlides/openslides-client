@@ -15,7 +15,6 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { TopicControllerService } from '../../../../services/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../../../services';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-topic-detail',
@@ -64,7 +63,7 @@ export class TopicDetailComponent extends BaseMeetingComponent {
      */
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private formBuilder: FormBuilder,
         private repo: TopicControllerService,
         private promptService: PromptService,
@@ -169,7 +168,7 @@ export class TopicDetailComponent extends BaseMeetingComponent {
      * Handler for the delete button. Uses the PromptService
      */
     public async onDeleteButton(): Promise<void> {
-        const title = _(`Are you sure you want to delete this entry?`);
+        const title = this.translate.instant(`Are you sure you want to delete this entry?`);
         const content = this.topic!.title;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.topic!).catch(this.raiseError);

@@ -14,7 +14,6 @@ import { Observable } from 'rxjs';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { MatTableDataSource } from '@angular/material/table';
 import { WorkflowExportService } from '../../services/workflow-export.service/workflow-export.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Declares data for the workflow dialog
@@ -159,7 +158,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private promptService: PromptService,
         private dialog: MatDialog,
         private workflowRepo: MotionWorkflowControllerService,
@@ -200,15 +199,17 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Opens a dialog to enter the workflow name
      */
     public onNewStateButton(): void {
-        this.openEditDialog(``, _(`New state`), _(`Name`)).subscribe(result => {
-            if (result && result.action === `update`) {
-                const state = {
-                    name: result.value,
-                    workflow_id: this.workflow.id
-                };
-                this.handleRequest(this.stateRepo.create(state));
+        this.openEditDialog(``, this.translate.instant(`New state`), this.translate.instant(`Name`)).subscribe(
+            result => {
+                if (result && result.action === `update`) {
+                    const state = {
+                        name: result.value,
+                        workflow_id: this.workflow.id
+                    };
+                    this.handleRequest(this.stateRepo.create(state));
+                }
             }
-        });
+        );
     }
 
     /**
@@ -413,7 +414,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
     }
 
     private deleteWorkflowState(state: ViewMotionState): void {
-        const content = _(`Delete`) + ` ${state.name}?`;
+        const content = this.translate.instant(`Delete`) + ` ${state.name}?`;
 
         this.promptService.open(`Are you sure`, content).then(promptResult => {
             if (promptResult) {

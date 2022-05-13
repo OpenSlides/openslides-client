@@ -6,7 +6,6 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { Fieldsets, DEFAULT_FIELDSET, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionWorkflowAction } from './motion-workflow.action';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +28,7 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
 
     public getTitle = (viewMotionWorkflow: ViewMotionWorkflow) => viewMotionWorkflow.name;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Workflows` : `Workflow`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     public create(partialModel: Partial<MotionWorkflow>): Promise<Identifiable> {
         const payload = {

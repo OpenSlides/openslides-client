@@ -11,7 +11,6 @@ import { MotionCategoryControllerService } from '../../../../modules/categories/
 import { ActivatedRoute } from '@angular/router';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * View for rearranging and renumbering the motions of a category. The {@link onNumberMotions}
@@ -74,7 +73,7 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private promptService: PromptService,
         private repo: MotionCategoryControllerService,
         private route: ActivatedRoute,
@@ -144,7 +143,7 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
      * Only an array containing ids from the motions will be sent.
      */
     public async sendUpdate(): Promise<void> {
-        const title = _(`Do you really want to save your changes?`);
+        const title = this.translate.instant(`Do you really want to save your changes?`);
         if (await this.promptService.open(title)) {
             const ids = this.motionsCopy.map(motion => motion.id);
             this.repo.sortMotionsInCategory(this.category!, ids);
@@ -192,8 +191,8 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = _(`Do you really want to exit this page?`);
-            const content = _(`You made changes.`);
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
             return await this.promptService.open(title, content);
         }
         return true;
@@ -201,11 +200,11 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
 
     public async moveToPosition(): Promise<void> {
         if (this.sortSelector.multiSelectedIndex.length) {
-            const content = _(`Move selected items ...`);
+            const content = this.translate.instant(`Move selected items ...`);
             const choices = this.sortSelector.sortedItems.filter(
                 f => !this.sortSelector.multiSelectedIndex.includes(f.id)
             );
-            const actions = [_(`Insert before`), _(`Insert behind`)];
+            const actions = [this.translate.instant(`Insert before`), this.translate.instant(`Insert behind`)];
             const selectedChoice = await this.choiceService.open(content, choices, false, actions);
             if (selectedChoice) {
                 const newIndex = selectedChoice.items as number;

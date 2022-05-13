@@ -8,7 +8,6 @@ import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionSubmitterAction } from './motion-submitter.action';
 import { Action } from 'src/app/gateways/actions';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +30,7 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
 
     public getTitle = (submitter: ViewMotionSubmitter) => submitter?.user.getTitle();
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Submitters` : `Submitter`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Submitters` : `Submitter`);
 
     public create(motion: Identifiable, ...users: Identifiable[]): Action<Identifiable[]> {
         const payload = users.map(user => ({

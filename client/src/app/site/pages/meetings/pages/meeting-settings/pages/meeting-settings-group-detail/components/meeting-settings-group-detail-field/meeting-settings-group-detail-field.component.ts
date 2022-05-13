@@ -22,7 +22,6 @@ import { CollectionMapperService } from 'src/app/site/services/collection-mapper
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { Moment, unix as moment } from 'moment';
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export interface SettingsFieldUpdate {
     key: string;
@@ -117,7 +116,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef,
         private groupRepo: GroupControllerService,
@@ -167,7 +166,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             this.setting.type === `markupText` ||
             this.setting.type === `text`
         ) {
-            this.translatedValue = _(this.value);
+            this.translatedValue = this.translate.instant(this.value);
         }
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));

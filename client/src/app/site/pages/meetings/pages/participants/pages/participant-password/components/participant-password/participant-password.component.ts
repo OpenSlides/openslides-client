@@ -11,7 +11,6 @@ import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-participant-password',
@@ -45,7 +44,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private operator: OperatorService,
         private openslidesRouter: OpenSlidesRouterService,
         private route: ActivatedRoute,
@@ -58,7 +57,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
      * Initializes the forms and some of the frontend options
      */
     public ngOnInit(): void {
-        super.setTitle(_(`Change password`));
+        super.setTitle(this.translate.instant(`Change password`));
         this.openslidesRouter.currentParamMap.subscribe(params => {
             if (params['id']) {
                 this.urlUserId = +params['id'];

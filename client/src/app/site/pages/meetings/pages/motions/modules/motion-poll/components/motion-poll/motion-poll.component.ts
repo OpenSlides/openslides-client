@@ -50,7 +50,7 @@ export class MotionPollComponent extends BasePollComponent {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         promptService: PromptService,
         choiceService: ChoiceService,
         pollRepo: PollControllerService,

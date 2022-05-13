@@ -22,7 +22,7 @@ export class OrganizationInfoComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private orgaRepo: OrganizationControllerService,
         private operator: OperatorService
     ) {

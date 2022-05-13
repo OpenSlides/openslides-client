@@ -13,7 +13,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MotionBlockSortService } from '../../services/motion-block-sort.service';
 import { MotionBlockCreateDialogService } from '../motion-block-create-dialog/services/motion-block-create-dialog.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const MOTION_BLOCK_LIST_STORAGE_INDEX = `motion_blocks`;
 @Component({
@@ -53,19 +52,19 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: `title`,
-            label: _(`Title`),
+            label: this.translate.instant(`Title`),
             width: `100%`
         },
         {
             prop: `amount`,
-            label: _(`Motions`),
+            label: this.translate.instant(`Motions`),
             width: `40px`
         }
     ];
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public repo: MotionBlockControllerService,
         private dialog: MotionBlockCreateDialogService,
         private itemRepo: AgendaItemControllerService,

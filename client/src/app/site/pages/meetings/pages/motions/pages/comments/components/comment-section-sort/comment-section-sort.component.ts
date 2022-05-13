@@ -18,7 +18,7 @@ export class CommentSectionSortComponent extends BaseComponent implements OnInit
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private repo: MotionCommentSectionControllerService
     ) {
         super(componentServiceCollector, translate);
