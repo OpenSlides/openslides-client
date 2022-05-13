@@ -11,6 +11,8 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 
 @Component({
     selector: 'os-assignment-poll-detail-content',
@@ -29,6 +31,9 @@ export class AssignmentPollDetailContentComponent {
         this.setupTableData();
         this.cd.markForCheck();
     }
+
+    @Input()
+    public iconSize: 'large' | 'gigantic' = `large`;
 
     public get poll(): PollData {
         return this._poll;
@@ -99,6 +104,30 @@ export class AssignmentPollDetailContentComponent {
 
     public get isPercentBaseEntitled(): boolean {
         return this.poll?.onehundred_percent_base === PollPercentBase.Entitled;
+    }
+
+    public get pService(): PollService {
+        return this.pollService;
+    }
+
+    public get reformedTableData(): PollTableData[]{
+        const tableData = [];
+        this.tableData.forEach(tableDate => {
+            if (tableDate.class === `user`) {
+                tableDate.value.forEach(value => {
+                    if (this.voteFitsMethod(value)) {
+                        tableData.push({
+                            class: tableDate.class,
+                            votingOption: value.vote,
+                            value: [value]
+                        });
+                    }
+                });
+            } else {
+                tableData.push(tableDate);
+            }
+        });
+        return tableData;
     }
 
     public constructor(

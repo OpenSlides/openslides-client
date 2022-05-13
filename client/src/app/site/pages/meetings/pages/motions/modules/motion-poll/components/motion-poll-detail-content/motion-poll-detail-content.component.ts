@@ -7,6 +7,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
+import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 
 const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
 
@@ -65,6 +66,10 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
 
     public get showChart(): boolean {
         return this.pollService.shouldShowChart(this.poll);
+    }
+
+    public get pService(): PollService {
+        return this.pollService;
     }
 
     public isPercentBaseEntitled = false;

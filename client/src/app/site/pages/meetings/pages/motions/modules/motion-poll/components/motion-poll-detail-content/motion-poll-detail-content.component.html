@@ -1,51 +1,13 @@
 <div class="result-wrapper" *ngIf="poll">
     <ng-container *ngIf="hasResults && canSeeResults">
-        <!-- result table -->
-        <table class="result-table">
-            <tbody>
-                <tr>
-                    <th></th>
-                    <th colspan="2">{{ 'Votes' | translate }}</th>
-                </tr>
-                <tr *ngFor="let row of tableData; trackBy: trackByIndex" [class]="row.votingOption">
-                    <!-- YNA/Valid etc -->
-                    <td>
-                        <os-icon-container *ngIf="row.value[0].icon" [icon]="row.value[0].icon" [size]="iconSize">
-                            {{ row.votingOption | pollKeyVerbose | translate }}
-                        </os-icon-container>
-                        <span *ngIf="!row.value[0].icon">
-                            {{ row.votingOption | pollKeyVerbose | translate }}
-                        </span>
-                    </td>
-
-                    <!-- Percent numbers -->
-                    <td class="result-cell-definition">
-                        <span *ngIf="row.value[0].showPercent">
-                            {{ row.value[0].amount! | pollPercentBase: poll }}
-                        </span>
-                    </td>
-
-                    <!-- Voices -->
-                    <td class="result-cell-definition">
-                        {{ row.value[0].amount | pollParseNumber }}
-                    </td>
-                </tr>
-                <tr *ngIf="isPercentBaseEntitled" class="entitled-users-row">
-                    <td>{{ 'Entitled users' | translate }}</td>
-                    <td class="result-cell-definition">
-                        {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
-                    </td>
-                    <td class="result-cell-definition">
-                        {{ poll.entitled_users_at_stop.length }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Chart -->
-        <div *ngIf="showChart" class="doughnut-chart">
-            <os-chart type="doughnut" [data]="chartData"></os-chart>
-        </div>
+        <os-single-option-chart-table
+            [shouldShowHead]="true"
+            [tableData]="tableData"
+            [pollService]="pService"
+            [poll]="poll"
+            [iconSize]="iconSize"
+            [shouldShowEntitled]="isPercentBaseEntitled"
+        ></os-single-option-chart-table>
     </ng-container>
 
     <!-- No results yet -->

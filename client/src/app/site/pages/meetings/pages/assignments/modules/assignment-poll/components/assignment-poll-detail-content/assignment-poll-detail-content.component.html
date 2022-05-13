@@ -81,77 +81,17 @@
                 ({{ tableData[0].votingOptionSubtitle }})
             </span>
         </h3>
-        <div class="doughnut-chart result-grid">
-            <table class="result-table">
-                <tbody>
-                    <ng-container *ngFor="let row of tableData; let i = index">
-                        <ng-container *ngIf="row.class === 'user'">
-                            <tr *ngFor="let vote of filterRelevantResults(row.value)" [ngClass]="getVoteClass(vote)">
-                                <td>
-                                    {{vote.vote | pollKeyVerbose | translate}}
-                                </td>
-                                <td>
-                                    <div class="result">
-                                        <span *ngIf="vote.showPercent">
-                                            {{ getVoteAmount(vote, row) | pollPercentBase: poll:row }}
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="result">
-                                        <span>
-                                            {{ getVoteAmount(vote, row) | pollParseNumber }}
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-container>
-                        <ng-container *ngIf="row.class !== 'user'">
-                            <tr *ngFor="let vote of filterRelevantResults(row.value)">
-                                <td>
-                                    {{ row.votingOption | pollKeyVerbose | translate }}
-                                </td>
-                                <td>
-                                    <div class="result" [ngClass]="getVoteClass(vote)">
-                                        <span *ngIf="vote.showPercent">
-                                            {{ getVoteAmount(vote, row) | pollPercentBase: poll:row }}
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="result">
-                                        <span>
-                                            {{ vote.amount | pollParseNumber }}
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </ng-container>
-                    <tr *ngIf="isPercentBaseEntitled && poll.entitled_users_at_stop" class="entitled-users-row">
-                        <td>{{ 'Entitled users' | translate }}</td>
-                        <td class="result">
-                            <div>
-                                <span>
-                                    {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="result">
-                                <span>
-                                    {{ poll.entitled_users_at_stop.length }}
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- Chart -->
-            <div class="doughnut-chart">
-                <os-chart type="doughnut" [data]="chartData"></os-chart>
-            </div>
-        </div>
+
+        <ng-container *ngIf="hasResults && canSeeResults">
+            <os-single-option-chart-table
+                [shouldShowHead]="false"
+                [poll]="poll"
+                [tableData]="reformedTableData"
+                [pollService]="pService"
+                [iconSize]="iconSize"
+                [shouldShowEntitled]="isPercentBaseEntitled">
+            </os-single-option-chart-table>
+        </ng-container>
     </div>
 
     <!-- No results yet -->
