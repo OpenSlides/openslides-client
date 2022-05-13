@@ -8,7 +8,6 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { SpeakingTimeStructureLevelObject } from '../../../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 interface IdentifiedSpeakingTimeStructureLevelObject extends Identifiable, SpeakingTimeStructureLevelObject {}
 
@@ -51,12 +50,12 @@ export class UserStatisticsComponent extends BaseComponent {
         {
             prop: `durationOfWordRequests`,
             width: `30%`,
-            label: _(`Duration of requests to speak`)
+            label: this.translate.instant(`Duration of requests to speak`)
         },
         {
             prop: `numberOfWordRequests`,
             width: `30%`,
-            label: _(`Number of requests to speak`)
+            label: this.translate.instant(`Number of requests to speak`)
         }
     ];
 
@@ -72,7 +71,7 @@ export class UserStatisticsComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private speakerRepo: SpeakerControllerService,
         private durationService: DurationService
     ) {

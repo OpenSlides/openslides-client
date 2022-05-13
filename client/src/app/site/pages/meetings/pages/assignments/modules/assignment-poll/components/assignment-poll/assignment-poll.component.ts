@@ -64,7 +64,7 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         promptService: PromptService,
         choiceService: ChoiceService,
         repo: PollControllerService,

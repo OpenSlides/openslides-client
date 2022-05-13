@@ -93,7 +93,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
         public perms: MotionPermissionService,
         private operator: OperatorService,

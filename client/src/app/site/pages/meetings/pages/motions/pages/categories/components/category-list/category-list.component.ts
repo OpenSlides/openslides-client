@@ -67,7 +67,7 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public repo: MotionCategoryControllerService,
         private formBuilder: FormBuilder,
         private dialog: MatDialog,

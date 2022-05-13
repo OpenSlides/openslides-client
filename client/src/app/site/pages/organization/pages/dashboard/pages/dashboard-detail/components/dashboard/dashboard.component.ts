@@ -34,7 +34,7 @@ export class DashboardComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private meetingRepo: MeetingControllerService,
         private themeService: ThemeService
     ) {

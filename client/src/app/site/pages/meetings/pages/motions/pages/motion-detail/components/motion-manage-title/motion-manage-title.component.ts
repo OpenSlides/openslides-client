@@ -28,7 +28,7 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
         private personalNoteRepo: PersonalNoteControllerService,
         private dialog: MotionChangeRecommendationDialogService

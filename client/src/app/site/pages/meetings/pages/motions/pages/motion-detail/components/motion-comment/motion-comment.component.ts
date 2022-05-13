@@ -37,7 +37,7 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private fb: FormBuilder,
         private pdfService: MotionPdfExportService,
         private commentRepo: MotionCommentControllerService

@@ -10,7 +10,6 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Action } from 'src/app/gateways/actions';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Observable } from 'rxjs';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -61,11 +60,11 @@ export class ParticipantRepositoryService extends BaseMeetingRelatedRepository<V
         const noEmails = response.filter(email => !email.sent);
         let responseMessage: string;
         if (numEmails === 0) {
-            responseMessage = _(`No emails were send.`);
+            responseMessage = this.translate.instant(`No emails were send.`);
         } else if (numEmails === 1) {
-            responseMessage = _(`One email was send sucessfully.`);
+            responseMessage = this.translate.instant(`One email was send sucessfully.`);
         } else {
-            responseMessage = _(`%num% emails were send sucessfully.`);
+            responseMessage = this.translate.instant(`%num% emails were send sucessfully.`);
             responseMessage = responseMessage.replace(`%num%`, numEmails.toString());
         }
 
@@ -73,9 +72,13 @@ export class ParticipantRepositoryService extends BaseMeetingRelatedRepository<V
             responseMessage += ` `;
 
             if (noEmails.length === 1) {
-                responseMessage += _(`The user %user% has no email, so the invitation email could not be send.`);
+                responseMessage += this.translate.instant(
+                    `The user %user% has no email, so the invitation email could not be send.`
+                );
             } else {
-                responseMessage += _(`The users %user% have no email, so the invitation emails could not be send.`);
+                responseMessage += this.translate.instant(
+                    `The users %user% have no email, so the invitation emails could not be send.`
+                );
             }
 
             // This one builds a username string like "user1, user2 and user3" with the full names.
@@ -86,7 +89,7 @@ export class ParticipantRepositoryService extends BaseMeetingRelatedRepository<V
             let userString: string;
             if (usernames.length > 1) {
                 const lastUsername = usernames.pop();
-                userString = usernames.join(`, `) + ` ` + _(`and`) + ` ` + lastUsername;
+                userString = usernames.join(`, `) + ` ` + this.translate.instant(`and`) + ` ` + lastUsername;
             } else {
                 userString = usernames.join(`, `);
             }

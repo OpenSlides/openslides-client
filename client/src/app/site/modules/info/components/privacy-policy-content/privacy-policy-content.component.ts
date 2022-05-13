@@ -64,8 +64,7 @@ export class PrivacyPolicyContentComponent extends BaseUiComponent implements On
     private _value!: string;
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected translate: TranslateService,
         private orgaSettings: OrganizationSettingsService,
         fb: FormBuilder
     ) {

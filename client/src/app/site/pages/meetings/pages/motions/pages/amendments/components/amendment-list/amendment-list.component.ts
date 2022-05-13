@@ -74,7 +74,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private route: ActivatedRoute,
         public amendmentRepo: AmendmentControllerService,
         public motionService: MotionControllerService,

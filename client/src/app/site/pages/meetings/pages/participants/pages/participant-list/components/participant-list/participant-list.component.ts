@@ -114,7 +114,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
         private choiceService: ChoiceService,
@@ -257,7 +257,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * SelectedRows is only filled with data in multiSelect mode
      */
     public async setGroupSelected(): Promise<void> {
-        const content = _(`This will add or remove the following groups for all selected participants:`);
+        const content = this.translate.instant(
+            `This will add or remove the following groups for all selected participants:`
+        );
         const ADD = _(`add group(s)`);
         const REMOVE = _(`remove group(s)`);
         const choices = [ADD, REMOVE];
@@ -289,8 +291,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * multiSelect mode.
      */
     public async sendInvitationEmailSelected(): Promise<void> {
-        const title = _(`Are you sure you want to send emails to all selected participants?`);
-        const content = this.selectedRows.length + ` ` + _(`emails`);
+        const title = this.translate.instant(`Are you sure you want to send emails to all selected participants?`);
+        const content = this.selectedRows.length + ` ` + this.translate.instant(`emails`);
         if (await this.promptService.open(title, content)) {
             this.repo.sendInvitationEmails(this.selectedRows).then(this.raiseError, this.raiseError);
         }
@@ -304,7 +306,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public getEmailSentTime(user: ViewUser): string {
         if (!user.isLastEmailSend) {
-            return _(`No email sent`);
+            return this.translate.instant(`No email sent`);
         }
         return this.repo.getLastSentEmailTimeString(user);
     }
@@ -340,7 +342,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 actions = [_(`natural person`), _(`no natural person`)];
                 break;
         }
-        const content = _(`Set status for selected participants:`);
+        const content = this.translate.instant(`Set status for selected participants:`);
 
         const selectedChoice = await this.choiceService.open({ title: content, multiSelect: false, actions });
         if (selectedChoice) {

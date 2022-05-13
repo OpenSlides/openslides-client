@@ -27,7 +27,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private controller: OrganizationControllerService,
         private formBuilder: FormBuilder,
         private operator: OperatorService

@@ -9,7 +9,6 @@ import { CommitteeControllerService } from '../../services/committee-controller.
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-committee-meeting-preview',
@@ -61,8 +60,8 @@ export class CommitteeMeetingPreviewComponent {
     ) {}
 
     public async onArchive(): Promise<void> {
-        const title = _(`Are you sure you want to archive this meeting?`);
-        const content = _(`Attention: You can NOT be undone this action!`);
+        const title = this.translate.instant(`Are you sure you want to archive this meeting?`);
+        const content = this.translate.instant(`Attention: You can NOT be undone this action!`);
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
@@ -71,7 +70,7 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public async onUnarchive(): Promise<void> {
-        const title = _(`Are you sure you want to activate this meeting?`);
+        const title = this.translate.instant(`Are you sure you want to activate this meeting?`);
         const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
@@ -81,7 +80,7 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public async onDuplicate(): Promise<void> {
-        const title = _(`Are you sure you want to duplicate this meeting?`);
+        const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);
@@ -91,7 +90,7 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public async onDeleteMeeting(): Promise<void> {
-        const title = _(`Are you sure you want to delete this meeting?`);
+        const title = this.translate.instant(`Are you sure you want to delete this meeting?`);
         const content = this.title;
 
         const confirmed = await this.promptService.open(title, content);

@@ -6,7 +6,6 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionCommentSectionAction } from './motion-comment-section.action';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +37,8 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
 
     public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => viewMotionCommentSection.name;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Comment sections` : `Comment section`);
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? `Comment sections` : `Comment section`);
 
     public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         const payload = {

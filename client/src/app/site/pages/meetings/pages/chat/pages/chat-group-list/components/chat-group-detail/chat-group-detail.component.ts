@@ -29,7 +29,6 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-chat-group-detail',
@@ -77,7 +76,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private repo: ChatGroupControllerService,
         private chatMessageRepo: ChatMessageControllerService,
         private chatNotificationService: ChatNotificationService,
@@ -133,7 +132,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     }
 
     public async clearChatGroup(chatGroup: ViewChatGroup): Promise<void> {
-        const title = _(`Are you sure you want to clear all messages in this chat?`);
+        const title = this.translate.instant(`Are you sure you want to clear all messages in this chat?`);
         if (await this.promptService.open(title, chatGroup.name)) {
             await this.repo.clear(chatGroup).catch(this.raiseError);
             this.triggerUpdateView();
@@ -156,7 +155,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     }
 
     public async deleteChatGroup(chatGroup: ViewChatGroup): Promise<void> {
-        const title = _(`Are you sure you want to delete this chat group?`);
+        const title = this.translate.instant(`Are you sure you want to delete this chat group?`);
         const content = chatGroup.name;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(chatGroup).catch(this.raiseError);
@@ -173,7 +172,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     }
 
     public async deleteChatMessage(message: ViewChatMessage): Promise<void> {
-        const title = _(`Are you sure you want to delete this message?`);
+        const title = this.translate.instant(`Are you sure you want to delete this message?`);
         if (await this.promptService.open(title)) {
             await this.chatMessageRepo.delete(message).catch(this.raiseError);
             this.triggerUpdateView();

@@ -8,7 +8,6 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { TopicAction } from './topic.action';
 import { createAgendaItem } from '../agenda';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -71,7 +70,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
 
     public override getAgendaSlideTitle = (topic: ViewTopic) => this.getAgendaListTitle(topic).title;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Topics` : `Topic`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Topics` : `Topic`);
 
     public duplicateTopics(...topicAgendaItems: ViewAgendaItem<ViewTopic>[]): Promise<Identifiable[]> {
         return this.create(...topicAgendaItems.map(topic => this.getDuplicatedTopic(topic)));

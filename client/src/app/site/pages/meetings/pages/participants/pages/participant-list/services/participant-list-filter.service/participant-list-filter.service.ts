@@ -6,7 +6,6 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: ParticipantListServiceModule
@@ -49,57 +48,57 @@ export class ParticipantListFilterService extends BaseFilterListService<ViewUser
                 property: `isPresentInMeeting`,
                 label: `Presence`,
                 options: [
-                    { condition: true, label: _(`Is present`) },
-                    { condition: [false, null], label: _(`Is not present`) }
+                    { condition: true, label: this.translate.instant(`Is present`) },
+                    { condition: [false, null], label: this.translate.instant(`Is not present`) }
                 ]
             },
             {
                 property: `is_active`,
-                label: _(`Active`),
+                label: this.translate.instant(`Active`),
                 options: [
-                    { condition: true, label: _(`Is active`) },
-                    { condition: [false, null], label: _(`Is not active`) }
+                    { condition: true, label: this.translate.instant(`Is active`) },
+                    { condition: [false, null], label: this.translate.instant(`Is not active`) }
                 ]
             },
             {
                 property: `is_physical_person`,
-                label: _(`Committee`),
+                label: this.translate.instant(`Committee`),
                 options: [
-                    { condition: true, label: _(`Is not a committee`) },
-                    { condition: [false, null], label: _(`Is a committee`) }
+                    { condition: true, label: this.translate.instant(`Is not a committee`) },
+                    { condition: [false, null], label: this.translate.instant(`Is a committee`) }
                 ]
             },
             {
                 property: `isLastEmailSend`,
-                label: _(`Last email send`),
+                label: this.translate.instant(`Last email send`),
                 options: [
-                    { condition: true, label: _(`Got an email`) },
-                    { condition: [false, null], label: _(`Didn't get an email`) }
+                    { condition: true, label: this.translate.instant(`Got an email`) },
+                    { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
                 ]
             },
             {
                 property: `isVoteWeightOne`,
-                label: _(`Vote weight`),
+                label: this.translate.instant(`Vote weight`),
                 options: [
-                    { condition: [false, null], label: _(`Has changed vote weight`) },
-                    { condition: true, label: _(`Has unchanged vote weight`) }
+                    { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
+                    { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
                 ]
             },
             {
                 property: `delegationType`,
-                label: _(`Delegation of vote`),
+                label: this.translate.instant(`Delegation of vote`),
                 options: [
                     {
                         condition: DelegationType.Transferred,
-                        label: _(`Voting right received from (principals)`)
+                        label: this.translate.instant(`Voting right received from (principals)`)
                     },
                     {
                         condition: DelegationType.Received,
-                        label: _(`Voting right delegated to (proxy)`)
+                        label: this.translate.instant(`Voting right delegated to (proxy)`)
                     },
                     {
                         condition: DelegationType.Neither,
-                        label: _(`No delegation of vote`)
+                        label: this.translate.instant(`No delegation of vote`)
                     }
                 ]
             }

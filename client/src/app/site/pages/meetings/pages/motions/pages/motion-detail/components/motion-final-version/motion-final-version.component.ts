@@ -23,7 +23,7 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: FormBuilder
     ) {

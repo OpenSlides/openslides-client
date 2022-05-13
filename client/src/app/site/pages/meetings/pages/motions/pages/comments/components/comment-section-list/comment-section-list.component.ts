@@ -42,7 +42,7 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private repo: MotionCommentSectionControllerService,
         private formBuilder: FormBuilder,
         private promptService: PromptService,

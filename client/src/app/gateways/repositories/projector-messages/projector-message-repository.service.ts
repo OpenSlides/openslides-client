@@ -6,7 +6,6 @@ import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorMessageAction } from './projector-message.action';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +19,7 @@ export class ProjectorMessageRepositoryService extends BaseMeetingRelatedReposit
     }
     public getTitle = (viewProjectorMessage: ViewProjectorMessage) => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Messages` : `Message`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Messages` : `Message`);
 
     public override getFieldsets(): Fieldsets<ProjectorMessage> {
         return {

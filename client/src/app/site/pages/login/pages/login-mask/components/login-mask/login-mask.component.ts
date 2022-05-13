@@ -81,7 +81,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private authService: AuthService,
         private operator: OperatorService,
         // private router: Router,
@@ -172,7 +172,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     private checkForUnsecureConnection(): void {
         if (location.protocol === `http:`) {
-            this.raiseWarning(_(HTTP_WARNING));
+            this.raiseWarning(this.translate.instant(HTTP_WARNING));
         }
     }
 

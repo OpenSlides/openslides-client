@@ -3,7 +3,6 @@ import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { TranslateService } from '@ngx-translate/core';
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicImportServiceModule } from '../topic-import-service.module';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 interface TopicExport {
     title?: string;
@@ -29,7 +28,7 @@ export class TopicExportService {
         this.csvExportService.dummyCSVExport<TopicExport>(
             topicHeadersAndVerboseNames,
             rows,
-            `${_(`Agenda`)}-${_(`example`)}.csv`
+            `${this.translate.instant(`Agenda`)}-${this.translate.instant(`example`)}.csv`
         );
     }
 }

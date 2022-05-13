@@ -8,7 +8,6 @@ import { RepositoryServiceCollectorService } from '../repository-service-collect
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { MediafileAction } from './mediafile.action';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +28,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     public getTitle = (viewMediafile: ViewMediafile) => viewMediafile.title;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Files` : `File`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Files` : `File`);
 
     public override getFieldsets(): Fieldsets<Mediafile> {
         const fileSelectionFields: TypedFieldset<Mediafile> = [`title`, `is_directory`];

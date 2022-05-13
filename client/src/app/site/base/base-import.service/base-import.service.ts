@@ -49,7 +49,6 @@ import {
 import { ImportHandler } from '../../../infrastructure/utils/import/base-import-handler';
 import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
 import { ImportService } from '../../../ui/base/import-service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Directive()
 export abstract class BaseImportService<MainModel extends Identifiable> implements ImportService<MainModel> {
@@ -462,7 +461,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             this._beforeImportHandler[header] = { mainHandler: handler };
         } else {
             this._beforeImportHandler[header] = {
-                mainHandler: new StaticBeforeImportHandler(handler, key => _(key))
+                mainHandler: new StaticBeforeImportHandler(handler, key => this.translate.instant(key))
             };
         }
     }
@@ -485,7 +484,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             } else {
                 return new StaticAdditionalImportHandler<MainModel, SideModel>({
                     ..._handler,
-                    translateFn: key => _(key)
+                    translateFn: key => this.translate.instant(key)
                 });
             }
         };
@@ -497,7 +496,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
                 mainHandler: new StaticAfterImportHandler<MainModel, SideModel>(
                     handler,
                     header as keyof MainModel,
-                    toTranslate => _(toTranslate)
+                    toTranslate => this.translate.instant(toTranslate)
                 ),
                 additionalHandlers: _additionalHandlers
             };
@@ -512,7 +511,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         } else {
             this._otherMainImportHelper.push(
                 new StaticMainImportHandler({
-                    translateFn: key => _(key),
+                    translateFn: key => this.translate.instant(key),
                     resolveEntryFn: importModel => this.resolveEntry(importModel),
                     ...handler
                 })
@@ -642,7 +641,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             shouldCreateModelFn,
             createFn,
             updateFn,
-            translateFn: key => _(key),
+            translateFn: key => this.translate.instant(key),
             resolveEntryFn: importModel => this.resolveEntry(importModel)
         });
         this.updateSummary();
@@ -692,7 +691,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     private checkHeaderLength(): boolean {
         const snackbarDuration = 3000;
         // if (this._receivedHeaders.length < this.requiredHeaderLength) {
-        //     this.matSnackbar.open(_(`The file has too few columns to be parsed properly.`), ``, {
+        //     this.matSnackbar.open(this.translate.instant(`The file has too few columns to be parsed properly.`), ``, {
         //         duration: snackbarDuration
         //     });
 
@@ -700,13 +699,13 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         //     return false;
         // } else if (this._receivedHeaders.length < this.expectedHeaders.length) {
         //     this.matSnackbar.open(
-        //         _(`The file seems to have some ommitted columns. They will be considered empty.`),
+        //         this.translate.instant(`The file seems to have some ommitted columns. They will be considered empty.`),
         //         ``,
         //         { duration: snackbarDuration }
         //     );
         // } else if (this._receivedHeaders.length > this.expectedHeaders.length) {
         //     this.matSnackbar.open(
-        //         _(`The file seems to have additional columns. They will be ignored.`),
+        //         this.translate.instant(`The file seems to have additional columns. They will be ignored.`),
         //         ``,
         //         { duration: snackbarDuration }
         //     );
@@ -720,7 +719,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         while (expectedHeaders.length > 0) {
             const toExpected = expectedHeaders.shift() as string;
             const nextHeader = this._modelHeadersAndVerboseNames[toExpected];
-            const nextHeaderTranslated = _(nextHeader);
+            const nextHeaderTranslated = this.translate.instant(nextHeader);
             let index = leftReceivedHeaders.findIndex(header => header === nextHeaderTranslated);
             if (index > -1) {
                 this._mapReceivedExpectedHeaders[toExpected] = nextHeaderTranslated;

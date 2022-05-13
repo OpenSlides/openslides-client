@@ -166,7 +166,7 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         protected motionServiceCollector: MotionDetailServiceCollectorService
     ) {
         super(componentServiceCollector, translate);

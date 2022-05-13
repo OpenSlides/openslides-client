@@ -107,7 +107,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private meetingRepo: MeetingControllerService,

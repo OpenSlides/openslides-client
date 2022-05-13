@@ -9,6 +9,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { ActivatedRoute } from '@angular/router';
@@ -17,7 +18,6 @@ import { AmendmentParagraphs } from '../../../../../../../../../domain/models/mo
 import { filter, first, firstValueFrom, Subscription } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-amendment-create-wizard',
@@ -73,7 +73,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private formBuilder: FormBuilder,
         private repo: AmendmentControllerService,
         private motionRepo: MotionControllerService,
@@ -104,7 +104,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
      */
     public async cancelCreation(): Promise<void> {
         if (this.contentForm.dirty || this.contentForm.value.selectedParagraphs.length > 0) {
-            const title = _(`Are you sure you want to discard this amendment?`);
+            const title = this.translate.instant(`Are you sure you want to discard this amendment?`);
             if (await this.promptService.open(title)) {
                 this.router.navigate([`..`], { relativeTo: this.route });
             }
@@ -167,7 +167,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         });
         const motionCreate = {
             ...this.contentForm.value,
-            title: _(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
+            title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
             tag_ids: this.motion.tag_ids,

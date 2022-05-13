@@ -28,7 +28,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     providedIn: MotionMultiselectModule
 })
 export class MotionMultiselectService {
-    private messageForSpinner = _(`Motions are in process. Please wait ...`);
+    private messageForSpinner = this.translate.instant(`Motions are in process. Please wait ...`);
 
     public constructor(
         private repo: MotionControllerService,
@@ -55,9 +55,9 @@ export class MotionMultiselectService {
      * @param motions The motions to delete
      */
     public async delete(motions: ViewMotion[]): Promise<void> {
-        const title = _(`Are you sure you want to delete all selected motions?`);
+        const title = this.translate.instant(`Are you sure you want to delete all selected motions?`);
         if (await this.promptService.open(title)) {
-            const message = `${motions.length} ${_(this.messageForSpinner)}`;
+            const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
             this.spinnerService.show(message, { hideAfterPromiseResolved: () => this.repo.delete(...motions) });
         }
     }
@@ -67,7 +67,7 @@ export class MotionMultiselectService {
         const choices = this.workflowRepo.getViewModelList();
         const selectedChoice = await this.choiceService.open({ title, choices });
         if (selectedChoice) {
-            const message = `${motions.length} ` + _(this.messageForSpinner);
+            const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () =>
                     this.repo.update({ workflow_id: selectedChoice.items as number }, ...motions).resolve()
@@ -82,13 +82,13 @@ export class MotionMultiselectService {
      */
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
         if (motions.some(motion => motion.state!.workflow_id !== motions[0].state!.workflow_id)) {
-            throw new Error(_(`You cannot change the state of motions in different workflows!`));
+            throw new Error(this.translate.instant(`You cannot change the state of motions in different workflows!`));
         }
-        const title = _(`This will set the following state for all selected motions:`);
+        const title = this.translate.instant(`This will set the following state for all selected motions:`);
         const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
         const selectedChoice = await this.choiceService.open({ title, choices });
         if (selectedChoice) {
-            const message = `${motions.length} ` + _(this.messageForSpinner);
+            const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () => this.repo.setState(selectedChoice.items as number, ...motions).resolve()
             });
@@ -102,9 +102,11 @@ export class MotionMultiselectService {
      */
     public async setRecommendation(motions: ViewMotion[]): Promise<void> {
         if (motions.some(motion => motion.state!.workflow_id !== motions[0].state!.workflow_id)) {
-            throw new Error(_(`You cannot change the recommendation of motions in different workflows!`));
+            throw new Error(
+                this.translate.instant(`You cannot change the recommendation of motions in different workflows!`)
+            );
         }
-        const title = _(`This will set the following recommendation for all selected motions:`);
+        const title = this.translate.instant(`This will set the following recommendation for all selected motions:`);
 
         // hacks custom Displayables from recommendations
         // TODO: Recommendations should be an own class
@@ -116,10 +118,10 @@ export class MotionMultiselectService {
                 getTitle: () => workflowState.recommendation_label,
                 getListTitle: () => workflowState.recommendation_label
             }));
-        const clearChoiceOption = _(`Delete recommendation`);
+        const clearChoiceOption = this.translate.instant(`Delete recommendation`);
         const selectedChoice = await this.choiceService.open({ title, choices, multiSelect: false, clearChoiceOption });
         if (selectedChoice) {
-            const message = `${motions.length} ` + _(this.messageForSpinner);
+            const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () =>
                     selectedChoice.action
@@ -135,8 +137,8 @@ export class MotionMultiselectService {
      * @param motions The motions to change
      */
     public async setCategory(motions: ViewMotion[]): Promise<void> {
-        const title = _(`This will set the following category for all selected motions:`);
-        const clearChoiceOption = _(`No category`);
+        const title = this.translate.instant(`This will set the following category for all selected motions:`);
+        const clearChoiceOption = this.translate.instant(`No category`);
         const selectedChoice = await this.choiceService.open({
             title,
             choices: this.categoryRepo.getViewModelListObservable(),
@@ -145,7 +147,7 @@ export class MotionMultiselectService {
         });
         const categoryId = selectedChoice?.action ? null : (selectedChoice?.items as number);
         if (selectedChoice && categoryId) {
-            const message = _(this.messageForSpinner);
+            const message = this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () => this.repo.setCategory(categoryId, ...motions)
             });
@@ -158,9 +160,11 @@ export class MotionMultiselectService {
      * @param motions The motions to add/remove the sumbitters to
      */
     public async changeSubmitters(motions: ViewMotion[]): Promise<void> {
-        const title = _(`This will add or remove the following submitters for all selected motions:`);
-        const ADD = _(`Add`);
-        const REMOVE = _(`Remove`);
+        const title = this.translate.instant(
+            `This will add or remove the following submitters for all selected motions:`
+        );
+        const ADD = this.translate.instant(`Add`);
+        const REMOVE = this.translate.instant(`Remove`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(
             title,
@@ -185,7 +189,7 @@ export class MotionMultiselectService {
             }
 
             if (action) {
-                const message = `${motions.length} ` + _(this.messageForSpinner);
+                const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
                 this.spinnerService.show(message, { hideAfterPromiseResolved: () => action!.resolve() });
             }
         }
@@ -197,16 +201,16 @@ export class MotionMultiselectService {
      * @param motions The motions to add the tags to
      */
     public async changeTags(motions: ViewMotion[]): Promise<void> {
-        const title = _(`This will add or remove the following tags for all selected motions:`);
-        const ADD = _(`Add`);
-        const REMOVE = _(`Remove`);
+        const title = this.translate.instant(`This will add or remove the following tags for all selected motions:`);
+        const ADD = this.translate.instant(`Add`);
+        const REMOVE = this.translate.instant(`Remove`);
         const actions = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open({
             title,
             choices: this.tagRepo.getViewModelListObservable(),
             multiSelect: true,
             actions,
-            clearChoiceOption: _(`Clear tags`)
+            clearChoiceOption: this.translate.instant(`Clear tags`)
         });
         if (selectedChoice) {
             let requestData: Action<void>[] = [];
@@ -224,7 +228,7 @@ export class MotionMultiselectService {
                 requestData = motions.map(motion => this.repo.update({ tag_ids: [] }, motion));
             }
 
-            const message = `${motions.length} ` + _(this.messageForSpinner);
+            const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () => Action.from(...requestData).resolve()
             });
@@ -237,8 +241,8 @@ export class MotionMultiselectService {
      * @param motions The motions for which to change the motionBlock
      */
     public async setMotionBlock(motions: ViewMotion[]): Promise<void> {
-        const title = _(`This will set the following motion block for all selected motions:`);
-        const clearChoiceOption = _(`Clear motion block`);
+        const title = this.translate.instant(`This will set the following motion block for all selected motions:`);
+        const clearChoiceOption = this.translate.instant(`Clear motion block`);
         const selectedChoice = await this.choiceService.open({
             title,
             choices: this.motionBlockRepo.getViewModelListObservable(),
@@ -247,7 +251,7 @@ export class MotionMultiselectService {
         });
         const blockId = selectedChoice?.action ? null : (selectedChoice?.items as number);
         if (selectedChoice && blockId) {
-            const message = _(this.messageForSpinner);
+            const message = this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () => this.repo.setBlock(blockId, ...motions)
             });
@@ -258,7 +262,7 @@ export class MotionMultiselectService {
      * Moves the related agenda items from the motions as childs under a selected (parent) agenda item.
      */
     public async moveInAgenda(motions: ViewMotion[]): Promise<void> {
-        const title = _(`This will move all selected motions as childs to:`);
+        const title = this.translate.instant(`This will move all selected motions as childs to:`);
         const choices = this.agendaRepo.getViewModelListObservable();
         const selectedChoice = await this.choiceService.open({ title, choices });
         if (selectedChoice) {
@@ -278,7 +282,7 @@ export class MotionMultiselectService {
             }
 
             if (actions.length) {
-                const message = `${motions.length} ${_(this.messageForSpinner)}`;
+                const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
                 this.spinnerService.show(message, {
                     hideAfterPromiseResolved: () => Action.from(...actions).resolve()
                 });
@@ -293,9 +297,11 @@ export class MotionMultiselectService {
      * @param motions The motions to move
      */
     public async moveInCallList(motions: ViewMotion[]): Promise<void> {
-        const title = _(`This will move all selected motions under or after the following motion in the call list:`);
-        const TO_PARENT = _(`Set as parent`);
-        const INSERT_AFTER = _(`Insert after`);
+        const title = this.translate.instant(
+            `This will move all selected motions under or after the following motion in the call list:`
+        );
+        const TO_PARENT = this.translate.instant(`Set as parent`);
+        const INSERT_AFTER = this.translate.instant(`Insert after`);
         const options = [TO_PARENT, INSERT_AFTER];
         const allMotions = this.repo.getViewModelList();
         const tree = this.treeService.makeSortedTree(allMotions, `sort_weight`, `sort_parent_id`);
@@ -310,7 +316,7 @@ export class MotionMultiselectService {
                 return;
             }
             if (!selectedChoice.items) {
-                throw new Error(_(`No items selected`));
+                throw new Error(this.translate.instant(`No items selected`));
             }
             const parentId =
                 selectedChoice.action === TO_PARENT
@@ -323,7 +329,7 @@ export class MotionMultiselectService {
                 parentId,
                 olderSibling
             );
-            const message = `${motions.length} ${_(this.messageForSpinner)}`;
+            const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () => this.repo.sortMotions(this.treeService.stripTree(sortedTree))
             });
@@ -336,13 +342,13 @@ export class MotionMultiselectService {
      * @param motions The motions to set/unset the favorite status for
      */
     public async bulkSetFavorite(motions: ViewMotion[]): Promise<void> {
-        const title = _(`This will set the favorite status for all selected motions:`);
-        const options = [_(`Set as favorite`), _(`Set as not favorite`)];
+        const title = this.translate.instant(`This will set the favorite status for all selected motions:`);
+        const options = [this.translate.instant(`Set as favorite`), this.translate.instant(`Set as not favorite`)];
         const selectedChoice = await this.choiceService.open({ title, multiSelect: false, actions: options });
         if (selectedChoice && motions.length) {
             // `bulkSetStar` does imply that "true" sets favorites while "false" unsets favorites
             const isFavorite = selectedChoice.action === options[0];
-            const message = _(`I have ${motions.length} favorite motions. Please wait ...`);
+            const message = this.translate.instant(`I have ${motions.length} favorite motions. Please wait ...`);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () => this.personalNoteRepo.setPersonalNote({ star: isFavorite }, ...motions)
             });

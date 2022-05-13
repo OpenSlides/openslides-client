@@ -25,7 +25,7 @@ export class StatuteParagraphImportListComponent extends BaseImportListComponent
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public override importer: StatuteParagraphImportService
     ) {
         super(componentServiceCollector, translate, importer);

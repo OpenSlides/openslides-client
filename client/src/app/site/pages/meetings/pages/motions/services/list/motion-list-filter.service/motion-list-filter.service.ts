@@ -108,8 +108,8 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         property: `hasSpeakers`,
         label: `Speakers`,
         options: [
-            { condition: true, label: _(`Has speakers`) },
-            { condition: false, label: _(`Has no speakers`) }
+            { condition: true, label: this.translate.instant(`Has speakers`) },
+            { condition: false, label: this.translate.instant(`Has no speakers`) }
         ]
     };
 
@@ -117,38 +117,38 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         property: `amendmentType`,
         label: `Amendment`,
         options: [
-            { condition: AmendmentType.Amendment, label: _(`Is amendment`) },
-            { condition: AmendmentType.Parent, label: _(`Has amendments`) },
-            { condition: AmendmentType.Lead, label: _(`Is no amendment and has no amendments`) }
+            { condition: AmendmentType.Amendment, label: this.translate.instant(`Is amendment`) },
+            { condition: AmendmentType.Parent, label: this.translate.instant(`Has amendments`) },
+            { condition: AmendmentType.Lead, label: this.translate.instant(`Is no amendment and has no amendments`) }
         ]
     };
 
     private personalNoteFilterOptions: any[] = [
         {
             property: `isFavorite`,
-            label: _(`Favorites`),
+            label: this.translate.instant(`Favorites`),
             options: [
                 {
                     condition: true,
-                    label: _(`Is favorite`)
+                    label: this.translate.instant(`Is favorite`)
                 },
                 {
                     condition: false,
-                    label: _(`Is not favorite`)
+                    label: this.translate.instant(`Is not favorite`)
                 }
             ]
         },
         {
             property: `hasNotes`,
-            label: _(`Personal notes`),
+            label: this.translate.instant(`Personal notes`),
             options: [
                 {
                     condition: true,
-                    label: _(`Has notes`)
+                    label: this.translate.instant(`Has notes`)
                 },
                 {
                     condition: false,
-                    label: _(`Does not have notes`)
+                    label: this.translate.instant(`Does not have notes`)
                 }
             ]
         }
@@ -161,7 +161,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         commentRepo: MotionCommentSectionControllerService,
         tagRepo: TagControllerService,
         private workflowRepo: MotionWorkflowControllerService,
-        private translate: TranslateService,
+        protected translate: TranslateService,
         private operator: OperatorService,
         private meetingSettingsService: MeetingSettingsService
     ) {
@@ -172,25 +172,25 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         this.updateFilterForRepo({
             repo: categoryRepo,
             filter: this.categoryFilterOptions,
-            noneOptionLabel: _(`No category set`)
+            noneOptionLabel: this.translate.instant(`No category set`)
         });
 
         this.updateFilterForRepo({
             repo: motionBlockRepo,
             filter: this.motionBlockFilterOptions,
-            noneOptionLabel: _(`No motion block set`)
+            noneOptionLabel: this.translate.instant(`No motion block set`)
         });
 
         this.updateFilterForRepo({
             repo: commentRepo,
             filter: this.motionCommentFilterOptions,
-            noneOptionLabel: _(`No comment`)
+            noneOptionLabel: this.translate.instant(`No comment`)
         });
 
         this.updateFilterForRepo({
             repo: tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: _(`No tags`)
+            noneOptionLabel: this.translate.instant(`No tags`)
         });
 
         this.subscribeWorkflows();

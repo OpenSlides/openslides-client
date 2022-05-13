@@ -5,7 +5,6 @@ import { AccountCommonServiceModule } from './account-common-service.module';
 import { OsFilter, BaseFilterListService, OsFilterOptions } from 'src/app/site/base/base-filter.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: `root`
@@ -15,7 +14,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
 
     private committeeFilterOptions: OsFilter<ViewUser> = {
         property: `committee_ids`,
-        label: _(`Committees`),
+        label: this.translate.instant(`Committees`),
         options: []
     };
 
@@ -29,7 +28,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         this.updateFilterForRepo({
             repo: committeeRepo,
             filter: this.committeeFilterOptions,
-            noneOptionLabel: _(`No committee`)
+            noneOptionLabel: this.translate.instant(`No committee`)
         });
     }
 
@@ -42,37 +41,37 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
             `-`,
             {
                 condition: null,
-                label: _(`No meeting`)
+                label: this.translate.instant(`No meeting`)
             }
         ];
         const staticFilterDefinitions: OsFilter<ViewUser>[] = [
             {
                 property: `is_active`,
-                label: _(`Active`),
+                label: this.translate.instant(`Active`),
                 options: [
                     { condition: true, label: `Is active` },
-                    { condition: [false, null], label: _(`Is not active`) }
+                    { condition: [false, null], label: this.translate.instant(`Is not active`) }
                 ]
             },
             {
                 property: `isLastEmailSend`,
-                label: _(`Last email send`),
+                label: this.translate.instant(`Last email send`),
                 options: [
-                    { condition: true, label: _(`Got an email`) },
-                    { condition: [false, null], label: _(`Didn't get an email`) }
+                    { condition: true, label: this.translate.instant(`Got an email`) },
+                    { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
                 ]
             },
             {
                 property: `isVoteWeightOne`,
-                label: _(`Vote weight`),
+                label: this.translate.instant(`Vote weight`),
                 options: [
-                    { condition: [false, null], label: _(`Has changed vote weight`) },
-                    { condition: true, label: _(`Has unchanged vote weight`) }
+                    { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
+                    { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
                 ]
             },
             {
                 property: `id`,
-                label: _(`Meetings`),
+                label: this.translate.instant(`Meetings`),
                 options: meetingFilterOptions
             },
             this.committeeFilterOptions

@@ -15,7 +15,6 @@ import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.se
 import { Subscription } from 'rxjs';
 import { ViewUnifiedChange } from '../../../../modules/change-recommendations/view-models/view-unified-change';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-motion-highlight-form',
@@ -105,7 +104,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
         private linenumberingService: LineNumberingService,
         private promptService: PromptService,
@@ -196,7 +195,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
      * Deletes the modified final version
      */
     public async deleteModifiedFinalVersion(): Promise<void> {
-        const title = _(`Are you sure you want to delete the print template?`);
+        const title = this.translate.instant(`Are you sure you want to delete the print template?`);
         if (await this.promptService.open(title)) {
             try {
                 await this.repo.update({ modified_final_version: `` }, this.motion);

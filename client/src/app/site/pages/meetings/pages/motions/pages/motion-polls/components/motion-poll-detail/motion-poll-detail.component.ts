@@ -47,7 +47,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         repo: PollControllerService,
         route: ActivatedRoute,
         groupRepo: GroupControllerService,

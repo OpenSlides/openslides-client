@@ -9,7 +9,6 @@ import { ViewMotionWorkflow } from '../../../../modules';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { WorkflowExportService } from '../../services';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const WORKFLOW_LIST_STORAGE_INDEX = `workflows`;
 
@@ -44,7 +43,7 @@ export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMoti
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private dialog: MatDialog,
         public workflowRepo: MotionWorkflowControllerService,
         private promptService: PromptService,
@@ -84,7 +83,7 @@ export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMoti
      * @param selected the selected workflow
      */
     public async onDeleteWorkflow(selected: ViewMotionWorkflow): Promise<void> {
-        const title = _(`Are you sure you want to delete this workflow?`);
+        const title = this.translate.instant(`Are you sure you want to delete this workflow?`);
         const content = selected.getTitle();
         if (await this.promptService.open(title, content)) {
             this.workflowRepo.delete(selected);

@@ -34,7 +34,7 @@ export class ChatGroupListComponent extends BaseMeetingComponent {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private dialog: ChatGroupDialogService,
         private chatGroupRepo: ChatGroupControllerService,
         private vp: ViewPortService,

@@ -6,7 +6,6 @@ import { MotionState } from 'src/app/domain/models/motions/motion-state';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import { MotionStateControllerService } from '../../../../modules/states/services';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: MotionWorkflowServiceModule
@@ -54,10 +53,12 @@ export class WorkflowExportService {
         }
         const blob = new Blob([JSON.stringify(json, undefined, 2)], { type: `application/json` });
         const isMultiple = workflows.length > 1;
-        const workflowTranslation = isMultiple ? _(`Workflows`) : _(`Workflow`);
+        const workflowTranslation = isMultiple
+            ? this.translate.instant(`Workflows`)
+            : this.translate.instant(`Workflow`);
         const fileName = isMultiple
             ? `${workflowTranslation}.json`
-            : `${workflowTranslation}-${_(workflows[0].name)}.json`;
+            : `${workflowTranslation}-${this.translate.instant(workflows[0].name)}.json`;
         saveAs(blob, fileName);
     }
 }

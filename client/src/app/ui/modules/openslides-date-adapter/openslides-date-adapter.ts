@@ -14,7 +14,7 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 @Injectable()
 export class OpenSlidesDateAdapter extends MomentDateAdapter {
     public constructor(
-        translate: TranslateService,
+        protected translate: TranslateService,
         @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string,
         @Optional() @Inject(MAT_MOMENT_DATE_ADAPTER_OPTIONS) _options?: MatMomentDateAdapterOptions
     ) {

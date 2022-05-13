@@ -10,7 +10,6 @@ import { OrganizationTagControllerService } from '../../../../services/organizat
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ColorService } from 'src/app/site/services/color.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: `os-organization-tag-list`,
@@ -35,7 +34,7 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public repo: OrganizationTagControllerService,
         private promptService: PromptService,
         private dialog: OrganizationTagDialogService,
@@ -71,8 +70,8 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
     public async deleteOrganizationTags(...orgaTags: ViewOrganizationTag[]): Promise<void> {
         const dialogTitle =
             orgaTags.length === 1
-                ? _(`Are you sure you want to delete this tag?`)
-                : _(`Are you sure you want to delete all selected tags?`);
+                ? this.translate.instant(`Are you sure you want to delete this tag?`)
+                : this.translate.instant(`Are you sure you want to delete all selected tags?`);
         const dialogSubtitle = orgaTags.length === 1 ? orgaTags[0].name : ``;
         if (await this.promptService.open(dialogTitle, dialogSubtitle)) {
             await this.repo.delete(...orgaTags);

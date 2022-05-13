@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-reset-password',
@@ -22,7 +21,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
      */
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         formBuilder: FormBuilder,
         private userRepo: UserControllerService
     ) {
@@ -49,9 +48,13 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
 
         try {
             await this.userRepo.forgetPassword(this.resetPasswordForm.get(`email`)!.value);
-            this.matSnackBar.open(_(`An email with a password reset link was send!`), _(`OK`), {
-                duration: 0
-            });
+            this.matSnackBar.open(
+                this.translate.instant(`An email with a password reset link was send!`),
+                this.translate.instant(`OK`),
+                {
+                    duration: 0
+                }
+            );
             this.router.navigate([`..`]);
         } catch (e) {
             this.raiseError(e);

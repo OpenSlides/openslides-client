@@ -11,7 +11,6 @@ import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-motion-poll-vote',
@@ -68,8 +67,8 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         }
         this.voteRequestData[user.id].value = vote;
 
-        const title = _(`Submit selection now?`);
-        const content = _(`Your decision cannot be changed afterwards.`);
+        const title = this.translate.instant(`Submit selection now?`);
+        const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
         const confirmed = await this.promptService.open(title, content);
 
         if (confirmed) {

@@ -35,7 +35,7 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
         commentRepo: MotionCommentSectionControllerService,
         tagRepo: TagControllerService,
         workflowRepo: MotionWorkflowControllerService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         operator: OperatorService,
         meetingSettingsService: MeetingSettingsService
     ) {

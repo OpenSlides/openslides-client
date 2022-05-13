@@ -53,7 +53,7 @@ export class InteractionContainerComponent extends BaseMeetingComponent implemen
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         rtcService: RtcService,
         streamService: StreamService,
         private interactionService: InteractionService,

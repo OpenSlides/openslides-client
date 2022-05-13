@@ -39,7 +39,7 @@ export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public pollRepo: PollControllerService,
         public filterService: PollListFilterService,
         public votingService: VotingService

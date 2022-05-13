@@ -87,7 +87,7 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public override importer: CommitteeImportService
     ) {
         super(componentServiceCollector, translate, importer);

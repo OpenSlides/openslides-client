@@ -22,7 +22,7 @@ export class MeetingInfoComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private orgaRepo: OrganizationRepositoryService,
         private operator: OperatorService
     ) {

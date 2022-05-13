@@ -22,7 +22,6 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { HistoryService } from '../../services/history.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 const COLLECTION = Motion.COLLECTION;
 
@@ -65,7 +64,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private viewModelStore: ViewModelStoreService,
         private formBuilder: FormBuilder,
         private motionRepo: MotionRepositoryService,
@@ -191,7 +190,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         if (element && isDetailNavigable(element)) {
             this.router.navigate([element.getDetailStateUrl()]);
         } else {
-            const message = _('Cannot navigate to the selected history element.');
+            const message = this.translate.instant('Cannot navigate to the selected history element.');
             this.raiseError(message);
         }
     }

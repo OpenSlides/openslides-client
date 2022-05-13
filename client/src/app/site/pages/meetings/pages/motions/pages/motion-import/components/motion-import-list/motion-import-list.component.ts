@@ -27,7 +27,7 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public override importer: MotionImportService
     ) {
         super(componentServiceCollector, translate, importer);

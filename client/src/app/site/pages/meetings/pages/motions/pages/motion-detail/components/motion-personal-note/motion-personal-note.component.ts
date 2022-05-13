@@ -45,7 +45,7 @@ export class MotionPersonalNoteComponent extends BaseComponent {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         formBuilder: FormBuilder,
         private repo: PersonalNoteControllerService,
         private pdfService: MotionPdfExportService

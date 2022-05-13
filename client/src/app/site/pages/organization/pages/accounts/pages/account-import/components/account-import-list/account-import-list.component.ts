@@ -16,7 +16,7 @@ import { AccountControllerService } from '../../../../services/common/account-co
 export class AccountImportListComponent extends BaseUserImportListComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         formBuilder: FormBuilder,
         public override importer: AccountImportService,
         private accountController: AccountControllerService

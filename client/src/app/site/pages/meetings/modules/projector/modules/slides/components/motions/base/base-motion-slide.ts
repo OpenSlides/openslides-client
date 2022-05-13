@@ -2,7 +2,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { TitleInformationWithAgendaItem } from '../../../definitions';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export interface MotionTitleInformation extends TitleInformationWithAgendaItem {
     title: string;
@@ -34,12 +33,12 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
      * @returns the new string
      */
     public replaceReferencedMotions(text: string, referencedMotions: ReferencedMotions): string {
-        return text.replace(/\[motion\/(\d+)\]/g, (__, id) => {
+        return text.replace(/\[motion\/(\d+)\]/g, (_, id) => {
             const referencedMotion = referencedMotions[id];
             if (referencedMotion) {
                 return this.getNumberOrTitle(referencedMotion);
             } else {
-                return _(`<unknown motion>`);
+                return this.translate.instant(`<unknown motion>`);
             }
         });
     }

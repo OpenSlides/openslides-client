@@ -49,7 +49,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private formBuilder: FormBuilder,
         public committeeRepo: CommitteeControllerService,
         public orgaTagRepo: OrganizationTagControllerService,

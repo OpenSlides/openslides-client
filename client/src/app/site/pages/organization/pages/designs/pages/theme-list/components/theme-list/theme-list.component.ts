@@ -33,7 +33,7 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public readonly repo: ThemeControllerService,
         private dialog: ThemeBuilderDialogService,
         private prompt: PromptService

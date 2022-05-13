@@ -12,7 +12,6 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewCommittee } from '../../../../../committees';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
     selector: 'os-account-detail',
@@ -47,7 +46,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         private route: ActivatedRoute,
         private operator: OperatorService,
         public readonly committeeController: CommitteeControllerService,
@@ -199,6 +198,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 hint = `At least one committee or an organization management-level has to be set.`;
                 break;
         }
-        return _(hint);
+        return this.translate.instant(hint);
     }
 }

@@ -11,7 +11,6 @@ import { AgendaItemAction } from './agenda-item.action';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { Action } from '../../actions';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -47,7 +46,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
         };
     }
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Items` : `Item`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Items` : `Item`);
 
     private getAgendaTitle(viewAgendaItem: ViewAgendaItem): AgendaListTitle {
         if (viewAgendaItem.content_object) {

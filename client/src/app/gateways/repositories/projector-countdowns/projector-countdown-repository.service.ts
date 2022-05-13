@@ -7,7 +7,6 @@ import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorCountdownAction } from './projector-countdown.action';
 import { ServerTimePresenterService } from '../../presenter/server-time-presenter.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +27,7 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
             ? `${viewProjectorCountdown.title} (${viewProjectorCountdown.description})`
             : viewProjectorCountdown.title;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Countdowns` : `Countdown`);
+    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Countdowns` : `Countdown`);
 
     public override getFieldsets(): Fieldsets<ProjectorCountdown> {
         return {

@@ -8,7 +8,6 @@ import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { MotionBlockAction } from './motion-block.action';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: 'root'
@@ -57,7 +56,8 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
 
     public getTitle = (viewMotionBlock: ViewMotionBlock) => viewMotionBlock.title;
 
-    public getVerboseName = (plural: boolean = false) => _(plural ? `Motion blocks` : `Motion block`);
+    public getVerboseName = (plural: boolean = false) =>
+        this.translate.instant(plural ? `Motion blocks` : `Motion block`);
 
     /**
      * Sets the default sorting (e.g. in dropdowns and for new users) to 'title'

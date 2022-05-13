@@ -9,7 +9,6 @@ import { AmendmentListPdfService } from '../amendment-list-pdf.service';
 import { MotionPdfService } from '../motion-pdf.service';
 import { MotionPdfCatalogService } from '../motion-pdf-catalog.service';
 import { MotionsExportModule } from '../motions-export.module';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Export service to handle various kind of exporting necessities.
@@ -34,7 +33,7 @@ export class MotionPdfExportService {
      */
     public exportSingleMotion(motion: ViewMotion, exportInfo?: MotionExportInfo): void {
         const doc = this.motionPdfService.motionToDocDef({ motion, exportInfo });
-        const filename = `${_(`Motion`)} ${motion.numberOrTitle}`;
+        const filename = `${this.translate.instant(`Motion`)} ${motion.numberOrTitle}`;
         const metadata = {
             title: filename
         };
@@ -49,7 +48,7 @@ export class MotionPdfExportService {
     public exportMotionCatalog(motions: ViewMotion[], exportInfo: MotionExportInfo): void {
         const docDefinition = this.pdfCatalogService.motionListToDocDef(motions, exportInfo);
         const motions_export_title = this.meetingSettingsService.instant(`motions_export_title`) as string;
-        const filename = _(motions_export_title);
+        const filename = this.translate.instant(motions_export_title);
         const metadata = {
             title: filename
         };
@@ -63,7 +62,7 @@ export class MotionPdfExportService {
      */
     public exportPdfCallList(motions: ViewMotion[]): void {
         const docDefinition = this.motionPdfService.callListToDoc(motions);
-        const filename = _(`Call list`);
+        const filename = this.translate.instant(`Call list`);
         const metadata = {
             title: filename
         };
@@ -83,7 +82,7 @@ export class MotionPdfExportService {
         const note = personalNote ? personalNote.note : ``;
 
         const docDefinition = this.motionPdfService.textToDocDef(note, motion, `Personal note`);
-        const filename = `${motion.number} - ${_(`Personal note`)}`;
+        const filename = `${motion.number} - ${this.translate.instant(`Personal note`)}`;
         const metadata = {
             title: filename
         };
@@ -113,9 +112,9 @@ export class MotionPdfExportService {
     public exportAmendmentList(amendments: ViewMotion[], parentMotion?: ViewMotion): void {
         let filename: string;
         if (parentMotion) {
-            filename = `${_(`Amendments to`)} ${parentMotion.getListTitle()}`;
+            filename = `${this.translate.instant(`Amendments to`)} ${parentMotion.getListTitle()}`;
         } else {
-            filename = `${_(`Amendments`)}`;
+            filename = `${this.translate.instant(`Amendments`)}`;
         }
         const docDefinition = this.amendmentListPdfService.overviewToDocDef(filename, amendments);
         const metadata = {

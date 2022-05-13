@@ -38,7 +38,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> implem
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        translate: TranslateService,
+        protected override translate: TranslateService,
         public readonly controller: AccountControllerService,
         public readonly filterService: AccountFilterService,
         public readonly sortService: AccountSortService,
@@ -69,7 +69,9 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> implem
     }
 
     public async assignMeetingToUsers(): Promise<void> {
-        const content = _(`This will add or remove the selected accounts to the following meeting:`);
+        const content = this.translate.instant(
+            `This will add or remove the selected accounts to the following meeting:`
+        );
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);
         const choices = [ADD, REMOVE];
