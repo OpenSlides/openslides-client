@@ -6,9 +6,9 @@ import { PollService } from '../../services/poll.service';
 import { ChartData } from '../chart/chart.component';
 
 @Component({
-  selector: 'os-single-option-chart-table',
-  templateUrl: './single-option-chart-table.component.html',
-  styleUrls: ['./single-option-chart-table.component.scss']
+    selector: 'os-single-option-chart-table',
+    templateUrl: './single-option-chart-table.component.html',
+    styleUrls: ['./single-option-chart-table.component.scss']
 })
 export class SingleOptionChartTableComponent {
     private _poll: PollData;
@@ -22,17 +22,17 @@ export class SingleOptionChartTableComponent {
     public shouldShowHead: boolean = true;
 
     @Input()
-    public set tableData(tableData: PollTableData[]){
+    public set tableData(tableData: PollTableData[]) {
         this._tableData = tableData;
     }
 
     @Input()
-    public set pollService(pollService: PollService){
+    public set pollService(pollService: PollService) {
         this._pollService = pollService;
     }
 
     @Input()
-    public set poll(pollData: PollData){
+    public set poll(pollData: PollData) {
         this._poll = pollData;
         this.setChartData();
         this.cd.markForCheck();
@@ -84,10 +84,7 @@ export class SingleOptionChartTableComponent {
         return true;
     }
 
-    constructor(
-        private cd: ChangeDetectorRef,
-        private pService: PollService
-    ) {}
+    constructor(private cd: ChangeDetectorRef, private pService: PollService) {}
 
     private setChartData(): void {
         this._chartData = this.pollService.generateChartData(this.poll).filter(option => option.data[0] > 0);
@@ -133,5 +130,4 @@ export class SingleOptionChartTableComponent {
             return amount;
         }
     }
-
 }

@@ -110,7 +110,7 @@ export class AssignmentPollDetailContentComponent {
         return this.pollService;
     }
 
-    public get reformedTableData(): PollTableData[]{
+    public get reformedTableData(): PollTableData[] {
         const tableData = [];
         this.tableData.forEach(tableDate => {
             if (tableDate.class === `user`) {
