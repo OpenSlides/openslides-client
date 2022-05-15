@@ -9,7 +9,7 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MotionsCommonServiceModule } from '../motions-service.module';
 import { DiffLinesInParagraph } from '../../../definitions';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { Action, EmptyAction } from 'src/app/gateways/actions';
+import { Action, createEmptyAction } from 'src/app/gateways/actions';
 import { map, Observable } from 'rxjs';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { Ids, Id } from 'src/app/domain/definitions/key-types';
@@ -42,7 +42,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (update) {
             return this.repo.update(update, ...motions);
         }
-        return EmptyAction;
+        return createEmptyAction();
     }
 
     public delete(...motions: Identifiable[]): Promise<void> {

@@ -247,7 +247,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     protected override createForm(): FormControl {
-        return this.fb.control([]);
+        return this.fb.control(this.multiple ? [] : null);
     }
 
     protected updateForm(value: Selectable[] | Selectable | null): void {

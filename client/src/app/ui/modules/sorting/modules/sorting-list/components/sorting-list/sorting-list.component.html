@@ -3,7 +3,8 @@
         <span>{{ 'No data' | translate }}</span>
     </div>
     <div
-        [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected line' : 'backgroundColorLight line'"
+        [ngClass]="isSelectedRow(i) ? 'backgroundColorSelected' : 'backgroundColorLight'"
+        class="line margin-bottom-5"
         *ngFor="let item of sortedItems; let i = index"
         cdkDrag
         (click)="onItemClick($event, i)"
@@ -23,6 +24,8 @@
         <div class="content">
             <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
         </div>
+
+        <div *cdkDragPlaceholder class="margin-bottom-5"></div>
 
         <!-- Drag prev -->
         <div class="line" *cdkDragPreview>

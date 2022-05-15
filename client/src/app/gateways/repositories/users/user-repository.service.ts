@@ -11,8 +11,9 @@ import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { toDecimal } from '../../../infrastructure/utils';
+import { Fqid } from 'src/app/domain/definitions/key-types';
 
-export type RawUser = FullNameInformation & Identifiable & Displayable;
+export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid };
 
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.

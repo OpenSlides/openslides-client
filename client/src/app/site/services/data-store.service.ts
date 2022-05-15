@@ -3,7 +3,7 @@ import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model
 import { Subject, Observable } from 'rxjs';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreUpdateManagerService } from './data-store-update-manager.service';
-import { Ids } from 'src/app/domain/definitions/key-types';
+import { Ids, Collection } from 'src/app/domain/definitions/key-types';
 
 /**
  * Represents information about a deleted model.
@@ -281,6 +281,18 @@ export class DataStoreService {
         if (models && models.length) {
             await this.add(models);
         }
+    }
+
+    public getCollections(): Collection[] {
+        return Object.keys(this.modelStore);
+    }
+
+    public deleteCollections(...collections: Collection[]): void {
+        for (const collection of collections) {
+            delete this.modelStore[collection];
+        }
+        this.triggerModifiedObservable();
+        this.clearEvent.emit(collections);
     }
 
     /**

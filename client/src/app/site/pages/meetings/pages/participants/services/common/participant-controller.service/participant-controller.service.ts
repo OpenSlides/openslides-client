@@ -265,7 +265,13 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         };
         const identifiable = (await this.create(newUserPayload))[0];
         const getNameFn = () => this.userController.getShortName(newUser);
-        return { id: identifiable.id, ...newUser, getTitle: getNameFn, getListTitle: getNameFn };
+        return {
+            id: identifiable.id,
+            ...newUser,
+            fqid: `${User.COLLECTION}/${identifiable.id}`,
+            getTitle: getNameFn,
+            getListTitle: getNameFn
+        };
     }
 
     private validatePayload(participant: Partial<User>): any {
