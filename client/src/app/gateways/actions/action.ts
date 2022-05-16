@@ -40,8 +40,11 @@ export class Action<T = void> {
     }
 
     public static from<U = void>(...actions: Action<any>[]): Action<U> {
-        return actions[0].concat(...actions.slice(1));
+        if (actions.length) {
+            return actions[0].concat(...actions.slice(1));
+        }
+        return createEmptyAction();
     }
 }
 
-export const EmptyAction = new Action(async () => []);
+export const createEmptyAction = () => new Action(async () => []);

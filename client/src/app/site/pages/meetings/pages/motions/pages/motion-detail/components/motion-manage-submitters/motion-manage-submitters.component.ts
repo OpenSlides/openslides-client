@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id, Fqid } from 'src/app/domain/definitions/key-types';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { Observable, map, BehaviorSubject, of } from 'rxjs';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -10,8 +10,9 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { MotionSubmitterControllerService } from '../../../../modules/submitters/services/motion-submitter-controller.service/motion-submitter-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
+import { Action, createEmptyAction } from 'src/app/gateways/actions';
 
-type Submitter = Selectable & { user_id?: Id };
+type Submitter = Selectable & { fqid?: Fqid; user_id?: Id };
 
 interface IdMap {
     [user_id: number]: number;
@@ -107,15 +108,19 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
      * Save the submitters
      */
     public async onSave(): Promise<void> {
+        let actions: Action<any>[] = [];
         if (Object.values(this._removeSubmittersMap).length > 0) {
-            await this.motionSubmitterRepository.delete(...Object.values(this._removeSubmittersMap));
+            actions.push(this.motionSubmitterRepository.delete(...Object.values(this._removeSubmittersMap)));
         }
         if (this._addSubmittersSet.size > 0) {
-            await this.motionSubmitterRepository.create(
-                this.motion,
-                ...Array.from(this._addSubmittersSet).map(id => ({ id }))
+            actions.push(
+                this.motionSubmitterRepository.create(
+                    this.motion,
+                    ...Array.from(this._addSubmittersSet).map(id => ({ id }))
+                )
             );
         }
+        await Action.from(...actions).resolve();
         this.isEditMode = false;
     }
 
@@ -157,7 +162,7 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     /**
      * Removes the user from the list of submitters.
      *
-     * @param user The user to remove as a submitters
+     * @param submitter The user to remove as a submitters
      */
     public onRemove(submitter: Submitter): void {
         if (submitter.user_id) {
@@ -166,11 +171,11 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
             this._addSubmittersSet.delete(submitter.id);
         }
         const submitters = this.editSubmitterSubject.getValue();
-        this.editSubmitterSubject.next(submitters.filter(user => user.id !== submitter.id));
+        this.editSubmitterSubject.next(submitters.filter(user => user.fqid !== submitter.fqid));
     }
 
     /**
-     * Adds the user to the submitters, if he isn't already in there.
+     * Adds the user to the submitters, if they aren't already in there.
      */
     private async addUserAsSubmitter(submitter: Submitter): Promise<void> {
         if (!submitter?.user_id) {

@@ -57,11 +57,7 @@ export class MotionCommentsComponent extends BaseUiComponent implements OnInit {
     }
 
     private canReadSection(section: ViewMotionCommentSection): boolean {
-        if (section.read_group_ids?.length) {
-            return this.operator.isInGroupIds(...section.read_group_ids);
-        } else {
-            return false;
-        }
+        return this.operator.isInGroupIds(...(section.read_group_ids || []));
     }
 
     /**
