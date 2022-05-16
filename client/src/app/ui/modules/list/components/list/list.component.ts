@@ -560,11 +560,11 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
                 return true;
             }
 
-            // filter by ID
+            // filter by sequential number
             const trimmedInput = this.inputValue.trim().toLowerCase();
-            const idString = `` + item.id;
-            const foundId = idString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
-            if (foundId) {
+            const seqNumberString = `` + item[`sequential_number`];
+            const foundSeqNumber = seqNumberString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
+            if (foundSeqNumber) {
                 return true;
             }
 
