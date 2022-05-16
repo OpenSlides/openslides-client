@@ -25,7 +25,6 @@ import { MotionStatuteParagraphControllerService } from '../../../modules/statut
 import { MotionsExportModule } from '../motions-export.module';
 import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { mmToPoints } from 'src/app/infrastructure/utils';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 
@@ -226,7 +225,7 @@ export class MotionPdfService {
     private createSubtitle(motion: ViewMotion, sequential?: boolean): object {
         const subtitleLines = [];
         if (sequential) {
-            subtitleLines.push(`${this.translate.instant(`Sequential number`)}: ${motion.id}`);
+            subtitleLines.push(`${this.translate.instant(`Sequential number`)}: ${motion.sequential_number}`);
         }
 
         if (motion.lead_motion) {
