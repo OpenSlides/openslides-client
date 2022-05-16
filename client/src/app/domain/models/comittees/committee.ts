@@ -2,7 +2,6 @@ import { BaseModel } from '../base/base-model';
 import { Id } from '../../definitions/key-types';
 import { CML } from '../../definitions/organization-permission';
 
-export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 
 export class Committee extends BaseModel<Committee> {

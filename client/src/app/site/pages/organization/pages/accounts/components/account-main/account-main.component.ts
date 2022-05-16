@@ -10,6 +10,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { map } from 'rxjs';
 import { AccountCommonService } from '../../services/account-common.service/account-common.service';
+import { getCommitteeListSubscriptionConfig } from '../../../committees/config/model-subscription';
 
 const ACCOUNT_LIST_SUBSCRIPTION = `account_list`;
 
@@ -46,7 +47,8 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                 },
                 subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
                 hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))
-            }
+            },
+            getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable())
         ];
     }
 }

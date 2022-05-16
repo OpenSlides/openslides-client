@@ -2,8 +2,6 @@ import { ViewOrganization } from 'src/app/site/pages/organization/view-models/vi
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Theme } from 'src/app/domain/models/theme/theme';
 
-export const THEME_LIST_SUBSCRIPTION = `theme_list`;
-
 interface ThemeRelations {
     organization: ViewOrganization;
     theme_for_organization: ViewOrganization;

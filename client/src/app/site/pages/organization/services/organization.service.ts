@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { LifecycleService } from '../../../services/lifecycle.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ViewOrganization } from '../view-models/view-organization';
-import { AutoupdateService, ModelSubscription } from '../../../services/autoupdate';
+import { ModelSubscription } from '../../../services/autoupdate';
 import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { ORGANIZATION_SUBSCRIPTION } from 'src/app/domain/models/organizations/organization';
+import { getDesignListSubscriptionConfig } from '../pages/designs/config/model-subscription';
 
 /**
  * Token to get a resource dedicated to the `logo_web_header` of an organization.
@@ -63,11 +64,12 @@ export class OrganizationService {
                     viewModelCtor: ViewOrganization,
                     ids: [ORGANIZATION_ID],
                     fieldset: `settings`,
-                    additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`]
+                    additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`, `theme_id`]
                 },
                 subscriptionName: ORGANIZATION_SUBSCRIPTION,
                 isDelayed: false
             });
+            this.modelRequestService.subscribeTo(getDesignListSubscriptionConfig());
             this.repo
                 .getViewModelObservable(ORGANIZATION_ID)
                 .subscribe(organization => this.organizationSubject.next(organization));

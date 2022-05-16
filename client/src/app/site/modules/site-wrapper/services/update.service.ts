@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UpdateAvailableEvent, SwUpdate } from '@angular/service-worker';
-import { SiteWrapperModule } from '../site-wrapper.module';
 import { SiteWrapperServiceModule } from './site-wrapper-service.module';
 
 @Injectable({
