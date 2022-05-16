@@ -64,11 +64,11 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
         return this.operator.hasPerms(Permission.motionCanManagePolls) || this.isPublished;
     }
 
-    public get showChart(): boolean {
+    public get shouldShowChart(): boolean {
         return this.pollService.shouldShowChart(this.poll);
     }
 
-    public get pService(): PollService {
+    public get motionPollService(): PollService {
         return this.pollService;
     }
 

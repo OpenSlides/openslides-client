@@ -87,7 +87,7 @@ export class AssignmentPollDetailContentComponent {
         return this.state === PollState.Published;
     }
 
-    public get showChart(): boolean {
+    public get shouldShowChart(): boolean {
         const validOptions = this.poll.options.some(
             option => option.yes! >= 0 && option.no! >= 0 && option.abstain! >= 0
         );
@@ -106,28 +106,8 @@ export class AssignmentPollDetailContentComponent {
         return this.poll?.onehundred_percent_base === PollPercentBase.Entitled;
     }
 
-    public get pService(): PollService {
+    public get assignmentPollService(): PollService {
         return this.pollService;
-    }
-
-    public get reformedTableData(): PollTableData[] {
-        const tableData = [];
-        this.tableData.forEach(tableDate => {
-            if (tableDate.class === `user`) {
-                tableDate.value.forEach(value => {
-                    if (this.voteFitsMethod(value)) {
-                        tableData.push({
-                            class: tableDate.class,
-                            votingOption: value.vote,
-                            value: [value]
-                        });
-                    }
-                });
-            } else {
-                tableData.push(tableDate);
-            }
-        });
-        return tableData;
     }
 
     public constructor(
@@ -185,5 +165,25 @@ export class AssignmentPollDetailContentComponent {
         } else {
             return true;
         }
+    }
+
+    public getReformedTableData(): PollTableData[] {
+        const tableData = [];
+        this.tableData.forEach(tableDate => {
+            if (tableDate.class === `user`) {
+                tableDate.value.forEach(value => {
+                    if (this.voteFitsMethod(value)) {
+                        tableData.push({
+                            class: tableDate.class,
+                            votingOption: value.vote,
+                            value: [value]
+                        });
+                    }
+                });
+            } else {
+                tableData.push(tableDate);
+            }
+        });
+        return tableData;
     }
 }

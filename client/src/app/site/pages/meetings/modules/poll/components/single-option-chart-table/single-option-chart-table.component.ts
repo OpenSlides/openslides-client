@@ -16,7 +16,7 @@ export class SingleOptionChartTableComponent {
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
 
-    private _pollService: PollService = this.pService;
+    private _pollService: PollService = this.defaultPollService;
 
     @Input()
     public shouldShowHead: boolean = true;
@@ -84,7 +84,7 @@ export class SingleOptionChartTableComponent {
         return true;
     }
 
-    constructor(private cd: ChangeDetectorRef, private pService: PollService) {}
+    public constructor(private cd: ChangeDetectorRef, private defaultPollService: PollService) {}
 
     private setChartData(): void {
         this._chartData = this.pollService.generateChartData(this.poll).filter(option => option.data[0] > 0);
