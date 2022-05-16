@@ -1,13 +1,13 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { PasswordForm } from 'src/app/ui/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { AccountControllerService } from '../../../../services/common/account-controller.service';
 import { OML } from 'src/app/domain/definitions/organization-permission';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 @Component({
     selector: 'os-account-password',
@@ -24,17 +24,17 @@ export class AccountPasswordComponent extends BaseUiComponent implements OnInit,
     private userId: Id | null = null;
 
     public constructor(
-        private route: ActivatedRoute,
         private operator: OperatorService,
         private userController: UserControllerService,
-        private router: Router
+        private router: Router,
+        private osRouter: OpenSlidesRouterService
     ) {
         super();
     }
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.route.params.subscribe(params => {
+            this.osRouter.currentParamMap.subscribe(params => {
                 if (params['id']) {
                     this.userId = +params['id'];
                     this.loadUser();
