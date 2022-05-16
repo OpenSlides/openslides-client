@@ -12,6 +12,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewCommittee } from '../../../../../committees';
 import { BaseComponent } from 'src/app/site/base/base.component';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 @Component({
     selector: 'os-account-detail',
@@ -48,6 +49,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
+        private osRouter: OpenSlidesRouterService,
         private operator: OperatorService,
         public readonly committeeController: CommitteeControllerService,
         private accountController: AccountControllerService,
@@ -123,7 +125,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private getUserByUrl(): void {
         this.subscriptions.push(
-            this.route.params.subscribe(params => {
+            this.osRouter.currentParamMap.subscribe(params => {
                 if (params['id']) {
                     this.loadUserById(+params['id']);
                 } else {
