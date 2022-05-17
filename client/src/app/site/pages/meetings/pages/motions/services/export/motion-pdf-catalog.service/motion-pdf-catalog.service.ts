@@ -118,7 +118,6 @@ export class MotionPdfCatalogService {
         const header = exportSubmitterRecommendation ? this.getTocHeaderDefinition() : undefined;
         const layout = exportSubmitterRecommendation ? BorderType.LIGHT_HORIZONTAL_LINES : BorderType.DEFAULT;
 
-
         if (categories && categories.length) {
             const catTocBody = [];
             for (const category of categories.sort((a, b) => a.weight - b.weight)) {
