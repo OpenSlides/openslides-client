@@ -118,11 +118,12 @@ export class MotionPdfCatalogService {
         const header = exportSubmitterRecommendation ? this.getTocHeaderDefinition() : undefined;
         const layout = exportSubmitterRecommendation ? BorderType.LIGHT_HORIZONTAL_LINES : BorderType.DEFAULT;
 
+
         if (categories && categories.length) {
             const catTocBody = [];
             for (const category of categories.sort((a, b) => a.weight - b.weight)) {
                 // find out if the category has any motions
-                const motionToCurrentCat = motions.filter(motionIn => category === motionIn.category);
+                const motionToCurrentCat = motions.filter(motionIn => category.id === motionIn.category_id);
 
                 if (motionToCurrentCat && motionToCurrentCat.length) {
                     // if this is not the first page, start with a pagebreak
