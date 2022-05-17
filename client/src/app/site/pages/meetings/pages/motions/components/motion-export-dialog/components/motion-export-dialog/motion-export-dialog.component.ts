@@ -81,8 +81,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
      * @returns a list of available commentSections
      */
     public get commentsToExport(): ViewMotionCommentSection[] {
-        return [];
-        // return this.commentsSubject ? this.commentsSubject.value : [];
+        return this.commentRepo.getViewModelList();
     }
 
     /**
