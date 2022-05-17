@@ -122,7 +122,7 @@ export class MotionPdfCatalogService {
             const catTocBody = [];
             for (const category of categories.sort((a, b) => a.weight - b.weight)) {
                 // find out if the category has any motions
-                const motionToCurrentCat = motions.filter(motionIn => category === motionIn.category);
+                const motionToCurrentCat = motions.filter(motionIn => category.id === motionIn.category_id);
 
                 if (motionToCurrentCat && motionToCurrentCat.length) {
                     // if this is not the first page, start with a pagebreak
