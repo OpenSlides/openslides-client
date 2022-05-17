@@ -58,20 +58,17 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
 
     public get availableMeetingsObservable(): Observable<Selectable[]> {
-        return combineLatest(
-            this.orga.organization!.template_meetings_as_observable,
-            this.orga.organization!.active_meetings_as_observable,
-            this.orga.organization!.archived_meetings_as_observable,
-            (templateMeetings, activeMeetings, archivedMeetings) => {
+        return this.orga.organizationObservable.pipe(
+            map(organization => {
                 return [
                     TEMPLATE_MEETINGS_LABEL,
-                    ...templateMeetings,
+                    ...organization.template_meetings,
                     ACTIVE_MEETINGS_LABEL,
-                    ...activeMeetings,
+                    ...organization.active_meetings,
                     ARCHIVED_MEETINGS_LABEL,
-                    ...archivedMeetings
+                    ...organization.archived_meetings
                 ];
-            }
+            })
         );
     }
 
@@ -116,7 +113,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private operator: OperatorService,
         private userRepo: UserControllerService,
         private openslidesRouter: OpenSlidesRouterService,
-        private orga: OrganizationService // private memberService: AccountControllerService
+        private orga: OrganizationService
     ) {
         super(componentServiceCollector, translate);
         this.checkCreateView();
