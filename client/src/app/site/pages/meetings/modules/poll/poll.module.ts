@@ -20,6 +20,8 @@ import { ListModule } from 'src/app/ui/modules/list';
 import { MatIconModule } from '@angular/material/icon';
 import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
+import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 
 const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
 const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollParseNumberPipe];
@@ -28,7 +30,8 @@ const COMPONENTS = [
     PollFormComponent,
     ChartComponent,
     CheckInputComponent,
-    EntitledUsersTableComponent
+    EntitledUsersTableComponent,
+    SingleOptionChartTableComponent
 ];
 
 @NgModule({
@@ -43,6 +46,7 @@ const COMPONENTS = [
         MatIconModule,
         MatCheckboxModule,
         ReactiveFormsModule,
+        IconContainerModule,
         FormsModule,
         VotingPrivacyDialogModule,
         ListModule,

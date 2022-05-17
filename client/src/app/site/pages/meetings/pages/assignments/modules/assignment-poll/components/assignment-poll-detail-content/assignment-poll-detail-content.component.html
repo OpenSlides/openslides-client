@@ -1,5 +1,5 @@
 <div *ngIf="poll">
-    <table class="assignment-result-table" *ngIf="hasResults && canSeeResults">
+    <table class="assignment-result-table" *ngIf="hasResults && canSeeResults && !shouldShowChart">
         <tbody>
             <tr>
                 <td></td>
@@ -69,6 +69,30 @@
             </tr>
         </tbody>
     </table>
+
+    <!-- Table with Chart -->
+    <div *ngIf="hasResults && canSeeResults && shouldShowChart" class="result-wrapper">
+        <h3 class="result-title">
+            <span class="candidate-name">
+                {{ tableData[0].votingOption | pollKeyVerbose | translate }}
+            </span>
+            <br>
+            <span class="user-subtitle" *ngIf="tableData[0].votingOptionSubtitle">
+                ({{ tableData[0].votingOptionSubtitle }})
+            </span>
+        </h3>
+
+        <ng-container *ngIf="hasResults && canSeeResults">
+            <os-single-option-chart-table
+                [shouldShowHead]="false"
+                [poll]="poll"
+                [tableData]="getReformedTableData()"
+                [pollService]="assignmentPollService"
+                [iconSize]="iconSize"
+                [shouldShowEntitled]="isPercentBaseEntitled">
+            </os-single-option-chart-table>
+        </ng-container>
+    </div>
 
     <!-- No results yet -->
     <div *ngIf="!hasResults">
