@@ -102,6 +102,9 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
         return columnsToHide;
     };
 
+    @Input()
+    public override alsoFilterByProperties: string[] = [`sequential_number`, `id`];
+
     private get projectorColumnWidth(): number {
         if (this.operator.hasPerms(Permission.projectorCanManage)) {
             return PROJECTOR_BUTTON_WIDTH;

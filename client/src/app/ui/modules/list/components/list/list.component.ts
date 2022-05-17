@@ -186,6 +186,14 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     public toHideFn: () => string[] = () => [];
 
     /**
+     * When filtering the list via search bar,
+     * the first property that exists both in this array and the filtered object will be compared to the search value.
+     * If the search value is included in the properties value, the object will be shown.
+     */
+    @Input()
+    public alsoFilterByProperties: string[] = [`id`];
+
+    /**
      * Inform about changes in the dataSource
      */
     @Output()
@@ -560,11 +568,8 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
                 return true;
             }
 
-            // filter by sequential number
             const trimmedInput = this.inputValue.trim().toLowerCase();
-            const seqNumberString = `` + item[`sequential_number`];
-            const foundSeqNumber = seqNumberString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
-            if (foundSeqNumber) {
+            if (this.includedInProperty(item, trimmedInput, this.alsoFilterByProperties)) {
                 return true;
             }
 
@@ -584,6 +589,30 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
             }
             return false;
         };
+    }
+
+    /**
+     * A recursive function that searches for the first property name in a given array,
+     * that is included in a given object and then returns true, if the value of said property includes a given trimmed input string.
+     *
+     * @param item the object whose properties should be checked
+     * @param trimmedInput the string whose inclusion in the property value should be checked
+     * @param properties an array of property names
+     * @returns true if the trimmedInput is included in the chosen property value
+     */
+    private includedInProperty(item: V, trimmedInput: string, properties: string[]): boolean {
+        if (properties.length > 0 && !!item[properties[0]]) {
+            const propertyValueString = `` + item[properties[0]];
+            const foundPropertyValue = propertyValueString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
+            if (foundPropertyValue) {
+                return true;
+            }
+            return false;
+        }
+        if (properties.length > 1) {
+            return this.includedInProperty(item, trimmedInput, properties.slice(1));
+        }
+        return false;
     }
 
     /**
