@@ -11,6 +11,7 @@ import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/
 import { MotionSubmitterControllerService } from '../../../../modules/submitters/services/motion-submitter-controller.service/motion-submitter-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { Action, createEmptyAction } from 'src/app/gateways/actions';
+import { Identifiable } from 'src/app/domain/interfaces';
 
 type Submitter = Selectable & { fqid?: Fqid; user_id?: Id };
 
@@ -110,7 +111,10 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     public async onSave(): Promise<void> {
         let actions: Action<any>[] = [];
         if (Object.values(this._removeSubmittersMap).length > 0) {
-            actions.push(this.motionSubmitterRepository.delete(...Object.values(this._removeSubmittersMap)));
+            const removeSubmittersMap = Object.values(this._removeSubmittersMap).map(id => {
+                return { id: id };
+            }) as Identifiable[];
+            actions.push(this.motionSubmitterRepository.delete(...removeSubmittersMap));
         }
         if (this._addSubmittersSet.size > 0) {
             actions.push(
