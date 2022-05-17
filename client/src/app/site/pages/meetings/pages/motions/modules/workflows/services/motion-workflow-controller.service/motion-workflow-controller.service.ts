@@ -11,7 +11,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 
 @Injectable({
-    providedIn: MotionWorkflowCommonServiceModule
+    providedIn: `root`
 })
 export class MotionWorkflowControllerService extends BaseMeetingControllerService<ViewMotionWorkflow, MotionWorkflow> {
     constructor(

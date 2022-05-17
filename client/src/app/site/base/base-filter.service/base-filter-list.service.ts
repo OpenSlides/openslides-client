@@ -1,11 +1,10 @@
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FilterListService } from 'src/app/ui/base/filter-service';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
-import { BaseModel } from '../../../domain/models/base/base-model';
 import { StorageService } from '../../../gateways/storage.service';
-import { BaseController } from '../base-controller';
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 /**
  * Extends the BaseViewModel with a parent
@@ -111,6 +110,8 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     protected abstract readonly storageKey: string;
 
+    public constructor(private store: StorageService, private historyService: HistoryService) {}
+
     /**
      * Initializes the filterService.
      *
@@ -118,6 +119,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
         let storedFilter: OsFilter<V>[] | null = null;
+        if (!this.historyService.isInHistoryMode()) {
+            storedFilter = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
+        }
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
             this.filterDefinitions = storedFilter;
@@ -195,6 +199,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         const nextDefinitions = this.getFilterDefinitions();
 
         let storedFilters: OsFilter<V>[] = [];
+        if (!this.historyService.isInHistoryMode()) {
+            storedFilters = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
+        }
 
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
             return;
@@ -288,6 +295,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     public storeActiveFilters(): void {
         this.updateFilteredData();
+        if (!this.historyService.isInHistoryMode()) {
+            this.store.set(`filter_` + this.storageKey, this.filterDefinitions);
+        }
     }
 
     /**

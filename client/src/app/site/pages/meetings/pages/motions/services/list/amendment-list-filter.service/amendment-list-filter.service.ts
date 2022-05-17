@@ -13,6 +13,7 @@ import { MotionCommentSectionControllerService } from '../../../modules/comments
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionControllerService } from '../../common/motion-controller.service';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: MotionsListServiceModule
@@ -52,6 +53,7 @@ export class AmendmentListFilterService extends MotionListFilterService {
 
     public constructor(
         store: StorageService,
+        history: HistoryService,
         categoryRepo: MotionCategoryControllerService,
         motionBlockRepo: MotionBlockControllerService,
         commentRepo: MotionCommentSectionControllerService,
@@ -64,6 +66,7 @@ export class AmendmentListFilterService extends MotionListFilterService {
     ) {
         super(
             store,
+            history,
             categoryRepo,
             motionBlockRepo,
             commentRepo,

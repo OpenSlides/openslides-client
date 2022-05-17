@@ -5,6 +5,7 @@ import { ViewPoll } from '../../../../view-models';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: PollListServiceModule
@@ -15,8 +16,8 @@ export class PollListFilterService extends BaseFilterListService<ViewPoll> {
      */
     protected storageKey = `PollList`;
 
-    public constructor(store: StorageService, private translate: TranslateService) {
-        super();
+    public constructor(store: StorageService, history: HistoryService, private translate: TranslateService) {
+        super(store, history);
     }
 
     /**

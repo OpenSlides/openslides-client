@@ -8,7 +8,7 @@ import { TagCommonServiceModule } from '../../tag-common-service.module';
 import { Identifiable } from 'src/app/domain/interfaces';
 
 @Injectable({
-    providedIn: TagCommonServiceModule
+    providedIn: `root`
 })
 export class TagControllerService extends BaseMeetingControllerService<ViewTag, Tag> {
     constructor(

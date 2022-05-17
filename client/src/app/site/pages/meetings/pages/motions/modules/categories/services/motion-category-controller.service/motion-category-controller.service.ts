@@ -12,7 +12,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 import { Observable, map, BehaviorSubject } from 'rxjs';
 
 @Injectable({
-    providedIn: MotionCategoryCommonServiceModule
+    providedIn: 'root'
 })
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {
     private readonly _currentCategoriesSubject = new BehaviorSubject<ViewMotionCategory[]>([]);
