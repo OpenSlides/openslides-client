@@ -2,6 +2,7 @@ import { Id } from '../../../domain/definitions/key-types';
 import { BaseBeforeImportHandler } from './base-before-import-handler';
 import { CsvMapping, ImportIdentifiable, ImportResolveInformation } from './import-utils';
 import { StaticBeforeImportConfig } from './static-before-import-config';
+import { Ids } from 'src/app/domain/definitions/key-types';
 
 /**
  * `MainModel` is the type of a model an importer will primarly create. `SideModel` is the type of a model which will
@@ -11,6 +12,8 @@ export class StaticBeforeImportHandler<
     SideModel,
     MainModel extends ImportIdentifiable = any
 > extends BaseBeforeImportHandler<MainModel, SideModel> {
+    private readonly _useDefault: Ids | undefined;
+
     public constructor(
         config: StaticBeforeImportConfig<MainModel, SideModel>,
         protected override readonly translateFn: (key: string) => string
@@ -19,6 +22,7 @@ export class StaticBeforeImportHandler<
             translateFn,
             ...config
         });
+        this._useDefault = config.useDefault;
     }
 
     public doResolve(mainModel: MainModel, propertyName: string): ImportResolveInformation<MainModel> {
@@ -27,11 +31,21 @@ export class StaticBeforeImportHandler<
             unresolvedModels: 0
         };
         const propertyValue = mainModel[propertyName as keyof ImportIdentifiable] as any;
-        if (Array.isArray(propertyValue)) {
+        if (!propertyValue && this._useDefault) {
+            return this.linkDefaultIds(mainModel, result);
+        } else if (Array.isArray(propertyValue)) {
             return this.linkArrayPropertyToItem(propertyValue, mainModel, result);
         } else {
             return this.linkSinglePropertyToItem(propertyValue, mainModel, result);
         }
+    }
+
+    private linkDefaultIds(
+        mainModel: MainModel,
+        result: ImportResolveInformation<MainModel>
+    ): ImportResolveInformation<MainModel> {
+        mainModel[this.idProperty] = this._useDefault as any;
+        return result;
     }
 
     private linkArrayPropertyToItem(
