@@ -15,6 +15,7 @@ import { PblNgridModule } from '@pebula/ngrid';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { PortalModule } from '@angular/cdk/portal';
 
 const DECLARATIONS = [
     ImportListComponent,
@@ -38,6 +39,7 @@ const DECLARATIONS = [
         MatDialogModule,
         FormsModule,
         PblNgridModule,
+        PortalModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })

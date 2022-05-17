@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ExportServiceModule } from 'src/app/gateways/export';
 
-@NgModule()
+@NgModule({ imports: [ExportServiceModule] })
 export class TopicImportServiceModule {}
