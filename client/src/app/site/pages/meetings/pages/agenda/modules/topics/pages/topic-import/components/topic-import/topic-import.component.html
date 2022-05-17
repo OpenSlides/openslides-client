@@ -18,7 +18,7 @@
     [showUnknownHeaders]="!isTextImportSelected"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
-    <mat-tab label="{{ 'Text import' | translate }}" osImportListViewFirstTab>
+    <mat-tab label="{{ 'Text import' | translate }}" osImportListFirstTab>
         <ng-template matTabLabel>{{ 'Text import' | translate }}</ng-template>
         <ng-template matTabContent>
             <div [formGroup]="textAreaForm">

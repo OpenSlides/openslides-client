@@ -108,8 +108,8 @@ export class TopicImportService extends BaseImportService<Topic> {
      * @param data a string as produced by textArea input
      */
     public parseTextArea(data: string): void {
-        const newEntries: { [importTrackId: number]: ImportModel<any> } = {};
         const lines = data.split(`\n`);
+        const csvLines = [];
         for (let i = 0; i < lines.length; ++i) {
             const line = lines[i];
             if (!line.length) {
@@ -119,8 +119,8 @@ export class TopicImportService extends BaseImportService<Topic> {
                 title: line,
                 agenda_type: AgendaItemType.COMMON
             };
-            newEntries[i + 1] = new ImportModel({ model: topic, importTrackId: i + 1 });
+            csvLines.push(topic);
         }
-        this.setParsedEntries(newEntries);
+        this.addLines(...csvLines);
     }
 }

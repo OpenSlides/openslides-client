@@ -19,7 +19,7 @@ import { ImportListLastTabDirective } from '../../directives/import-list-last-ta
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
 import { PblColumnDefinition, PblNgridColumnSet, PblDataSource, createDS, columnFactory } from '@pebula/ngrid';
 import { ImportListHeaderDefinition } from '../../definitions';
-import { Observable, of, distinctUntilChanged, auditTime, map } from 'rxjs';
+import { Observable, of, distinctUntilChanged, auditTime, map, firstValueFrom } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -27,6 +27,7 @@ import { ImportService } from 'src/app/ui/base/import-service';
 import { ImportStep, ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { CsvMapping, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'os-import-list',
@@ -218,7 +219,7 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     private _requiredFields: string[] = [];
     private _columnSet: PblNgridColumnSet | null = null;
 
-    public constructor(private host: ElementRef<HTMLElement>) {}
+    public constructor(private host: ElementRef<HTMLElement>, private dialog: MatDialog) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
@@ -420,8 +421,8 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     }
 
     public async enterFullscreen(dialogTemplate: TemplateRef<any>): Promise<void> {
-        // const ref = this.dialog.open(dialogTemplate, { width: `80vw` });
-        // await ref.afterClosed().toPromise();
+        const ref = this.dialog.open(dialogTemplate, { width: `80vw` });
+        await firstValueFrom(ref.afterClosed());
     }
 
     public isArray(data: any): boolean {
