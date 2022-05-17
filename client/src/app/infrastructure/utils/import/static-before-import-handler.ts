@@ -3,6 +3,7 @@ import { BaseBeforeImportHandler } from './base-before-import-handler';
 import { CsvMapping, ImportIdentifiable, ImportResolveInformation } from './import-utils';
 import { StaticBeforeImportConfig } from './static-before-import-config';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { isEmpty } from '../functions';
 
 /**
  * `MainModel` is the type of a model an importer will primarly create. `SideModel` is the type of a model which will
@@ -31,7 +32,7 @@ export class StaticBeforeImportHandler<
             unresolvedModels: 0
         };
         const propertyValue = mainModel[propertyName as keyof ImportIdentifiable] as any;
-        if (!propertyValue && this._useDefault) {
+        if (isEmpty(propertyValue) && this._useDefault) {
             return this.linkDefaultIds(mainModel, result);
         } else if (Array.isArray(propertyValue)) {
             return this.linkArrayPropertyToItem(propertyValue, mainModel, result);

@@ -15,7 +15,7 @@ const ASSIGNMENT_SUBSCRIPTION = `assignment`;
 export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(
+            this.updateSubscribeTo(
                 getAssignmentSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getAgendaSubscriptionConfig(id, () => this.getNextMeetingIdObservable())
             );

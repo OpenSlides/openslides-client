@@ -178,3 +178,23 @@ export function compareNumber(a: number, b: number): number {
     }
     return b - a;
 }
+
+/**
+ * Checks, if a given value is either null, undefined, has no keys or entries
+ *
+ * @param instance
+ *
+ * @returns A boolean if so
+ */
+export function isEmpty(instance: any): boolean {
+    if (instance === null || instance === undefined) {
+        return true;
+    }
+    if (Array.isArray(instance) && instance.length === 0) {
+        return true;
+    }
+    if (typeof instance === `object` && Object.keys(instance).length === 0) {
+        return true;
+    }
+    return false;
+}

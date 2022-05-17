@@ -159,7 +159,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
         const title = this.translate.instant(`Are you sure you want to remove this motion from motion block?`);
         const content = motion.getTitle();
         if (await this.promptService.open(title, content)) {
-            this.motionRepo.update({ block_id: null }, motion);
+            this.motionRepo.update({ block_id: null }, motion).resolve();
         }
     }
 

@@ -10,7 +10,7 @@ import { getMotionListSubscriptionConfig } from '../../../motions/config/model-s
 export class HistoryMainComponent extends BaseModelRequestHandlerComponent {
     protected override onParamsChanged(params: any): void {
         if (params[`meetingId`]) {
-            this.subscribeTo(
+            this.updateSubscribeTo(
                 getMotionListSubscriptionConfig(+params[`meetingId`], () => this.getNextMeetingIdObservable())
             );
         }

@@ -4,12 +4,12 @@ import { ViewMotionCategory } from '../../view-models';
 import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { MotionCategoryRepositoryService } from 'src/app/gateways/repositories/motions';
-import { MotionCategoryCommonServiceModule } from '../../motion-categorie-common-service.module';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 import { Observable, map, BehaviorSubject } from 'rxjs';
+import { Action } from 'src/app/gateways/actions';
 
 @Injectable({
     providedIn: 'root'
@@ -44,8 +44,8 @@ export class MotionCategoryControllerService extends BaseMeetingControllerServic
         return this.repo.update(update, category);
     }
 
-    public delete(category: Identifiable): Promise<void> {
-        return this.repo.delete(category);
+    public delete(...categories: Identifiable[]): Promise<void> {
+        return Action.from(...categories.map(category => this.repo.delete(category))).resolve() as Promise<void>;
     }
 
     public numberMotionsInCategory(category: Identifiable): Promise<void> {

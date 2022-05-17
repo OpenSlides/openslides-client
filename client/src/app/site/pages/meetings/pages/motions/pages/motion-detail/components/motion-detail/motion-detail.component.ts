@@ -8,10 +8,11 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 const MOTION_DETAIL_SEQUENTIAL_NUMBER_MAPPING = `motion_detail_sequential_number_mapping`;
 const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
-const MOTION_DETAIL_ADDITION_SUBSCRIPTION = `motion_detail_additional`;
+const MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION = `motion_detail_additional`;
 
 @Component({
     selector: 'os-motion-detail',
@@ -45,6 +46,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
                     .subscribe(id => {
                         if (id && this._currentMotionId !== id) {
                             this._currentMotionId = id;
+                            this._watchingMap = {};
                             this.loadMotionDetail();
                         }
                     })
@@ -57,7 +59,10 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
             modelRequest: {
                 ids: [this._currentMotionId!],
                 viewModelCtor: ViewMotion,
-                follow: [{ idField: `lead_motion_id`, fieldset: [], additionalFields: [`text`] }, `poll_ids`],
+                follow: [
+                    { idField: `lead_motion_id`, fieldset: DEFAULT_FIELDSET, additionalFields: [`text`] },
+                    `poll_ids`
+                ],
                 additionalFields: [
                     // `text`,
                     `all_origin_ids`,
@@ -73,7 +78,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
             MOTION_DETAIL_SUBSCRIPTION,
             this.repo.getViewModelObservable(this._currentMotionId!).subscribe(motion => {
                 if (motion) {
-                    this.watchForChanges(motion, `all_origin_ids`, `amendment_ids`, `derived_motion_ids`);
+                    this.watchForChanges(motion, `all_origin_ids`, `derived_motion_ids`);
                 }
             })
         );
@@ -93,19 +98,20 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
                 (<any>this._watchingMap)[field] = nextIds;
             }
         }
-        this.makeAdditionalSubscription(ids);
+        if (ids.length) {
+            this.makeAdditionalSubscription(ids);
+        }
     }
 
     private makeAdditionalSubscription(ids: Ids): void {
-        if (ids.length > 0) {
-            this.updateSubscribeTo({
-                modelRequest: {
-                    ids,
-                    viewModelCtor: ViewMotion,
-                    additionalFields: [`text`]
-                },
-                subscriptionName: MOTION_DETAIL_ADDITION_SUBSCRIPTION
-            });
-        }
+        this.updateSubscribeTo({
+            modelRequest: {
+                ids,
+                viewModelCtor: ViewMotion,
+                fieldset: DEFAULT_FIELDSET,
+                follow: [{ idField: `meeting_id`, fieldset: [], additionalFields: [`name`, `description`] }]
+            },
+            subscriptionName: MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION
+        });
     }
 }

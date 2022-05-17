@@ -86,10 +86,11 @@ export class ParticipantImportService extends BaseUserImportService {
             createFn: async () => [],
             updateFn: models => this.updateUsers(models)
         });
+        console.log(`default group id:`, activeMeetingService.meeting.default_group_id);
         this.registerBeforeImportHandler(GROUP_PROPERTY, {
             idProperty: GROUP_PROPERTY,
             repo: this.groupRepo as any,
-            useDefault: [this.activeMeetingService.meeting.default_group_id]
+            useDefault: [activeMeetingService.meeting.default_group_id]
         });
     }
 

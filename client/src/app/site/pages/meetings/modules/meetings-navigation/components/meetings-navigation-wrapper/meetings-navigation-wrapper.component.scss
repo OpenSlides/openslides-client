@@ -30,22 +30,6 @@ mat-icon {
     height: 40px !important;
 }
 
-/* The footer container only appears when custom logo is
-   specified. It can only contain the standard logo */
-.os-footer-logo-container {
-    width: 150px;
-}
-
-.os-logo-container:focus,
-.os-logo-container:active,
-.os-logo-container:hover,
-.os-footer-logo-container:focus,
-.os-footer-logo-container:active,
-.os-footer-logo-container:hover {
-    border: none;
-    outline: none;
-}
-
 /* Content container */
 .content {
     min-height: 100%;

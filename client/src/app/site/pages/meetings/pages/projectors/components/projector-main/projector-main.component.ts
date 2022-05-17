@@ -9,10 +9,4 @@ import { getProjectorListSubscriptionConfig } from '../../config/model-subscript
     templateUrl: './projector-main.component.html',
     styleUrls: ['./projector-main.component.scss']
 })
-export class ProjectorMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getProjectorListSubscriptionConfig(id, () => this.getNextMeetingIdObservable()));
-        }
-    }
-}
+export class ProjectorMainComponent extends BaseModelRequestHandlerComponent {}

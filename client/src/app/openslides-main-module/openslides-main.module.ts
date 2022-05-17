@@ -12,6 +12,8 @@ import { AppLoadService } from './services/app-load.service';
 import { httpInterceptorProviders } from './interceptors';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OpenSlidesOverlayModule } from 'src/app/ui/modules/openslides-overlay/openslides-overlay.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from 'src/environments/environment';
 
 /**
  * Returns a function that returns a promis that will be resolved, if all apps are loaded.
@@ -32,6 +34,7 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, OpenSlidesOverlayModule];
         HttpClientModule,
         SlidesModule, // TODO: We should remove this!
         OpenSlidesTranslationModule.forRoot(),
+        ServiceWorkerModule.register(`ngsw-worker.js`, { enabled: environment.production }),
         ...NOT_LAZY_LOADED_MODULES
     ],
     providers: [
