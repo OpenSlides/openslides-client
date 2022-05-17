@@ -9,30 +9,6 @@ const routes: Routes = [
         path: ``,
         component: ParticipantMainComponent,
         children: [
-            // {
-            //     path: ``,
-            //     component: UserListComponent,
-            //     pathMatch: `full`
-            // },
-            // {
-            //     path: `new`,
-            //     component: UserDetailComponent,
-            //     data: { basePerm: Permission.userCanManage }
-            // },
-            // {
-            //     path: `import`,
-            //     component: UserImportListComponent,
-            //     data: { basePerm: Permission.userCanManage }
-            // },
-            // {
-            //     path: `presence`,
-            //     component: PresenceDetailComponent,
-            //     data: { basePerm: Permission.userCanManage, meetingSetting: `users_enable_presence_view` }
-            // },
-            // {
-            //     path: `:id`,
-            //     component: UserDetailComponent
-            // },
             {
                 path: ``,
                 pathMatch: `full`,
@@ -44,7 +20,6 @@ const routes: Routes = [
                 loadChildren: () =>
                     import(`./pages/participant-import/participant-import.module`).then(m => m.ParticipantImportModule),
                 data: { meetingPermissions: [Permission.userCanManage] }
-                // canLoad: [PermissionGuard]
             },
             {
                 path: `password`,
@@ -63,13 +38,11 @@ const routes: Routes = [
                     meetingPermissions: [Permission.userCanManage],
                     meetingSettings: [`users_enable_presence_view`]
                 }
-                // canLoad: [PermissionGuard]
             },
             {
                 path: `groups`,
                 loadChildren: () => import(`./modules/groups/groups.module`).then(m => m.GroupsModule),
                 data: { meetingPermissions: [Permission.userCanManage] }
-                // canLoad: [PermissionGuard]
             },
             {
                 path: ``,

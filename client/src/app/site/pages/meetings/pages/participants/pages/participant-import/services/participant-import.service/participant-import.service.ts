@@ -17,6 +17,7 @@ import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/prese
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 const GROUP_PROPERTY = `group_ids`;
 
@@ -59,6 +60,7 @@ export class ParticipantImportService extends BaseUserImportService {
         private repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
         private activeMeetingIdService: ActiveMeetingIdService,
+        private activeMeetingService: ActiveMeetingService,
         private exporter: ParticipantCsvExportService,
         private presenter: SearchUsersByNameOrEmailPresenterService
     ) {
@@ -86,7 +88,8 @@ export class ParticipantImportService extends BaseUserImportService {
         });
         this.registerBeforeImportHandler(GROUP_PROPERTY, {
             idProperty: GROUP_PROPERTY,
-            repo: this.groupRepo as any
+            repo: this.groupRepo as any,
+            useDefault: [this.activeMeetingService.meeting.default_group_id]
         });
     }
 
@@ -130,6 +133,7 @@ export class ParticipantImportService extends BaseUserImportService {
 
     private async getDuplicates(entries: Partial<User>[]): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
         const result = await this.presenter.call({
+            permissionRelatedId: this.activeMeetingId,
             searchCriteria: entries.map(entry => {
                 const username = !!entry.username ? entry.username : `${entry.first_name} ${entry.last_name}`;
                 return { username, email: entry.email };

@@ -21,6 +21,7 @@ import { UserDeleteDialogService } from 'src/app/ui/modules/user-components';
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
+import { firstValueFrom } from 'rxjs';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
     `structure_level`,
@@ -42,7 +43,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         private userController: UserControllerService,
-        private prompt: UserDeleteDialogService,
+        private userDeleteDialog: UserDeleteDialogService,
         private presenter: GetUserScopePresenterService,
         private userService: UserService,
         private actions: ActionService
@@ -56,7 +57,11 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
         if (typeof patch === `function`) {
-            return this.repo.update(patch, ...users);
+            const updatePatch = (user: ViewUser) => {
+                const participantPayload = patch(user);
+                return this.validatePayload(participantPayload);
+            };
+            return this.repo.update(updatePatch, ...users);
         }
         return this.repo.update(this.validatePayload(patch as Partial<User>), ...users);
     }
@@ -211,15 +216,15 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const toRemove = users.map(user => user.id).difference(toDelete);
         const toRemoveUsers = toRemove.map(id => this.getViewModel(id) as ViewUser);
 
-        if (await this.prompt.open({ toDelete: toDeleteUsers, toRemove: toRemoveUsers })) {
+        const prompt = await this.userDeleteDialog.open({ toDelete: toDeleteUsers, toRemove: toRemoveUsers });
+        const answer = await firstValueFrom(prompt.afterClosed());
+        if (answer) {
             const patch = { group_$_ids: { [this.activeMeetingId!]: [] } };
             await this.delete(...toDeleteUsers)
                 .concat(this.update(patch, ...toRemoveUsers))
                 .resolve();
-            return true;
-        } else {
-            return false;
         }
+        return answer;
     }
 
     /**

@@ -8,12 +8,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ImportListModule } from 'src/app/ui/modules/import-list';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { ParticipantImportServiceModule } from './services';
 
 @NgModule({
     declarations: [ParticipantImportListComponent],
     imports: [
         CommonModule,
         ParticipantImportRoutingModule,
+        ParticipantImportServiceModule,
         ImportListModule,
         HeadBarModule,
         OpenSlidesTranslationModule.forChild(),

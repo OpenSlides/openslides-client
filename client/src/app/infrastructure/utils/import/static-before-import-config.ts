@@ -1,3 +1,4 @@
+import { Ids } from 'src/app/domain/definitions/key-types';
 import { SideImportHandlerConfig } from './side-import-handler-config';
 
 export interface StaticBeforeImportConfig<ToCreate = any, ToImport = any>
@@ -6,4 +7,8 @@ export interface StaticBeforeImportConfig<ToCreate = any, ToImport = any>
      * The property of the models, which are created, models created by this helper are linked to
      */
     idProperty: keyof ToCreate;
+    /**
+     * If none value is given, this value will be inserted
+     */
+    useDefault?: Ids;
 }
