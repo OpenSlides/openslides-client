@@ -184,7 +184,7 @@
 </mat-menu>
 
 <ng-template #tiles>
-    <os-grid>
+    <os-grid rowHeight="50%">
         <os-tile *ngFor="let tile of listTiles" [data]="tile" (clicked)="changeToViewWithTileCategory(tile)">
             <div class="motion-tile-card" [osPaper]="2" [osPaperRaise]="true">
                 <div class="full-height">
