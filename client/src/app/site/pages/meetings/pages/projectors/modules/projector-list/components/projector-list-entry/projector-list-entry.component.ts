@@ -84,7 +84,7 @@ export class ProjectorListEntryComponent {
         if (this.operator.hasPerms(Permission.projectorCanManage)) {
             return `/${this.activeMeetingId}/projectors/detail/${this.projector.sequential_number}`;
         } else {
-            return `/${this.activeMeetingId}/projector/${this.projector.sequential_number}`;
+            return `/${this.activeMeetingId}/projectors/${this.projector.sequential_number}`;
         }
     }
 
