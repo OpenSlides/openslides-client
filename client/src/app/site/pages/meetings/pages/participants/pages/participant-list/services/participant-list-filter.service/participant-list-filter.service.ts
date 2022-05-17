@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: ParticipantListServiceModule
@@ -30,8 +31,13 @@ export class ParticipantListFilterService extends BaseFilterListService<ViewUser
      * @param groupRepo to filter by groups
      * @param translate marking some translations that are unique here
      */
-    public constructor(store: StorageService, groupRepo: GroupControllerService, private translate: TranslateService) {
-        super();
+    public constructor(
+        store: StorageService,
+        history: HistoryService,
+        groupRepo: GroupControllerService,
+        private translate: TranslateService
+    ) {
+        super(store, history);
         this.updateFilterForRepo({
             repo: groupRepo,
             filter: this.userGroupFilterOptions,

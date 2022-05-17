@@ -10,6 +10,7 @@ import { Topic } from 'src/app/domain/models/topics/topic';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: AgendaItemListServiceModule
@@ -32,8 +33,13 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
      * @param store
      * @param translate Translation service
      */
-    public constructor(store: StorageService, private translate: TranslateService, tagRepo: TagControllerService) {
-        super();
+    public constructor(
+        store: StorageService,
+        history: HistoryService,
+        private translate: TranslateService,
+        tagRepo: TagControllerService
+    ) {
+        super(store, history);
 
         this.updateFilterForRepo({
             repo: tagRepo,

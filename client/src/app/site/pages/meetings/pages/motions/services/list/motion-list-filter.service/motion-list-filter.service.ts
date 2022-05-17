@@ -21,6 +21,7 @@ import { MotionBlockControllerService } from '../../../modules/motion-blocks/ser
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
@@ -156,6 +157,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
 
     public constructor(
         store: StorageService,
+        history: HistoryService,
         categoryRepo: MotionCategoryControllerService,
         motionBlockRepo: MotionBlockControllerService,
         commentRepo: MotionCommentSectionControllerService,
@@ -165,7 +167,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         private operator: OperatorService,
         private meetingSettingsService: MeetingSettingsService
     ) {
-        super();
+        super(store, history);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 

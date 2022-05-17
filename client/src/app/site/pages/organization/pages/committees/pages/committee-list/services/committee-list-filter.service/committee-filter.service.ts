@@ -4,6 +4,8 @@ import { ViewCommittee } from '../../../../view-models';
 import { CommitteeListServiceModule } from '../committee-list-service.module';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { StorageService } from 'src/app/gateways/storage.service';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: CommitteeListServiceModule
@@ -18,8 +20,13 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
         options: []
     };
 
-    public constructor(organizationTagRepo: OrganizationTagControllerService, private translate: TranslateService) {
-        super();
+    public constructor(
+        organizationTagRepo: OrganizationTagControllerService,
+        store: StorageService,
+        history: HistoryService,
+        private translate: TranslateService
+    ) {
+        super(store, history);
         this.updateFilterForRepo({
             repo: organizationTagRepo,
             filter: this.orgaTagFilterOptions,
