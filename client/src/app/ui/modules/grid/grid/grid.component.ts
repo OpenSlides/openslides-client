@@ -22,4 +22,10 @@ export class GridComponent {
      */
     @Input()
     public noSpace: boolean = false;
+
+    /**
+     * Defines the height of every card
+     */
+    @Input()
+    public rowHeight = `100%`;
 }

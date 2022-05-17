@@ -47,7 +47,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
         ]);
         const listFields: (keyof MotionCategory)[] = sortListFields.concat([`motion_ids`]);
         return {
-            [DEFAULT_FIELDSET]: detailFields,
+            [DEFAULT_FIELDSET]: listFields,
             [ROUTING_FIELDSET]: routingFields,
             list: listFields,
             sortList: sortListFields
