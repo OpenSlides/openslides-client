@@ -34,8 +34,13 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, OpenSlidesOverlayModule];
         HttpClientModule,
         SlidesModule, // TODO: We should remove this!
         OpenSlidesTranslationModule.forRoot(),
-        ServiceWorkerModule.register(`ngsw-worker.js`, { enabled: environment.production }),
-        ...NOT_LAZY_LOADED_MODULES
+        ...NOT_LAZY_LOADED_MODULES,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        })
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: AppLoaderFactory, deps: [AppLoadService], multi: true },
