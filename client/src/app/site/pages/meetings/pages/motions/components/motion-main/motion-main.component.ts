@@ -19,12 +19,11 @@ import {
 export class MotionMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(
+            this.updateSubscribeTo(
                 getMotionListSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getMotionBlockSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getMotionWorkflowSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getMotionsSubmodelSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
-                getParticipantSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getAgendaSubscriptionConfig(id, () => this.getNextMeetingIdObservable())
             );
         }

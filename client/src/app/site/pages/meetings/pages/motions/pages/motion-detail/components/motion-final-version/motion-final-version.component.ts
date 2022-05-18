@@ -60,7 +60,7 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     }
 
     private async saveModifiedFinalVersion(): Promise<void> {
-        await this.repo.update(this.contentForm.value, this.motion);
+        await this.repo.update(this.contentForm.value, this.motion).resolve();
         this.leaveEditMode();
     }
 

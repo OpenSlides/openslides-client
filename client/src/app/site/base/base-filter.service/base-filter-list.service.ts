@@ -5,6 +5,7 @@ import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { Directive } from '@angular/core';
 
 /**
  * Extends the BaseViewModel with a parent
@@ -19,6 +20,7 @@ interface HierarchyModel extends BaseViewModel {
  * Filter for the list view. List views can subscribe to its' dataService (providing filter definitions)
  * and will receive their filtered data as observable
  */
+@Directive()
 export abstract class BaseFilterListService<V extends BaseViewModel> implements FilterListService<V> {
     /**
      * stores the currently used raw data to be used for the filter

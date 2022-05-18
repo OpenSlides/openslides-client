@@ -7,10 +7,4 @@ import { getParticipantSubscriptionConfig } from '../../config/model-subscriptio
     templateUrl: './participant-main.component.html',
     styleUrls: ['./participant-main.component.scss']
 })
-export class ParticipantMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo(getParticipantSubscriptionConfig(id, () => this.getNextMeetingIdObservable()));
-        }
-    }
-}
+export class ParticipantMainComponent extends BaseModelRequestHandlerComponent {}

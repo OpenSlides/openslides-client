@@ -7,6 +7,7 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { MotionCategoryAction } from './motion-category.action';
 import { Fieldsets, DEFAULT_FIELDSET, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { Action } from 'src/app/gateways/actions';
 
 @Injectable({
     providedIn: 'root'
@@ -32,8 +33,8 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
         return this.sendActionToBackend(MotionCategoryAction.UPDATE, payload);
     }
 
-    public delete(viewModel: Identifiable): Promise<void> {
-        return this.sendActionToBackend(MotionCategoryAction.DELETE, { id: viewModel.id });
+    public delete(viewModel: Identifiable): Action<void> {
+        return this.createAction(MotionCategoryAction.DELETE, { id: viewModel.id });
     }
 
     public override getFieldsets(): Fieldsets<MotionCategory> {

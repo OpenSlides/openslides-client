@@ -12,7 +12,7 @@ const MOTIONS_SETTINGS_GROUP = `motions`;
 export class MeetingSettingsGroupDetailMainComponent extends BaseModelRequestHandlerComponent {
     protected override onParamsChanged(params: any): void {
         if (params[`group`] && params[`group`] === MOTIONS_SETTINGS_GROUP) {
-            this.subscribeTo(
+            this.updateSubscribeTo(
                 getMotionWorkflowSubscriptionConfig(+params[`meetingId`], () => this.getNextMeetingIdObservable())
             );
         }

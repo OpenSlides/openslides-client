@@ -74,7 +74,7 @@
             </div>
 
             <!--  Reco -->
-            <div class="spacer-top-3" *ngIf="motion.recommendation && motion.state.next_states_id.length > 0">
+            <div class="spacer-top-3" *ngIf="motion.recommendation && motion.state.next_state_ids?.length > 0">
                 <mat-basic-chip class="bluegrey" [disabled]="true">
                     {{ motionService.getExtendedRecommendationLabel(motion) }}
                 </mat-basic-chip>

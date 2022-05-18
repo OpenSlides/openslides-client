@@ -43,7 +43,10 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     public importListLastTabs!: QueryList<MatTab>;
 
     @ContentChild(ImportListStatusTemplateDirective, { read: TemplateRef })
-    public importListStateTemplate: TemplateRef<any> | null = null;
+    public importListStateTemplate: TemplateRef<any>;
+    // public set importListStateTemplate(template: TemplateRef<any>) {
+    //     console.log(`set state template:`, template);
+    // }
 
     @ViewChild(`fileInput`)
     private fileInput!: ElementRef<HTMLInputElement>;

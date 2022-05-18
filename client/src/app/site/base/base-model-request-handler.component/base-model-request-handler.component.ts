@@ -72,13 +72,15 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         }
     }
 
-    protected async updateSubscribeTo(config: ModelRequestConfig): Promise<void> {
-        const subscriptionNameIndex = this._openedSubscriptions.findIndex(name => name === config.subscriptionName);
-        if (subscriptionNameIndex > -1) {
-            this._openedSubscriptions.splice(subscriptionNameIndex, 1);
+    protected async updateSubscribeTo(...configs: ModelRequestConfig[]): Promise<void> {
+        for (const config of configs) {
+            const subscriptionNameIndex = this._openedSubscriptions.findIndex(name => name === config.subscriptionName);
+            if (subscriptionNameIndex > -1) {
+                this._openedSubscriptions.splice(subscriptionNameIndex, 1);
+            }
+            this.modelRequestService.closeSubscription(config.subscriptionName);
+            this.subscribeTo(config);
         }
-        this.modelRequestService.closeSubscription(config.subscriptionName);
-        this.subscribeTo(config);
     }
 
     protected getNextMeetingIdObservable(): Observable<Id | null> {

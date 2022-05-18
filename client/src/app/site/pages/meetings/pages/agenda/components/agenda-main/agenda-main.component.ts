@@ -17,7 +17,7 @@ import { getAssignmentSubscriptionConfig } from '../../../assignments/config/mod
 export class AgendaMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(
+            this.updateSubscribeTo(
                 getAgendaSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getTopicSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
                 getMotionListSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),

@@ -3,6 +3,4 @@ import { Directive } from '@angular/core';
 @Directive({
     selector: '[osImportListStatusTemplate]'
 })
-export class ImportListStatusTemplateDirective {
-    constructor() {}
-}
+export class ImportListStatusTemplateDirective {}

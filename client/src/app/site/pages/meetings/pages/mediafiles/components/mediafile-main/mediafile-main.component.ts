@@ -10,18 +10,4 @@ const MEDIAFILE_SUBSCRIPTION = `mediafile`;
     templateUrl: './mediafile-main.component.html',
     styleUrls: ['./mediafile-main.component.scss']
 })
-export class MediafileMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onNextMeetingId(id: number | null): void {
-        if (id) {
-            this.subscribeTo({
-                modelRequest: {
-                    viewModelCtor: ViewMeeting,
-                    ids: [id],
-                    follow: [`mediafile_ids`]
-                },
-                subscriptionName: MEDIAFILE_SUBSCRIPTION,
-                hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !id))
-            });
-        }
-    }
-}
+export class MediafileMainComponent extends BaseModelRequestHandlerComponent {}

@@ -282,17 +282,20 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     private validatePayload(participant: Partial<User>): any {
         return {
             ...participant,
-            structure_level_$:
-                { [this.activeMeetingId!]: participant.structure_level } || participant.structure_level_$,
-            group_$_ids: { [this.activeMeetingId!]: participant.group_ids } || participant.group_$_ids,
-            number_$: { [this.activeMeetingId!]: participant.number } || participant.number_$,
-            vote_weight_$:
-                { [this.activeMeetingId!]: toDecimal(participant.vote_weight as any) } || participant.vote_weight_$,
-            vote_delegated_$_to_id:
-                { [this.activeMeetingId!]: participant.vote_delegated_to_id } || participant.vote_delegated_$_to_id,
-            vote_delegations_$_from_ids:
-                { [this.activeMeetingId!]: participant.vote_delegations_from_ids } ||
-                participant.vote_delegations_$_from_ids
+            structure_level_$: participant.structure_level_$ || {
+                [this.activeMeetingId!]: participant.structure_level
+            },
+            group_$_ids: participant.group_$_ids || { [this.activeMeetingId!]: participant.group_ids },
+            number_$: participant.number_$ || { [this.activeMeetingId!]: participant.number },
+            vote_weight_$: participant.vote_weight_$ || {
+                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any)
+            },
+            vote_delegated_$_to_id: participant.vote_delegated_$_to_id || {
+                [this.activeMeetingId!]: participant.vote_delegated_to_id
+            },
+            vote_delegations_$_from_ids: participant.vote_delegations_$_from_ids || {
+                [this.activeMeetingId!]: participant.vote_delegations_from_ids
+            }
         };
     }
 }

@@ -157,22 +157,14 @@ export class ActiveMeetingService {
     }
 
     private async refreshAutoupdateSubscription(): Promise<void> {
-        this.modelRequestService.subscribeTo(
+        this.modelRequestService.updateSubscribeTo(
             getMeetingDetailGroupSubscriptionConfig(
                 this.meetingId!,
                 () => this.activeMeetingIdService.meetingIdObservable
-            )
-        );
-        this.modelRequestService.subscribeTo(
-            getMeetingDetailSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable)
-        );
-        this.modelRequestService.subscribeTo(
-            getMediafilesSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable)
-        );
-        this.modelRequestService.subscribeTo(
-            getProjectorListSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable)
-        );
-        this.modelRequestService.subscribeTo(
+            ),
+            getMeetingDetailSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
+            getMediafilesSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
+            getProjectorListSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
             getParticipantSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable)
         );
     }

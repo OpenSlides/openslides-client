@@ -27,6 +27,18 @@ export class ModelRequestService {
         private DS: DataStoreService
     ) {}
 
+    /**
+     * Pass several subscription configs which will be fired asynchronously.
+     * Pay attention: They will not be awaited!
+     */
+    public updateSubscribeTo(...configs: SubscribeToConfig[]): void {
+        for (const config of configs) {
+            const { subscriptionName } = config;
+            this.closeSubscription(subscriptionName);
+            this.subscribeTo(config);
+        }
+    }
+
     public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
         if (this._modelSubscriptionMap[subscriptionName]) {
             console.warn(`A subscription already made for ${subscriptionName}. Aborting.`);

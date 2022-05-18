@@ -56,8 +56,8 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     }
 
     public static COLLECTION = Meeting.COLLECTION;
-
     public static ACCESSIBILITY_FIELD: keyof Meeting = `description`;
+
     protected _collection = Meeting.COLLECTION;
 
     public getUrl(): string {
