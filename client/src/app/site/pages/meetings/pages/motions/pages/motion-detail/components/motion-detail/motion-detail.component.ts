@@ -6,7 +6,6 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
@@ -60,12 +59,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
             modelRequest: {
                 ids: [this._currentMotionId!],
                 viewModelCtor: ViewMotion,
-                follow: [
-                    { idField: `lead_motion_id`, fieldset: DEFAULT_FIELDSET, additionalFields: [`text`] },
-                    `poll_ids`
-                ],
                 additionalFields: [
-                    // `text`,
                     `all_origin_ids`,
                     `derived_motion_ids`,
                     `amendment_ids`,
@@ -109,7 +103,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
             modelRequest: {
                 ids,
                 viewModelCtor: ViewMotion,
-                fieldset: DEFAULT_FIELDSET,
+                fieldset: [`forwarded`, `created`, `sequential_number`],
                 follow: [{ idField: `meeting_id`, fieldset: [], additionalFields: [`name`, `description`] }]
             },
             subscriptionName: MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION
