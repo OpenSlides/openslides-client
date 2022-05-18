@@ -31,7 +31,16 @@ export class MediaManageService {
     }
 
     public get allFontPlaces(): FontPlace[] {
-        return [`regular`, `italic`, `bold`, `bold_italic`, `monospace`, `chyron_speaker_name`];
+        return [
+            `regular`,
+            `italic`,
+            `bold`,
+            `bold_italic`,
+            `monospace`,
+            `chyron_speaker_name`,
+            `projector_h1`,
+            `projector_h2`
+        ];
     }
 
     private readonly logoUrlSubjects: { [place in LogoPlace]?: BehaviorSubject<string | null> } = {};

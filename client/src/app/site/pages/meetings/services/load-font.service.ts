@@ -59,6 +59,18 @@ export class LoadFontService {
                 this.setNewFontFace(`OSFont ChyronName`, chyronFont);
             }
         });
+
+        this.mediaManageService.getFontUrlObservable(`projector_h1`).subscribe(projectorH1 => {
+            if (projectorH1) {
+                this.setNewFontFace(`OSFont projectorH1`, projectorH1);
+            }
+        });
+
+        this.mediaManageService.getFontUrlObservable(`projector_h2`).subscribe(projectorH2 => {
+            if (projectorH2) {
+                this.setNewFontFace(`OSFont projectorH2`, projectorH2);
+            }
+        });
     }
 
     /**
