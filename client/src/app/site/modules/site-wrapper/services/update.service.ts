@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UpdateAvailableEvent, SwUpdate } from '@angular/service-worker';
+import { Observable, filter, Subject } from 'rxjs';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({
     providedIn: `root`
@@ -9,9 +10,11 @@ export class UpdateService {
     /**
      * @returns the updateSubscription
      */
-    public get updateObservable(): Observable<UpdateAvailableEvent> {
-        return this.swUpdate.available;
+    public get updateObservable(): Observable<void> {
+        return this._nextVersionAvailableSubject.asObservable();
     }
+
+    private _nextVersionAvailableSubject = new Subject<void>();
 
     /**
      * Constructor.
@@ -19,7 +22,11 @@ export class UpdateService {
      *
      * @param swUpdate Service Worker update service
      */
-    public constructor(private swUpdate: SwUpdate) {}
+    public constructor(private swUpdate: SwUpdate, private store: StorageService) {
+        swUpdate.versionUpdates
+            .pipe(filter(event => event.type === `VERSION_READY`))
+            .subscribe((version: VersionReadyEvent) => this.checkVersion(version));
+    }
 
     /**
      * Manually applies the update if one was found
@@ -27,6 +34,7 @@ export class UpdateService {
     public applyUpdate(): void {
         this.swUpdate.activateUpdate().then(() => {
             document.location.reload();
+            this.store.clear();
         });
     }
 
@@ -36,6 +44,17 @@ export class UpdateService {
     public checkForUpdate(): void {
         if (this.swUpdate.isEnabled) {
             this.swUpdate.checkForUpdate();
+        }
+    }
+
+    private checkVersion(version: VersionReadyEvent): void {
+        const currentVersion = version.currentVersion.hash;
+        const latestVersion = version.latestVersion.hash;
+        const isUpdateAvailable = currentVersion !== latestVersion;
+        console.log(`Current version: ${currentVersion}.\n Latest version: ${latestVersion}`);
+        console.log(isUpdateAvailable ? `Update available` : `No update available`);
+        if (isUpdateAvailable) {
+            this._nextVersionAvailableSubject.next();
         }
     }
 }
