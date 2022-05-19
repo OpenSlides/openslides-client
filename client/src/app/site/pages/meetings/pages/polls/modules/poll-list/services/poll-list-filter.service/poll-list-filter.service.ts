@@ -2,22 +2,28 @@ import { Injectable } from '@angular/core';
 import { PollListServiceModule } from '../poll-list-service.module';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ViewPoll } from '../../../../view-models';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
+import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({
     providedIn: PollListServiceModule
 })
-export class PollListFilterService extends BaseFilterListService<ViewPoll> {
+export class PollListFilterService extends BaseMeetingFilterListService<ViewPoll> {
     /**
      * set the storage key name
      */
-    protected storageKey = `PollList`;
+    // protected storageKey = `PollList`;
 
-    public constructor(store: StorageService, history: HistoryService, private translate: TranslateService) {
-        super(store, history);
+    public constructor(
+        baseFilterListService: BaseFilterListService<ViewPoll>,
+        history: HistoryService,
+        store: StorageService,
+        private translate: TranslateService
+    ) {
+        super(baseFilterListService, store, history, `PollList`);
     }
 
     /**

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-    BaseFilterListService,
     OsFilterOption,
     OsFilter,
-    OsFilterOptions
+    OsFilterOptions,
+    BaseFilterListService
 } from 'src/app/site/base/base-filter.service';
 import { ViewMotion } from '../../../view-models';
 import { AmendmentType } from 'src/app/domain/models/motions/motions.constants';
@@ -22,6 +22,7 @@ import { MotionCommentSectionControllerService } from '../../../modules/comments
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
@@ -44,11 +45,11 @@ interface WorkflowConfiguration {
 @Injectable({
     providedIn: MotionsListServiceModule
 })
-export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
+export class MotionListFilterService extends BaseMeetingFilterListService<ViewMotion> {
     /**
      * set the storage key name
      */
-    protected storageKey = `MotionList`;
+    // protected storageKey = `MotionList`;
 
     /**
      * Listen to the configuration for change in defined/used workflows
@@ -156,6 +157,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     ];
 
     public constructor(
+        baseFilterListService: BaseFilterListService<ViewMotion>,
         store: StorageService,
         history: HistoryService,
         categoryRepo: MotionCategoryControllerService,
@@ -167,7 +169,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         private operator: OperatorService,
         private meetingSettingsService: MeetingSettingsService
     ) {
-        super(store, history);
+        super(baseFilterListService, store, history, `MotionList`);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 

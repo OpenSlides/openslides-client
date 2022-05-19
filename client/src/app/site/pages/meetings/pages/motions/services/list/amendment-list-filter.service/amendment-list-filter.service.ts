@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MotionListFilterService } from '../motion-list-filter.service';
 import { MotionsListServiceModule } from '../motions-list-service.module';
-import { OsFilter } from 'src/app/site/base/base-filter.service';
+import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +13,7 @@ import { MotionBlockControllerService } from '../../../modules/motion-blocks/ser
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({
     providedIn: MotionsListServiceModule
@@ -27,7 +27,7 @@ export class AmendmentListFilterService extends MotionListFilterService {
     /**
      * set the storage key nae
      */
-    protected override storageKey: string = ``;
+    // protected override storageKey: string = ``;
 
     /**
      * The sorage key prefix to identify the parent id
@@ -52,8 +52,9 @@ export class AmendmentListFilterService extends MotionListFilterService {
     }
 
     public constructor(
-        store: StorageService,
+        baseFilterListService: BaseFilterListService<ViewMotion>,
         history: HistoryService,
+        store: StorageService,
         categoryRepo: MotionCategoryControllerService,
         motionBlockRepo: MotionBlockControllerService,
         commentRepo: MotionCommentSectionControllerService,
@@ -65,6 +66,7 @@ export class AmendmentListFilterService extends MotionListFilterService {
         motionRepo: MotionControllerService
     ) {
         super(
+            baseFilterListService,
             store,
             history,
             categoryRepo,
@@ -76,6 +78,8 @@ export class AmendmentListFilterService extends MotionListFilterService {
             operator,
             meetingSettingsService
         );
+
+        this.filterListData.storageKey = ``;
 
         this.updateFilterForRepo({
             repo: motionRepo,
@@ -89,9 +93,9 @@ export class AmendmentListFilterService extends MotionListFilterService {
      */
     private updateStorageKey(): void {
         if (this._parentMotionId) {
-            this.storageKey = `${this.keyPrefix}_parentId_${this._parentMotionId}`;
+            this.filterListData.storageKey = `${this.keyPrefix}_parentId_${this._parentMotionId}`;
         } else {
-            this.storageKey = this.keyPrefix;
+            this.filterListData.storageKey = this.keyPrefix;
         }
     }
 

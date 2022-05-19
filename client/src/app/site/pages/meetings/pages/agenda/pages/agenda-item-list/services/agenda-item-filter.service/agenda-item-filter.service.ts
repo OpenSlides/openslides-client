@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { OsFilter, BaseFilterListService, OsFilterOption } from 'src/app/site/base/base-filter.service';
+import { BaseFilterListService, OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
 import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
 import { Motion } from 'src/app/domain/models/motions/motion';
@@ -11,15 +10,17 @@ import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
+import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({
     providedIn: AgendaItemListServiceModule
 })
-export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaItem> {
+export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAgendaItem> {
     /**
      * set the storage key name
      */
-    protected storageKey = `AgendaList`;
+    // protected storageKey = `AgendaList`;
 
     public tagFilterOptions: OsFilter<ViewAgendaItem> = {
         property: `tag_ids`,
@@ -34,12 +35,13 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
      * @param translate Translation service
      */
     public constructor(
-        store: StorageService,
+        baseFilterListService: BaseFilterListService<ViewAgendaItem>,
         history: HistoryService,
+        store: StorageService,
         private translate: TranslateService,
         tagRepo: TagControllerService
     ) {
-        super(store, history);
+        super(baseFilterListService, store, history, `AgendaList`);
 
         this.updateFilterForRepo({
             repo: tagRepo,

@@ -5,13 +5,12 @@ import { CommitteeListServiceModule } from '../committee-list-service.module';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: CommitteeListServiceModule
 })
 export class CommitteeFilterService extends BaseFilterListService<ViewCommittee> {
-    protected storageKey = `CommitteeList`;
+    // protected storageKey = `CommitteeList`;
 
     private orgaTagFilterOptions: OsFilter<ViewCommittee> = {
         property: `organization_tag_ids`,
@@ -23,15 +22,19 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
     public constructor(
         organizationTagRepo: OrganizationTagControllerService,
         store: StorageService,
-        history: HistoryService,
         private translate: TranslateService
     ) {
-        super(store, history);
+        super(store);
+        this.initializeStorageKey();
         this.updateFilterForRepo({
             repo: organizationTagRepo,
             filter: this.orgaTagFilterOptions,
             noneOptionLabel: this.translate.instant(`No tags`)
         });
+    }
+
+    protected initializeStorageKey() {
+        this.filterListData.storageKey = `CommitteeList`;
     }
 
     protected getFilterDefinitions(): OsFilter<ViewCommittee>[] {

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
 import { MotionBlockServiceModule } from '../motion-block-service.module';
@@ -12,6 +11,8 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { BaseFilterListService } from 'src/app/site/base/base-filter.service';
+import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({
     providedIn: MotionBlockServiceModule
@@ -30,8 +31,9 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
     }
 
     public constructor(
-        store: StorageService,
+        baseFilterListService: BaseFilterListService<ViewMotion>,
         history: HistoryService,
+        store: StorageService,
         categoryRepo: MotionCategoryControllerService,
         motionBlockRepo: MotionBlockControllerService,
         commentRepo: MotionCommentSectionControllerService,
@@ -42,6 +44,7 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
         meetingSettingsService: MeetingSettingsService
     ) {
         super(
+            baseFilterListService,
             store,
             history,
             categoryRepo,

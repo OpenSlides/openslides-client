@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 /**
  * Describes the available filters for a listView.
@@ -51,6 +51,7 @@ type OsFilterOptionCondition = OsFilterOptionConditionType | OsFilterOptionCondi
 type OsFilterOptionConditionType = null | string | boolean | number;
 
 export interface FilterListService<V> {
+    filterListData: FilterListData<V>;
     readonly unfilteredCount: number;
     readonly filterCount: number;
     readonly hasFilterOptions: boolean;
@@ -58,7 +59,99 @@ export interface FilterListService<V> {
     readonly filterStack: OsFilterIndicator<V>[];
     readonly outputObservable: Observable<V[]>;
     getFilterName(filter: OsFilter<V>): string;
-    toggleFilterOption(property: keyof V, option: OsFilterOption): void;
-    clearAllFilters(): void;
-    initFilters(inputObservable: Observable<V[]>): void;
+    toggleFilterOption(property: keyof V, option: OsFilterOption, info?: FilterListData<V>): void;
+    clearAllFilters(info?: FilterListData<V>): void;
+    initFilters(inputObservable: Observable<V[]>, info?: FilterListData<V>): void;
+}
+
+export interface FilterListData<V> {
+    /**
+    * stores the currently used raw data to be used for the filter
+    */
+    inputData: V[];
+
+    /**
+     * Subscription for the inputData list.
+     * Acts as an semaphore for new filtered data
+     */
+    inputDataSubscription: Subscription | null;
+
+    /**
+     * The currently used filters.
+     */
+    filterDefinitions: OsFilter<V>[];
+
+    /**
+     * The observable output for the filtered data
+     */
+    outputSubject: BehaviorSubject<V[]>;
+
+    /**
+     * Stack OsFilters
+     */
+    filterStack: OsFilterIndicator<V>[];
+
+    /**
+     * The key to access stored valued
+     */
+    storageKey: string;
+}
+
+export class FilterListData<V>{
+
+    public inputData: V[] = [];
+    public inputDataSubscription: Subscription | null = null;
+    public filterDefinitions: OsFilter<V>[] = [];
+    public outputSubject = new BehaviorSubject<V[]>([]);
+    public filterStack: OsFilterIndicator<V>[] = [];
+    public storageKey: string;
+
+    public constructor(storageKey: string = ``) {
+        this.storageKey = storageKey;
+    };
+
+    /**
+     * @returns the total count of items before the filter
+     */
+    public get unfilteredCount(): number {
+        return this.inputData ? this.inputData.length : 0;
+    }
+
+    /**
+     * Returns all OsFilters containing active filters
+     */
+    public get activeFilters(): OsFilter<V>[] {
+        return this.filterDefinitions.filter(def =>
+            def.options.find((option: OsFilterOption | string | undefined) => {
+                if (typeof option === `string`) {
+                    return false;
+                }
+                return option?.isActive;
+            })
+        );
+    }
+
+    public get filterCount(): number {
+        if (this.filterDefinitions) {
+            return this.filterDefinitions.reduce((a, b) => a + (b.count || 0), 0);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * @return Observable data for the filtered output subject
+     */
+    public get outputObservable(): Observable<V[]> {
+        return this.outputSubject.asObservable();
+    }
+
+    /**
+     * Boolean indicating if there are any filters described in this service
+     *
+     * @returns true if there are defined filters (regardless of current state)
+     */
+    public get hasFilterOptions(): boolean {
+        return !!this.filterDefinitions && this.filterDefinitions.length > 0;
+    }
 }

@@ -2,20 +2,21 @@ import { Injectable } from '@angular/core';
 import { ParticipantListServiceModule } from '../participant-list-service.module';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
+import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({
     providedIn: ParticipantListServiceModule
 })
-export class ParticipantListFilterService extends BaseFilterListService<ViewUser> {
+export class ParticipantListFilterService extends BaseMeetingFilterListService<ViewUser> {
     /**
      * set the storage key name
      */
-    protected storageKey = `UserList`;
+    // protected storageKey = `UserList`;
 
     private userGroupFilterOptions: OsFilter<ViewUser> = {
         property: `group_ids`,
@@ -32,12 +33,13 @@ export class ParticipantListFilterService extends BaseFilterListService<ViewUser
      * @param translate marking some translations that are unique here
      */
     public constructor(
-        store: StorageService,
+        baseFilterListService: BaseFilterListService<ViewUser>,
         history: HistoryService,
+        store: StorageService,
         groupRepo: GroupControllerService,
         private translate: TranslateService
     ) {
-        super(store, history);
+        super(baseFilterListService, store, history, `UserList`);
         this.updateFilterForRepo({
             repo: groupRepo,
             filter: this.userGroupFilterOptions,

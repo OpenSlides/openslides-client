@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { AccountCommonServiceModule } from './account-common-service.module';
 import { OsFilter, BaseFilterListService, OsFilterOptions } from 'src/app/site/base/base-filter.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: `root`
 })
 export class AccountFilterService extends BaseFilterListService<ViewUser> {
-    protected storageKey = `MemberList`;
+    // protected storageKey = `MemberList`;
 
     private committeeFilterOptions: OsFilter<ViewUser> = {
         property: `committee_ids`,
@@ -23,17 +21,21 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
     public constructor(
         committeeRepo: CommitteeRepositoryService,
         store: StorageService,
-        history: HistoryService,
         private meetingRepo: MeetingControllerService,
         private translate: TranslateService
     ) {
-        super(store, history);
+        super(store);
+        this.initializeStorageKey();
 
         this.updateFilterForRepo({
             repo: committeeRepo,
             filter: this.committeeFilterOptions,
             noneOptionLabel: this.translate.instant(`No committee`)
         });
+    }
+
+    protected initializeStorageKey() {
+        this.filterListData.storageKey = `MemberList`;
     }
 
     protected getFilterDefinitions(): OsFilter<ViewUser>[] {

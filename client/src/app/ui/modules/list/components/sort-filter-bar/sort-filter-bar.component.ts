@@ -20,7 +20,7 @@ import { FilterListService } from 'src/app/ui/base/filter-service';
  *
  * ```html
  * <os-sort-filter-bar [sortService]="sortService" [filterService]="filterService"
- * (searchFieldChange)="searchFilter($event)" [filterCount]="filteredCount">
+ * (searchFieldChange)="searchFilter($event)" [filterCount]="filterCount">
  * </os-sort-filter-bar>
  * ```
  */
