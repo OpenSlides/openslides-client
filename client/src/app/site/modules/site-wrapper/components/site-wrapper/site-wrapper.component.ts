@@ -38,7 +38,7 @@ export class SiteWrapperComponent implements OnInit, OnDestroy {
     private readonly _subscriptions = new SubscriptionMap();
 
     public constructor(
-        _themeService: ThemeService,
+        _themeService: ThemeService, // just to initialize it
         _votingBannerService: VotingBannerService, // just to initialize it
         private snackbar: MatSnackBar,
         private updateService: UpdateService,
