@@ -19,9 +19,7 @@ interface HierarchyModel extends BaseViewModel {
  * Filter for the list view. List views can subscribe to its' dataService (providing filter definitions)
  * and will receive their filtered data as observable
  */
-Injectable({
-    providedIn: `root`
-})
+@Injectable({ providedIn: 'root' })
 export abstract class BaseFilterListService<V extends BaseViewModel> implements FilterListService<V> {
     public filterListData: FilterListData<V>;
 
@@ -141,7 +139,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             this.activeFiltersToStack(info);
         } else {
             info.filterDefinitions = this.getFilterDefinitions();
-            this.storeActiveFilters(true, info);
+            this.storeActiveFilters();
         }
 
         if (info.inputDataSubscription) {
@@ -223,7 +221,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         }
 
         info.filterDefinitions = nextDefinitions ?? []; // Prevent being null or undefined
-        this.storeActiveFilters(true, info);
+        this.storeActiveFilters();
     }
 
     public getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters: OsFilter<V>[]): number {
@@ -304,11 +302,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     /**
      * Update the filtered data and store the current filter options
      */
-    public storeActiveFilters(storeLocally: boolean = true, info: FilterListData<V> = this.filterListData): void {
-        this.updateFilteredData(info);
-        if (storeLocally) {
-            this.store.set(`filter_` + info.storageKey, info.filterDefinitions);
-        }
+    public storeActiveFilters(): void {
+        this.updateFilteredData(this.filterListData);
+        this.store.set(`filter_` + this.filterListData.storageKey, this.filterListData.filterDefinitions);
     }
 
     /**
@@ -357,7 +353,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         } else {
             this.addFilterOption(filterName, option, info);
         }
-        this.storeActiveFilters(true, info);
+        this.storeActiveFilters();
     }
 
     /**
@@ -366,7 +362,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param filterProperty new filter as string
      * @param option filter option
      */
-    protected addFilterOption(filterProperty: keyof V, option: OsFilterOption, info: FilterListData<V> = this.filterListData): void {
+    public addFilterOption(filterProperty: keyof V, option: OsFilterOption, info: FilterListData<V> = this.filterListData): void {
         const filter = info.filterDefinitions.find(f => f.property === filterProperty);
 
         if (!filter) {
@@ -398,7 +394,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param filterProperty The property name of this filter
      * @param option The option to disable
      */
-    protected removeFilterOption(filterProperty: keyof V, option: OsFilterOption, info: FilterListData<V> = this.filterListData): void {
+    public removeFilterOption(filterProperty: keyof V, option: OsFilterOption, info: FilterListData<V> = this.filterListData): void {
         const filter = info.filterDefinitions.find(f => f.property === filterProperty);
         if (!filter) {
             return;
@@ -435,7 +431,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param filter The filter to check
      * @returns true if the item is to be displayed according to the filter
      */
-    private isPassingFilter(item: V, filter: OsFilter<V>): boolean {
+    public isPassingFilter(item: V, filter: OsFilter<V>): boolean {
         const relevantOptions = filter.options.filter(
             option => typeof option !== `string` && option.isActive
         ) as OsFilterOption[];
@@ -514,7 +510,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             }
         });
         if (update) {
-            this.storeActiveFilters(true, info);
+            this.storeActiveFilters();
         }
     }
 
@@ -526,7 +522,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             info.filterDefinitions.forEach(filter => {
                 this.clearFilter(info, filter, false);
             });
-            this.storeActiveFilters(true, info);
+            this.storeActiveFilters();
         }
     }
 }

@@ -117,11 +117,12 @@ export abstract class BaseMeetingFilterListService<V extends BaseViewModel> impl
     }
 
     public toggleFilterOption(property: keyof V, option: OsFilterOption): void {
-        this.baseFilterListService.toggleFilterOption(property, option, this.filterListData);
-    }
-
-    public clearAllFilters(): void {
-        this.baseFilterListService.clearAllFilters(this.filterListData);
+        if (option.isActive) {
+            this.baseFilterListService.removeFilterOption(property, option, this.filterListData);
+        } else {
+            this.baseFilterListService.addFilterOption(property, option, this.filterListData);
+        }
+        this.storeActiveFilters();
     }
 
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
@@ -144,7 +145,7 @@ export abstract class BaseMeetingFilterListService<V extends BaseViewModel> impl
         }
         this.filterListData.inputDataSubscription = inputData.subscribe(data => {
             this.filterListData.inputData = data;
-            this.baseFilterListService.updateFilteredData(this.filterListData);
+            this.updateFilteredData();
         });
     }
 
@@ -226,7 +227,10 @@ export abstract class BaseMeetingFilterListService<V extends BaseViewModel> impl
      * Update the filtered data and store the current filter options
      */
     public storeActiveFilters(): void {
-        this.baseFilterListService.storeActiveFilters(!this.historyService.isInHistoryMode(), this.filterListData);
+        this.updateFilteredData();
+        if (!this.historyService.isInHistoryMode()) {
+            this.store.set(`filter_` + this.filterListData.storageKey, this.filterListData.filterDefinitions);
+        }
     }
 
     /**
@@ -237,4 +241,58 @@ export abstract class BaseMeetingFilterListService<V extends BaseViewModel> impl
      * @returns should be a filtered version of `rawInputData`. Returns void if unused
      */
     protected preFilter(rawInputData: V[]): V[] | void {}
+
+    /**
+     * Applies current filters in {@link filterDefinitions} to the {@link inputData} list
+     * and publishes the filtered data to the observable {@link outputSubject}
+     */
+    public updateFilteredData(): void {
+        let filteredData: V[] = [];
+        if (this.filterListData.inputData) {
+            const preFilteredList = this.preFilter(this.filterListData.inputData);
+            if (preFilteredList) {
+                this.filterListData.inputData = preFilteredList;
+            }
+
+            if (!this.filterListData.filterDefinitions || !this.filterListData.filterDefinitions.length) {
+                filteredData = this.filterListData.inputData;
+            } else {
+                filteredData = this.filterListData.inputData.filter(item =>
+                    this.filterListData.filterDefinitions.every(filter => !filter.count || this.baseFilterListService.isPassingFilter(item, filter))
+                );
+            }
+        }
+
+        this.filterListData.outputSubject.next(filteredData);
+        this.baseFilterListService.activeFiltersToStack(this.filterListData);
+    }
+
+    /**
+     * Removes all active options of a given filter, clearing it
+     *
+     * @param filter
+     * @param update
+     */
+    private clearFilter(filter: OsFilter<V>, update: boolean = true): void {
+        filter.options.forEach(option => {
+            if (typeof option === `object` && option.isActive) {
+                this.baseFilterListService.removeFilterOption(filter.property, option, this.filterListData);
+            }
+        });
+        if (update) {
+            this.storeActiveFilters();
+        }
+    }
+
+    /**
+     * Removes all filters currently in use from this filterService
+     */
+    public clearAllFilters(): void {
+        if (this.filterListData.filterDefinitions && this.filterListData.filterDefinitions.length) {
+            this.filterListData.filterDefinitions.forEach(filter => {
+                this.clearFilter(filter, false);
+            });
+            this.storeActiveFilters();
+        }
+    }
 }
