@@ -14,7 +14,8 @@ import {
     PollTableData,
     PollType,
     VotingResult,
-    YES_KEY
+    YES_KEY,
+    VOTE_MAJORITY
 } from 'src/app/domain/models/poll/poll-constants';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
@@ -101,8 +102,11 @@ export class MotionPollService extends PollService {
     }
 
     private createTableData(poll: PollData, options: OptionData[]): PollTableData[] {
+        const showPercent = !super
+            .getVoteTableKeys(poll)
+            .some(key => options.some(option => option[key.vote as OptionDataKey] === VOTE_MAJORITY));
         let tableData: PollTableData[] = options.flatMap(option =>
-            super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, option))
+            super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, option, showPercent))
         );
         tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
 
@@ -110,7 +114,12 @@ export class MotionPollService extends PollService {
         return tableData;
     }
 
-    private createTableDataEntry(poll: PollData, result: VotingResult, option?: OptionData): PollTableData {
+    private createTableDataEntry(
+        poll: PollData,
+        result: VotingResult,
+        option?: OptionData,
+        showPercent: boolean = undefined
+    ): PollTableData {
         return {
             votingOption: result.vote || ``,
             value: [
@@ -120,7 +129,7 @@ export class MotionPollService extends PollService {
                         : poll[result.vote as PollDataKey]) as number,
                     hide: result.hide,
                     icon: result.icon,
-                    showPercent: result.showPercent
+                    showPercent: showPercent ?? result.showPercent
                 }
             ]
         };

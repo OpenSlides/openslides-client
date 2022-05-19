@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
-
 import { PollService } from '../../services/poll.service';
 import { ChartData } from '../chart/chart.component';
 
@@ -23,6 +22,10 @@ export class SingleOptionChartTableComponent {
     @Input()
     public set tableData(tableData: PollTableData[]) {
         this._tableData = tableData;
+        if (this._poll) {
+            this.setChartData();
+            this.cd.markForCheck();
+        }
     }
 
     @Input()
@@ -80,7 +83,7 @@ export class SingleOptionChartTableComponent {
     }
 
     public get shouldShowChart(): boolean {
-        return true;
+        return !this.tableData.some(option => option.value[0].amount < 0);
     }
 
     public constructor(private cd: ChangeDetectorRef, private defaultPollService: PollService) {}

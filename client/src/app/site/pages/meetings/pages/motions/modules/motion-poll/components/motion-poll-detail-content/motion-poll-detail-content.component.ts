@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, OnDestroy } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
+import { VOTE_UNDOCUMENTED, OptionData } from 'src/app/domain/models/poll';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-constants';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
@@ -18,8 +18,10 @@ const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
     styleUrls: [`./motion-poll-detail-content.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy {
+export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy, DoCheck {
     private _poll!: PollData | null;
+
+    private _oldOptions: OptionData[];
 
     public get chartData(): ChartData {
         return this._chartData!;
@@ -32,7 +34,8 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     @Input()
     public set poll(pollData: PollData | null) {
         this._poll = pollData;
-        if (pollData) {
+        this._oldOptions = JSON.parse(JSON.stringify(this._poll.options));
+        if (this._poll) {
             this.setupTableData();
             this.cd.markForCheck();
         }
@@ -84,6 +87,27 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
         private cd: ChangeDetectorRef
     ) {
         super();
+    }
+
+    public ngDoCheck(): void {
+        let changeDetected = false;
+        const options = this._poll.options;
+        if (options.length !== this._oldOptions.length) {
+            changeDetected = true;
+        } else {
+            changeDetected = options.some((item, index) => {
+                return (
+                    item?.yes !== this._oldOptions[index]?.yes ||
+                    item?.no !== this._oldOptions[index]?.no ||
+                    item?.abstain !== this._oldOptions[index]?.abstain
+                );
+            });
+        }
+
+        if (changeDetected) {
+            this._oldOptions = JSON.parse(JSON.stringify(options));
+            this.setupTableData();
+        }
     }
 
     private setupTableData(): void {
