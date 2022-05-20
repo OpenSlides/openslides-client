@@ -1,10 +1,8 @@
 import { Directive } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
-import { FilterListService } from 'src/app/ui/base/filter-service';
+import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/base/filter-service';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
-import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
 
@@ -113,7 +111,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     protected abstract readonly storageKey: string;
 
-    public constructor(private store: StorageService, private historyService: HistoryService) {}
+    public constructor(private activeFiltersStore: ActiveFiltersStoreService) {}
 
     /**
      * Initializes the filterService.
@@ -121,10 +119,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param inputData Observable array with ViewModels
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
-        let storedFilter: OsFilter<V>[] | null = null;
-        if (!this.historyService.isInHistoryMode()) {
-            storedFilter = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
-        }
+        const storedFilter: OsFilter<V>[] | null = await this.activeFiltersStore.load<V>(this.storageKey);
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
             this.filterDefinitions = storedFilter;
@@ -201,10 +196,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         const nextDefinitions = this.getFilterDefinitions();
 
-        let storedFilters: OsFilter<V>[] = [];
-        if (!this.historyService.isInHistoryMode()) {
-            storedFilters = await this.store.get<OsFilter<V>[]>(`filter_` + this.storageKey);
-        }
+        let storedFilters: OsFilter<V>[] = (await this.activeFiltersStore.load<V>(this.storageKey)) ?? [];
 
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
             return;
@@ -298,9 +290,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     public storeActiveFilters(): void {
         this.updateFilteredData();
-        if (!this.historyService.isInHistoryMode()) {
-            this.store.set(`filter_` + this.storageKey, this.filterDefinitions);
-        }
+        this.activeFiltersStore.save<V>(this.storageKey, this.filterDefinitions);
     }
 
     /**

@@ -5,9 +5,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Restriction } from 'src/app/domain/models/motions/motion-state';
 import { AmendmentType } from 'src/app/domain/models/motions/motions.constants';
-import { StorageService } from 'src/app/gateways/storage.service';
 import {
-    BaseFilterListService,
     OsFilter,
     OsFilterOption,
     OsFilterOptions
@@ -23,6 +21,8 @@ import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
 import { ViewMotion } from '../../../view-models';
 import { MotionsListServiceModule } from '../motions-list-service.module';
+import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
@@ -45,7 +45,7 @@ interface WorkflowConfiguration {
 @Injectable({
     providedIn: MotionsListServiceModule
 })
-export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
+export class MotionListFilterService extends BaseMeetingFilterListService<ViewMotion> {
     /**
      * set the storage key name
      */
@@ -157,8 +157,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     ];
 
     public constructor(
-        store: StorageService,
-        history: HistoryService,
+        store: MeetingActiveFiltersService,
         categoryRepo: MotionCategoryControllerService,
         motionBlockRepo: MotionBlockControllerService,
         commentRepo: MotionCommentSectionControllerService,
@@ -168,7 +167,7 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
         private operator: OperatorService,
         private meetingSettingsService: MeetingSettingsService
     ) {
-        super(store, history);
+        super(store);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();
 

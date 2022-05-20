@@ -5,10 +5,10 @@ import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { Topic } from 'src/app/domain/models/topics/topic';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseFilterListService, OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
+import { OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 
 import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
 import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
@@ -16,7 +16,7 @@ import { AgendaItemListServiceModule } from '../agenda-item-list-service.module'
 @Injectable({
     providedIn: AgendaItemListServiceModule
 })
-export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaItem> {
+export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAgendaItem> {
     /**
      * set the storage key name
      */
@@ -35,12 +35,11 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
      * @param translate Translation service
      */
     public constructor(
-        store: StorageService,
-        history: HistoryService,
+        store: MeetingActiveFiltersService,
         private translate: TranslateService,
         tagRepo: TagControllerService
     ) {
-        super(store, history);
+        super(store);
 
         this.updateFilterForRepo({
             repo: tagRepo,

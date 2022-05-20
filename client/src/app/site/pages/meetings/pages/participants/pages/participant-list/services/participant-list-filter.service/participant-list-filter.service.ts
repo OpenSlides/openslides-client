@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { OsFilter } from 'src/app/site/base/base-filter.service';
+import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -12,7 +12,7 @@ import { ParticipantListServiceModule } from '../participant-list-service.module
 @Injectable({
     providedIn: ParticipantListServiceModule
 })
-export class ParticipantListFilterService extends BaseFilterListService<ViewUser> {
+export class ParticipantListFilterService extends BaseMeetingFilterListService<ViewUser> {
     /**
      * set the storage key name
      */
@@ -33,12 +33,11 @@ export class ParticipantListFilterService extends BaseFilterListService<ViewUser
      * @param translate marking some translations that are unique here
      */
     public constructor(
-        store: StorageService,
-        history: HistoryService,
+        store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
         private translate: TranslateService
     ) {
-        super(store, history);
+        super(store);
         this.updateFilterForRepo({
             repo: groupRepo,
             filter: this.userGroupFilterOptions,
