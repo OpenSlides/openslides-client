@@ -1,10 +1,11 @@
-import { BaseModel } from '../../domain/models/base/base-model';
-import { Fqid, Id } from '../../domain/definitions/key-types';
-import { Displayable } from '../../domain/interfaces/displayable';
-import { Identifiable } from '../../domain/interfaces/identifiable';
-import { HasCollection } from '../../domain/interfaces/has-collection';
-import { DetailNavigable } from '../../domain/interfaces/detail-navigable';
 import { Collection } from 'src/app/domain/definitions/key-types';
+
+import { Fqid, Id } from '../../domain/definitions/key-types';
+import { DetailNavigable } from '../../domain/interfaces/detail-navigable';
+import { Displayable } from '../../domain/interfaces/displayable';
+import { HasCollection } from '../../domain/interfaces/has-collection';
+import { Identifiable } from '../../domain/interfaces/identifiable';
+import { BaseModel } from '../../domain/models/base/base-model';
 
 export interface ViewModelConstructor<T extends BaseViewModel> {
     COLLECTION: string;

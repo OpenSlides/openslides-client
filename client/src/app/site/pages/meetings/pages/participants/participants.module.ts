@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ParticipantsRoutingModule } from './participants-routing.module';
-import { ParticipantMainComponent } from './components/participant-main/participant-main.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { ParticipantMainComponent } from './components/participant-main/participant-main.component';
+import { ParticipantsRoutingModule } from './participants-routing.module';
 import { ParticipantCommonServiceModule } from './services/common/participant-common-service.module';
 
 @NgModule({

@@ -3,6 +3,7 @@ import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-s
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { hasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ListOfSpeakersAction } from './list-of-speakers.action';

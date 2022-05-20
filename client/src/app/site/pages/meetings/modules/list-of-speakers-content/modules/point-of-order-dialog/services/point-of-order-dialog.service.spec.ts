@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PointOfOrderDialogService } from './point-of-order-dialog.service';
 
-describe('PointOfOrderDialogService', () => {
+describe(`PointOfOrderDialogService`, () => {
     let service: PointOfOrderDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('PointOfOrderDialogService', () => {
         service = TestBed.inject(PointOfOrderDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

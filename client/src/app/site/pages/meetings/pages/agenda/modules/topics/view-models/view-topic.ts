@@ -1,10 +1,11 @@
+import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { Topic } from 'src/app/domain/models/topics/topic';
+import { HasAgendaItem, HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
-import { HasListOfSpeakers, HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { HasTags } from '../../../../motions/modules/tags/view-models/has-tags';
+
 import { HasAttachment } from '../../../../mediafiles/view-models/has-attachment';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { HasTags } from '../../../../motions/modules/tags/view-models/has-tags';
 
 export class ViewTopic extends BaseProjectableViewModel<Topic> {
     public static COLLECTION = Topic.COLLECTION;

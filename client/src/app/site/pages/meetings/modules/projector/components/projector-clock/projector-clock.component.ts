@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ServerTimePresenterService } from 'src/app/gateways/presenter/server-time-presenter.service';
 
 @Component({
-    selector: 'os-projector-clock',
-    templateUrl: './projector-clock.component.html',
-    styleUrls: ['./projector-clock.component.scss']
+    selector: `os-projector-clock`,
+    templateUrl: `./projector-clock.component.html`,
+    styleUrls: [`./projector-clock.component.scss`]
 })
 export class ProjectorClockComponent implements OnInit, OnDestroy {
     @Input()

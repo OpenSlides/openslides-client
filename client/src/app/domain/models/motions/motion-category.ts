@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
 import { Id } from '../../definitions/key-types';
 import { HasMeetingId, HasSequentialNumber } from '../../interfaces';
+import { BaseModel } from '../base/base-model';
 
 /**
  * Representation of a motion category. Has the nested property "File"

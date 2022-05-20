@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { FullscreenProjectorComponent } from '../fullscreen-projector/fullscreen-projector.component';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+
+import { FullscreenProjectorComponent } from '../fullscreen-projector/fullscreen-projector.component';
 
 @Component({
-    selector: 'os-fullscreen-projector-detail',
-    templateUrl: './fullscreen-projector-detail.component.html',
-    styleUrls: ['./fullscreen-projector-detail.component.scss']
+    selector: `os-fullscreen-projector-detail`,
+    templateUrl: `./fullscreen-projector-detail.component.html`,
+    styleUrls: [`./fullscreen-projector-detail.component.scss`]
 })
 export class FullscreenProjectorDetailComponent implements OnInit {
     private _projectorId: Id | null = null;

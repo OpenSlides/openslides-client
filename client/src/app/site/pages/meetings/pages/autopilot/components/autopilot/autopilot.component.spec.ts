@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AutopilotComponent } from './autopilot.component';
 
-describe('AutopilotComponent', () => {
+describe(`AutopilotComponent`, () => {
     let component: AutopilotComponent;
     let fixture: ComponentFixture<AutopilotComponent>;
 
@@ -18,7 +18,7 @@ describe('AutopilotComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

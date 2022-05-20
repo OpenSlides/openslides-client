@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { OrganizationRoutingModule } from './organization-routing.module';
 import { NavigationModule } from './modules/navigation/navigation.module';
+import { OrganizationRoutingModule } from './organization-routing.module';
 
 @NgModule({
     declarations: [],

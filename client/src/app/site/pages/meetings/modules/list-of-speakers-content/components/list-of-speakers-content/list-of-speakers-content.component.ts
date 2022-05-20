@@ -1,43 +1,44 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
-    OnInit,
-    ViewEncapsulation,
-    ViewChild,
-    Input,
     ContentChild,
-    TemplateRef,
-    Output,
     EventEmitter,
-    ChangeDetectorRef
+    Input,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
-import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
+import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
+import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
+import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
-import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { DurationService } from 'src/app/site/services/duration.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
+
+import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
 
 @Component({
-    selector: 'os-list-of-speakers-content',
-    templateUrl: './list-of-speakers-content.component.html',
-    styleUrls: ['./list-of-speakers-content.component.scss'],
+    selector: `os-list-of-speakers-content`,
+    templateUrl: `./list-of-speakers-content.component.html`,
+    styleUrls: [`./list-of-speakers-content.component.scss`],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

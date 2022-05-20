@@ -1,10 +1,10 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { Fqid } from 'src/app/domain/definitions/key-types';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { Fqid } from 'src/app/domain/definitions/key-types';
+import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { NotifyService } from 'src/app/gateways/notify.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 /**
@@ -67,7 +67,7 @@ interface EditObject {
 }
 
 @Directive({
-    selector: '[osListenEditing]'
+    selector: `[osListenEditing]`
 })
 export class ListenEditingDirective extends BaseUiComponent implements OnDestroy {
     @Input()

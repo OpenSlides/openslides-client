@@ -1,32 +1,33 @@
-import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
+import { Meeting } from 'src/app/domain/models/meetings/meeting';
+
+import { StructuredRelation } from '../../../../infrastructure/definitions/relations';
 import { BaseViewModel } from '../../../base/base-view-model';
-import { ViewUser } from './view-user';
-import { ViewMediafile } from '../pages/mediafiles';
-import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
-import { ViewGroup } from '../pages/participants';
-import { ViewPoll, ViewOption, ViewVote } from '../pages/polls';
+import { ViewCommittee } from '../../organization/pages/committees';
+import { HasOrganizationTags } from '../../organization/pages/organization-tags';
+import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
+import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
+import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
+import { ViewMediafile } from '../pages/mediafiles';
 import {
-    ViewMotionChangeRecommendation,
-    ViewMotionStatuteParagraph,
-    ViewMotionSubmitter,
-    ViewPersonalNote,
-    ViewMotionWorkflow,
-    ViewMotionState,
     ViewMotion,
     ViewMotionBlock,
     ViewMotionCategory,
+    ViewMotionChangeRecommendation,
     ViewMotionComment,
     ViewMotionCommentSection,
+    ViewMotionState,
+    ViewMotionStatuteParagraph,
+    ViewMotionSubmitter,
+    ViewMotionWorkflow,
+    ViewPersonalNote,
     ViewTag
 } from '../pages/motions';
-import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
+import { ViewGroup } from '../pages/participants';
+import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
-import { ViewCommittee } from '../../organization/pages/committees';
-import { ViewOrganization } from '../../organization/view-models/view-organization';
-import { HasOrganizationTags } from '../../organization/pages/organization-tags';
-import { StructuredRelation } from '../../../../infrastructure/definitions/relations';
+import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
 

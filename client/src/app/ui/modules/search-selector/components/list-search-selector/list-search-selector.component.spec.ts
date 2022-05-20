@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListSearchSelectorComponent } from './list-search-selector.component';
 
-describe('ListSearchSelectorComponent', () => {
+describe(`ListSearchSelectorComponent`, () => {
     let component: ListSearchSelectorComponent;
     let fixture: ComponentFixture<ListSearchSelectorComponent>;
 
@@ -18,7 +18,7 @@ describe('ListSearchSelectorComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { Permission } from '../../../domain/definitions/permission';
 import { PermissionGuard } from '../../guards/permission.guard';
 import { MeetingsNavigationWrapperComponent } from './modules/meetings-navigation/components/meetings-navigation-wrapper/meetings-navigation-wrapper.component';

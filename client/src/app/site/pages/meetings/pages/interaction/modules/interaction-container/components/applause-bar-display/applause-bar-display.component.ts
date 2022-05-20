@@ -1,14 +1,15 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { fadeInAnim } from 'src/app/infrastructure/animations';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ApplauseService } from '../../../../services/applause.service';
-import { TranslateService } from '@ngx-translate/core';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
+import { ApplauseService } from '../../../../services/applause.service';
+
 @Component({
-    selector: 'os-applause-bar-display',
-    templateUrl: './applause-bar-display.component.html',
-    styleUrls: ['./applause-bar-display.component.scss'],
+    selector: `os-applause-bar-display`,
+    templateUrl: `./applause-bar-display.component.html`,
+    styleUrls: [`./applause-bar-display.component.scss`],
     animations: [fadeInAnim],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None

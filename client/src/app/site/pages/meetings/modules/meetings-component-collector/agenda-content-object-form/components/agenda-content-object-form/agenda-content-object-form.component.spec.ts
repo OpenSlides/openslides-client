@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaContentObjectFormComponent } from './agenda-content-object-form.component';
 
-describe('AgendaContentObjectFormComponent', () => {
+describe(`AgendaContentObjectFormComponent`, () => {
     let component: AgendaContentObjectFormComponent;
     let fixture: ComponentFixture<AgendaContentObjectFormComponent>;
 
@@ -18,7 +18,7 @@ describe('AgendaContentObjectFormComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

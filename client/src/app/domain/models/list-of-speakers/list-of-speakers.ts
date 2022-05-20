@@ -1,8 +1,8 @@
-import { BaseModel } from '../base/base-model';
 import { Fqid, Id } from '../../definitions/key-types';
+import { HasSequentialNumber } from '../../interfaces';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
-import { HasSequentialNumber } from '../../interfaces';
+import { BaseModel } from '../base/base-model';
 
 /**
  * Representations of agenda Item

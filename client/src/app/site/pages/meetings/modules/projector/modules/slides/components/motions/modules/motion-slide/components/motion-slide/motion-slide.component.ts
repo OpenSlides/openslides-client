@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { BaseScaleScrollSlideComponent } from '../../../../../../base/base-scale-scroll-slide-component';
-import { AmendmentData, MotionSlideData } from '../../motion-slide-data';
-import { BaseMotionSlideComponent, MotionTitleInformation } from '../../../../base/base-motion-slide';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import {
     DiffLinesInParagraph,
@@ -9,26 +8,28 @@ import {
     ViewUnifiedChange,
     ViewUnifiedChangeType
 } from 'src/app/site/pages/meetings/pages/motions';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
-import { MotionLineNumberingService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-line-numbering.service';
-import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
 import {
     LineNumberedString,
     LineNumberingService,
     MotionChangeRecommendationControllerService,
     MotionDiffService
 } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/services';
+import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
+import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-format.service';
+import { MotionLineNumberingService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-line-numbering.service';
+import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+
+import { BaseScaleScrollSlideComponent } from '../../../../../../base/base-scale-scroll-slide-component';
+import { BaseMotionSlideComponent, MotionTitleInformation } from '../../../../base/base-motion-slide';
 import { AmendmentParagraphUnifiedChange } from '../../amendment-paragraph-unified-change';
 import { ChangeRecommendationUnifiedChange } from '../../change-recommendation-unified-change';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
+import { AmendmentData, MotionSlideData } from '../../motion-slide-data';
 
 @Component({
-    selector: 'os-motion-slide',
-    templateUrl: './motion-slide.component.html',
-    styleUrls: ['./motion-slide.component.scss'],
+    selector: `os-motion-slide`,
+    templateUrl: `./motion-slide.component.html`,
+    styleUrls: [`./motion-slide.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionSlideComponent
@@ -164,7 +165,7 @@ export class MotionSlideComponent
         this.lnMode = value.data.line_numbering;
         this.lineLength = value.data.line_length;
         this.preamble = value.data.preamble;
-        this.crMode = value.options['mode'] || `original`;
+        this.crMode = value.options[`mode`] || `original`;
 
         this.textDivStyles.width = value.data.show_sidebox ? `calc(100% - 250px)` : `100%`;
 

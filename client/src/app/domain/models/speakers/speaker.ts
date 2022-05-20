@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
-import { UnsafeHtml, Id } from '../../definitions/key-types';
+import { Id, UnsafeHtml } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
 import { SpeechState } from './speech-state';
 
 /**

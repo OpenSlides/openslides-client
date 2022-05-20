@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { BaseImportListComponent } from 'src/app/site/base/base-import-list.component';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { StatuteParagraphImportService } from '../../services/statute-paragraph-import.service';
+import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
+
 import { statuteParagraphHeadersAndVerboseNames } from '../../definitions';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { StatuteParagraphImportService } from '../../services/statute-paragraph-import.service';
 
 @Component({
-    selector: 'os-statute-paragraph-import-list',
-    templateUrl: './statute-paragraph-import-list.component.html',
-    styleUrls: ['./statute-paragraph-import-list.component.scss']
+    selector: `os-statute-paragraph-import-list`,
+    templateUrl: `./statute-paragraph-import-list.component.html`,
+    styleUrls: [`./statute-paragraph-import-list.component.scss`]
 })
 export class StatuteParagraphImportListComponent extends BaseImportListComponent<MotionStatuteParagraph> {
     public possibleFields = Object.values(statuteParagraphHeadersAndVerboseNames);

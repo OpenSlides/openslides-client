@@ -1,5 +1,5 @@
-import { BaseModel } from './base-model';
 import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
+import { BaseModel } from './base-model';
 
 export abstract class BaseDecimalModel<T = any> extends BaseModel<T> {
     protected abstract getDecimalFields(): (keyof T)[];

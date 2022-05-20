@@ -1,20 +1,20 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import {
     isProjectable,
     isProjectionBuildDescriptor,
     Projectable,
     ProjectionBuildDescriptor
 } from 'src/app/site/pages/meetings/view-models';
-import { distinctUntilChanged, Subscription } from 'rxjs';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 
 @Component({
-    selector: 'os-projector-button',
-    templateUrl: './projector-button.component.html',
-    styleUrls: ['./projector-button.component.scss']
+    selector: `os-projector-button`,
+    templateUrl: `./projector-button.component.html`,
+    styleUrls: [`./projector-button.component.scss`]
 })
 export class ProjectorButtonComponent implements OnInit, OnDestroy {
     public readonly permission = Permission;

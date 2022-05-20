@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+
 import { EasterEggContentPlatformService } from '../../modules/easter-egg/services/easter-egg-content-platform.service';
 
 @Component({
-    selector: 'os-copyright-sign',
-    templateUrl: './copyright-sign.component.html',
-    styleUrls: ['./copyright-sign.component.scss']
+    selector: `os-copyright-sign`,
+    templateUrl: `./copyright-sign.component.html`,
+    styleUrls: [`./copyright-sign.component.scss`]
 })
 export class CopyrightSignComponent {
     private clickTimeout: number | null = null;

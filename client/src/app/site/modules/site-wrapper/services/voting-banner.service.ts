@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
-import { BannerService, BannerDefinition } from './banner.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { distinctUntilChanged, debounceTime } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
+import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
+import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+
+import { BannerDefinition, BannerService } from './banner.service';
 import { SiteWrapperServiceModule } from './site-wrapper-service.module';
 
 @Injectable({

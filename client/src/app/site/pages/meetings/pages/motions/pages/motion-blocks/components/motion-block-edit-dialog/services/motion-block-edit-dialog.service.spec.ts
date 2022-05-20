@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionBlockEditDialogService } from './motion-block-edit-dialog.service';
 
-describe('MotionBlockEditDialogService', () => {
+describe(`MotionBlockEditDialogService`, () => {
     let service: MotionBlockEditDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionBlockEditDialogService', () => {
         service = TestBed.inject(MotionBlockEditDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

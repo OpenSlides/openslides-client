@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Collection, Ids } from 'src/app/domain/definitions/key-types';
+import { BaseModel, BaseModelTemplate } from 'src/app/domain/models/base/base-model';
+import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { DataStoreService } from 'src/app/site/services/data-store.service';
 import { DataStoreUpdateManagerService } from 'src/app/site/services/data-store-update-manager.service';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { BaseModel, BaseModelTemplate } from 'src/app/domain/models/base/base-model';
-import { Ids, Collection } from 'src/app/domain/definitions/key-types';
 
 interface DeletedModels {
     [collection: string]: number[];
@@ -34,7 +34,7 @@ interface ModelPatch {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ViewModelStoreUpdateService {
     public constructor(
@@ -69,7 +69,7 @@ export class ViewModelStoreUpdateService {
         for (const id of Object.keys(modelData[collection])) {
             const model = modelData[collection][+id];
             // Important: our model system needs to have an id in the model, even if it is partial
-            model['id'] = +id;
+            model[`id`] = +id;
             const basemodel = this.mapObjectToBaseModel(collection, model);
             if (basemodel) {
                 update.push(basemodel);

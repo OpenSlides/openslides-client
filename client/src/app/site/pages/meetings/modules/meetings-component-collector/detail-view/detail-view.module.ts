@@ -1,13 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetailViewComponent } from './components/detail-view/detail-view.component';
-import { DetailViewNavigatorComponent } from './components/detail-view-navigator/detail-view-navigator.component';
-import { RouterModule } from '@angular/router';
-import { DetailViewNotFoundComponent } from './components/detail-view-not-found/detail-view-not-found.component';
-import { EasterEggComponent } from './components/easter-egg/easter-egg.component';
+import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+
+import { DetailViewComponent } from './components/detail-view/detail-view.component';
+import { DetailViewNavigatorComponent } from './components/detail-view-navigator/detail-view-navigator.component';
+import { DetailViewNotFoundComponent } from './components/detail-view-not-found/detail-view-not-found.component';
+import { EasterEggComponent } from './components/easter-egg/easter-egg.component';
 
 const DECLARATIONS = [
     DetailViewComponent,

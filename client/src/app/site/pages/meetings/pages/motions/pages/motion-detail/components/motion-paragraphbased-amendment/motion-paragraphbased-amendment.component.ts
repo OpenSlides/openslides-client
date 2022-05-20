@@ -1,23 +1,16 @@
-import {
-    Component,
-    OnInit,
-    ChangeDetectionStrategy,
-    Input,
-    Output,
-    EventEmitter,
-    ChangeDetectorRef
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
+import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
+import { DiffLinesInParagraph } from '../../../../definitions/index';
 import { ParagraphToChoose } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
 import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
-import { DiffLinesInParagraph } from '../../../../definitions/index';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 
 interface ParagraphBasedAmendmentContent {
     amendment_paragraph_$: { [paragraph_number: number]: any };
@@ -26,9 +19,9 @@ interface ParagraphBasedAmendmentContent {
 }
 
 @Component({
-    selector: 'os-motion-paragraphbased-amendment',
-    templateUrl: './motion-paragraphbased-amendment.component.html',
-    styleUrls: ['./motion-paragraphbased-amendment.component.scss'],
+    selector: `os-motion-paragraphbased-amendment`,
+    templateUrl: `./motion-paragraphbased-amendment.component.html`,
+    styleUrls: [`./motion-paragraphbased-amendment.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChildComponent {

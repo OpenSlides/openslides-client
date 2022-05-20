@@ -8,6 +8,7 @@ import { ProjectorCountdownRepositoryService } from 'src/app/gateways/repositori
 import { ProjectorMessageRepositoryService } from 'src/app/gateways/repositories/projector-messages/projector-message-repository.service';
 import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from './view-models';
 
 export const ProjectorAppConfig: AppConfig = {

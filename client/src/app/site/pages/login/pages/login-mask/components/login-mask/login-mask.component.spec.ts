@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginMaskComponent } from './login-mask.component';
 
-describe('LoginMaskComponent', () => {
+describe(`LoginMaskComponent`, () => {
     let component: LoginMaskComponent;
     let fixture: ComponentFixture<LoginMaskComponent>;
 
@@ -18,7 +18,7 @@ describe('LoginMaskComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { AuthService } from './auth.service';
 import { ConnectionStatusService } from './connection-status.service';
 import { LifecycleService } from './lifecycle.service';
@@ -7,7 +8,7 @@ import { OpenSlidesRouterService } from './openslides-router.service';
 const WHOAMI_FAILED = `WhoAmI failed`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OpenSlidesService {
     public constructor(

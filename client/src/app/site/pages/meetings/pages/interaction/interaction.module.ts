@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InteractionContainerModule } from './modules/interaction-container/interaction-container.module';
+import { NgModule } from '@angular/core';
+
 import { ActionBarModule } from './modules/action-bar/action-bar.module';
+import { InteractionContainerModule } from './modules/interaction-container/interaction-container.module';
 
 const EXPORT_MODULES = [InteractionContainerModule, ActionBarModule];
 

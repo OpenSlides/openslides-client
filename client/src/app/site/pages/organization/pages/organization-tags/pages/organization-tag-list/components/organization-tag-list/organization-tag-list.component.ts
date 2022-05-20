@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { OrganizationTagDialogService } from '../../../../modules/organization-tag-dialog/services/organization-tag-dialog.service';
-import { filter, firstValueFrom, map, Observable } from 'rxjs';
-import { ViewOrganizationTag } from '../../../../view-models';
+import { PblColumnDefinition } from '@pebula/ngrid';
+import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { OrganizationTagControllerService } from '../../../../services/organization-tag-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ColorService } from 'src/app/site/services/color.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { OrganizationTagDialogService } from '../../../../modules/organization-tag-dialog/services/organization-tag-dialog.service';
+import { OrganizationTagControllerService } from '../../../../services/organization-tag-controller.service';
+import { ViewOrganizationTag } from '../../../../view-models';
 
 @Component({
     selector: `os-organization-tag-list`,

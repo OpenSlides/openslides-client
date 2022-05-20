@@ -1,28 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../../../../view-models';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { Observable, map, switchMap } from 'rxjs';
-import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute } from '@angular/router';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
-import { ProjectorMessageControllerService } from '../../services/projector-message-controller.service';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { map, Observable, switchMap } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { DurationService } from 'src/app/site/services/duration.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { GridTileDimension } from 'src/app/ui/modules/grid';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
+import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
 import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog';
-import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
-import { GridTileDimension } from 'src/app/ui/modules/grid';
-import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
-import { ProjectionControllerService } from '../../services/projection-controller.service';
+import { ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../../../../view-models';
 import { CurrentSpeakerChyronSlideService } from '../../services/current-speaker-chyron-slide.service';
+import { ProjectionControllerService } from '../../services/projection-controller.service';
+import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
+import { ProjectorMessageControllerService } from '../../services/projector-message-controller.service';
 
 /**
  * The projector detail view.

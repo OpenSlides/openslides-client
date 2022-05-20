@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { Container } from 'tsparticles';
-import { particleConfig, particleOptions } from './particle-options';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ApplauseService } from '../../../../services/applause.service';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { ElementSize } from 'src/app/ui/directives/resized/resized.directive';
+import { Container } from 'tsparticles';
+
+import { ApplauseService } from '../../../../services/applause.service';
+import { particleConfig, particleOptions } from './particle-options';
 
 @Component({
-    selector: 'os-applause-particle-display',
-    templateUrl: './applause-particle-display.component.html',
-    styleUrls: ['./applause-particle-display.component.scss'],
+    selector: `os-applause-particle-display`,
+    templateUrl: `./applause-particle-display.component.html`,
+    styleUrls: [`./applause-particle-display.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {

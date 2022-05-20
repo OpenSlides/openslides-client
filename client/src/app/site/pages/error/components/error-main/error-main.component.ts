@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/site/services/auth.service';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/site/services/auth.service';
 
 @Component({
-    selector: 'os-error-main',
-    templateUrl: './error-main.component.html',
-    styleUrls: ['./error-main.component.scss']
+    selector: `os-error-main`,
+    templateUrl: `./error-main.component.html`,
+    styleUrls: [`./error-main.component.scss`]
 })
 export class ErrorMainComponent {
     public constructor(private authService: AuthService, private router: Router) {}

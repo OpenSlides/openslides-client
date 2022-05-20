@@ -3,6 +3,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { distinctUntilChanged, map, Observable, Subject } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { InteractionServiceModule } from './interaction-service.module';
 

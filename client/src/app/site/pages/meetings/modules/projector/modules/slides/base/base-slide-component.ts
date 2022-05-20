@@ -1,6 +1,7 @@
 import { Directive, Input } from '@angular/core';
-import { SlideData } from '../../../../../pages/projectors/definitions';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+
+import { SlideData } from '../../../../../pages/projectors/definitions';
 
 /**
  * Every slide has to extends this base class. It forces the slides

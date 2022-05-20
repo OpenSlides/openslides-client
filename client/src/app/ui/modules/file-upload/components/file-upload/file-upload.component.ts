@@ -1,9 +1,9 @@
 import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
-import { BehaviorSubject } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import { BehaviorSubject } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 
 export interface FileData {
     mediafile: File;
@@ -14,9 +14,9 @@ export interface FileData {
 const PBL_ROW_HEIGHT = 70;
 
 @Component({
-    selector: 'os-file-upload',
-    templateUrl: './file-upload.component.html',
-    styleUrls: ['./file-upload.component.scss']
+    selector: `os-file-upload`,
+    templateUrl: `./file-upload.component.html`,
+    styleUrls: [`./file-upload.component.scss`]
 })
 export class FileUploadComponent implements OnInit {
     /**

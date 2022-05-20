@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { MotionExportInfo } from '../motion-export.service';
+import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
+import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionControllerService } from '../../common/motion-controller.service';
+import { MotionExportInfo } from '../motion-export.service';
 import { MotionPdfService } from '../motion-pdf.service';
 import { MotionsExportModule } from '../motions-export.module';
-import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
 /**
  * Service to export a list of motions.

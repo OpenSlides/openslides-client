@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { PollListServiceModule } from '../poll-list-service.module';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { ViewPoll } from '../../../../view-models';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
+import { StorageService } from 'src/app/gateways/storage.service';
+import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+
+import { ViewPoll } from '../../../../view-models';
+import { PollListServiceModule } from '../poll-list-service.module';
 
 @Injectable({
     providedIn: PollListServiceModule

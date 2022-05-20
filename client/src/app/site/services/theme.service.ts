@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
+
 import { HtmlColor, Id } from '../../domain/definitions/key-types';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
+import { ThemeRequiredValues } from '../../domain/models/theme/theme';
 import { StorageService } from '../../gateways/storage.service';
 import { ViewTheme } from '../pages/organization/pages/designs';
+import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
 import { ColorDefinition, ColorService } from './color.service';
-import { ThemeRequiredValues } from '../../domain/models/theme/theme';
-import { ThemePalette } from '@angular/material/core';
-import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 
 const DARK_MODE_STORAGE_KEY = `theme_dark_mode`;
 const DARK_MODE_CSS_CLASS = `openslides-dark-theme`;
 const LIGHT_MODE_CSS_CLASS = `openslides-light-theme`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ThemeService {
     public static readonly DEFAULT_PRIMARY_COLOR = `#317796`;

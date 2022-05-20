@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HistoryPresenterService } from './history-presenter.service';
 
-describe('HistoryPresenterService', () => {
+describe(`HistoryPresenterService`, () => {
     let service: HistoryPresenterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('HistoryPresenterService', () => {
         service = TestBed.inject(HistoryPresenterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

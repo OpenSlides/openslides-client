@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { DomService } from './dom.service';
 
-describe('DomService', () => {
+describe(`DomService`, () => {
     let service: DomService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('DomService', () => {
         service = TestBed.inject(DomService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

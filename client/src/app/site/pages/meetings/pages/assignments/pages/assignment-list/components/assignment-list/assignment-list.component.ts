@@ -1,25 +1,26 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AssignmentPhases } from '../../../../definitions/index';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { ViewAssignment } from '../../../../view-models';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { PblColumnDefinition } from '@pebula/ngrid';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { AssignmentPhases } from '../../../../definitions/index';
+import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
+import { AssignmentExportService } from '../../../../services/assignment-export.service';
+import { ViewAssignment } from '../../../../view-models';
 import { AssignmentFilterListService } from '../../services/assignment-filter-list.service';
 import { AssignmentSortListService } from '../../services/assignment-sort-list.service';
-import { AssignmentExportService } from '../../../../services/assignment-export.service';
-import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 
 const ASSIGNMENT_LIST_STORAGE_INDEX = `assignment_list`;
 @Component({
-    selector: 'os-assignment-list',
-    templateUrl: './assignment-list.component.html',
-    styleUrls: ['./assignment-list.component.scss'],
+    selector: `os-assignment-list`,
+    templateUrl: `./assignment-list.component.html`,
+    styleUrls: [`./assignment-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAssignment> implements OnInit {

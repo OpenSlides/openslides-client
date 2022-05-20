@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionContentComponent } from './motion-content.component';
 
-describe('MotionContentComponent', () => {
+describe(`MotionContentComponent`, () => {
     let component: MotionContentComponent;
     let fixture: ComponentFixture<MotionContentComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionContentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SpinnerComponent } from './components/spinner/spinner.component';
-import { CustomOverlayModule } from '../custom-overlay/custom-overlay.module';
+import { NgModule } from '@angular/core';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+
+import { CustomOverlayModule } from '../custom-overlay/custom-overlay.module';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 const DECLARATIONS = [SpinnerComponent];
 

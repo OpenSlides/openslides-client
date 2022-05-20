@@ -1,22 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { ViewListOfSpeakers } from '../../../agenda';
-import { ViewProjection, ViewProjector } from '../../../projectors';
-import { MeetingComponentServiceCollectorService } from '../../../../services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ProjectorControllerService } from '../../../projectors/services/projector-controller.service';
+
+import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
+import { MeetingComponentServiceCollectorService } from '../../../../services/meeting-component-service-collector.service';
+import { ViewListOfSpeakers } from '../../../agenda';
 import { CurrentListOfSpeakersService } from '../../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 import { HasPolls } from '../../../polls';
+import { ViewProjection, ViewProjector } from '../../../projectors';
+import { ProjectorControllerService } from '../../../projectors/services/projector-controller.service';
 
 @Component({
-    selector: 'os-autopilot',
-    templateUrl: './autopilot.component.html',
-    styleUrls: ['./autopilot.component.scss']
+    selector: `os-autopilot`,
+    templateUrl: `./autopilot.component.html`,
+    styleUrls: [`./autopilot.component.scss`]
 })
 export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public listOfSpeakers: ViewListOfSpeakers | null = null;

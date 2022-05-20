@@ -1,27 +1,28 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { PblColumnDefinition } from '@pebula/ngrid';
+import { Permission } from 'src/app/domain/definitions/permission';
 import {
     BasePollDetailComponent,
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionPollService } from '../../../../modules/motion-poll/services';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { ActivatedRoute } from '@angular/router';
-import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { VoteControllerService } from '../../../../../../modules/poll/services/vote-controller.service/vote-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { VoteControllerService } from '../../../../../../modules/poll/services/vote-controller.service/vote-controller.service';
+import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
+import { MotionPollService } from '../../../../modules/motion-poll/services';
 import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';
 
 @Component({
-    selector: 'os-motion-poll-detail',
-    templateUrl: './motion-poll-detail.component.html',
-    styleUrls: ['./motion-poll-detail.component.scss'],
+    selector: `os-motion-poll-detail`,
+    templateUrl: `./motion-poll-detail.component.html`,
+    styleUrls: [`./motion-poll-detail.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

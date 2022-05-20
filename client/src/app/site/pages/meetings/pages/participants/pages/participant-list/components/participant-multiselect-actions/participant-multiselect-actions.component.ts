@@ -1,15 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
-    selector: 'os-participant-multiselect-actions',
-    templateUrl: './participant-multiselect-actions.component.html',
-    styleUrls: ['./participant-multiselect-actions.component.scss']
+    selector: `os-participant-multiselect-actions`,
+    templateUrl: `./participant-multiselect-actions.component.html`,
+    styleUrls: [`./participant-multiselect-actions.component.scss`]
 })
 export class ParticipantMultiselectActionsComponent extends BaseUiComponent {
     @Input()

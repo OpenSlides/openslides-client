@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommitteeMetaInfoComponent } from './committee-meta-info.component';
 
-describe('CommitteeMetaInfoComponent', () => {
+describe(`CommitteeMetaInfoComponent`, () => {
     let component: CommitteeMetaInfoComponent;
     let fixture: ComponentFixture<CommitteeMetaInfoComponent>;
 
@@ -18,7 +18,7 @@ describe('CommitteeMetaInfoComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

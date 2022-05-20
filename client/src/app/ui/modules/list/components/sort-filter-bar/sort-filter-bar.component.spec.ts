@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SortFilterBarComponent } from './sort-filter-bar.component';
 
-describe('SortFilterBarComponent', () => {
+describe(`SortFilterBarComponent`, () => {
     let component: SortFilterBarComponent;
     let fixture: ComponentFixture<SortFilterBarComponent>;
 
@@ -18,7 +18,7 @@ describe('SortFilterBarComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

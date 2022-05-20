@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ViewTheme } from '../view-models';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Theme } from 'src/app/domain/models/theme/theme';
 import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
-import { Theme } from 'src/app/domain/models/theme/theme';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ThemeCommonServiceModule } from './theme-common-service.module';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
+import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
+
+import { ViewTheme } from '../view-models';
+import { ThemeCommonServiceModule } from './theme-common-service.module';
 
 @Injectable({
     providedIn: ThemeCommonServiceModule

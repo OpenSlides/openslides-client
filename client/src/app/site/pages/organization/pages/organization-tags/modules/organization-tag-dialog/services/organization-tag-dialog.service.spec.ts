@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OrganizationTagDialogService } from './organization-tag-dialog.service';
 
-describe('OrganizationTagDialogService', () => {
+describe(`OrganizationTagDialogService`, () => {
     let service: OrganizationTagDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('OrganizationTagDialogService', () => {
         service = TestBed.inject(OrganizationTagDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

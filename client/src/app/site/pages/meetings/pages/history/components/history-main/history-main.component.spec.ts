@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryMainComponent } from './history-main.component';
 
-describe('HistoryMainComponent', () => {
+describe(`HistoryMainComponent`, () => {
     let component: HistoryMainComponent;
     let fixture: ComponentFixture<HistoryMainComponent>;
 
@@ -18,7 +18,7 @@ describe('HistoryMainComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

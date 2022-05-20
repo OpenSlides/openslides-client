@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GridComponent } from './grid.component';
 
-describe('GridComponent', () => {
+describe(`GridComponent`, () => {
     let component: GridComponent;
     let fixture: ComponentFixture<GridComponent>;
 
@@ -18,7 +18,7 @@ describe('GridComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

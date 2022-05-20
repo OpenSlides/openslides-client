@@ -1,13 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChatGroupDialogComponent } from './components/chat-group-dialog/chat-group-dialog.component';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ReactiveFormsModule } from '@angular/forms';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+
+import { ChatGroupDialogComponent } from './components/chat-group-dialog/chat-group-dialog.component';
 
 @NgModule({
     declarations: [ChatGroupDialogComponent],

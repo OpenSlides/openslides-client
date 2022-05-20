@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationNavigationComponent } from './organization-navigation.component';
 
-describe('OrganizationNavigationComponent', () => {
+describe(`OrganizationNavigationComponent`, () => {
     let component: OrganizationNavigationComponent;
     let fixture: ComponentFixture<OrganizationNavigationComponent>;
 
@@ -18,7 +18,7 @@ describe('OrganizationNavigationComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

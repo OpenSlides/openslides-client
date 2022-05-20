@@ -1,17 +1,18 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, merge, mergeMap, Observable, Subject } from 'rxjs';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { BehaviorSubject, combineLatest, map, merge, mergeMap, Observable } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
 import { Dimension, SlideData } from '../../../../pages/projectors/definitions';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 
 @Component({
-    selector: 'os-projector',
-    templateUrl: './projector.component.html',
-    styleUrls: ['./projector.component.scss']
+    selector: `os-projector`,
+    templateUrl: `./projector.component.html`,
+    styleUrls: [`./projector.component.scss`]
 })
 export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
     private readonly projectorSubject = new BehaviorSubject<ViewProjector | null>(null);

@@ -1,9 +1,9 @@
-import { Component, HostBinding, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'os-icon-container',
-    templateUrl: './icon-container.component.html',
-    styleUrls: ['./icon-container.component.scss']
+    selector: `os-icon-container`,
+    templateUrl: `./icon-container.component.html`,
+    styleUrls: [`./icon-container.component.scss`]
 })
 export class IconContainerComponent {
     /**

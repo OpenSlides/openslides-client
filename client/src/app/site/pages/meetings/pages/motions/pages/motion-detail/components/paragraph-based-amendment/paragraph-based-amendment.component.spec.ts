@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParagraphBasedAmendmentComponent } from './paragraph-based-amendment.component';
 
-describe('ParagraphBasedAmendmentComponent', () => {
+describe(`ParagraphBasedAmendmentComponent`, () => {
     let component: ParagraphBasedAmendmentComponent;
     let fixture: ComponentFixture<ParagraphBasedAmendmentComponent>;
 
@@ -18,7 +18,7 @@ describe('ParagraphBasedAmendmentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

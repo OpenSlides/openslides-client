@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
+
 import {
     formatQueryParams,
     HttpMethod,
@@ -13,7 +14,7 @@ import { toBase64 } from '../infrastructure/utils/functions';
 
 const defaultHeaders = { [`Content-Type`]: `application/json` };
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HttpService {
     public constructor(private http: HttpClient) {}
@@ -36,7 +37,7 @@ export class HttpService {
         data?: any,
         queryParams?: QueryParams,
         customHeader?: HttpHeaders,
-        responseType: ResponseType = 'json'
+        responseType: ResponseType = `json`
     ): Promise<T> {
         let url = path + formatQueryParams(queryParams);
         if (url[0] !== `/`) {

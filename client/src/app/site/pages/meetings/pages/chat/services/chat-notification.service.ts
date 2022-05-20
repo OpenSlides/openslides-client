@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { StorageService } from 'src/app/gateways/storage.service';
+
 import { ViewChatMessage } from '../view-models';
 import { ChatMessageControllerService } from './chat-message-controller.service';
 
@@ -26,7 +27,7 @@ interface LastSeenTimestampEvent {
 const STORAGE_KEY = `os4-chat-notifications`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ChatNotificationService {
     public get allChatGroupsNotificationsObservable(): Observable<number> {

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { combineLatest, startWith } from 'rxjs';
 import {
     PollBackendDurationChoices,
     PollClassType,
@@ -9,20 +10,20 @@ import {
     PollType,
     PollTypeVerbose
 } from 'src/app/domain/models/poll/poll-constants';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { combineLatest, startWith } from 'rxjs';
-import { GroupControllerService } from '../../../../pages/participants/modules/groups/services/group-controller.service';
-import { PollService } from '../../services/poll.service';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { isNumberRange } from 'src/app/infrastructure/utils/validators';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
+
+import { GroupControllerService } from '../../../../pages/participants/modules/groups/services/group-controller.service';
+import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
+import { PollService } from '../../services/poll.service';
 
 @Component({
-    selector: 'os-poll-form',
-    templateUrl: './poll-form.component.html',
-    styleUrls: ['./poll-form.component.scss']
+    selector: `os-poll-form`,
+    templateUrl: `./poll-form.component.html`,
+    styleUrls: [`./poll-form.component.scss`]
 })
 export class PollFormComponent extends BaseUiComponent implements OnInit {
     /**
@@ -315,49 +316,49 @@ export class PollFormComponent extends BaseUiComponent implements OnInit {
      */
     private updatePollValues(data: { [key: string]: any }): void {
         if (this.data) {
-            const pollMethod: PollMethod = data['pollmethod'];
-            const pollType: PollType = data['type'];
+            const pollMethod: PollMethod = data[`pollmethod`];
+            const pollType: PollType = data[`type`];
             this.pollValues = [
                 [
                     this.pollService.getVerboseNameForKey(`type`),
-                    this.pollService.getVerboseNameForValue(`type`, data['type'])
+                    this.pollService.getVerboseNameForValue(`type`, data[`type`])
                 ]
             ];
             // show pollmethod only for assignment polls
             if (this.isAssignmentPoll) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`pollmethod`),
-                    this.pollService.getVerboseNameForValue(`pollmethod`, data['pollmethod'])
+                    this.pollService.getVerboseNameForValue(`pollmethod`, data[`pollmethod`])
                 ]);
             }
             if (pollType !== PollType.Analog) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`groups`),
-                    data && data['entitled_group_ids'] && data['entitled_group_ids'].length
-                        ? this.groupRepo.getNameForIds(...data['entitled_group_ids'])
+                    data && data[`entitled_group_ids`] && data[`entitled_group_ids`].length
+                        ? this.groupRepo.getNameForIds(...data[`entitled_group_ids`])
                         : `---`
                 ]);
             }
 
             if (pollMethod === PollMethod.Y || pollMethod === PollMethod.N) {
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_yes`), data['global_yes']]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_no`), data['global_no']]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_abstain`), data['global_abstain']]);
-                this.pollValues.push([this.pollService.getVerboseNameForKey(`votes_amount`), data['votes_amount']]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_yes`), data[`global_yes`]]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_no`), data[`global_no`]]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`global_abstain`), data[`global_abstain`]]);
+                this.pollValues.push([this.pollService.getVerboseNameForKey(`votes_amount`), data[`votes_amount`]]);
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`max_votes_amount`),
-                    data['max_votes_amount']
+                    data[`max_votes_amount`]
                 ]);
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`min_votes_amount`),
-                    data['min_votes_amount']
+                    data[`min_votes_amount`]
                 ]);
             }
 
             if (pollMethod === PollMethod.Y || pollMethod === PollMethod.N) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`max_votes_per_option`),
-                    data['max_votes_per_option']
+                    data[`max_votes_per_option`]
                 ]);
             }
         }

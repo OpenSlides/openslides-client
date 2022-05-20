@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CsvColumnsDefinition, CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+
 import { ViewCommittee } from '../../../../view-models/view-committee';
 import { CommitteeListServiceModule } from '../committee-list-service.module';
 

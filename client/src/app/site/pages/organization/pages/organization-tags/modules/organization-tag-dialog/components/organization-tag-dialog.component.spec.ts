@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationTagDialogComponent } from './organization-tag-dialog.component';
 
-describe('OrganizationTagDialogComponent', () => {
+describe(`OrganizationTagDialogComponent`, () => {
     let component: OrganizationTagDialogComponent;
     let fixture: ComponentFixture<OrganizationTagDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('OrganizationTagDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

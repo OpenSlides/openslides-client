@@ -3,12 +3,13 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Tag } from 'src/app/domain/models/tag/tag';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { TagAction } from './tag.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TagRepositoryService extends BaseMeetingRelatedRepository<ViewTag, Tag> {
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {

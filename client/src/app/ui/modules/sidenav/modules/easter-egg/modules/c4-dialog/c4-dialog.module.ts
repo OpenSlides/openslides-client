@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { C4DialogComponent } from './components/c4-dialog/c4-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
+
+import { C4DialogComponent } from './components/c4-dialog/c4-dialog.component';
 
 @NgModule({
     declarations: [C4DialogComponent],

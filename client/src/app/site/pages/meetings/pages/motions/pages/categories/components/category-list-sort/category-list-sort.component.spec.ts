@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoryListSortComponent } from './category-list-sort.component';
 
-describe('CategoryListSortComponent', () => {
+describe(`CategoryListSortComponent`, () => {
     let component: CategoryListSortComponent;
     let fixture: ComponentFixture<CategoryListSortComponent>;
 
@@ -18,7 +18,7 @@ describe('CategoryListSortComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

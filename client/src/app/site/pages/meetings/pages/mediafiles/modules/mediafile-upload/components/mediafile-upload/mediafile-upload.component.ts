@@ -1,17 +1,17 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { Observable } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
 
 @Component({
-    selector: 'os-mediafile-upload',
-    templateUrl: './mediafile-upload.component.html',
-    styleUrls: ['./mediafile-upload.component.scss']
+    selector: `os-mediafile-upload`,
+    templateUrl: `./mediafile-upload.component.html`,
+    styleUrls: [`./mediafile-upload.component.scss`]
 })
 export class MediafileUploadComponent implements OnInit {
     /**

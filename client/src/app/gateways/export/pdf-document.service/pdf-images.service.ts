@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { ExportServiceModule } from '../export-service.module';
 
 const IMAGE_USABLE_FOR_PDF_MIMETYPES = [`image/png`, `image/jpeg`];

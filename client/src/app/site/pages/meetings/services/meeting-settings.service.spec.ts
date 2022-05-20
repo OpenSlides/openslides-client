@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MeetingSettingsService } from './meeting-settings.service';
 
-describe('MeetingSettingsService', () => {
+describe(`MeetingSettingsService`, () => {
     let service: MeetingSettingsService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MeetingSettingsService', () => {
         service = TestBed.inject(MeetingSettingsService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

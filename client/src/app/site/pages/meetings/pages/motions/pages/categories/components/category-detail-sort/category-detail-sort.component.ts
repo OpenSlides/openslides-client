@@ -1,16 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
-import { ViewMotionCategory, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { ActivatedRoute } from '@angular/router';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 
 /**
  * View for rearranging and renumbering the motions of a category. The {@link onNumberMotions}
@@ -18,9 +19,9 @@ import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
  * as displayed in this view
  */
 @Component({
-    selector: 'os-category-detail-sort',
-    templateUrl: './category-detail-sort.component.html',
-    styleUrls: ['./category-detail-sort.component.scss']
+    selector: `os-category-detail-sort`,
+    templateUrl: `./category-detail-sort.component.html`,
+    styleUrls: [`./category-detail-sort.component.scss`]
 })
 export class CategoryDetailSortComponent extends BaseMeetingComponent implements OnInit, CanComponentDeactivate {
     /**

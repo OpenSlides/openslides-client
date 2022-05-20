@@ -1,20 +1,21 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-constants';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MotionPollService } from '../../services';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
+import { MotionPollService } from '../../services';
 
 const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
 
 @Component({
-    selector: 'os-motion-poll-detail-content',
-    templateUrl: './motion-poll-detail-content.component.html',
-    styleUrls: ['./motion-poll-detail-content.component.scss'],
+    selector: `os-motion-poll-detail-content`,
+    templateUrl: `./motion-poll-detail-content.component.html`,
+    styleUrls: [`./motion-poll-detail-content.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy {

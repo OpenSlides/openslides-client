@@ -1,15 +1,16 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
+import { AuthToken } from '../../domain/interfaces/auth-token';
+import { AuthAdapterService } from '../../gateways/auth-adapter.service';
 import { ProcessError } from '../../infrastructure/errors';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
-import { AuthAdapterService } from '../../gateways/auth-adapter.service';
-import { AuthToken } from '../../domain/interfaces/auth-token';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthService {
     public get authTokenObservable(): Observable<AuthToken | null> {

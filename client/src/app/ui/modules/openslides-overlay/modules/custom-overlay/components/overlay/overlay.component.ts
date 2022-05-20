@@ -1,21 +1,22 @@
-import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
+import { TemplatePortal } from '@angular/cdk/portal';
 import {
     Component,
+    EmbeddedViewRef,
     EventEmitter,
     HostListener,
     Input,
     Output,
-    ViewChild,
-    ViewContainerRef,
     Type,
-    EmbeddedViewRef
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
+
 import { OverlayPosition } from '../../../../definitions';
 
 @Component({
-    selector: 'os-overlay',
-    templateUrl: './overlay.component.html',
-    styleUrls: ['./overlay.component.scss']
+    selector: `os-overlay`,
+    templateUrl: `./overlay.component.html`,
+    styleUrls: [`./overlay.component.scss`]
 })
 export class OverlayComponent {
     @ViewChild(`viewContainer`, { read: ViewContainerRef, static: true })

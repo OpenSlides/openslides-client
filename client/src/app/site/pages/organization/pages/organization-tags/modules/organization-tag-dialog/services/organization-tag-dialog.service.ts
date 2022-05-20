@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
-import { OrganizationTagDialogModule } from '../organization-tag-dialog.module';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewOrganizationTag } from '../../../view-models';
 import { HtmlColor } from 'src/app/domain/definitions/key-types';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+
+import { ViewOrganizationTag } from '../../../view-models';
 import { OrganizationTagDialogComponent } from '../components/organization-tag-dialog.component';
+import { OrganizationTagDialogModule } from '../organization-tag-dialog.module';
 
 export interface OrganizationTagDialogData {
     organizationTag?: ViewOrganizationTag;

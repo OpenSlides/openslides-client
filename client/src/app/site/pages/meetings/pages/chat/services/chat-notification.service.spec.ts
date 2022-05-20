@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ChatNotificationService } from './chat-notification.service';
 
-describe('ChatNotificationService', () => {
+describe(`ChatNotificationService`, () => {
     let service: ChatNotificationService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ChatNotificationService', () => {
         service = TestBed.inject(ChatNotificationService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

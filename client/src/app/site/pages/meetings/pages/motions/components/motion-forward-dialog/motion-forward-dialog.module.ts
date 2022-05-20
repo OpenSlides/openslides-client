@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MotionForwardDialogComponent } from './components/motion-forward-dialog/motion-forward-dialog.component';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
-import { MatDialogModule } from '@angular/material/dialog';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+
+import { MotionForwardDialogComponent } from './components/motion-forward-dialog/motion-forward-dialog.component';
 
 @NgModule({
     declarations: [MotionForwardDialogComponent],

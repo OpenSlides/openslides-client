@@ -1,18 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
+import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { toBase64 } from 'src/app/infrastructure/utils';
-import { TranslateService } from '@ngx-translate/core';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { Observable } from 'rxjs';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 import { FileData } from '../../../file-upload/components/file-upload/file-upload.component';
 
 @Component({
-    selector: 'os-media-upload-content',
-    templateUrl: './media-upload-content.component.html',
-    styleUrls: ['./media-upload-content.component.scss']
+    selector: `os-media-upload-content`,
+    templateUrl: `./media-upload-content.component.html`,
+    styleUrls: [`./media-upload-content.component.scss`]
 })
 export class MediaUploadContentComponent extends BaseUiComponent implements OnInit {
     /**

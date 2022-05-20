@@ -1,10 +1,10 @@
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Observable, map } from 'rxjs';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 const MOTION_LIST_SUBSCRIPTION = `motion_list`;
 const MOTION_BLOCK_SUBSCRIPTION = `motion_block`;
-const MOTION_WORKFLOW_SUBSCRiPTION = `motion_workflow`;
+const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow`;
 const MOTION_SUBMODELS_SUBSCRIPTION = `motion_submodels`;
 
 export const getMotionListSubscriptionConfig = (id: Id, getNextMeetingIdObservable: () => Observable<Id | null>) => ({
@@ -36,7 +36,7 @@ export const getMotionWorkflowSubscriptionConfig = (
         ids: [id],
         follow: [`motion_workflow_ids`]
     },
-    subscriptionName: MOTION_WORKFLOW_SUBSCRiPTION,
+    subscriptionName: MOTION_WORKFLOW_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
 });
 

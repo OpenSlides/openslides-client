@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionWorkflowControllerService } from './motion-workflow-controller.service';
 
-describe('MotionWorkflowControllerService', () => {
+describe(`MotionWorkflowControllerService`, () => {
     let service: MotionWorkflowControllerService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionWorkflowControllerService', () => {
         service = TestBed.inject(MotionWorkflowControllerService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

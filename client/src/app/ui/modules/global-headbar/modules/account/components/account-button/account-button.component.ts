@@ -15,13 +15,14 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
+
 import { GlobalAccountService } from '../../services/global-account.service';
+import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 
 @Component({
-    selector: 'os-account-button',
-    templateUrl: './account-button.component.html',
-    styleUrls: ['./account-button.component.scss']
+    selector: `os-account-button`,
+    templateUrl: `./account-button.component.html`,
+    styleUrls: [`./account-button.component.scss`]
 })
 export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`languageTrigger`, { read: MatMenuTrigger })

@@ -1,18 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
-import { MotionMultiselectService } from '../../services/motion-multiselect.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { ViewMotionBlock, ViewTag, ViewMotionCategory, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionExportDialogService } from '../../../motion-export-dialog/services/motion-export-dialog.service';
-import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
+import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
+import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionExportDialogService } from '../../../motion-export-dialog/services/motion-export-dialog.service';
+import { MotionMultiselectService } from '../../services/motion-multiselect.service';
 
 @Component({
-    selector: 'os-motion-multiselect-actions',
-    templateUrl: './motion-multiselect-actions.component.html',
-    styleUrls: ['./motion-multiselect-actions.component.scss']
+    selector: `os-motion-multiselect-actions`,
+    templateUrl: `./motion-multiselect-actions.component.html`,
+    styleUrls: [`./motion-multiselect-actions.component.scss`]
 })
 export class MotionMultiselectActionsComponent extends BaseUiComponent implements OnInit {
     public readonly permission = Permission;

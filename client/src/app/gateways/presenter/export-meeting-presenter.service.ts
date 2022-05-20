@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
 
@@ -12,7 +13,7 @@ interface JsonBlob {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ExportMeetingPresenterService {
     public constructor(private presenter: PresenterService) {}

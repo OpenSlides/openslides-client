@@ -8,6 +8,7 @@ import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/l
 import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+
 import { ViewListOfSpeakers, ViewSpeaker, ViewTopic } from './modules';
 import { ViewAgendaItem } from './view-models';
 

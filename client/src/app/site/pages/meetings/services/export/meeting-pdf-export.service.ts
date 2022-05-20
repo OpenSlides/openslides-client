@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FontPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import {
     PdfDocumentService,
     PdfFontDescription,
@@ -6,12 +7,12 @@ import {
     TocLineDefinition,
     TocTableDefinition
 } from 'src/app/gateways/export/pdf-document.service';
-import { mmToPoints } from 'src/app/infrastructure/utils';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { MeetingPdfExportModule } from './meeting-pdf-export.module';
 import { HttpService } from 'src/app/gateways/http.service';
+import { mmToPoints } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { FontPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
+import { MeetingPdfExportModule } from './meeting-pdf-export.module';
 
 interface MeetingDownloadLandscapeConfig {
     docDefinition: object;

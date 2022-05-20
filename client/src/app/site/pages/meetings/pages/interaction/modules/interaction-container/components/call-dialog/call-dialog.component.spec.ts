@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CallDialogComponent } from './call-dialog.component';
 
-describe('CallDialogComponent', () => {
+describe(`CallDialogComponent`, () => {
     let component: CallDialogComponent;
     let fixture: ComponentFixture<CallDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('CallDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

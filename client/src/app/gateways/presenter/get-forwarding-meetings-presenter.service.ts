@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
 
@@ -22,7 +23,7 @@ export interface GetForwardingMeetingsPresenter {
 type GetForwardingMeetingsPresenterResult = GetForwardingMeetingsPresenter[];
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class GetForwardingMeetingsPresenterService {
     public constructor(private presenter: PresenterService) {}

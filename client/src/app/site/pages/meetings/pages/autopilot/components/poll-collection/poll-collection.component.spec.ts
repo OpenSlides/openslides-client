@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PollCollectionComponent } from './poll-collection.component';
 
-describe('PollCollectionComponent', () => {
+describe(`PollCollectionComponent`, () => {
     let component: PollCollectionComponent;
     let fixture: ComponentFixture<PollCollectionComponent>;
 
@@ -18,7 +18,7 @@ describe('PollCollectionComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

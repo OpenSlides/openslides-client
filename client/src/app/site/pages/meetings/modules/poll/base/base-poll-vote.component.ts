@@ -1,14 +1,15 @@
 import { ChangeDetectorRef, Directive, Input } from '@angular/core';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { VotingError, VotingService } from '../services/voting.service';
-import { PollPropertyVerbose, IdentifiedVotingData, VotingData, VoteValue } from 'src/app/domain/models/poll';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { IdentifiedVotingData, PollPropertyVerbose, VoteValue, VotingData } from 'src/app/domain/models/poll';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
+import { VotingError, VotingService } from '../services/voting.service';
 
 export interface VoteOption {
     vote?: VoteValue;
@@ -93,7 +94,7 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     public getVotingError(user: ViewUser = this.user): string {
         console.info(`Cannot vote because:`, this.votingService.getVotePermissionErrorVerbose(this.poll, user));
-        return this.votingService.getVotePermissionErrorVerbose(this.poll, user) || '';
+        return this.votingService.getVotePermissionErrorVerbose(this.poll, user) || ``;
     }
 
     protected async sendVote(userId: Id, votePayload: any): Promise<void> {

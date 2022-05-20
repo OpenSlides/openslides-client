@@ -1,18 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ViewProjectorCountdown, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog/services/projector-countdown-dialog.service';
-import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
+import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
+import { ViewProjector, ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { DurationService } from 'src/app/site/services/duration.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog/services/projector-countdown-dialog.service';
+import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
 
 @Component({
-    selector: 'os-countdown-controls',
-    templateUrl: './countdown-controls.component.html',
-    styleUrls: ['./countdown-controls.component.scss']
+    selector: `os-countdown-controls`,
+    templateUrl: `./countdown-controls.component.html`,
+    styleUrls: [`./countdown-controls.component.scss`]
 })
 export class CountdownControlsComponent {
     /**

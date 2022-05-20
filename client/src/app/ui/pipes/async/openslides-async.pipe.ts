@@ -1,11 +1,11 @@
 import {
     ChangeDetectorRef,
-    Pipe,
-    PipeTransform,
-    OnDestroy,
     EventEmitter,
+    OnDestroy,
     ɵisPromise,
-    ɵisSubscribable
+    ɵisSubscribable,
+    Pipe,
+    PipeTransform
 } from '@angular/core';
 import { Observable, Subscribable, Unsubscribable } from 'rxjs';
 
@@ -56,7 +56,7 @@ const _subscribableStrategy = new SubscribableStrategy();
 /**
  * Overrides the Angular's async pipe because this returns `T | null` and leads to errors in an html-template.
  */
-@Pipe({ name: 'async', pure: false })
+@Pipe({ name: `async`, pure: false })
 export class OpenSlidesAsyncPipe implements PipeTransform, OnDestroy {
     private _latestValue: any = null;
 

@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { map } from 'rxjs';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 @Component({
-    selector: 'os-poll-progress',
-    templateUrl: './poll-progress.component.html',
-    styleUrls: ['./poll-progress.component.scss'],
+    selector: `os-poll-progress`,
+    templateUrl: `./poll-progress.component.html`,
+    styleUrls: [`./poll-progress.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollProgressComponent extends BaseUiComponent implements OnInit {

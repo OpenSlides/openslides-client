@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ChatGroupRepositoryService } from './chat-group-repository.service';
 
-describe('ChatGroupRepositoryService', () => {
+describe(`ChatGroupRepositoryService`, () => {
     let service: ChatGroupRepositoryService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ChatGroupRepositoryService', () => {
         service = TestBed.inject(ChatGroupRepositoryService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

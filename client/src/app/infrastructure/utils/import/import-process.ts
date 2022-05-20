@@ -1,6 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
-import { CsvMapping, ImportIdentifiable } from './import-utils';
+
 import { VoidFn } from '../functions';
+import { CsvMapping, ImportIdentifiable } from './import-utils';
 
 interface ImportResult extends ImportIdentifiable {
     importError?: any;

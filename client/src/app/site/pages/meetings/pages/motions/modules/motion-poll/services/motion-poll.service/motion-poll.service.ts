@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { map, merge, Observable, of } from 'rxjs';
 import { Motion } from 'src/app/domain/models/motions/motion';
+import { OptionData, OptionDataKey, PollData, PollDataKey } from 'src/app/domain/models/poll/generic-poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import {
     ABSTAIN_KEY,
@@ -17,11 +16,13 @@ import {
     VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
-import { map, merge, Observable, of } from 'rxjs';
-import { OptionData, OptionDataKey, PollData, PollDataKey } from 'src/app/domain/models/poll/generic-poll';
-import { MotionPollServiceModule } from '../motion-poll-service.module';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+
 import { MotionPollControllerService } from '../motion-poll-controller.service';
+import { MotionPollServiceModule } from '../motion-poll-service.module';
 
 /**
  * Service class for motion polls.

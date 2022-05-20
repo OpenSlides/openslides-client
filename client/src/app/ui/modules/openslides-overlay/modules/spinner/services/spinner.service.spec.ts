@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { SpinnerService } from './spinner.service';
 
-describe('SpinnerService', () => {
+describe(`SpinnerService`, () => {
     let service: SpinnerService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('SpinnerService', () => {
         service = TestBed.inject(SpinnerService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { MediafileListServiceModule } from '../mediafile-list-service.module';
-import { BaseSortListService, OsSortingOption, OsSortingDefinition } from 'src/app/site/base/base-sort.service';
-import { ViewMediafile } from '../../../../view-models';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+
+import { ViewMediafile } from '../../../../view-models';
+import { MediafileListServiceModule } from '../mediafile-list-service.module';
 
 @Injectable({ providedIn: MediafileListServiceModule })
 export class MediafileListSortService extends BaseSortListService<ViewMediafile> {

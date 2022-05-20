@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ViewGroup } from '../view-models';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
 import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { ViewGroup } from '../view-models';
 
 export class MeetingGroupsObject {
     public readonly groups: { [groupName: string]: ViewGroup };
@@ -28,7 +29,7 @@ export class MeetingGroupsObject {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class GroupControllerService extends BaseMeetingControllerService<ViewGroup, Group> {
     public constructor(

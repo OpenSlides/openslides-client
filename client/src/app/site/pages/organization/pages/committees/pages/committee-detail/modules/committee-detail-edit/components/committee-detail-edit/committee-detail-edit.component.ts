@@ -1,33 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { map, Observable, OperatorFunction } from 'rxjs';
-import { ViewCommittee } from '../../../../../../view-models';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
+import { TranslateService } from '@ngx-translate/core';
+import { map, Observable, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { CML } from 'src/app/domain/definitions/organization-permission';
-import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
-import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { NAVIGATION_FROM_LIST } from '../../../../../committee-list/components/committee-list/committee-list.component';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
+
+import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
+import { ViewCommittee } from '../../../../../../view-models';
+import { NAVIGATION_FROM_LIST } from '../../../../../committee-list/components/committee-list/committee-list.component';
 
 const CREATE_COMMITTEE_LABEL = _(`New committee`);
 const EDIT_COMMITTEE_LABEL = _(`Edit committee`);
 const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only in the forwarding section.`);
 
 @Component({
-    selector: 'os-committee-detail-edit',
-    templateUrl: './committee-detail-edit.component.html',
-    styleUrls: ['./committee-detail-edit.component.scss']
+    selector: `os-committee-detail-edit`,
+    templateUrl: `./committee-detail-edit.component.html`,
+    styleUrls: [`./committee-detail-edit.component.scss`]
 })
 export class CommitteeDetailEditComponent extends BaseComponent implements OnInit {
     private committeeId: number | null = null;
@@ -188,7 +189,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             this.isCreateView = false;
             this.subscriptions.push(
                 this.route.queryParams.subscribe(queryParams => {
-                    this.navigatedFrom = queryParams['from'];
+                    this.navigatedFrom = queryParams[`from`];
                     this.committeeId = Number(queryParams[`committeeId`]);
                     this.loadCommittee(this.committeeId);
                 })

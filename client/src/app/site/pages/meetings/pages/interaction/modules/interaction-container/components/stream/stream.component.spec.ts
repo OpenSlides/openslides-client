@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StreamComponent } from './stream.component';
 
-describe('StreamComponent', () => {
+describe(`StreamComponent`, () => {
     let component: StreamComponent;
     let fixture: ComponentFixture<StreamComponent>;
 
@@ -18,7 +18,7 @@ describe('StreamComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

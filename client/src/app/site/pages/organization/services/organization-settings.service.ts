@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { OrganizationService } from './organization.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+
 import { OrganizationSetting } from '../../../../domain/models/organizations/organization';
 import { ViewOrganization } from '../view-models/view-organization';
+import { OrganizationService } from './organization.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OrganizationSettingsService {
     /**

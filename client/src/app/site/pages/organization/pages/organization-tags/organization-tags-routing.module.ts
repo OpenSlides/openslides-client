@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { OrganizationTagMainComponent } from './pages/organization-tag-main/components/organization-tag-main/organization-tag-main.component';
 
 const routes: Routes = [

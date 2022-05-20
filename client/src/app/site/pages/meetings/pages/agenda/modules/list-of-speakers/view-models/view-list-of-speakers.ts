@@ -1,14 +1,15 @@
-import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
-import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { ViewSpeaker } from './view-speaker';
-import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { SpeakerStateOnList } from '../../../definitions/index';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { HasListOfSpeakers } from './has-list-of-speakers';
-import { Projectable } from 'src/app/site/pages/meetings/view-models';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
+import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { Projectable } from 'src/app/site/pages/meetings/view-models';
+import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
+import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+
+import { SpeakerStateOnList } from '../../../definitions/index';
+import { HasListOfSpeakers } from './has-list-of-speakers';
+import { ViewSpeaker } from './view-speaker';
 export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers> {
     public static COLLECTION = ListOfSpeakers.COLLECTION;
     protected _collection = ListOfSpeakers.COLLECTION;

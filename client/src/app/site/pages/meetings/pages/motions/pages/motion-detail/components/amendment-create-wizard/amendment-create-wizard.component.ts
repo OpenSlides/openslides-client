@@ -1,28 +1,28 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import {
-    ParagraphToChoose,
-    MotionLineNumberingService
-} from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { filter, first, firstValueFrom, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { AmendmentParagraphs } from '../../../../../../../../../domain/models/motions/motion';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { ActivatedRoute } from '@angular/router';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { AmendmentParagraphs } from '../../../../../../../../../domain/models/motions/motion';
-import { filter, first, firstValueFrom, Subscription } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { Permission } from 'src/app/domain/definitions/permission';
+import {
+    MotionLineNumberingService,
+    ParagraphToChoose
+} from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 
 @Component({
-    selector: 'os-amendment-create-wizard',
-    templateUrl: './amendment-create-wizard.component.html',
-    styleUrls: ['./amendment-create-wizard.component.scss'],
+    selector: `os-amendment-create-wizard`,
+    templateUrl: `./amendment-create-wizard.component.html`,
+    styleUrls: [`./amendment-create-wizard.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class AmendmentCreateWizardComponent extends BaseMeetingComponent implements OnInit {

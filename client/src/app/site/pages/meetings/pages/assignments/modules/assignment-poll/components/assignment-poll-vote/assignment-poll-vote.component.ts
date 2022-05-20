@@ -1,20 +1,21 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { GlobalVote, PollMethod, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
     VoteOption
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-vote.component';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { UnknownUserLabel } from '../../services/assignment-poll.service';
-import { GlobalVote, PollMethod, PollType } from 'src/app/domain/models/poll/poll-constants';
-import { FormControl, Validators } from '@angular/forms';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { TranslateService } from '@ngx-translate/core';
-import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
 const voteOptions = {
     Yes: {
@@ -38,9 +39,9 @@ const voteOptions = {
 };
 
 @Component({
-    selector: 'os-assignment-poll-vote',
-    templateUrl: './assignment-poll-vote.component.html',
-    styleUrls: ['./assignment-poll-vote.component.scss']
+    selector: `os-assignment-poll-vote`,
+    templateUrl: `./assignment-poll-vote.component.html`,
+    styleUrls: [`./assignment-poll-vote.component.scss`]
 })
 export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> implements OnInit {
     public unknownUserLabel = UnknownUserLabel;

@@ -1,14 +1,15 @@
 import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     OnDestroy,
     OnInit,
-    ChangeDetectionStrategy,
-    ViewEncapsulation,
-    ChangeDetectorRef
+    ViewEncapsulation
 } from '@angular/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { distinctUntilChanged, Subscription } from 'rxjs';
+
 import { ProgressSnackBarControlService } from '../../services/progress-snack-bar-control.service';
 
 /**

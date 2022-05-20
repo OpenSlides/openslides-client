@@ -1,23 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { OML, CML, OMLMapping, getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
-import { UserDetailViewComponent } from 'src/app/ui/modules/user-components';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { UserDetailViewComponent } from 'src/app/ui/modules/user-components';
+
+import { ViewCommittee } from '../../../../../committees';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ViewCommittee } from '../../../../../committees';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 @Component({
-    selector: 'os-account-detail',
-    templateUrl: './account-detail.component.html',
-    styleUrls: ['./account-detail.component.scss']
+    selector: `os-account-detail`,
+    templateUrl: `./account-detail.component.html`,
+    styleUrls: [`./account-detail.component.scss`]
 })
 export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get organizationManagementLevels(): string[] {
@@ -126,8 +127,8 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     private getUserByUrl(): void {
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
-                if (params['id']) {
-                    this.loadUserById(+params['id']);
+                if (params[`id`]) {
+                    this.loadUserById(+params[`id`]);
                 } else {
                     super.setTitle(`New member`);
                     this.isNewUser = true;

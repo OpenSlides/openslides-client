@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+
 import { HttpService } from '../http.service';
 import { Presenter } from './presenter';
 
 const PRESENTER_URL = `/system/presenter/handle_request`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PresenterService {
     public constructor(private readonly http: HttpService) {}

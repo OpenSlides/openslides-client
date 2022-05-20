@@ -3,9 +3,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { SortDefinition } from 'src/app/site/base/base-sort.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
-import { SortingTreeComponent } from '../modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { SortingTreeComponent } from '../modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
 
 export type SortTreeFilterId = string | number;
 

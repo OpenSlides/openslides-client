@@ -1,21 +1,21 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
     VoteOption
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-vote.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { TranslateService } from '@ngx-translate/core';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
-    selector: 'os-motion-poll-vote',
-    templateUrl: './motion-poll-vote.component.html',
-    styleUrls: ['./motion-poll-vote.component.scss']
+    selector: `os-motion-poll-vote`,
+    templateUrl: `./motion-poll-vote.component.html`,
+    styleUrls: [`./motion-poll-vote.component.scss`]
 })
 export class MotionPollVoteComponent extends BasePollVoteComponent implements OnInit {
     public voteOptions: VoteOption[] = [

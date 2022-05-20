@@ -14,7 +14,7 @@ export class BannerDefinition {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class BannerService {
     private get currentBanners(): BannerDefinition[] {

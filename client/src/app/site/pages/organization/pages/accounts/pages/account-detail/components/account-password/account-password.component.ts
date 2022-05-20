@@ -1,18 +1,18 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { PasswordForm } from 'src/app/ui/modules/user-components';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { PasswordForm } from 'src/app/ui/modules/user-components';
 
 @Component({
-    selector: 'os-account-password',
-    templateUrl: './account-password.component.html',
-    styleUrls: ['./account-password.component.scss']
+    selector: `os-account-password`,
+    templateUrl: `./account-password.component.html`,
+    styleUrls: [`./account-password.component.scss`]
 })
 export class AccountPasswordComponent extends BaseUiComponent implements OnInit, AfterViewInit {
     public isValid = false;
@@ -35,8 +35,8 @@ export class AccountPasswordComponent extends BaseUiComponent implements OnInit,
     public ngOnInit(): void {
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
-                if (params['id']) {
-                    this.userId = +params['id'];
+                if (params[`id`]) {
+                    this.userId = +params[`id`];
                     this.loadUser();
                 }
             }),

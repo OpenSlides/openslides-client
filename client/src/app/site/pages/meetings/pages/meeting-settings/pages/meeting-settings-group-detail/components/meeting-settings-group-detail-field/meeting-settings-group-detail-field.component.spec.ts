@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingSettingsGroupDetailFieldComponent } from './meeting-settings-group-detail-field.component';
 
-describe('MeetingSettingsGroupDetailFieldComponent', () => {
+describe(`MeetingSettingsGroupDetailFieldComponent`, () => {
     let component: MeetingSettingsGroupDetailFieldComponent;
     let fixture: ComponentFixture<MeetingSettingsGroupDetailFieldComponent>;
 
@@ -18,7 +18,7 @@ describe('MeetingSettingsGroupDetailFieldComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

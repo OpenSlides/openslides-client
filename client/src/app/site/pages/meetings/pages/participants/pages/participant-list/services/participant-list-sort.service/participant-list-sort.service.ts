@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ParticipantListServiceModule } from '../participant-list-service.module';
-import { BaseSortListService, OsSortingOption, OsSortingDefinition } from 'src/app/site/base/base-sort.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+
+import { ParticipantListServiceModule } from '../participant-list-service.module';
 
 @Injectable({
     providedIn: ParticipantListServiceModule

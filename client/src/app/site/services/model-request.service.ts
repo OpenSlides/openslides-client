@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { concatMap, Observable, of, Subscription, timer } from 'rxjs';
+import { Ids } from 'src/app/domain/definitions/key-types';
+import { DataStoreService } from 'src/app/site/services/data-store.service';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
+
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { SimplifiedModelRequest } from './model-request-builder';
-import { concatMap, Observable, of, Subscription, timer } from 'rxjs';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
-import { DataStoreService } from 'src/app/site/services/data-store.service';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { ModelRequestObject } from './model-request-builder';
 
 export interface SubscribeToConfig {
     modelRequest: SimplifiedModelRequest;
@@ -15,7 +15,7 @@ export interface SubscribeToConfig {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ModelRequestService {
     private _modelSubscriptionMap: { [requestFamilyName: string]: ModelSubscription } = {};

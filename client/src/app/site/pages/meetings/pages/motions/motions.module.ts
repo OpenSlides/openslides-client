@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { MotionsRoutingModule } from './motions-routing.module';
-import { MotionMainComponent } from './components/motion-main/motion-main.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { MotionMainComponent } from './components/motion-main/motion-main.component';
+import { MotionsRoutingModule } from './motions-routing.module';
 
 @NgModule({
     declarations: [MotionMainComponent],

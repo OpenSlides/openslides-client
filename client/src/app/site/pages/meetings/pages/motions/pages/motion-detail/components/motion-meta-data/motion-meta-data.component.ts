@@ -1,24 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { Tag } from 'src/app/domain/models/tag/tag';
-import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
-import { ViewMotion, ViewMotionState, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { Observable, Subscription, of } from 'rxjs';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { Observable, of, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
+import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
+import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 @Component({
-    selector: 'os-motion-meta-data',
-    templateUrl: './motion-meta-data.component.html',
-    styleUrls: ['./motion-meta-data.component.scss']
+    selector: `os-motion-meta-data`,
+    templateUrl: `./motion-meta-data.component.html`,
+    styleUrls: [`./motion-meta-data.component.scss`]
 })
 export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public motionBlocks: MotionBlock[] = [];

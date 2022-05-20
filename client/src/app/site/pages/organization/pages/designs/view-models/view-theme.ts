@@ -1,6 +1,6 @@
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Theme } from 'src/app/domain/models/theme/theme';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 interface ThemeRelations {
     organization: ViewOrganization;

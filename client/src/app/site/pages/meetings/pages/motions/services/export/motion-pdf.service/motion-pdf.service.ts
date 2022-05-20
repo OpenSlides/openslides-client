@@ -1,32 +1,33 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
     ChangeRecoMode,
     LineNumberingMode,
-    PERSONAL_NOTE_ID,
-    MOTION_PDF_OPTIONS
+    MOTION_PDF_OPTIONS,
+    PERSONAL_NOTE_ID
 } from 'src/app/domain/models/motions/motions.constants';
+import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+
+import { getRecommendationTypeName } from '../../../definitions';
+import { ViewUnifiedChangeType } from '../../../modules';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
+import { LineNumberingService } from '../../../modules/change-recommendations/services';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
+import { MotionPollService } from '../../../modules/motion-poll/services';
+import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
+import { MotionControllerService } from '../../common/motion-controller.service';
+import { MotionFormatService } from '../../common/motion-format.service';
+import { MotionLineNumberingService } from '../../common/motion-line-numbering.service';
 import { InfoToExport } from '../definitions';
 import { MotionExportInfo } from '../motion-export.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionLineNumberingService } from '../../common/motion-line-numbering.service';
-import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { LineNumberingService } from '../../../modules/change-recommendations/services';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
-import { MotionFormatService } from '../../common/motion-format.service';
-import { ViewUnifiedChangeType } from '../../../modules';
-import { MotionControllerService } from '../../common/motion-controller.service';
-import { getRecommendationTypeName } from '../../../definitions';
-import { MotionPollService } from '../../../modules/motion-poll/services';
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
-import { MotionsExportModule } from '../motions-export.module';
 import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
+import { MotionsExportModule } from '../motions-export.module';
 
 interface CreateTextData {
     motion: ViewMotion;

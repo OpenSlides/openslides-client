@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { ViewMotion } from '../../../view-models';
-import { Motion } from 'src/app/domain/models/motions/motion';
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Motion } from 'src/app/domain/models/motions/motion';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+
+import { ViewMotion } from '../../../view-models';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AmendmentControllerService {
     constructor(private repo: MotionRepositoryService) {}

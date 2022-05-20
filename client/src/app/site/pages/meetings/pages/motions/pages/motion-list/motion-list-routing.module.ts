@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { MotionListComponent } from './components/motion-list/motion-list.component';
 
 const routes: Routes = [

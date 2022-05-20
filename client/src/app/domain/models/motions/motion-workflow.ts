@@ -1,7 +1,7 @@
-import { BaseModel } from '../base/base-model';
 import { Id } from '../../definitions/key-types';
-import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasSequentialNumber } from '../../interfaces';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
 
 /**
  * Representation of a motion workflow. Has the nested property 'states'

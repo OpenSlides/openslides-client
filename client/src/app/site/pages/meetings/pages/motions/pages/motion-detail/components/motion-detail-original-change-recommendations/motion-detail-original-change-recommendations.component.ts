@@ -1,21 +1,19 @@
 import {
-    Component,
-    OnInit,
     ChangeDetectionStrategy,
-    OnChanges,
-    Output,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
     EventEmitter,
     Input,
-    Renderer2,
-    ElementRef,
-    ChangeDetectorRef
+    OnInit,
+    Output,
+    Renderer2
 } from '@angular/core';
-import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
-import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 /**
  * This component displays either the original motion text or the original amendment diff text
@@ -47,9 +45,9 @@ import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/mod
  * ```
  */
 @Component({
-    selector: 'os-motion-detail-original-change-recommendations',
-    templateUrl: './motion-detail-original-change-recommendations.component.html',
-    styleUrls: ['./motion-detail-original-change-recommendations.component.scss'],
+    selector: `os-motion-detail-original-change-recommendations`,
+    templateUrl: `./motion-detail-original-change-recommendations.component.html`,
+    styleUrls: [`./motion-detail-original-change-recommendations.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionDetailOriginalChangeRecommendationsComponent implements OnInit /* , OnChanges */ {

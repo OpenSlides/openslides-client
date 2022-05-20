@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RoundedInputComponent } from './rounded-input.component';
 
-describe('RoundedInputComponent', () => {
+describe(`RoundedInputComponent`, () => {
     let component: RoundedInputComponent;
     let fixture: ComponentFixture<RoundedInputComponent>;
 
@@ -18,7 +18,7 @@ describe('RoundedInputComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

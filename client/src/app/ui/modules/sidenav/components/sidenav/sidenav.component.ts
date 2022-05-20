@@ -1,13 +1,14 @@
-import { Component, ContentChild, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
+
 import { SidenavDrawerContentDirective } from '../../directives/sidenav-drawer-content.directive';
 import { SidenavMainContentDirective } from '../../directives/sidenav-main-content.directive';
 
 @Component({
-    selector: 'os-sidenav',
-    templateUrl: './sidenav.component.html',
-    styleUrls: ['./sidenav.component.scss']
+    selector: `os-sidenav`,
+    templateUrl: `./sidenav.component.html`,
+    styleUrls: [`./sidenav.component.scss`]
 })
 export class SidenavComponent {
     @ContentChild(SidenavMainContentDirective, { read: TemplateRef, static: true })

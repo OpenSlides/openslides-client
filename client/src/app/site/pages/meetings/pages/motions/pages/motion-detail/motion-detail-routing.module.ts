@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { Permission } from 'src/app/domain/definitions/permission';
+
+import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
 import { MotionDetailViewComponent } from './components/motion-detail-view/motion-detail-view.component';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
 
 const routes: Routes = [
     {

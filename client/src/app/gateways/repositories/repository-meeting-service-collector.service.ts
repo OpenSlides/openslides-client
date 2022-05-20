@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ActiveMeetingIdService } from '../../site/pages/meetings/services/active-meeting-id.service';
+
 import { ActiveMeetingService } from '../../site/pages/meetings/services/active-meeting.service';
+import { ActiveMeetingIdService } from '../../site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from '../../site/pages/meetings/services/meeting-settings.service';
 import { CollectionMapperService } from '../../site/services/collection-mapper.service';
 import { DataStoreService } from '../../site/services/data-store.service';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
 import { ViewModelStoreService } from '../../site/services/view-model-store.service';
 import { ActionService } from '../actions';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
-import { MeetingSettingsService } from '../../site/pages/meetings/services/meeting-settings.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class RepositoryMeetingServiceCollectorService {
     public get DS(): DataStoreService {

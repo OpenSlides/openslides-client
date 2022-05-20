@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CallRestrictionService } from './call-restriction.service';
 
-describe('CallRestrictionService', () => {
+describe(`CallRestrictionService`, () => {
     let service: CallRestrictionService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('CallRestrictionService', () => {
         service = TestBed.inject(CallRestrictionService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

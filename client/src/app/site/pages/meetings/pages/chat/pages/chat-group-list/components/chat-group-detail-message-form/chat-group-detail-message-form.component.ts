@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CHAT_MESSAGE_MAX_LENGTH } from 'src/app/gateways/repositories/chat/chat-message-repository.service';
-import { FormControl, FormBuilder, Validators } from '@angular/forms';
 import { KeyCode } from 'src/app/infrastructure/utils/key-code';
 import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
 
 @Component({
-    selector: 'os-chat-group-detail-message-form',
-    templateUrl: './chat-group-detail-message-form.component.html',
-    styleUrls: ['./chat-group-detail-message-form.component.scss']
+    selector: `os-chat-group-detail-message-form`,
+    templateUrl: `./chat-group-detail-message-form.component.html`,
+    styleUrls: [`./chat-group-detail-message-form.component.scss`]
 })
 export class ChatGroupDetailMessageFormComponent {
     public readonly CHAT_MESSAGE_MAX_LENGTH = CHAT_MESSAGE_MAX_LENGTH;

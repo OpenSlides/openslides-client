@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
-import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { Motion } from 'src/app/domain/models/motions/motion';
+import { BeforeImportHandler } from 'src/app/infrastructure/utils/import/base-before-import-handler';
+import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
+import { UserImportHelper } from 'src/app/infrastructure/utils/import/users';
+import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
+
 import { MotionCategoryControllerService } from '../../../modules/categories/services/motion-category-controller.service';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services/motion-block-controller.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { TagControllerService } from '../../../modules/tags/services';
-import { MotionCsvExportService } from '../../../services/export/motion-csv-export.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
 import { getMotionExportHeadersAndVerboseNames } from '../../../services/export/definitions';
-import { BeforeImportHandler } from 'src/app/infrastructure/utils/import/base-before-import-handler';
-import { UserImportHelper } from 'src/app/infrastructure/utils/import/users';
-import { TagImportHelper } from '../import/tag-import-helper';
+import { MotionCsvExportService } from '../../../services/export/motion-csv-export.service';
 import { CategoryImportHelper } from '../import/category-import-helper';
 import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
+import { TagImportHelper } from '../import/tag-import-helper';
 
 const CATEGORY_PROPERTY = `category`;
 const MOTION_BLOCK_PROPERTY = `motion_block`;
@@ -23,7 +24,7 @@ const SUBMITTER_PROPERTY = `submitters`;
 const SUPPORTER_PROPERTY = `supporters`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionImportService extends BaseImportService<Motion> {
     /**

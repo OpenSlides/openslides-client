@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectionDialogComponent } from './projection-dialog.component';
 
-describe('ProjectionDialogComponent', () => {
+describe(`ProjectionDialogComponent`, () => {
     let component: ProjectionDialogComponent;
     let fixture: ComponentFixture<ProjectionDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('ProjectionDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

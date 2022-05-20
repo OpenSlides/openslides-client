@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { ServerTimePresenterService } from 'src/app/gateways/presenter/server-time-presenter.service';
 
 interface CountdownData {
@@ -7,9 +7,9 @@ interface CountdownData {
 }
 
 @Component({
-    selector: 'os-countdown-time',
-    templateUrl: './countdown-time.component.html',
-    styleUrls: ['./countdown-time.component.scss']
+    selector: `os-countdown-time`,
+    templateUrl: `./countdown-time.component.html`,
+    styleUrls: [`./countdown-time.component.scss`]
 })
 export class CountdownTimeComponent implements OnDestroy {
     /**

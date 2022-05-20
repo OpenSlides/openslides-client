@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PersonalNoteRepositoryService } from './personal-note-repository.service';
 
-describe('PersonalNoteRepositoryService', () => {
+describe(`PersonalNoteRepositoryService`, () => {
     let service: PersonalNoteRepositoryService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('PersonalNoteRepositoryService', () => {
         service = TestBed.inject(PersonalNoteRepositoryService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

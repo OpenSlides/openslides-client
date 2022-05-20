@@ -1,28 +1,29 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { ViewUser, PERSONAL_FORM_CONTROLS } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-    ParticipantControllerService,
-    MEETING_RELATED_FORM_CONTROLS
-} from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { GroupControllerService } from '../../../../modules';
-import { UserService } from 'src/app/site/services/user.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import {
+    MEETING_RELATED_FORM_CONTROLS,
+    ParticipantControllerService
+} from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
+import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserService } from 'src/app/site/services/user.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
+import { GroupControllerService } from '../../../../modules';
 
 @Component({
-    selector: 'os-participant-detail-view',
-    templateUrl: './participant-detail-view.component.html',
-    styleUrls: ['./participant-detail-view.component.scss'],
+    selector: `os-participant-detail-view`,
+    templateUrl: `./participant-detail-view.component.html`,
+    styleUrls: [`./participant-detail-view.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
@@ -151,8 +152,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             this.subscriptions.push(
                 combineLatest([this.route.params, this.activeMeetingIdService.meetingIdObservable]).subscribe(
                     async ([params, _]) => {
-                        if (params['id']) {
-                            this._userId = +params['id'];
+                        if (params[`id`]) {
+                            this._userId = +params[`id`];
                         }
                         if (this._userId) {
                             await this.loadUserById();

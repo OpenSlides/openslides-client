@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import {
     FakeMissingTranslationHandler,
     MissingTranslationHandler,
@@ -14,9 +14,10 @@ import {
     USE_DEFAULT_LANG,
     USE_STORE
 } from '@ngx-translate/core';
+
+import { OpenSlidesTranslationService } from './openslides-translation.service';
 import { OpenSlidesTranslateParser } from './translation-parser';
 import { PruningTranslationLoader } from './translation-pruning-loader';
-import { OpenSlidesTranslationService } from './openslides-translation.service';
 
 @NgModule({
     imports: [TranslateModule],

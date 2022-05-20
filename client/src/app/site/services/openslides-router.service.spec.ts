@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OpenSlidesRouterService } from './openslides-router.service';
 
-describe('OpenslidesRouterService', () => {
+describe(`OpenslidesRouterService`, () => {
     let service: OpenSlidesRouterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('OpenslidesRouterService', () => {
         service = TestBed.inject(OpenSlidesRouterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,12 +1,13 @@
 import { Observable, of } from 'rxjs';
-import { HasOrganizationTags } from '../../organization-tags/view-models/has-organization-tags';
-import { Committee } from 'src/app/domain/models/comittees/committee';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML } from 'src/app/domain/definitions/organization-permission';
+import { Committee } from 'src/app/domain/models/comittees/committee';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+
+import { HasOrganizationTags } from '../../organization-tags/view-models/has-organization-tags';
 
 export class ViewCommittee extends BaseViewModel<Committee> {
     public static COLLECTION = Committee.COLLECTION;

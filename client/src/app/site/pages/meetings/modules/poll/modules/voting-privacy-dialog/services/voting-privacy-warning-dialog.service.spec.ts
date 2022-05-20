@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { VotingPrivacyWarningDialogService } from './voting-privacy-warning-dialog.service';
 
-describe('VotingPrivacyWarningDialogService', () => {
+describe(`VotingPrivacyWarningDialogService`, () => {
     let service: VotingPrivacyWarningDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('VotingPrivacyWarningDialogService', () => {
         service = TestBed.inject(VotingPrivacyWarningDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { Dimension } from '../../../../definitions';
 
 @Component({
-    selector: 'os-fullscreen-projector',
-    templateUrl: './fullscreen-projector.component.html',
-    styleUrls: ['./fullscreen-projector.component.scss']
+    selector: `os-fullscreen-projector`,
+    templateUrl: `./fullscreen-projector.component.html`,
+    styleUrls: [`./fullscreen-projector.component.scss`]
 })
 export class FullscreenProjectorComponent implements OnInit {
     public readonly COLLECTION = ViewProjector.COLLECTION;

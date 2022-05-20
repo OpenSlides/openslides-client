@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionPollMetaInformationComponent } from './motion-poll-meta-information.component';
 
-describe('MotionPollMetaInformationComponent', () => {
+describe(`MotionPollMetaInformationComponent`, () => {
     let component: MotionPollMetaInformationComponent;
     let fixture: ComponentFixture<MotionPollMetaInformationComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionPollMetaInformationComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

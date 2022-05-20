@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ConnectionStatusService } from './connection-status.service';
 
-describe('ConnectionStatusService', () => {
+describe(`ConnectionStatusService`, () => {
     let service: ConnectionStatusService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ConnectionStatusService', () => {
         service = TestBed.inject(ConnectionStatusService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

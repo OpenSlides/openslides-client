@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+
 import { GridTileClickEvent, GridTileDimension } from '../definitions';
 
 @Component({
-    selector: 'os-tile',
-    templateUrl: './tile.component.html',
-    styleUrls: ['./tile.component.scss']
+    selector: `os-tile`,
+    templateUrl: `./tile.component.html`,
+    styleUrls: [`./tile.component.scss`]
 })
 export class TileComponent implements OnInit {
     public get classes(): string {

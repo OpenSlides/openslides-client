@@ -1,11 +1,12 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { BaseFormControlComponent } from '../../../../base/base-form-control';
 
 @Component({
-    selector: 'os-color-form-field',
-    templateUrl: './color-form-field.component.html',
-    styleUrls: ['./color-form-field.component.scss'],
+    selector: `os-color-form-field`,
+    templateUrl: `./color-form-field.component.html`,
+    styleUrls: [`./color-form-field.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => ColorFormFieldComponent) }]
 })
 export class ColorFormFieldComponent extends BaseFormControlComponent<string> {

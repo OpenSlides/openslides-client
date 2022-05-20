@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryBannerComponent } from './history-banner.component';
 
-describe('HistoryBannerComponent', () => {
+describe(`HistoryBannerComponent`, () => {
     let component: HistoryBannerComponent;
     let fixture: ComponentFixture<HistoryBannerComponent>;
 
@@ -18,7 +18,7 @@ describe('HistoryBannerComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

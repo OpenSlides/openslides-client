@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { StreamService } from './stream.service';
 
-describe('StreamService', () => {
+describe(`StreamService`, () => {
     let service: StreamService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('StreamService', () => {
         service = TestBed.inject(StreamService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

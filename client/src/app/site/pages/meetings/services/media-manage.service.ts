@@ -9,11 +9,12 @@ import {
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { MeetingMediaAdapterService } from 'src/app/gateways/meeting-media-adapter.service';
+
 import { ViewMediafile } from '../pages/mediafiles';
 import { ActiveMeetingService } from './active-meeting.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MediaManageService {
     public get allLogoPlaces(): LogoPlace[] {

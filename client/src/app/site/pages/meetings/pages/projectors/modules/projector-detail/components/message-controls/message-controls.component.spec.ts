@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MessageControlsComponent } from './message-controls.component';
 
-describe('MessageControlsComponent', () => {
+describe(`MessageControlsComponent`, () => {
     let component: MessageControlsComponent;
     let fixture: ComponentFixture<MessageControlsComponent>;
 
@@ -18,7 +18,7 @@ describe('MessageControlsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,23 +1,23 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
-    PollState,
     PollMethod,
-    PollTableData,
     PollPercentBase,
+    PollState,
+    PollTableData,
     VotingResult
 } from 'src/app/domain/models/poll/poll-constants';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { AssignmentPollService } from '../../services/assignment-poll.service';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
+import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 @Component({
-    selector: 'os-assignment-poll-detail-content',
-    templateUrl: './assignment-poll-detail-content.component.html',
-    styleUrls: ['./assignment-poll-detail-content.component.scss']
+    selector: `os-assignment-poll-detail-content`,
+    templateUrl: `./assignment-poll-detail-content.component.html`,
+    styleUrls: [`./assignment-poll-detail-content.component.scss`]
 })
 export class AssignmentPollDetailContentComponent {
     private _poll: PollData;

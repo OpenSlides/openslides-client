@@ -1,14 +1,14 @@
 import {
-    Component,
-    Input,
-    OnInit,
-    OnDestroy,
-    ViewChild,
-    ContentChild,
-    TemplateRef,
-    Output,
-    EventEmitter,
     ChangeDetectorRef,
+    Component,
+    ContentChild,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -21,12 +21,13 @@ import {
     PblNgridColumnSet,
     PblNgridComponent
 } from '@pebula/ngrid';
-import { distinctUntilChanged, Observable, Subscription, Subject } from 'rxjs';
-import { ViewPortService } from '../../../../../site/services/view-port.service';
-import { SortListService } from '../../../../base/sort-service';
-import { FilterListService } from '../../../../base/filter-service';
+import { distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
+
+import { ViewPortService } from '../../../../../site/services/view-port.service';
+import { FilterListService } from '../../../../base/filter-service';
+import { SortListService } from '../../../../base/sort-service';
 
 /**
  * To hide columns via restriction
@@ -37,9 +38,9 @@ export interface ColumnRestriction<P = any> {
 }
 
 @Component({
-    selector: 'os-list',
-    templateUrl: './list.component.html',
-    styleUrls: ['./list.component.scss'],
+    selector: `os-list`,
+    templateUrl: `./list.component.html`,
+    styleUrls: [`./list.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy {

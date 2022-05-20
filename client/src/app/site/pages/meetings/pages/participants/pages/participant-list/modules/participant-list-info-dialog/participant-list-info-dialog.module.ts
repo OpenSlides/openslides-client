@@ -1,14 +1,15 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ParticipantListInfoDialogComponent } from './components/participant-list-info-dialog/participant-list-info-dialog.component';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+
+import { ParticipantListInfoDialogComponent } from './components/participant-list-info-dialog/participant-list-info-dialog.component';
 
 @NgModule({
     declarations: [ParticipantListInfoDialogComponent],

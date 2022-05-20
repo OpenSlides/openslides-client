@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-    selector: '[osVerticalTabGroupLabelHeader]'
+    selector: `[osVerticalTabGroupLabelHeader]`
 })
 export class VerticalTabGroupLabelHeaderDirective {}

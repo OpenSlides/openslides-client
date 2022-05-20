@@ -1,9 +1,10 @@
 import { Directive, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-import { filter, map, Observable, tap, combineLatest } from 'rxjs';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
+import { combineLatest, filter, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 import { SubscribeToConfig } from '../../services/model-request.service';
 import { OpenSlidesRouterService } from '../../services/openslides-router.service';
 

@@ -1,7 +1,7 @@
 import { DetailNavigable } from '../../../../../../domain/interfaces/detail-navigable';
 import { HasAgendaItemId } from '../../../../../../domain/interfaces/has-agenda-item-id';
-import { ViewAgendaItem } from './view-agenda-item';
 import { AgendaListTitle } from '../definitions';
+import { ViewAgendaItem } from './view-agenda-item';
 export interface HasAgendaItem extends DetailNavigable, HasAgendaItemId {
     agenda_item?: ViewAgendaItem;
 

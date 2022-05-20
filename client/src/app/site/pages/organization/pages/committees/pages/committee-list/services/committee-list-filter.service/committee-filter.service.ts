@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { StorageService } from 'src/app/gateways/storage.service';
+import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+
 import { ViewCommittee } from '../../../../view-models';
 import { CommitteeListServiceModule } from '../committee-list-service.module';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 
 @Injectable({
     providedIn: CommitteeListServiceModule

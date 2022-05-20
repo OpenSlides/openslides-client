@@ -1,22 +1,23 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
-import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { Observable, Subscription } from 'rxjs';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { Observable, Subscription } from 'rxjs';
 import { navItemAnim } from 'src/app/infrastructure/animations';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
+
 import { ChatNotificationService, ChatService } from '../../../../pages/chat';
 import { LoadFontService } from '../../../../services/load-font.service';
 
 @Component({
-    selector: 'os-meetings-navigation-wrapper',
-    templateUrl: './meetings-navigation-wrapper.component.html',
-    styleUrls: ['./meetings-navigation-wrapper.component.scss'],
+    selector: `os-meetings-navigation-wrapper`,
+    templateUrl: `./meetings-navigation-wrapper.component.html`,
+    styleUrls: [`./meetings-navigation-wrapper.component.scss`],
     animations: [navItemAnim]
 })
 export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent implements OnInit {

@@ -1,25 +1,26 @@
-import {
-    Component,
-    OnInit,
-    ChangeDetectionStrategy,
-    Output,
-    EventEmitter,
-    ChangeDetectorRef,
-    OnDestroy,
-    AfterViewInit,
-    HostListener
-} from '@angular/core';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { Observable } from 'rxjs';
-import { ConferenceMemberCollection, RtcService, ConferenceMember } from '../../../../services/rtc.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { CallRestrictionService } from '../../../../services/call-restriction.service';
-import { ApplauseService } from '../../../../services/applause.service';
-import { InteractionService } from '../../../../services/interaction.service';
-import { StreamService } from '../../../../services/stream.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { KeyValue } from '@angular/common';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
+import { ApplauseService } from '../../../../services/applause.service';
+import { CallRestrictionService } from '../../../../services/call-restriction.service';
+import { InteractionService } from '../../../../services/interaction.service';
+import { ConferenceMember, ConferenceMemberCollection, RtcService } from '../../../../services/rtc.service';
+import { StreamService } from '../../../../services/stream.service';
 
 const helpDeskTitle = _(`Help desk`);
 const liveConferenceTitle = _(`Conference room`);
@@ -27,9 +28,9 @@ const disconnectedTitle = _(`disconnected`);
 const connectingTitle = _(`connecting ...`);
 
 @Component({
-    selector: 'os-call',
-    templateUrl: './call.component.html',
-    styleUrls: ['./call.component.scss'],
+    selector: `os-call`,
+    templateUrl: `./call.component.html`,
+    styleUrls: [`./call.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CallComponent extends BaseMeetingComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -1,15 +1,16 @@
 import { Directive } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
-import { TranslateService } from '@ngx-translate/core';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PollControllerService } from '../services/poll-controller.service/poll-controller.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { PollControllerService } from '../services/poll-controller.service/poll-controller.service';
 
 @Directive()
 export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseMeetingComponent {

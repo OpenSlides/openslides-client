@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
 
 @Component({
-    selector: 'os-organization-settings',
-    templateUrl: './organization-settings.component.html',
-    styleUrls: ['./organization-settings.component.scss']
+    selector: `os-organization-settings`,
+    templateUrl: `./organization-settings.component.html`,
+    styleUrls: [`./organization-settings.component.scss`]
 })
 export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);

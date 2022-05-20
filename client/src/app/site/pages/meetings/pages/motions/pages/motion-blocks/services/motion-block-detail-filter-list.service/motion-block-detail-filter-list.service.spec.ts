@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionBlockDetailFilterListService } from './motion-block-detail-filter-list.service';
 
-describe('MotionBlockDetailFilterListService', () => {
+describe(`MotionBlockDetailFilterListService`, () => {
     let service: MotionBlockDetailFilterListService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionBlockDetailFilterListService', () => {
         service = TestBed.inject(MotionBlockDetailFilterListService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
 import { CommitteesRoutingModule } from './committees-routing.module';
-import { CommitteeCommonServiceModule } from './services/committee-common-service.module';
 import { CommitteeMainModule } from './pages/committee-main/committee-main.module';
+import { CommitteeCommonServiceModule } from './services/committee-common-service.module';
 
 @NgModule({
     declarations: [],

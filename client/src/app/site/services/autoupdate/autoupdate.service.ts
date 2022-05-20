@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
+
+import { Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService, HttpStreamService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
 import { formatQueryParams, HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
 import { CommunicationManagerService } from '../communication-manager.service';
-import { ModelRequestBuilderService, ModelRequestObject, SimplifiedModelRequest } from '../model-request-builder';
-import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
+import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
-import { Fqid } from 'src/app/domain/definitions/key-types';
+import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
 
@@ -81,7 +81,7 @@ const COLLECTION_INDEX = 0;
 const FIELD_INDEX = 2;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};

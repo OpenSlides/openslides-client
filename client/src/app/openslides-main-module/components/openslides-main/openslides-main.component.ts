@@ -1,23 +1,23 @@
-import { ApplicationRef, Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { OpenSlidesService } from 'src/app/site/services/openslides.service';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
+import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { first, firstValueFrom, tap } from 'rxjs';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { firstValueFrom, first, tap } from 'rxjs';
+import { LifecycleService } from 'src/app/site/services/lifecycle.service';
+import { OpenSlidesService } from 'src/app/site/services/openslides.service';
+import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 
 @Component({
-    selector: 'os-root',
-    templateUrl: './openslides-main.component.html',
-    styleUrls: ['./openslides-main.component.scss']
+    selector: `os-root`,
+    templateUrl: `./openslides-main.component.html`,
+    styleUrls: [`./openslides-main.component.scss`]
 })
 export class OpenSlidesMainComponent implements OnInit {
     private onInitDone = new Deferred();
 
-    title = 'OpenSlides';
+    title = `OpenSlides`;
 
     public constructor(
         _viewContainer: ViewContainerRef,

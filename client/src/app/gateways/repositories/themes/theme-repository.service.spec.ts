@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ThemeRepositoryService } from './theme-repository.service';
 
-describe('ThemeRepositoryService', () => {
+describe(`ThemeRepositoryService`, () => {
     let service: ThemeRepositoryService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ThemeRepositoryService', () => {
         service = TestBed.inject(ThemeRepositoryService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

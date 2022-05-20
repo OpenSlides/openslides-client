@@ -1,20 +1,21 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { DurationService } from 'src/app/site/services/duration.service';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { SpeakingTimeStructureLevelObject } from '../../../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
-import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
+import { PblColumnDefinition } from '@pebula/ngrid';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { DurationService } from 'src/app/site/services/duration.service';
+
+import { SpeakingTimeStructureLevelObject } from '../../../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 
 interface IdentifiedSpeakingTimeStructureLevelObject extends Identifiable, SpeakingTimeStructureLevelObject {}
 
 @Component({
-    selector: 'os-user-statistics',
-    templateUrl: './user-statistics.component.html',
-    styleUrls: ['./user-statistics.component.scss'],
+    selector: `os-user-statistics`,
+    templateUrl: `./user-statistics.component.html`,
+    styleUrls: [`./user-statistics.component.scss`],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomTranslationComponent } from './custom-translation.component';
 
-describe('CustomTranslationComponent', () => {
+describe(`CustomTranslationComponent`, () => {
     let component: CustomTranslationComponent;
     let fixture: ComponentFixture<CustomTranslationComponent>;
 
@@ -18,7 +18,7 @@ describe('CustomTranslationComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { PROJECTOR_DETAIL_SUBSCRIPTION } from '../../../../view-models/view-projector';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Projector } from 'src/app/domain/models/projector/projector';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+
+import { PROJECTOR_DETAIL_SUBSCRIPTION } from '../../../../view-models/view-projector';
 
 @Component({
-    selector: 'os-fullscreen-projector-main',
-    templateUrl: './fullscreen-projector-main.component.html',
-    styleUrls: ['./fullscreen-projector-main.component.scss']
+    selector: `os-fullscreen-projector-main`,
+    templateUrl: `./fullscreen-projector-main.component.html`,
+    styleUrls: [`./fullscreen-projector-main.component.scss`]
 })
 export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerComponent {
     private _projectorId: Id | null = null;

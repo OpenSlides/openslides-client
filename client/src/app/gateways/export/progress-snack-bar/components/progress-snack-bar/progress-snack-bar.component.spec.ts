@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProgressSnackBarComponent } from './progress-snack-bar.component';
 
-describe('ProgressSnackBarComponent', () => {
+describe(`ProgressSnackBarComponent`, () => {
     let component: ProgressSnackBarComponent;
     let fixture: ComponentFixture<ProgressSnackBarComponent>;
 
@@ -18,7 +18,7 @@ describe('ProgressSnackBarComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MediafileListSortService } from './mediafile-list-sort.service';
 
-describe('MediafileListSortService', () => {
+describe(`MediafileListSortService`, () => {
     let service: MediafileListSortService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MediafileListSortService', () => {
         service = TestBed.inject(MediafileListSortService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

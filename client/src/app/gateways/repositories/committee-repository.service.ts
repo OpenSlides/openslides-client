@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from '../../domain/interfaces';
+import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
+import { Identifiable } from '../../domain/interfaces';
 import { Committee } from '../../domain/models/comittees/committee';
 import { ViewCommittee } from '../../site/pages/organization/pages/committees';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
 import { OperatorService } from '../../site/services/operator.service';
 import { BaseRepository } from './base-repository';
+import { CommitteeAction } from './committees/committee.action';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { UserRepositoryService } from './users/user-repository.service';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { CommitteeAction } from './committees/committee.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Committee> {
     public constructor(

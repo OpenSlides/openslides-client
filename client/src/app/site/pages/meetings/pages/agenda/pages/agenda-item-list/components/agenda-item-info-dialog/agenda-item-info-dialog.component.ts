@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { DurationService } from 'src/app/site/services/duration.service';
+
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';
 import { DurationValidator } from '../../../../validators/duration.validator';

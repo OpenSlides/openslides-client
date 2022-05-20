@@ -1,4 +1,5 @@
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+
 import { ViewMotionChangeRecommendation } from '../modules';
 
 /**

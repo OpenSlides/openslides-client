@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
-import { BaseSlideComponent } from '../../../../base/base-slide-component';
-import { AgendaItemListSlideData, SlideItem } from '../../agenda-item-list-slide-data';
-import { modifyAgendaItemNumber } from '../../../../definitions/agenda_item_number';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
+import { Component } from '@angular/core';
 import { isAgendaItemContentObjectRepository } from 'src/app/gateways/repositories/base-agenda-item-content-object-repository';
+import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
+
+import { BaseSlideComponent } from '../../../../base/base-slide-component';
+import { modifyAgendaItemNumber } from '../../../../definitions/agenda_item_number';
+import { AgendaItemListSlideData, SlideItem } from '../../agenda-item-list-slide-data';
 
 @Component({
-    selector: 'os-agenda-item-list-slide',
-    templateUrl: './agenda-item-list-slide.component.html',
-    styleUrls: ['./agenda-item-list-slide.component.scss']
+    selector: `os-agenda-item-list-slide`,
+    templateUrl: `./agenda-item-list-slide.component.html`,
+    styleUrls: [`./agenda-item-list-slide.component.scss`]
 })
 export class AgendaItemListSlideComponent extends BaseSlideComponent<AgendaItemListSlideData> {
     public constructor(private collectionMapperService: CollectionMapperService) {
@@ -22,7 +23,7 @@ export class AgendaItemListSlideComponent extends BaseSlideComponent<AgendaItemL
     }
 
     public getTitle(item: SlideItem): string {
-        const repo = this.collectionMapperService.getRepository(item.title_information['collection']);
+        const repo = this.collectionMapperService.getRepository(item.title_information[`collection`]);
         if (isAgendaItemContentObjectRepository(repo)) {
             return repo!.getListTitle(item.title_information);
         } else {

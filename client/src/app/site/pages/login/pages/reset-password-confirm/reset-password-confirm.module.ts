@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ResetPasswordConfirmRoutingModule } from './reset-password-confirm-routing.module';
-import { ResetPasswordConfirmComponent } from './components/reset-password-confirm/reset-password-confirm.component';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ReactiveFormsModule } from '@angular/forms';
+
+import { ResetPasswordConfirmComponent } from './components/reset-password-confirm/reset-password-confirm.component';
+import { ResetPasswordConfirmRoutingModule } from './reset-password-confirm-routing.module';
 
 @NgModule({
     declarations: [ResetPasswordConfirmComponent],

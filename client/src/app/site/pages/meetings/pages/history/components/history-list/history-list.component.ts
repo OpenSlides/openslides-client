@@ -1,27 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { Position } from '../../definitions';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
-import {
-    fqidFromCollectionAndId,
-    idFromFqid,
-    collectionIdFromFqid
-} from 'src/app/infrastructure/utils/transform-functions';
+import { isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
+import { Motion } from 'src/app/domain/models/motions/motion';
+import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { langToLocale } from 'src/app/infrastructure/utils/lang-to-locale';
-import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
-import { isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { HistoryService } from '../../services/history.service';
+import {
+    collectionIdFromFqid,
+    fqidFromCollectionAndId,
+    idFromFqid
+} from 'src/app/infrastructure/utils/transform-functions';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
+
+import { Position } from '../../definitions';
+import { HistoryService } from '../../services/history.service';
 
 const COLLECTION = Motion.COLLECTION;
 
@@ -57,7 +58,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     public motions: Observable<ViewMotion[]>;
 
     public get currentMotionId(): number | null {
-        return this.motionSelectForm.controls['motion'].value;
+        return this.motionSelectForm.controls[`motion`].value;
     }
 
     private _fqid: Fqid | null = null;
@@ -80,7 +81,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         });
         this.motions = this.motionRepo.getViewModelListObservable();
 
-        this.motionSelectForm.controls['motion'].valueChanges.subscribe((id: number) => {
+        this.motionSelectForm.controls[`motion`].valueChanges.subscribe((id: number) => {
             console.log(`id`, id);
             if (!id || (Array.isArray(id) && !id.length)) {
                 return;
@@ -128,7 +129,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     private loadFromParams(): void {
-        const fqid = this.activatedRoute.snapshot.queryParams?.['fqid'];
+        const fqid = this.activatedRoute.snapshot.queryParams?.[`fqid`];
         if (!fqid) {
             return;
         }
@@ -190,7 +191,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         if (element && isDetailNavigable(element)) {
             this.router.navigate([element.getDetailStateUrl()]);
         } else {
-            const message = this.translate.instant('Cannot navigate to the selected history element.');
+            const message = this.translate.instant(`Cannot navigate to the selected history element.`);
             this.raiseError(message);
         }
     }

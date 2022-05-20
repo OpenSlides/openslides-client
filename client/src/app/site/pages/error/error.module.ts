@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ErrorRoutingModule } from './error-routing.module';
-import { ErrorMainComponent } from './components/error-main/error-main.component';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+
+import { ErrorMainComponent } from './components/error-main/error-main.component';
+import { ErrorRoutingModule } from './error-routing.module';
 
 @NgModule({
     declarations: [ErrorMainComponent],

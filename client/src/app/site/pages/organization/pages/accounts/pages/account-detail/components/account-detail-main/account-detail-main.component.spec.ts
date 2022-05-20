@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountDetailMainComponent } from './account-detail-main.component';
 
-describe('AccountDetailMainComponent', () => {
+describe(`AccountDetailMainComponent`, () => {
     let component: AccountDetailMainComponent;
     let fixture: ComponentFixture<AccountDetailMainComponent>;
 
@@ -18,7 +18,7 @@ describe('AccountDetailMainComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

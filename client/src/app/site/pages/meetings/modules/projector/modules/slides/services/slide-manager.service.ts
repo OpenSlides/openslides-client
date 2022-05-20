@@ -1,6 +1,7 @@
-import { Injectable, Compiler, Injector, Inject, ComponentFactory, NgModuleFactory, Type } from '@angular/core';
+import { Compiler, ComponentFactory, Inject, Injectable, Injector, NgModuleFactory, Type } from '@angular/core';
+
 import { BaseSlideComponent } from '../base/base-slide-component';
-import { SlideConfiguration, SlideManifest, SlideToken, SLIDE_MANIFESTS } from '../definitions';
+import { SLIDE_MANIFESTS, SlideConfiguration, SlideManifest, SlideToken } from '../definitions';
 import { SlidesModule } from '../slides.module';
 
 @Injectable({ providedIn: SlidesModule })

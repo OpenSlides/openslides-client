@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionFormatService } from './motion-format.service';
 
-describe('MotionFormatService', () => {
+describe(`MotionFormatService`, () => {
     let service: MotionFormatService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionFormatService', () => {
         service = TestBed.inject(MotionFormatService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

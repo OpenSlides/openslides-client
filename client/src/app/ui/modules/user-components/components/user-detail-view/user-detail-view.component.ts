@@ -1,25 +1,26 @@
 import {
+    AfterViewInit,
     Component,
     ContentChild,
     EventEmitter,
     Input,
     OnInit,
     Output,
-    TemplateRef,
-    AfterViewInit
+    TemplateRef
 } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { GENDERS } from '../../../../../domain/models/users/user';
-import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
-import { OneOfValidator } from '../../validators';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { GENDERS } from '../../../../../domain/models/users/user';
+import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
+import { OneOfValidator } from '../../validators';
+
 @Component({
-    selector: 'os-user-detail-view',
-    templateUrl: './user-detail-view.component.html',
-    styleUrls: ['./user-detail-view.component.scss']
+    selector: `os-user-detail-view`,
+    templateUrl: `./user-detail-view.component.html`,
+    styleUrls: [`./user-detail-view.component.scss`]
 })
 export class UserDetailViewComponent extends BaseUiComponent implements OnInit, AfterViewInit {
     /**

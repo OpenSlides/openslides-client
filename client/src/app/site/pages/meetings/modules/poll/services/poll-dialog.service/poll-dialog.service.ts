@@ -1,9 +1,10 @@
-import { Injectable, TemplateRef } from '@angular/core';
-import { PollServiceModule } from '../poll-service.module';
-import { MatDialog } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/portal';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+
+import { PollServiceModule } from '../poll-service.module';
 
 @Injectable({
     providedIn: PollServiceModule

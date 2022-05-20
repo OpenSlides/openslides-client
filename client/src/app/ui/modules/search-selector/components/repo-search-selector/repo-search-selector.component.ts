@@ -1,17 +1,18 @@
-import { Component, OnInit, Self, Optional, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { Component, ElementRef, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, NgControl } from '@angular/forms';
-import { MeetingSettingsService } from '../../../../../site/pages/meetings/services/meeting-settings.service';
-import { BaseSearchSelectorComponent } from '../base-search-selector/base-search-selector.component';
-import { map, OperatorFunction } from 'rxjs';
-import { Settings } from '../../../../../domain/models/meetings/meeting';
-import { ViewModelListProvider } from '../../../../base/view-model-list-provider';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { map, OperatorFunction } from 'rxjs';
+
+import { Settings } from '../../../../../domain/models/meetings/meeting';
+import { MeetingSettingsService } from '../../../../../site/pages/meetings/services/meeting-settings.service';
+import { ViewModelListProvider } from '../../../../base/view-model-list-provider';
+import { BaseSearchSelectorComponent } from '../base-search-selector/base-search-selector.component';
 
 @Component({
-    selector: 'os-repo-search-selector',
-    templateUrl: '../base-search-selector/base-search-selector.component.html',
-    styleUrls: ['../base-search-selector/base-search-selector.component.scss', './repo-search-selector.component.scss'],
+    selector: `os-repo-search-selector`,
+    templateUrl: `../base-search-selector/base-search-selector.component.html`,
+    styleUrls: [`../base-search-selector/base-search-selector.component.scss`, `./repo-search-selector.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: RepoSearchSelectorComponent }],
     encapsulation: ViewEncapsulation.None
 })

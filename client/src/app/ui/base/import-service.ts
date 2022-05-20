@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
-import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStep } from 'src/app/infrastructure/utils/import/import-step';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 
 interface ImportServicePreview {
     new: number;

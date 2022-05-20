@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+
 import { AuthToken } from '../../domain/interfaces/auth-token';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthTokenService {
     public get rawAccessToken(): string | null {

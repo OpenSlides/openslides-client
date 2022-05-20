@@ -1,6 +1,6 @@
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 
 /**
  * Viewport Service
@@ -21,7 +21,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
  * ```
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ViewPortService {
     /**

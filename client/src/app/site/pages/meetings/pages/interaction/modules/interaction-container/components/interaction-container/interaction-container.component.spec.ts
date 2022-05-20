@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InteractionContainerComponent } from './interaction-container.component';
 
-describe('InteractionContainerComponent', () => {
+describe(`InteractionContainerComponent`, () => {
     let component: InteractionContainerComponent;
     let fixture: ComponentFixture<InteractionContainerComponent>;
 
@@ -18,7 +18,7 @@ describe('InteractionContainerComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

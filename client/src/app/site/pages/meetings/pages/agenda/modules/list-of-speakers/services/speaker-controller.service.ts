@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Speaker } from 'src/app/domain/models/speakers/speaker';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
-import { MeetingControllerServiceCollectorService } from '../../../../../services/meeting-controller-service-collector.service';
-import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
 import { map, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Speaker } from 'src/app/domain/models/speakers/speaker';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+
+import { MeetingControllerServiceCollectorService } from '../../../../../services/meeting-controller-service-collector.service';
+import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
     constructor(

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { PollServiceModule } from '../poll-service.module';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewVote } from '../../../../pages/polls';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { ViewVote } from '../../../../pages/polls';
+import { PollServiceModule } from '../poll-service.module';
 
 @Injectable({
     providedIn: PollServiceModule

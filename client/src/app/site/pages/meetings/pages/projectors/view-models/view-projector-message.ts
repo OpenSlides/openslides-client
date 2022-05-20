@@ -1,8 +1,8 @@
-import { ProjectorMessage } from '../../../../../../domain/models/projector/projector-message';
-import { HasMeeting } from '../../../view-models/has-meeting';
-import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import { ProjectorMessage } from '../../../../../../domain/models/projector/projector-message';
 import { stripHtmlTags } from '../../../../../../infrastructure/utils';
+import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
+import { HasMeeting } from '../../../view-models/has-meeting';
 import { ProjectionBuildDescriptor } from '../../../view-models/projection-build-descriptor';
 export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMessage> {
     public static COLLECTION = ProjectorMessage.COLLECTION;

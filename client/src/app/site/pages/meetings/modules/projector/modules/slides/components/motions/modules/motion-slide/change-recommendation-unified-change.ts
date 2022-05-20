@@ -1,5 +1,6 @@
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from 'src/app/site/pages/meetings/pages/motions';
+
 import { ChangeRecommendationData } from './motion-slide-data';
 
 /**
@@ -20,10 +21,10 @@ export class ChangeRecommendationUnifiedChange implements ChangeRecommendationDa
         Object.assign(this, data);
     }
     public getTitle(): string {
-        throw new Error('Method not implemented.');
+        throw new Error(`Method not implemented.`);
     }
     public getModificationType(): ModificationType {
-        throw new Error('Method not implemented.');
+        throw new Error(`Method not implemented.`);
     }
 
     public getChangeId(): string {

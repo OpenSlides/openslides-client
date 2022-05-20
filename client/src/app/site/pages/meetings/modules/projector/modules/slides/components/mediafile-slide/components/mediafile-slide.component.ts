@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IMAGE_MIMETYPES, PDF_MIMETYPES } from 'src/app/site/pages/meetings/pages/mediafiles';
+
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { MediafileSlideData } from '../mediafile-slide-data';
 
@@ -14,7 +15,7 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
     }
 
     public get zoom(): number {
-        return Math.pow(1.1, this.data.options['zoom'] || 0);
+        return Math.pow(1.1, this.data.options[`zoom`] || 0);
     }
 
     public get page(): number {

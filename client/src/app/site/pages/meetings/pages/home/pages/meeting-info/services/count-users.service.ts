@@ -24,7 +24,7 @@ const RESPONSE_NAME = `count-user-response`;
  * Here, the answers will be collected and aggegated.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CountUsersService {
     private activeCounts: { [token: string]: Subject<CountUserData> } = {};

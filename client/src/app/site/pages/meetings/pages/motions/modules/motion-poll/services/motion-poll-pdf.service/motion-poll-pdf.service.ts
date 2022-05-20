@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
-import { MotionPollServiceModule } from '../motion-poll-service.module';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionPollServiceModule } from '../motion-poll-service.module';
 
 @Injectable({
     providedIn: MotionPollServiceModule

@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { TranslateService } from '@ngx-translate/core';
 import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
 import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { TranslateService } from '@ngx-translate/core';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
 @Injectable({
     providedIn: AssignmentPollServiceModule

@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
 import { Id } from '../../definitions/key-types';
 import { CML } from '../../definitions/organization-permission';
+import { BaseModel } from '../base/base-model';
 
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 

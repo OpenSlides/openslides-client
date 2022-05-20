@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { FilterListService, OsFilterOption } from 'src/app/ui/base/filter-service';
 
 /**

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 
-describe('HttpStreamEndpointService', () => {
+describe(`HttpStreamEndpointService`, () => {
     let service: HttpStreamEndpointService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('HttpStreamEndpointService', () => {
         service = TestBed.inject(HttpStreamEndpointService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

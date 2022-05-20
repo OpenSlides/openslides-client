@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionPollService } from './motion-poll.service';
 
-describe('MotionPollService', () => {
+describe(`MotionPollService`, () => {
     let service: MotionPollService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionPollService', () => {
         service = TestBed.inject(MotionPollService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

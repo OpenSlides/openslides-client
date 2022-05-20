@@ -1,14 +1,15 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HtmlColor } from 'src/app/domain/definitions/key-types';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 import { OrganizationTagDialogData } from '../services/organization-tag-dialog.service';
 
 @Component({
-    selector: 'os-organization-tag-dialog',
-    templateUrl: './organization-tag-dialog.component.html',
-    styleUrls: ['./organization-tag-dialog.component.scss']
+    selector: `os-organization-tag-dialog`,
+    templateUrl: `./organization-tag-dialog.component.html`,
+    styleUrls: [`./organization-tag-dialog.component.scss`]
 })
 export class OrganizationTagDialogComponent extends BaseUiComponent implements OnInit {
     public get isCreateView(): boolean {

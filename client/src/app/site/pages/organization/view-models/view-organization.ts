@@ -1,11 +1,12 @@
 import { Observable } from 'rxjs';
-import { ViewMeeting } from '../../meetings/view-models/view-meeting';
-import { ViewOrganizationTag } from '../pages/organization-tags';
+import { Organization } from 'src/app/domain/models/organizations/organization';
+
 import { BaseViewModel } from '../../../base/base-view-model';
+import { ViewMeeting } from '../../meetings/view-models/view-meeting';
 import { ViewCommittee } from '../pages/committees';
 import { ViewTheme } from '../pages/designs';
+import { ViewOrganizationTag } from '../pages/organization-tags';
 import { ViewResource } from '../pages/resources';
-import { Organization } from 'src/app/domain/models/organizations/organization';
 
 export class ViewOrganization extends BaseViewModel<Organization> {
     public static COLLECTION = Organization.COLLECTION;

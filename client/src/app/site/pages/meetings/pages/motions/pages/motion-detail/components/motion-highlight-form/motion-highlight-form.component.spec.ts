@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionHighlightFormComponent } from './motion-highlight-form.component';
 
-describe('MotionHighlightFormComponent', () => {
+describe(`MotionHighlightFormComponent`, () => {
     let component: MotionHighlightFormComponent;
     let fixture: ComponentFixture<MotionHighlightFormComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionHighlightFormComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

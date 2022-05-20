@@ -1,2 +1,2 @@
-export * from './import-list.module';
 export * from './definitions';
+export * from './import-list.module';

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantImportService } from './participant-import.service';
 
-describe('ParticipantImportService', () => {
+describe(`ParticipantImportService`, () => {
     let service: ParticipantImportService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ParticipantImportService', () => {
         service = TestBed.inject(ParticipantImportService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

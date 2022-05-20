@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { PresenterService } from './presenter.service';
 import { Id } from 'src/app/domain/definitions/key-types';
+
 import { Presenter } from './presenter';
+import { PresenterService } from './presenter.service';
 
 enum UserScope {
     MEETING = `meeting`,
@@ -23,7 +24,7 @@ interface GetUserScopePresenterResult {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class GetUserScopePresenterService {
     public constructor(private presenter: PresenterService) {}

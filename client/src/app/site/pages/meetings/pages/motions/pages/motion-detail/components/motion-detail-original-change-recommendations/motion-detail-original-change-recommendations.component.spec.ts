@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionDetailOriginalChangeRecommendationsComponent } from './motion-detail-original-change-recommendations.component';
 
-describe('MotionDetailOriginalChangeRecommendationsComponent', () => {
+describe(`MotionDetailOriginalChangeRecommendationsComponent`, () => {
     let component: MotionDetailOriginalChangeRecommendationsComponent;
     let fixture: ComponentFixture<MotionDetailOriginalChangeRecommendationsComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionDetailOriginalChangeRecommendationsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

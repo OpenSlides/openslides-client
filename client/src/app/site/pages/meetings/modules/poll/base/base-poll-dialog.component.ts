@@ -1,23 +1,24 @@
 import { Directive, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Fqid } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
-    VoteValueVerbose,
+    LOWEST_VOTE_VALUE,
     PollClassType,
-    VoteValue,
+    PollMethod,
     PollType,
     VOTE_UNDOCUMENTED,
-    LOWEST_VOTE_VALUE,
-    PollMethod,
-    VoteKey
+    VoteKey,
+    VoteValue,
+    VoteValueVerbose
 } from 'src/app/domain/models/poll';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { OneOfValidator } from 'src/app/ui/modules/user-components';
 import { Option } from 'src/app/domain/models/poll/option';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { OneOfValidator } from 'src/app/ui/modules/user-components';
+
 import { PollFormComponent } from '../components/poll-form/poll-form.component';
 
 export interface OptionsObject {

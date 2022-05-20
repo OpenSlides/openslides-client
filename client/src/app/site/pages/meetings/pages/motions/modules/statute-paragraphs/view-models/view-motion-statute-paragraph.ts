@@ -1,7 +1,7 @@
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { MotionStatuteParagraph } from '../../../../../../../../domain/models/motions/motion-statute-paragraph';
-import { ViewMotion } from '../../../view-models/view-motion';
+import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
+import { ViewMotion } from '../../../view-models/view-motion';
 export class ViewMotionStatuteParagraph extends BaseViewModel<MotionStatuteParagraph> /* implements Searchable */ {
     public static COLLECTION = MotionStatuteParagraph.COLLECTION;
     protected _collection = MotionStatuteParagraph.COLLECTION;

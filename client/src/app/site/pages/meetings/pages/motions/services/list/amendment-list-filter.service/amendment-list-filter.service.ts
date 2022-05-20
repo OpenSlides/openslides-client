@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
-import { MotionListFilterService } from '../motion-list-filter.service';
-import { MotionsListServiceModule } from '../motions-list-service.module';
-import { OsFilter } from 'src/app/site/base/base-filter.service';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { OsFilter } from 'src/app/site/base/base-filter.service';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { TranslateService } from '@ngx-translate/core';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
+
+import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
+import { TagControllerService } from '../../../modules/tags/services';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
 import { MotionControllerService } from '../../common/motion-controller.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { MotionListFilterService } from '../motion-list-filter.service';
+import { MotionsListServiceModule } from '../motions-list-service.module';
 
 @Injectable({
     providedIn: MotionsListServiceModule

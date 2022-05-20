@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DetailViewNavigatorComponent } from './detail-view-navigator.component';
 
-describe('DetailViewNavigatorComponent', () => {
+describe(`DetailViewNavigatorComponent`, () => {
     let component: DetailViewNavigatorComponent;
     let fixture: ComponentFixture<DetailViewNavigatorComponent>;
 
@@ -18,7 +18,7 @@ describe('DetailViewNavigatorComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

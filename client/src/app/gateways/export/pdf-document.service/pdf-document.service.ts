@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { HttpService } from '../../http.service';
 import { saveAs } from 'file-saver';
+import { Functionable } from 'src/app/infrastructure/utils';
+
+import { HttpService } from '../../http.service';
 import { ExportServiceModule } from '../export-service.module';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';
 import { ProgressSnackBarControlService } from '../progress-snack-bar/services/progress-snack-bar-control.service';
-import { Functionable } from 'src/app/infrastructure/utils';
 import { PdfImagesService } from './pdf-images.service';
 
 export const PDF_OPTIONS = {

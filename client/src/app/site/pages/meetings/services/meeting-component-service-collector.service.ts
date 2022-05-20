@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { ComponentServiceCollectorService } from '../../../services/component-service-collector.service';
-import { ActiveMeetingIdService } from './active-meeting-id.service';
-import { ActiveMeetingService } from './active-meeting.service';
-import { Title } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageService } from '../../../../gateways/storage.service';
-import { MeetingSettingsService } from './meeting-settings.service';
-import { ModelRequestService } from '../../../services/model-request.service';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
+import { StorageService } from '../../../../gateways/storage.service';
+import { ComponentServiceCollectorService } from '../../../services/component-service-collector.service';
+import { ModelRequestService } from '../../../services/model-request.service';
+import { ActiveMeetingService } from './active-meeting.service';
+import { ActiveMeetingIdService } from './active-meeting-id.service';
+import { MeetingSettingsService } from './meeting-settings.service';
+
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingComponentServiceCollectorService {
     public get titleService(): Title {

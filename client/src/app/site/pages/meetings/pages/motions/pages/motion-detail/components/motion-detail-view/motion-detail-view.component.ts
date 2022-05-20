@@ -1,42 +1,42 @@
 import {
-    Component,
-    OnInit,
-    OnDestroy,
-    ChangeDetectorRef,
-    HostListener,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostListener,
+    OnDestroy,
+    OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, filter, first, firstValueFrom, Observable, of } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Motion } from 'src/app/domain/models/motions/motion';
+import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { Observable, filter, first, firstValueFrom, of, BehaviorSubject } from 'rxjs';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
-import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
-import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
-import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { MotionDetailViewService } from '../../services/motion-detail-view.service';
-import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
+import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
+import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
+import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
+import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
+import { MotionDetailViewService } from '../../services/motion-detail-view.service';
 
 @Component({
-    selector: 'os-motion-detail-view',
-    templateUrl: './motion-detail-view.component.html',
-    styleUrls: ['./motion-detail-view.component.scss'],
+    selector: `os-motion-detail-view`,
+    templateUrl: `./motion-detail-view.component.html`,
+    styleUrls: [`./motion-detail-view.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -188,7 +188,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             this.router.navigate([`create-amendment`], { relativeTo: this.route });
         } else {
             this.router.navigate([this.activeMeetingId, `motions`, `new-amendment`], {
-                relativeTo: this.route.snapshot.params['relativeTo'],
+                relativeTo: this.route.snapshot.params[`relativeTo`],
                 queryParams: { parent: this.motion.id || null }
             });
         }
@@ -316,7 +316,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.newMotion = true;
         this.editMotion = true;
         this.motion = {} as any;
-        if (this.route.snapshot.queryParams['parent']) {
+        if (this.route.snapshot.queryParams[`parent`]) {
             this.initializeAmendment();
         }
     }
@@ -394,7 +394,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private async initializeAmendment(): Promise<void> {
         const motion: any = {};
-        this._parentId = +this.route.snapshot.queryParams['parent'] || null;
+        this._parentId = +this.route.snapshot.queryParams[`parent`] || null;
         this.amendmentEdit = true;
         await this.ensureParentIsAvailable(this._parentId!);
         const parentMotion = this.repo.getViewModel(this._parentId!);

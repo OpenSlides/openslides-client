@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionBlock } from '../../../../domain/models/motions/motion-block';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { MotionAction } from '../motion-repository.service';
-import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+
+import { MotionBlock } from '../../../../domain/models/motions/motion-block';
+import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
+import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
+import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionBlockAction } from './motion-block.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotionBlock,

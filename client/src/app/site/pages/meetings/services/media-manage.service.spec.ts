@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MediaManageService } from './media-manage.service';
 
-describe('MediaManageService', () => {
+describe(`MediaManageService`, () => {
     let service: MediaManageService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MediaManageService', () => {
         service = TestBed.inject(MediaManageService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

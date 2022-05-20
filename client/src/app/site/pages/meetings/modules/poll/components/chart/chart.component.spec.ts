@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartComponent } from './chart.component';
 
-describe('ChartComponent', () => {
+describe(`ChartComponent`, () => {
     let component: ChartComponent;
     let fixture: ComponentFixture<ChartComponent>;
 
@@ -18,7 +18,7 @@ describe('ChartComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

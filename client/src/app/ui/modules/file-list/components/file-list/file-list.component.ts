@@ -1,24 +1,24 @@
 import {
-    Component,
-    OnInit,
-    Input,
-    ChangeDetectorRef,
-    ViewEncapsulation,
     ChangeDetectionStrategy,
-    Output,
+    ChangeDetectorRef,
+    Component,
     EventEmitter,
+    Input,
+    OnInit,
+    Output,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { PblDataSource, PblColumnDefinition, columnFactory, createDS } from '@pebula/ngrid';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { columnFactory, createDS, PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { OnDestroy } from '@angular/core';
 
 interface MoveEvent {
     files: ViewMediafile[];
@@ -46,9 +46,9 @@ interface BeforeEditingEvent {
 }
 
 @Component({
-    selector: 'os-file-list',
-    templateUrl: './file-list.component.html',
-    styleUrls: ['./file-list.component.scss'],
+    selector: `os-file-list`,
+    templateUrl: `./file-list.component.html`,
+    styleUrls: [`./file-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

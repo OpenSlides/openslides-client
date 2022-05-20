@@ -1,17 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { Subscription } from 'rxjs';
+import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
+import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.service';
 
 @Component({
-    selector: 'os-motion-final-version',
-    templateUrl: './motion-final-version.component.html',
-    styleUrls: ['./motion-final-version.component.scss']
+    selector: `os-motion-final-version`,
+    templateUrl: `./motion-final-version.component.html`,
+    styleUrls: [`./motion-final-version.component.scss`]
 })
 export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent {
     @Input()

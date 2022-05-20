@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantCsvExportService } from './participant-csv-export.service';
 
-describe('ParticipantCsvExportService', () => {
+describe(`ParticipantCsvExportService`, () => {
     let service: ParticipantCsvExportService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ParticipantCsvExportService', () => {
         service = TestBed.inject(ParticipantCsvExportService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { MotionsCommonServiceModule } from '../motions-service.module';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { ViewMotion } from '../../../view-models';
+import { MotionsCommonServiceModule } from '../motions-service.module';
 
 @Injectable({
     providedIn: MotionsCommonServiceModule

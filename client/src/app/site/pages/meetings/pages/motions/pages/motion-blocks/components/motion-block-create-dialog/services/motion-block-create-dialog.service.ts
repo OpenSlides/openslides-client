@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
-import { MotionBlockCreateDialogComponent } from '../components/motion-block-create-dialog/motion-block-create-dialog.component';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+
+import { MotionBlockCreateDialogComponent } from '../components/motion-block-create-dialog/motion-block-create-dialog.component';
 import { MotionBlockCreateDialogModule } from '../motion-block-create-dialog.module';
 
 @Injectable({

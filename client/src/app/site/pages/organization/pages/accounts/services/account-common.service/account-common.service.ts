@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Ids } from 'src/app/domain/definitions/key-types';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { GetUsersPresenterService } from 'src/app/gateways/presenter';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AccountCommonService {
     public constructor(private operator: OperatorService, private usersPresenter: GetUsersPresenterService) {}

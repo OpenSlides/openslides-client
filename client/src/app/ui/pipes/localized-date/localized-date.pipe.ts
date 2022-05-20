@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { locale, unix } from 'moment';
 
 @Pipe({
-    name: 'localizedDate'
+    name: `localizedDate`
 })
 export class LocalizedDatePipe implements PipeTransform {
     public constructor(private translate: TranslateService) {}

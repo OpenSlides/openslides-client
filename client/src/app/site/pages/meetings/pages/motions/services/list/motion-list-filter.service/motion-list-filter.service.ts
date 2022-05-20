@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
-import {
-    BaseFilterListService,
-    OsFilterOption,
-    OsFilter,
-    OsFilterOptions
-} from 'src/app/site/base/base-filter.service';
-import { ViewMotion } from '../../../view-models';
-import { AmendmentType } from 'src/app/domain/models/motions/motions.constants';
-import { StorageService } from 'src/app/gateways/storage.service';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Restriction } from 'src/app/domain/models/motions/motion-state';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { MotionsListServiceModule } from '../motions-list-service.module';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
+import { AmendmentType } from 'src/app/domain/models/motions/motions.constants';
+import { StorageService } from 'src/app/gateways/storage.service';
+import {
+    BaseFilterListService,
+    OsFilter,
+    OsFilterOption,
+    OsFilterOptions
+} from 'src/app/site/base/base-filter.service';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
+import { MotionCategoryControllerService } from '../../../modules/categories/services';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
+import { TagControllerService } from '../../../modules/tags/services';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
+import { ViewMotion } from '../../../view-models';
+import { MotionsListServiceModule } from '../motions-list-service.module';
 
 /**
  * Filter description to easier parse dynamically occurring workflows

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BaseSortListService, OsSortingOption, OsSortingDefinition } from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
+
 import { AssignmentListServiceModule } from './assignment-list-service.module';
 
 /**

@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MeetingTimeComponent } from './components/meeting-time/meeting-time.component';
+import { NgModule } from '@angular/core';
+
 import { PipesModule } from '../../pipes/pipes.module';
+import { MeetingTimeComponent } from './components/meeting-time/meeting-time.component';
 
 const DECLARATIONS = [MeetingTimeComponent];
 

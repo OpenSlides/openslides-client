@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorCountdownDialogComponent } from './projector-countdown-dialog.component';
 
-describe('ProjectorCountdownDialogComponent', () => {
+describe(`ProjectorCountdownDialogComponent`, () => {
     let component: ProjectorCountdownDialogComponent;
     let fixture: ComponentFixture<ProjectorCountdownDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('ProjectorCountdownDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

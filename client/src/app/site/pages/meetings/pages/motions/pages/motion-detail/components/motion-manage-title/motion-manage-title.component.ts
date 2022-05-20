@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { ViewMotionChangeRecommendation, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
-import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { Subscription } from 'rxjs';
+import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
+import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
+import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
+import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
+import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 @Component({
-    selector: 'os-motion-manage-title',
-    templateUrl: './motion-manage-title.component.html',
-    styleUrls: ['./motion-manage-title.component.scss']
+    selector: `os-motion-manage-title`,
+    templateUrl: `./motion-manage-title.component.html`,
+    styleUrls: [`./motion-manage-title.component.scss`]
 })
 export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
     public titleChangeRecommendation: ViewMotionChangeRecommendation | null = null;

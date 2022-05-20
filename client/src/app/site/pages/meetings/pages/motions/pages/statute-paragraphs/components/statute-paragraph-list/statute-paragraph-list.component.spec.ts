@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatuteParagraphListComponent } from './statute-paragraph-list.component';
 
-describe('StatuteParagraphListComponent', () => {
+describe(`StatuteParagraphListComponent`, () => {
     let component: StatuteParagraphListComponent;
     let fixture: ComponentFixture<StatuteParagraphListComponent>;
 
@@ -18,7 +18,7 @@ describe('StatuteParagraphListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

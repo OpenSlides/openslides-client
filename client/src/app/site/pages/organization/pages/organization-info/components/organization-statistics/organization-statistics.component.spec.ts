@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationStatisticsComponent } from './organization-statistics.component';
 
-describe('OrganizationStatisticsComponent', () => {
+describe(`OrganizationStatisticsComponent`, () => {
     let component: OrganizationStatisticsComponent;
     let fixture: ComponentFixture<OrganizationStatisticsComponent>;
 
@@ -18,7 +18,7 @@ describe('OrganizationStatisticsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

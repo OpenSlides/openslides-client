@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionListInfoDialogComponent } from './motion-list-info-dialog.component';
 
-describe('MotionListInfoDialogComponent', () => {
+describe(`MotionListInfoDialogComponent`, () => {
     let component: MotionListInfoDialogComponent;
     let fixture: ComponentFixture<MotionListInfoDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionListInfoDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

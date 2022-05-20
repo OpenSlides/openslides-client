@@ -1,19 +1,20 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { fadeInAnim, fadeInOutAnim } from 'src/app/infrastructure/animations';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { combineLatest, map, Observable } from 'rxjs';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { CallRestrictionService } from '../../../../services/call-restriction.service';
+import { combineLatest, map, Observable } from 'rxjs';
+import { fadeInAnim, fadeInOutAnim } from 'src/app/infrastructure/animations';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
-import { RtcService } from '../../../../services/rtc.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
 import { ApplauseService } from '../../../../services/applause.service';
+import { CallRestrictionService } from '../../../../services/call-restriction.service';
+import { RtcService } from '../../../../services/rtc.service';
 
 @Component({
-    selector: 'os-action-bar',
-    templateUrl: './action-bar.component.html',
-    styleUrls: ['./action-bar.component.scss'],
+    selector: `os-action-bar`,
+    templateUrl: `./action-bar.component.html`,
+    styleUrls: [`./action-bar.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [fadeInAnim, fadeInOutAnim]
 })

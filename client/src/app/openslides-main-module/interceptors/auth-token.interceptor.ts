@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
 import {
-    HttpRequest,
-    HttpHandler,
+    HttpErrorResponse,
     HttpEvent,
+    HttpHandler,
     HttpInterceptor,
-    HttpResponse,
-    HttpErrorResponse
+    HttpRequest,
+    HttpResponse
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+
 import { AuthTokenService } from '../../site/services/auth-token.service';
 
 @Injectable()

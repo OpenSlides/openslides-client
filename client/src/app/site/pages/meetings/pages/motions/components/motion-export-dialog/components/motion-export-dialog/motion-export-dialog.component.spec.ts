@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionExportDialogComponent } from './motion-export-dialog.component';
 
-describe('MotionExportDialogComponent', () => {
+describe(`MotionExportDialogComponent`, () => {
     let component: MotionExportDialogComponent;
     let fixture: ComponentFixture<MotionExportDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionExportDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,9 +1,10 @@
+import { Observable } from 'rxjs';
+
 import { ChatGroup } from '../../../../../../domain/models/chat/chat-group';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
-import { ViewChatMessage } from './view-chat-message';
-import { Observable } from 'rxjs';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
+import { ViewChatMessage } from './view-chat-message';
 export class ViewChatGroup extends BaseViewModel<ChatGroup> {
     public static readonly COLLECTION = ChatGroup.COLLECTION;
 

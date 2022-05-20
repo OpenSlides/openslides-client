@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewMotionCategory } from '../../view-models';
-import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { MotionCategoryRepositoryService } from 'src/app/gateways/repositories/motions';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
-import { Observable, map, BehaviorSubject } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
 import { Action } from 'src/app/gateways/actions';
+import { MotionCategoryRepositoryService } from 'src/app/gateways/repositories/motions';
+import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
+
+import { ViewMotionCategory } from '../../view-models';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {
     private readonly _currentCategoriesSubject = new BehaviorSubject<ViewMotionCategory[]>([]);

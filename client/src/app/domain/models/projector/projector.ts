@@ -1,8 +1,8 @@
-import { BaseModel } from '../base/base-model';
-import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { Id } from '../../definitions/key-types';
-import { Projectiondefault } from './projection-default';
 import { HasSequentialNumber } from '../../interfaces';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
+import { Projectiondefault } from './projection-default';
 
 /**
  * Representation of a projector.

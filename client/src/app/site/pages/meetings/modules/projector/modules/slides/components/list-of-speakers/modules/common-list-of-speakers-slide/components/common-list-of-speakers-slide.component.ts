@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { isAgendaItemContentObjectRepository } from 'src/app/gateways/repositories/base-agenda-item-content-object-repository';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
+
 import { BaseSlideComponent } from '../../../../../base/base-slide-component';
 import { modifyAgendaItemNumber } from '../../../../../definitions';
 import { CommonListOfSpeakersSlideData } from '../common-list-of-speakers-slide-data';
-import { isAgendaItemContentObjectRepository } from 'src/app/gateways/repositories/base-agenda-item-content-object-repository';
 
 @Component({
     selector: `os-common-list-of-speakers-slide`,

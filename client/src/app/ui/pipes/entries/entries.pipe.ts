@@ -1,12 +1,12 @@
-import { KeyValueDiffer, KeyValueDiffers, Pipe, PipeTransform } from '@angular/core';
 import { KeyValue } from '@angular/common';
+import { KeyValueDiffer, KeyValueDiffers, Pipe, PipeTransform } from '@angular/core';
 
 interface IterableMap<K, V> {
     [Symbol.iterator](): IterableIterator<[K, V]>;
 }
 
 @Pipe({
-    name: 'entries'
+    name: `entries`
 })
 export class EntriesPipe implements PipeTransform {
     private differ!: KeyValueDiffer<any, any>;

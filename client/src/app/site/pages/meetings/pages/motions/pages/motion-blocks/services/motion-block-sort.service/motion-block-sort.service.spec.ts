@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionBlockSortService } from './motion-block-sort.service';
 
-describe('MotionBlockSortService', () => {
+describe(`MotionBlockSortService`, () => {
     let service: MotionBlockSortService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionBlockSortService', () => {
         service = TestBed.inject(MotionBlockSortService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

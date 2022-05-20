@@ -1,19 +1,19 @@
 import {
-    Component,
-    OnInit,
-    ViewEncapsulation,
     ChangeDetectionStrategy,
-    ViewChild,
+    ChangeDetectorRef,
+    Component,
     Inject,
-    ChangeDetectorRef
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
-import { ProjectorComponent } from 'src/app/site/pages/meetings/modules/projector/components/projector/projector.component';
-import { Projector } from 'src/app/domain/models/projector/projector';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { auditTime } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { auditTime } from 'rxjs';
+import { Projector } from 'src/app/domain/models/projector/projector';
+import { ProjectorComponent } from 'src/app/site/pages/meetings/modules/projector/components/projector/projector.component';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 const ASPECT_RATIO_FORM_KEY = `aspectRatio`;

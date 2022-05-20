@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
-import { ParticipantImportServiceModule } from '../participant-import-service.module';
-import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
-import { User } from 'src/app/domain/models/users/user';
-import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { GroupControllerService } from '../../../../modules';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
-import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
-import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { copy } from 'src/app/infrastructure/utils/transform-functions';
-import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
-import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { User } from 'src/app/domain/models/users/user';
+import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
+import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
+import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
+import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
+import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
+import { copy } from 'src/app/infrastructure/utils/transform-functions';
+import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
+
+import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
+import { GroupControllerService } from '../../../../modules';
+import { ParticipantImportServiceModule } from '../participant-import-service.module';
 
 const GROUP_PROPERTY = `group_ids`;
 

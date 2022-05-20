@@ -1,12 +1,12 @@
 import { Directive, EmbeddedViewRef, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
 
 const SUBSCRIPTION_NAME = `settingsSubscription`;
 
 @Directive({
-    selector: '[osMeetingSetting]'
+    selector: `[osMeetingSetting]`
 })
 export class MeetingSettingDirective extends BaseUiComponent {
     @Input()

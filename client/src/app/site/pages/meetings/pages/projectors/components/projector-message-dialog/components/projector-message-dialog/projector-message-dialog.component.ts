@@ -1,15 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MessageDialogData } from '../../definitions';
+import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
+
+import { MessageDialogData } from '../../definitions';
 
 @Component({
-    selector: 'os-projector-message-dialog',
-    templateUrl: './projector-message-dialog.component.html',
-    styleUrls: ['./projector-message-dialog.component.scss']
+    selector: `os-projector-message-dialog`,
+    templateUrl: `./projector-message-dialog.component.html`,
+    styleUrls: [`./projector-message-dialog.component.scss`]
 })
 export class ProjectorMessageDialogComponent extends BaseComponent implements OnInit {
     /**

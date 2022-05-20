@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
+
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
-import { BaseComponent } from 'src/app/site/base/base.component';
 
 @Component({
-    selector: 'os-comment-section-sort',
-    templateUrl: './comment-section-sort.component.html',
-    styleUrls: ['./comment-section-sort.component.scss']
+    selector: `os-comment-section-sort`,
+    templateUrl: `./comment-section-sort.component.html`,
+    styleUrls: [`./comment-section-sort.component.scss`]
 })
 export class CommentSectionSortComponent extends BaseComponent implements OnInit {
     /**

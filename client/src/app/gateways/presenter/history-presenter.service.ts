@@ -71,7 +71,7 @@ const getUniqueItems = (positions: Position[]) => {
 };
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HistoryPresenterService {
     public constructor(private http: HttpService, private userRepo: UserRepositoryService) {}

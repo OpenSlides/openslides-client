@@ -1,5 +1,5 @@
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
 
 export const MeetingSettingsAppConfig: AppConfig = {
     name: `settings`,

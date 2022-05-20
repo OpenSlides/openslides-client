@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
 import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { TopicImportServiceModule } from '../topic-import-service.module';
-import { TopicExportService } from '../topic-export.service';
+
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
+import { TopicExportService } from '../topic-export.service';
+import { TopicImportServiceModule } from '../topic-import-service.module';
 
 @Injectable({
     providedIn: TopicImportServiceModule

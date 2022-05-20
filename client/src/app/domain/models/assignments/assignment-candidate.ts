@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
 import { Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
 
 /**
  * Content of the 'assignment_related_users' property.

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VerticalTabGroupComponent } from './vertical-tab-group.component';
 
-describe('VerticalTabGroupComponent', () => {
+describe(`VerticalTabGroupComponent`, () => {
     let component: VerticalTabGroupComponent;
     let fixture: ComponentFixture<VerticalTabGroupComponent>;
 
@@ -18,7 +18,7 @@ describe('VerticalTabGroupComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

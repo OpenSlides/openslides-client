@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountButtonComponent } from './account-button.component';
 
-describe('AccountButtonComponent', () => {
+describe(`AccountButtonComponent`, () => {
     let component: AccountButtonComponent;
     let fixture: ComponentFixture<AccountButtonComponent>;
 
@@ -18,7 +18,7 @@ describe('AccountButtonComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

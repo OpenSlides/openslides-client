@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionExportDialogService } from './motion-export-dialog.service';
 
-describe('MotionExportDialogService', () => {
+describe(`MotionExportDialogService`, () => {
     let service: MotionExportDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionExportDialogService', () => {
         service = TestBed.inject(MotionExportDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

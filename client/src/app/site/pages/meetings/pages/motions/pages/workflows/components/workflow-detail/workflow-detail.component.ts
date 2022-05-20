@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { MergeAmendment, Restriction, MotionState } from 'src/app/domain/models/motions/motion-state';
-import { ViewMotionWorkflow, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
+import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/motions/motion-state';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { MotionStateControllerService } from '../../../../modules/states/services';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Observable } from 'rxjs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { MatTableDataSource } from '@angular/material/table';
 import { WorkflowExportService } from '../../services/workflow-export.service/workflow-export.service';
 
 /**

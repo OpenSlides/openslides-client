@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OperatorMediaPermissionService } from './operator-media-permission.service';
 
-describe('OperatorMediaPermissionService', () => {
+describe(`OperatorMediaPermissionService`, () => {
     let service: OperatorMediaPermissionService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('OperatorMediaPermissionService', () => {
         service = TestBed.inject(OperatorMediaPermissionService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

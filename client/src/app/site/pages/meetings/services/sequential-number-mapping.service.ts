@@ -5,7 +5,8 @@ import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from 'src
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AutoupdateService, ModelSubscription } from 'src/app/site/services/autoupdate';
-import { SimplifiedModelRequest, ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
+import { ModelRequestBuilderService, SimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
+
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingService } from './active-meeting.service';
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';

@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
-import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { MotionChangeRecommendationRepositoryService } from 'src/app/gateways/repositories/motions';
-import { ViewMotion } from '../../../../view-models';
-import { ChangeRecoMode, ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { LineRange } from '../../../../definitions';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { map, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
+import { ChangeRecoMode, ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { MotionChangeRecommendationRepositoryService } from 'src/app/gateways/repositories/motions';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { LineRange } from '../../../../definitions';
+import { ViewMotion } from '../../../../view-models';
 import { ChangeRecommendationsModule } from '../../change-recommendations.module';
+import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from '../motion-diff.service';
-import { Identifiable } from 'src/app/domain/interfaces';
 
 @Injectable({
     providedIn: ChangeRecommendationsModule

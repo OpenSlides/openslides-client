@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { Id } from '../../domain/definitions/key-types';
 import { CML } from '../../domain/definitions/organization-permission';
 import { Presenter } from './presenter';
@@ -28,7 +29,7 @@ export interface GetUserRelatedModelsPresenterResult {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class GetUserRelatedModelsPresenterService {
     public constructor(private presenter: PresenterService) {}

@@ -1,19 +1,20 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'os-projector-list-entry',
-    templateUrl: './projector-list-entry.component.html',
-    styleUrls: ['./projector-list-entry.component.scss'],
+    selector: `os-projector-list-entry`,
+    templateUrl: `./projector-list-entry.component.html`,
+    styleUrls: [`./projector-list-entry.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ProjectorListEntryComponent {

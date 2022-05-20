@@ -1,11 +1,11 @@
-import { Component, Input, ElementRef } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { HtmlColor } from 'src/app/domain/definitions/key-types';
 import { Color, ColorService } from 'src/app/site/services/color.service';
 
 @Component({
-    selector: 'os-chip',
-    templateUrl: './chip.component.html',
-    styleUrls: ['./chip.component.scss']
+    selector: `os-chip`,
+    templateUrl: `./chip.component.html`,
+    styleUrls: [`./chip.component.scss`]
 })
 export class ChipComponent {
     /**

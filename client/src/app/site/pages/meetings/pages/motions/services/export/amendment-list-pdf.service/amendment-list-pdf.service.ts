@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
+
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionsExportModule } from '../motions-export.module';

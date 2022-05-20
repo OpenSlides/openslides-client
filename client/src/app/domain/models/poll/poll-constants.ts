@@ -1,4 +1,5 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { OptionDataKey, PollDataKey } from './generic-poll';
 
 export const YES_KEY = `yes`;

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { LoginWrapperComponent } from './modules/login-wrapper/components/login-wrapper/login-wrapper.component';
 
 const routes: Routes = [

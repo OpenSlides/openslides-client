@@ -1,9 +1,10 @@
+import { Ids } from 'src/app/domain/definitions/key-types';
+
 import { Id } from '../../../domain/definitions/key-types';
+import { isEmpty } from '../functions';
 import { BaseBeforeImportHandler } from './base-before-import-handler';
 import { CsvMapping, ImportIdentifiable, ImportResolveInformation } from './import-utils';
 import { StaticBeforeImportConfig } from './static-before-import-config';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { isEmpty } from '../functions';
 
 /**
  * `MainModel` is the type of a model an importer will primarly create. `SideModel` is the type of a model which will

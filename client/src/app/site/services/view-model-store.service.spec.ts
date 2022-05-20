@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ViewModelStoreService } from './view-model-store.service';
 
-describe('ViewModelStoreService', () => {
+describe(`ViewModelStoreService`, () => {
     let service: ViewModelStoreService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ViewModelStoreService', () => {
         service = TestBed.inject(ViewModelStoreService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

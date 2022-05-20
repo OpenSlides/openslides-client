@@ -1,8 +1,8 @@
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Observable, map } from 'rxjs';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-const AGENDA_ITEM_SUBSCRIPTION = 'agenda';
+const AGENDA_ITEM_SUBSCRIPTION = `agenda`;
 const TOPIC_LIST_SUBSCRIPTION = `topic_list`;
 
 export const getAgendaSubscriptionConfig = (id: Id, getNextMeetingIdObservable: () => Observable<Id | null>) => ({

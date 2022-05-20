@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+
 import { StorageService } from '../../gateways/storage.service';
 import { ModelRequestService } from './model-request.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ComponentServiceCollectorService {
     constructor(

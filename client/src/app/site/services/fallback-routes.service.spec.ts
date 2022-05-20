@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { FallbackRoutesService } from './fallback-routes.service';
 
-describe('FallbackRoutesService', () => {
+describe(`FallbackRoutesService`, () => {
     let service: FallbackRoutesService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('FallbackRoutesService', () => {
         service = TestBed.inject(FallbackRoutesService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,6 +1,7 @@
-import { Component, ComponentRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { SlideData } from '../../../../pages/projectors/definitions';
+import { Component, ComponentRef, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+
+import { SlideData } from '../../../../pages/projectors/definitions';
 import { isBaseScaleScrollSlideComponent } from '../../modules/slides/base/base-scale-scroll-slide-component';
 import { BaseSlideComponent } from '../../modules/slides/base/base-slide-component';
 import { SlideManagerService } from '../../modules/slides/services/slide-manager.service';
@@ -10,9 +11,9 @@ function hasError(obj: object): obj is { error: string } {
 }
 
 @Component({
-    selector: 'os-slide-container',
-    templateUrl: './slide-container.component.html',
-    styleUrls: ['./slide-container.component.scss']
+    selector: `os-slide-container`,
+    templateUrl: `./slide-container.component.html`,
+    styleUrls: [`./slide-container.component.scss`]
 })
 export class SlideContainerComponent {
     private previousSlideName: string | undefined;

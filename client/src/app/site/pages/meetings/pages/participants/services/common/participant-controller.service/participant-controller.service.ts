@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { Ids } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
+import { Action, ActionService } from 'src/app/gateways/actions';
+import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
 import {
+    FullNameInformation,
     RawUser,
-    UserStateField,
     UserPatchFn,
     UserRepositoryService,
-    FullNameInformation
+    UserStateField
 } from 'src/app/gateways/repositories/users';
-import { Action, ActionService } from 'src/app/gateways/actions';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { UserService } from 'src/app/site/services/user.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { UserDeleteDialogService } from 'src/app/ui/modules/user-components';
-import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
-import { firstValueFrom } from 'rxjs';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { UserService } from 'src/app/site/services/user.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { UserDeleteDialogService } from 'src/app/ui/modules/user-components';
+
+import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
     `structure_level`,

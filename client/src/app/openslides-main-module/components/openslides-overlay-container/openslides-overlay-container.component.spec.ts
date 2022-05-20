@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OpenSlidesOverlayContainerComponent } from './openslides-overlay-container.component';
 
-describe('OpenslidesOverlayContainerComponent', () => {
+describe(`OpenslidesOverlayContainerComponent`, () => {
     let component: OpenSlidesOverlayContainerComponent;
     let fixture: ComponentFixture<OpenSlidesOverlayContainerComponent>;
 
@@ -18,7 +18,7 @@ describe('OpenslidesOverlayContainerComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

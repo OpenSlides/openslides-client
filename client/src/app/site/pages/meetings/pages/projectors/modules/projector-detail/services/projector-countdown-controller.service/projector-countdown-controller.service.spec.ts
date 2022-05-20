@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectorCountdownControllerService } from './projector-countdown-controller.service';
 
-describe('ProjectorCountdownControllerService', () => {
+describe(`ProjectorCountdownControllerService`, () => {
     let service: ProjectorCountdownControllerService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ProjectorCountdownControllerService', () => {
         service = TestBed.inject(ProjectorCountdownControllerService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

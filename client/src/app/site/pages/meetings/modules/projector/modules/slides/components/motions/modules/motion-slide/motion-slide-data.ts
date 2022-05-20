@@ -1,6 +1,7 @@
 import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
 import { MergeAmendment } from 'src/app/domain/models/motions/motion-state';
 import { LineNumberingMode, ModificationType } from 'src/app/domain/models/motions/motions.constants';
+
 import { MotionTitleInformation, ReferencedMotions } from '../../base/base-motion-slide';
 
 /**

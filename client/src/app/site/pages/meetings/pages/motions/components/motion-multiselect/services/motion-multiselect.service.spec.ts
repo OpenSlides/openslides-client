@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionMultiselectService } from './motion-multiselect.service';
 
-describe('MotionMultiselectService', () => {
+describe(`MotionMultiselectService`, () => {
     let service: MotionMultiselectService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionMultiselectService', () => {
         service = TestBed.inject(MotionMultiselectService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

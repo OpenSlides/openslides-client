@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectorComponent } from './components/projector/projector.component';
+import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { ProjectorClockComponent } from './components/projector-clock/projector-clock.component';
 import { DirectivesModule } from 'src/app/ui/directives';
+
+import { ProjectorComponent } from './components/projector/projector.component';
+import { ProjectorClockComponent } from './components/projector-clock/projector-clock.component';
 import { SlideContainerComponent } from './components/slide-container/slide-container.component';
-import { SlidesModule } from './modules/slides/slides.module';
 import { CountdownTimeModule } from './modules/countdown-time/countdown-time.module';
+import { SlidesModule } from './modules/slides/slides.module';
 
 const DECLARATIONS = [ProjectorComponent];
 const EXPORTED_MODULES = [CountdownTimeModule];

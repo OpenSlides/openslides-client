@@ -1,5 +1,5 @@
-import { BaseModel } from '../base/base-model';
 import { HtmlColor, Id } from '../../definitions/key-types';
+import { BaseModel } from '../base/base-model';
 
 export interface ThemeRequiredValues {
     // Required

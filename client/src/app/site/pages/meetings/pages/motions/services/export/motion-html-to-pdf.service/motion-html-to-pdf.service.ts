@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+
 import { MotionsExportModule } from '../motions-export.module';
 
 /**

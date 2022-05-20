@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { Id, Ids } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
+import { Action, createEmptyAction } from 'src/app/gateways/actions';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { NullablePartial } from 'src/app/infrastructure/utils';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionsCommonServiceModule } from '../motions-service.module';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
 import { DiffLinesInParagraph } from '../../../definitions';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Action, createEmptyAction } from 'src/app/gateways/actions';
-import { map, Observable } from 'rxjs';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { Ids, Id } from 'src/app/domain/definitions/key-types';
-import { NullablePartial } from 'src/app/infrastructure/utils';
+import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
+import { MotionsCommonServiceModule } from '../motions-service.module';
 
 @Injectable({ providedIn: MotionsCommonServiceModule })
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {

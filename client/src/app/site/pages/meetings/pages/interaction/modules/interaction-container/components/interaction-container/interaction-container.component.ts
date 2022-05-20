@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, Observable } from 'rxjs';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
+import { ApplauseService } from '../../../../services/applause.service';
+import { InteractionService } from '../../../../services/interaction.service';
 import { RtcService } from '../../../../services/rtc.service';
 import { StreamService } from '../../../../services/stream.service';
-import { InteractionService } from '../../../../services/interaction.service';
-import { ApplauseService } from '../../../../services/applause.service';
 
 @Component({
-    selector: 'os-interaction-container',
-    templateUrl: './interaction-container.component.html',
-    styleUrls: ['./interaction-container.component.scss'],
+    selector: `os-interaction-container`,
+    templateUrl: `./interaction-container.component.html`,
+    styleUrls: [`./interaction-container.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InteractionContainerComponent extends BaseMeetingComponent implements OnInit {

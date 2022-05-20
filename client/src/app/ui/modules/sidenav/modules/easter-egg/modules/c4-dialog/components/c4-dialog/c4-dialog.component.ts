@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
@@ -54,9 +54,9 @@ interface SMAction {
 type StateMachine = { [state in State]?: { [event in StateEvent]?: SMAction } };
 
 @Component({
-    selector: 'os-c4-dialog',
-    templateUrl: './c4-dialog.component.html',
-    styleUrls: ['./c4-dialog.component.scss']
+    selector: `os-c4-dialog`,
+    templateUrl: `./c4-dialog.component.html`,
+    styleUrls: [`./c4-dialog.component.scss`]
 })
 export class C4DialogComponent implements OnInit, OnDestroy {
     /**

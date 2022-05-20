@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { EasterEggContentPlatformService } from './easter-egg-content-platform.service';
 
-describe('EasterEggContentPlatformService', () => {
+describe(`EasterEggContentPlatformService`, () => {
     let service: EasterEggContentPlatformService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('EasterEggContentPlatformService', () => {
         service = TestBed.inject(EasterEggContentPlatformService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

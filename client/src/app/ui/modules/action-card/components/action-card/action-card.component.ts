@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
-    selector: 'os-action-card',
-    templateUrl: './action-card.component.html',
-    styleUrls: ['./action-card.component.scss'],
+    selector: `os-action-card`,
+    templateUrl: `./action-card.component.html`,
+    styleUrls: [`./action-card.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

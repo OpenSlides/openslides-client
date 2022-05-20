@@ -1,23 +1,24 @@
-import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { SettingsGroup } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import {
     MeetingSettingsGroupDetailFieldComponent,
     SettingsFieldUpdate
 } from '../meeting-settings-group-detail-field/meeting-settings-group-detail-field.component';
-import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute } from '@angular/router';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
 @Component({
-    selector: 'os-meeting-settings-group-detail',
-    templateUrl: './meeting-settings-group-detail.component.html',
-    styleUrls: ['./meeting-settings-group-detail.component.scss']
+    selector: `os-meeting-settings-group-detail`,
+    templateUrl: `./meeting-settings-group-detail.component.html`,
+    styleUrls: [`./meeting-settings-group-detail.component.scss`]
 })
 export class MeetingSettingsGroupDetailComponent
     extends BaseMeetingComponent
@@ -55,8 +56,8 @@ export class MeetingSettingsGroupDetailComponent
 
         this.subscriptions.push(
             this.route.params.subscribe(params => {
-                if (params['group']) {
-                    this.settingsGroup = this.meetingSettingsDefinitionProvider.getSettingsGroup(params['group'])!;
+                if (params[`group`]) {
+                    this.settingsGroup = this.meetingSettingsDefinitionProvider.getSettingsGroup(params[`group`])!;
                     const groupName = this.translate.instant(this.settingsGroup.label);
                     super.setTitle(`${settings} - ${groupName}`);
                     this.cd.markForCheck();

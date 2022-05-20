@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantListInfoDialogComponent } from './participant-list-info-dialog.component';
 
-describe('ParticipantListInfoDialogComponent', () => {
+describe(`ParticipantListInfoDialogComponent`, () => {
     let component: ParticipantListInfoDialogComponent;
     let fixture: ComponentFixture<ParticipantListInfoDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('ParticipantListInfoDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

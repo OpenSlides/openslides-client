@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ProjectorsRoutingModule } from './projectors-routing.module';
-import { ProjectorMainComponent } from './components/projector-main/projector-main.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { ProjectorMainComponent } from './components/projector-main/projector-main.component';
+import { ProjectorsRoutingModule } from './projectors-routing.module';
 
 @NgModule({
     declarations: [ProjectorMainComponent],

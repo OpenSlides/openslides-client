@@ -1,29 +1,30 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { ViewMotionBlock, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { ColumnRestriction } from 'src/app/ui/modules/list/components';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { PblColumnDefinition } from '@pebula/ngrid';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
+import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ViewMotion, ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { ColumnRestriction } from 'src/app/ui/modules/list/components';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
+import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionBlockDetailFilterListService } from '../../services/motion-block-detail-filter-list.service';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MotionBlockEditDialogService } from '../motion-block-edit-dialog/services/motion-block-edit-dialog.service';
-import { MatDialogRef } from '@angular/material/dialog';
 import { MotionBlockEditDialogComponent } from '../motion-block-edit-dialog/components/motion-block-edit-dialog/motion-block-edit-dialog.component';
+import { MotionBlockEditDialogService } from '../motion-block-edit-dialog/services/motion-block-edit-dialog.service';
 
 @Component({
-    selector: 'os-motion-block-detail',
-    templateUrl: './motion-block-detail.component.html',
-    styleUrls: ['./motion-block-detail.component.scss']
+    selector: `os-motion-block-detail`,
+    templateUrl: `./motion-block-detail.component.html`,
+    styleUrls: [`./motion-block-detail.component.scss`]
 })
 export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     public readonly COLLECTION = MotionBlock.COLLECTION;

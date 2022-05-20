@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+
 import { ParticipantExportModule } from '../participant-export.module';
 
 /**

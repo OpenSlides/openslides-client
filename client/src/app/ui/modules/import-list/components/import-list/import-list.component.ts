@@ -1,38 +1,39 @@
 import {
     Component,
-    ContentChildren,
-    OnInit,
-    QueryList,
-    ViewEncapsulation,
-    TemplateRef,
     ContentChild,
-    ViewChild,
+    ContentChildren,
     ElementRef,
-    Input,
     EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
     Output,
-    OnDestroy
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
+import { auditTime, distinctUntilChanged, firstValueFrom, map, Observable, of } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
+import { ImportStep, ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
+import { CsvMapping, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
+import { ImportService } from 'src/app/ui/base/import-service';
+
+import { ImportListHeaderDefinition } from '../../definitions';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
-import { PblColumnDefinition, PblNgridColumnSet, PblDataSource, createDS, columnFactory } from '@pebula/ngrid';
-import { ImportListHeaderDefinition } from '../../definitions';
-import { Observable, of, distinctUntilChanged, auditTime, map, firstValueFrom } from 'rxjs';
-import { MatSelectChange } from '@angular/material/select';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ImportService } from 'src/app/ui/base/import-service';
-import { ImportStep, ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
-import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
-import { CsvMapping, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-    selector: 'os-import-list',
-    templateUrl: './import-list.component.html',
-    styleUrls: ['./import-list.component.scss'],
+    selector: `os-import-list`,
+    templateUrl: `./import-list.component.html`,
+    styleUrls: [`./import-list.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ImportListComponent<M extends Identifiable> implements OnInit, OnDestroy {

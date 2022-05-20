@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, fromEvent, map, Observable, firstValueFrom } from 'rxjs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { BehaviorSubject, filter, fromEvent, map, Observable } from 'rxjs';
+
 import { BannerDefinition, BannerService } from '../modules/site-wrapper/services/banner.service';
 
 export interface OfflineReasonConfig {
@@ -28,7 +29,7 @@ const OFFLINE_BANNER: BannerDefinition = {
  * This service handles the status being connected to the internet.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ConnectionStatusService {
     public get offlineGone(): Observable<void> {
@@ -54,7 +55,7 @@ export class ConnectionStatusService {
     private _config: OfflineReasonConfig | null = null;
 
     public constructor(private bannerService: BannerService) {
-        fromEvent(window, 'offline').subscribe(() => this.goOffline(DEFAULT_OFFLINE_REASON));
+        fromEvent(window, `offline`).subscribe(() => this.goOffline(DEFAULT_OFFLINE_REASON));
     }
 
     public isOffline(): boolean {

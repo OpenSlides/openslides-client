@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { SearchUsersByNameOrEmailPresenterService } from './search-users-by-name-or-email-presenter.service';
 
-describe('SearchUsersByNameOrEmailPresenterService', () => {
+describe(`SearchUsersByNameOrEmailPresenterService`, () => {
     let service: SearchUsersByNameOrEmailPresenterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('SearchUsersByNameOrEmailPresenterService', () => {
         service = TestBed.inject(SearchUsersByNameOrEmailPresenterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

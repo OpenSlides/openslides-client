@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ErrorMainComponent } from './error-main.component';
 
-describe('ErrorMainComponent', () => {
+describe(`ErrorMainComponent`, () => {
     let component: ErrorMainComponent;
     let fixture: ComponentFixture<ErrorMainComponent>;
 
@@ -18,7 +18,7 @@ describe('ErrorMainComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

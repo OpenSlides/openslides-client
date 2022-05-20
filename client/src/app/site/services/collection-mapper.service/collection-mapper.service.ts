@@ -1,13 +1,14 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { BaseViewModel, ViewModelConstructor } from 'src/app/site/base/base-view-model';
 import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { CollectionMappedTypes, CollectionType } from './definitions';
+import { BaseViewModel, ViewModelConstructor } from 'src/app/site/base/base-view-model';
+
 import { CollectionMapper } from './collection-mapper';
+import { CollectionMappedTypes, CollectionType } from './definitions';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CollectionMapperService implements CollectionMapper {
     public get afterRepositoryRegistered(): Observable<CollectionMappedTypes<any, any>> {

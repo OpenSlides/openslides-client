@@ -3,16 +3,17 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
+import {
+    LineNumberingService,
+    MotionChangeRecommendationControllerService,
+    MotionDiffService
+} from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
+import { AmendmentControllerService } from '../amendment-controller.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service';
 import { MotionsCommonServiceModule } from '../motions-service.module';
-import { AmendmentControllerService } from '../amendment-controller.service';
-import {
-    MotionChangeRecommendationControllerService,
-    MotionDiffService,
-    LineNumberingService
-} from '../../../modules/change-recommendations/services';
 
 interface MotionFormatResult {
     origin_id: Id;

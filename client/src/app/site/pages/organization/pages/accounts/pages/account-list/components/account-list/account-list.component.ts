@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { AccountSortService } from '../../services/account-list-sort.service/account-sort.service';
+
+import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 import { AccountFilterService } from '../../../../services/common/account-filter.service';
+import { AccountSortService } from '../../services/account-list-sort.service/account-sort.service';
 
 @Component({
-    selector: 'os-account-list',
-    templateUrl: './account-list.component.html',
-    styleUrls: ['./account-list.component.scss']
+    selector: `os-account-list`,
+    templateUrl: `./account-list.component.html`,
+    styleUrls: [`./account-list.component.scss`]
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> implements OnInit {
     public tableColumnDefinition: PblColumnDefinition[] = [

@@ -1,24 +1,23 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/components/base-search-selector/base-search-selector.component';
-import { FormBuilder, NgControl } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { FormBuilder, NgControl } from '@angular/forms';
+import { MatOptionSelectionChange } from '@angular/material/core';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { Selectable } from 'src/app/domain/interfaces/selectable';
 import {
     SearchUsersByNameOrEmailPresenterScope,
     SearchUsersByNameOrEmailPresenterService
 } from 'src/app/gateways/presenter';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { MatFormFieldControl } from '@angular/material/form-field';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { MatOptionSelectionChange } from '@angular/material/core';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/components/base-search-selector/base-search-selector.component';
 
 @Component({
-    selector: 'os-account-search-selector',
-    templateUrl:
-        '../../../../../../../ui/modules/search-selector/components/base-search-selector/base-search-selector.component.html',
+    selector: `os-account-search-selector`,
+    templateUrl: `../../../../../../../ui/modules/search-selector/components/base-search-selector/base-search-selector.component.html`,
     styleUrls: [
-        './account-search-selector.component.scss',
+        `./account-search-selector.component.scss`,
         `../../../../../../../ui/modules/search-selector/components/base-search-selector/base-search-selector.component.scss`
     ],
     providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }]

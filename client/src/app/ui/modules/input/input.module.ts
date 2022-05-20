@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RoundedInputComponent } from './components/rounded-input/rounded-input.component';
-import { MatIconModule } from '@angular/material/icon';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+
+import { RoundedInputComponent } from './components/rounded-input/rounded-input.component';
 
 const DECLARATIONS = [RoundedInputComponent];
 

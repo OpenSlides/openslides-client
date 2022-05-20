@@ -1,25 +1,26 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-    ViewMotionCategory,
-    ViewMotionBlock,
-    ViewTag,
-    ViewMotionState
-} from 'src/app/site/pages/meetings/pages/motions';
-import { MotionListInfoDialogConfig } from '../../definitions';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
+import {
+    ViewMotionBlock,
+    ViewMotionCategory,
+    ViewMotionState,
+    ViewTag
+} from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+
 import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service';
 import { MotionBlockControllerService } from '../../../../../../modules/motion-blocks/services/motion-block-controller.service';
 import { TagControllerService } from '../../../../../../modules/tags/services/tag-controller.service';
-import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service';
-import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service';
+import { MotionListInfoDialogConfig } from '../../definitions';
 
 @Component({
-    selector: 'os-motion-list-info-dialog',
-    templateUrl: './motion-list-info-dialog.component.html',
-    styleUrls: ['./motion-list-info-dialog.component.scss']
+    selector: `os-motion-list-info-dialog`,
+    templateUrl: `./motion-list-info-dialog.component.html`,
+    styleUrls: [`./motion-list-info-dialog.component.scss`]
 })
 export class MotionListInfoDialogComponent {
     public readonly infoDialog: MotionListInfoDialogConfig;

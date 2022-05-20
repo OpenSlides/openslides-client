@@ -1,2 +1,2 @@
-export * from './utils';
 export * from './relations';
+export * from './utils';

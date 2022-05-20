@@ -3,7 +3,7 @@ import { LocalStorage } from '@ngx-pwa/local-storage';
 import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class StorageService {
     private noClearKeys: string[] = [];

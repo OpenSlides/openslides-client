@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommitteeDetailSharedContextService } from './committee-detail-shared-context.service';
 
-describe('CommitteeDetailSharedContextService', () => {
+describe(`CommitteeDetailSharedContextService`, () => {
     let service: CommitteeDetailSharedContextService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('CommitteeDetailSharedContextService', () => {
         service = TestBed.inject(CommitteeDetailSharedContextService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

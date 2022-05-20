@@ -1,8 +1,9 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Motion, MotionBlock } from 'src/app/domain/models/motions';
 import { BaseBeforeImportHandler } from 'src/app/infrastructure/utils/import/base-before-import-handler';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { CsvMapping, ImportResolveInformation } from 'src/app/infrastructure/utils/import/import-utils';
+
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 
 export class MotionBlockImportHelper extends BaseBeforeImportHandler<Motion, MotionBlock> {
     public constructor(private repo: MotionBlockControllerService, private translate: TranslateService) {

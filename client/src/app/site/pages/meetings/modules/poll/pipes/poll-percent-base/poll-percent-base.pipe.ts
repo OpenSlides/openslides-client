@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollTableData } from 'src/app/domain/models/poll/poll-constants';
-import { PollServiceMapperService } from '../../services/poll-service-mapper.service/poll-service-mapper.service';
+
 import { PollService } from '../../services/poll.service/poll.service';
+import { PollServiceMapperService } from '../../services/poll-service-mapper.service/poll-service-mapper.service';
 
 /**
  * Uses a number and a ViewPoll-object.

@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { OSTreeNode } from 'src/app/infrastructure/definitions/tree';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
-import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
+
+import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 
 /**
  * pdfMake structure for a content line in the pdf document.

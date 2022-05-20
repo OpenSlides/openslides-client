@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionPollMainComponent } from './motion-poll-main.component';
 
-describe('MotionPollMainComponent', () => {
+describe(`MotionPollMainComponent`, () => {
     let component: MotionPollMainComponent;
     let fixture: ComponentFixture<MotionPollMainComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionPollMainComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+
+import { Collection, Field, Id } from '../../../domain/definitions/key-types';
+import { BaseModel } from '../../../domain/models/base/base-model';
 import { Relation } from '../../../infrastructure/definitions/relations';
 import { Deferred } from '../../../infrastructure/utils/promises';
 import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
-import { ModelRequestObject } from '.';
-import { Collection, Field, Id } from '../../../domain/definitions/key-types';
-import { BaseModel } from '../../../domain/models/base/base-model';
 import { BaseViewModel, ViewModelConstructor } from '../../base/base-view-model';
 import {
     FieldDescriptor,
@@ -15,6 +15,7 @@ import {
 } from '../autoupdate';
 import { CollectionMapperService } from '../collection-mapper.service';
 import { RelationManagerService } from '../relation-manager.service';
+import { ModelRequestObject } from '.';
 
 export type TypedFieldset<M> = (keyof M | { templateField: keyof M })[];
 
@@ -103,7 +104,7 @@ export const DEFAULT_FIELDSET = `detail`;
 export const ROUTING_FIELDSET = `routing`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ModelRequestBuilderService {
     private fieldsets: {

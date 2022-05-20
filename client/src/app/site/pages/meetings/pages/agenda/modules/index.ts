@@ -1,2 +1,2 @@
-export * from './topics';
 export * from './list-of-speakers';
+export * from './topics';

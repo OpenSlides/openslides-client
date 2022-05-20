@@ -1,10 +1,10 @@
+import { Id } from '../../../../../../../../domain/definitions/key-types';
+import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
+import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
+import { BaseViewModel } from '../../../../../../../base/base-view-model';
+import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewUser } from '../../../../../view-models/view-user';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
-import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
-import { HasMeeting } from '../../../../../view-models/has-meeting';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
-import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
-import { Id } from '../../../../../../../../domain/definitions/key-types';
 /**
  * Provides "safe" access to a speaker with all it's components
  */

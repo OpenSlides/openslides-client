@@ -1,25 +1,26 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { FormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { verboseChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { verboseChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { FormControl } from '@angular/forms';
-import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.service';
-import { Subscription } from 'rxjs';
 import { ViewUnifiedChange } from '../../../../modules/change-recommendations/view-models/view-unified-change';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
+import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.service';
 
 @Component({
-    selector: 'os-motion-highlight-form',
-    templateUrl: './motion-highlight-form.component.html',
-    styleUrls: ['./motion-highlight-form.component.scss']
+    selector: `os-motion-highlight-form`,
+    templateUrl: `./motion-highlight-form.component.html`,
+    styleUrls: [`./motion-highlight-form.component.scss`]
 })
 export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent implements OnInit {
     public readonly LineNumberingMode = LineNumberingMode;

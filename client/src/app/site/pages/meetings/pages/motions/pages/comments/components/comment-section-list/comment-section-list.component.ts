@@ -1,24 +1,25 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
-import { TranslateService } from '@ngx-translate/core';
+import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
+import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
 
 @Component({
-    selector: 'os-comment-section-list',
-    templateUrl: './comment-section-list.component.html',
-    styleUrls: ['./comment-section-list.component.scss']
+    selector: `os-comment-section-list`,
+    templateUrl: `./comment-section-list.component.html`,
+    styleUrls: [`./comment-section-list.component.scss`]
 })
 export class CommentSectionListComponent extends BaseComponent implements OnInit {
     @ViewChild(`motionCommentDialog`, { static: true })

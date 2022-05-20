@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { CommitteeDetailViewComponent } from './components/committee-detail-view/committee-detail-view.component';
 
 const routes: Routes = [

@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectorCountdownDialogComponent } from './components/projector-countdown-dialog/projector-countdown-dialog.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDialogModule } from '@angular/material/dialog';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+
+import { ProjectorCountdownDialogComponent } from './components/projector-countdown-dialog/projector-countdown-dialog.component';
 
 @NgModule({
     declarations: [ProjectorCountdownDialogComponent],

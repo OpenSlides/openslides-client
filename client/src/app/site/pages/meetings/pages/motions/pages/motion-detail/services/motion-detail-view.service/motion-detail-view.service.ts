@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MotionDetailServiceModule } from '../motion-detail-service.module';
-import { LineNumberingMode, ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+
+import { MotionDetailServiceModule } from '../motion-detail-service.module';
 
 export enum ModifiedFinalVersionAction {
     CANCEL = `cancel`,

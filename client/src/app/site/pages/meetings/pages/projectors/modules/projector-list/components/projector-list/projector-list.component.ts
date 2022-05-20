@@ -1,31 +1,31 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    OnDestroy,
     OnInit,
     TemplateRef,
-    ViewEncapsulation,
-    OnDestroy,
-    AfterViewInit
+    ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { ViewProjector, PROJECTOR_CONTENT_FOLLOW } from 'src/app/site/pages/meetings/pages/projectors';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { TranslateService } from '@ngx-translate/core';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { MatDialog } from '@angular/material/dialog';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, timer } from 'rxjs';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
-    selector: 'os-projector-list',
-    templateUrl: './projector-list.component.html',
-    styleUrls: ['./projector-list.component.scss'],
+    selector: `os-projector-list`,
+    templateUrl: `./projector-list.component.html`,
+    styleUrls: [`./projector-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

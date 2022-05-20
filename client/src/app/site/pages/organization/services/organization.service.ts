@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { LifecycleService } from '../../../services/lifecycle.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ViewOrganization } from '../view-models/view-organization';
-import { ModelSubscription } from '../../../services/autoupdate';
-import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { ORGANIZATION_SUBSCRIPTION } from 'src/app/domain/models/organizations/organization';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
+
+import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
+import { ModelSubscription } from '../../../services/autoupdate';
+import { LifecycleService } from '../../../services/lifecycle.service';
 import { getDesignListSubscriptionConfig } from '../pages/designs/config/model-subscription';
+import { ViewOrganization } from '../view-models/view-organization';
 
 /**
  * Token to get a resource dedicated to the `logo_web_header` of an organization.
@@ -19,7 +20,7 @@ export const WEB_HEADER_TOKEN = `web_header`;
 export const ORGANIZATION_ID = 1;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OrganizationService {
     public get organizationObservable(): Observable<ViewOrganization | null> {

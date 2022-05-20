@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
+
 import { PromptDialogComponent } from '../components/prompt-dialog/prompt-dialog.component';
 import { PromptDialogModule } from '../prompt-dialog.module';
 

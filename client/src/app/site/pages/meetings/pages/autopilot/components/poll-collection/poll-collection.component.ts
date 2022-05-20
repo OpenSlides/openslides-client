@@ -1,22 +1,22 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { map } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseComponent } from 'src/app/site/base/base.component';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { map } from 'rxjs';
+import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';
 
 @Component({
-    selector: 'os-poll-collection',
-    templateUrl: './poll-collection.component.html',
-    styleUrls: ['./poll-collection.component.scss']
+    selector: `os-poll-collection`,
+    templateUrl: `./poll-collection.component.html`,
+    styleUrls: [`./poll-collection.component.scss`]
 })
 export class PollCollectionComponent<C extends BaseViewModel> extends BaseComponent implements OnInit {
     public polls: ViewPoll[] = [];

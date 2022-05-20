@@ -1,13 +1,13 @@
-import { Component, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { distinctUntilChanged, Subscription, Observable, of } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { distinctUntilChanged, Observable, of, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 
 @Component({
-    selector: 'os-speaker-button',
-    templateUrl: './speaker-button.component.html',
-    styleUrls: ['./speaker-button.component.scss'],
+    selector: `os-speaker-button`,
+    templateUrl: `./speaker-button.component.html`,
+    styleUrls: [`./speaker-button.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpeakerButtonComponent implements OnDestroy {

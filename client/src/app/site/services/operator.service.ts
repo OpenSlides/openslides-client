@@ -1,26 +1,26 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { childPermissions } from '../../domain/definitions/permission-children';
-import { Committee } from '../../domain/models/comittees/committee';
-import { Group } from '../../domain/models/users/group';
-import { User } from '../../domain/models/users/user';
-import { Deferred } from '../../infrastructure/utils/promises';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
+
 import { Id } from '../../domain/definitions/key-types';
 import { CML, cmlNameMapping, OML, omlNameMapping } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
-import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-id.service';
+import { childPermissions } from '../../domain/definitions/permission-children';
+import { Committee } from '../../domain/models/comittees/committee';
+import { Group } from '../../domain/models/users/group';
+import { Deferred } from '../../infrastructure/utils/promises';
+import { GroupControllerService } from '../pages/meetings/pages/participants';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
+import { NoActiveMeetingError } from '../pages/meetings/services/active-meeting-id.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
 import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
-import { SimplifiedModelRequest, TypedFieldset } from './model-request-builder/model-request-builder.service';
+import { SimplifiedModelRequest } from './model-request-builder/model-request-builder.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
-import { GroupControllerService } from '../pages/meetings/pages/participants';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
@@ -42,7 +42,7 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OperatorService {
     public get operatorId(): number | null {

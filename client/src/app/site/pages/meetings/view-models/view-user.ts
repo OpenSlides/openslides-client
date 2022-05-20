@@ -1,17 +1,18 @@
+import { User } from 'src/app/domain/models/users/user';
+
+import { Id } from '../../../../domain/definitions/key-types';
+import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
+import { ViewCommittee } from '../../organization/pages/committees';
+import { ViewSpeaker } from '../pages/agenda';
+import { ViewAssignmentCandidate } from '../pages/assignments';
+import { ViewChatMessage } from '../pages/chat/view-models/view-chat-message';
+import { ViewMotion, ViewMotionSubmitter } from '../pages/motions';
+import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
+import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
+import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { BaseProjectableViewModel } from './base-projectable-model';
 import { DelegationType } from './delegation-type';
-import { Id } from '../../../../domain/definitions/key-types';
 import { ViewMeeting } from './view-meeting';
-import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
-import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
-import { ViewChatMessage } from '../pages/chat/view-models/view-chat-message';
-import { ViewVote, ViewOption, ViewPoll } from '../pages/polls';
-import { ViewSpeaker } from '../pages/agenda';
-import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
-import { ViewMotion, ViewMotionSubmitter } from '../pages/motions';
-import { ViewAssignmentCandidate } from '../pages/assignments';
-import { ViewCommittee } from '../../organization/pages/committees';
-import { User } from 'src/app/domain/models/users/user';
 
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.

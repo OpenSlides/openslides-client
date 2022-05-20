@@ -1,14 +1,14 @@
-import { Directive, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Directive, ViewChild } from '@angular/core';
+import { NavigationStart } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
-import { StorageService } from '../../gateways/storage.service';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
-
-import { BaseViewModel } from './base-view-model';
+import { filter } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
-import { filter } from 'rxjs';
-import { NavigationStart } from '@angular/router';
+
+import { StorageService } from '../../gateways/storage.service';
+import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
+import { BaseViewModel } from './base-view-model';
 
 const createStorageOffsetIndex = (prefix: string) => `${prefix}:offset`;
 const createStorageSearchIndex = (prefix: string) => `${prefix}:search`;

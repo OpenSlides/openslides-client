@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
+import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+
+import { createAgendaItem } from '../agenda';
+import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
-import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { TopicAction } from './topic.action';
-import { createAgendaItem } from '../agenda';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<ViewTopic, Topic> {
     public constructor(

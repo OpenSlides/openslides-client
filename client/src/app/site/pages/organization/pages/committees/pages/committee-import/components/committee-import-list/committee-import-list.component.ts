@@ -1,23 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { Committee } from 'src/app/domain/models/comittees/committee';
 import {
-    CommitteeCsvPort,
     COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
+    CommitteeCsvPort,
     MEETING_ADMIN_IDS,
     MEETING_TEMPLATE_ID
 } from 'src/app/domain/models/comittees/committee.constants';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { CommitteeImportService } from '../../services/committee-import.service/committee-import.service';
 import { BaseImportListComponent } from 'src/app/site/base/base-import-list.component';
-import { Committee } from 'src/app/domain/models/comittees/committee';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
+
+import { CommitteeImportService } from '../../services/committee-import.service/committee-import.service';
 
 @Component({
-    selector: 'os-committee-import-list',
-    templateUrl: './committee-import-list.component.html',
-    styleUrls: ['./committee-import-list.component.scss']
+    selector: `os-committee-import-list`,
+    templateUrl: `./committee-import-list.component.html`,
+    styleUrls: [`./committee-import-list.component.scss`]
 })
 export class CommitteeImportListComponent extends BaseImportListComponent<CommitteeCsvPort> implements OnInit {
     public possibleFields: string[] = Object.values(COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES) as string[];

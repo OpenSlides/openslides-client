@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
+import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+
 import { ProjectionDialogComponent } from '../components/projection-dialog/projection-dialog.component';
 import { ProjectionDialogReturnType } from '../definitions';
-import { firstValueFrom } from 'rxjs';
 import { ProjectionDialogModule } from '../projection-dialog.module';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 
 @Injectable({ providedIn: ProjectionDialogModule })
 export class ProjectionDialogService {

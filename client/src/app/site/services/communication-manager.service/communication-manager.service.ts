@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+
 import { HttpStream } from '../../../gateways/http-stream';
 import { ConnectionStatusService } from '../connection-status.service';
 import { LifecycleService } from '../lifecycle.service';

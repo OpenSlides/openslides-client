@@ -4,9 +4,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 
 @Component({
-    selector: 'os-motion-block-create-dialog',
-    templateUrl: './motion-block-create-dialog.component.html',
-    styleUrls: ['./motion-block-create-dialog.component.scss']
+    selector: `os-motion-block-create-dialog`,
+    templateUrl: `./motion-block-create-dialog.component.html`,
+    styleUrls: [`./motion-block-create-dialog.component.scss`]
 })
 export class MotionBlockCreateDialogComponent {
     public readonly createBlockForm: FormGroup;

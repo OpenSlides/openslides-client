@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
-import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { BaseModel } from '../base/base-model';
 
 /**
  * Representation of a countdown

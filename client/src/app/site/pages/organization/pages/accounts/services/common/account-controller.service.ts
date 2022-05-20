@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { User } from 'src/app/domain/models/users/user';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Action } from 'src/app/gateways/actions';
-import { AccountCommonServiceModule } from './account-common-service.module';
-import { UserDeleteDialogService } from 'src/app/ui/modules/user-components';
 import { firstValueFrom } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { User } from 'src/app/domain/models/users/user';
+import { Action } from 'src/app/gateways/actions';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { BaseController } from 'src/app/site/base/base-controller';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
+import { UserDeleteDialogService } from 'src/app/ui/modules/user-components';
+
+import { AccountCommonServiceModule } from './account-common-service.module';
 
 @Injectable({
     providedIn: AccountCommonServiceModule

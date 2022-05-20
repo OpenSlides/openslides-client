@@ -1,6 +1,6 @@
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
-import { Component, OnInit } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { Component } from '@angular/core';
+
 import { C4DialogModule } from '../../modules/c4-dialog/c4-dialog.module';
 
 interface EasterEggModuleDescription {
@@ -9,9 +9,9 @@ interface EasterEggModuleDescription {
 }
 
 @Component({
-    selector: 'os-easter-egg-content-platform-dialog',
-    templateUrl: './easter-egg-content-platform-dialog.component.html',
-    styleUrls: ['./easter-egg-content-platform-dialog.component.scss']
+    selector: `os-easter-egg-content-platform-dialog`,
+    templateUrl: `./easter-egg-content-platform-dialog.component.html`,
+    styleUrls: [`./easter-egg-content-platform-dialog.component.scss`]
 })
 export class EasterEggContentPlatformDialogComponent {
     public readonly choosableModules: EasterEggModuleDescription[] = [C4DialogModule];

@@ -7,9 +7,9 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
-    selector: 'os-meeting-info',
-    templateUrl: './meeting-info.component.html',
-    styleUrls: ['./meeting-info.component.scss']
+    selector: `os-meeting-info`,
+    templateUrl: `./meeting-info.component.html`,
+    styleUrls: [`./meeting-info.component.scss`]
 })
 export class MeetingInfoComponent extends BaseComponent implements OnInit {
     public get canSeeStatistics(): boolean {

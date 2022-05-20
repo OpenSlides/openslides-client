@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectorButtonComponent } from './components/projector-button/projector-button.component';
-import { MatIconModule } from '@angular/material/icon';
+import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
+
 import { ProjectionDialogModule } from '../projection-dialog/projection-dialog.module';
+import { ProjectorButtonComponent } from './components/projector-button/projector-button.component';
 
 const DECLARATIONS = [ProjectorButtonComponent];
 

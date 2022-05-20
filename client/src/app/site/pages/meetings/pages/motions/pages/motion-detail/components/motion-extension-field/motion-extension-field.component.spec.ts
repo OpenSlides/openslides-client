@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionExtensionFieldComponent } from './motion-extension-field.component';
 
-describe('MotionExtensionFieldComponent', () => {
+describe(`MotionExtensionFieldComponent`, () => {
     let component: MotionExtensionFieldComponent;
     let fixture: ComponentFixture<MotionExtensionFieldComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionExtensionFieldComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

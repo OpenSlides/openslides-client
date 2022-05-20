@@ -1,14 +1,15 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
-import { PasswordForm } from '../../definitions';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+
+import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
 import { OperatorService } from '../../../../../site/services/operator.service';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { PasswordForm } from '../../definitions';
 
 @Component({
-    selector: 'os-user-password-form',
-    templateUrl: './user-password-form.component.html',
-    styleUrls: ['./user-password-form.component.scss']
+    selector: `os-user-password-form`,
+    templateUrl: `./user-password-form.component.html`,
+    styleUrls: [`./user-password-form.component.scss`]
 })
 export class UserPasswordFormComponent implements OnInit, OnDestroy {
     @Input()

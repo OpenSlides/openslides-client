@@ -1,15 +1,16 @@
+import { Directive } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
+import { BaseController } from 'src/app/site/base/base-controller';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+
 import { ActiveMeetingService } from '../services/active-meeting.service';
 import { ActiveMeetingIdService } from '../services/active-meeting-id.service';
 import { MeetingCollectionMapperService } from '../services/meeting-collection-mapper.service';
 import { MeetingSettingsService } from '../services/meeting-settings.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Directive } from '@angular/core';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { BaseController } from 'src/app/site/base/base-controller';
 
 @Directive()
 export abstract class BaseMeetingControllerService<V extends BaseViewModel, M extends BaseModel> extends BaseController<

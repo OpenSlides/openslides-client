@@ -1,14 +1,15 @@
+import { Collection } from 'src/app/domain/definitions/key-types';
+import { AgendaItem, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { Projection } from 'src/app/domain/models/projector/projection';
+import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { AgendaItem, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { BaseProjectableViewModel, isProjectable } from 'src/app/site/pages/meetings/view-models';
-import { Projection } from 'src/app/domain/models/projector/projection';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { BaseProjectableViewModel, isProjectable } from 'src/app/site/pages/meetings/view-models';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+
 import { HasTags } from '../../motions';
-import { Collection } from 'src/app/domain/definitions/key-types';
 
 export class ViewAgendaItem<
     C extends BaseViewModel & HasAgendaItem = any

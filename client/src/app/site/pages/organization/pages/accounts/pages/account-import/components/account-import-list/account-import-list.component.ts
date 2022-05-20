@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder } from '@angular/forms';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { BaseUserImportListComponent } from 'src/app/site/base/base-user-import-list.component';
-import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
+import { TranslateService } from '@ngx-translate/core';
 import { User } from 'src/app/domain/models/users/user';
-import { AccountImportService } from '../../services/account-import.service/account-import.service';
+import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
+import { BaseUserImportListComponent } from 'src/app/site/base/base-user-import-list.component';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
+import { AccountImportService } from '../../services/account-import.service/account-import.service';
 
 @Component({
-    selector: 'os-account-import-list',
-    templateUrl: './account-import-list.component.html',
-    styleUrls: ['./account-import-list.component.scss']
+    selector: `os-account-import-list`,
+    templateUrl: `./account-import-list.component.html`,
+    styleUrls: [`./account-import-list.component.scss`]
 })
 export class AccountImportListComponent extends BaseUserImportListComponent implements OnInit {
     public constructor(

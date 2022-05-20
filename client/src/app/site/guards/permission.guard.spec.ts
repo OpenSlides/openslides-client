@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PermissionGuard } from './permission.guard';
 
-describe('PermissionGuard', () => {
+describe(`PermissionGuard`, () => {
     let guard: PermissionGuard;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('PermissionGuard', () => {
         guard = TestBed.inject(PermissionGuard);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(guard).toBeTruthy();
     });
 });

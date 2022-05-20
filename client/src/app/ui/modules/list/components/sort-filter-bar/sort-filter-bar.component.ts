@@ -1,14 +1,15 @@
 import { Component, EventEmitter, HostListener, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { TranslateService } from '@ngx-translate/core';
 import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet.component';
-import { FilterMenuComponent } from '../filter-menu/filter-menu.component';
-import { RoundedInputComponent } from '../../../input/components/rounded-input/rounded-input.component';
-import { SortListService } from 'src/app/ui/base/sort-service';
 import { FilterListService } from 'src/app/ui/base/filter-service';
+import { SortListService } from 'src/app/ui/base/sort-service';
+
+import { RoundedInputComponent } from '../../../input/components/rounded-input/rounded-input.component';
+import { FilterMenuComponent } from '../filter-menu/filter-menu.component';
+import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet.component';
 
 /**
  * Reusable bar for list views, offering sorting and filter options.

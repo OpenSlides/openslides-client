@@ -1,7 +1,7 @@
-import { BaseModel } from '../base/base-model';
-import { HasCollection } from '../../interfaces/has-collection';
 import { Fqid, Id } from '../../definitions/key-types';
+import { HasCollection } from '../../interfaces/has-collection';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
 
 type ProjectionContent = HasCollection & { [key: string]: any };
 

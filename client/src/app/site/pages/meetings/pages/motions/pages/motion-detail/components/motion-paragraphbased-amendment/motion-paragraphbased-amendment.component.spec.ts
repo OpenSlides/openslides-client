@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionParagraphbasedAmendmentComponent } from './motion-paragraphbased-amendment.component';
 
-describe('MotionParagraphbasedAmendmentComponent', () => {
+describe(`MotionParagraphbasedAmendmentComponent`, () => {
     let component: MotionParagraphbasedAmendmentComponent;
     let fixture: ComponentFixture<MotionParagraphbasedAmendmentComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionParagraphbasedAmendmentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

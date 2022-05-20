@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+
 import { LineRange } from '../../../../../../definitions/index';
 import {
     BaseChangeRecommendationData,
     BaseChangeRecommendationDialogComponent
 } from '../../base/base-change-recommendation-dialog.component';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { Validators } from '@angular/forms';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 /**
  * Data that needs to be provided to the MotionChangeRecommendationComponent dialog
@@ -36,9 +37,9 @@ export interface MotionContentChangeRecommendationDialogComponentData extends Ba
  *
  */
 @Component({
-    selector: 'os-motion-content-change-recommendation-dialog',
-    templateUrl: './motion-content-change-recommendation-dialog.component.html',
-    styleUrls: ['./motion-content-change-recommendation-dialog.component.scss']
+    selector: `os-motion-content-change-recommendation-dialog`,
+    templateUrl: `./motion-content-change-recommendation-dialog.component.html`,
+    styleUrls: [`./motion-content-change-recommendation-dialog.component.scss`]
 })
 export class MotionContentChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionContentChangeRecommendationDialogComponentData> {
     /**

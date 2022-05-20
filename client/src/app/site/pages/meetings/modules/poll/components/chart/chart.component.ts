@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ChartOptions, ChartType, ChartData as NgChartData } from 'chart.js';
+import { Component, Input } from '@angular/core';
+import { ChartData as NgChartData, ChartOptions, ChartType } from 'chart.js';
 
 export type ChartData = ChartDate[];
 
@@ -20,9 +20,9 @@ type MultiLineLabel = string[];
 type Label = SingleLineLabel | MultiLineLabel;
 
 @Component({
-    selector: 'os-chart',
-    templateUrl: './chart.component.html',
-    styleUrls: ['./chart.component.scss']
+    selector: `os-chart`,
+    templateUrl: `./chart.component.html`,
+    styleUrls: [`./chart.component.scss`]
 })
 export class ChartComponent {
     /**

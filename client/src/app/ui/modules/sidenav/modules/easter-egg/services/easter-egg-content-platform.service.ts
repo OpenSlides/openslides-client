@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { EasterEggModule } from '../easter-egg.module';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
-import { EasterEggContentPlatformDialogComponent } from '../components/easter-egg-content-platform-dialog/easter-egg-content-platform-dialog.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+
+import { EasterEggContentPlatformDialogComponent } from '../components/easter-egg-content-platform-dialog/easter-egg-content-platform-dialog.component';
+import { EasterEggModule } from '../easter-egg.module';
 
 @Injectable({
     providedIn: EasterEggModule

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+
 import { Permission } from '../../../../domain/definitions/permission';
 import { BaseMenuEntry } from '../../../base/base-menu-entry';
 

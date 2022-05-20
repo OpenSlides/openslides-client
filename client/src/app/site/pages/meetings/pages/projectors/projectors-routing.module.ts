@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { ProjectorMainComponent } from './components/projector-main/projector-main.component';
 
 const routes: Routes = [

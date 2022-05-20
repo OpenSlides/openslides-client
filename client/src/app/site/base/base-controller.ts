@@ -1,11 +1,12 @@
-import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
-import { BaseViewModel } from './base-view-model';
-import { ControllerServiceCollectorService } from '../services/controller-service-collector.service';
-import { Observable } from 'rxjs';
-import { BaseRepository } from '../../gateways/repositories/base-repository';
-import { Id } from '../../domain/definitions/key-types';
-import { TranslateService } from '@ngx-translate/core';
 import { Directive } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+
+import { Id } from '../../domain/definitions/key-types';
+import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
+import { BaseRepository } from '../../gateways/repositories/base-repository';
+import { ControllerServiceCollectorService } from '../services/controller-service-collector.service';
+import { BaseViewModel } from './base-view-model';
 
 @Directive()
 export abstract class BaseController<V extends BaseViewModel, M extends BaseModel> {

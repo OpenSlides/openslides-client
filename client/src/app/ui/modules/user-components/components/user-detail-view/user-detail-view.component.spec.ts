@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserDetailViewComponent } from './user-detail-view.component';
 
-describe('UserDetailViewComponent', () => {
+describe(`UserDetailViewComponent`, () => {
     let component: UserDetailViewComponent;
     let fixture: ComponentFixture<UserDetailViewComponent>;
 
@@ -18,7 +18,7 @@ describe('UserDetailViewComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

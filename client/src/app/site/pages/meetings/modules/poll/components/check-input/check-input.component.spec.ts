@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CheckInputComponent } from './check-input.component';
 
-describe('CheckInputComponent', () => {
+describe(`CheckInputComponent`, () => {
     let component: CheckInputComponent;
     let fixture: ComponentFixture<CheckInputComponent>;
 
@@ -18,7 +18,7 @@ describe('CheckInputComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

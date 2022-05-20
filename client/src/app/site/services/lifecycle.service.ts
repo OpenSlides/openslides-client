@@ -1,8 +1,8 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class LifecycleService {
     /**

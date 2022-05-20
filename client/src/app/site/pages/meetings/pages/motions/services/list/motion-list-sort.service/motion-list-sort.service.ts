@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BaseSortListService, OsSortingOption, OsSortingDefinition } from 'src/app/site/base/base-sort.service';
-import { ViewMotion } from '../../../view-models';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
+import { ViewMotion } from '../../../view-models';
 import { MotionsListServiceModule } from '../motions-list-service.module';
 
 @Injectable({

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentPollDialogComponent } from './assignment-poll-dialog.component';
 
-describe('AssignmentPollDialogComponent', () => {
+describe(`AssignmentPollDialogComponent`, () => {
     let component: AssignmentPollDialogComponent;
     let fixture: ComponentFixture<AssignmentPollDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('AssignmentPollDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { WatchForChangesGuard } from './watch-for-changes.guard';
 
-describe('WatchForChangesGuard', () => {
+describe(`WatchForChangesGuard`, () => {
     let guard: WatchForChangesGuard;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('WatchForChangesGuard', () => {
         guard = TestBed.inject(WatchForChangesGuard);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(guard).toBeTruthy();
     });
 });

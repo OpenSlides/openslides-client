@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { C4DialogComponent } from './c4-dialog.component';
 
-describe('C4DialogComponent', () => {
+describe(`C4DialogComponent`, () => {
     let component: C4DialogComponent;
     let fixture: ComponentFixture<C4DialogComponent>;
 
@@ -18,7 +18,7 @@ describe('C4DialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

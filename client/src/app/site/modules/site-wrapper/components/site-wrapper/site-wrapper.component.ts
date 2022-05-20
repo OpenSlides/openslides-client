@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, TemplateRef, EmbeddedViewRef, OnDestroy } from '@angular/core';
-import { ThemeService } from 'src/app/site/services/theme.service';
+import { Component, EmbeddedViewRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { UpdateService } from '../../services/update.service';
 import { ActivationEnd, Router } from '@angular/router';
 import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
+import { ThemeService } from 'src/app/site/services/theme.service';
+
+import { UpdateService } from '../../services/update.service';
 import { VotingBannerService } from '../../services/voting-banner.service';
 
 /**
@@ -15,9 +16,9 @@ interface RoutingData {
 }
 
 @Component({
-    selector: 'os-site-wrapper',
-    templateUrl: './site-wrapper.component.html',
-    styleUrls: ['./site-wrapper.component.scss']
+    selector: `os-site-wrapper`,
+    templateUrl: `./site-wrapper.component.html`,
+    styleUrls: [`./site-wrapper.component.scss`]
 })
 export class SiteWrapperComponent implements OnInit, OnDestroy {
     @ViewChild(`updateNotificationTemplate`, { static: true })

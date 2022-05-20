@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ThemeBuilderDialogService } from './theme-builder-dialog.service';
 
-describe('ThemeBuilderDialogService', () => {
+describe(`ThemeBuilderDialogService`, () => {
     let service: ThemeBuilderDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ThemeBuilderDialogService', () => {
         service = TestBed.inject(ThemeBuilderDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

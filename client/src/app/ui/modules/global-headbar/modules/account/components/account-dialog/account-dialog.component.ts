@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 import { MatDialogRef } from '@angular/material/dialog';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { PasswordFormComponent, PasswordForm } from 'src/app/ui/modules/user-components';
-import { UserService } from 'src/app/site/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserService } from 'src/app/site/services/user.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { PasswordForm, PasswordFormComponent } from 'src/app/ui/modules/user-components';
 
 interface MenuItem {
     name: string;
@@ -26,9 +26,9 @@ enum MenuItems {
 const PERSONAL_PERMISSIONS = [`seePersonal`, `seeName`, `changePersonal`];
 
 @Component({
-    selector: 'os-account-dialog',
-    templateUrl: './account-dialog.component.html',
-    styleUrls: ['./account-dialog.component.scss']
+    selector: `os-account-dialog`,
+    templateUrl: `./account-dialog.component.html`,
+    styleUrls: [`./account-dialog.component.scss`]
 })
 export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`changePasswordComponent`, { static: false })

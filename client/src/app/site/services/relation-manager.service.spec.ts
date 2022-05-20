@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { RelationManagerService } from './relation-manager.service';
 
-describe('RelationManagerService', () => {
+describe(`RelationManagerService`, () => {
     let service: RelationManagerService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('RelationManagerService', () => {
         service = TestBed.inject(RelationManagerService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

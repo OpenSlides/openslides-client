@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog/services/choice.service';
+
 import { CommitteeControllerService } from '../../../../services/committee-controller.service';
-import { CommitteeFilterService } from '../../services/committee-list-filter.service/committee-filter.service';
-import { CommitteeSortService } from '../../services/committee-list-sort.service/committee-sort.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewCommittee } from '../../../../view-models';
 import { CommitteeExportService } from '../../services/committee-list-export.service/committee-export.service';
+import { CommitteeFilterService } from '../../services/committee-list-filter.service/committee-filter.service';
+import { CommitteeSortService } from '../../services/committee-list-sort.service/committee-sort.service';
 
 export const NAVIGATION_FROM_LIST = `list`;
 
 @Component({
-    selector: 'os-committee-list',
-    templateUrl: './committee-list.component.html',
-    styleUrls: ['./committee-list.component.scss']
+    selector: `os-committee-list`,
+    templateUrl: `./committee-list.component.html`,
+    styleUrls: [`./committee-list.component.scss`]
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> {
     public readonly tableColumnDefinition: PblColumnDefinition[] = [

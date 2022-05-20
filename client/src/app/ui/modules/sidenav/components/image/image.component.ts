@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { HttpService } from 'src/app/gateways/http.service';
 
 @Component({
-    selector: 'os-image',
-    templateUrl: './image.component.html',
-    styleUrls: ['./image.component.scss']
+    selector: `os-image`,
+    templateUrl: `./image.component.html`,
+    styleUrls: [`./image.component.scss`]
 })
 export class ImageComponent {
     @Input()

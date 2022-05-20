@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { LoadFontService } from './load-font.service';
 
-describe('LoadFontService', () => {
+describe(`LoadFontService`, () => {
     let service: LoadFontService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('LoadFontService', () => {
         service = TestBed.inject(LoadFontService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

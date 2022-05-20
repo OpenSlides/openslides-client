@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { CurrentSpeakerChyronSlideData } from '../current-speaker-chyron-slide-data';
 

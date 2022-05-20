@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingsNavigationWrapperComponent } from './meetings-navigation-wrapper.component';
 
-describe('MeetingsNavigationWrapperComponent', () => {
+describe(`MeetingsNavigationWrapperComponent`, () => {
     let component: MeetingsNavigationWrapperComponent;
     let fixture: ComponentFixture<MeetingsNavigationWrapperComponent>;
 
@@ -18,7 +18,7 @@ describe('MeetingsNavigationWrapperComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

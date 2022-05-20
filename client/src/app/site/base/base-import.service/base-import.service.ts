@@ -1,6 +1,8 @@
-import { EventEmitter, Directive } from '@angular/core';
+import { Directive, EventEmitter } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+
 import { Identifiable } from '../../../domain/interfaces';
 import {
     AdditionalImportHandler,
@@ -14,6 +16,7 @@ import {
     BaseBeforeImportHandler,
     BeforeImportHandler
 } from '../../../infrastructure/utils/import/base-before-import-handler';
+import { ImportHandler } from '../../../infrastructure/utils/import/base-import-handler';
 import {
     BaseMainImportHandler,
     MainImportHandler
@@ -31,24 +34,22 @@ import {
     RawObject,
     ValueLabelCombination
 } from '../../../infrastructure/utils/import/import-utils';
-import { Papa, ParseConfig } from 'ngx-papaparse';
-import { StaticBeforeImportHandler } from '../../../infrastructure/utils/import/static-before-import-handler';
-import { StaticBeforeImportConfig } from '../../../infrastructure/utils/import/static-before-import-config';
-import {
-    StaticAfterImportConfig,
-    StaticAfterImportHandler
-} from '../../../infrastructure/utils/import/static-after-import-handler';
 import {
     StaticAdditionalImportHandler,
     StaticAdditionalImportHandlerConfig
 } from '../../../infrastructure/utils/import/static-additional-import-handler';
 import {
+    StaticAfterImportConfig,
+    StaticAfterImportHandler
+} from '../../../infrastructure/utils/import/static-after-import-handler';
+import { StaticBeforeImportConfig } from '../../../infrastructure/utils/import/static-before-import-config';
+import { StaticBeforeImportHandler } from '../../../infrastructure/utils/import/static-before-import-handler';
+import {
     StaticMainImportConfig,
     StaticMainImportHandler
 } from '../../../infrastructure/utils/import/static-main-import-handler';
-import { ImportHandler } from '../../../infrastructure/utils/import/base-import-handler';
-import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
 import { ImportService } from '../../../ui/base/import-service';
+import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
 
 @Directive()
 export abstract class BaseImportService<MainModel extends Identifiable> implements ImportService<MainModel> {

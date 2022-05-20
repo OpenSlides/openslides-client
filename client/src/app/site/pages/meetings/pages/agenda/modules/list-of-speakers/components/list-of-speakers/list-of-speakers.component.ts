@@ -1,25 +1,26 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { ViewListOfSpeakers } from '../../view-models';
-import { TranslateService } from '@ngx-translate/core';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { ListOfSpeakersControllerService } from '../../services/list-of-speakers-controller.service';
-import { CurrentListOfSpeakersService } from '../../services/current-list-of-speakers.service';
-import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ListOfSpeakersContentComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { CurrentListOfSpeakersService } from '../../services/current-list-of-speakers.service';
+import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
+import { ListOfSpeakersControllerService } from '../../services/list-of-speakers-controller.service';
+import { ViewListOfSpeakers } from '../../view-models';
 
 @Component({
-    selector: 'os-list-of-speakers',
-    templateUrl: './list-of-speakers.component.html',
-    styleUrls: ['./list-of-speakers.component.scss']
+    selector: `os-list-of-speakers`,
+    templateUrl: `./list-of-speakers.component.html`,
+    styleUrls: [`./list-of-speakers.component.scss`]
 })
 export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
     public readonly COLLECTION = ViewListOfSpeakers.COLLECTION;

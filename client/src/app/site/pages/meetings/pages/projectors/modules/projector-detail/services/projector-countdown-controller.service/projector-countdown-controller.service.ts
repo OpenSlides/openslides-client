@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { ProjectorCountdownRepositoryService } from 'src/app/gateways/repositories/projector-countdowns/projector-countdown-repository.service';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { ProjectorDetailServiceModule } from '../projector-detail-service.module';
+import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
+import { ProjectorCountdownRepositoryService } from 'src/app/gateways/repositories/projector-countdowns/projector-countdown-repository.service';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { ProjectorDetailServiceModule } from '../projector-detail-service.module';
 
 @Injectable({ providedIn: ProjectorDetailServiceModule })
 export class ProjectorCountdownControllerService extends BaseMeetingControllerService<

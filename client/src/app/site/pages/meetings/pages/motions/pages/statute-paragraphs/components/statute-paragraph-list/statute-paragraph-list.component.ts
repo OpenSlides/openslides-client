@@ -1,21 +1,22 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
+import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionStatuteParagraphControllerService } from '../../../../modules/statute-paragraphs/services';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { MotionStatuteParagraphControllerService } from '../../../../modules/statute-paragraphs/services';
 import { StatuteParagraphCsvExportService } from '../../services/statute-paragraph-csv-export.service';
-import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
-    selector: 'os-statute-paragraph-list',
-    templateUrl: './statute-paragraph-list.component.html',
-    styleUrls: ['./statute-paragraph-list.component.scss']
+    selector: `os-statute-paragraph-list`,
+    templateUrl: `./statute-paragraph-list.component.html`,
+    styleUrls: [`./statute-paragraph-list.component.scss`]
 })
 export class StatuteParagraphListComponent extends BaseComponent implements OnInit {
     @ViewChild(`statuteParagraphDialog`, { static: true })

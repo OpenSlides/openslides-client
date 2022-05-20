@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { environment } from '../../environments/environment';
 import { HttpService } from './http.service';
 
@@ -9,7 +10,7 @@ interface AuthServiceResponse {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthAdapterService {
     private get authUrl(): string {

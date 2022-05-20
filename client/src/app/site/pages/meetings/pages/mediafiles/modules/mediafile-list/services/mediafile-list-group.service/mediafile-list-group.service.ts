@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
 import { Observable } from 'rxjs';
+import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
+
 import { ViewGroup } from '../../../../../participants';
 import { MediafileListServiceModule } from '../mediafile-list-service.module';
 

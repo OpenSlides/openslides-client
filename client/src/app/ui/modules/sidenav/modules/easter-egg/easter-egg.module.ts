@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
-import { EasterEggContentPlatformDialogComponent } from './components/easter-egg-content-platform-dialog/easter-egg-content-platform-dialog.component';
-import { GridModule } from 'src/app/ui/modules/grid';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { CommonModule } from '@angular/common';
-import { MatDialogModule } from '@angular/material/dialog';
-import { DirectivesModule } from 'src/app/ui/directives';
 import { PortalModule } from '@angular/cdk/portal';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { DirectivesModule } from 'src/app/ui/directives';
+import { GridModule } from 'src/app/ui/modules/grid';
+
+import { EasterEggContentPlatformDialogComponent } from './components/easter-egg-content-platform-dialog/easter-egg-content-platform-dialog.component';
 
 @NgModule({
     declarations: [EasterEggContentPlatformDialogComponent],
