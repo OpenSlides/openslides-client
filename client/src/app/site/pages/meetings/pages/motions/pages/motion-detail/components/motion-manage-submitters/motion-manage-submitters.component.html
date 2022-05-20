@@ -57,21 +57,13 @@
         </ng-template>
     </os-sorting-list>
 
-    <form class="search-users" *ngIf="usersObservable | async as users">
-        <mat-form-field>
-            <os-list-search-selector
-                [formControl]="addSubmitterForm"
-                placeholder="{{ 'Select or search new submitter ...' | translate }}"
-                [inputListValues]="users"
-                (clickNotFound)="createNewSubmitter($event)"
-            >
-                <ng-template osNotFoundDescription>
-                    <mat-icon>add</mat-icon>
-                    {{ 'Create user' | translate }}
-                </ng-template>
-            </os-list-search-selector>
-        </mat-form-field>
-    </form>
+    <div class="search-users">
+        <os-participant-search-selector
+            [nonSelectableUsersSubject]="editSubmitterUsersSubject"
+            placeholder="Select or search new submitter ..."
+            (userSelected)="addSubmitter($event)"
+        ></os-participant-search-selector>
+    </div>
 
     <p>
         <button type="button" mat-button (click)="onSave()">

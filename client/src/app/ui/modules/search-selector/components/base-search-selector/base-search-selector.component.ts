@@ -176,9 +176,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     public ngOnInit(): void {
         this.subscriptions.push(
             this.searchValueForm.valueChanges.pipe(debounceTime(100), distinctUntilChanged()).subscribe(value => {
-                if (value) {
-                    this.onSearchValueUpdated(value.trim());
-                }
+                this.onSearchValueUpdated(value.trim());
             })
         );
     }
