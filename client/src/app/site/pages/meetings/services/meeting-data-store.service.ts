@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
 import { DataStoreService } from 'src/app/site/services/data-store.service';
 
+import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 
 @Injectable({
     providedIn: `root`
 })
 export class MeetingDataStoreService {
-    public constructor(private modelMapper: MeetingCollectionMapperService, private datastore: DataStoreService) {}
+    public constructor(
+        private modelMapper: MeetingCollectionMapperService,
+        private datastore: DataStoreService,
+        activeMeetingId: ActiveMeetingIdService
+    ) {
+        activeMeetingId.meetingIdObservable.subscribe(_ => {
+            this.clearMeetingModels();
+        });
+    }
 
     /**
      * Deletes all models that belong to a meeting.

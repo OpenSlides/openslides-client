@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, merge, Observable, of } from 'rxjs';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { OptionData, OptionDataKey, PollData, PollDataKey } from 'src/app/domain/models/poll/generic-poll';
+import { PollTableData, VotingResult } from 'src/app/domain/models/poll/generic-poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import {
     ABSTAIN_KEY,
@@ -11,10 +12,8 @@ import {
     NO_KEY,
     PollMethod,
     PollPercentBase,
-    PollTableData,
     PollType,
     VOTE_MAJORITY,
-    VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';

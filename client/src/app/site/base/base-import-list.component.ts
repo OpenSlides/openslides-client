@@ -34,8 +34,7 @@ export abstract class BaseImportListComponent<M extends Identifiable> extends Ba
 
     public constructor() {
         super();
-        const injector = AppInjector.getInjector();
-        this.importer = injector.get<BaseImportService<M>>(BaseImportService);
+        this.importer = AppInjector.get<BaseImportService<M>>(BaseImportService);
     }
 
     public ngOnInit(): void {

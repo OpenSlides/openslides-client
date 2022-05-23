@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { ORGANIZATION_ID } from 'src/app/domain/models/organizations/organization.constants';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';

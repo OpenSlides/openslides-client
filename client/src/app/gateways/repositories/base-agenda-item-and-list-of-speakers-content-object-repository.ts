@@ -20,8 +20,7 @@ export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
 
     public constructor(baseModelCtor: ModelConstructor<M>) {
         super(baseModelCtor);
-        const injector = AppInjector.getInjector();
-        this.agendaItemRepo = injector.get(AgendaItemRepositoryService);
+        this.agendaItemRepo = AppInjector.get(AgendaItemRepositoryService);
     }
     public getAgendaListTitle(viewModel: V): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended

@@ -101,13 +101,12 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private _createViewModelPipes: ((viewModel: V) => void)[] = [];
 
     public constructor(protected baseModelCtor: ModelConstructor<M>) {
-        const injector = AppInjector.getInjector();
-        this.DS = injector.get(DataStoreService);
-        this.actions = injector.get(ActionService);
-        this.collectionMapperService = injector.get(CollectionMapperService);
-        this.viewModelStoreService = injector.get(ViewModelStoreService);
-        this.translate = injector.get(TranslateService);
-        this.relationManager = injector.get(RelationManagerService);
+        this.DS = AppInjector.get(DataStoreService);
+        this.actions = AppInjector.get(ActionService);
+        this.collectionMapperService = AppInjector.get(CollectionMapperService);
+        this.viewModelStoreService = AppInjector.get(ViewModelStoreService);
+        this.translate = AppInjector.get(TranslateService);
+        this.relationManager = AppInjector.get(RelationManagerService);
 
         this._collection = baseModelCtor.COLLECTION;
 

@@ -25,9 +25,8 @@ export abstract class BaseMeetingComponent extends BaseComponent {
 
     public constructor() {
         super();
-        const injector = AppInjector.getInjector();
-        this.meetingSettingsService = injector.get(MeetingSettingsService);
-        this.activeMeetingIdService = injector.get(ActiveMeetingIdService);
-        this.activeMeetingService = injector.get(ActiveMeetingService);
+        this.meetingSettingsService = AppInjector.get(MeetingSettingsService);
+        this.activeMeetingIdService = AppInjector.get(ActiveMeetingIdService);
+        this.activeMeetingService = AppInjector.get(ActiveMeetingService);
     }
 }

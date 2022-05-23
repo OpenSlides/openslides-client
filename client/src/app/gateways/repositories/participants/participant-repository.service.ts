@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -15,6 +16,8 @@ import { UserAction } from '../users/user-action';
     providedIn: `root`
 })
 export class ParticipantRepositoryService extends BaseMeetingRelatedRepository<ViewUser, User> {
+    protected override translate: TranslateService;
+
     constructor(private userRepo: UserRepositoryService) {
         super(User);
     }

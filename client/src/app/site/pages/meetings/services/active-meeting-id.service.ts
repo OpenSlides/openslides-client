@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { BehaviorSubject, distinctUntilChanged, filter, Observable } from 'rxjs';
 
-import { MeetingDataStoreService } from './meeting-data-store.service';
-
 export class NoActiveMeetingError extends Error {}
 
 @Injectable({
@@ -21,7 +19,7 @@ export class ActiveMeetingIdService {
     // undefined is for detecting, that this service wasn't loaded yet
     private _meetingIdSubject = new BehaviorSubject<number | null>(null);
 
-    public constructor(router: Router, private DS: MeetingDataStoreService) {
+    public constructor(router: Router) {
         router.events
             .pipe(
                 filter((event): boolean => event instanceof RoutesRecognized),
@@ -43,7 +41,6 @@ export class ActiveMeetingIdService {
         if (newMeetingId === this.meetingId) {
             return;
         }
-        this.DS.clearMeetingModels();
         this._meetingIdSubject.next(newMeetingId);
     }
 }

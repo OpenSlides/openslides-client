@@ -1,7 +1,5 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-import { OptionDataKey, PollDataKey } from './generic-poll';
-
 export const YES_KEY = `yes`;
 export const NO_KEY = `no`;
 export const ABSTAIN_KEY = `abstain`;
@@ -184,28 +182,3 @@ export const VoteValuesVerbose = {
     N: `No`,
     A: `Abstain`
 };
-
-/**
- * Interface describes the possible data for the result-table.
- */
-export interface PollTableData {
-    votingOption: string;
-    votingOptionSubtitle?: string;
-    class?: string;
-    value: VotingResult[];
-}
-
-export function isPollTableData(data: any): data is PollTableData {
-    if (!data) {
-        return false;
-    }
-    return !!data.votingOption && !!data.value;
-}
-
-export interface VotingResult {
-    vote?: OptionDataKey | PollDataKey;
-    amount?: number;
-    icon?: string;
-    hide?: boolean;
-    showPercent?: boolean;
-}

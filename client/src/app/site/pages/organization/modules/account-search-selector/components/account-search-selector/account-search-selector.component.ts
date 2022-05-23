@@ -4,11 +4,11 @@ import { FormBuilder, NgControl } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
+import { ORGANIZATION_ID } from 'src/app/domain/models/organizations/organization.constants';
 import {
     SearchUsersByNameOrEmailPresenterScope,
     SearchUsersByNameOrEmailPresenterService
 } from 'src/app/gateways/presenter';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/components/base-search-selector/base-search-selector.component';

@@ -25,7 +25,7 @@ import { OrganizationAppConfig } from '../../site/pages/organization/organizatio
 import { CommitteesAppConfig } from '../../site/pages/organization/pages/committees/committees.config';
 import { DesignsAppConfig } from '../../site/pages/organization/pages/designs/designs.config';
 import { OrganizationTagsAppConfig } from '../../site/pages/organization/pages/organization-tags/organization-tags.config';
-import { AppInjector } from './app-injector.service';
+// import { AppInjector } from './app-injector.service';
 
 const servicesOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [ModelRequestBuilderService];
 
@@ -56,16 +56,22 @@ const appConfigs: AppConfig[] = [
     providedIn: `root`
 })
 export class AppLoadService {
-    private modelMapper: CollectionMapperService;
-    private mainMenuService: MainMenuService;
-    private fallbackRoutesService: FallbackRoutesService;
+    // private modelMapper: CollectionMapperService;
+    // private mainMenuService: MainMenuService;
+    // private fallbackRoutesService: FallbackRoutesService;
 
-    public constructor(private injector: Injector) {
+    public constructor(
+        // appInjector: AppInjector,
+        private injector: Injector,
+        private modelMapper: CollectionMapperService,
+        private mainMenuService: MainMenuService,
+        private fallbackRoutesService: FallbackRoutesService
+    ) {
         // Circumventing the standard CI here to set the injector before any other services are loaded
-        AppInjector.setInjector(injector);
-        this.modelMapper = this.injector.get(CollectionMapperService);
-        this.mainMenuService = this.injector.get(MainMenuService);
-        this.fallbackRoutesService = this.injector.get(FallbackRoutesService);
+        // AppInjector.setInjector(injector);
+        // this.modelMapper = this.injector.get(CollectionMapperService);
+        // this.mainMenuService = this.injector.get(MainMenuService);
+        // this.fallbackRoutesService = this.injector.get(FallbackRoutesService);
     }
 
     public async loadApps(): Promise<void> {

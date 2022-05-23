@@ -224,9 +224,8 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      * strings
      */
     public constructor() {
-        const injector = AppInjector.getInjector();
-        this._papa = injector.get(Papa);
-        this.translate = injector.get(TranslateService);
+        this._papa = AppInjector.get(Papa);
+        this.translate = AppInjector.get(TranslateService);
 
         this._reader.onload = (event: FileReaderProgressEvent) => {
             this.parseInput(event.target?.result as string);

@@ -16,6 +16,7 @@ import {
     NAME,
     ORGANIZATION_TAG_IDS
 } from 'src/app/domain/models/comittees/committee.constants';
+import { ORGANIZATION_ID } from 'src/app/domain/models/organizations/organization.constants';
 import { User } from 'src/app/domain/models/users/user';
 import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import {
@@ -30,7 +31,6 @@ import { UserImportHelper, UserSearchService } from 'src/app/infrastructure/util
 import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 

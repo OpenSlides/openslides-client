@@ -13,8 +13,7 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
     public translate: TranslateService;
 
     public constructor(protected baseModelCtor: ModelConstructor<M>, protected repo: BaseRepository<V, M>) {
-        const injector = AppInjector.getInjector();
-        this.translate = injector.get(TranslateService);
+        this.translate = AppInjector.get(TranslateService);
     }
 
     public getViewModel(id: Id): V | null {

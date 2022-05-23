@@ -54,10 +54,9 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
 
     public constructor() {
         super();
-        const injector = AppInjector.getInjector();
-        this.promptService = injector.get(PromptService);
-        this.choiceService = injector.get(ChoiceService);
-        this.repo = injector.get(PollControllerService);
+        this.promptService = AppInjector.get(PromptService);
+        this.choiceService = AppInjector.get(ChoiceService);
+        this.repo = AppInjector.get(PollControllerService);
     }
 
     public async nextPollState(): Promise<void> {

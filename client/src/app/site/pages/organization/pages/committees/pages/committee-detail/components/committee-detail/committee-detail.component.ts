@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { COMMITTEE_DETAIL_SUBSCRIPTION } from 'src/app/domain/models/comittees/committee';
+import { ORGANIZATION_ID } from 'src/app/domain/models/organizations/organization.constants';
 import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig

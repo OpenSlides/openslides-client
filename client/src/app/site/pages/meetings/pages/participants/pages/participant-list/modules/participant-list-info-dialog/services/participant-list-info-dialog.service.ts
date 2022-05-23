@@ -6,7 +6,6 @@ import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
-import { ParticipantListInfoDialogModule } from '../participant-list-info-dialog.module';
 
 /**
  * Interface for the short editing dialog.
@@ -46,7 +45,7 @@ export interface InfoDialog {
 }
 
 @Injectable({
-    providedIn: ParticipantListInfoDialogModule
+    providedIn: `root`
 })
 export class ParticipantListInfoDialogService extends BaseDialogService<
     ParticipantListInfoDialogComponent,

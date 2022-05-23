@@ -36,11 +36,10 @@ export abstract class BaseMeetingControllerService<V extends BaseViewModel, M ex
 
     public constructor(baseModelConstructor: ModelConstructor<M>, repo: BaseRepository<V, M>) {
         super(baseModelConstructor, repo);
-        const injector = AppInjector.getInjector();
-        this.activeMeetingIdService = injector.get(ActiveMeetingIdService);
-        this.activeMeetingService = injector.get(ActiveMeetingService);
-        this.collectionMapperService = injector.get(MeetingCollectionMapperService);
-        this.meetingSettingsService = injector.get(MeetingSettingsService);
+        this.activeMeetingIdService = AppInjector.get(ActiveMeetingIdService);
+        this.activeMeetingService = AppInjector.get(ActiveMeetingService);
+        this.collectionMapperService = AppInjector.get(MeetingCollectionMapperService);
+        this.meetingSettingsService = AppInjector.get(MeetingSettingsService);
 
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => this.onNextMeetingId(id));
         this._isConstructed = true;

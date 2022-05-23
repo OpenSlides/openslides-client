@@ -74,14 +74,13 @@ export abstract class BaseComponent implements OnDestroy {
     protected errorService: ErrorService;
 
     public constructor() {
-        const injector = AppInjector.getInjector();
-        this.router = injector.get(Router);
-        this.titleService = injector.get(Title);
-        this.modelRequestService = injector.get(ModelRequestService);
-        this.matSnackBar = injector.get(MatSnackBar);
-        this.storage = injector.get(StorageService);
-        this.translate = injector.get(TranslateService);
-        this.errorService = injector.get(ErrorService);
+        this.router = AppInjector.get(Router);
+        this.titleService = AppInjector.get(Title);
+        this.modelRequestService = AppInjector.get(ModelRequestService);
+        this.matSnackBar = AppInjector.get(MatSnackBar);
+        this.storage = AppInjector.get(StorageService);
+        this.translate = AppInjector.get(TranslateService);
+        this.errorService = AppInjector.get(ErrorService);
     }
 
     /**

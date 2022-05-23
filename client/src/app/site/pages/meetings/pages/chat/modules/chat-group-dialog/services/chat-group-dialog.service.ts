@@ -4,7 +4,6 @@ import { Ids } from 'src/app/domain/definitions/key-types';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
-import { ChatGroupDialogModule } from '../chat-group-dialog.module';
 import { ChatGroupDialogComponent } from '../components/chat-group-dialog/chat-group-dialog.component';
 
 export interface ChatGroupDialogData {
@@ -20,7 +19,7 @@ interface ChatGroupDialogResult {
 }
 
 @Injectable({
-    providedIn: ChatGroupDialogModule
+    providedIn: `root`
 })
 export class ChatGroupDialogService extends BaseDialogService<
     ChatGroupDialogComponent,

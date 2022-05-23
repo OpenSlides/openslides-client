@@ -1,13 +1,13 @@
-import { Injector } from '@angular/core';
+import { AbstractType, InjectionToken, Injector, Type } from '@angular/core';
 
-export class AppInjector {
+export abstract class AppInjector {
     private static injector: Injector;
 
     public static setInjector(injector: Injector) {
         AppInjector.injector = injector;
     }
 
-    public static getInjector(): Injector {
-        return AppInjector.injector;
+    public static get<T>(token: Type<T> | InjectionToken<T> | AbstractType<T>): T {
+        return this.injector.get<T>(token);
     }
 }

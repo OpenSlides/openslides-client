@@ -40,10 +40,9 @@ export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M ex
 
     public constructor(baseModelCtor: ModelConstructor<M>) {
         super(baseModelCtor);
-        const injector = AppInjector.getInjector();
-        this.activeMeetingIdService = injector.get(ActiveMeetingIdService);
-        this.activeMeetingService = injector.get(ActiveMeetingService);
-        this.meetingSettingsService = injector.get(MeetingSettingsService);
+        this.activeMeetingIdService = AppInjector.get(ActiveMeetingIdService);
+        this.activeMeetingService = AppInjector.get(ActiveMeetingService);
+        this.meetingSettingsService = AppInjector.get(MeetingSettingsService);
     }
 
     protected override createViewModel(model: M): V {

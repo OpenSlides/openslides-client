@@ -6,7 +6,6 @@ import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { ViewOrganizationTag } from '../../../view-models';
 import { OrganizationTagDialogComponent } from '../components/organization-tag-dialog.component';
-import { OrganizationTagDialogModule } from '../organization-tag-dialog.module';
 
 export interface OrganizationTagDialogData {
     organizationTag?: ViewOrganizationTag;
@@ -20,7 +19,7 @@ interface OrganizationTagDialogResult {
 }
 
 @Injectable({
-    providedIn: OrganizationTagDialogModule
+    providedIn: `root`
 })
 export class OrganizationTagDialogService extends BaseDialogService<
     OrganizationTagDialogComponent,

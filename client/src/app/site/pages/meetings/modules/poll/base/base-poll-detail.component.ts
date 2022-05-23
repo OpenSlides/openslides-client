@@ -111,15 +111,14 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
 
     public constructor(protected pollService: S) {
         super();
-        const injector = AppInjector.getInjector();
-        this.repo = injector.get(PollControllerService);
-        this.route = injector.get(ActivatedRoute);
-        this.groupRepo = injector.get(GroupControllerService);
-        this.promptService = injector.get(PromptService);
-        this.votesRepo = injector.get(VoteControllerService);
-        this.operator = injector.get(OperatorService);
-        this.cd = injector.get(ChangeDetectorRef);
-        this.userRepo = injector.get(ParticipantControllerService);
+        this.repo = AppInjector.get(PollControllerService);
+        this.route = AppInjector.get(ActivatedRoute);
+        this.groupRepo = AppInjector.get(GroupControllerService);
+        this.promptService = AppInjector.get(PromptService);
+        this.votesRepo = AppInjector.get(VoteControllerService);
+        this.operator = AppInjector.get(OperatorService);
+        this.cd = AppInjector.get(ChangeDetectorRef);
+        this.userRepo = AppInjector.get(ParticipantControllerService);
 
         this.subscriptions.push(
             this.operator.userObservable.subscribe(currentUser => {

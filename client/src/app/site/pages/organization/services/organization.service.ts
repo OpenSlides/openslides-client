@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ORGANIZATION_SUBSCRIPTION } from 'src/app/domain/models/organizations/organization';
+import { ORGANIZATION_ID } from 'src/app/domain/models/organizations/organization.constants';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
@@ -13,11 +14,6 @@ import { ViewOrganization } from '../view-models/view-organization';
  * Token to get a resource dedicated to the `logo_web_header` of an organization.
  */
 export const WEB_HEADER_TOKEN = `web_header`;
-
-/**
- * The organization_id is always the 1.
- */
-export const ORGANIZATION_ID = 1;
 
 @Injectable({
     providedIn: `root`

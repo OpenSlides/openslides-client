@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
+import { isPollTableData, PollTableData, VotingResult } from 'src/app/domain/models/poll/generic-poll';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
-    isPollTableData,
     NO_KEY,
     PollColor,
     PollMethod,
@@ -14,12 +14,10 @@ import {
     PollPercentBaseVerboseKey,
     PollPropertyVerbose,
     PollPropertyVerboseKey,
-    PollTableData,
     PollType,
     PollTypeVerbose,
     PollTypeVerboseKey,
     VOTE_UNDOCUMENTED,
-    VotingResult,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
 import { compareNumber } from 'src/app/infrastructure/utils';

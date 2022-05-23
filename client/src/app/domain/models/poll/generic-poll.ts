@@ -45,3 +45,28 @@ export interface OptionData {
 }
 
 export type OptionDataKey = keyof OptionData;
+
+/**
+ * Interface describes the possible data for the result-table.
+ */
+export interface PollTableData {
+    votingOption: string;
+    votingOptionSubtitle?: string;
+    class?: string;
+    value: VotingResult[];
+}
+
+export function isPollTableData(data: any): data is PollTableData {
+    if (!data) {
+        return false;
+    }
+    return !!data.votingOption && !!data.value;
+}
+
+export interface VotingResult {
+    vote?: OptionDataKey | PollDataKey;
+    amount?: number;
+    icon?: string;
+    hide?: boolean;
+    showPercent?: boolean;
+}

@@ -1,13 +1,8 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
-import {
-    PollMethod,
-    PollPercentBase,
-    PollState,
-    PollTableData,
-    VotingResult
-} from 'src/app/domain/models/poll/poll-constants';
+import { PollTableData, VotingResult } from 'src/app/domain/models/poll/generic-poll';
+import { PollMethod, PollPercentBase, PollState } from 'src/app/domain/models/poll/poll-constants';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';

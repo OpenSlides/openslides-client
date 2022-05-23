@@ -1,4 +1,4 @@
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { ORGANIZATION_ID } from 'src/app/domain/models/organizations/organization.constants';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 export const THEME_LIST_SUBSCRIPTION = `theme_list`;

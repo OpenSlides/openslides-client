@@ -130,19 +130,18 @@ export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponen
 
     public constructor() {
         super();
-        const injector = AppInjector.getInjector();
-        this.repo = injector.get(MotionControllerService);
-        this.amendmentRepo = injector.get(AmendmentControllerService);
-        this.blockRepo = injector.get(MotionBlockControllerService);
-        this.tagRepo = injector.get(TagControllerService);
-        this.statuteRepo = injector.get(MotionStatuteParagraphControllerService);
-        this.changeRecoRepo = injector.get(MotionChangeRecommendationControllerService);
-        this.motionLineNumbering = injector.get(MotionLineNumberingService);
-        this.motionFormatService = injector.get(MotionFormatService);
-        this.viewService = injector.get(MotionDetailViewService);
-        this.categoryRepo = injector.get(MotionCategoryControllerService);
-        this.workflowRepo = injector.get(MotionWorkflowControllerService);
-        this.participantRepo = injector.get(ParticipantControllerService);
+        this.repo = AppInjector.get(MotionControllerService);
+        this.amendmentRepo = AppInjector.get(AmendmentControllerService);
+        this.blockRepo = AppInjector.get(MotionBlockControllerService);
+        this.tagRepo = AppInjector.get(TagControllerService);
+        this.statuteRepo = AppInjector.get(MotionStatuteParagraphControllerService);
+        this.changeRecoRepo = AppInjector.get(MotionChangeRecommendationControllerService);
+        this.motionLineNumbering = AppInjector.get(MotionLineNumberingService);
+        this.motionFormatService = AppInjector.get(MotionFormatService);
+        this.viewService = AppInjector.get(MotionDetailViewService);
+        this.categoryRepo = AppInjector.get(MotionCategoryControllerService);
+        this.workflowRepo = AppInjector.get(MotionWorkflowControllerService);
+        this.participantRepo = AppInjector.get(ParticipantControllerService);
     }
 
     /**

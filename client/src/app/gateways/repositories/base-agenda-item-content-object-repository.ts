@@ -37,8 +37,7 @@ export abstract class BaseAgendaItemContentObjectRepository<
 
     public constructor(baseModelCtor: ModelConstructor<M>) {
         super(baseModelCtor);
-        const injector = AppInjector.getInjector();
-        this.agendaItemRepo = injector.get(AgendaItemRepositoryService);
+        this.agendaItemRepo = AppInjector.get(AgendaItemRepositoryService);
     }
 
     /**

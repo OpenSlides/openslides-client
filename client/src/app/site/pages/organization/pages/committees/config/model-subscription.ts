@@ -1,6 +1,6 @@
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { ORGANIZATION_ID } from 'src/app/domain/models/organizations/organization.constants';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
