@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+
+import { DiffLinesInParagraph } from '../../../definitions';
 import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewUnifiedChange } from '../../../modules';
-import { MotionsCommonServiceModule } from '../motions-service.module';
 import {
     LineNumberedString,
     LineNumberingService,
@@ -12,8 +13,8 @@ import {
     MotionDiffService
 } from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
-import { DiffLinesInParagraph } from '../../../definitions';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
+import { MotionsCommonServiceModule } from '../motions-service.module';
 
 /**
  * Describes the single paragraphs from the base motion.

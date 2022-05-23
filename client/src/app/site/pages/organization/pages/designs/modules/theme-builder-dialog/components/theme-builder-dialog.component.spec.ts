@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ThemeBuilderDialogComponent } from './theme-builder-dialog.component';
 
-describe('ThemeBuilderDialogComponent', () => {
+describe(`ThemeBuilderDialogComponent`, () => {
     let component: ThemeBuilderDialogComponent;
     let fixture: ComponentFixture<ThemeBuilderDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('ThemeBuilderDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

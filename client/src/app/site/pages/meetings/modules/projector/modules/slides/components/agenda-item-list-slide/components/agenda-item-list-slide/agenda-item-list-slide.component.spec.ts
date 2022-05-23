@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaItemListSlideComponent } from './agenda-item-list-slide.component';
 
-describe('AgendaItemListSlideComponent', () => {
+describe(`AgendaItemListSlideComponent`, () => {
     let component: AgendaItemListSlideComponent;
     let fixture: ComponentFixture<AgendaItemListSlideComponent>;
 
@@ -18,7 +18,7 @@ describe('AgendaItemListSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

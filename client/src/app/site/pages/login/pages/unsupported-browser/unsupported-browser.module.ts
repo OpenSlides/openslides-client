@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { UnsupportedBrowserRoutingModule } from './unsupported-browser-routing.module';
-import { UnsupportedBrowserComponent } from './components/unsupported-browser/unsupported-browser.component';
+import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+
+import { UnsupportedBrowserComponent } from './components/unsupported-browser/unsupported-browser.component';
+import { UnsupportedBrowserRoutingModule } from './unsupported-browser-routing.module';
 
 @NgModule({
     declarations: [UnsupportedBrowserComponent],

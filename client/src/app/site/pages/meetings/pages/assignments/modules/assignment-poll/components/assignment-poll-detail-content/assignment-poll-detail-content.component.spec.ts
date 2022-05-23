@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentPollDetailContentComponent } from './assignment-poll-detail-content.component';
 
-describe('AssignmentPollDetailContentComponent', () => {
+describe(`AssignmentPollDetailContentComponent`, () => {
     let component: AssignmentPollDetailContentComponent;
     let fixture: ComponentFixture<AssignmentPollDetailContentComponent>;
 
@@ -18,7 +18,7 @@ describe('AssignmentPollDetailContentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

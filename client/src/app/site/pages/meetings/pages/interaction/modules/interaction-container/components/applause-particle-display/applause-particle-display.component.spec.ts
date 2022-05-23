@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApplauseParticleDisplayComponent } from './applause-particle-display.component';
 
-describe('ApplauseParticleDisplayComponent', () => {
+describe(`ApplauseParticleDisplayComponent`, () => {
     let component: ApplauseParticleDisplayComponent;
     let fixture: ComponentFixture<ApplauseParticleDisplayComponent>;
 
@@ -18,7 +18,7 @@ describe('ApplauseParticleDisplayComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

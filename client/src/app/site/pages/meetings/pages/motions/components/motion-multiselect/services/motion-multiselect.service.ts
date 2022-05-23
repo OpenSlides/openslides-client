@@ -1,28 +1,29 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionMultiselectModule } from '../motion-multiselect.module';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { SpinnerService } from 'src/app/ui/modules/openslides-overlay/modules/spinner';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
-import { ViewMotion } from '../../../view-models';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { Id, Ids } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Action } from 'src/app/gateways/actions';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
+import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { SpinnerService } from 'src/app/ui/modules/openslides-overlay/modules/spinner';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
+
 import { AgendaItemControllerService } from '../../../../agenda/services';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
-import { TagControllerService } from '../../../modules/tags/services';
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { PersonalNoteControllerService } from '../../../modules/personal-notes/services';
-import { MotionControllerService } from '../../../services/common/motion-controller.service';
 import { MotionSubmitterControllerService } from '../../../modules/submitters/services';
-import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { TagControllerService } from '../../../modules/tags/services';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
+import { MotionControllerService } from '../../../services/common/motion-controller.service';
+import { ViewMotion } from '../../../view-models';
+import { MotionMultiselectModule } from '../motion-multiselect.module';
 
 @Injectable({
     providedIn: MotionMultiselectModule

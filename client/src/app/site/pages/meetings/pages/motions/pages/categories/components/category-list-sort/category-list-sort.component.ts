@@ -1,18 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingTreeComponent } from 'src/app/ui/modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
 
+import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+
 @Component({
-    selector: 'os-category-list-sort',
-    templateUrl: './category-list-sort.component.html',
-    styleUrls: ['./category-list-sort.component.scss']
+    selector: `os-category-list-sort`,
+    templateUrl: `./category-list-sort.component.html`,
+    styleUrls: [`./category-list-sort.component.scss`]
 })
 export class CategoryListSortComponent extends BaseMeetingComponent {
     /**

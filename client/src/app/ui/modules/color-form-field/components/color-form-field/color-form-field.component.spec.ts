@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ColorFormFieldComponent } from './color-form-field.component';
 
-describe('ColorFormFieldComponent', () => {
+describe(`ColorFormFieldComponent`, () => {
     let component: ColorFormFieldComponent;
     let fixture: ComponentFixture<ColorFormFieldComponent>;
 
@@ -18,7 +18,7 @@ describe('ColorFormFieldComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

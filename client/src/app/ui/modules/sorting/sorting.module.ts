@@ -1,6 +1,7 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SortingTreeModule, SortingListModule } from './modules';
+import { NgModule } from '@angular/core';
+
+import { SortingListModule, SortingTreeModule } from './modules';
 
 const MODULES = [SortingListModule, SortingTreeModule];
 

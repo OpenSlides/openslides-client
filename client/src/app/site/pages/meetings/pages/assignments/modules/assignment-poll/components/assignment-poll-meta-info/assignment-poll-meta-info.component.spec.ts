@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentPollMetaInfoComponent } from './assignment-poll-meta-info.component';
 
-describe('AssignmentPollMetaInfoComponent', () => {
+describe(`AssignmentPollMetaInfoComponent`, () => {
     let component: AssignmentPollMetaInfoComponent;
     let fixture: ComponentFixture<AssignmentPollMetaInfoComponent>;
 
@@ -18,7 +18,7 @@ describe('AssignmentPollMetaInfoComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

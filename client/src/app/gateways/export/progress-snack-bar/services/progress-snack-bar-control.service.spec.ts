@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProgressSnackBarControlService } from './progress-snack-bar-control.service';
 
-describe('ProgressSnackBarControlService', () => {
+describe(`ProgressSnackBarControlService`, () => {
     let service: ProgressSnackBarControlService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ProgressSnackBarControlService', () => {
         service = TestBed.inject(ProgressSnackBarControlService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,14 +1,14 @@
-import { Component, OnInit, AfterViewInit, forwardRef, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { AfterViewInit, Component, forwardRef, Input } from '@angular/core';
+import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import { RawEditorSettings } from 'tinymce';
 
 @Component({
-    selector: 'os-editor',
-    templateUrl: './editor.component.html',
-    styleUrls: ['./editor.component.scss'],
+    selector: `os-editor`,
+    templateUrl: `./editor.component.html`,
+    styleUrls: [`./editor.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true }]
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit {

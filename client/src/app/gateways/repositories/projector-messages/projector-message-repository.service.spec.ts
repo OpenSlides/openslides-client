@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectorMessageRepositoryService } from './projector-message-repository.service';
 
-describe('ProjectorMessageRepositoryService', () => {
+describe(`ProjectorMessageRepositoryService`, () => {
     let service: ProjectorMessageRepositoryService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ProjectorMessageRepositoryService', () => {
         service = TestBed.inject(ProjectorMessageRepositoryService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

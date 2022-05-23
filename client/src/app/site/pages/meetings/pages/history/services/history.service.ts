@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { Position } from '../definitions';
-import { HistoryBannerComponent } from '../components/history-banner/history-banner.component';
-import { BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { combineLatest } from 'rxjs';
-import { ActionService } from 'src/app/gateways/actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { combineLatest } from 'rxjs';
+import { Fqid } from 'src/app/domain/definitions/key-types';
+import { ActionService } from 'src/app/gateways/actions';
+import { NotifyService } from 'src/app/gateways/notify.service';
+import { BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+
+import { HistoryBannerComponent } from '../components/history-banner/history-banner.component';
+import { Position } from '../definitions';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HistoryService {
     private _isInHistoryMode = false;

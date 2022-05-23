@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
-import { MotionForwardDialogComponent } from '../components/motion-forward-dialog/motion-forward-dialog.component';
-import { ViewMotion } from '../../../view-models';
-import { Ids } from 'src/app/domain/definitions/key-types';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { firstValueFrom } from 'rxjs';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionFormatService } from '../../../services/common/motion-format.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { Ids } from 'src/app/domain/definitions/key-types';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+
+import { MotionFormatService } from '../../../services/common/motion-format.service';
+import { ViewMotion } from '../../../view-models';
+import { MotionForwardDialogComponent } from '../components/motion-forward-dialog/motion-forward-dialog.component';
+import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
 
 @Injectable({
     providedIn: MotionForwardDialogModule

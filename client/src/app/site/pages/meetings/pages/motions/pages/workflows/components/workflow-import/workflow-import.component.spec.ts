@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WorkflowImportComponent } from './workflow-import.component';
 
-describe('WorkflowImportComponent', () => {
+describe(`WorkflowImportComponent`, () => {
     let component: WorkflowImportComponent;
     let fixture: ComponentFixture<WorkflowImportComponent>;
 
@@ -18,7 +18,7 @@ describe('WorkflowImportComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

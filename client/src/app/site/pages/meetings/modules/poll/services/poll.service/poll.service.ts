@@ -1,32 +1,33 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
+import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
 import {
     ABSTAIN_KEY,
+    CalculablePollKey,
     isPollTableData,
     NO_KEY,
+    PollColor,
     PollMethod,
     PollPercentBase,
     PollPercentBaseVerbose,
+    PollPercentBaseVerboseKey,
     PollPropertyVerbose,
+    PollPropertyVerboseKey,
     PollTableData,
+    PollType,
     PollTypeVerbose,
+    PollTypeVerboseKey,
     VOTE_UNDOCUMENTED,
     VotingResult,
-    YES_KEY,
-    PollType,
-    PollTypeVerboseKey,
-    PollPercentBaseVerboseKey,
-    PollPropertyVerboseKey,
-    CalculablePollKey,
-    PollColor
+    YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
+import { compareNumber } from 'src/app/infrastructure/utils';
+import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+
 import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { PollServiceModule } from '../poll-service.module';
-import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
-import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { compareNumber } from 'src/app/infrastructure/utils';
 
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;

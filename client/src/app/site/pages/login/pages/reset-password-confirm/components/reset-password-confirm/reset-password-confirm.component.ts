@@ -8,9 +8,9 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Component({
-    selector: 'os-reset-password-confirm',
-    templateUrl: './reset-password-confirm.component.html',
-    styleUrls: ['./reset-password-confirm.component.scss']
+    selector: `os-reset-password-confirm`,
+    templateUrl: `./reset-password-confirm.component.html`,
+    styleUrls: [`./reset-password-confirm.component.scss`]
 })
 export class ResetPasswordConfirmComponent extends BaseComponent implements OnInit {
     /**
@@ -51,7 +51,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
         super.setTitle(`Reset password`);
         this.activatedRoute.queryParams.subscribe(params => {
             if (!this.user_id && !this.token) {
-                if (!params['user_id'] || !params['token']) {
+                if (!params[`user_id`] || !params[`token`]) {
                     setTimeout(() => {
                         this.matSnackBar.open(``);
                         this.matSnackBar.open(
@@ -64,8 +64,8 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                         this.router.navigate([`..`]);
                     });
                 } else {
-                    this.user_id = Number(params['user_id']);
-                    this.token = params['token'];
+                    this.user_id = Number(params[`user_id`]);
+                    this.token = params[`token`];
                 }
             }
         });

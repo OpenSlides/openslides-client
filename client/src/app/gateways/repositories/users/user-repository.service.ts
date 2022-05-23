@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
-import { User, UserSortProperty } from '../../../domain/models/users/user';
+import { Fqid } from 'src/app/domain/definitions/key-types';
+
 import { Id } from '../../../domain/definitions/key-types';
-import { Identifiable } from '../../../domain/interfaces/identifiable';
 import { Displayable } from '../../../domain/interfaces/displayable';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
+import { Identifiable } from '../../../domain/interfaces/identifiable';
+import { User, UserSortProperty } from '../../../domain/models/users/user';
 import { PreventedInDemoError } from '../../../infrastructure/errors';
-import { UserAction } from './user-action';
+import { toDecimal } from '../../../infrastructure/utils';
+import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
+import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
-import { toDecimal } from '../../../infrastructure/utils';
-import { Fqid } from 'src/app/domain/definitions/key-types';
+import { UserAction } from './user-action';
 
 export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid };
 
@@ -47,7 +48,7 @@ interface LevelAndNumberInformation {
 export type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser, User> {
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
@@ -57,7 +58,7 @@ export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser
     /**
      * The property the incoming data is sorted by
      */
-    protected sortProperty: UserSortProperty = 'first_name';
+    protected sortProperty: UserSortProperty = `first_name`;
 
     private _demoModeUserIds: number[] | null = null;
 

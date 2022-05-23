@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { MotionChangeRecommendationDialogModule } from '../motion-change-recommendation-dialog.module';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { infoDialogSettings, mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import {
-    MotionTitleChangeRecommendationDialogComponent,
-    MotionTitleChangeRecommendationDialogComponentData
-} from '../components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
+
 import {
     MotionContentChangeRecommendationDialogComponent,
     MotionContentChangeRecommendationDialogComponentData
 } from '../components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
+import {
+    MotionTitleChangeRecommendationDialogComponent,
+    MotionTitleChangeRecommendationDialogComponentData
+} from '../components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
+import { MotionChangeRecommendationDialogModule } from '../motion-change-recommendation-dialog.module';
 
 @Injectable({
     providedIn: MotionChangeRecommendationDialogModule

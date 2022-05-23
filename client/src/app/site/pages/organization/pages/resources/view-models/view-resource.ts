@@ -1,5 +1,6 @@
 import { Resource } from 'src/app/domain/models/resources/resource';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
+
 import { ViewOrganization } from '../../../view-models/view-organization';
 
 export class ViewResource extends BaseViewModel<Resource> {

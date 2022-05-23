@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorMessageDialogComponent } from './projector-message-dialog.component';
 
-describe('ProjectorMessageDialogComponent', () => {
+describe(`ProjectorMessageDialogComponent`, () => {
     let component: ProjectorMessageDialogComponent;
     let fixture: ComponentFixture<ProjectorMessageDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('ProjectorMessageDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

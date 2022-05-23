@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { Action } from 'src/app/gateways/actions';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
 import { AssignmentCandidate } from '../../../../domain/models/assignments/assignment-candidate';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentCandidateAction } from './assignment-candidate.action';
-import { Action } from 'src/app/gateways/actions';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepository<
     ViewAssignmentCandidate,

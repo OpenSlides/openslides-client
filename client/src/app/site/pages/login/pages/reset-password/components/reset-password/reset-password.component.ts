@@ -6,9 +6,9 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Component({
-    selector: 'os-reset-password',
-    templateUrl: './reset-password.component.html',
-    styleUrls: ['./reset-password.component.scss']
+    selector: `os-reset-password`,
+    templateUrl: `./reset-password.component.html`,
+    styleUrls: [`./reset-password.component.scss`]
 })
 export class ResetPasswordComponent extends BaseComponent implements OnInit {
     /**

@@ -1,17 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
+import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+
+import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
+import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 
 @Component({
-    selector: 'os-motion-personal-note',
-    templateUrl: './motion-personal-note.component.html',
-    styleUrls: ['./motion-personal-note.component.scss']
+    selector: `os-motion-personal-note`,
+    templateUrl: `./motion-personal-note.component.html`,
+    styleUrls: [`./motion-personal-note.component.scss`]
 })
 export class MotionPersonalNoteComponent extends BaseComponent {
     /**

@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
+import { filter, map, Observable } from 'rxjs';
+
+import { Fqid } from '../../domain/definitions/key-types';
 import { BaseModel } from '../../domain/models/base/base-model';
 import { Relation, RELATIONS } from '../../infrastructure/definitions/relations';
+import { collectionIdFromFqid } from '../../infrastructure/utils/transform-functions';
 import { BaseViewModel } from '../base/base-view-model';
+import { ActiveMeetingIdService } from '../pages/meetings/services/active-meeting-id.service';
 import { CollectionMapperService } from './collection-mapper.service';
 import { ViewModelStoreService } from './view-model-store.service';
-import { filter, map, Observable } from 'rxjs';
-import { Fqid } from '../../domain/definitions/key-types';
-import { ActiveMeetingIdService } from '../pages/meetings/services/active-meeting-id.service';
-import { collectionIdFromFqid } from '../../infrastructure/utils/transform-functions';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class RelationManagerService {
     private relationsByCollection: {

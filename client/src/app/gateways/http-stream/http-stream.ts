@@ -1,14 +1,15 @@
+import { HttpDownloadProgressEvent, HttpEvent, HttpHeaderResponse } from '@angular/common/http';
+import { firstValueFrom, Observable, Subscription } from 'rxjs';
+
+import { EndpointConfiguration } from './endpoint-configuration';
 import {
     CommunicationError,
+    CommunicationErrorWrapper,
+    ErrorDescription,
     ErrorType,
     isCommunicationError,
-    isCommunicationErrorWrapper,
-    CommunicationErrorWrapper,
-    ErrorDescription
+    isCommunicationErrorWrapper
 } from './stream-utils';
-import { HttpEvent, HttpHeaderResponse, HttpDownloadProgressEvent } from '@angular/common/http';
-import { Subscription, Observable, firstValueFrom } from 'rxjs';
-import { EndpointConfiguration } from './endpoint-configuration';
 
 type MessageHandler<T> = (data: T, stream: HttpStream<T>) => void;
 type ErrorHandler<T> = (stream: HttpStream<T>, description: ErrorDescription) => void;

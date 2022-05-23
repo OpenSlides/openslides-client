@@ -1,8 +1,8 @@
 import { DOCUMENT } from '@angular/common';
-import { Injectable, Inject, Type, ViewContainerRef, EmbeddedViewRef, ComponentRef } from '@angular/core';
+import { ComponentRef, EmbeddedViewRef, Inject, Injectable, Type, ViewContainerRef } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DomService {
     private get hostElement(): HTMLElement {

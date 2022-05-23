@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { CsvColumnDefinitionProperty, CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
+
 import { StatuteParagraphExport, statuteParagraphHeadersAndVerboseNames } from '../definitions';
 import { StatuteParagraphServiceModule } from './statute-paragraph-service.module';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Injectable({
     providedIn: StatuteParagraphServiceModule

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from '../../motion-block-slide-data';
 import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/projector/modules/slides/components/motions/base/base-motion-slide';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+
 import { modifyAgendaItemNumber } from '../../../../../../definitions/agenda_item_number';
+import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from '../../motion-block-slide-data';
 
 // Layout:
 // 1) Long layout: Motion title is shown and the motions are
@@ -22,9 +23,9 @@ const SHORT_LAYOUT_THRESHOLD = 8;
 const MAX_COLUMNS = 3;
 
 @Component({
-    selector: 'os-motion-block-slide',
-    templateUrl: './motion-block-slide.component.html',
-    styleUrls: ['./motion-block-slide.component.scss']
+    selector: `os-motion-block-slide`,
+    templateUrl: `./motion-block-slide.component.html`,
+    styleUrls: [`./motion-block-slide.component.scss`]
 })
 export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBlockSlideData> {
     /**

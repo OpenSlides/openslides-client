@@ -1,12 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-    selector: 'os-motion-block-edit-dialog',
-    templateUrl: './motion-block-edit-dialog.component.html',
-    styleUrls: ['./motion-block-edit-dialog.component.scss']
+    selector: `os-motion-block-edit-dialog`,
+    templateUrl: `./motion-block-edit-dialog.component.html`,
+    styleUrls: [`./motion-block-edit-dialog.component.scss`]
 })
 export class MotionBlockEditDialogComponent {
     public readonly blockEditForm: FormGroup;

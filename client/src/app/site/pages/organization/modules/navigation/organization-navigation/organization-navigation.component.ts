@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseMenuEntry } from 'src/app/site/base/base-menu-entry';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
@@ -8,9 +8,9 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 interface OrgaMenuEntry extends BaseMenuEntry<OML> {}
 
 @Component({
-    selector: 'os-organization-navigation',
-    templateUrl: './organization-navigation.component.html',
-    styleUrls: ['./organization-navigation.component.scss']
+    selector: `os-organization-navigation`,
+    templateUrl: `./organization-navigation.component.html`,
+    styleUrls: [`./organization-navigation.component.scss`]
 })
 export class OrganizationNavigationComponent {
     public menuEntries: OrgaMenuEntry[] = [

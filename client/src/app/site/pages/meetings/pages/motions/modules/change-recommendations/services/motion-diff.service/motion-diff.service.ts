@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
-import { ChangeRecommendationsModule } from '../../change-recommendations.module';
+
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
+import { ChangeRecommendationsModule } from '../../change-recommendations.module';
 import { ViewUnifiedChange } from '../../view-models';
+import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;

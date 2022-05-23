@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { SettingsGroup } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
-    selector: 'os-meeting-settings-group-list',
-    templateUrl: './meeting-settings-group-list.component.html',
-    styleUrls: ['./meeting-settings-group-list.component.scss']
+    selector: `os-meeting-settings-group-list`,
+    templateUrl: `./meeting-settings-group-list.component.html`,
+    styleUrls: [`./meeting-settings-group-list.component.scss`]
 })
 export class MeetingSettingsGroupListComponent extends BaseMeetingComponent {
     public groups: SettingsGroup[] = [];

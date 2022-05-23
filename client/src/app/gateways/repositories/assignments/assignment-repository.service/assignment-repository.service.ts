@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { Assignment } from '../../../../domain/models/assignments/assignment';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { createAgendaItem } from '../../agenda';
-import { AssignmentAction } from './assignment.action';
-import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
+import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+
+import { Assignment } from '../../../../domain/models/assignments/assignment';
+import { createAgendaItem } from '../../agenda';
+import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
+import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
+import { AssignmentAction } from './assignment.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewAssignment,

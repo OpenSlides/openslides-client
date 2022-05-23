@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { TagCommonServiceModule } from '../../../../motions/modules/tags/tag-common-service.module';
 import { MeetingPdfExportModule } from 'src/app/site/pages/meetings/services/export';
+
+import { TagCommonServiceModule } from '../../../../motions/modules/tags/tag-common-service.module';
 
 @NgModule({
     imports: [TagCommonServiceModule, MeetingPdfExportModule]

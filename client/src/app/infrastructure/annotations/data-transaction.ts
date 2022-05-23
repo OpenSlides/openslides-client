@@ -1,4 +1,5 @@
 import { Constructable } from 'src/app/domain/interfaces/constructable';
+
 import { DataType } from './data-type';
 
 type ClassDecorator = (target: Constructable) => void;

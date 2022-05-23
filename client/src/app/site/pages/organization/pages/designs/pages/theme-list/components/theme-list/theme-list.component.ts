@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
+import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
+import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
-import { ThemeControllerService } from '../../../../services/theme-controller.service';
+
 import { ThemeBuilderDialogService } from '../../../../modules/theme-builder-dialog/services/theme-builder-dialog.service';
+import { ThemeControllerService } from '../../../../services/theme-controller.service';
 
 @Component({
-    selector: 'os-theme-list',
-    templateUrl: './theme-list.component.html',
-    styleUrls: ['./theme-list.component.scss']
+    selector: `os-theme-list`,
+    templateUrl: `./theme-list.component.html`,
+    styleUrls: [`./theme-list.component.scss`]
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     public tableColumnDefinition: PblColumnDefinition[] = [

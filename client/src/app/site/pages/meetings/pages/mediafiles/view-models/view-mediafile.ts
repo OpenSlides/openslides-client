@@ -1,18 +1,19 @@
-import { HasAttachment } from './has-attachment';
-import { BaseViewModel } from '../../../../../base/base-view-model';
-import { HasMeeting } from '../../../view-models/has-meeting';
-import { ViewMeeting } from '../../../view-models/view-meeting';
-import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
-import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
-import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
-import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
-import { VIDEO_MIMETYPES } from '../definitions/index';
-import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
-import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
-import { StructuredRelation } from '../../../../../../infrastructure/definitions/relations';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+
+import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
+import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import { StructuredRelation } from '../../../../../../infrastructure/definitions/relations';
+import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
+import { HasMeeting } from '../../../view-models/has-meeting';
+import { ViewMeeting } from '../../../view-models/view-meeting';
+import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
+import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
+import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
+import { VIDEO_MIMETYPES } from '../definitions/index';
+import { HasAttachment } from './has-attachment';
 
 export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public static COLLECTION = Mediafile.COLLECTION;
@@ -36,7 +37,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public get meeting_id(): Id {
         const [collection, id] = collectionIdFromFqid(this.mediafile.owner_id);
         if (collection != Meeting.COLLECTION) {
-            throw Error("Mediafile's owner_id is not a meeting");
+            throw Error(`Mediafile's owner_id is not a meeting`);
         }
         return id;
     }

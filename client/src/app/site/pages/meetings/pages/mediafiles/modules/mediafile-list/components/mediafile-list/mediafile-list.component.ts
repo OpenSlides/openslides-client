@@ -1,37 +1,38 @@
-import { Component, OnInit, TemplateRef, ChangeDetectorRef, ViewChild, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable, Subscription } from 'rxjs';
-import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
-import { MediafileListSortService } from '../../services/mediafile-list-sort.service';
-import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import {
     FontDisplayNames,
     FontPlace,
     LogoDisplayNames,
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
+import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
+import { MediafileListSortService } from '../../services/mediafile-list-sort.service';
 
 @Component({
-    selector: 'os-mediafile-list',
-    templateUrl: './mediafile-list.component.html',
-    styleUrls: ['./mediafile-list.component.scss']
+    selector: `os-mediafile-list`,
+    templateUrl: `./mediafile-list.component.html`,
+    styleUrls: [`./mediafile-list.component.scss`]
 })
 export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
     @ViewChild(FileListComponent)

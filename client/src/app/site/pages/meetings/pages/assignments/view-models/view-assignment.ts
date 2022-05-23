@@ -1,17 +1,18 @@
-import { ViewPoll } from '../../polls/view-models/view-poll';
-import { HasMeeting } from '../../../view-models/has-meeting';
-import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
-import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
-import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
-import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
-import { ViewAssignmentCandidate } from './view-assignment-candidate';
-import { AssignmentPhases } from '../definitions';
-import { HasPolls } from '../../polls/view-models/has-polls';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
+import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+
+import { HasMeeting } from '../../../view-models/has-meeting';
+import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
+import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
+import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
+import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
+import { HasPolls } from '../../polls/view-models/has-polls';
+import { ViewPoll } from '../../polls/view-models/view-poll';
+import { AssignmentPhases } from '../definitions';
+import { ViewAssignmentCandidate } from './view-assignment-candidate';
 export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
     public static COLLECTION = Assignment.COLLECTION;
     protected _collection = Assignment.COLLECTION;

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectorMessageDialogService } from './projector-message-dialog.service';
 
-describe('ProjectorMessageDialogService', () => {
+describe(`ProjectorMessageDialogService`, () => {
     let service: ProjectorMessageDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ProjectorMessageDialogService', () => {
         service = TestBed.inject(ProjectorMessageDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

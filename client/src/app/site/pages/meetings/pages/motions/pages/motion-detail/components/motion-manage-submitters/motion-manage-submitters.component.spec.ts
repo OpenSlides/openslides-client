@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionManageSubmittersComponent } from './motion-manage-submitters.component';
 
-describe('MotionManageSubmittersComponent', () => {
+describe(`MotionManageSubmittersComponent`, () => {
     let component: MotionManageSubmittersComponent;
     let fixture: ComponentFixture<MotionManageSubmittersComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionManageSubmittersComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

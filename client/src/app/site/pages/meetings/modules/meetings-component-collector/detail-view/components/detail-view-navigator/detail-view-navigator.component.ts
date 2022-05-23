@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 
 @Component({
-    selector: 'os-detail-view-navigator',
-    templateUrl: './detail-view-navigator.component.html',
-    styleUrls: ['./detail-view-navigator.component.scss']
+    selector: `os-detail-view-navigator`,
+    templateUrl: `./detail-view-navigator.component.html`,
+    styleUrls: [`./detail-view-navigator.component.scss`]
 })
 export class DetailViewNavigatorComponent {
     @Input()

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, Observable } from 'rxjs';
-import { infoDialogSettings } from '../../../../infrastructure/utils/dialog-settings';
+
 import { Displayable } from '../../../../domain/interfaces';
+import { infoDialogSettings } from '../../../../infrastructure/utils/dialog-settings';
+import { ChoiceDialogModule } from '../choice-dialog.module';
 import { ChoiceDialogComponent } from '../components/choice-dialog/choice-dialog.component';
 import { ChoiceAnswer, ChoiceDialogConfig } from '../definitions';
-import { ChoiceDialogModule } from '../choice-dialog.module';
 
 @Injectable({
     providedIn: ChoiceDialogModule

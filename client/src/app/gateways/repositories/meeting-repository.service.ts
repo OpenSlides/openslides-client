@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
+import { isMoment, Moment } from 'moment';
+import { Action } from 'src/app/gateways/actions';
+
+import { Id } from '../../domain/definitions/key-types';
+import { Identifiable } from '../../domain/interfaces/identifiable';
 import { Meeting } from '../../domain/models/meetings/meeting';
+import { Projection } from '../../domain/models/projector/projection';
+import { MeetingSettingsDefinitionService } from '../../site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
-import { BaseRepository } from './base-repository';
-import { Moment, isMoment } from 'moment';
-import { Projection } from '../../domain/models/projector/projection';
-import { Identifiable } from '../../domain/interfaces/identifiable';
-import { Id } from '../../domain/definitions/key-types';
 import { DEFAULT_FIELDSET, Fieldsets } from '../../site/services/model-request-builder';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
-import { MeetingAction } from './meetings';
-import { UserAction } from './users/user-action';
-import { ActionRequest } from '../actions/action-utils';
-import { MeetingSettingsDefinitionService } from '../../site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
-import { Action } from 'src/app/gateways/actions';
+import { ActionRequest } from '../actions/action-utils';
+import { BaseRepository } from './base-repository';
+import { MeetingAction } from './meetings';
+import { RepositoryServiceCollectorService } from './repository-service-collector.service';
+import { UserAction } from './users/user-action';
 
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_list_of_speakers`,
@@ -34,7 +35,7 @@ export interface MeetingUserModifiedFields {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting> {
     public constructor(

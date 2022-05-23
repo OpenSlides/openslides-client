@@ -1,15 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DurationService } from 'src/app/site/services/duration.service';
+
 import { CountdownDialogData } from '../../definitions';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector: 'os-projector-countdown-dialog',
-    templateUrl: './projector-countdown-dialog.component.html',
-    styleUrls: ['./projector-countdown-dialog.component.scss']
+    selector: `os-projector-countdown-dialog`,
+    templateUrl: `./projector-countdown-dialog.component.html`,
+    styleUrls: [`./projector-countdown-dialog.component.scss`]
 })
 export class ProjectorCountdownDialogComponent implements OnInit {
     /**

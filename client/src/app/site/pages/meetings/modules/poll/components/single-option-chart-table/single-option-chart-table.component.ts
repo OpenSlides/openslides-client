@@ -1,14 +1,13 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
-import { AssignmentPollService } from '../../../../pages/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { MotionPollService } from '../../../../pages/motions/modules/motion-poll/services';
+
 import { PollService } from '../../services/poll.service';
 import { ChartData } from '../chart/chart.component';
 
 @Component({
-    selector: 'os-single-option-chart-table',
-    templateUrl: './single-option-chart-table.component.html',
-    styleUrls: ['./single-option-chart-table.component.scss']
+    selector: `os-single-option-chart-table`,
+    templateUrl: `./single-option-chart-table.component.html`,
+    styleUrls: [`./single-option-chart-table.component.scss`]
 })
 export class SingleOptionChartTableComponent {
     private _poll: PollData;

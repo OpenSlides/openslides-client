@@ -1,9 +1,8 @@
-import { BaseModel } from '../base/base-model';
-import { Id, Fqid } from '../../definitions/key-types';
-import { HasMeetingId } from '../../interfaces/has-meeting-id';
-import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { Fqid, Id } from '../../definitions/key-types';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasOwnerId } from '../../interfaces/has-owner-id';
+import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { BaseModel } from '../base/base-model';
 
 interface PdfInformation {
     pages?: number;

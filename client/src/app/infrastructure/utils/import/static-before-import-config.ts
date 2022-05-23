@@ -1,4 +1,5 @@
 import { Ids } from 'src/app/domain/definitions/key-types';
+
 import { SideImportHandlerConfig } from './side-import-handler-config';
 
 export interface StaticBeforeImportConfig<ToCreate = any, ToImport = any>

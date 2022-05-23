@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { HttpStreamEndpointService, HttpStreamService } from 'src/app/gateways/http-stream';
 import { HttpService } from 'src/app/gateways/http.service';
+import { HttpStreamEndpointService, HttpStreamService } from 'src/app/gateways/http-stream';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 import { CommunicationManagerService } from 'src/app/site/services/communication-manager.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
 
 /**
@@ -96,7 +97,7 @@ const PUBLISH_PATH = `${NOTIFY_PATH}/publish`;
 const ICC_HEALTH_PATH = `${ICC_PATH}/health`;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class NotifyService {
     /**

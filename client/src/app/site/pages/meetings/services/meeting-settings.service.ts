@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+
 import { Settings } from '../../../../domain/models/meetings/meeting';
 import { CustomTranslationService } from '../../../modules/translations/custom-translation.service';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingService } from './active-meeting.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingSettingsService {
     /**

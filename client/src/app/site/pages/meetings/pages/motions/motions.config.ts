@@ -9,6 +9,7 @@ import { MotionState } from 'src/app/domain/models/motions/motion-state';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { MotionSubmitter } from 'src/app/domain/models/motions/motion-submitter';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
+import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { Tag } from 'src/app/domain/models/tag/tag';
 import {
     MotionBlockRepositoryService,
@@ -22,8 +23,10 @@ import {
     MotionSubmitterRepositoryService,
     MotionWorkflowRepositoryService
 } from 'src/app/gateways/repositories/motions';
+import { PersonalNoteRepositoryService } from 'src/app/gateways/repositories/motions/personal-note-repository.service';
 import { TagRepositoryService } from 'src/app/gateways/repositories/tags';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+
 import {
     ViewMotionBlock,
     ViewMotionCategory,
@@ -38,8 +41,6 @@ import {
     ViewTag
 } from './modules';
 import { ViewMotion } from './view-models';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { PersonalNoteRepositoryService } from 'src/app/gateways/repositories/motions/personal-note-repository.service';
 
 export const MotionsAppConfig: AppConfig = {
     name: `motions`,

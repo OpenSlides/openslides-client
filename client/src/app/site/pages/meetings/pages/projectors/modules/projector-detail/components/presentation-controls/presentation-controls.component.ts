@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { ProjectionControllerService } from '../../services/projection-controller.service';
+import { Component, Input } from '@angular/core';
 import { combineLatest, map, merge, mergeMap, Observable, of } from 'rxjs';
+import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+
+import { ProjectionControllerService } from '../../services/projection-controller.service';
 
 @Component({
-    selector: 'os-presentation-controls',
-    templateUrl: './presentation-controls.component.html',
-    styleUrls: ['./presentation-controls.component.scss']
+    selector: `os-presentation-controls`,
+    templateUrl: `./presentation-controls.component.html`,
+    styleUrls: [`./presentation-controls.component.scss`]
 })
 export class PresentationControlsComponent {
     @Input()

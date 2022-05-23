@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route } from '@angular/router';
-import { OML } from '../../domain/definitions/organization-permission';
-import { Permission } from '../../domain/definitions/permission';
+
 import { OperatorService } from '../services/operator.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PermissionGuard implements CanLoad {
     public constructor(private operator: OperatorService) {}

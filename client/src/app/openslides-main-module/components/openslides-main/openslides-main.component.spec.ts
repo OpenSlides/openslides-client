@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OpenSlidesMainComponent } from './openslides-main.component';
 
-describe('OpenslidesMainComponent', () => {
+describe(`OpenslidesMainComponent`, () => {
     let component: OpenSlidesMainComponent;
     let fixture: ComponentFixture<OpenSlidesMainComponent>;
 
@@ -18,7 +18,7 @@ describe('OpenslidesMainComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

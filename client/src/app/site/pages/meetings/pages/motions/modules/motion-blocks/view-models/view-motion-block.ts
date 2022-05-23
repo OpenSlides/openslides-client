@@ -1,10 +1,10 @@
 import { MotionBlock } from '../../../../../../../../domain/models/motions/motion-block';
 import { Projectiondefault } from '../../../../../../../../domain/models/projector/projection-default';
-import { ViewMotion } from '../../../view-models/view-motion';
 import { BaseProjectableViewModel } from '../../../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { HasAgendaItem } from '../../../../agenda';
 import { HasListOfSpeakers } from '../../../../agenda/modules/list-of-speakers';
+import { ViewMotion } from '../../../view-models/view-motion';
 
 export class ViewMotionBlock extends BaseProjectableViewModel<MotionBlock> {
     public static COLLECTION = MotionBlock.COLLECTION;

@@ -8,14 +8,14 @@ import {
     TemplateRef
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { map, Observable, OperatorFunction } from 'rxjs';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 @Component({
     selector: `os-attachment-control`,

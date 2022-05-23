@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { BaseSlideComponent } from '../../../base/base-slide-component';
 
+import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { ProjectorCountdownSlideData } from '../projector-countdown-slide-data';
 
 @Component({

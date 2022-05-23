@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  * This is because the "original" pipe does not take arguments as "any", instead they're "unknown".
  */
 @Pipe({
-    name: 'slice'
+    name: `slice`
 })
 export class OpenSlidesSlicePipe implements PipeTransform {
     /**
@@ -45,6 +45,6 @@ export class OpenSlidesSlicePipe implements PipeTransform {
     }
 
     private isSupported(obj: any): boolean {
-        return typeof obj === 'string' || Array.isArray(obj);
+        return typeof obj === `string` || Array.isArray(obj);
     }
 }

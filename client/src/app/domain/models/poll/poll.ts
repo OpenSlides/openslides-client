@@ -1,8 +1,9 @@
+import { HasSequentialNumber } from 'src/app/domain/interfaces';
+
 import { Fqid, Id } from '../../definitions/key-types';
-import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
+import { BaseDecimalModel } from '../base/base-decimal-model';
 import {
     CalculablePollKey,
     EntitledUsersEntry,

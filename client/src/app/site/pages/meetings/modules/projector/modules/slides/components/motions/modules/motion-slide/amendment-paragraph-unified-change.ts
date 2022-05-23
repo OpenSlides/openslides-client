@@ -1,6 +1,7 @@
 import { MergeAmendment } from 'src/app/domain/models/motions/motion-state';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { LineRange, ViewUnifiedChange, ViewUnifiedChangeType } from 'src/app/site/pages/meetings/pages/motions';
+
 import { AmendmentData } from './motion-slide-data';
 
 /**
@@ -25,11 +26,11 @@ export class AmendmentParagraphUnifiedChange implements ViewUnifiedChange {
     }
 
     public getTitle(): string {
-        throw new Error('Method not implemented.');
+        throw new Error(`Method not implemented.`);
     }
 
     public getModificationType(): ModificationType {
-        throw new Error('Method not implemented.');
+        throw new Error(`Method not implemented.`);
     }
 
     public getChangeId(): string {

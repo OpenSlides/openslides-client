@@ -1,18 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InfoDialog } from '../../services/participant-list-info-dialog.service';
+import { map, Observable } from 'rxjs';
 import { GENDERS } from 'src/app/domain/models/users/user';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { Observable, map } from 'rxjs';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { UserService } from 'src/app/site/services/user.service';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { UserService } from 'src/app/site/services/user.service';
+
+import { InfoDialog } from '../../services/participant-list-info-dialog.service';
 
 @Component({
-    selector: 'os-participant-list-info-dialog',
-    templateUrl: './participant-list-info-dialog.component.html',
-    styleUrls: ['./participant-list-info-dialog.component.scss']
+    selector: `os-participant-list-info-dialog`,
+    templateUrl: `./participant-list-info-dialog.component.html`,
+    styleUrls: [`./participant-list-info-dialog.component.scss`]
 })
 export class ParticipantListInfoDialogComponent implements OnInit {
     public readonly genders = GENDERS;

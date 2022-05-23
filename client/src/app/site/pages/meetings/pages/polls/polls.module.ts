@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { PollsRoutingModule } from './polls-routing.module';
-import { PollMainComponent } from './components/poll-main/poll-main.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { PollMainComponent } from './components/poll-main/poll-main.component';
+import { PollsRoutingModule } from './polls-routing.module';
 
 @NgModule({
     declarations: [PollMainComponent],

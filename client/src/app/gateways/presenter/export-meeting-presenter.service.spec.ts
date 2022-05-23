@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ExportMeetingPresenterService } from './export-meeting-presenter.service';
 
-describe('ExportMeetingPresenterService', () => {
+describe(`ExportMeetingPresenterService`, () => {
     let service: ExportMeetingPresenterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ExportMeetingPresenterService', () => {
         service = TestBed.inject(ExportMeetingPresenterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

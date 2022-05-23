@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { ROUTES } from '@angular/router';
-import { Slides, SLIDE_MANIFESTS } from './definitions';
+
+import { SLIDE_MANIFESTS, Slides } from './definitions';
 
 @NgModule({
     declarations: [],

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AssignmentPollPdfService } from './assignment-poll-pdf.service';
 
-describe('AssignmentPollPdfService', () => {
+describe(`AssignmentPollPdfService`, () => {
     let service: AssignmentPollPdfService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('AssignmentPollPdfService', () => {
         service = TestBed.inject(AssignmentPollPdfService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { AgendaSortComponent } from './components/agenda-sort/agenda-sort.component';
 
 const routes: Routes = [

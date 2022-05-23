@@ -1,31 +1,32 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MotionPollServiceModule } from './services/motion-poll-service.module';
-import { MotionPollDialogComponent } from './components/motion-poll-dialog/motion-poll-dialog.component';
-import { MotionPollComponent } from './components/motion-poll/motion-poll.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
-import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { RouterModule } from '@angular/router';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
+import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
+import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+import { DirectivesModule } from 'src/app/ui/directives';
+import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
-import { CommonModule } from '@angular/common';
+
+import { MotionPollComponent } from './components/motion-poll/motion-poll.component';
+import { MotionPollDetailContentComponent } from './components/motion-poll-detail-content/motion-poll-detail-content.component';
+import { MotionPollDialogComponent } from './components/motion-poll-dialog/motion-poll-dialog.component';
 import { MotionPollMetaInformationComponent } from './components/motion-poll-meta-information/motion-poll-meta-information.component';
 import { MotionPollVoteComponent } from './components/motion-poll-vote/motion-poll-vote.component';
-import { MotionPollDetailContentComponent } from './components/motion-poll-detail-content/motion-poll-detail-content.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
-import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { DirectivesModule } from 'src/app/ui/directives';
 import { MotionPollService } from './services';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+import { MotionPollServiceModule } from './services/motion-poll-service.module';
 
 const DECLARATIONS = [
     MotionPollComponent,

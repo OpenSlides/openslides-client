@@ -1,12 +1,12 @@
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { BaseViewModel } from '../../site/base/base-view-model';
-import { ActiveMeetingIdService } from '../../site/pages/meetings/services/active-meeting-id.service';
 import { ActiveMeetingService } from '../../site/pages/meetings/services/active-meeting.service';
+import { ActiveMeetingIdService } from '../../site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from '../../site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting';
 import { BaseRepository } from './base-repository';
 import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
-import { MeetingSettingsService } from '../../site/pages/meetings/services/meeting-settings.service';
 
 /**
  * Extension of the base repository for all meeting specific models. Provides access

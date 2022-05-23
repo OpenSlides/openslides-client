@@ -1,22 +1,23 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
+import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
 
 @Component({
-    selector: 'os-assignment-poll',
-    templateUrl: './assignment-poll.component.html',
-    styleUrls: ['./assignment-poll.component.scss']
+    selector: `os-assignment-poll`,
+    templateUrl: `./assignment-poll.component.html`,
+    styleUrls: [`./assignment-poll.component.scss`]
 })
 export class AssignmentPollComponent extends BasePollComponent implements OnInit {
     @Input()

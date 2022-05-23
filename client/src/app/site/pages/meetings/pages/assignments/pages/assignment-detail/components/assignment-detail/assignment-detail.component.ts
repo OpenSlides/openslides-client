@@ -1,38 +1,39 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { AssignmentPhases } from '../../../../definitions';
-import { BehaviorSubject, Subscription, filter, first, firstValueFrom } from 'rxjs';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
-import { AssignmentPollService } from '../../../../modules/assignment-poll/services/assignment-poll.service';
-import { AssignmentExportService } from '../../../../services/assignment-export.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
+import { BehaviorSubject, filter, first, firstValueFrom, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { AssignmentCandidateControllerService } from '../../services/assignment-candidate-controller.service';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
+import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
+import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
+import { AssignmentPhases } from '../../../../definitions';
+import { AssignmentPollService } from '../../../../modules/assignment-poll/services/assignment-poll.service';
+import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
+import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
+import { AssignmentExportService } from '../../../../services/assignment-export.service';
+import { AssignmentCandidateControllerService } from '../../services/assignment-candidate-controller.service';
 
 @Component({
-    selector: 'os-assignment-detail',
-    templateUrl: './assignment-detail.component.html',
-    styleUrls: ['./assignment-detail.component.scss']
+    selector: `os-assignment-detail`,
+    templateUrl: `./assignment-detail.component.html`,
+    styleUrls: [`./assignment-detail.component.scss`]
 })
 export class AssignmentDetailComponent extends BaseMeetingComponent implements OnDestroy {
     public readonly COLLECTION = Assignment.COLLECTION;

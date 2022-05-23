@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ViewMediafile } from '../view-models';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
+import { BaseController } from 'src/app/site/base/base-controller';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { ViewMediafile } from '../view-models';
 import { MediafileCommonServiceModule } from './mediafile-common-service.module';
 
 @Injectable({ providedIn: MediafileCommonServiceModule })

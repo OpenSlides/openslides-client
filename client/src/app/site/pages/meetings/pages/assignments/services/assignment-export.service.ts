@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PdfError } from 'src/app/gateways/export/pdf-document.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewAssignment } from '../view-models';
-import { AssignmentPdfService } from './assignment-pdf.service';
-import { AssignmentExportServiceModule } from './assignment-export-service.module';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
+import { ViewAssignment } from '../view-models';
+import { AssignmentExportServiceModule } from './assignment-export-service.module';
+import { AssignmentPdfService } from './assignment-pdf.service';
 
 /**
  * Controls PDF export for assignments

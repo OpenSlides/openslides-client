@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GlobalAccountService } from './global-account.service';
 
-describe('GlobalAccountService', () => {
+describe(`GlobalAccountService`, () => {
     let service: GlobalAccountService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('GlobalAccountService', () => {
         service = TestBed.inject(GlobalAccountService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

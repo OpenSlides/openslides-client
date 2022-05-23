@@ -1,14 +1,13 @@
 import { Directive } from '@angular/core';
-import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
+import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 /**
  * Workaround data definitions. The implementation for the different model's classes might have different needs,

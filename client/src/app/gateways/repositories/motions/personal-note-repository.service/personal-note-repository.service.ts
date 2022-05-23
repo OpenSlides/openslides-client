@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
-import { HasPersonalNote, ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Fqid } from 'src/app/domain/definitions/key-types';
-import { PersonalNoteAction } from './personal-note.action';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { Action } from 'src/app/gateways/actions';
+import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
+import { ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
+import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
+import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
+import { PersonalNoteAction } from './personal-note.action';
 
 /**
  */

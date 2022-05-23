@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { TranslateService } from '@ngx-translate/core';
+import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
+
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicImportServiceModule } from '../topic-import-service.module';
 

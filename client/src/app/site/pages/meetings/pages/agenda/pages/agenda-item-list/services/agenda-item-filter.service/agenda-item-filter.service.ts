@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { OsFilter, BaseFilterListService, OsFilterOption } from 'src/app/site/base/base-filter.service';
-import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { TranslateService } from '@ngx-translate/core';
-import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
+import { Motion } from 'src/app/domain/models/motions/motion';
+import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
+import { Topic } from 'src/app/domain/models/topics/topic';
+import { StorageService } from 'src/app/gateways/storage.service';
+import { BaseFilterListService, OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
+import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+
+import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
+import { AgendaItemListServiceModule } from '../agenda-item-list-service.module';
 
 @Injectable({
     providedIn: AgendaItemListServiceModule

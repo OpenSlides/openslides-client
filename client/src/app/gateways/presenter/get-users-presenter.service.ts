@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { Id } from '../../domain/definitions/key-types';
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
@@ -13,7 +14,7 @@ interface GetUsersPresenterPayload {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class GetUsersPresenterService {
     public constructor(private presenter: PresenterService) {}

@@ -9,17 +9,18 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Selectable } from 'src/app/domain/interfaces/selectable';
+
 import { BaseFormFieldControlComponent } from '../../../../base/base-form-field-control';
+import { OsOptionSelectionChanged } from '../../definitions';
 import { SearchSelectorNotFoundTemplateDirective } from '../../directives/search-selector-not-found-template.directive';
 import { ParentErrorStateMatcher } from '../../validators';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { OsOptionSelectionChanged } from '../../definitions';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BehaviorSubject, Observable, debounceTime, distinctUntilChanged } from 'rxjs';
-import { OnInit } from '@angular/core';
 
 @Directive()
 export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlComponent<Selectable> implements OnInit {

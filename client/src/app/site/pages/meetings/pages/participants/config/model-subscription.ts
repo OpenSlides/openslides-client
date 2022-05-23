@@ -1,6 +1,6 @@
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { Observable, map } from 'rxjs';
 
 const PARTICIPANT_LIST_SUBSCRIPTION = `participant_list`;
 

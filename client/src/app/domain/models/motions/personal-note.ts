@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
 
 export class PersonalNote extends BaseModel<PersonalNote> {
     public static COLLECTION = `personal_note`;

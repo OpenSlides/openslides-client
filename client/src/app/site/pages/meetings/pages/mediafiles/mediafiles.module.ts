@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { MediafilesRoutingModule } from './mediafiles-routing.module';
-import { MediafileMainComponent } from './components/mediafile-main/mediafile-main.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { MediafileMainComponent } from './components/mediafile-main/mediafile-main.component';
+import { MediafilesRoutingModule } from './mediafiles-routing.module';
 import { MediafileCommonServiceModule } from './services/mediafile-common-service.module';
 
 @NgModule({

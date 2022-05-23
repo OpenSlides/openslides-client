@@ -1,5 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
+
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { TitleInformationWithAgendaItem } from '../../../definitions';
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EntitledUsersTableComponent } from './entitled-users-table.component';
 
-describe('EntitledUsersTableComponent', () => {
+describe(`EntitledUsersTableComponent`, () => {
     let component: EntitledUsersTableComponent;
     let fixture: ComponentFixture<EntitledUsersTableComponent>;
 
@@ -18,7 +18,7 @@ describe('EntitledUsersTableComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

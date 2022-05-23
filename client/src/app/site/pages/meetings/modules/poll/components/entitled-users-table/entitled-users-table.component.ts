@@ -1,13 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-entry';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
+import { Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 
+import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-entry';
+
 @Component({
-    selector: 'os-entitled-users-table',
-    templateUrl: './entitled-users-table.component.html',
-    styleUrls: ['./entitled-users-table.component.scss'],
+    selector: `os-entitled-users-table`,
+    templateUrl: `./entitled-users-table.component.html`,
+    styleUrls: [`./entitled-users-table.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommitteeDetailComponent } from './committee-detail.component';
 
-describe('CommitteeDetailComponent', () => {
+describe(`CommitteeDetailComponent`, () => {
     let component: CommitteeDetailComponent;
     let fixture: ComponentFixture<CommitteeDetailComponent>;
 
@@ -18,7 +18,7 @@ describe('CommitteeDetailComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

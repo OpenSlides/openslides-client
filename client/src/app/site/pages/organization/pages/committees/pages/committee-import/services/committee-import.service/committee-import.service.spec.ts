@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommitteeImportService } from './committee-import.service';
 
-describe('CommitteeImportService', () => {
+describe(`CommitteeImportService`, () => {
     let service: CommitteeImportService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('CommitteeImportService', () => {
         service = TestBed.inject(CommitteeImportService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

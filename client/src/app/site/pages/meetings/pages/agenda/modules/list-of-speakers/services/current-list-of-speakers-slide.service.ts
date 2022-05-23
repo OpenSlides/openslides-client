@@ -3,11 +3,12 @@ import { Projectiondefault } from 'src/app/domain/models/projector/projection-de
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+
 import { ViewProjector } from '../../../../projectors';
 import { ProjectorControllerService } from '../../../../projectors/services/projector-controller.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CurrentListOfSpeakersSlideService {
     public constructor(

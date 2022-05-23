@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionForwardDialogComponent } from './motion-forward-dialog.component';
 
-describe('MotionForwardDialogComponent', () => {
+describe(`MotionForwardDialogComponent`, () => {
     let component: MotionForwardDialogComponent;
     let fixture: ComponentFixture<MotionForwardDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionForwardDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

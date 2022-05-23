@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { HttpService } from '../http.service';
 import { Action } from './action';
 import { ActionRequest, isActionError, isActionResponse } from './action-utils';
@@ -9,7 +10,7 @@ const ACTION_URL = `/system/action/handle_request`;
 let uniqueFnId = 0;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ActionService {
     private readonly _beforeActionFnMap: { [index: number]: ActionFn } = {};

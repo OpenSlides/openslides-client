@@ -1,23 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { Motion } from 'src/app/domain/models/motions/motion';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
 const MOTION_DETAIL_SEQUENTIAL_NUMBER_MAPPING = `motion_detail_sequential_number_mapping`;
 const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
 const MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION = `motion_detail_additional`;
 
 @Component({
-    selector: 'os-motion-detail',
-    templateUrl: './motion-detail.component.html',
-    styleUrls: ['./motion-detail.component.scss']
+    selector: `os-motion-detail`,
+    templateUrl: `./motion-detail.component.html`,
+    styleUrls: [`./motion-detail.component.scss`]
 })
 export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     private _currentMotionId: Id | null = null;

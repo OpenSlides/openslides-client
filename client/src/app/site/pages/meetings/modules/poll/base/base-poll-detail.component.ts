@@ -1,26 +1,26 @@
 import { ChangeDetectorRef, Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, from, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-
-import { PollService } from '../services/poll.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
-import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { VoteControllerService } from '../services/vote-controller.service';
-import { EntitledUsersTableEntry } from '../definitions';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
+import { EntitledUsersTableEntry } from '../definitions';
+import { PollService } from '../services/poll.service';
+import { VoteControllerService } from '../services/vote-controller.service';
 
 export interface BaseVoteData extends Identifiable {
     user?: ViewUser;

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GroupControllerService } from './group-controller.service';
 
-describe('GroupControllerService', () => {
+describe(`GroupControllerService`, () => {
     let service: GroupControllerService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('GroupControllerService', () => {
         service = TestBed.inject(GroupControllerService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

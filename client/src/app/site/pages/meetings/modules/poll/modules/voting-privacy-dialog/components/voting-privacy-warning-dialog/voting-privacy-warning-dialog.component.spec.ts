@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VotingPrivacyWarningDialogComponent } from './voting-privacy-warning-dialog.component';
 
-describe('VotingPrivacyWarningDialogComponent', () => {
+describe(`VotingPrivacyWarningDialogComponent`, () => {
     let component: VotingPrivacyWarningDialogComponent;
     let fixture: ComponentFixture<VotingPrivacyWarningDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('VotingPrivacyWarningDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

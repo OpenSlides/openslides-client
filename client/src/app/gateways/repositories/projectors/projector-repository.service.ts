@@ -3,9 +3,10 @@ import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Projector } from 'src/app/domain/models/projector/projector';
-import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorAction, ScrollScaleDirection } from './projector.action';

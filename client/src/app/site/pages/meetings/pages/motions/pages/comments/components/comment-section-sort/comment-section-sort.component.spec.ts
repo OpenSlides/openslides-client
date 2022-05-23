@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommentSectionSortComponent } from './comment-section-sort.component';
 
-describe('CommentSectionSortComponent', () => {
+describe(`CommentSectionSortComponent`, () => {
     let component: CommentSectionSortComponent;
     let fixture: ComponentFixture<CommentSectionSortComponent>;
 
@@ -18,7 +18,7 @@ describe('CommentSectionSortComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

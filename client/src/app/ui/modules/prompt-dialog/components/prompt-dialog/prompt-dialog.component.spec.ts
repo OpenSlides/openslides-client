@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PromptDialogComponent } from './prompt-dialog.component';
 
-describe('PromptDialogComponent', () => {
+describe(`PromptDialogComponent`, () => {
     let component: PromptDialogComponent;
     let fixture: ComponentFixture<PromptDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('PromptDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

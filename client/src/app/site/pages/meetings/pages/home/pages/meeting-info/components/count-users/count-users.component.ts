@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { auditTime, Observable } from 'rxjs';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 import { CountUsersStatisticsService, CountUserStatistics } from '../../services/count-users-statistics.service';
 
 @Component({
-    selector: 'os-count-users',
-    templateUrl: './count-users.component.html',
-    styleUrls: ['./count-users.component.scss']
+    selector: `os-count-users`,
+    templateUrl: `./count-users.component.html`,
+    styleUrls: [`./count-users.component.scss`]
 })
 export class CountUsersComponent extends BaseUiComponent implements OnDestroy {
     public token: string | null = null;

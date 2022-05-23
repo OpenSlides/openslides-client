@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { Validators } from '@angular/forms';
+
 import {
     BaseChangeRecommendationData,
     BaseChangeRecommendationDialogComponent
 } from '../../base/base-change-recommendation-dialog.component';
-import { Validators } from '@angular/forms';
 
 /**
  * Data that needs to be provided to the MotionTitleChangeRecommendationComponent dialog
@@ -28,9 +29,9 @@ export interface MotionTitleChangeRecommendationDialogComponentData extends Base
  * ```
  */
 @Component({
-    selector: 'os-motion-title-change-recommendation-dialog',
-    templateUrl: './motion-title-change-recommendation-dialog.component.html',
-    styleUrls: ['./motion-title-change-recommendation-dialog.component.scss'],
+    selector: `os-motion-title-change-recommendation-dialog`,
+    templateUrl: `./motion-title-change-recommendation-dialog.component.html`,
+    styleUrls: [`./motion-title-change-recommendation-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionTitleChangeRecommendationDialogComponent extends BaseChangeRecommendationDialogComponent<MotionTitleChangeRecommendationDialogComponentData> {

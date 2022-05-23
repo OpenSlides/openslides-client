@@ -1,4 +1,5 @@
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
+
 import { TitleInformationWithAgendaItem } from '../../../../definitions';
 
 export interface SlideSpeaker {

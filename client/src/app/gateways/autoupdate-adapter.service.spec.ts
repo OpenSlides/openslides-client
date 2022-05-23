@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AutoupdateAdapterService } from './autoupdate-adapter.service';
 
-describe('AutoupdateAdapterService', () => {
+describe(`AutoupdateAdapterService`, () => {
     let service: AutoupdateAdapterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('AutoupdateAdapterService', () => {
         service = TestBed.inject(AutoupdateAdapterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

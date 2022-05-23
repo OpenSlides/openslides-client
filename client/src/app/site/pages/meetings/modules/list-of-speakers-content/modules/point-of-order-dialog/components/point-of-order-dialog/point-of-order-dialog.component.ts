@@ -1,12 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 
 @Component({
-    selector: 'os-point-of-order-dialog',
-    templateUrl: './point-of-order-dialog.component.html',
-    styleUrls: ['./point-of-order-dialog.component.scss']
+    selector: `os-point-of-order-dialog`,
+    templateUrl: `./point-of-order-dialog.component.html`,
+    styleUrls: [`./point-of-order-dialog.component.scss`]
 })
 export class PointOfOrderDialogComponent {
     public editForm: FormGroup;

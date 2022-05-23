@@ -1,2 +1,2 @@
-export * from './spinner.module';
 export * from './services';
+export * from './spinner.module';

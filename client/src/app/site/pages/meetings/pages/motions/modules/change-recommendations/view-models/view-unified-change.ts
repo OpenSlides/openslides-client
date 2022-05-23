@@ -1,5 +1,6 @@
-import { ViewUnifiedChangeType } from '../definitions';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+
+import { ViewUnifiedChangeType } from '../definitions';
 
 /**
  * A common interface for (paragraph-based) amendments and change recommendations.

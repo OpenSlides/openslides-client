@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileListComponent } from './file-list.component';
 
-describe('FileListComponent', () => {
+describe(`FileListComponent`, () => {
     let component: FileListComponent;
     let fixture: ComponentFixture<FileListComponent>;
 
@@ -18,7 +18,7 @@ describe('FileListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

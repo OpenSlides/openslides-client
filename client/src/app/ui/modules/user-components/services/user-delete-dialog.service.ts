@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
-import { UserComponentsModule } from '../user-components.module';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { UserDeleteDialogComponent } from '../components';
-import { GetUserRelatedModelsPresenterService } from 'src/app/gateways/presenter/get-user-related-models-presenter.service';
-import { Ids } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces';
+import { GetUserRelatedModelsPresenterService } from 'src/app/gateways/presenter/get-user-related-models-presenter.service';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+
+import { UserDeleteDialogComponent } from '../components';
+import { UserComponentsModule } from '../user-components.module';
 
 interface UserDeleteDialogOpenConfig {
     toRemove: ViewUser[];

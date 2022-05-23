@@ -1,21 +1,22 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { GroupControllerService } from '../../services';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppPermission, PERMISSIONS, DisplayPermission } from 'src/app/domain/definitions/permission.config';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { AppPermission, DisplayPermission, PERMISSIONS } from 'src/app/domain/definitions/permission.config';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { GroupControllerService } from '../../services';
 
 @Component({
-    selector: 'os-group-list',
-    templateUrl: './group-list.component.html',
-    styleUrls: ['./group-list.component.scss']
+    selector: `os-group-list`,
+    templateUrl: `./group-list.component.html`,
+    styleUrls: [`./group-list.component.scss`]
 })
 export class GroupListComponent extends BaseMeetingComponent implements OnInit {
     /**

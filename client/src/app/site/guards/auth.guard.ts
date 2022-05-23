@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { FallbackRoutesService } from '../services/fallback-routes.service';
@@ -15,7 +16,7 @@ enum CannotAccessReason {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
     private _cannotAccessReason: CannotAccessReason | null = null;
@@ -43,11 +44,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             this._cannotAccessReason = CannotAccessReason.NO_MEANING;
             return false;
         }
-        const basePerm: Permission[] = route.data['meetingPermissions'];
+        const basePerm: Permission[] = route.data[`meetingPermissions`];
         if (!basePerm) {
             return true;
         }
-        const meetingSetting: keyof Settings = route.data['meetingSetting'];
+        const meetingSetting: keyof Settings = route.data[`meetingSetting`];
         await this.operator.ready;
         if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
             const hasPerm = !!this.activeMeeting.meetingId ? this.hasPerms(basePerm) : true;
@@ -131,14 +132,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             }
         }
         const routeParams = route.parent?.params;
-        const meetingId = routeParams?.['meetingId'];
+        const meetingId = routeParams?.[`meetingId`];
 
         if (meetingId) {
             this.router.navigate([`error`], {
                 queryParams: {
                     meetingId,
                     error: `Authentication Error`,
-                    msg: route.data['meetingPermissions']
+                    msg: route.data[`meetingPermissions`]
                 }
             });
         } else {

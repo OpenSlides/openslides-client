@@ -1,16 +1,17 @@
-import { Component, OnDestroy, Input, AfterViewInit } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
 import { AgendaContentObjectFormService } from '../../services/agenda-content-object-form.service';
 
 @Component({
-    selector: 'os-agenda-content-object-form',
-    templateUrl: './agenda-content-object-form.component.html',
-    styleUrls: ['./agenda-content-object-form.component.scss']
+    selector: `os-agenda-content-object-form`,
+    templateUrl: `./agenda-content-object-form.component.html`,
+    styleUrls: [`./agenda-content-object-form.component.scss`]
 })
 export class AgendaContentObjectFormComponent implements AfterViewInit, OnDestroy {
     @Input()

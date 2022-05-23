@@ -1,19 +1,20 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotionCategory, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MatTableDataSource } from '@angular/material/table';
 
 /**
  * Detail component to display one motion block

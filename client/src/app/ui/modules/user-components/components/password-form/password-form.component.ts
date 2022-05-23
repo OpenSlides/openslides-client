@@ -1,8 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 import { PasswordForm } from '../../definitions';
 import { PasswordValidator } from '../../validators';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 const UndesiredPasswords = [
     `123456`,
@@ -19,9 +20,9 @@ const UndesiredPasswords = [
 const UndesiredPasswordFeedback = `ಠ_ಠ`;
 
 @Component({
-    selector: 'os-password-form',
-    templateUrl: './password-form.component.html',
-    styleUrls: ['./password-form.component.scss']
+    selector: `os-password-form`,
+    templateUrl: `./password-form.component.html`,
+    styleUrls: [`./password-form.component.scss`]
 })
 export class PasswordFormComponent extends BaseUiComponent implements OnInit {
     @Output()

@@ -1,15 +1,16 @@
-import { NgModule } from '@angular/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
+import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
 import { ListSearchSelectorComponent } from './components/list-search-selector/list-search-selector.component';
 import { RepoSearchSelectorComponent } from './components/repo-search-selector/repo-search-selector.component';
-import { MatSelectModule } from '@angular/material/select';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
 
 const DECLARATIONS = [ListSearchSelectorComponent, RepoSearchSelectorComponent];
 

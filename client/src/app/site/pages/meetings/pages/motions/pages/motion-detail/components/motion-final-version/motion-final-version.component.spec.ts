@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionFinalVersionComponent } from './motion-final-version.component';
 
-describe('MotionFinalVersionComponent', () => {
+describe(`MotionFinalVersionComponent`, () => {
     let component: MotionFinalVersionComponent;
     let fixture: ComponentFixture<MotionFinalVersionComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionFinalVersionComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

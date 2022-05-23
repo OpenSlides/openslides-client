@@ -8,6 +8,7 @@ import {
     PollPercentBaseVerbose,
     PollTypeVerbose
 } from 'src/app/domain/models/poll/poll-constants';
+
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
 

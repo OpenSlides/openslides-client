@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
+import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from 'src/app/domain/models/poll';
+import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
+import { Poll } from 'src/app/domain/models/poll/poll';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -9,20 +14,16 @@ import {
     PollType,
     YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
-import { TranslateService } from '@ngx-translate/core';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollData, OptionData } from 'src/app/domain/models/poll/generic-poll';
-import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
-import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
-import { AssignmentPollServiceModule } from './assignment-poll-service.module';
 import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { PollTypeVerboseKey, PollPercentBaseVerboseKey } from 'src/app/domain/models/poll';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+
+import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
+import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
 import { AssignmentPollMethodKey, AssignmentPollMethodVerbose } from '../definitions';
+import { AssignmentPollServiceModule } from './assignment-poll-service.module';
 
 export const UnknownUserLabel = _(`Deleted user`);
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MainMenuService } from './main-menu.service';
 
-describe('MainMenuService', () => {
+describe(`MainMenuService`, () => {
     let service: MainMenuService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MainMenuService', () => {
         service = TestBed.inject(MainMenuService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

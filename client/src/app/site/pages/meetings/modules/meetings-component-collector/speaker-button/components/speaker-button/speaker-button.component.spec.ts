@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpeakerButtonComponent } from './speaker-button.component';
 
-describe('SpeakerButtonComponent', () => {
+describe(`SpeakerButtonComponent`, () => {
     let component: SpeakerButtonComponent;
     let fixture: ComponentFixture<SpeakerButtonComponent>;
 
@@ -18,7 +18,7 @@ describe('SpeakerButtonComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

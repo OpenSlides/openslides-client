@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 @Component({
-    selector: 'os-participant-presence',
-    templateUrl: './participant-presence.component.html',
-    styleUrls: ['./participant-presence.component.scss']
+    selector: `os-participant-presence`,
+    templateUrl: `./participant-presence.component.html`,
+    styleUrls: [`./participant-presence.component.scss`]
 })
 export class ParticipantPresenceComponent implements OnInit {
     /**

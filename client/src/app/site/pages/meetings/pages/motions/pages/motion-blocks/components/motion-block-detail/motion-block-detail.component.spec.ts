@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionBlockDetailComponent } from './motion-block-detail.component';
 
-describe('MotionBlockDetailComponent', () => {
+describe(`MotionBlockDetailComponent`, () => {
     let component: MotionBlockDetailComponent;
     let fixture: ComponentFixture<MotionBlockDetailComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionBlockDetailComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,7 +1,6 @@
+import { Id } from '../../../domain/definitions/key-types';
 import { SharedImportContext } from './import-context';
 import { ImportModel } from './import-model';
-
-import { Id } from '../../../domain/definitions/key-types';
 import { StaticMainImportConfig } from './static-main-import-handler';
 
 export interface ImportIdentifiable {

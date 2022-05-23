@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionCallListComponent } from './motion-call-list.component';
 
-describe('MotionCallListComponent', () => {
+describe(`MotionCallListComponent`, () => {
     let component: MotionCallListComponent;
     let fixture: ComponentFixture<MotionCallListComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionCallListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

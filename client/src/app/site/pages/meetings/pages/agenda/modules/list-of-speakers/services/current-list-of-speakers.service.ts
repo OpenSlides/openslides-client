@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
-import { Follow } from 'src/app/site/services/model-request-builder';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
 import { ViewProjector } from '../../../../projectors';
 import { ProjectorControllerService } from '../../../../projectors/services/projector-controller.service';
 import { hasListOfSpeakers, ViewListOfSpeakers } from '../view-models';

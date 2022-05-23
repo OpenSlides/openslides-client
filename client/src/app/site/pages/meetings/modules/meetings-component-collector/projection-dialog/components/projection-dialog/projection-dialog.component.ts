@@ -1,6 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
 import {
     isSlideChoiceOption,
     isSlideDecisionOption,
@@ -9,15 +12,13 @@ import {
     SlideOption,
     SlideOptions
 } from 'src/app/site/pages/meetings/view-models/slide-options';
+
 import { ProjectionDialogReturnType } from '../../definitions';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 @Component({
-    selector: 'os-projection-dialog',
-    templateUrl: './projection-dialog.component.html',
-    styleUrls: ['./projection-dialog.component.scss']
+    selector: `os-projection-dialog`,
+    templateUrl: `./projection-dialog.component.html`,
+    styleUrls: [`./projection-dialog.component.scss`]
 })
 export class ProjectionDialogComponent {
     public projectors: ViewProjector[] = [];

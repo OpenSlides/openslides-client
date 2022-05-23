@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EasterEggContentPlatformDialogComponent } from './easter-egg-content-platform-dialog.component';
 
-describe('EasterEggContentPlatformDialogComponent', () => {
+describe(`EasterEggContentPlatformDialogComponent`, () => {
     let component: EasterEggContentPlatformDialogComponent;
     let fixture: ComponentFixture<EasterEggContentPlatformDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('EasterEggContentPlatformDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

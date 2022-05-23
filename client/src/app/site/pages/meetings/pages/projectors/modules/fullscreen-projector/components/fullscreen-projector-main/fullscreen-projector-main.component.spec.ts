@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FullscreenProjectorMainComponent } from './fullscreen-projector-main.component';
 
-describe('FullscreenProjectorMainComponent', () => {
+describe(`FullscreenProjectorMainComponent`, () => {
     let component: FullscreenProjectorMainComponent;
     let fixture: ComponentFixture<FullscreenProjectorMainComponent>;
 
@@ -18,7 +18,7 @@ describe('FullscreenProjectorMainComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

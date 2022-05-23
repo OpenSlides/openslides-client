@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ImportServiceCollectorService } from './import-service-collector.service';
 
-describe('ImportServiceCollectorService', () => {
+describe(`ImportServiceCollectorService`, () => {
     let service: ImportServiceCollectorService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ImportServiceCollectorService', () => {
         service = TestBed.inject(ImportServiceCollectorService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

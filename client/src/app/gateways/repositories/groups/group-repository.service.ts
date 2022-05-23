@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
+import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
-import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { GroupAction } from './group.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGroup, Group> {
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {

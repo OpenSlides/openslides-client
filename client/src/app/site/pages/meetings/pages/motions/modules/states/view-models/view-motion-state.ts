@@ -1,5 +1,5 @@
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { MotionState } from '../../../../../../../../domain/models/motions/motion-state';
+import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionWorkflow } from '../../workflows/view-models/view-motion-workflow';

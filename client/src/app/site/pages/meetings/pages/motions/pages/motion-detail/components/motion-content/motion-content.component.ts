@@ -1,32 +1,32 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { Motion } from 'src/app/domain/models/motions/motion';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { RawUser } from 'src/app/gateways/repositories/users';
+import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import {
     ViewMotion,
-    ViewMotionWorkflow,
     ViewMotionCategory,
-    ViewMotionStatuteParagraph
+    ViewMotionStatuteParagraph,
+    ViewMotionWorkflow
 } from 'src/app/site/pages/meetings/pages/motions';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { Subscription } from 'rxjs';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
-import { ActivatedRoute } from '@angular/router';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
-import { RawUser } from 'src/app/gateways/repositories/users';
-import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
-import { Motion } from 'src/app/domain/models/motions/motion';
+import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
+import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
+import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
+import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 /**
  * fields that are required for the motion form but are not part of any motion payload
@@ -46,9 +46,9 @@ interface MotionFormFields {
 type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any };
 
 @Component({
-    selector: 'os-motion-content',
-    templateUrl: './motion-content.component.html',
-    styleUrls: ['./motion-content.component.scss']
+    selector: `os-motion-content`,
+    templateUrl: `./motion-content.component.html`,
+    styleUrls: [`./motion-content.component.scss`]
 })
 export class MotionContentComponent extends BaseMotionDetailChildComponent {
     @Output()
@@ -309,7 +309,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         let configKey: keyof Settings = `motions_default_workflow_id`;
         if (!!this.contentForm && !!this.contentForm.get(`statute_amendment`)!.value && !!paragraph) {
             configKey = `motions_default_statute_amendment_workflow_id`;
-        } else if (!!this.route.snapshot.queryParams['parent']) {
+        } else if (!!this.route.snapshot.queryParams[`parent`]) {
             configKey = `motions_default_amendment_workflow_id`;
         }
         return configKey;

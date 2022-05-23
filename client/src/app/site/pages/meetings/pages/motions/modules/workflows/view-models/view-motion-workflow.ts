@@ -1,8 +1,8 @@
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { ViewMotionState, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { ViewMotion, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 export class ViewMotionWorkflow extends BaseViewModel<MotionWorkflow> {
     public static COLLECTION = MotionWorkflow.COLLECTION;

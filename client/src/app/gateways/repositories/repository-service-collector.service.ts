@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+
 import { CollectionMapperService } from '../../site/services/collection-mapper.service';
 import { DataStoreService } from '../../site/services/data-store.service';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
@@ -7,7 +8,7 @@ import { ViewModelStoreService } from '../../site/services/view-model-store.serv
 import { ActionService } from '../actions';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class RepositoryServiceCollectorService {
     constructor(

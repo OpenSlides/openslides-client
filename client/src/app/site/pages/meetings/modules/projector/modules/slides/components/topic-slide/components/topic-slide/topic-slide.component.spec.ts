@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopicSlideComponent } from './topic-slide.component';
 
-describe('TopicSlideComponent', () => {
+describe(`TopicSlideComponent`, () => {
     let component: TopicSlideComponent;
     let fixture: ComponentFixture<TopicSlideComponent>;
 
@@ -18,7 +18,7 @@ describe('TopicSlideComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

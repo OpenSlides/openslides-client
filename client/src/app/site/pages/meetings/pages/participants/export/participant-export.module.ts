@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { MeetingPdfExportModule } from 'src/app/site/pages/meetings/services/export';
 
 @NgModule({

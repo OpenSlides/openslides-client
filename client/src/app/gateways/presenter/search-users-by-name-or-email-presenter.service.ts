@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 interface SearchCriteria {
     email?: string;

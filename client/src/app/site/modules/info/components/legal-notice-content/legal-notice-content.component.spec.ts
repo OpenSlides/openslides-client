@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LegalNoticeContentComponent } from './legal-notice-content.component';
 
-describe('LegalNoticeContentComponent', () => {
+describe(`LegalNoticeContentComponent`, () => {
     let component: LegalNoticeContentComponent;
     let fixture: ComponentFixture<LegalNoticeContentComponent>;
 
@@ -18,7 +18,7 @@ describe('LegalNoticeContentComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

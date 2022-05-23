@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionMetaDataComponent } from './motion-meta-data.component';
 
-describe('MotionMetaDataComponent', () => {
+describe(`MotionMetaDataComponent`, () => {
     let component: MotionMetaDataComponent;
     let fixture: ComponentFixture<MotionMetaDataComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionMetaDataComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

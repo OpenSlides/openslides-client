@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IconContainerComponent } from './icon-container.component';
 
-describe('IconContainerComponent', () => {
+describe(`IconContainerComponent`, () => {
     let component: IconContainerComponent;
     let fixture: ComponentFixture<IconContainerComponent>;
 
@@ -18,7 +18,7 @@ describe('IconContainerComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

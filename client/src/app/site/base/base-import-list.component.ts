@@ -1,12 +1,12 @@
 import { Directive, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, distinctUntilChanged } from 'rxjs';
+import { BaseComponent } from 'src/app/site/base/base.component';
+
 import { Identifiable } from '../../domain/interfaces';
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseImportService } from './base-import.service';
-
-import { BaseComponent } from 'src/app/site/base/base.component';
 
 @Directive()
 export abstract class BaseImportListComponent<M extends Identifiable> extends BaseComponent implements OnInit {

@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SpinnerModule } from './modules/spinner';
+import { NgModule } from '@angular/core';
+
 import { CustomOverlayModule } from './modules/custom-overlay';
+import { SpinnerModule } from './modules/spinner';
 
 @NgModule({
     declarations: [],

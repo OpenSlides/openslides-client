@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
 import { Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
 import { VoteValue, VoteValueVerbose } from './vote-constants';
 
 export class Vote extends BaseModel<Vote> {

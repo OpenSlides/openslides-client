@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
 
 const routes: Routes = [{ path: ``, component: AutopilotComponent, pathMatch: `full` }];

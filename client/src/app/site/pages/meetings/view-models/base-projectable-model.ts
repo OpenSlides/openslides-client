@@ -1,10 +1,10 @@
-import { BaseModel } from '../../../../domain/models/base/base-model';
-import { BaseViewModel } from '../../../base/base-view-model';
-import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
 import { ProjectorTitle } from '../../../../domain/interfaces/has-projector-title';
+import { BaseModel } from '../../../../domain/models/base/base-model';
 import { Projection } from '../../../../domain/models/projector/projection';
-import { Projectable } from './projectable';
+import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
+import { BaseViewModel } from '../../../base/base-view-model';
 import { MeetingSettingsService } from '../services/meeting-settings.service';
+import { Projectable } from './projectable';
 import { ProjectionBuildDescriptor } from './projection-build-descriptor';
 /**
  * Base view class for projectable models.

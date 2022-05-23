@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { TagControllerService } from './tag-controller.service';
 
-describe('TagControllerService', () => {
+describe(`TagControllerService`, () => {
     let service: TagControllerService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('TagControllerService', () => {
         service = TestBed.inject(TagControllerService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

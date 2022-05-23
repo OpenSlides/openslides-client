@@ -1,29 +1,30 @@
 import { Injectable } from '@angular/core';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { Motion } from '../../../../domain/models/motions/motion';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionAction } from './motion.action';
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Action } from 'src/app/gateways/actions';
+import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { NullablePartial } from 'src/app/infrastructure/utils';
+import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import {
     DEFAULT_FIELDSET,
     Fieldsets,
     ROUTING_FIELDSET,
     TypedFieldset
 } from 'src/app/site/services/model-request-builder';
-import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { Action } from 'src/app/gateways/actions';
+
+import { Motion } from '../../../../domain/models/motions/motion';
+import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
+import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
+import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AmendmentAction } from './amendment.action';
-import { NullablePartial } from 'src/app/infrastructure/utils';
-import { Observable, map } from 'rxjs';
+import { MotionAction } from './motion.action';
 
 type SortProperty = 'sort_weight' | 'number';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotion,

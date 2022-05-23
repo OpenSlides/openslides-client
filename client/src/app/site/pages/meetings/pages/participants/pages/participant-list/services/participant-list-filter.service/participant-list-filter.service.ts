@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ParticipantListServiceModule } from '../participant-list-service.module';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { TranslateService } from '@ngx-translate/core';
-import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
+import { StorageService } from 'src/app/gateways/storage.service';
+import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+
+import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
+import { ParticipantListServiceModule } from '../participant-list-service.module';
 
 @Injectable({
     providedIn: ParticipantListServiceModule

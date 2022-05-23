@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ControllerServiceCollectorService } from '../../../services/controller-service-collector.service';
-import { Meeting } from '../../../../domain/models/meetings/meeting';
-import { ViewMeeting } from '../view-models/view-meeting';
-import { MeetingRepositoryService } from '../../../../gateways/repositories/meeting-repository.service';
-import { Identifiable } from '../../../../domain/interfaces';
 import { Observable } from 'rxjs';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { ViewUser } from '../view-models/view-user';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Action } from 'src/app/gateways/actions';
+import { BaseController } from 'src/app/site/base/base-controller';
+
+import { Identifiable } from '../../../../domain/interfaces';
+import { Meeting } from '../../../../domain/models/meetings/meeting';
+import { MeetingRepositoryService } from '../../../../gateways/repositories/meeting-repository.service';
+import { ControllerServiceCollectorService } from '../../../services/controller-service-collector.service';
+import { ViewMeeting } from '../view-models/view-meeting';
+import { ViewUser } from '../view-models/view-user';
 
 export interface MeetingUserModifiedFields {
     addedUsers?: ViewUser[];
@@ -18,7 +19,7 @@ export interface MeetingUserModifiedFields {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingControllerService extends BaseController<ViewMeeting, Meeting> {
     public constructor(

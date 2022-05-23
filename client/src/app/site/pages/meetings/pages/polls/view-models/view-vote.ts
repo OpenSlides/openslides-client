@@ -1,7 +1,7 @@
 import { Vote } from '../../../../../../domain/models/poll/vote';
 import { BaseViewModel } from '../../../../../base/base-view-model';
-import { ViewUser } from '../../../view-models/view-user';
 import { HasMeeting } from '../../../view-models/has-meeting';
+import { ViewUser } from '../../../view-models/view-user';
 import { ViewOption } from './view-option';
 export class ViewVote extends BaseViewModel<Vote> {
     public static COLLECTION = Vote.COLLECTION;

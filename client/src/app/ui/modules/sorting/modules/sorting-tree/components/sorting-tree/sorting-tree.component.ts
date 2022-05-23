@@ -1,11 +1,12 @@
-import { Component, ContentChild, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { FlatNode, TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDragMove, CdkDragSortEvent, CdkDragStart } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
 import { auditTime, Observable, Subscription } from 'rxjs';
+import { Displayable, Identifiable } from 'src/app/domain/interfaces';
+import { FlatNode, TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { SortDefinition } from 'src/app/site/base/base-sort.service';
+
 import { TreeService, TreeSortService } from '../../services';
 
 /**

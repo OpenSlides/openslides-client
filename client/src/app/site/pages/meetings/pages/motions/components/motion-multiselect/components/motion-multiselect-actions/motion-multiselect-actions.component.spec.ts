@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionMultiselectActionsComponent } from './motion-multiselect-actions.component';
 
-describe('MotionMultiselectActionsComponent', () => {
+describe(`MotionMultiselectActionsComponent`, () => {
     let component: MotionMultiselectActionsComponent;
     let fixture: ComponentFixture<MotionMultiselectActionsComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionMultiselectActionsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

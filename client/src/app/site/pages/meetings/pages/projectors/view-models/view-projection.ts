@@ -1,10 +1,10 @@
+import { HasProjectorTitle, ProjectorTitle } from '../../../../../../domain/interfaces/has-projector-title';
 import { Projection } from '../../../../../../domain/models/projector/projection';
-import { ProjectorTitle, HasProjectorTitle } from '../../../../../../domain/interfaces/has-projector-title';
-import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
-import { ViewProjector } from './view-projector';
 import { ProjectionBuildDescriptor } from '../../../view-models/projection-build-descriptor';
+import { ViewProjector } from './view-projector';
 
 export class ViewProjection extends BaseProjectableViewModel<Projection> {
     public static COLLECTION = Projection.COLLECTION;

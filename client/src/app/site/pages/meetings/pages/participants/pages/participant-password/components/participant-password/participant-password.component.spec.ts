@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantPasswordComponent } from './participant-password.component';
 
-describe('ParticipantPasswordComponent', () => {
+describe(`ParticipantPasswordComponent`, () => {
     let component: ParticipantPasswordComponent;
     let fixture: ComponentFixture<ParticipantPasswordComponent>;
 
@@ -18,7 +18,7 @@ describe('ParticipantPasswordComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OrganizationTagRepositoryService } from './organization-tag-repository.service';
 
-describe('OrganizationTagRepositoryService', () => {
+describe(`OrganizationTagRepositoryService`, () => {
     let service: OrganizationTagRepositoryService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('OrganizationTagRepositoryService', () => {
         service = TestBed.inject(OrganizationTagRepositoryService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

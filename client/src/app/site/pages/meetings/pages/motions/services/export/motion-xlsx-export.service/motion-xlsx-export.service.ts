@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Workbook } from 'exceljs';
+import { Ids } from 'src/app/domain/definitions/key-types';
 import { CellFillingDefinition, XlsxExportService } from 'src/app/gateways/export/xlsx-export.service';
 import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
+
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
-import { Ids } from 'src/app/domain/definitions/key-types';
 import { MotionsExportModule } from '../motions-export.module';
 
 interface MotionXlsxExportConfig {

@@ -1,7 +1,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Subject, Subscription, distinctUntilChanged } from 'rxjs';
+import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 /**
  * Register a custom form control by providing it as NG_VALUE_ACCESSOR:

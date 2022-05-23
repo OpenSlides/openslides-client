@@ -1,9 +1,10 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { Collection, Ids } from 'src/app/domain/definitions/key-types';
+
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
-import { Subject, Observable } from 'rxjs';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreUpdateManagerService } from './data-store-update-manager.service';
-import { Ids, Collection } from 'src/app/domain/definitions/key-types';
 
 /**
  * Represents information about a deleted model.
@@ -34,7 +35,7 @@ interface ModelStorage {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DataStoreService {
     protected modelStore: ModelStorage = {};

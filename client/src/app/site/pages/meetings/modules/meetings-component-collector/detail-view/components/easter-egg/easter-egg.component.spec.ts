@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EasterEggComponent } from './easter-egg.component';
 
-describe('EasterEggComponent', () => {
+describe(`EasterEggComponent`, () => {
     let component: EasterEggComponent;
     let fixture: ComponentFixture<EasterEggComponent>;
 
@@ -18,7 +18,7 @@ describe('EasterEggComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

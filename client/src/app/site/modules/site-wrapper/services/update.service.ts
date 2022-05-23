@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, filter, Subject } from 'rxjs';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { filter, Observable, Subject } from 'rxjs';
 import { StorageService } from 'src/app/gateways/storage.service';
 
 @Injectable({

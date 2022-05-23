@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UnsupportedBrowserComponent } from './unsupported-browser.component';
 
-describe('UnsupportedBrowserComponent', () => {
+describe(`UnsupportedBrowserComponent`, () => {
     let component: UnsupportedBrowserComponent;
     let fixture: ComponentFixture<UnsupportedBrowserComponent>;
 
@@ -18,7 +18,7 @@ describe('UnsupportedBrowserComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

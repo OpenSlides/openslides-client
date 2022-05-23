@@ -1,11 +1,12 @@
+import { Directive } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 import { FilterListService } from 'src/app/ui/base/filter-service';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
+
 import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
-import { Directive } from '@angular/core';
 
 /**
  * Extends the BaseViewModel with a parent

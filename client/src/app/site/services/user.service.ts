@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
+import { Permission } from 'src/app/domain/definitions/permission';
+import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserService {
     public constructor(

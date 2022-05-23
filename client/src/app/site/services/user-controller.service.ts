@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
+import { GetActiveUsersAmountPresenterService } from 'src/app/gateways/presenter';
+import {
+    FullNameInformation,
+    ShortNameInformation,
+    UserPatchFn,
+    UserRepositoryService
+} from 'src/app/gateways/repositories/users';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
+import { Identifiable } from '../../domain/interfaces';
 import { User } from '../../domain/models/users/user';
+import { Action } from '../../gateways/actions';
 import { BaseController } from '../base/base-controller';
 import { ViewUser } from '../pages/meetings/view-models/view-user';
 import { ControllerServiceCollectorService } from './controller-service-collector.service';
-import { Observable } from 'rxjs';
-import { Identifiable } from '../../domain/interfaces';
-import { Action } from '../../gateways/actions';
-import {
-    UserRepositoryService,
-    ShortNameInformation,
-    UserPatchFn,
-    FullNameInformation
-} from 'src/app/gateways/repositories/users';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { GetActiveUsersAmountPresenterService } from 'src/app/gateways/presenter';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 /**
  * type for determining the user name from a string during import.
@@ -24,7 +25,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class UserControllerService extends BaseController<ViewUser, User> {
     public constructor(

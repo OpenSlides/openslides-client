@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommentSectionListComponent } from './comment-section-list.component';
 
-describe('CommentSectionListComponent', () => {
+describe(`CommentSectionListComponent`, () => {
     let component: CommentSectionListComponent;
     let fixture: ComponentFixture<CommentSectionListComponent>;
 
@@ -18,7 +18,7 @@ describe('CommentSectionListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

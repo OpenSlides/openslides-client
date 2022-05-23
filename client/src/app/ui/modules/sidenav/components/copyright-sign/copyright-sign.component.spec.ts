@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CopyrightSignComponent } from './copyright-sign.component';
 
-describe('CopyrightSignComponent', () => {
+describe(`CopyrightSignComponent`, () => {
     let component: CopyrightSignComponent;
     let fixture: ComponentFixture<CopyrightSignComponent>;
 
@@ -18,7 +18,7 @@ describe('CopyrightSignComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

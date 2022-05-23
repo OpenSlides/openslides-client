@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 
 @Injectable({
     providedIn: `root`

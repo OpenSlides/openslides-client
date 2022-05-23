@@ -1,25 +1,25 @@
+import { TemplatePortal } from '@angular/cdk/portal';
 import {
     Component,
     ContentChild,
     ContentChildren,
-    OnInit,
-    QueryList,
-    TemplateRef,
+    EventEmitter,
     Input,
     Output,
-    EventEmitter
+    QueryList,
+    TemplateRef
 } from '@angular/core';
 import { MatTab } from '@angular/material/tabs';
-import { VerticalTabGroupLabelHeaderDirective } from '../../directives/vertical-tab-group-label-header.directive';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
+
 import { VerticalTabGroupContentState } from '../../definitions';
+import { VerticalTabGroupLabelHeaderDirective } from '../../directives/vertical-tab-group-label-header.directive';
 
 @Component({
-    selector: 'os-vertical-tab-group',
-    templateUrl: './vertical-tab-group.component.html',
-    styleUrls: ['./vertical-tab-group.component.scss']
+    selector: `os-vertical-tab-group`,
+    templateUrl: `./vertical-tab-group.component.html`,
+    styleUrls: [`./vertical-tab-group.component.scss`]
 })
 export class VerticalTabGroupComponent {
     @ContentChildren(MatTab, { descendants: true, emitDistinctChangesOnly: true })

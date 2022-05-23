@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
 import { HttpEvent, HttpParams } from '@angular/common/http';
-import { HttpStreamEndpointService } from './http-stream-endpoint.service';
-import { EndpointConfiguration } from './endpoint-configuration';
-import { HttpStream, HttpStreamOptions } from '.';
+import { Injectable } from '@angular/core';
+
 import { HttpOptions } from '../../infrastructure/definitions/http';
-import { HttpService } from '../http.service';
 import { AuthService } from '../../site/services/auth.service';
-import { ErrorDescription } from './stream-utils';
 import { ConnectionStatusService } from '../../site/services/connection-status.service';
+import { HttpService } from '../http.service';
+import { HttpStream, HttpStreamOptions } from '.';
+import { EndpointConfiguration } from './endpoint-configuration';
+import { HttpStreamEndpointService } from './http-stream-endpoint.service';
+import { ErrorDescription } from './stream-utils';
 
 const lostConnectionToFn = (endpoint: EndpointConfiguration) => {
     return `Connection lost to ${endpoint.url}`;
@@ -24,7 +25,7 @@ interface RequestOptions {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HttpStreamService {
     public constructor(

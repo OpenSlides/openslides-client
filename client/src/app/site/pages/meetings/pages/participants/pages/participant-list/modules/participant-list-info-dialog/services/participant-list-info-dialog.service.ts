@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ParticipantListInfoDialogModule } from '../participant-list-info-dialog.module';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
-import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
 import { MatDialogRef } from '@angular/material/dialog';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+
+import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
+import { ParticipantListInfoDialogModule } from '../participant-list-info-dialog.module';
 
 /**
  * Interface for the short editing dialog.

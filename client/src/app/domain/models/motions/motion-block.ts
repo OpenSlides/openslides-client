@@ -1,10 +1,10 @@
-import { BaseModel } from '../base/base-model';
-import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
 import { Id } from '../../definitions/key-types';
-import { HasMeetingId } from '../../interfaces/has-meeting-id';
-import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
-import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasSequentialNumber } from '../../interfaces';
+import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
+import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { BaseModel } from '../base/base-model';
 
 /**
  * Representation of a motion block.

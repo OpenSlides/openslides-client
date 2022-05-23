@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { AssignmentMainComponent } from './components/assignment-main/assignment-main.component';
 
 const routes: Routes = [

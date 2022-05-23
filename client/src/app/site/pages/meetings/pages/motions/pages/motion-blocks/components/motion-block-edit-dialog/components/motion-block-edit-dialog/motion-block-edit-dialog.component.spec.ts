@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionBlockEditDialogComponent } from './motion-block-edit-dialog.component';
 
-describe('MotionBlockEditDialogComponent', () => {
+describe(`MotionBlockEditDialogComponent`, () => {
     let component: MotionBlockEditDialogComponent;
     let fixture: ComponentFixture<MotionBlockEditDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('MotionBlockEditDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

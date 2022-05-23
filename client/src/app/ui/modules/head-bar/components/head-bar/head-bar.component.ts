@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+
 import { MainMenuService } from '../../../../../site/pages/meetings/services/main-menu.service';
 import { ViewPortService } from '../../../../../site/services/view-port.service';
 import { RoutingStateService } from '../../services/routing-state.service';

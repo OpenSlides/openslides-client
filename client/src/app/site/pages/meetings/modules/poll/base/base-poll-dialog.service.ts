@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
-import { PollServiceModule } from '../services/poll-service.module';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { MatDialog } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/portal';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { PollDialogData, PollDialogResult } from 'src/app/site/pages/meetings/modules/poll/definitions';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
+import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { PollDialogData, PollDialogResult } from 'src/app/site/pages/meetings/modules/poll/definitions';
+import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+
+import { PollServiceModule } from '../services/poll-service.module';
 
 @Injectable({ providedIn: PollServiceModule })
 export abstract class BasePollDialogService<V extends BaseViewModel, C = any> {

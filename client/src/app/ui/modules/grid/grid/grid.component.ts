@@ -1,10 +1,11 @@
 import { Component, ContentChildren, Input, QueryList } from '@angular/core';
+
 import { TileComponent } from '../tile/tile.component';
 
 @Component({
-    selector: 'os-grid',
-    templateUrl: './grid.component.html',
-    styleUrls: ['./grid.component.scss']
+    selector: `os-grid`,
+    templateUrl: `./grid.component.html`,
+    styleUrls: [`./grid.component.scss`]
 })
 export class GridComponent {
     @ContentChildren(TileComponent, { descendants: false })

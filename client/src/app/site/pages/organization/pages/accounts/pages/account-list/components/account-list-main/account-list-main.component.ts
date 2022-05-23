@@ -1,24 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import {
-    BaseModelRequestHandlerComponent,
-    ModelRequestConfig
-} from 'src/app/site/base/base-model-request-handler.component';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { map } from 'rxjs';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { Router } from '@angular/router';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { AccountControllerService } from '../../../../services/common/account-controller.service';
+import { Component } from '@angular/core';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
 const ACCOUNT_LIST_SUBSCRIPTION = `account_list`;
 
 let uniqueSubscriptionNumber = 0;
 
 @Component({
-    selector: 'os-account-list-main',
-    templateUrl: './account-list-main.component.html',
-    styleUrls: ['./account-list-main.component.scss']
+    selector: `os-account-list-main`,
+    templateUrl: `./account-list-main.component.html`,
+    styleUrls: [`./account-list-main.component.scss`]
 })
 export class AccountListMainComponent extends BaseModelRequestHandlerComponent {
     // private _accountIds: Ids = [];

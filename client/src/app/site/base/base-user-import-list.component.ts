@@ -1,12 +1,13 @@
+import { Directive } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+
 import { User } from '../../domain/models/users/user';
 import { ImportModel } from '../../infrastructure/utils/import/import-model';
+import { ImportListHeaderDefinition } from '../../ui/modules/import-list/definitions/import-list-header-definition';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseImportListComponent } from './base-import-list.component';
-import { ImportListHeaderDefinition } from '../../ui/modules/import-list/definitions/import-list-header-definition';
 import { BaseUserImportService } from './base-user-import.service';
-import { Directive } from '@angular/core';
 
 @Directive()
 export abstract class BaseUserImportListComponent extends BaseImportListComponent<User> {

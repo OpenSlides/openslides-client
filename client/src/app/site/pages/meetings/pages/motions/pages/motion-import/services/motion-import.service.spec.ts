@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionImportService } from './motion-import.service';
 
-describe('MotionImportService', () => {
+describe(`MotionImportService`, () => {
     let service: MotionImportService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionImportService', () => {
         service = TestBed.inject(MotionImportService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { ViewMotionSubmitter } from '../../../../site/pages/meetings/pages/motions/modules/submitters/view-models/view-motion-submitter';
 import { MotionSubmitter } from 'src/app/domain/models/motions/motion-submitter';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { Identifiable } from '../../../../domain/interfaces/identifiable';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MotionSubmitterAction } from './motion-submitter.action';
 import { Action } from 'src/app/gateways/actions';
+import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
+import { Identifiable } from '../../../../domain/interfaces/identifiable';
+import { ViewMotionSubmitter } from '../../../../site/pages/meetings/pages/motions/modules/submitters/view-models/view-motion-submitter';
+import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
+import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
+import { MotionSubmitterAction } from './motion-submitter.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionSubmitterRepositoryService extends BaseMeetingRelatedRepository<
     ViewMotionSubmitter,

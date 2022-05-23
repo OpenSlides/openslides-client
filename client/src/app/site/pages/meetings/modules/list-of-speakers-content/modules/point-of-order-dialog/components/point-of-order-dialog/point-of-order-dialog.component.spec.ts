@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PointOfOrderDialogComponent } from './point-of-order-dialog.component';
 
-describe('PointOfOrderDialogComponent', () => {
+describe(`PointOfOrderDialogComponent`, () => {
     let component: PointOfOrderDialogComponent;
     let fixture: ComponentFixture<PointOfOrderDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('PointOfOrderDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

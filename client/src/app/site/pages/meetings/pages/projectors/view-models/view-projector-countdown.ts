@@ -1,9 +1,9 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
-import { HasMeeting } from '../../../view-models/has-meeting';
 import { ProjectorCountdown } from '../../../../../../domain/models/projector/projector-countdown';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
+import { HasMeeting } from '../../../view-models/has-meeting';
 import { ProjectionBuildDescriptor } from '../../../view-models/projection-build-descriptor';
 export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCountdown> {
     public static COLLECTION = ProjectorCountdown.COLLECTION;

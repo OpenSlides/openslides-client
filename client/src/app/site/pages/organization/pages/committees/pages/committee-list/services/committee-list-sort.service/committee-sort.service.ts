@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+
 import { ViewCommittee } from '../../../../view-models';
 import { CommitteeListServiceModule } from '../committee-list-service.module';
 

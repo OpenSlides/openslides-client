@@ -1,2 +1,2 @@
-export * from './slide-data';
 export * from './dimension';
+export * from './slide-data';

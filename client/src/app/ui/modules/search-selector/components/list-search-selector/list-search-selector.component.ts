@@ -1,23 +1,24 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
+    ChangeDetectionStrategy,
     Component,
-    Input,
-    Self,
-    Optional,
     ElementRef,
-    ViewEncapsulation,
-    ChangeDetectionStrategy
+    Input,
+    Optional,
+    Self,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, NgControl } from '@angular/forms';
-import { auditTime, Observable, distinctUntilChanged } from 'rxjs';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { auditTime, distinctUntilChanged, Observable } from 'rxjs';
+
 import { Selectable } from '../../../../../domain/interfaces/selectable';
 import { BaseSearchSelectorComponent } from '../base-search-selector/base-search-selector.component';
-import { MatFormFieldControl } from '@angular/material/form-field';
 
 @Component({
-    selector: 'os-list-search-selector',
-    templateUrl: '../base-search-selector/base-search-selector.component.html',
-    styleUrls: ['../base-search-selector/base-search-selector.component.scss', './list-search-selector.component.scss'],
+    selector: `os-list-search-selector`,
+    templateUrl: `../base-search-selector/base-search-selector.component.html`,
+    styleUrls: [`../base-search-selector/base-search-selector.component.scss`, `./list-search-selector.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: ListSearchSelectorComponent }],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { AdditionalField, DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
+import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
+import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
-import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { MediafileAction } from './mediafile.action';
-import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Mediafile> {
     private get activeMeetingId(): number {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AssignmentPollDialogService } from './assignment-poll-dialog.service';
 
-describe('AssignmentPollDialogService', () => {
+describe(`AssignmentPollDialogService`, () => {
     let service: AssignmentPollDialogService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('AssignmentPollDialogService', () => {
         service = TestBed.inject(AssignmentPollDialogService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Theme } from 'src/app/domain/models/theme/theme';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { ColorService } from 'src/app/site/services/color.service';

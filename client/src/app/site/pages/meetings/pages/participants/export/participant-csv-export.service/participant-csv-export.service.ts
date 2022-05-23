@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ParticipantExportModule } from '../participant-export.module';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { TranslateService } from '@ngx-translate/core';
 import { UserExport } from 'src/app/domain/models/users/user.export';
-import { participantsExportExample } from '../participants-export-example';
+import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+
 import { PARTICIPANT_HEADERS_AND_VERBOSE_NAMES } from '../../pages/participant-import/definitions/index';
+import { ParticipantExportModule } from '../participant-export.module';
+import { participantsExportExample } from '../participants-export-example';
 
 export interface ParticipantExport extends UserExport {
     comment?: string;

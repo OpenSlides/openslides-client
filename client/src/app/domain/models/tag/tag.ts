@@ -1,6 +1,6 @@
-import { BaseModel } from '../base/base-model';
-import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { Fqid } from '../../definitions/key-types';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { BaseModel } from '../base/base-model';
 
 export class Tag extends BaseModel<Tag> {
     public static COLLECTION = `tag`;

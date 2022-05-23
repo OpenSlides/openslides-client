@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { PdfError } from 'src/app/gateways/export/pdf-document.service';
+
 import { ViewMotion } from '../../../view-models';
 import { ExportFileFormat, InfoToExport } from '../definitions';
 import { MotionCsvExportService } from '../motion-csv-export.service';

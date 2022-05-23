@@ -1,31 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMotion } from '../../../../view-models';
-import { Observable, switchMap, distinctUntilChanged, firstValueFrom, of } from 'rxjs';
-import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
-import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { MotionExportService } from '../../../../services/export/motion-export.service/motion-export.service';
-import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
-import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
-import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
-import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
+import { TranslateService } from '@ngx-translate/core';
+import { PblColumnDefinition } from '@pebula/ngrid';
+import { distinctUntilChanged, firstValueFrom, Observable, of, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
+import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
+import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
 import { DiffLinesInParagraph } from '../../../../definitions/index';
+import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionExportService } from '../../../../services/export/motion-export.service/motion-export.service';
+import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
+import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
+import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
+import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
+import { ViewMotion } from '../../../../view-models';
 
 const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
 
 @Component({
-    selector: 'os-amendment-list',
-    templateUrl: './amendment-list.component.html',
-    styleUrls: ['./amendment-list.component.scss']
+    selector: `os-amendment-list`,
+    templateUrl: `./amendment-list.component.html`,
+    styleUrls: [`./amendment-list.component.scss`]
 })
 export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     /**

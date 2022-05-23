@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { MatDialogRef } from '@angular/material/dialog';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialogRef } from '@angular/material/dialog';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import {
     GetForwardingMeetingsPresenter,
-    GetForwardingMeetingsPresenterService,
-    GetForwardingMeetingsPresenterMeeting
+    GetForwardingMeetingsPresenterMeeting,
+    GetForwardingMeetingsPresenterService
 } from 'src/app/gateways/presenter';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 @Component({
-    selector: 'os-motion-forward-dialog',
-    templateUrl: './motion-forward-dialog.component.html',
-    styleUrls: ['./motion-forward-dialog.component.scss']
+    selector: `os-motion-forward-dialog`,
+    templateUrl: `./motion-forward-dialog.component.html`,
+    styleUrls: [`./motion-forward-dialog.component.scss`]
 })
 export class MotionForwardDialogComponent implements OnInit {
     public get committeesObservable(): Observable<GetForwardingMeetingsPresenter[]> {

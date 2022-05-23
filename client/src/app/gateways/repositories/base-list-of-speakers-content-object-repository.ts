@@ -2,6 +2,7 @@ import { HasListOfSpeakersId } from 'src/app/domain/interfaces';
 import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 

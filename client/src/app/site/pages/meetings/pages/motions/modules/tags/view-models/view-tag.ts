@@ -1,7 +1,8 @@
-import { HasTags } from './has-tags';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Tag } from 'src/app/domain/models/tag/tag';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+
+import { HasTags } from './has-tags';
 
 export class ViewTag extends BaseViewModel<Tag> /* implements Searchable */ {
     public static COLLECTION = Tag.COLLECTION;

@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { combineLatest, filter, Subscription } from 'rxjs';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
+import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { OverlayInstance } from '../../../definitions';
 import { OverlayService } from '../../custom-overlay/services/overlay.service';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { SpinnerConfig } from '../definitions';
 import { SpinnerModule } from '../spinner.module';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 
 @Injectable({
     providedIn: SpinnerModule

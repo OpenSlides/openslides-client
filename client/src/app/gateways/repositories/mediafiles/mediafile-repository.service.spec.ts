@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MediafileRepositoryService } from './mediafile-repository.service';
 
-describe('MediafileRepositoryService', () => {
+describe(`MediafileRepositoryService`, () => {
     let service: MediafileRepositoryService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MediafileRepositoryService', () => {
         service = TestBed.inject(MediafileRepositoryService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

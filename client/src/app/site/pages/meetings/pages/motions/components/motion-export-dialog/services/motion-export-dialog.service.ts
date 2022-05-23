@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { MotionExportDialogModule } from '../motion-export-dialog.module';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
-import { MotionExportDialogComponent } from '../components/motion-export-dialog/motion-export-dialog.component';
-import { MotionExportInfo } from '../../../services/export/motion-export.service';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { ViewMotion } from '../../../view-models';
-import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
+import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+
+import { MotionExportInfo } from '../../../services/export/motion-export.service';
 import { MotionExportService } from '../../../services/export/motion-export.service';
+import { ViewMotion } from '../../../view-models';
+import { MotionExportDialogComponent } from '../components/motion-export-dialog/motion-export-dialog.component';
+import { MotionExportDialogModule } from '../motion-export-dialog.module';
 
 @Injectable({
     providedIn: MotionExportDialogModule

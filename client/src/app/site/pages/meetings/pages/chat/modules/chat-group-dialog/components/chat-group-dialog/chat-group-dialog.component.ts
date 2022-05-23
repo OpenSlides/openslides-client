@@ -1,13 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 import { ChatGroupDialogData } from '../../services/chat-group-dialog.service';
 
 @Component({
-    selector: 'os-chat-group-dialog',
-    templateUrl: './chat-group-dialog.component.html',
-    styleUrls: ['./chat-group-dialog.component.scss']
+    selector: `os-chat-group-dialog`,
+    templateUrl: `./chat-group-dialog.component.html`,
+    styleUrls: [`./chat-group-dialog.component.scss`]
 })
 export class ChatGroupDialogComponent implements OnInit {
     public get isCreateView(): boolean {

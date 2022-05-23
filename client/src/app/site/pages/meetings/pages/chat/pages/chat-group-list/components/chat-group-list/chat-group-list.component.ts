@@ -1,19 +1,20 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewChatGroup } from 'src/app/site/pages/meetings/pages/chat';
-import { Observable, firstValueFrom } from 'rxjs';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { ChatNotificationService, ChatGroupControllerService } from '../../../../services';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { VerticalTabGroupContentState } from 'src/app/ui/modules/vertical-tab-group';
+
 import { ChatGroupDialogService } from '../../../../modules/chat-group-dialog/services/chat-group-dialog.service';
+import { ChatGroupControllerService, ChatNotificationService } from '../../../../services';
 
 @Component({
-    selector: 'os-chat-group-list',
-    templateUrl: './chat-group-list.component.html',
-    styleUrls: ['./chat-group-list.component.scss'],
+    selector: `os-chat-group-list`,
+    templateUrl: `./chat-group-list.component.html`,
+    styleUrls: [`./chat-group-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

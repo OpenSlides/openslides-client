@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SiteWrapperComponent } from './site-wrapper.component';
 
-describe('SiteWrapperComponent', () => {
+describe(`SiteWrapperComponent`, () => {
     let component: SiteWrapperComponent;
     let fixture: ComponentFixture<SiteWrapperComponent>;
 
@@ -18,7 +18,7 @@ describe('SiteWrapperComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

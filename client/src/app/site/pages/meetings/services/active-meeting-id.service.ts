@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, filter, distinctUntilChanged } from 'rxjs';
-import { RoutesRecognized, Router } from '@angular/router';
+import { Router, RoutesRecognized } from '@angular/router';
+import { BehaviorSubject, distinctUntilChanged, filter, Observable } from 'rxjs';
+
 import { MeetingDataStoreService } from './meeting-data-store.service';
 
 export class NoActiveMeetingError extends Error {}
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ActiveMeetingIdService {
     public get meetingIdObservable(): Observable<number | null> {

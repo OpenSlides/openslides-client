@@ -1,13 +1,13 @@
-import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { NavigationEnd, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { Router, NavigationEnd } from '@angular/router';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 @Component({
-    selector: 'os-motion-extension-field',
-    templateUrl: './motion-extension-field.component.html',
-    styleUrls: ['./motion-extension-field.component.scss']
+    selector: `os-motion-extension-field`,
+    templateUrl: `./motion-extension-field.component.html`,
+    styleUrls: [`./motion-extension-field.component.scss`]
 })
 export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     /**

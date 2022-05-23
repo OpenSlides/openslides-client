@@ -3,7 +3,7 @@ import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from 'src/app/infrastructure/definitions/tree';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class TreeService {
     /**

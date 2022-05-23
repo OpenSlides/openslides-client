@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseImportListComponent } from 'src/app/site/base/base-import-list.component';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
-import { TranslateService } from '@ngx-translate/core';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { DurationService } from 'src/app/site/services/duration.service';
+import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
+
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicImportService } from '../../services/topic-import.service';
 
 const TEXT_IMPORT_TAB_INDEX = 0;
 
 @Component({
-    selector: 'os-topic-import',
-    templateUrl: './topic-import.component.html',
-    styleUrls: ['./topic-import.component.scss']
+    selector: `os-topic-import`,
+    templateUrl: `./topic-import.component.html`,
+    styleUrls: [`./topic-import.component.scss`]
 })
 export class TopicImportComponent extends BaseImportListComponent<Topic> {
     /**

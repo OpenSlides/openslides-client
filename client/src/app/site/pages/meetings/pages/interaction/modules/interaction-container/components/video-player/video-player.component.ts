@@ -1,21 +1,20 @@
 import {
-    Component,
-    OnInit,
-    ViewEncapsulation,
-    ChangeDetectionStrategy,
     AfterViewInit,
-    OnDestroy,
-    ViewChild,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
     ElementRef,
-    Input,
-    Output,
     EventEmitter,
-    ChangeDetectorRef
+    Input,
+    OnDestroy,
+    Output,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
+import { catchError, firstValueFrom, map, of } from 'rxjs';
+import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { catchError, map, of, firstValueFrom } from 'rxjs';
-import { ajax, AjaxResponse } from 'rxjs/ajax';
 import videojs from 'video.js';
 
 enum MimeType {
@@ -31,9 +30,9 @@ enum Player {
 }
 
 @Component({
-    selector: 'os-video-player',
-    templateUrl: './video-player.component.html',
-    styleUrls: ['./video-player.component.scss'],
+    selector: `os-video-player`,
+    templateUrl: `./video-player.component.html`,
+    styleUrls: [`./video-player.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })

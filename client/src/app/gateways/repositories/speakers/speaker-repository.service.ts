@@ -6,12 +6,13 @@ import { Speaker } from 'src/app/domain/models/speakers/speaker';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { SpeakerAction } from './speaker.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewSpeaker, Speaker> {
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {

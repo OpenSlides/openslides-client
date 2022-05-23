@@ -1,24 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { ViewCommittee } from '../../../../../../view-models/view-committee';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { TranslateService } from '@ngx-translate/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Observable } from 'rxjs';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
+import { ViewCommittee } from '../../../../../../view-models/view-committee';
 
 const FORWARD_LABEL = _(`Forward motions to`);
 const RECEIVE_LABEL = _(`Receive motions from`);
 
 @Component({
-    selector: 'os-committee-detail-view',
-    templateUrl: './committee-detail-view.component.html',
-    styleUrls: ['./committee-detail-view.component.scss']
+    selector: `os-committee-detail-view`,
+    templateUrl: `./committee-detail-view.component.html`,
+    styleUrls: [`./committee-detail-view.component.scss`]
 })
 export class CommitteeDetailViewComponent extends BaseUiComponent {
     public readonly OML = OML;
@@ -54,7 +55,7 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         this.subscriptions.push(
             this.route.params.subscribe(params => {
                 if (params) {
-                    this.committeeId = Number(params['committeeId']);
+                    this.committeeId = Number(params[`committeeId`]);
                     this.currentCommitteeObservable = this.committeeRepo.getViewModelObservable(this.committeeId);
                 }
             })

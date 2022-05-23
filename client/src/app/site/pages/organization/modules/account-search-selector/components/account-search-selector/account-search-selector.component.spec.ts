@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountSearchSelectorComponent } from './account-search-selector.component';
 
-describe('AccountSearchSelectorComponent', () => {
+describe(`AccountSearchSelectorComponent`, () => {
     let component: AccountSearchSelectorComponent;
     let fixture: ComponentFixture<AccountSearchSelectorComponent>;
 
@@ -18,7 +18,7 @@ describe('AccountSearchSelectorComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResetPasswordConfirmComponent } from './reset-password-confirm.component';
 
-describe('ResetPasswordConfirmComponent', () => {
+describe(`ResetPasswordConfirmComponent`, () => {
     let component: ResetPasswordConfirmComponent;
     let fixture: ComponentFixture<ResetPasswordConfirmComponent>;
 
@@ -18,7 +18,7 @@ describe('ResetPasswordConfirmComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

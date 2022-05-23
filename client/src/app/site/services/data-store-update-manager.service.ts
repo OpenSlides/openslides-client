@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CollectionMapperService } from './collection-mapper.service';
+
 import { Deferred } from '../../infrastructure/utils/promises';
+import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService } from './data-store.service';
 
 interface CollectionIds {
@@ -113,7 +114,7 @@ class UpdateSlot {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class DataStoreUpdateManagerService {
     /**

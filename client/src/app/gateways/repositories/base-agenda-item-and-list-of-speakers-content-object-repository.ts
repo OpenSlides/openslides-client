@@ -2,11 +2,12 @@ import { HasAgendaItemId, HasListOfSpeakersId } from 'src/app/domain/interfaces'
 import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem, HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+
 import { AgendaItemRepositoryService } from './agenda/agenda-item-repository.service';
+import { AgendaItemContentObjectRepository } from './base-agenda-item-content-object-repository';
+import { ListOfSpeakersContentObjectRepository } from './base-list-of-speakers-content-object-repository';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
-import { ListOfSpeakersContentObjectRepository } from './base-list-of-speakers-content-object-repository';
-import { AgendaItemContentObjectRepository } from './base-agenda-item-content-object-repository';
 
 export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
         V extends BaseViewModel & HasListOfSpeakers & HasAgendaItem,

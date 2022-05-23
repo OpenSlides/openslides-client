@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { NG_VALUE_ACCESSOR, FormControl, FormBuilder, ControlValueAccessor } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 @Component({

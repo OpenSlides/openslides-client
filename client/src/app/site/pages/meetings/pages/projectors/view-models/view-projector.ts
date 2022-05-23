@@ -1,12 +1,13 @@
-import { ViewProjection } from './view-projection';
 import { Observable } from 'rxjs';
-import { Follow } from 'src/app/site/services/model-request-builder';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { Projector } from 'src/app/domain/models/projector/projector';
 import { StructuredRelation } from 'src/app/infrastructure/definitions/relations';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { Follow } from 'src/app/site/services/model-request-builder';
+
+import { ViewProjection } from './view-projection';
 
 export const PROJECTOR_CONTENT_FOLLOW: Follow = {
     idField: `current_projection_ids`,

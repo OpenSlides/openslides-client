@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantCreateWizardComponent } from './participant-create-wizard.component';
 
-describe('ParticipantCreateWizardComponent', () => {
+describe(`ParticipantCreateWizardComponent`, () => {
     let component: ParticipantCreateWizardComponent;
     let fixture: ComponentFixture<ParticipantCreateWizardComponent>;
 
@@ -18,7 +18,7 @@ describe('ParticipantCreateWizardComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

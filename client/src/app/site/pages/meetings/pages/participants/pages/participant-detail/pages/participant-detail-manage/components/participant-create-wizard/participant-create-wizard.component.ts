@@ -1,27 +1,28 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
-import { ViewUser, PERSONAL_FORM_CONTROLS } from 'src/app/site/pages/meetings/view-models/view-user';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
-import { UserService } from 'src/app/site/services/user.service';
-import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
-import { OneOfValidator } from 'src/app/ui/modules/user-components';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { UserService } from 'src/app/site/services/user.service';
+import { OneOfValidator } from 'src/app/ui/modules/user-components';
+
+import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
+import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
 
 @Component({
-    selector: 'os-participant-create-wizard',
-    templateUrl: './participant-create-wizard.component.html',
-    styleUrls: ['./participant-create-wizard.component.scss']
+    selector: `os-participant-create-wizard`,
+    templateUrl: `./participant-create-wizard.component.html`,
+    styleUrls: [`./participant-create-wizard.component.scss`]
 })
 export class ParticipantCreateWizardComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(MatStepper)

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GlobalHeadbarComponent } from './global-headbar.component';
 
-describe('GlobalHeadbarComponent', () => {
+describe(`GlobalHeadbarComponent`, () => {
     let component: GlobalHeadbarComponent;
     let fixture: ComponentFixture<GlobalHeadbarComponent>;
 
@@ -18,7 +18,7 @@ describe('GlobalHeadbarComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

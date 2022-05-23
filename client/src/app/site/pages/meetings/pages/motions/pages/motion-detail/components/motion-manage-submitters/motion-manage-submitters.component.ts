@@ -1,17 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { Id, Fqid } from 'src/app/domain/definitions/key-types';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { Observable, map, BehaviorSubject, of } from 'rxjs';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { FormControl } from '@angular/forms';
-import { ViewMotionSubmitter } from '../../../../modules/submitters/view-models/view-motion-submitter';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Selectable } from 'src/app/domain/interfaces/selectable';
+import { Action } from 'src/app/gateways/actions';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 import { MotionSubmitterControllerService } from '../../../../modules/submitters/services/motion-submitter-controller.service/motion-submitter-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
-import { Action, createEmptyAction } from 'src/app/gateways/actions';
-import { Identifiable } from 'src/app/domain/interfaces';
 
 type Submitter = Selectable & { fqid?: Fqid; user_id?: Id };
 
@@ -20,9 +20,9 @@ interface IdMap {
 }
 
 @Component({
-    selector: 'os-motion-manage-submitters',
-    templateUrl: './motion-manage-submitters.component.html',
-    styleUrls: ['./motion-manage-submitters.component.scss']
+    selector: `os-motion-manage-submitters`,
+    templateUrl: `./motion-manage-submitters.component.html`,
+    styleUrls: [`./motion-manage-submitters.component.scss`]
 })
 export class MotionManageSubmittersComponent extends BaseUiComponent implements OnInit {
     /**

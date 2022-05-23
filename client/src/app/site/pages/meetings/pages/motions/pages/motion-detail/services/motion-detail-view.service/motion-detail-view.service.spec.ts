@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionDetailViewService } from './motion-detail-view.service';
 
-describe('MotionDetailViewService', () => {
+describe(`MotionDetailViewService`, () => {
     let service: MotionDetailViewService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionDetailViewService', () => {
         service = TestBed.inject(MotionDetailViewService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

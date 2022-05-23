@@ -8,19 +8,19 @@ import {
     Output
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Subscription } from 'rxjs';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
 const ROUTE_SUBSCRIPTION_NAME = `routeSubscription`;
 const SEQUENTIAL_NUMBER_SUBSCRIPTION_NAME = `sequentialNumberSubscription`;
 
 @Component({
-    selector: 'os-detail-view',
-    templateUrl: './detail-view.component.html',
-    styleUrls: ['./detail-view.component.scss'],
+    selector: `os-detail-view`,
+    templateUrl: `./detail-view.component.html`,
+    styleUrls: [`./detail-view.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailViewComponent implements OnInit {

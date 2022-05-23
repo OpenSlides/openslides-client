@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+
 import { Id } from '../domain/definitions/key-types';
 import { ViewMediafile } from '../site/pages/meetings/pages/mediafiles';
 import { ActionService } from './actions';
 import { MeetingAction } from './repositories/meetings';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingMediaAdapterService {
     public constructor(private actionService: ActionService) {}

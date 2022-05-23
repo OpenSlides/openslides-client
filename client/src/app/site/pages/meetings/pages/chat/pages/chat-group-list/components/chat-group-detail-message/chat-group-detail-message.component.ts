@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -6,9 +6,9 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 @Component({
-    selector: 'os-chat-group-detail-message',
-    templateUrl: './chat-group-detail-message.component.html',
-    styleUrls: ['./chat-group-detail-message.component.scss']
+    selector: `os-chat-group-detail-message`,
+    templateUrl: `./chat-group-detail-message.component.html`,
+    styleUrls: [`./chat-group-detail-message.component.scss`]
 })
 export class ChatGroupDetailMessageComponent {
     @Input()

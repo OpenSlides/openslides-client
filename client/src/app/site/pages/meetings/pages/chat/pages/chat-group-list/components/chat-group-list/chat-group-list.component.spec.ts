@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatGroupListComponent } from './chat-group-list.component';
 
-describe('ChatGroupListComponent', () => {
+describe(`ChatGroupListComponent`, () => {
     let component: ChatGroupListComponent;
     let fixture: ComponentFixture<ChatGroupListComponent>;
 
@@ -18,7 +18,7 @@ describe('ChatGroupListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

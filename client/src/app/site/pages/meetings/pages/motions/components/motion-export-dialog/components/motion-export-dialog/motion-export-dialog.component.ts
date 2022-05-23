@@ -1,27 +1,28 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatButtonToggle } from '@angular/material/button-toggle';
+import { MatDialogRef } from '@angular/material/dialog';
+import { auditTime, Observable } from 'rxjs';
+import { Permission } from 'src/app/domain/definitions/permission';
 import {
     ChangeRecoMode,
     LineNumberingMode,
     MOTION_PDF_OPTIONS,
     PERSONAL_NOTE_ID
 } from 'src/app/domain/models/motions/motions.constants';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ExportFileFormat, noMetaData, motionImportExportHeaderOrder } from '../../../../services/export/definitions';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { BehaviorSubject, Observable, auditTime } from 'rxjs';
-import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionExportInfo } from '../../../../services/export/motion-export.service/motion-export.service';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { MatButtonToggle } from '@angular/material/button-toggle';
+
+import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
+import { ExportFileFormat, motionImportExportHeaderOrder, noMetaData } from '../../../../services/export/definitions';
+import { MotionExportInfo } from '../../../../services/export/motion-export.service/motion-export.service';
 
 @Component({
-    selector: 'os-motion-export-dialog',
-    templateUrl: './motion-export-dialog.component.html',
-    styleUrls: ['./motion-export-dialog.component.scss'],
+    selector: `os-motion-export-dialog`,
+    templateUrl: `./motion-export-dialog.component.html`,
+    styleUrls: [`./motion-export-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionExportDialogComponent extends BaseUiComponent implements OnInit {

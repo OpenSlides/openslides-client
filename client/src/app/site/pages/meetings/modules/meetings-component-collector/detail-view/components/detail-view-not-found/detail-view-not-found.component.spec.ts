@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DetailViewNotFoundComponent } from './detail-view-not-found.component';
 
-describe('DetailViewNotFoundComponent', () => {
+describe(`DetailViewNotFoundComponent`, () => {
     let component: DetailViewNotFoundComponent;
     let fixture: ComponentFixture<DetailViewNotFoundComponent>;
 
@@ -18,7 +18,7 @@ describe('DetailViewNotFoundComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

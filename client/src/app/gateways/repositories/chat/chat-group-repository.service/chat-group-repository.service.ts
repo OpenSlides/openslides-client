@@ -4,12 +4,13 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { ChatGroup } from 'src/app/domain/models/chat/chat-group';
 import { ViewChatGroup } from 'src/app/site/pages/meetings/pages/chat';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { ChatGroupAction } from './chat-group.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<ViewChatGroup, ChatGroup> {
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {

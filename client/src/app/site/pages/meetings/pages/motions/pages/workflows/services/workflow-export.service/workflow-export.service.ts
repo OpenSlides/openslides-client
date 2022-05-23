@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { MotionWorkflowServiceModule } from '../motion-workflow-service.module';
-import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { MotionState } from 'src/app/domain/models/motions/motion-state';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { MotionState } from 'src/app/domain/models/motions/motion-state';
+import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
+import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
+
 import { MotionStateControllerService } from '../../../../modules/states/services';
+import { MotionWorkflowServiceModule } from '../motion-workflow-service.module';
 
 @Injectable({
     providedIn: MotionWorkflowServiceModule
@@ -35,16 +36,16 @@ export class WorkflowExportService {
             nextWorkflow[`states`] = [];
             for (const state of workflow.states) {
                 if (state.id === workflow.first_state_id) {
-                    nextWorkflow['first_state_name'] = state.name;
+                    nextWorkflow[`first_state_name`] = state.name;
                 }
                 const nextState = stateKeysToCopy.mapToObject(key => ({ [key]: state[key] }));
-                nextState['next_state_names'] = (state.next_state_ids || []).map(
+                nextState[`next_state_names`] = (state.next_state_ids || []).map(
                     id => this.stateRepo.getViewModel(id)!.name
                 );
-                nextState['previous_state_names'] = (state.previous_state_ids || []).map(
+                nextState[`previous_state_names`] = (state.previous_state_ids || []).map(
                     id => this.stateRepo.getViewModel(id)!.name
                 );
-                nextWorkflow['states'].push(nextState);
+                nextWorkflow[`states`].push(nextState);
             }
             return nextWorkflow;
         };

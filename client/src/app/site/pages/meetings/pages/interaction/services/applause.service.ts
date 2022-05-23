@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { ApplauseType } from 'src/app/domain/models/meetings/applause';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { HttpService } from 'src/app/gateways/http.service';
 import { NotifyService } from 'src/app/gateways/notify.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
 import { InteractionServiceModule } from './interaction-service.module';
 
 export interface Applause {

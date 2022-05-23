@@ -1,6 +1,7 @@
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+
 import { ViewMotion } from '../../../view-models';
 
 export class ViewMotionCategory extends BaseViewModel<MotionCategory> /* implements Searchable  */ {

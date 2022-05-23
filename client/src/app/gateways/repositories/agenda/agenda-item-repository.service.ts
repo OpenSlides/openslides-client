@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
-import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
+import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem, ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { AgendaItemAction } from './agenda-item.action';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { Action } from '../../actions';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
+import { Action } from '../../actions';
+import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
+import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
+import { AgendaItemAction } from './agenda-item.action';
+
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<ViewAgendaItem, AgendaItem> {
     public constructor(

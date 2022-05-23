@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
 
 @Component({
-    selector: 'os-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss'],
+    selector: `os-dashboard`,
+    templateUrl: `./dashboard.component.html`,
+    styleUrls: [`./dashboard.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent extends BaseComponent {

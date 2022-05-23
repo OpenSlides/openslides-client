@@ -1,18 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { MotionCommentControllerService } from '../../../../modules/comments/services/motion-comment-controller.service';
-import { ViewMotionComment, ViewMotionCommentSection, ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
+import { ViewMotion, ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
+
+import { MotionCommentControllerService } from '../../../../modules/comments/services/motion-comment-controller.service';
+import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 
 @Component({
-    selector: 'os-motion-comment',
-    templateUrl: './motion-comment.component.html',
-    styleUrls: ['./motion-comment.component.scss']
+    selector: `os-motion-comment`,
+    templateUrl: `./motion-comment.component.html`,
+    styleUrls: [`./motion-comment.component.scss`]
 })
 export class MotionCommentComponent extends BaseComponent implements OnInit {
     @Input()

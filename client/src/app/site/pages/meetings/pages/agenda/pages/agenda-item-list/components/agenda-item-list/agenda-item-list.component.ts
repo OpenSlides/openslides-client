@@ -1,41 +1,42 @@
 import { Component, OnInit } from '@angular/core';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { MatDialog } from '@angular/material/dialog';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
+import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
-import { hasListOfSpeakers, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
+import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { hasListOfSpeakers, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import { DurationService } from 'src/app/site/services/duration.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction } from 'src/app/ui/modules/list/components';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
+
+import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
+import { AgendaItemControllerService } from '../../../../services';
 import { AgendaItemExportService } from '../../services/agenda-item-export.service/agenda-item-export.service';
 import { AgendaItemFilterService } from '../../services/agenda-item-filter.service/agenda-item-filter.service';
-import { AgendaItemControllerService } from '../../../../services';
-import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
+import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
 
 const AGENDA_ITEM_LIST_STORAGE_INDEX = `agenda_item_list`;
 
 @Component({
-    selector: 'os-agenda-item-list',
-    templateUrl: './agenda-item-list.component.html',
-    styleUrls: ['./agenda-item-list.component.scss']
+    selector: `os-agenda-item-list`,
+    templateUrl: `./agenda-item-list.component.html`,
+    styleUrls: [`./agenda-item-list.component.scss`]
 })
 export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAgendaItem> implements OnInit {
     public readonly AGENDA_TYPE_PUBLIC = AgendaItemType.COMMON;

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { Assignment } from 'src/app/domain/models/assignments/assignment';
+import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
-import { Identifiable } from 'src/app/domain/interfaces';
+
 import { AssignmentCommonServiceModule } from './assignment-common-service.module';
 
 @Injectable({ providedIn: AssignmentCommonServiceModule })

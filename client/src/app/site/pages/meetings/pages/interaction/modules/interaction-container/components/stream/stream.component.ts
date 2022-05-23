@@ -1,25 +1,25 @@
 import {
-    Component,
-    OnInit,
-    ChangeDetectionStrategy,
     AfterViewInit,
-    OnDestroy,
-    Output,
-    EventEmitter,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
-    HostListener
+    Component,
+    EventEmitter,
+    HostListener,
+    OnDestroy,
+    Output
 } from '@angular/core';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { Observable } from 'rxjs';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { StreamService } from '../../../../services/stream.service';
+import { Observable } from 'rxjs';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
 import { ApplauseService } from '../../../../services/applause.service';
+import { StreamService } from '../../../../services/stream.service';
 
 @Component({
-    selector: 'os-stream',
-    templateUrl: './stream.component.html',
-    styleUrls: ['./stream.component.scss'],
+    selector: `os-stream`,
+    templateUrl: `./stream.component.html`,
+    styleUrls: [`./stream.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StreamComponent extends BaseMeetingComponent implements AfterViewInit, OnDestroy {

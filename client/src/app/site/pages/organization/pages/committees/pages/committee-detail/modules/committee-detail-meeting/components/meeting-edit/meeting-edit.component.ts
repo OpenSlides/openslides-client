@@ -1,26 +1,27 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { combineLatest, map, Observable } from 'rxjs';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ViewCommittee } from '../../../../../../view-models';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable, Selectable } from 'src/app/domain/interfaces';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import {
     MeetingControllerService,
     MeetingUserModifiedFields
 } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { Identifiable, Selectable } from 'src/app/domain/interfaces';
+
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
-import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
+import { ViewCommittee } from '../../../../../../view-models';
 
 const ADD_MEETING_LABEL = _(`New meeting`);
 const EDIT_MEETING_LABEL = _(`Edit meeting`);
@@ -49,9 +50,9 @@ const ARCHIVED_MEETINGS_LABEL: Selectable = {
 };
 
 @Component({
-    selector: 'os-meeting-edit',
-    templateUrl: './meeting-edit.component.html',
-    styleUrls: ['./meeting-edit.component.scss'],
+    selector: `os-meeting-edit`,
+    templateUrl: `./meeting-edit.component.html`,
+    styleUrls: [`./meeting-edit.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MeetingEditComponent extends BaseComponent implements OnInit {

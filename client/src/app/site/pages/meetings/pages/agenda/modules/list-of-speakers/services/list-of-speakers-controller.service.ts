@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
 import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
-import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { Follow } from 'src/app/site/services/model-request-builder';
+import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
+
+import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
 /**
  * An object, that contains information about structure-level,
@@ -19,7 +19,7 @@ export interface SpeakingTimeStructureLevelObject {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ListOfSpeakersControllerService extends BaseController<ViewListOfSpeakers, ListOfSpeakers> {
     public constructor(

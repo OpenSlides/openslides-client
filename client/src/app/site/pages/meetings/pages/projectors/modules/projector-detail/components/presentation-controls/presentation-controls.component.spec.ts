@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PresentationControlsComponent } from './presentation-controls.component';
 
-describe('PresentationControlsComponent', () => {
+describe(`PresentationControlsComponent`, () => {
     let component: PresentationControlsComponent;
     let fixture: ComponentFixture<PresentationControlsComponent>;
 
@@ -18,7 +18,7 @@ describe('PresentationControlsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CountdownControlsComponent } from './countdown-controls.component';
 
-describe('CountdownControlsComponent', () => {
+describe(`CountdownControlsComponent`, () => {
     let component: CountdownControlsComponent;
     let fixture: ComponentFixture<CountdownControlsComponent>;
 
@@ -18,7 +18,7 @@ describe('CountdownControlsComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

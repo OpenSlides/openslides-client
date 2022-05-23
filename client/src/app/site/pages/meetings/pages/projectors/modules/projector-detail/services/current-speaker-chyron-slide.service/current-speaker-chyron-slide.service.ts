@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
-import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+
 import { ProjectorDetailServiceModule } from '../projector-detail-service.module';
 
 @Injectable({ providedIn: ProjectorDetailServiceModule })

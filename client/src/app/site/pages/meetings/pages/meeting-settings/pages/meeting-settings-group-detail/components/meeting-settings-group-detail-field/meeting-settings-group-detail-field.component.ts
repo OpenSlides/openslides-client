@@ -1,26 +1,27 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
-    ViewEncapsulation,
-    OnDestroy,
-    ChangeDetectorRef
+    ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SettingsItem } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { Observable, filter, map, distinctUntilChanged } from 'rxjs';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { Moment, unix as moment } from 'moment';
+import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
+import { SettingsItem } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
+
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 
 export interface SettingsFieldUpdate {
@@ -38,9 +39,9 @@ export interface SettingsFieldUpdate {
  * ```
  */
 @Component({
-    selector: 'os-meeting-settings-group-detail-field',
-    templateUrl: './meeting-settings-group-detail-field.component.html',
-    styleUrls: ['./meeting-settings-group-detail-field.component.scss'],
+    selector: `os-meeting-settings-group-detail-field`,
+    templateUrl: `./meeting-settings-group-detail-field.component.html`,
+    styleUrls: [`./meeting-settings-group-detail-field.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None // to style the date and time pickers
 })
@@ -286,7 +287,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * Triggers a reset to the default value
      */
     public onResetButton(): void {
-        this.form.controls['value'].setValue(this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting));
+        this.form.controls[`value`].setValue(this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting));
     }
 
     /**

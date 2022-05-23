@@ -1,24 +1,25 @@
 import { Directive, Input } from '@angular/core';
-import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { LineNumberingMode, ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
-import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
-import { MotionDetailViewService } from '../services/motion-detail-view.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription, filter } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
+import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+
+import { MotionCategoryControllerService } from '../../../modules/categories/services';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
+import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
+import { MotionStatuteParagraphControllerService } from '../../../modules/statute-paragraphs/services';
+import { TagControllerService } from '../../../modules/tags/services';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
+import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
+import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
 import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MotionDetailServiceCollectorService } from '../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
+import { MotionDetailViewService } from '../services/motion-detail-view.service';
 
 @Directive()
 export abstract class BaseMotionDetailChildComponent extends BaseMeetingComponent {

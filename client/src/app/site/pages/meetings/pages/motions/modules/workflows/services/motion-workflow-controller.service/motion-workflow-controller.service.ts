@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MotionWorkflowCommonServiceModule } from '../../motion-workflow-common-service.module';
-import { ViewMotionWorkflow } from '../../view-models';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { MotionWorkflowRepositoryService } from 'src/app/gateways/repositories/motions';
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionState } from '../../../states';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
+import { MotionWorkflowRepositoryService } from 'src/app/gateways/repositories/motions';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { ViewMotion } from '../../../../view-models';
+import { ViewMotionState } from '../../../states';
+import { ViewMotionWorkflow } from '../../view-models';
 
 @Injectable({
     providedIn: `root`

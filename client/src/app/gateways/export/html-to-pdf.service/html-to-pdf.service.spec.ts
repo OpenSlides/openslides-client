@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HtmlToPdfService } from './html-to-pdf.service';
 
-describe('HtmlToPdfService', () => {
+describe(`HtmlToPdfService`, () => {
     let service: HtmlToPdfService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('HtmlToPdfService', () => {
         service = TestBed.inject(HtmlToPdfService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

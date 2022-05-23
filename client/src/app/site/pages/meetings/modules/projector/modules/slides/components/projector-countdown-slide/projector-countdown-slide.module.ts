@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
 import { CountdownTimeModule } from '../../../countdown-time/countdown-time.module';
 import { SlideToken } from '../../definitions';
-
 import { CountdownSlideComponent } from './components/projector-countdown-slide.component';
 
 @NgModule({

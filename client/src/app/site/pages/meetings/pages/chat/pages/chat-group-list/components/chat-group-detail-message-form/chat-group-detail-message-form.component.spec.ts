@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatGroupDetailMessageFormComponent } from './chat-group-detail-message-form.component';
 
-describe('ChatGroupDetailMessageFormComponent', () => {
+describe(`ChatGroupDetailMessageFormComponent`, () => {
     let component: ChatGroupDetailMessageFormComponent;
     let fixture: ComponentFixture<ChatGroupDetailMessageFormComponent>;
 
@@ -18,7 +18,7 @@ describe('ChatGroupDetailMessageFormComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

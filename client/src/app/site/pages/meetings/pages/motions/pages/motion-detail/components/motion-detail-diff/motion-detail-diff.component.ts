@@ -1,29 +1,30 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { getRecommendationTypeName } from '../../../../definitions/recommendation-type-names';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
-import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
+import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { getRecommendationTypeName } from '../../../../definitions/recommendation-type-names';
+import { ViewUnifiedChangeType } from '../../../../modules/change-recommendations/definitions/index';
 import {
-    LineNumberingService,
-    LineNumberedString
+    LineNumberedString,
+    LineNumberingService
 } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { MotionChangeRecommendationControllerService } from '../../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { MotionDiffService } from '../../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
-import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
-import { ViewUnifiedChangeType } from '../../../../modules/change-recommendations/definitions/index';
 import { ViewMotionChangeRecommendation } from '../../../../modules/change-recommendations/view-models/view-motion-change-recommendation';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
+import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionTitleChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
-import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar/head-bar.component';
 
 /**
  * This component displays the original motion text with the change blocks inside.
@@ -49,9 +50,9 @@ import { HEAD_BAR_HEIGHT } from 'src/app/ui/modules/head-bar/components/head-bar
  * ```
  */
 @Component({
-    selector: 'os-motion-detail-diff',
-    templateUrl: './motion-detail-diff.component.html',
-    styleUrls: ['./motion-detail-diff.component.scss'],
+    selector: `os-motion-detail-diff`,
+    templateUrl: `./motion-detail-diff.component.html`,
+    styleUrls: [`./motion-detail-diff.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class MotionDetailDiffComponent extends BaseMeetingComponent implements AfterViewInit {

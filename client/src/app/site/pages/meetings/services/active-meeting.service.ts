@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Subscription, BehaviorSubject, Observable, firstValueFrom, distinctUntilChanged, first, map } from 'rxjs';
+import { BehaviorSubject, first, firstValueFrom, map, Observable, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
+
+import { LifecycleService } from '../../../services/lifecycle.service';
+import { getParticipantSubscriptionConfig } from '../pages/participants/config/model-subscription';
+import { getProjectorListSubscriptionConfig } from '../pages/projectors/config/model-subscription';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
-import { LifecycleService } from '../../../services/lifecycle.service';
-import { MeetingControllerService } from './meeting-controller.service';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { ArchiveStatusService } from './archive-status.service';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { getProjectorListSubscriptionConfig } from '../pages/projectors/config/model-subscription';
-import { getParticipantSubscriptionConfig } from '../pages/participants/config/model-subscription';
-import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
+import { MeetingControllerService } from './meeting-controller.service';
 
 const MEETING_DETAIL_SUBSCRIPTION = `meeting_detail`;
 const MEETING_DETAIL_GROUP_SUBSCRIPTION = `meeting_detail_group`; // Used for the active meeting service
@@ -57,7 +58,7 @@ const getMeetingDetailGroupSubscriptionConfig = (id: Id, getNextMeetingIdObserva
 });
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ActiveMeetingService {
     public get guestsEnabled(): boolean {

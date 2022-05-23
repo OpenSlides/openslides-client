@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
+import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionStatuteParagraphAction } from './motion-statute-paragraph.action';
-import { Id } from 'src/app/domain/definitions/key-types';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionStatuteParagraphRepositoryService extends BaseMeetingRelatedRepository<
     ViewMotionStatuteParagraph,

@@ -1,8 +1,8 @@
-import { BaseViewModel } from '../../../../../base/base-view-model';
 import { ChatMessage } from '../../../../../../domain/models/chat/chat-message';
+import { BaseViewModel } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
-import { ViewChatGroup } from './view-chat-group';
 import { ViewUser } from '../../../view-models/view-user';
+import { ViewChatGroup } from './view-chat-group';
 
 export class ViewChatMessage extends BaseViewModel<ChatMessage> {
     public static readonly COLLECTION = ChatMessage.COLLECTION;

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.component';
+
 import { CommitteeDetailMeetingMainComponent } from './components/committee-detail-meeting-main/committee-detail-meeting-main.component';
+import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.component';
 
 const routes: Routes = [
     {

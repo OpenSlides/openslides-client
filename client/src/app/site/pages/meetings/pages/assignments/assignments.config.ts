@@ -4,6 +4,7 @@ import { AssignmentCandidate } from 'src/app/domain/models/assignments/assignmen
 import { AssignmentCandidateRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-candidate-repository.service';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+
 import { ViewAssignment, ViewAssignmentCandidate } from './view-models';
 
 export const AssignmentsAppConfig: AppConfig = {

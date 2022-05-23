@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { Fieldsets, DEFAULT_FIELDSET, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionWorkflowAction } from './motion-workflow.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepository<ViewMotionWorkflow, MotionWorkflow> {
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {

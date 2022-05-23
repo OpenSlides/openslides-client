@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OpenSlidesStatusService } from './openslides-status.service';
 
-describe('OpenSlidesStatusService', () => {
+describe(`OpenSlidesStatusService`, () => {
     let service: OpenSlidesStatusService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('OpenSlidesStatusService', () => {
         service = TestBed.inject(OpenSlidesStatusService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

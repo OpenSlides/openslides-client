@@ -1,7 +1,7 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { filter, pairwise } from 'rxjs';
-import { Location } from '@angular/common';
 
 /**
  * Watches URL changes.
@@ -61,7 +61,7 @@ export class RoutingStateService {
             .subscribe((event: any[]) => {
                 this._previousUrl = event[0].urlAfterRedirects;
                 const currentNavigationExtras = router.getCurrentNavigation()?.extras;
-                if (currentNavigationExtras && currentNavigationExtras.state && currentNavigationExtras.state['back']) {
+                if (currentNavigationExtras && currentNavigationExtras.state && currentNavigationExtras.state[`back`]) {
                     this._customOrigin = this._previousUrl;
                 } else if (
                     this._customOrigin &&

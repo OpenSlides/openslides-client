@@ -1,12 +1,12 @@
-import { ViewMeeting } from '../../../../../view-models/view-meeting';
-import { HasMeeting } from '../../../../../view-models/has-meeting';
-import { ViewMediafile } from '../../../../mediafiles/view-models/view-mediafile';
-import { Group } from '../../../../../../../../domain/models/users/group';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { Permission } from '../../../../../../../../domain/definitions/permission';
 import { childPermissions } from '../../../../../../../../domain/definitions/permission-children';
-import { ViewChatGroup } from '../../../../chat/view-models/view-chat-group';
+import { Group } from '../../../../../../../../domain/models/users/group';
+import { BaseViewModel } from '../../../../../../../base/base-view-model';
+import { HasMeeting } from '../../../../../view-models/has-meeting';
+import { ViewMeeting } from '../../../../../view-models/view-meeting';
 import { ViewUser } from '../../../../../view-models/view-user';
+import { ViewChatGroup } from '../../../../chat/view-models/view-chat-group';
+import { ViewMediafile } from '../../../../mediafiles/view-models/view-mediafile';
 import { ViewMotionCommentSection } from '../../../../motions/modules/comments/view-models/view-motion-comment-section';
 import { ViewPoll } from '../../../../polls/view-models/view-poll';
 

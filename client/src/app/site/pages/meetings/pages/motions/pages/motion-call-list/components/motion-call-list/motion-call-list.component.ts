@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { FlatNode } from 'src/app/infrastructure/definitions/tree';
+import { ViewMotion, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import {
     BaseSortTreeViewComponent,
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { ViewMotion, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { TagControllerService } from '../../../../modules/tags/services';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionCsvExportService } from '../../../../services/export/motion-csv-export.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service';
-import { TagControllerService } from '../../../../modules/tags/services';
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { FlatNode } from 'src/app/infrastructure/definitions/tree';
 
 @Component({
-    selector: 'os-motion-call-list',
-    templateUrl: './motion-call-list.component.html',
-    styleUrls: ['./motion-call-list.component.scss']
+    selector: `os-motion-call-list`,
+    templateUrl: `./motion-call-list.component.html`,
+    styleUrls: [`./motion-call-list.component.scss`]
 })
 export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotion> implements OnInit {
     /**

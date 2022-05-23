@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { Observable, BehaviorSubject, map, combineLatest, distinctUntilChanged, merge, filter } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, merge, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { NotifyService } from '../../../../../../gateways/notify.service';
 import { BroadcastService } from './broadcast.service';
 import { CallRestrictionService } from './call-restriction.service';

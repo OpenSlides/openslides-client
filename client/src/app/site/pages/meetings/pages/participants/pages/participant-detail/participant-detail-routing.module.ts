@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ParticipantDetailViewComponent } from './components/participant-detail-view/participant-detail-view.component';
-import { ParticipantDetailComponent } from './components/participant-detail/participant-detail.component';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PermissionGuard } from 'src/app/site/guards/permission.guard';
+
+import { ParticipantDetailComponent } from './components/participant-detail/participant-detail.component';
+import { ParticipantDetailViewComponent } from './components/participant-detail-view/participant-detail-view.component';
 
 const MANAGED_DETAIL_ROUTES = [`new`, `edit`];
 

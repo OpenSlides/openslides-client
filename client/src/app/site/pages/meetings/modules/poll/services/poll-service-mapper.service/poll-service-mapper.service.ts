@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { PollServiceModule } from '../poll-service.module';
+
 import { PollService } from '../poll.service/poll.service';
+import { PollServiceModule } from '../poll-service.module';
 
 @Injectable({ providedIn: PollServiceModule })
 export class PollServiceMapperService {

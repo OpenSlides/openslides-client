@@ -1,34 +1,34 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
+import { PblColumnDefinition } from '@pebula/ngrid';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
-import { GroupControllerService, ViewGroup } from '../../../../modules';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { PblColumnDefinition } from '@pebula/ngrid';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
 import { UserStateField } from 'src/app/gateways/repositories/users';
-
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
-import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
-import { ParticipantListSortService } from '../../services/participant-list-sort.service/participant-list-sort.service';
-import { ParticipantListFilterService } from '../../services/participant-list-filter.service/participant-list-filter.service';
+import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ActivatedRoute } from '@angular/router';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
+import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
+import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
+import { GroupControllerService, ViewGroup } from '../../../../modules';
+import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
+import { ParticipantListFilterService } from '../../services/participant-list-filter.service/participant-list-filter.service';
+import { ParticipantListSortService } from '../../services/participant-list-sort.service/participant-list-sort.service';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
 
 @Component({
-    selector: 'os-participant-list',
-    templateUrl: './participant-list.component.html',
-    styleUrls: ['./participant-list.component.scss'],
+    selector: `os-participant-list`,
+    templateUrl: `./participant-list.component.html`,
+    styleUrls: [`./participant-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewUser> implements OnInit {

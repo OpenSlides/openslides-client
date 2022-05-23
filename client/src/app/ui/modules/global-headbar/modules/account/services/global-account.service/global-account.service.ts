@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { GlobalAccountServiceModule } from '../global-account-service.module';
 import { ParticipantRepositoryService } from 'src/app/gateways/repositories/participants/participant-repository.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+
+import { GlobalAccountServiceModule } from '../global-account-service.module';
 
 @Injectable({
     providedIn: GlobalAccountServiceModule

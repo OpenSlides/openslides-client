@@ -1,18 +1,17 @@
 import { Directive, OnDestroy } from '@angular/core';
-import { Id } from '../../domain/definitions/key-types';
-import { BaseModel } from '../../domain/models/base/base-model';
-import { Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
+
+import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
+import { BaseModel } from '../../domain/models/base/base-model';
+import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { ModelRequestService } from '../services/model-request.service';
-import { RawEditorSettings } from 'tinymce';
-import { Router } from '@angular/router';
-import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
-import { StorageService } from 'src/app/gateways/storage.service';
 
 @Directive()
 export abstract class BaseComponent implements OnDestroy {

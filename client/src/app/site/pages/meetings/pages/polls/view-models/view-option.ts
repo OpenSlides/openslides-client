@@ -1,10 +1,10 @@
-import { Option } from '../../../../../../domain/models/poll/option';
 import { OptionData, OptionTitle } from '../../../../../../domain/models/poll/generic-poll';
+import { Option } from '../../../../../../domain/models/poll/option';
 import { BaseViewModel } from '../../../../../base/base-view-model';
-import { ViewUser } from '../../../view-models/view-user';
-import { ViewVote } from './view-vote';
 import { HasMeeting } from '../../../view-models/has-meeting';
+import { ViewUser } from '../../../view-models/view-user';
 import { ViewPoll } from './view-poll';
+import { ViewVote } from './view-vote';
 export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Option> implements OptionData {
     public static COLLECTION = Option.COLLECTION;
     protected _collection = Option.COLLECTION;

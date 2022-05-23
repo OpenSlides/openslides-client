@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ServerTimePresenterService } from './server-time-presenter.service';
 
-describe('ServerTimePresenterService', () => {
+describe(`ServerTimePresenterService`, () => {
     let service: ServerTimePresenterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ServerTimePresenterService', () => {
         service = TestBed.inject(ServerTimePresenterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PasswordFormComponent } from './password-form.component';
 
-describe('PasswordFormComponent', () => {
+describe(`PasswordFormComponent`, () => {
     let component: PasswordFormComponent;
     let fixture: ComponentFixture<PasswordFormComponent>;
 
@@ -18,7 +18,7 @@ describe('PasswordFormComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

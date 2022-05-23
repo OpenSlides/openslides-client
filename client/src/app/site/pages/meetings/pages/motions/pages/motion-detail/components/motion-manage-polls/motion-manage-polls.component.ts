@@ -1,16 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MotionPollService } from '../../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
+import { Component, Input } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
-import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+
+import { MotionPollService } from '../../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
+import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';
 
 @Component({
-    selector: 'os-motion-manage-polls',
-    templateUrl: './motion-manage-polls.component.html',
-    styleUrls: ['./motion-manage-polls.component.scss']
+    selector: `os-motion-manage-polls`,
+    templateUrl: `./motion-manage-polls.component.html`,
+    styleUrls: [`./motion-manage-polls.component.scss`]
 })
 export class MotionManagePollsComponent {
     @Input()

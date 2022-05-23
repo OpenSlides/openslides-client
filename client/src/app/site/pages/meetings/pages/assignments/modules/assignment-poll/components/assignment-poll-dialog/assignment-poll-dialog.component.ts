@@ -1,25 +1,26 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
     GeneralValueVerbose,
-    PollPropertyVerbose,
-    VoteValue,
+    GlobalOptionKey,
     PollMethod,
-    GlobalOptionKey
+    PollPropertyVerbose,
+    VoteValue
 } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { UnknownUserLabel, AssignmentPollService } from '../../services/assignment-poll.service';
-import { FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+
 import { AssignmentPollMethodVerbose, AssignmentPollPercentBaseVerbose } from '../../definitions';
+import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
 
 @Component({
-    selector: 'os-assignment-poll-dialog',
-    templateUrl: './assignment-poll-dialog.component.html',
-    styleUrls: ['./assignment-poll-dialog.component.scss']
+    selector: `os-assignment-poll-dialog`,
+    templateUrl: `./assignment-poll-dialog.component.html`,
+    styleUrls: [`./assignment-poll-dialog.component.scss`]
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public unknownUserLabel = UnknownUserLabel;

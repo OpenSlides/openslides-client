@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionDiffService } from './motion-diff.service';
 
-describe('MotionDiffService', () => {
+describe(`MotionDiffService`, () => {
     let service: MotionDiffService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MotionDiffService', () => {
         service = TestBed.inject(MotionDiffService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

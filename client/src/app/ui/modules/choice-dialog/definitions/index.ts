@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { Displayable } from '../../../../domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 interface ChoiceDialogResult {

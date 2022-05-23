@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { PollServiceModule } from '../poll-service.module';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+
+import { PollServiceModule } from '../poll-service.module';
 
 export enum VotingError {
     POLL_WRONG_STATE = 1, // 1 so we can check with negation

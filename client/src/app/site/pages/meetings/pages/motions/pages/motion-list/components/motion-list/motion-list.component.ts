@@ -1,32 +1,33 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { PblColumnDefinition } from '@pebula/ngrid';
+import { firstValueFrom, map } from 'rxjs';
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMotion } from '../../../../view-models';
 import {
-    ViewTag,
-    ViewMotionWorkflow,
-    ViewMotionCategory,
     ViewMotionBlock,
-    ViewMotionState
+    ViewMotionCategory,
+    ViewMotionState,
+    ViewMotionWorkflow,
+    ViewTag
 } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
-import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
-import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog';
-import { firstValueFrom, map } from 'rxjs';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
+import { GridBlockTileType } from 'src/app/ui/modules/grid';
+
+import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { GridBlockTileType } from 'src/app/ui/modules/grid';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service';
+import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
+import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
+import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
+import { ViewMotion } from '../../../../view-models';
+import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog';
 
 /**
  * Determine the types of the motionList
@@ -46,9 +47,9 @@ interface TileCategoryInformation {
 }
 
 @Component({
-    selector: 'os-motion-list',
-    templateUrl: './motion-list.component.html',
-    styleUrls: ['./motion-list.component.scss']
+    selector: `os-motion-list`,
+    templateUrl: `./motion-list.component.html`,
+    styleUrls: [`./motion-list.component.scss`]
 })
 export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     public readonly gridBlockType = GridBlockTileType;

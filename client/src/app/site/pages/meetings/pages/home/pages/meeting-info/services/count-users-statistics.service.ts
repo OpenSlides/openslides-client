@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+
 import { CountUsersService } from './count-users.service';
 
 /**
@@ -29,7 +30,7 @@ export const DEFAULT_COUNT_USERS_OBJECT: CountUserStatistics = {
 };
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class CountUsersStatisticsService {
     private runningCounts: { [token: string]: BehaviorSubject<CountUserStatistics> } = {};

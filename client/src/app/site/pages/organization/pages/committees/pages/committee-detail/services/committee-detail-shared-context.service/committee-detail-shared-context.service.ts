@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
 import { CommitteeDetailServiceModule } from '../committee-detail-service.module';
 
 @Injectable({

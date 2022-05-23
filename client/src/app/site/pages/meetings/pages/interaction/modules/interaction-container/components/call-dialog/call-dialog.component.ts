@@ -1,21 +1,21 @@
 import {
-    Component,
-    OnInit,
-    ChangeDetectionStrategy,
     AfterViewInit,
-    ViewChild,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
     ElementRef,
-    ChangeDetectorRef
+    ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RtcService } from '../../../../services/rtc.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
+
+import { RtcService } from '../../../../services/rtc.service';
 
 @Component({
-    selector: 'os-call-dialog',
-    templateUrl: './call-dialog.component.html',
-    styleUrls: ['./call-dialog.component.scss'],
+    selector: `os-call-dialog`,
+    templateUrl: `./call-dialog.component.html`,
+    styleUrls: [`./call-dialog.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CallDialogComponent implements AfterViewInit {

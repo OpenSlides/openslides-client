@@ -2,10 +2,11 @@ import { ElementRef, Injectable } from '@angular/core';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { CallRestrictionService } from './call-restriction.service';
-import { OperatorMediaPermissionService } from './operator-media-permission.service';
 import { InteractionServiceModule } from './interaction-service.module';
+import { OperatorMediaPermissionService } from './operator-media-permission.service';
 
 interface JitsiMember {
     id: string;

@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Id, Ids } from 'src/app/domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
+import { Action } from 'src/app/gateways/actions';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
+
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
-import { NameInformation, RawUser, UserRepositoryService } from '../users';
+import { UserRepositoryService } from '../users';
 import { UserAction } from '../users/user-action';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Action } from 'src/app/gateways/actions';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ParticipantRepositoryService extends BaseMeetingRelatedRepository<ViewUser, User> {
     constructor(

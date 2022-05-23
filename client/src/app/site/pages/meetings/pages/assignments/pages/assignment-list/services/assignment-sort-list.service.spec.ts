@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AssignmentSortListService } from './assignment-sort-list.service';
 
-describe('AssignmentSortListService', () => {
+describe(`AssignmentSortListService`, () => {
     let service: AssignmentSortListService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('AssignmentSortListService', () => {
         service = TestBed.inject(AssignmentSortListService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -1,8 +1,9 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { Id } from '../../definitions/key-types';
 import { CML, OMLMapping } from '../../definitions/organization-permission';
-import { BaseDecimalModel } from '../base/base-decimal-model';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { BaseDecimalModel } from '../base/base-decimal-model';
 /**
  * Key to sort users by
  */

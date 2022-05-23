@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantListFilterService } from './participant-list-filter.service';
 
-describe('ParticipantListFilterService', () => {
+describe(`ParticipantListFilterService`, () => {
     let service: ParticipantListFilterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ParticipantListFilterService', () => {
         service = TestBed.inject(ParticipantListFilterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

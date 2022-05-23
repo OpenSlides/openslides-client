@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MeetingControllerServiceCollectorService } from './meeting-controller-service-collector.service';
 
-describe('MeetingControllerServiceCollectorService', () => {
+describe(`MeetingControllerServiceCollectorService`, () => {
     let service: MeetingControllerServiceCollectorService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('MeetingControllerServiceCollectorService', () => {
         service = TestBed.inject(MeetingControllerServiceCollectorService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

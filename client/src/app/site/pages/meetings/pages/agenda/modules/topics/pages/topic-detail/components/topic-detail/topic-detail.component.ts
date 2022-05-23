@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ItemTypeChoices, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { Topic } from 'src/app/domain/models/topics/topic';
+import { Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { Topic } from 'src/app/domain/models/topics/topic';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { TopicControllerService } from '../../../../services/topic-controller.service';
+import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { AgendaItemControllerService } from '../../../../../../services';
+import { TopicControllerService } from '../../../../services/topic-controller.service';
 
 @Component({
-    selector: 'os-topic-detail',
-    templateUrl: './topic-detail.component.html',
-    styleUrls: ['./topic-detail.component.scss']
+    selector: `os-topic-detail`,
+    templateUrl: `./topic-detail.component.html`,
+    styleUrls: [`./topic-detail.component.scss`]
 })
 export class TopicDetailComponent extends BaseMeetingComponent {
     public readonly COLLECTION = ViewTopic.COLLECTION;

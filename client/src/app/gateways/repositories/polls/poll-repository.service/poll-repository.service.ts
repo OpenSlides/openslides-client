@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Decimal } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { Fieldsets, DEFAULT_FIELDSET, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
-import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { toDecimal } from 'src/app/infrastructure/utils';
-import { Decimal } from 'src/app/domain/definitions/key-types';
+import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+
+import { Identifiable } from '../../../../domain/interfaces/identifiable';
+import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
+import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { VoteRepositoryService } from '../vote-repository.service';
 import { PollAction } from './poll.action';
 
@@ -24,7 +25,7 @@ interface AnalogPollGlobalValues {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
     public constructor(

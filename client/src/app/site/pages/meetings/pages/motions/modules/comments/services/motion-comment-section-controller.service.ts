@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MotionCommentCommonServiceModule } from '../motion-comment-common-service.module';
-import { ViewMotionCommentSection } from '../view-models';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { MotionCommentSectionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
+import { MotionCommentSectionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { ViewMotionCommentSection } from '../view-models';
 
 @Injectable({
     providedIn: `root`

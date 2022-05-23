@@ -1,15 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PollPropertyVerbose } from 'src/app/domain/models/poll/poll-constants';
 import { BasePollMetaInformationComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-meta-information.component';
-import { UnknownUserLabel } from '../../services/assignment-poll.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+
 import { AssignmentPollMethodVerbose } from '../../definitions';
+import { UnknownUserLabel } from '../../services/assignment-poll.service';
 
 @Component({
-    selector: 'os-assignment-poll-meta-info',
-    templateUrl: './assignment-poll-meta-info.component.html',
-    styleUrls: ['./assignment-poll-meta-info.component.scss']
+    selector: `os-assignment-poll-meta-info`,
+    templateUrl: `./assignment-poll-meta-info.component.html`,
+    styleUrls: [`./assignment-poll-meta-info.component.scss`]
 })
 export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComponent {
     public pollPropertyVerbose = PollPropertyVerbose;

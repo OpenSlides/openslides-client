@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ThemeListComponent } from './theme-list.component';
 
-describe('ThemeListComponent', () => {
+describe(`ThemeListComponent`, () => {
     let component: ThemeListComponent;
     let fixture: ComponentFixture<ThemeListComponent>;
 
@@ -18,7 +18,7 @@ describe('ThemeListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

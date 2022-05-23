@@ -1,11 +1,12 @@
+import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { SortListService } from 'src/app/ui/base/sort-service';
+
 import { StorageService } from '../../../gateways/storage.service';
+import { BaseViewModel } from '../base-view-model';
 import { BaseSortService } from './base-sort.service';
 import { OsSortingDefinition, OsSortingOption } from './os-sort';
-import { BaseViewModel } from '../base-view-model';
-import { SortListService } from 'src/app/ui/base/sort-service';
-import { Directive } from '@angular/core';
 
 /**
  * Base class for generic sorting purposes

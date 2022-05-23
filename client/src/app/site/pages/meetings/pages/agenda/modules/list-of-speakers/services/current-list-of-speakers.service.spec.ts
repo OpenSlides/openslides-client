@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CurrentListOfSpeakersService } from './current-list-of-speakers.service';
 
-describe('CurrentListOfSpeakersService', () => {
+describe(`CurrentListOfSpeakersService`, () => {
     let service: CurrentListOfSpeakersService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('CurrentListOfSpeakersService', () => {
         service = TestBed.inject(CurrentListOfSpeakersService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

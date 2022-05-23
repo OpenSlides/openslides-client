@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediafileUploadComponent } from './mediafile-upload.component';
 
-describe('MediafileUploadComponent', () => {
+describe(`MediafileUploadComponent`, () => {
     let component: MediafileUploadComponent;
     let fixture: ComponentFixture<MediafileUploadComponent>;
 
@@ -18,7 +18,7 @@ describe('MediafileUploadComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

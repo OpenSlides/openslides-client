@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SingleOptionChartTableComponent } from './single-option-chart-table.component';
 
-describe('SingleOptionChartTableComponent', () => {
+describe(`SingleOptionChartTableComponent`, () => {
     let component: SingleOptionChartTableComponent;
     let fixture: ComponentFixture<SingleOptionChartTableComponent>;
 
@@ -18,7 +18,7 @@ describe('SingleOptionChartTableComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

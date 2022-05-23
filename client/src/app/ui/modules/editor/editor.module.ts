@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditorModule as TinyMce, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
-import { EditorComponent } from './components/editor/editor.component';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EditorModule as TinyMce, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+
+import { EditorComponent } from './components/editor/editor.component';
 
 const DECLARATIONS = [EditorComponent];
 

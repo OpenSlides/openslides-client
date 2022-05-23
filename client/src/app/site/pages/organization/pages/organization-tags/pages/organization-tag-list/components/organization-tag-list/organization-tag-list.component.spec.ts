@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationTagListComponent } from './organization-tag-list.component';
 
-describe('OrganizationTagListComponent', () => {
+describe(`OrganizationTagListComponent`, () => {
     let component: OrganizationTagListComponent;
     let fixture: ComponentFixture<OrganizationTagListComponent>;
 
@@ -18,7 +18,7 @@ describe('OrganizationTagListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

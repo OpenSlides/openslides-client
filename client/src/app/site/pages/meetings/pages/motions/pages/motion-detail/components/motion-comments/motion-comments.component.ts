@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { ViewMotion, ViewMotionCommentSection, ViewMotionComment } from 'src/app/site/pages/meetings/pages/motions';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ViewMotion, ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 
 @Component({
-    selector: 'os-motion-comments',
-    templateUrl: './motion-comments.component.html',
-    styleUrls: ['./motion-comments.component.scss'],
+    selector: `os-motion-comments`,
+    templateUrl: `./motion-comments.component.html`,
+    styleUrls: [`./motion-comments.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionCommentsComponent extends BaseUiComponent implements OnInit {

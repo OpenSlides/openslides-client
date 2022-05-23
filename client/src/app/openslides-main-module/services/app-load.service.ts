@@ -3,27 +3,28 @@ import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { AgendaAppConfig } from 'src/app/site/pages/meetings/pages/agenda/agenda.config';
+import { AssignmentsAppConfig } from 'src/app/site/pages/meetings/pages/assignments/assignments.config';
+import { ChatAppConfig } from 'src/app/site/pages/meetings/pages/chat/chat.config';
+import { HistoryAppConfig } from 'src/app/site/pages/meetings/pages/history/history.config';
+import { HomeAppConfig } from 'src/app/site/pages/meetings/pages/home/home.config';
+import { MediafileAppConfig } from 'src/app/site/pages/meetings/pages/mediafiles/mediafiles.config';
+import { MeetingSettingsAppConfig } from 'src/app/site/pages/meetings/pages/meeting-settings/meeting-settings.config';
 import { MotionsAppConfig } from 'src/app/site/pages/meetings/pages/motions';
+import { PollsAppConfig } from 'src/app/site/pages/meetings/pages/polls/polls.config';
+import { ProjectorAppConfig } from 'src/app/site/pages/meetings/pages/projectors/projector.config';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { FallbackRoutesService } from 'src/app/site/services/fallback-routes.service';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
+
 import { HasOnAfterAppsLoaded } from '../../infrastructure/definitions/hooks/after-apps-loaded';
-import { OrganizationAppConfig } from '../../site/pages/organization/organization.config';
-import { DesignsAppConfig } from '../../site/pages/organization/pages/designs/designs.config';
-import { ParticipantsAppConfig } from '../../site/pages/meetings/pages/participants/participants.config';
 import { MeetingsAppConfig } from '../../site/pages/meetings/meetings.config';
-import { CommitteesAppConfig } from '../../site/pages/organization/pages/committees/committees.config';
-import { OrganizationTagsAppConfig } from '../../site/pages/organization/pages/organization-tags/organization-tags.config';
-import { ProjectorAppConfig } from 'src/app/site/pages/meetings/pages/projectors/projector.config';
-import { AssignmentsAppConfig } from 'src/app/site/pages/meetings/pages/assignments/assignments.config';
 import { AutopilotAppConfig } from '../../site/pages/meetings/pages/autopilot/autopilot.config';
-import { MediafileAppConfig } from 'src/app/site/pages/meetings/pages/mediafiles/mediafiles.config';
-import { ChatAppConfig } from 'src/app/site/pages/meetings/pages/chat/chat.config';
-import { PollsAppConfig } from 'src/app/site/pages/meetings/pages/polls/polls.config';
-import { HomeAppConfig } from 'src/app/site/pages/meetings/pages/home/home.config';
-import { MeetingSettingsAppConfig } from 'src/app/site/pages/meetings/pages/meeting-settings/meeting-settings.config';
-import { HistoryAppConfig } from 'src/app/site/pages/meetings/pages/history/history.config';
+import { ParticipantsAppConfig } from '../../site/pages/meetings/pages/participants/participants.config';
+import { OrganizationAppConfig } from '../../site/pages/organization/organization.config';
+import { CommitteesAppConfig } from '../../site/pages/organization/pages/committees/committees.config';
+import { DesignsAppConfig } from '../../site/pages/organization/pages/designs/designs.config';
+import { OrganizationTagsAppConfig } from '../../site/pages/organization/pages/organization-tags/organization-tags.config';
 
 const servicesOnAppsLoaded: Type<OnAfterAppsLoaded>[] = [ModelRequestBuilderService];
 
@@ -51,7 +52,7 @@ const appConfigs: AppConfig[] = [
 ];
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class AppLoadService {
     public constructor(

@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChoiceDialogComponent } from './components/choice-dialog/choice-dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+
+import { ChoiceDialogComponent } from './components/choice-dialog/choice-dialog.component';
 
 const DECLARATIONS = [ChoiceDialogComponent];
 

@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChipComponent } from './components/chip/chip.component';
+import { NgModule } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRippleModule } from '@angular/material/core';
+
+import { ChipComponent } from './components/chip/chip.component';
 
 const DECLARATIONS = [ChipComponent];
 

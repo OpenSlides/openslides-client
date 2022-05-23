@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AgendaItemRepositoryService } from './agenda-item-repository.service';
 
-describe('AgendaItemRepositoryService', () => {
+describe(`AgendaItemRepositoryService`, () => {
     let service: AgendaItemRepositoryService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('AgendaItemRepositoryService', () => {
         service = TestBed.inject(AgendaItemRepositoryService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

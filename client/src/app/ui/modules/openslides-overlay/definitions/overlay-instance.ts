@@ -1,4 +1,5 @@
-import { ComponentRef, TemplateRef, ViewContainerRef, Type } from '@angular/core';
+import { ComponentRef, TemplateRef, Type } from '@angular/core';
+
 import { OverlayComponent } from '../modules/custom-overlay/components/overlay/overlay.component';
 import { CustomOverlayConfig } from './overlay-config';
 

@@ -1,5 +1,5 @@
-import { Component, OnInit, forwardRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { Component, forwardRef, OnInit } from '@angular/core';
+import { ControlValueAccessor, FormArray, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 
 interface TranslationBox {
     original: string;

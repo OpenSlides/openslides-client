@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewAgendaItem } from '../../view-models';
-import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Action } from 'src/app/gateways/actions';
-import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
+import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { ViewAgendaItem } from '../../view-models';
+import { AgendaItemCommonServiceModule } from '../agenda-item-common-service.module';
 
 @Injectable({
     providedIn: AgendaItemCommonServiceModule

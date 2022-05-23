@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionBarComponent } from './action-bar.component';
 
-describe('ActionBarComponent', () => {
+describe(`ActionBarComponent`, () => {
     let component: ActionBarComponent;
     let fixture: ComponentFixture<ActionBarComponent>;
 
@@ -18,7 +18,7 @@ describe('ActionBarComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import {
     BaseSortTreeViewComponent,
     SortTreeFilterId,
     SortTreeFilterOption
 } from 'src/app/ui/base/base-sort-tree-view-component';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ItemTypeChoices, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 
 @Component({
-    selector: 'os-agenda-sort',
-    templateUrl: './agenda-sort.component.html',
-    styleUrls: ['./agenda-sort.component.scss']
+    selector: `os-agenda-sort`,
+    templateUrl: `./agenda-sort.component.html`,
+    styleUrls: [`./agenda-sort.component.scss`]
 })
 export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaItem> implements OnInit {
     /**

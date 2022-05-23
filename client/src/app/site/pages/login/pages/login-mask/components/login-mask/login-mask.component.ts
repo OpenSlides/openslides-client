@@ -1,21 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { filter, Observable, Subscription } from 'rxjs';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
+import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { filter, Observable, Subscription } from 'rxjs';
+import { fadeInAnim } from 'src/app/infrastructure/animations';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { SpinnerService } from 'src/app/ui/modules/openslides-overlay/modules/spinner/services/spinner.service';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+import { AuthService } from 'src/app/site/services/auth.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
+
 import { MeetingComponentServiceCollectorService } from '../../../../../meetings/services/meeting-component-service-collector.service';
 import { BrowserSupportService } from '../../../../services/browser-support.service';
-import { fadeInAnim } from 'src/app/infrastructure/animations';
 
 const HTTP_WARNING = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
 
@@ -25,9 +25,9 @@ interface LoginValues {
 }
 
 @Component({
-    selector: 'os-login-mask',
-    templateUrl: './login-mask.component.html',
-    styleUrls: ['./login-mask.component.scss'],
+    selector: `os-login-mask`,
+    templateUrl: `./login-mask.component.html`,
+    styleUrls: [`./login-mask.component.scss`],
     animations: [fadeInAnim]
 })
 export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, OnDestroy {
@@ -113,12 +113,12 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             this.authService.redirectUser(this.currentMeetingId);
         });
 
-        this.route.queryParams.pipe(filter(params => params['checkBrowser'])).subscribe(params => {
-            this.checkBrowser = params['checkBrowser'] === `true`;
+        this.route.queryParams.pipe(filter(params => params[`checkBrowser`])).subscribe(params => {
+            this.checkBrowser = params[`checkBrowser`] === `true`;
         });
         this.route.params.subscribe(params => {
-            if (params['meetingId']) {
-                this.checkIfGuestsEnabled(params['meetingId']);
+            if (params[`meetingId`]) {
+                this.checkIfGuestsEnabled(params[`meetingId`]);
             }
         });
 

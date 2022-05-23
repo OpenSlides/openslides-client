@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CommitteeMainComponent } from './components/committee-main/committee-main.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { CommitteeMainComponent } from './components/committee-main/committee-main.component';
 
 @NgModule({
     declarations: [CommitteeMainComponent],

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { CommitteeMainComponent } from './pages/committee-main/components/committee-main/committee-main.component';
 
 const routes: Routes = [

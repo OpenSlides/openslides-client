@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { CommitteeDetailComponent } from './components/committee-detail/committee-detail.component';
 
 const COMMITTEE_DETAIL_EDIT_PATHS = [`create`, `edit-committee`];

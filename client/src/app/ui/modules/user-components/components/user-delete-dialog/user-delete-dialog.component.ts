@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { CML } from 'src/app/domain/definitions/organization-permission';
 import {
     GetUserRelatedModelsCommittee,
     GetUserRelatedModelsPresenterResult,
     GetUserRelatedModelsUser
 } from 'src/app/gateways/presenter';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { CML } from 'src/app/domain/definitions/organization-permission';
 
 interface UserDeleteDialogConfig {
     toRemove: ViewUser[];
@@ -18,9 +18,9 @@ const TO_REMOVE_LABEL = _(`These accounts will be removed from the meeting:`);
 const TO_DELETE_LABEL = _(`These accounts will be deleted:`);
 
 @Component({
-    selector: 'os-user-delete-dialog',
-    templateUrl: './user-delete-dialog.component.html',
-    styleUrls: ['./user-delete-dialog.component.scss'],
+    selector: `os-user-delete-dialog`,
+    templateUrl: `./user-delete-dialog.component.html`,
+    styleUrls: [`./user-delete-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class UserDeleteDialogComponent implements OnInit {

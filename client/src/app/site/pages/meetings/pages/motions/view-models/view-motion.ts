@@ -1,34 +1,35 @@
-import {
-    Motion,
-    HasReferencedMotionInRecommendationExtensionIds
-} from '../../../../../../domain/models/motions/motion';
-import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+
 import { Id } from '../../../../../../domain/definitions/key-types';
+import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';
+import {
+    HasReferencedMotionInRecommendationExtensionIds,
+    Motion
+} from '../../../../../../domain/models/motions/motion';
 import { AmendmentType } from '../../../../../../domain/models/motions/motions.constants';
-import { DiffLinesInParagraph } from '../definitions';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
-import { HasMeeting } from '../../../view-models/has-meeting';
-import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
-import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
-import { HasTags } from '../modules/tags/view-models/has-tags';
-import { ViewUser } from '../../../view-models/view-user';
-import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
-import { HasPersonalNote } from '../modules/personal-notes/view-models/has-personal-note';
-import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
-import { ViewMotionBlock } from '../modules/motion-blocks/view-models/view-motion-block';
-import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
-import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
-import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
-import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
-import { ViewPoll } from '../../polls/view-models/view-poll';
-import { ViewMotionSubmitter } from '../modules/submitters';
-import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
+import { ViewUser } from '../../../view-models/view-user';
+import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
+import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
+import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
+import { ViewPoll } from '../../polls/view-models/view-poll';
+import { DiffLinesInParagraph } from '../definitions';
+import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
+import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
+import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
+import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
+import { ViewMotionBlock } from '../modules/motion-blocks/view-models/view-motion-block';
+import { HasPersonalNote } from '../modules/personal-notes/view-models/has-personal-note';
+import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
+import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
+import { ViewMotionSubmitter } from '../modules/submitters';
+import { HasTags } from '../modules/tags/view-models/has-tags';
 
 export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
     referenced_in_motion_recommendation_extension: ViewMotion[];

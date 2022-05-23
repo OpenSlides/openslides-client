@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { PersonalNoteServiceModule } from '../../personal-note-service.module';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { Action } from 'src/app/gateways/actions';
 import { PersonalNoteRepositoryService } from 'src/app/gateways/repositories/motions/personal-note-repository.service';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { Action } from 'src/app/gateways/actions';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+
+import { PersonalNoteServiceModule } from '../../personal-note-service.module';
+import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
 
 @Injectable({
     providedIn: PersonalNoteServiceModule

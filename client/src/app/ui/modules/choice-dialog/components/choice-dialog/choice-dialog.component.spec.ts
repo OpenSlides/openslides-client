@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChoiceDialogComponent } from './choice-dialog.component';
 
-describe('ChoiceDialogComponent', () => {
+describe(`ChoiceDialogComponent`, () => {
     let component: ChoiceDialogComponent;
     let fixture: ComponentFixture<ChoiceDialogComponent>;
 
@@ -18,7 +18,7 @@ describe('ChoiceDialogComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Permission } from 'src/app/domain/definitions/permission';
+
 import { ParticipantMainComponent } from './components/participant-main/participant-main.component';
-import { PermissionGuard } from 'src/app/site/guards/permission.guard';
 
 const routes: Routes = [
     {

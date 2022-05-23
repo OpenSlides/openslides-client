@@ -1,8 +1,6 @@
-import { Observable, BehaviorSubject } from 'rxjs';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { DetailNavigable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import {
     PollClassType,
     PollClassTypeVerbose,
@@ -12,12 +10,14 @@ import {
     PollStateVerbose,
     PollTypeVerbose
 } from 'src/app/domain/models/poll';
-import { DetailNavigable } from 'src/app/domain/interfaces';
+import { Poll } from 'src/app/domain/models/poll/poll';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     extends BaseProjectableViewModel<Poll>

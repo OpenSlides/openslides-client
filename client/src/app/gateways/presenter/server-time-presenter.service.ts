@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
+
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
 
@@ -9,7 +10,7 @@ interface ServerTimeResponse {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ServerTimePresenterService {
     // TODO: couple this with the offlineService: Just retry often, if we are online.

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { BaseSlideComponent } from '../../../base/base-slide-component';
-import { PollSlideData, PollSlideDataFields, SlidePollOption, SlidePollOptionFields } from '../poll-slide-data';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
-import { SlideOption } from 'src/app/site/pages/meetings/view-models/slide-options';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { modifyAgendaItemNumber } from '../../../definitions';
 import { of } from 'rxjs';
+import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
+import { PollState } from 'src/app/domain/models/poll/poll-constants';
+import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
+
+import { BaseSlideComponent } from '../../../base/base-slide-component';
+import { modifyAgendaItemNumber } from '../../../definitions';
+import { PollSlideData, PollSlideDataFields, SlidePollOption, SlidePollOptionFields } from '../poll-slide-data';
 
 export enum PollContentObjectType {
     Standalone = `standalone`,

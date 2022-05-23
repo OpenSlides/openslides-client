@@ -1,12 +1,13 @@
 import { Directive } from '@angular/core';
-import { MeetingComponentServiceCollectorService } from '../services/meeting-component-service-collector.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ViewMeeting } from '../view-models/view-meeting';
-import { MeetingSettingsService } from '../services/meeting-settings.service';
-import { ActiveMeetingIdService } from '../services/active-meeting-id.service';
-import { ActiveMeetingService } from '../services/active-meeting.service';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseComponent } from 'src/app/site/base/base.component';
+
+import { ActiveMeetingService } from '../services/active-meeting.service';
+import { ActiveMeetingIdService } from '../services/active-meeting-id.service';
+import { MeetingComponentServiceCollectorService } from '../services/meeting-component-service-collector.service';
+import { MeetingSettingsService } from '../services/meeting-settings.service';
+import { ViewMeeting } from '../view-models/view-meeting';
 
 @Directive()
 export abstract class BaseMeetingComponent extends BaseComponent {

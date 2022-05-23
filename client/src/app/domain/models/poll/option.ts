@@ -1,5 +1,5 @@
+import { Fqid, Id, Ids } from '../../definitions/key-types';
 import { BaseDecimalModel } from '../base/base-decimal-model';
-import { Ids, Id, Fqid } from '../../definitions/key-types';
 
 export class Option extends BaseDecimalModel<Option> {
     public static COLLECTION = `option`;

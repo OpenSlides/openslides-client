@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaSortComponent } from './agenda-sort.component';
 
-describe('AgendaSortComponent', () => {
+describe(`AgendaSortComponent`, () => {
     let component: AgendaSortComponent;
     let fixture: ComponentFixture<AgendaSortComponent>;
 
@@ -18,7 +18,7 @@ describe('AgendaSortComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

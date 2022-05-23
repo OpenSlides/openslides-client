@@ -1,12 +1,13 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 import { ChoiceAnswer, ChoiceDialogConfig } from '../../definitions';
 
 @Component({
-    selector: 'os-choice-dialog',
-    templateUrl: './choice-dialog.component.html',
-    styleUrls: ['./choice-dialog.component.scss'],
+    selector: `os-choice-dialog`,
+    templateUrl: `./choice-dialog.component.html`,
+    styleUrls: [`./choice-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
 export class ChoiceDialogComponent {

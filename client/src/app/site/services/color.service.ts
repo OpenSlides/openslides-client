@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HtmlColor } from '../../domain/definitions/key-types';
 import * as tinycolor from 'tinycolor2';
+
+import { HtmlColor } from '../../domain/definitions/key-types';
 
 export interface ColorDefinition {
     name: string;
@@ -33,7 +34,7 @@ export class Color {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ColorService {
     public parseHtmlColorToColor(htmlColor: string | HtmlColor): Color {

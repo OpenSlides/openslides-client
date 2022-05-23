@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+
 import { HttpMethod } from '../../infrastructure/definitions/http';
 import { HttpService } from '../http.service';
 import { EndpointConfiguration } from './endpoint-configuration';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class HttpStreamEndpointService {
     private endpointConfigurations: { [endpoint: string]: EndpointConfiguration } = {};

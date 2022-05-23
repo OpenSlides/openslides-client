@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AccountCommonService } from './account-common.service';
 
-describe('AccountCommonService', () => {
+describe(`AccountCommonService`, () => {
     let service: AccountCommonService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('AccountCommonService', () => {
         service = TestBed.inject(AccountCommonService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PollProgressComponent } from './poll-progress.component';
 
-describe('PollProgressComponent', () => {
+describe(`PollProgressComponent`, () => {
     let component: PollProgressComponent;
     let fixture: ComponentFixture<PollProgressComponent>;
 
@@ -18,7 +18,7 @@ describe('PollProgressComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

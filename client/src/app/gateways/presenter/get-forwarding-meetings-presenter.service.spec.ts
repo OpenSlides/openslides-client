@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GetForwardingMeetingsPresenterService } from './get-forwarding-meetings-presenter.service';
 
-describe('GetForwardingMeetingsPresenterService', () => {
+describe(`GetForwardingMeetingsPresenterService`, () => {
     let service: GetForwardingMeetingsPresenterService;
 
     beforeEach(() => {
@@ -10,7 +10,7 @@ describe('GetForwardingMeetingsPresenterService', () => {
         service = TestBed.inject(GetForwardingMeetingsPresenterService);
     });
 
-    it('should be created', () => {
+    it(`should be created`, () => {
         expect(service).toBeTruthy();
     });
 });

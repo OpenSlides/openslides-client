@@ -3,11 +3,12 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Observable, Subject } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SpeakerStateOnList } from '../../agenda';
 import { CurrentListOfSpeakersService } from '../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
-import { RTC_LOGGED_STORAGE_KEY } from './rtc.service';
 import { InteractionServiceModule } from './interaction-service.module';
+import { RTC_LOGGED_STORAGE_KEY } from './rtc.service';
 
 @Injectable({
     providedIn: InteractionServiceModule

@@ -8,6 +8,7 @@ import {
 } from 'src/app/gateways/export/csv-export.service';
 import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+
 import { LineNumberingService } from '../../../modules/change-recommendations/services';
 import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
 import { ViewMotion } from '../../../view-models';

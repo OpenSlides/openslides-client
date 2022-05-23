@@ -1,2 +1,2 @@
-export * from './search-selector.module';
 export * from './definitions';
+export * from './search-selector.module';

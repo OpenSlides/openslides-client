@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupListComponent } from './group-list.component';
 
-describe('GroupListComponent', () => {
+describe(`GroupListComponent`, () => {
     let component: GroupListComponent;
     let fixture: ComponentFixture<GroupListComponent>;
 
@@ -18,7 +18,7 @@ describe('GroupListComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

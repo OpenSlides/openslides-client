@@ -6,6 +6,7 @@ import {
     PollState,
     PollType
 } from 'src/app/domain/models/poll/poll-constants';
+
 import { TitleInformationWithAgendaItem } from '../../definitions';
 
 export interface SlidePollOption {

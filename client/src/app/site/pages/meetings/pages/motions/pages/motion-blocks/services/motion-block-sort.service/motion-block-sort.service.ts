@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { MotionBlockServiceModule } from '../motion-block-service.module';
-import { BaseSortListService, OsSortingOption, OsSortingDefinition } from 'src/app/site/base/base-sort.service';
-import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
+
+import { MotionBlockServiceModule } from '../motion-block-service.module';
 
 @Injectable({
     providedIn: MotionBlockServiceModule

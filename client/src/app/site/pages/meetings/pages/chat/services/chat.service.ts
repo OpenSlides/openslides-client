@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { ChatGroupControllerService } from './chat-group-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
+
+import { ChatGroupControllerService } from './chat-group-controller.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ChatService {
     public get canSeeChatObservable(): Observable<boolean> {

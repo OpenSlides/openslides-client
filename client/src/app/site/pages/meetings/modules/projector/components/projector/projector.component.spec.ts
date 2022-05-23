@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorComponent } from './projector.component';
 
-describe('ProjectorComponent', () => {
+describe(`ProjectorComponent`, () => {
     let component: ProjectorComponent;
     let fixture: ComponentFixture<ProjectorComponent>;
 
@@ -18,7 +18,7 @@ describe('ProjectorComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

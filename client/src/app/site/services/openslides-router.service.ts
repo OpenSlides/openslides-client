@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Router, RoutesRecognized, ActivatedRouteSnapshot } from '@angular/router';
-import { BehaviorSubject, filter, map, Observable, distinctUntilChanged, Subject, tap } from 'rxjs';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { ActivatedRouteSnapshot, Router, RoutesRecognized } from '@angular/router';
+import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subject, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { AuthService } from 'src/app/site/services/auth.service';
 
 enum UrlTarget {
     LOGIN = `login`,
@@ -11,7 +11,7 @@ enum UrlTarget {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class OpenSlidesRouterService {
     public get currentParamMap(): Observable<{ [paramName: string]: any }> {

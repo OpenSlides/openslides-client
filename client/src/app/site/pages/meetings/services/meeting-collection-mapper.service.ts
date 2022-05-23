@@ -9,7 +9,7 @@ import {
 import { CollectionMapper } from 'src/app/site/services/collection-mapper.service/collection-mapper';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MeetingCollectionMapperService extends CollectionMapperService implements CollectionMapper {
     private readonly _meetingRepositoriesSubject = new BehaviorSubject<BaseMeetingRelatedRepository<any, any>[]>([]);

@@ -1,18 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { TranslateService } from '@ngx-translate/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
 
 @Component({
-    selector: 'os-legal-notice-content',
-    templateUrl: './legal-notice-content.component.html',
-    styleUrls: ['./legal-notice-content.component.scss']
+    selector: `os-legal-notice-content`,
+    templateUrl: `./legal-notice-content.component.html`,
+    styleUrls: [`./legal-notice-content.component.scss`]
 })
 export class LegalNoticeContentComponent extends BaseUiComponent implements OnInit {
     public readonly OML = OML;

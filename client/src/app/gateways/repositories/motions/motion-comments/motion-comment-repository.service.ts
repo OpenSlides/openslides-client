@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ViewMotionComment } from 'src/app/site/pages/meetings/pages/motions';
-import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { Fieldsets, DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
+import { ViewMotionComment } from 'src/app/site/pages/meetings/pages/motions';
+import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+
+import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
+import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCommentAction } from './motion-comment.action';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository<ViewMotionComment, MotionComment> {
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {

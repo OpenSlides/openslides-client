@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CategoryListComponent } from './components/category-list/category-list.component';
-import { CategoryListSortComponent } from './components/category-list-sort/category-list-sort.component';
+import { WatchForChangesGuard } from 'src/app/site/guards/watch-for-changes.guard';
+
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
 import { CategoryDetailSortComponent } from './components/category-detail-sort/category-detail-sort.component';
-import { WatchForChangesGuard } from 'src/app/site/guards/watch-for-changes.guard';
+import { CategoryListComponent } from './components/category-list/category-list.component';
+import { CategoryListSortComponent } from './components/category-list-sort/category-list-sort.component';
 
 const routes: Routes = [
     {
