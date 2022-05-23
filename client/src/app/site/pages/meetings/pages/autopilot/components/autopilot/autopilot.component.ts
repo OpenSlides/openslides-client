@@ -62,9 +62,9 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     public get projectorUrl(): string {
         if (this.projector) {
             if (this.operator.hasPerms(this.permission.projectorCanManage)) {
-                return `/${this.activeMeetingId}/projectors/detail/${this.projector.id}`;
+                return `/${this.activeMeetingId}/projectors/detail/${this.projector.sequential_number}`;
             } else {
-                return `/projector/${this.projector.id}`;
+                return `/${this.activeMeetingId}/projectors/${this.projector.sequential_number}`;
             }
         } else {
             return ``;

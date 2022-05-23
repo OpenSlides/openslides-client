@@ -4,11 +4,10 @@ import { Tag } from 'src/app/domain/models/tag/tag';
 import { TagRepositoryService } from 'src/app/gateways/repositories/tags/tag-repository.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { TagCommonServiceModule } from '../../tag-common-service.module';
 import { ViewTag } from '../../view-models';
 
 @Injectable({
-    providedIn: TagCommonServiceModule
+    providedIn: `root`
 })
 export class TagControllerService extends BaseMeetingControllerService<ViewTag, Tag> {
     constructor(protected override repo: TagRepositoryService) {

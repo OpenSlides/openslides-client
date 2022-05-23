@@ -12,6 +12,7 @@ import { copy } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
@@ -58,6 +59,7 @@ export class ParticipantImportService extends BaseUserImportService {
         private repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
         private activeMeetingIdService: ActiveMeetingIdService,
+        private activeMeetingService: ActiveMeetingService,
         private exporter: ParticipantCsvExportService,
         private presenter: SearchUsersByNameOrEmailPresenterService
     ) {
@@ -83,9 +85,11 @@ export class ParticipantImportService extends BaseUserImportService {
             createFn: async () => [],
             updateFn: models => this.updateUsers(models)
         });
+        console.log(`default group id:`, activeMeetingService.meeting.default_group_id);
         this.registerBeforeImportHandler(GROUP_PROPERTY, {
             idProperty: GROUP_PROPERTY,
-            repo: this.groupRepo as any
+            repo: this.groupRepo as any,
+            useDefault: [activeMeetingService.meeting.default_group_id]
         });
     }
 
@@ -129,6 +133,7 @@ export class ParticipantImportService extends BaseUserImportService {
 
     private async getDuplicates(entries: Partial<User>[]): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
         const result = await this.presenter.call({
+            permissionRelatedId: this.activeMeetingId,
             searchCriteria: entries.map(entry => {
                 const username = !!entry.username ? entry.username : `${entry.first_name} ${entry.last_name}`;
                 return { username, email: entry.email };

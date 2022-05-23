@@ -9,11 +9,10 @@ import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
-import { MotionCategoryCommonServiceModule } from '../../motion-categorie-common-service.module';
 import { ViewMotionCategory } from '../../view-models';
 
 @Injectable({
-    providedIn: MotionCategoryCommonServiceModule
+    providedIn: `root`
 })
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {
     private readonly _currentCategoriesSubject = new BehaviorSubject<ViewMotionCategory[]>([]);

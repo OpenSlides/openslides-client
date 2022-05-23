@@ -19,6 +19,7 @@ export abstract class BaseMeetingListViewComponent<V extends BaseViewModel> exte
         return this.activeMeetingService.meeting;
     }
 
+    // Services which are injected manually to be available in all subclasses
     protected meetingSettingsService: MeetingSettingsService;
     protected activeMeetingIdService: ActiveMeetingIdService;
     protected activeMeetingService: ActiveMeetingService;

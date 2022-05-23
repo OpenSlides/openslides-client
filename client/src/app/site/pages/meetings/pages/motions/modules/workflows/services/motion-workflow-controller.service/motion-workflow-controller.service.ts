@@ -7,11 +7,10 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 
 import { ViewMotion } from '../../../../view-models';
 import { ViewMotionState } from '../../../states';
-import { MotionWorkflowCommonServiceModule } from '../../motion-workflow-common-service.module';
 import { ViewMotionWorkflow } from '../../view-models';
 
 @Injectable({
-    providedIn: MotionWorkflowCommonServiceModule
+    providedIn: `root`
 })
 export class MotionWorkflowControllerService extends BaseMeetingControllerService<ViewMotionWorkflow, MotionWorkflow> {
     constructor(protected override repo: MotionWorkflowRepositoryService) {

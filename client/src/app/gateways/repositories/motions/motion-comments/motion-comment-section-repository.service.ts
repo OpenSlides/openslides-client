@@ -27,11 +27,15 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
     }
 
     public override getFieldsets(): Fieldsets<ViewMotionCommentSection> {
-        const listFields: (keyof ViewMotionCommentSection)[] = [`name`, `weight`];
-        const commentFields: (keyof ViewMotionCommentSection)[] = [`name`, `read_group_ids`, `write_group_ids`];
+        const listFields: (keyof ViewMotionCommentSection)[] = [
+            `name`,
+            `weight`,
+            `read_group_ids`,
+            `write_group_ids`,
+            `comment_ids`
+        ];
         return {
-            [DEFAULT_FIELDSET]: listFields,
-            comment: commentFields
+            [DEFAULT_FIELDSET]: listFields
         };
     }
 

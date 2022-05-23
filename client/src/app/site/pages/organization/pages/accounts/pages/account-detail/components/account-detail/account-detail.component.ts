@@ -4,6 +4,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { UserDetailViewComponent } from 'src/app/ui/modules/user-components';
@@ -45,6 +46,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public constructor(
         private route: ActivatedRoute,
+        private osRouter: OpenSlidesRouterService,
         private operator: OperatorService,
         public readonly committeeController: CommitteeControllerService,
         private accountController: AccountControllerService,
@@ -120,7 +122,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private getUserByUrl(): void {
         this.subscriptions.push(
-            this.route.params.subscribe(params => {
+            this.osRouter.currentParamMap.subscribe(params => {
                 if (params[`id`]) {
                     this.loadUserById(+params[`id`]);
                 } else {

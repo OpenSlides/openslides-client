@@ -193,7 +193,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
         const title = this.translate.instant(`Are you sure you want to delete the print template?`);
         if (await this.promptService.open(title)) {
             try {
-                await this.repo.update({ modified_final_version: `` }, this.motion);
+                await this.repo.update({ modified_final_version: `` }, this.motion).resolve();
                 this.setChangeRecoMode(this.determineCrMode(ChangeRecoMode.Diff));
             } catch (e) {
                 this.raiseError(e);
@@ -215,7 +215,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     public updateStartLineNumber(): void {
-        this.repo.update({ start_line_number: this.startLineNumber }, this.motion);
+        this.repo.update({ start_line_number: this.startLineNumber }, this.motion).resolve();
         this.lineNumberMenuTrigger.closeMenu();
     }
 

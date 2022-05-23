@@ -228,15 +228,19 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         } else {
             changes = Object.assign([], this.getAllTextChangingObjects());
         }
-        const formattedText = this.motionFormatService.formatMotion({
-            targetMotion: this.motion,
-            crMode: this.changeRecoMode,
-            changes,
-            lineLength: this.lineLength,
-            highlightedLine: this.highlightedLine,
-            firstLine: this.motion.firstLine
-        });
-        return formattedText;
+        if (this.lineLength) {
+            const formattedText = this.motionFormatService.formatMotion({
+                targetMotion: this.motion,
+                crMode: this.changeRecoMode,
+                changes,
+                lineLength: this.lineLength,
+                highlightedLine: this.highlightedLine,
+                firstLine: this.motion.firstLine
+            });
+            return formattedText;
+        } else {
+            return this.motion.text;
+        }
     }
 
     /**

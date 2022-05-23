@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 
-import { Id } from '../../../domain/definitions/key-types';
+import { Fqid, Id } from '../../../domain/definitions/key-types';
 import { Displayable } from '../../../domain/interfaces/displayable';
 import { Identifiable } from '../../../domain/interfaces/identifiable';
 import { User, UserSortProperty } from '../../../domain/models/users/user';
@@ -13,7 +13,7 @@ import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/servic
 import { Action } from '../../actions';
 import { UserAction } from './user-action';
 
-export type RawUser = FullNameInformation & Identifiable & Displayable;
+export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid };
 
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.

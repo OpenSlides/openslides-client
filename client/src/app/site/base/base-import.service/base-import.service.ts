@@ -252,14 +252,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         }
         const result = this._papa.parse(file, papaConfig);
         this._csvLines = result.data;
-        this._receivedHeaders = Object.keys(this._csvLines[0]);
-        const isValid = this.checkHeaderLength();
-        this.checkReceivedHeaders();
-        if (!isValid) {
-            return;
-        }
-        this.propagateNextNewEntries();
-        this.updateSummary();
+        this.parseCsvLines();
     }
 
     public clearFile(): void {
@@ -268,17 +261,11 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         this._rawFileSubject.next(null);
     }
 
-    /**
-     * parses pre-prepared entries (e.g. from a textarea) instead of a csv structure
-     *
-     * @param entries: an array of prepared newEntry objects
-     */
-    public setParsedEntries(entries: { [importTrackId: number]: ImportModel<MainModel> }): void {
-        this.clearPreview();
-        if (!entries) {
-            return;
+    public addLines(...lines: { [header: string]: any }[]): void {
+        for (const line of lines) {
+            this._csvLines.push(line);
         }
-        this.setNextEntries(entries);
+        this.parseCsvLines();
     }
 
     /**
@@ -586,6 +573,30 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             const receivedHeader = this._mapReceivedExpectedHeaders[expectedHeader];
             return { [expectedHeader]: line[receivedHeader] };
         }) as { [key in keyof MainModel]?: any };
+    }
+
+    private parseCsvLines(): void {
+        this._receivedHeaders = Object.keys(this._csvLines[0]);
+        const isValid = this.checkHeaderLength();
+        this.checkReceivedHeaders();
+        if (!isValid) {
+            return;
+        }
+        this.propagateNextNewEntries();
+        this.updateSummary();
+    }
+
+    /**
+     * parses pre-prepared entries (e.g. from a textarea) instead of a csv structure
+     *
+     * @param entries: an array of prepared newEntry objects
+     */
+    private setParsedEntries(entries: { [importTrackId: number]: ImportModel<MainModel> }): void {
+        this.clearPreview();
+        if (!entries) {
+            return;
+        }
+        this.setNextEntries(entries);
     }
 
     /**

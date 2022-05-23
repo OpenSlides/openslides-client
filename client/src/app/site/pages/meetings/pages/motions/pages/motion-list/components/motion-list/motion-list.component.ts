@@ -55,7 +55,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     /**
      * String to define the current selected view.
      */
-    public selectedView: MotionListviewType = `list`;
+    public selectedView: MotionListviewType = `tiles`;
 
     /**
      * The motion, the user has currently selected in the quick-edit-dialog.
@@ -384,9 +384,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     }
 
     private setupTileView(isAvailable: boolean): void {
-        this.selectedView = `list`;
         if (isAvailable) {
-            this.storage.get<MotionListviewType>(`motionListView`).then(type => (this.selectedView = type ?? `tiles`));
+            this.storage.get<MotionListviewType>(`motionListView`).then(type => (this.selectedView = type || `tiles`));
+        } else {
+            this.selectedView = `list`;
         }
     }
 }
