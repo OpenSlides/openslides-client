@@ -6,7 +6,11 @@ describe('Testing committees', () => {
 
     before(() => {
         cy.login();
-        cy.visit('https://localhost:8000');
+        cy.visit('https://localhost:8000', {
+            onLoad: win => console.log(`Loading finished:`, win),
+            onBeforeLoad: win => console.log(`Start loading:`, win),
+            timeout: 120000
+        });
         cy.createCommittee().then(_committee => {
             committee = _committee;
         });
