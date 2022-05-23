@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Fqid } from 'src/app/domain/definitions/key-types';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { UserAction } from 'src/app/gateways/repositories/users/user-action';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 
 import { Id } from '../../../domain/definitions/key-types';
 import { Displayable } from '../../../domain/interfaces/displayable';
@@ -10,9 +13,7 @@ import { toDecimal } from '../../../infrastructure/utils';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
 import { Action } from '../../actions';
-import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
-import { UserAction } from './user-action';
+import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
 export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid };
 
@@ -50,8 +51,11 @@ export type FullNameInformation = ShortNameInformation & LevelAndNumberInformati
 @Injectable({
     providedIn: `root`
 })
-export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser, User> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+export class UserRepositoryService extends BaseRepository<ViewUser, User> {
+    public constructor(
+        repositoryServiceCollector: RepositoryServiceCollectorService,
+        private activeMeetingIdService: ActiveMeetingIdService
+    ) {
         super(repositoryServiceCollector, User);
     }
 
@@ -79,10 +83,10 @@ export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser
             `default_vote_weight`,
             `email`,
             `last_email_send`,
-            `organization_management_level`
+            `organization_management_level`,
+            `meeting_ids`
         ];
         const accountListFields: TypedFieldset<User> = shortNameFields.concat([
-            `meeting_ids`,
             `committee_ids`,
             { templateField: `committee_$_management_level` }
         ]);
@@ -254,7 +258,7 @@ export class UserRepositoryService extends BaseMeetingRelatedRepository<ViewUser
         viewModel.getShortName = () => this.getShortName(viewModel);
         viewModel.getFullName = () => this.getFullName(viewModel);
         viewModel.getLevelAndNumber = () => this.getLevelAndNumber(viewModel);
-        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingId;
+        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
         return viewModel;
     }
 

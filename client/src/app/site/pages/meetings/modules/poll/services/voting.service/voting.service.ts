@@ -34,10 +34,10 @@ const VotingErrorVerbose = {
     providedIn: PollServiceModule
 })
 export class VotingService {
-    private currentUser: ViewUser | null = null;
+    private _currentUser: ViewUser | null = null;
 
     public constructor(private operator: OperatorService) {
-        this.operator.userObservable.subscribe(user => (this.currentUser = user));
+        this.operator.userObservable.subscribe(user => (this._currentUser = user));
     }
 
     /**
@@ -52,8 +52,8 @@ export class VotingService {
      * checks whether the operator can vote on the given poll
      * @returns null if no errors exist (= user can vote) or else a VotingError
      */
-    public getVotePermissionError(poll: ViewPoll, user: ViewUser | null = this.currentUser): VotingError | void {
-        if (this.currentUser?.id === user?.id) {
+    public getVotePermissionError(poll: ViewPoll, user: ViewUser | null = this._currentUser): VotingError | void {
+        if (this._currentUser?.id === user?.id) {
             if (user?.isVoteRightDelegated) {
                 return VotingError.USER_HAS_DELEGATED_RIGHT;
             }
@@ -61,7 +61,7 @@ export class VotingService {
                 return VotingError.USER_HAS_VOTED;
             }
         }
-        if (this.currentUser?.id !== user?.id && poll.hasVotedForDelegations(user?.id)) {
+        if (this._currentUser?.id !== user?.id && poll.hasVotedForDelegations(user?.id)) {
             return VotingError.USER_HAS_VOTED;
         }
         if (this.operator.isAnonymous) {
@@ -76,12 +76,12 @@ export class VotingService {
         if (poll.state !== PollState.Started) {
             return VotingError.POLL_WRONG_STATE;
         }
-        if (!user?.isPresentInMeeting() && !this.currentUser?.canVoteFor(user)) {
+        if (!user?.isPresentInMeeting() && !this._currentUser?.canVoteFor(user)) {
             return VotingError.USER_NOT_PRESENT;
         }
     }
 
-    public getVotePermissionErrorVerbose(poll: ViewPoll, user: ViewUser | null = this.currentUser): string | void {
+    public getVotePermissionErrorVerbose(poll: ViewPoll, user: ViewUser | null = this._currentUser): string | void {
         const error = this.getVotePermissionError(poll, user);
         if (error) {
             return VotingErrorVerbose[error];

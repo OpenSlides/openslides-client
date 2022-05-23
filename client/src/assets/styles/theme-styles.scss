@@ -14,25 +14,6 @@
 /** Mix the component-related style-rules. Every single custom style goes here */
 @mixin openslides-components-theme($theme) {
     @include os-component-themes($theme);
-
-    /** Components' concerning theme-files */
-    // @include os-site-theme($theme);
-    // @include os-list-of-speakers-style($theme);
-    // @include os-sorting-tree-style($theme);
-    // @include os-tile-style($theme);
-    // @include os-rounded-input-style($theme);
-    // @include os-meta-text-block-style($theme);
-    // @include os-settings-field-style($theme);
-    // @include os-amendment-create-wizard-style($theme);
-    // @include os-motion-detail-diff-style($theme);
-    // @include os-banner-style($theme);
-    // @include os-motion-poll-detail-style($theme);
-    // @include os-assignment-poll-detail-style($theme);
-    // @include os-progress-snack-bar-style($theme);
-    // @include os-list-view-table-theme($theme);
-    // @include os-user-statistics-style($theme);
-    // @include os-login-wrapper-theme($theme);
-    // @include os-progress-theme($theme);
 }
 
 @mixin ngrid-theme($theme) {

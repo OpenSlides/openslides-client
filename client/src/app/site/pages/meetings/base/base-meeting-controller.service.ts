@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { BaseController } from 'src/app/site/base/base-controller';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
@@ -41,11 +41,28 @@ export abstract class BaseMeetingControllerService<V extends BaseViewModel, M ex
         return this.controllerServiceCollector.meetingSettingsService;
     }
 
+    private _currentActiveMeetingId: Id | null = null;
+    private _isConstructed = false;
+
     public constructor(
         protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
         baseModelConstructor: ModelConstructor<M>,
-        repo: BaseMeetingRelatedRepository<V, M>
+        repo: BaseRepository<V, M>
     ) {
         super(controllerServiceCollector, baseModelConstructor, repo);
+        controllerServiceCollector.activeMeetingIdService.meetingIdObservable.subscribe(id => this.onNextMeetingId(id));
+        this._isConstructed = true;
+    }
+
+    /**
+     * Function called every change of the active meeting id. Be careful: The `this` scope can be undefined for the first invokes.
+     */
+    protected onMeetingIdChanged(): void {}
+
+    private onNextMeetingId(id: Id | null): void {
+        if (id !== this._currentActiveMeetingId && this._isConstructed) {
+            this.onMeetingIdChanged();
+        }
+        this._currentActiveMeetingId = id;
     }
 }

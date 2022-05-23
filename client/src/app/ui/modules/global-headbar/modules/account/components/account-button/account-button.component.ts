@@ -31,11 +31,13 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public get isPresent(): boolean {
-        return this.hasActiveMeeting && this.user ? this.user.isPresentInMeeting() : false;
+        return this.hasActiveMeeting && this.operator.isInMeeting(this.activeMeetingId)
+            ? this.user.isPresentInMeeting()
+            : false;
     }
 
     public get isAllowedSelfSetPresent(): boolean {
-        return this._isAllowedSelfSetPresent;
+        return this._isAllowedSelfSetPresent && this.operator.isInMeeting(this.activeMeetingId);
     }
 
     public get isOnProfilePage(): boolean {

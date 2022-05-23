@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
@@ -40,7 +40,9 @@ export const MEETING_RELATED_FORM_CONTROLS = [
     providedIn: ParticipantCommonServiceModule
 })
 export class ParticipantControllerService extends BaseMeetingControllerService<ViewUser, User> {
-    constructor(
+    private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);
+
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         private userController: UserControllerService,
@@ -50,6 +52,18 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         private actions: ActionService
     ) {
         super(controllerServiceCollector, User, repo);
+        repo.getViewModelListObservable().subscribe(users => {
+            const meetingUsers = users.filter(user => user.meeting_ids.includes(this.activeMeetingId));
+            this._participantListSubject.next(meetingUsers);
+        });
+    }
+
+    public override getViewModelList(): ViewUser[] {
+        return this._participantListSubject.value;
+    }
+
+    public override getViewModelListObservable(): Observable<ViewUser[]> {
+        return this._participantListSubject.asObservable();
     }
 
     public create(...participants: Partial<User>[]): Promise<Identifiable[]> {
@@ -278,6 +292,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             getTitle: getNameFn,
             getListTitle: getNameFn
         };
+    }
+
+    protected override onMeetingIdChanged(): void {
+        this._participantListSubject.next([]);
     }
 
     private validatePayload(participant: Partial<User>): any {
