@@ -96,7 +96,7 @@
         "@angular-eslint/template-parser": "13.1.0",
         "@angular/cli": "~13.3.5",
         "@angular/compiler-cli": "~13.3.7",
-        "@bartholomej/ngx-translate-extract": "^8.0.2",
+        "@biesbjerg/ngx-translate-extract": "github:jsangmeister/ngx-translate-extract#extract-from-superclasses",
         "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
         "@types/file-saver": "^2.0.5",
         "@types/jasmine": "~3.10.0",

@@ -1,6 +1,8 @@
 FROM node:16.10 as build
 ENV NODE_VERSION=16.10.0
 
+RUN apk add --no-cache git bash
+
 WORKDIR /app
 
 COPY client/package.json .
