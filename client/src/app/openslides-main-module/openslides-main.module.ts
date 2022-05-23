@@ -4,8 +4,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { OpenSlidesOverlayModule } from 'src/app/ui/modules/openslides-overlay/openslides-overlay.module';
 import { environment } from 'src/environments/environment';
 
 import { SlidesModule } from '../site/pages/meetings/modules/projector/modules/slides/slides.module';
@@ -23,7 +23,7 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
     return () => appLoadService.loadApps();
 }
 
-const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, OpenSlidesOverlayModule];
+const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule];
 
 @NgModule({
     declarations: [OpenSlidesMainComponent, OpenSlidesOverlayContainerComponent],
