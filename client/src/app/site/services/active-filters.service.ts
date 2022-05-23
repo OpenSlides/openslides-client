@@ -3,7 +3,7 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { ActiveFiltersStoreService, OsFilter } from 'src/app/ui/base/filter-service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: `root`
 })
 export class ActiveFiltersService implements ActiveFiltersStoreService {
     public constructor(private store: StorageService) {}

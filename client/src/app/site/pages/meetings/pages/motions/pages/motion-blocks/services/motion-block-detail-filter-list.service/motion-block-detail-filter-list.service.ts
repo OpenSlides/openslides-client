@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -11,7 +12,6 @@ import { TagControllerService } from '../../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
 import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
 import { MotionBlockServiceModule } from '../motion-block-service.module';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 
 @Injectable({
     providedIn: MotionBlockServiceModule

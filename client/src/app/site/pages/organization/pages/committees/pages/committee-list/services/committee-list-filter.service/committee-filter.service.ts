@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { ViewCommittee } from '../../../../view-models';
 import { CommitteeListServiceModule } from '../committee-list-service.module';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 @Injectable({
     providedIn: CommitteeListServiceModule

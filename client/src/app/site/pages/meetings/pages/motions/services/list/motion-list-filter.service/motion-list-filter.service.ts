@@ -5,12 +5,9 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Restriction } from 'src/app/domain/models/motions/motion-state';
 import { AmendmentType } from 'src/app/domain/models/motions/motions.constants';
-import {
-    OsFilter,
-    OsFilterOption,
-    OsFilterOptions
-} from 'src/app/site/base/base-filter.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
+import { OsFilter, OsFilterOption, OsFilterOptions } from 'src/app/site/base/base-filter.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
+import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -21,8 +18,6 @@ import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
 import { ViewMotion } from '../../../view-models';
 import { MotionsListServiceModule } from '../motions-list-service.module';
-import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
-import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
