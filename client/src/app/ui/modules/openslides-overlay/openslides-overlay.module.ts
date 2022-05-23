@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { CustomOverlayModule } from './modules/custom-overlay';
-import { SpinnerModule } from './modules/spinner';
+import { OverlayComponent } from './components/overlay/overlay.component';
+
+const EXPORTED_COMPONENTS = [OverlayComponent];
 
 @NgModule({
-    declarations: [],
-    exports: [SpinnerModule, CustomOverlayModule],
+    declarations: EXPORTED_COMPONENTS,
+    exports: [...EXPORTED_COMPONENTS],
     imports: [CommonModule]
 })
 export class OpenSlidesOverlayModule {}

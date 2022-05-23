@@ -4,15 +4,14 @@ import { combineLatest, filter, Subscription } from 'rxjs';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { OverlayInstance, OverlayService } from 'src/app/ui/modules/openslides-overlay';
+import { SpinnerComponent } from 'src/app/ui/modules/spinner/components/spinner/spinner.component';
 
-import { OverlayInstance } from '../../../definitions';
-import { OverlayService } from '../../custom-overlay/services/overlay.service';
-import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { SpinnerConfig } from '../definitions';
-import { SpinnerModule } from '../spinner.module';
+import { GlobalSpinnerModule } from '../global-spinner.module';
 
 @Injectable({
-    providedIn: SpinnerModule
+    providedIn: GlobalSpinnerModule
 })
 export class SpinnerService {
     private overlayInstance: OverlayInstance<SpinnerComponent> | null = null;

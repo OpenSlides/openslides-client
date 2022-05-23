@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
-import { SpinnerModule } from 'src/app/ui/modules/openslides-overlay/modules/spinner';
 
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import {
@@ -31,7 +31,7 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
         MatDividerModule,
         MatMenuModule,
         ChoiceDialogModule,
-        SpinnerModule,
+        GlobalSpinnerModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
         AgendaItemCommonServiceModule,

@@ -1,6 +1,6 @@
 import { ComponentRef, TemplateRef, Type } from '@angular/core';
 
-import { OverlayComponent } from '../modules/custom-overlay/components/overlay/overlay.component';
+import { OverlayComponentType } from './overlay-component-type';
 import { CustomOverlayConfig } from './overlay-config';
 
 export class OverlayInstance<T = any> {
@@ -18,8 +18,8 @@ export class OverlayInstance<T = any> {
     private _component?: T;
 
     public constructor(
-        public readonly componentRef: ComponentRef<OverlayComponent>,
-        private readonly _overlayComponent: OverlayComponent,
+        public readonly componentRef: ComponentRef<OverlayComponentType>,
+        private readonly _overlayComponent: OverlayComponentType,
         { onCloseFn }: CustomOverlayConfig<T>
     ) {
         this._onCloseFn = onCloseFn;

@@ -4,10 +4,11 @@ describe('Testing committees', () => {
 
     let committee: { id: number; name: string };
 
-    it('is okay...', () => {});
+    it(`is okay...`, () => {});
+
     // before(() => {
     //     cy.login();
-    //     cy.visit('https://localhost:8000');
+    //     cy.visit('/');
     //     cy.createCommittee().then(_committee => {
     //         committee = _committee;
     //     });
@@ -17,10 +18,16 @@ describe('Testing committees', () => {
     //     cy.login();
     //     cy.visit('/');
     //     cy.getAnchorFor('/committees').click();
+    //     cy.url().should('include', 'committees');
     // });
 
-    // it('visits committees', () => {
+    // it('visit committees', () => {
+    //     cy.visit(`/`);
+    //     cy.getAnchorFor('/committees').click();
     //     cy.url().should('include', 'committees');
+    // });
+
+    // it('visits one committee', () => {
     //     cy.getAnchorFor(`/committees/${committee.id}`).click();
     //     cy.url().should('include', committee.id);
     //     cy.contains(committee.name);
@@ -30,9 +37,7 @@ describe('Testing committees', () => {
     // });
 
     // it('creates a committee', () => {
-    //     cy.intercept({ method: 'POST', url: PRESENTER_URL }).as('presenter');
     //     cy.intercept({ method: 'POST', url: ACTION_URL }).as('action');
-    //     cy.wait(1000);
     //     cy.getElement('headbarMainButton').click();
     //     cy.url().should('include', 'create');
     //     const committeeName = `Cypress Committee ${Date.now().toString()}`;
@@ -46,9 +51,9 @@ describe('Testing committees', () => {
     // });
 
     // it('updates a committee', () => {
+    //     cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
     //     cy.getElement(`committeeListSingleMenuTrigger`).first().click();
     //     cy.getAnchorFor(`/committees/edit-committee?committeeId=${committee.id}`).click();
-    //     cy.intercept({ method: 'POST', url: '/system/action/handle_request' }).as('handle_request');
     //     cy.url().should('include', 'edit-committee');
     //     const committeeDescription = 'Hahaha';
     //     cy.getElement('committeeDescription').type(committeeDescription);

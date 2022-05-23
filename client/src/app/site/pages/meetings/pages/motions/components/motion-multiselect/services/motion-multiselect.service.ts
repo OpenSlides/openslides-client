@@ -8,9 +8,9 @@ import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Action } from 'src/app/gateways/actions';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { SpinnerService } from 'src/app/ui/modules/openslides-overlay/modules/spinner';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 

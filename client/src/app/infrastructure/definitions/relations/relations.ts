@@ -43,8 +43,7 @@ import { ViewCommittee } from '../../../site/pages/organization/pages/committees
 import { ViewTheme } from '../../../site/pages/organization/pages/designs';
 import { HasOrganizationTags, ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags';
 import { ViewOrganization } from '../../../site/pages/organization/view-models/view-organization';
-import { makeGenericM2M, makeGenericO2M, makeGenericO2O, makeM2M, makeM2O, makeO2O } from '.';
-import { Relation } from './utils';
+import { makeGenericM2M, makeGenericO2M, makeGenericO2O, makeM2M, makeM2O, makeO2O, Relation } from './utils';
 
 const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>[] = [
     ViewMotion,
