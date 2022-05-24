@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BaseFilterListService, OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
+import { OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
+import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
+import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 
 import { AssignmentPhases } from '../../../definitions';
 import { ViewAssignment } from '../../../view-models';
@@ -11,11 +13,15 @@ import { AssignmentListServiceModule } from './assignment-list-service.module';
 @Injectable({
     providedIn: AssignmentListServiceModule
 })
-export class AssignmentFilterListService extends BaseFilterListService<ViewAssignment> {
+export class AssignmentFilterListService extends BaseMeetingFilterListService<ViewAssignment> {
     /**
      * set the storage key name
      */
     protected storageKey = `AssignmentList`;
+
+    public constructor(store: MeetingActiveFiltersService) {
+        super(store);
+    }
 
     /**
      * @returns the filter definition

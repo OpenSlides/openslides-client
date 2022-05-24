@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
-import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseFilterListService, OsFilter, OsFilterOptions } from 'src/app/site/base/base-filter.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 @Injectable({
     providedIn: `root`
@@ -21,12 +20,11 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
 
     public constructor(
         committeeRepo: CommitteeRepositoryService,
-        store: StorageService,
-        history: HistoryService,
+        store: ActiveFiltersService,
         private meetingRepo: MeetingControllerService,
         private translate: TranslateService
     ) {
-        super(store, history);
+        super(store);
 
         this.updateFilterForRepo({
             repo: committeeRepo,

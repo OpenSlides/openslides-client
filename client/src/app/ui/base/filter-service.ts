@@ -62,3 +62,15 @@ export interface FilterListService<V> {
     clearAllFilters(): void;
     initFilters(inputObservable: Observable<V[]>): void;
 }
+
+/**
+ * Handles the saving and loading of filter definitions in the local storage.
+ * Concrete implementations may specify conditions under which nothing will happen
+ *
+ * @param storageKey the key under which the definitions should be stored
+ * @param filterDefinitions the data
+ */
+export interface ActiveFiltersStoreService {
+    save<V>(storageKey: string, filterDefinitions: OsFilter<V>[]): Promise<void>;
+    load<V>(storageKey: string): Promise<OsFilter<V>[] | null>;
+}

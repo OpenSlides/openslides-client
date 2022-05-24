@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -31,8 +30,7 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
     }
 
     public constructor(
-        store: StorageService,
-        history: HistoryService,
+        store: MeetingActiveFiltersService,
         categoryRepo: MotionCategoryControllerService,
         motionBlockRepo: MotionBlockControllerService,
         commentRepo: MotionCommentSectionControllerService,
@@ -44,7 +42,6 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
     ) {
         super(
             store,
-            history,
             categoryRepo,
             motionBlockRepo,
             commentRepo,
