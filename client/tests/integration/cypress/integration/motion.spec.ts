@@ -1,14 +1,20 @@
 describe('Motions will be written', () => {
+    let meeting: { name: string; id: number };
+
+    before(() => {
+        cy.createMeeting().then(_meeting => (meeting = _meeting));
+    });
+
     beforeEach(() => {
         cy.login();
         cy.visit(`/`);
-        cy.getAnchorFor(`/1`).click();
-        cy.url().should('include', `/1`);
+        cy.getAnchorFor(`/${meeting.id}`).click();
+        cy.url().should('include', `/${meeting.id}`);
     });
 
     it(`can access motions`, () => {
         cy.wait(200);
-        cy.getAnchorFor(`/1/motions`).click();
+        cy.getAnchorFor(`/${meeting.id}/motions`).click();
         cy.url().should(`include`, `/motions`);
     });
 });
