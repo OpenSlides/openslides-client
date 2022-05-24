@@ -214,8 +214,8 @@ export class MotionFormatService {
                 this.diffService.extractMotionLineRange(
                     motionText,
                     {
-                        from: i === 0 ? firstLine : changesToShow[i - 1].getLineTo(),
-                        to: changesToShow[i].getLineFrom()
+                        from: i === 0 ? firstLine : changesToShow[i - 1].getLineTo() + 1,
+                        to: changesToShow[i].getLineFrom() - 1
                     },
                     true,
                     lineLength,

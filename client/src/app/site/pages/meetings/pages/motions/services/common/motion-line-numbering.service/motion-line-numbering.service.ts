@@ -269,7 +269,7 @@ export class MotionLineNumberingService {
         const motion = amendment.lead_motion as ViewMotion;
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
-        let amendmentParagraphs: string[];
+        let amendmentParagraphs: string[] = [];
         if (crMode === ChangeRecoMode.Changed) {
             amendmentParagraphs = this.applyChangesToAmendment(
                 amendment,

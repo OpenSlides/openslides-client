@@ -1226,11 +1226,11 @@ export class MotionDiffService {
     }
 
     /**
-     * Returns the HTML snippet ranging from one given line to another.
+     * Returns the HTML snippet between two given line numbers.
      * extractRangeByLineNumbers
      * Hint:
-     * - The last line (toLine) is included, the content between line number "from" to the line number element "to + 1"
-     *   is returned.
+     * - The last line (toLine) is not included anymore, as the number refers to the line breaking element at the end
+     *   of the line
      * - if toLine === null, then everything from fromLine to the end of the fragment is returned
      *
      * In addition to the HTML snippet, additional information is provided regarding the most specific DOM element
@@ -1274,21 +1274,23 @@ export class MotionDiffService {
         const fragment = this.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
 
-        let toLineNumber;
+        let toLineNumber: number;
         if (toLine === null) {
             const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
             const lastMarker = <Element>internalLineMarkers[internalLineMarkers.length - 1];
-            toLine = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
+            toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
+        } else {
+            toLineNumber = toLine + 1;
         }
 
-        const fromLineNode = this.getLineNumberNode(fragment, fromLine);
-        const toLineNode = toLine ? this.getLineNumberNode(fragment, toLine) : null;
-        const ancestorData = this.getCommonAncestor(fromLineNode as Element, toLineNode as Element);
+        const fromLineNumberNode = this.getLineNumberNode(fragment, fromLine);
+        const toLineNumberNode = toLineNumber ? this.getLineNumberNode(fragment, toLineNumber) : null;
+        const ancestorData = this.getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
         const fromChildTraceRel = ancestorData.trace1;
-        const fromChildTraceAbs = this.getNodeContextTrace(fromLineNode as Element);
+        const fromChildTraceAbs = this.getNodeContextTrace(fromLineNumberNode as Element);
         const toChildTraceRel = ancestorData.trace2;
-        const toChildTraceAbs = this.getNodeContextTrace(toLineNode as Element);
+        const toChildTraceAbs = this.getNodeContextTrace(toLineNumberNode as Element);
         const ancestor = ancestorData.commonAncestor;
         let htmlOut = ``;
         let outerContextStart = ``;
@@ -1306,7 +1308,7 @@ export class MotionDiffService {
 
         const followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
 
-        let currNode: Node = fromLineNode as Element;
+        let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
         while (currNode.parentNode) {
             if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
@@ -1321,7 +1323,7 @@ export class MotionDiffService {
             currNode = currNode.parentNode;
         }
 
-        currNode = toLineNode as Element;
+        currNode = toLineNumberNode as Element;
         isSplit = false;
         while (currNode.parentNode) {
             if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
@@ -1338,7 +1340,7 @@ export class MotionDiffService {
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<number>this.getNthLIOfOL(parentElement, toLineNode as Element) + offset).toString()
+                    (<number>this.getNthLIOfOL(parentElement, toLineNumberNode as Element) + offset).toString()
                 );
                 followingHtmlStartSnippet = this.serializeTag(fakeOl) + followingHtmlStartSnippet;
             } else {
@@ -1364,7 +1366,7 @@ export class MotionDiffService {
                         : 0;
                     fakeOl.setAttribute(
                         `start`,
-                        (offset + <number>this.getNthLIOfOL(element, fromLineNode as Element)).toString()
+                        (offset + <number>this.getNthLIOfOL(element, fromLineNumberNode as Element)).toString()
                     );
                     innerContextStart += this.serializeTag(fakeOl);
                 } else {
@@ -1409,7 +1411,7 @@ export class MotionDiffService {
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<any>this.getNthLIOfOL(currElement, fromLineNode as Element) + offset).toString()
+                    (<any>this.getNthLIOfOL(currElement, fromLineNumberNode as Element) + offset).toString()
                 );
                 outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
             } else {
@@ -1463,7 +1465,7 @@ export class MotionDiffService {
     }
 
     /**
-     * This is a workaround to prevent the last word of the inserted text from accidentally being merged with the
+     * This is a workardoun to prevent the last word of the inserted text from accidently being merged with the
      * first word of the following line.
      *
      * This happens as trailing spaces in the change recommendation's text are frequently stripped,
@@ -1601,7 +1603,7 @@ export class MotionDiffService {
 
         const range = {
             from: parseInt(lastLineNumberBefore!.getAttribute(`data-line-number`) as string, 10),
-            to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10)
+            to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10) - 1
         };
 
         this.diffCache.put(cacheKey, range);
@@ -2147,7 +2149,6 @@ export class MotionDiffService {
      * @param {string} origText The original text - needs to be line-numbered
      * @param {string} newText The changed text
      * @param {number} lineLength the line length
-     * @param {ViewUnifiedChange[]} changeRecos
      * @return {DiffLinesInParagraph|null}
      */
     public getAmendmentParagraphsLines(
@@ -2162,7 +2163,7 @@ export class MotionDiffService {
         const affected_lines = this.detectAffectedLineRange(diff) as LineRange;
 
         /**
-         * If the affect line has change recos, overwrite the diff with the change reco
+         * If the affect line has change recos, overwirte the diff with the change reco
          */
         if (changeRecos && changeRecos.length) {
             const recoToThisLine = changeRecos.find(reco => reco.getLineFrom() === affected_lines.from);
@@ -2179,14 +2180,14 @@ export class MotionDiffService {
         let textPost = ``;
         if (affected_lines.from > paragraph_line_range.from!) {
             textPre = this.formatDiffWithLineNumbers(
-                this.extractRangeByLineNumbers(diff, paragraph_line_range.from!, affected_lines.from),
+                this.extractRangeByLineNumbers(diff, paragraph_line_range.from!, affected_lines.from - 1),
                 lineLength,
                 paragraph_line_range.from!
             );
         }
         if (paragraph_line_range.to! > affected_lines.to) {
             textPost = this.formatDiffWithLineNumbers(
-                this.extractRangeByLineNumbers(diff, affected_lines.to, paragraph_line_range.to!),
+                this.extractRangeByLineNumbers(diff, affected_lines.to + 1, paragraph_line_range.to!),
                 lineLength,
                 affected_lines.to + 1
             );
