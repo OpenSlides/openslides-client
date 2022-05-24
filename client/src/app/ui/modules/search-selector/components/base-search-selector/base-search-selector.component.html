@@ -9,9 +9,9 @@
     <!-- Custom display of selected items -->
     <mat-select-trigger *ngIf="multiple">
         <ng-container *ngIf="selectedItems?.length">
-            <span *ngFor="let item of selectedItems; let last = last">
+            <span *ngFor="let item of selectedItems; let last = last" class="inline-flex">
                 {{ item.getTitle() | translate }}
-                <span *ngIf="!last">,</span>
+                <span *ngIf="!last">,&nbsp;</span>
             </span>
         </ng-container>
     </mat-select-trigger>

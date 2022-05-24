@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 @Component({
@@ -129,11 +129,18 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
                 list: [[]]
             });
 
-            this.searchValueSubscription = this.extensionFieldForm.get(`list`)!.valueChanges.subscribe((value: any) => {
-                if (value && typeof value === `number`) {
+            this.searchValueSubscription = this.extensionFieldForm
+                .get(`list`)
+                .valueChanges.pipe(distinctUntilChanged())
+                .subscribe((value: any) => {
+                    if (value && typeof value === `number`) {
+                        if (!this.inputControl) {
+                            this.inputControl = ``;
+                        }
+                        this.inputControl += `[${this.listValuePrefix}${value}]`;
+                    }
                     this.extensionFieldForm.reset();
-                }
-            });
+                });
         }
     }
 
@@ -181,10 +188,6 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      * Function to execute, when the values are saved.
      */
     public sendSuccess(): void {
-        // const submitMessage =
-        // !this.searchList
-        //     ? this.inputControl
-        //     : { extensionInput: this.inputControl, extensionList: this.extensionFieldForm.get(`list`)!.value };
         this.succeeded.emit(this.inputControl);
     }
 }

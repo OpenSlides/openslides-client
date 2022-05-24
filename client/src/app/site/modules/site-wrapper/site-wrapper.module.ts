@@ -8,6 +8,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { BannerComponent } from './components/banner/banner.component';
 import { SiteWrapperComponent } from './components/site-wrapper/site-wrapper.component';
 import { SiteWrapperServiceModule } from './services/site-wrapper-service.module';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     declarations: [SiteWrapperComponent, BannerComponent],
@@ -15,6 +16,7 @@ import { SiteWrapperServiceModule } from './services/site-wrapper-service.module
         CommonModule,
         RouterModule,
         PortalModule,
+        MatButtonModule,
         MatIconModule,
         SiteWrapperServiceModule,
         OpenSlidesTranslationModule.forChild()

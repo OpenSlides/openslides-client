@@ -8,13 +8,23 @@ import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
 
-/**
- * Extends the BaseViewModel with a parent
- * Required to represent parent-child relationships in the filter
- */
-interface HierarchyModel extends BaseViewModel {
-    parent: BaseViewModel;
-    children: BaseViewModel<any>[];
+interface RepositoryFilterConfig<OV extends BaseViewModel, V> {
+    /**
+     * The provider for a list of view models. The view models will be the filters.
+     */
+    repo: ViewModelListProvider<OV>;
+    /**
+     * The reference to a variable which should hold filters.
+     */
+    filter: OsFilter<V>;
+    /**
+     * An optional label for filtering by `null`.
+     */
+    noneOptionLabel?: string;
+    /**
+     * An optional function to filter the view models.
+     */
+    filterFn?: (filter: OV) => boolean;
 }
 
 /**
@@ -256,12 +266,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         filter,
         noneOptionLabel,
         filterFn
-    }: {
-        repo: ViewModelListProvider<OV>;
-        filter: OsFilter<V>;
-        noneOptionLabel?: string;
-        filterFn?: (filter: OV) => boolean;
-    }): void {
+    }: RepositoryFilterConfig<OV, V>): void {
         repo.getViewModelListObservable().subscribe(viewModels => {
             if (viewModels && viewModels.length) {
                 const filterProperties: (OsFilterOption | string)[] = viewModels

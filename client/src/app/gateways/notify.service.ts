@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { HttpService } from 'src/app/gateways/http.service';
 import { HttpStreamEndpointService, HttpStreamService } from 'src/app/gateways/http-stream';
 import { HttpMethod } from 'src/app/infrastructure/definitions/http';
@@ -132,10 +132,7 @@ export class NotifyService {
          * enables logging out to be anonymous ICC and
          * re-logging in to a new ICC channel without a hazzle
          */
-        combineLatest([
-            this.activeMeetingIdService.meetingIdObservable,
-            this.lifecycleService.openslidesBooted
-        ]).subscribe(([meetingId]) => {
+        activeMeetingIdService.meetingIdObservable.subscribe(meetingId => {
             if (meetingId) {
                 this.connect(meetingId);
             } else {
@@ -198,6 +195,7 @@ export class NotifyService {
     }
 
     public async connect(meetingId: number): Promise<void> {
+        console.log(`Connect to ICC service with: meeting_id=${meetingId}`);
         if (!meetingId) {
             throw new Error(`Cannot connect to ICC, no meeting ID was provided`);
         }

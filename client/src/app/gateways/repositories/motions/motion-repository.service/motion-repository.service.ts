@@ -241,6 +241,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `lead_motion_id`, // needed for filtering
             `amendment_ids`,
             `submitter_ids`,
+            `supporter_ids`,
             `sequential_number`,
             `reason`,
             `recommendation_id`,

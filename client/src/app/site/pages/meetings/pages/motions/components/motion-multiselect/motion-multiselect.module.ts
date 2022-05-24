@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
@@ -18,6 +17,7 @@ import {
 import { MotionWorkflowCommonServiceModule } from '../../modules/workflows/motion-workflow-common-service.module';
 import { MotionsCommonServiceModule } from '../../services/common/motions-service.module';
 import { MotionMultiselectActionsComponent } from './components/motion-multiselect-actions/motion-multiselect-actions.component';
+import { MotionMultiselectServiceModule } from './services/motion-multiselect-service.module';
 
 const DECLARATIONS = [MotionMultiselectActionsComponent];
 
@@ -27,11 +27,11 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
     imports: [
         CommonModule,
         MotionBlockCommonServiceModule,
+        MotionMultiselectServiceModule,
         MatIconModule,
         MatDividerModule,
         MatMenuModule,
         ChoiceDialogModule,
-        GlobalSpinnerModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
         AgendaItemCommonServiceModule,

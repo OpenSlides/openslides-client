@@ -23,13 +23,21 @@
                     </div>
                     <div class="read">
                         <os-icon-container icon="visibility">
-                            {{ section.read_groups }}
+                            <ng-container *ngIf="section.read_groups?.length">
+                                <ng-container
+                                    *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
+                                ></ng-container>
+                            </ng-container>
                             <ng-container *ngIf="section.read_groups.length === 0">&ndash;</ng-container>
                         </os-icon-container>
                     </div>
                     <div class="write">
                         <os-icon-container icon="edit">
-                            {{ section.write_groups }}
+                            <ng-container *ngIf="section.write_groups?.length">
+                                <ng-container
+                                    *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
+                                ></ng-container>
+                            </ng-container>
                             <ng-container *ngIf="section.write_groups.length === 0">&ndash;</ng-container>
                         </os-icon-container>
                     </div>
@@ -40,12 +48,12 @@
         <div class="spacer-left">{{ section.name }}</div>
         <h3>{{ 'Groups with read permissions' | translate }}</h3>
         <ul *ngFor="let group of section.read_groups">
-            <li>{{ group.getTitle() }}</li>
+            <li>{{ group.getTitle() | translate }}</li>
         </ul>
         <div class="spacer-left" *ngIf="section.read_groups.length === 0">{{ 'No groups selected' | translate }}</div>
         <h3>{{ 'Groups with write permissions' | translate }}</h3>
         <ul *ngFor="let group of section.write_groups">
-            <li>{{ group.getTitle() }}</li>
+            <li>{{ group.getTitle() | translate }}</li>
         </ul>
         <div class="spacer-left" *ngIf="section.write_groups.length === 0">{{ 'No groups selected' | translate }}</div>
         <mat-action-row>
@@ -65,6 +73,13 @@
         <span>{{ 'Sort' | translate }}</span>
     </button>
 </mat-menu>
+
+<ng-template #groupList let-groups="groups">
+    <span class="inline-flex" *ngFor="let group of groups; let last = last">
+        {{ group.getTitle() | translate }}
+        <span *ngIf="!last">,&nbsp;</span>
+    </span>
+</ng-template>
 
 <!-- Template for motion comment dialog -->
 <ng-template #motionCommentDialog>

@@ -49,7 +49,7 @@
         [canBeEdited]="perms.isAllowed('change_state', motion)"
         [hasExtension]="!!motion.state && motion.state.show_state_extension_field"
         [chipValue]="stateLabel | translate"
-        [inputValue]="newStateExtension"
+        [inputValue]="motion?.state_extension"
         [classes]="motion.stateCssColor"
         extensionLabel="{{ 'Extension' | translate }}"
         (succeeded)="setStateExtension($event)"
@@ -85,7 +85,7 @@
 <div *ngIf="isRecommendationEnabled">
     <os-motion-extension-field
         title="{{ recommender }}"
-        [inputValue]="recommendationStateExtension"
+        [inputValue]="motion?.recommendation_extension"
         [canBeEdited]="perms.isAllowed('change_metadata', motion)"
         [chipValue]="recommendationLabel | translate"
         [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
