@@ -1273,20 +1273,24 @@ export class MotionDiffService {
 
         const fragment = this.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
+
+        let toLineNumber: number;
         if (toLine === null) {
             const internalLineMarkers = fragment.querySelectorAll(`OS-LINEBREAK`);
             const lastMarker = <Element>internalLineMarkers[internalLineMarkers.length - 1];
-            toLine = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
+            toLineNumber = parseInt(lastMarker.getAttribute(`data-line-number`) as string, 10);
+        } else {
+            toLineNumber = toLine + 1;
         }
 
-        const fromLineNode = this.getLineNumberNode(fragment, fromLine);
-        const toLineNode = toLine ? this.getLineNumberNode(fragment, toLine) : null;
-        const ancestorData = this.getCommonAncestor(fromLineNode as Element, toLineNode as Element);
+        const fromLineNumberNode = this.getLineNumberNode(fragment, fromLine);
+        const toLineNumberNode = toLineNumber ? this.getLineNumberNode(fragment, toLineNumber) : null;
+        const ancestorData = this.getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
         const fromChildTraceRel = ancestorData.trace1;
-        const fromChildTraceAbs = this.getNodeContextTrace(fromLineNode as Element);
+        const fromChildTraceAbs = this.getNodeContextTrace(fromLineNumberNode as Element);
         const toChildTraceRel = ancestorData.trace2;
-        const toChildTraceAbs = this.getNodeContextTrace(toLineNode as Element);
+        const toChildTraceAbs = this.getNodeContextTrace(toLineNumberNode as Element);
         const ancestor = ancestorData.commonAncestor;
         let htmlOut = ``;
         let outerContextStart = ``;
@@ -1304,7 +1308,7 @@ export class MotionDiffService {
 
         const followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
 
-        let currNode: Node = fromLineNode as Element;
+        let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
         while (currNode.parentNode) {
             if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
@@ -1319,7 +1323,7 @@ export class MotionDiffService {
             currNode = currNode.parentNode;
         }
 
-        currNode = toLineNode as Element;
+        currNode = toLineNumberNode as Element;
         isSplit = false;
         while (currNode.parentNode) {
             if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
@@ -1336,7 +1340,7 @@ export class MotionDiffService {
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<number>this.getNthLIOfOL(parentElement, toLineNode as Element) + offset).toString()
+                    (<number>this.getNthLIOfOL(parentElement, toLineNumberNode as Element) + offset).toString()
                 );
                 followingHtmlStartSnippet = this.serializeTag(fakeOl) + followingHtmlStartSnippet;
             } else {
@@ -1362,7 +1366,7 @@ export class MotionDiffService {
                         : 0;
                     fakeOl.setAttribute(
                         `start`,
-                        (offset + <number>this.getNthLIOfOL(element, fromLineNode as Element)).toString()
+                        (offset + <number>this.getNthLIOfOL(element, fromLineNumberNode as Element)).toString()
                     );
                     innerContextStart += this.serializeTag(fakeOl);
                 } else {
@@ -1407,7 +1411,7 @@ export class MotionDiffService {
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<any>this.getNthLIOfOL(currElement, fromLineNode as Element) + offset).toString()
+                    (<any>this.getNthLIOfOL(currElement, fromLineNumberNode as Element) + offset).toString()
                 );
                 outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
             } else {
@@ -1599,7 +1603,7 @@ export class MotionDiffService {
 
         const range = {
             from: parseInt(lastLineNumberBefore!.getAttribute(`data-line-number`) as string, 10),
-            to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10)
+            to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10) - 1
         };
 
         this.diffCache.put(cacheKey, range);
@@ -2176,16 +2180,16 @@ export class MotionDiffService {
         let textPost = ``;
         if (affected_lines.from > paragraph_line_range.from!) {
             textPre = this.formatDiffWithLineNumbers(
-                this.extractRangeByLineNumbers(diff, paragraph_line_range.from!, affected_lines.from),
+                this.extractRangeByLineNumbers(diff, paragraph_line_range.from!, affected_lines.from - 1),
                 lineLength,
                 paragraph_line_range.from!
             );
         }
         if (paragraph_line_range.to! > affected_lines.to) {
             textPost = this.formatDiffWithLineNumbers(
-                this.extractRangeByLineNumbers(diff, affected_lines.to, paragraph_line_range.to!),
+                this.extractRangeByLineNumbers(diff, affected_lines.to + 1, paragraph_line_range.to!),
                 lineLength,
-                affected_lines.to
+                affected_lines.to + 1
             );
         }
         const text = this.formatDiffWithLineNumbers(
@@ -2305,7 +2309,7 @@ export class MotionDiffService {
         let data;
 
         try {
-            data = this.extractRangeByLineNumbers(motionHtml, maxLine, null);
+            data = this.extractRangeByLineNumbers(motionHtml, maxLine + 1, null);
         } catch (e) {
             // This only happens (as far as we know) when the motion text has been altered (shortened)
             // without modifying the change recommendations accordingly.
@@ -2328,7 +2332,7 @@ export class MotionDiffService {
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
-            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine });
+            html = this.lineNumberingService.insertLineNumbers({ html, lineLength, highlight, firstLine: maxLine + 1 });
         } else {
             // Prevents empty lines at the end of the motion
             html = ``;

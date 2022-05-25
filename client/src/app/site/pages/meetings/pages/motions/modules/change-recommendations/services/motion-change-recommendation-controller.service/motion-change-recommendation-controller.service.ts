@@ -161,7 +161,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
 
     /**
      * Creates a {@link ViewMotionChangeRecommendation} object based on the amendment ID, the precalculated
-     * paragraphs (because we don't have access to motion-repository serice here) and the given lange range.
+     * paragraphs (because we don't have access to motion-repository service here) and the given lange range.
      * This object is not saved yet and does not yet have any changed HTML. It's meant to populate the UI form.
      *
      * @param {ViewMotion} amendment

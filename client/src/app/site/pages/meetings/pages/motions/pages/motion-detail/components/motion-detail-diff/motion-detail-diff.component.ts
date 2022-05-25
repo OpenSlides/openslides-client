@@ -113,8 +113,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public getTextBetweenChanges(change1: ViewUnifiedChange, change2: ViewUnifiedChange): string {
         // @TODO Highlighting
         const lineRange: LineRange = {
-            from: change1 ? change1.getLineTo() : 1,
-            to: change2 ? change2.getLineFrom() : 0 // TODO: It has to be investigated whether "0" is valid here!
+            from: change1 ? change1.getLineTo() + 1 : 1,
+            to: change2 ? change2.getLineFrom() - 1 : 0 // TODO: It has to be investigated whether "0" is valid here!
         };
 
         if (lineRange.from >= lineRange.to) {
@@ -206,8 +206,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * @returns string
      */
     public formatLineRange(change: ViewUnifiedChange): string {
-        if (change.getLineFrom() < change.getLineTo() - 1) {
-            return change.getLineFrom().toString(10) + ` - ` + (change.getLineTo() - 1).toString(10);
+        if (change.getLineFrom() < change.getLineTo()) {
+            return change.getLineFrom().toString(10) + ` - ` + change.getLineTo().toString(10);
         } else {
             return change.getLineFrom().toString(10);
         }

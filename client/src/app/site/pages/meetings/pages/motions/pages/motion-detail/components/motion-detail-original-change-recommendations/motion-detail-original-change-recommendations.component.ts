@@ -174,7 +174,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             this.element.querySelector(`.os-line-number.line-number-` + reco.getLineFrom().toString(10))
         );
         const to = <HTMLElement>(
-            this.element.querySelector(`.os-line-number.line-number-` + reco.getLineTo().toString(10))
+            this.element.querySelector(`.os-line-number.line-number-` + (reco.getLineTo() + 1).toString(10))
         );
         if (to) {
             return (to.offsetTop - from.offsetTop).toString() + `px`;
@@ -319,12 +319,12 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             if (lineNumber > this.selectedFrom) {
                 this.createChangeRecommendation.emit({
                     from: this.selectedFrom,
-                    to: lineNumber + 1
+                    to: lineNumber
                 });
             } else {
                 this.createChangeRecommendation.emit({
                     from: lineNumber,
-                    to: this.selectedFrom + 1
+                    to: this.selectedFrom
                 });
             }
             this.selectedFrom = null;
