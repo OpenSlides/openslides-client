@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { FileUploadModule } from 'src/app/ui/modules/file-upload';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { OpenSlidesDateAdapterModule } from 'src/app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
@@ -15,9 +16,10 @@ import { OrganizationTagCommonServiceModule } from '../../../../../organization-
 import { CommitteeDetailMeetingRoutingModule } from './committee-detail-meeting-routing.module';
 import { CommitteeDetailMeetingMainComponent } from './components/committee-detail-meeting-main/committee-detail-meeting-main.component';
 import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.component';
+import { MeetingImportComponent } from './components/meeting-import/meeting-import.component';
 
 @NgModule({
-    declarations: [MeetingEditComponent, CommitteeDetailMeetingMainComponent],
+    declarations: [MeetingEditComponent, CommitteeDetailMeetingMainComponent, MeetingImportComponent],
     imports: [
         CommonModule,
         CommitteeDetailMeetingRoutingModule,
@@ -32,7 +34,8 @@ import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.com
         OpenSlidesTranslationModule.forChild(),
         OpenSlidesDateAdapterModule,
         FormsModule,
-        DirectivesModule
+        DirectivesModule,
+        FileUploadModule
     ]
 })
 export class CommitteeDetailMeetingModule {}

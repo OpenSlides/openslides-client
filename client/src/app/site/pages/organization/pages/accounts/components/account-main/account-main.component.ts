@@ -7,6 +7,7 @@ import {
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/config/model-subscription';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
@@ -49,7 +50,8 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                 subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
                 hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))
             },
-            getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable())
+            getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable()),
+            getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())
         ];
     }
 }

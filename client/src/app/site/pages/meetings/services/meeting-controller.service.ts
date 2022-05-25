@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Action } from 'src/app/gateways/actions';
+import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
 
 import { Identifiable } from '../../../../domain/interfaces';
@@ -72,6 +73,10 @@ export class MeetingControllerService extends BaseController<ViewMeeting, Meetin
 
     public getGeneralViewModelObservable(): Observable<ViewMeeting> {
         return this.repo.getGeneralViewModelObservable();
+    }
+
+    public import(committeeId: Id, meeting: ImportMeeting): Promise<Identifiable> {
+        return this.repo.import(committeeId, meeting);
     }
 
     public parseUnixToMeetingTime(time?: number): string {

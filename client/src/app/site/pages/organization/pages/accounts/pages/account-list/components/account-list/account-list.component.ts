@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ import { AccountSortService } from '../../services/account-list-sort.service/acc
     templateUrl: `./account-list.component.html`,
     styleUrls: [`./account-list.component.scss`]
 })
-export class AccountListComponent extends BaseListViewComponent<ViewUser> implements OnInit {
+export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     public tableColumnDefinition: PblColumnDefinition[] = [
         {
             prop: `short_name`,
@@ -51,10 +51,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> implem
         super(componentServiceCollector, translate);
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
-    }
-
-    public ngOnInit(): void {
-        this.loadUsers();
     }
 
     public createNewMember(): void {
@@ -90,7 +86,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> implem
                 throw new Error(`Wrong meeting selected`);
             }
             if (selectedChoice.action === ADD) {
-                this.controller.bulkAddUserToMeeting(this.selectedRows, selectedMeeting);
+                this.controller.bulkAddUserToMeeting(this.selectedRows, selectedMeeting).resolve();
             } else {
                 this.controller.bulkRemoveUserFromMeeting(this.selectedRows, selectedMeeting).resolve();
             }
@@ -104,6 +100,4 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> implem
     public getOmlByUser(user: ViewUser): string {
         return getOmlVerboseName(user.organization_management_level as keyof OMLMapping);
     }
-
-    private async loadUsers(start_index: number = 0, entries: number = 500): Promise<void> {}
 }

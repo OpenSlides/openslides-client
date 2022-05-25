@@ -167,17 +167,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         this.router.navigate([`new`], { relativeTo: this.route });
     }
 
-    /**
-     * Filters the default group of a meeting
-     *
-     * @param user Their groups will be retrieved
-     *
-     * @returns The groups the given user is assigned to, except the default group of a current meeting
-     */
-    public getUserGroups(user: ViewUser): ViewGroup[] {
-        return user.groups().filter(group => !group.isDefaultGroup);
-    }
-
     public isUserPresent(user: ViewUser): boolean {
         return user.isPresentInMeeting();
     }

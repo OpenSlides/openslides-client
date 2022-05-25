@@ -29,7 +29,10 @@ export class ChatGroupDetailMessageComponent {
     }
 
     public get author(): string {
-        return this.user?.username || ``;
+        if (this.user) {
+            return `${this.user.first_name} ${this.user.last_name}`;
+        }
+        return ``;
     }
 
     public get text(): string {
