@@ -24,14 +24,6 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
-    /**
-     * Constructor.
-     * Subscribes to incoming group definitions.
-     *
-     * @param store
-     * @param groupRepo to filter by groups
-     * @param translate marking some translations that are unique here
-     */
     public constructor(
         store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
@@ -40,8 +32,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         super(store);
         this.updateFilterForRepo({
             repo: groupRepo,
-            filter: this.userGroupFilterOptions,
-            filterFn: model => !model.isDefaultGroup
+            filter: this.userGroupFilterOptions
         });
     }
 

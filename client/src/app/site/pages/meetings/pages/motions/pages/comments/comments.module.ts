@@ -13,6 +13,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingModule } from 'src/app/ui/modules/sorting';
+import { PipesModule } from 'src/app/ui/pipes';
 
 import { CommentsRoutingModule } from './comments-routing.module';
 import { CommentSectionListComponent } from './components/comment-section-list/comment-section-list.component';
@@ -27,6 +28,7 @@ import { CommentSectionSortComponent } from './components/comment-section-sort/c
         HeadBarModule,
         SearchSelectorModule,
         IconContainerModule,
+        PipesModule,
         OpenSlidesTranslationModule.forChild(),
         MatCardModule,
         MatExpansionModule,

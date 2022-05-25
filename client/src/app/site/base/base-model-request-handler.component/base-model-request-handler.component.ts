@@ -34,6 +34,7 @@ interface HidingConfig {
 export class BaseModelRequestHandlerComponent extends BaseUiComponent implements OnInit, OnDestroy {
     private _destroyed = new EventEmitter<boolean>();
     private _openedSubscriptions: string[] = [];
+    private _currentMeetingId: Id | null = null;
 
     public constructor(
         protected modelRequestService: ModelRequestService,
@@ -46,8 +47,12 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     public ngOnInit(): void {
         this.subscriptions.push(
             this.openslidesRouter.currentParamMap.subscribe(event => {
-                this.onNextMeetingId(Number(event[`meetingId`] || null));
-                this.onParamsChanged(event);
+                const nextMeetingId = Number(event[`meetingId`]) || null;
+                if (nextMeetingId !== this._currentMeetingId) {
+                    this._currentMeetingId = nextMeetingId;
+                    this.onNextMeetingId(nextMeetingId);
+                    this.onParamsChanged(event);
+                }
             })
         );
         this.initModelSubscriptions();

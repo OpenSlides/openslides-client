@@ -34,16 +34,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public showSupporters = false;
 
     /**
-     * new state extension label to be submitted, if state extensions can be set
-     */
-    public newStateExtension = ``;
-
-    /**
-     * State extension label for the recommendation.
-     */
-    public recommendationStateExtension = ``;
-
-    /**
      * @returns the current recommendation label (with extension)
      */
     public get recommendationLabel(): string {
@@ -116,7 +106,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     /**
      * triggers the update this motion's state extension according to the current string
-     * in {@link newStateExtension}
      */
     public setStateExtension(nextExtension: string): void {
         this.repo.setStateExtension(this.motion, nextExtension);
@@ -260,7 +249,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             if (this.recommenderSubscription) {
                 this.recommenderSubscription.unsubscribe();
             }
-            this.recommenderSubscription = this.meetingSettingService.get(configKey).subscribe(recommender => {
+            this.recommenderSubscription = this.meetingSettingsService.get(configKey).subscribe(recommender => {
                 this.recommender = recommender;
             });
         }

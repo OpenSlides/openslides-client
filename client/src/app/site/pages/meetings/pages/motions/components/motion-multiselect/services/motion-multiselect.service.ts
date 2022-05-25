@@ -23,10 +23,11 @@ import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
 import { MotionControllerService } from '../../../services/common/motion-controller.service';
 import { ViewMotion } from '../../../view-models';
-import { MotionMultiselectModule } from '../motion-multiselect.module';
+// import { MotionMultiselectModule } from '../motion-multiselect.module';
+import { MotionMultiselectServiceModule } from './motion-multiselect-service.module';
 
 @Injectable({
-    providedIn: MotionMultiselectModule
+    providedIn: MotionMultiselectServiceModule
 })
 export class MotionMultiselectService {
     private messageForSpinner = this.translate.instant(`Motions are in process. Please wait ...`);
