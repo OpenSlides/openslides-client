@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -23,10 +22,11 @@ import { Topic } from 'src/app/domain/models/topics/topic';
 import { compareNumber } from 'src/app/infrastructure/utils';
 import { ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+
 import { TopicPollServiceModule } from './topic-poll-service.module';
 
 @Injectable({

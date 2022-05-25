@@ -11,6 +11,7 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { ViewTopic } from '../../../../view-models';
 
 @Component({

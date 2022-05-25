@@ -8,6 +8,7 @@ import {
 import { VotingPrivacyWarningDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+
 import { GroupControllerService } from '../../../../../participants';
 
 @Component({

@@ -96,7 +96,11 @@
         </button>
     </div>
     <div *osPerms="permission.projectorCanManage">
-        <os-projector-button [object]="poll" [menuItem]="true"></os-projector-button>
+        <os-projector-button
+            [object]="poll"
+            [menuItem]="true"
+            *osPerms="permission.projectorCanManage">
+        </os-projector-button>
     </div>
     <div *osPerms="permission.agendaItemCanManage">
 

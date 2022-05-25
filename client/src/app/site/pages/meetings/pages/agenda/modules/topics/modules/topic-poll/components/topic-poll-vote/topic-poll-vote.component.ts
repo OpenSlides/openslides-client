@@ -12,6 +12,7 @@ import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+
 import { ViewTopic } from '../../../../view-models';
 
 const voteOptions = {

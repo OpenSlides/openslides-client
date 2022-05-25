@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -15,11 +14,10 @@ import {
     VoteValue
 } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ViewTopic } from '../../../../view-models';
-import { TopicPollMethodVerbose, TopicPollTypeVerbose } from '../../definitions';
 
+import { ViewTopic } from '../../../../view-models';
+import { TopicPollMethodVerbose } from '../../definitions';
 import { TopicPollService } from '../../services/topic-poll.service';
 import { TopicPollFormComponent } from '../topic-poll-form/topic-poll-form.component';
 

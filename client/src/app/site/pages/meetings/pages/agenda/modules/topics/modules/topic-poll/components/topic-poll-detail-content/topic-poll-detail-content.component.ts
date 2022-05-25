@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { pollChartColors, pollChartGreys, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
