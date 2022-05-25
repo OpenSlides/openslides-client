@@ -17,7 +17,6 @@ import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { ChartComponent } from './components/chart/chart.component';
 import { CheckInputComponent } from './components/check-input/check-input.component';
 import { EntitledUsersTableComponent } from './components/entitled-users-table/entitled-users-table.component';
-import { PollFormComponent } from './components/poll-form/poll-form.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
@@ -28,7 +27,6 @@ const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
 const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollParseNumberPipe];
 const COMPONENTS = [
     PollProgressComponent,
-    PollFormComponent,
     ChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,

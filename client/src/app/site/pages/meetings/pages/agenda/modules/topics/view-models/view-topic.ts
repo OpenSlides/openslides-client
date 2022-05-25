@@ -6,6 +6,7 @@ import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting'
 
 import { HasAttachment } from '../../../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../../../motions/modules/tags/view-models/has-tags';
+import { HasPolls } from '../../../../polls';
 
 export class ViewTopic extends BaseProjectableViewModel<Topic> {
     public static COLLECTION = Topic.COLLECTION;
@@ -34,4 +35,13 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
         return this.attachments && this.attachments.length > 0;
     }
 }
-export interface ViewTopic extends Topic, HasAttachment, HasTags, HasAgendaItem, HasListOfSpeakers, HasMeeting {}
+export interface ViewTopic
+    extends Topic,
+        HasAttachment,
+        HasTags,
+        HasAgendaItem,
+        HasListOfSpeakers,
+        HasMeeting,
+        ViewTopicRelations {}
+
+interface ViewTopicRelations extends HasPolls<ViewTopic> {}

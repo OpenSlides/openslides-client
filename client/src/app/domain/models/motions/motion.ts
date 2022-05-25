@@ -4,6 +4,7 @@ import { HasAttachmentIds } from '../../interfaces/has-attachment-ids';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasPersonalNoteIds } from '../../interfaces/has-personal-note-ids';
+import { HasPollIds } from '../../interfaces/has-poll-ids';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasTagIds } from '../../interfaces/has-tag-ids';
 import { BaseModel } from '../base/base-model';
@@ -91,4 +92,5 @@ export interface Motion
         HasAttachmentIds,
         HasPersonalNoteIds,
         HasProjectionIds,
-        HasReferencedMotionInRecommendationExtensionIds {}
+        HasReferencedMotionInRecommendationExtensionIds,
+        HasPollIds {}

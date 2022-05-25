@@ -18,7 +18,7 @@ import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
-import { ViewPoll } from '../../polls/view-models/view-poll';
+import { HasPolls } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
 import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
@@ -330,7 +330,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 }
 
-interface IMotionRelations {
+interface IMotionRelations extends HasPolls<ViewMotion> {
     lead_motion?: ViewMotion;
     amendments: ViewMotion[]; // children to lead_motion
     sort_parent?: ViewMotion;
@@ -346,7 +346,6 @@ interface IMotionRelations {
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
     supporters: ViewUser[];
-    polls: ViewPoll[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];

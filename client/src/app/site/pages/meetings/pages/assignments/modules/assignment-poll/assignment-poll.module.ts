@@ -8,8 +8,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
@@ -18,12 +20,14 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
 import { AssignmentCommonServiceModule } from '../../services/assignment-common-service.module';
 import { AssignmentPollComponent } from './components/assignment-poll/assignment-poll.component';
 import { AssignmentPollDetailContentComponent } from './components/assignment-poll-detail-content/assignment-poll-detail-content.component';
 import { AssignmentPollDialogComponent } from './components/assignment-poll-dialog/assignment-poll-dialog.component';
+import { AssignmentPollFormComponent } from './components/assignment-poll-form/assignment-poll-form.component';
 import { AssignmentPollMetaInfoComponent } from './components/assignment-poll-meta-info/assignment-poll-meta-info.component';
 import { AssignmentPollVoteComponent } from './components/assignment-poll-vote/assignment-poll-vote.component';
 import { AssignmentPollService } from './services/assignment-poll.service';
@@ -37,7 +41,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-    declarations: [...COMPONENTS, AssignmentPollDialogComponent],
+    declarations: [...COMPONENTS, AssignmentPollDialogComponent, AssignmentPollFormComponent],
     exports: [...COMPONENTS, PollModule, AssignmentPollServiceModule],
     imports: [
         CommonModule,
@@ -54,7 +58,10 @@ const COMPONENTS = [
         MatCardModule,
         MatIconModule,
         MatDividerModule,
+        MatSelectModule,
         MatButtonModule,
+        MatInputModule,
+        SearchSelectorModule,
         PollModule,
         DirectivesModule,
         PipesModule,

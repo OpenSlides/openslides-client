@@ -17,6 +17,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
+import { TopicPollModule } from '../../modules/topic-poll/topic-poll.module';
 import { TopicCommonServiceModule } from '../../services/topic-common-service.module';
 import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
 import { TopicDetailRoutingModule } from './topic-detail-routing.module';
@@ -42,7 +43,8 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         MatCardModule,
         MatIconModule,
         MatListModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        TopicPollModule
     ]
 })
 export class TopicDetailModule {}

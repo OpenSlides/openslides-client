@@ -24,17 +24,22 @@
 
         <os-poll-progress *ngIf="poll.canBeVotedFor()" [poll]="poll"></os-poll-progress>
 
-        <div *ngIf="poll.pollClassType === 'motion'">
+        <div *ngIf="poll.isMotionPoll">
             <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor() && !last"></os-motion-poll-vote>
             <os-motion-poll-detail-content [poll]="lastPublishedPoll" *ngIf="last"></os-motion-poll-detail-content>
         </div>
 
-        <div *ngIf="poll.pollClassType === 'assignment'">
+        <div *ngIf="poll.isAssignmentPoll">
             <os-assignment-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor() && !last"></os-assignment-poll-vote>
             <os-assignment-poll-detail-content
                 [poll]="lastPublishedPoll"
                 *ngIf="last"
             ></os-assignment-poll-detail-content>
+        </div>
+
+        <div *ngIf="poll.isTopicPoll">
+            <os-topic-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor() && !last"></os-topic-poll-vote>
+            <os-topic-poll-detail-content [poll]="lastPublishedPoll" *ngIf="last"></os-topic-poll-detail-content>
         </div>
     </mat-card>
 </ng-template>

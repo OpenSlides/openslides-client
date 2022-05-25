@@ -48,6 +48,10 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.content_object?.collection === PollClassType.Motion;
     }
 
+    public get isTopicPoll(): boolean {
+        return this.content_object?.collection === PollClassType.Topic;
+    }
+
     public get percentBaseVerbose(): string {
         return PollPercentBaseVerbose[this.onehundred_percent_base];
     }

@@ -47,7 +47,8 @@ export class ChartComponent {
     /**
      * Required since circle charts demand SingleDataSet-Objects
      */
-    public circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[] = [];
+    @Input()
+    public circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
 
     /**
      * The general data for the chart.
@@ -139,27 +140,32 @@ export class ChartComponent {
         }
     }
 
+    private createCircleColors(inputChartData: ChartData): void {
+        this.circleColors = [
+            {
+                backgroundColor: inputChartData.map(chartDate => chartDate.backgroundColor).filter(color => !!color),
+                hoverBackgroundColor: inputChartData
+                    .map(chartDate => chartDate.hoverBackgroundColor)
+                    .filter(color => !!color)
+            }
+        ];
+    }
+
     private progressInputData(inputChartData: ChartDate[]): void {
         if (this.isCircle) {
             const data = inputChartData.flatMap(chartDate => {
                 // removes undefined and null values
                 return chartDate.data.filter(data => !!data);
             });
-            this.circleColors = [
-                {
-                    backgroundColor: inputChartData
-                        .map(chartDate => chartDate.backgroundColor)
-                        .filter(color => !!color) as string[],
-                    hoverBackgroundColor: inputChartData
-                        .map(chartDate => chartDate.hoverBackgroundColor)
-                        .filter(color => !!color) as string[]
-                }
-            ];
+            if (!this.circleColors) {
+                this.createCircleColors(inputChartData);
+            }
             this.chartData.datasets = [
                 {
                     data: data,
                     backgroundColor: this.circleColors[0].backgroundColor,
                     hoverBackgroundColor: this.circleColors[0].hoverBackgroundColor,
+                    hoverBorderColor: this.circleColors[0].hoverBackgroundColor,
                     hoverBorderWidth: 0
                 }
             ];

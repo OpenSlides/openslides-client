@@ -112,7 +112,7 @@ export abstract class PollService {
         return tableData;
     }
 
-    public getChartLabels(poll: PollData): string[] {
+    public getChartLabels(poll: PollData, excludeYNALabels: boolean = false): string[] {
         const fields = this.getPollDataFields(poll);
         return poll.options.map(option => {
             const votingResults = fields.map(field => {
@@ -120,10 +120,13 @@ export abstract class PollService {
                 const votingKey = this.translate.instant(this.pollKeyVerbose.transform(field));
                 const resultValue = this.pollParseNumber.transform(voteValue);
                 const resultInPercent = this.getVoteValueInPercent(voteValue, { poll, row: option });
-                let resultLabel = `${votingKey}: ${resultValue}`;
+                let resultLabel = `${resultValue}`;
+                if (!excludeYNALabels) {
+                    resultLabel = `${votingKey}: ${resultLabel}`;
+                }
 
                 // 0 is a valid number in this case
-                if (resultInPercent !== null) {
+                if (!!resultInPercent) {
                     resultLabel += ` (${resultInPercent})`;
                 }
                 return resultLabel;

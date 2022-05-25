@@ -14,6 +14,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorModule } from '../../modules/projector/projector.module';
+import { TopicPollModule } from '../agenda/modules/topics/modules/topic-poll/topic-poll.module';
 import { InteractionServiceModule } from '../interaction/services/interaction-service.module';
 import { AutopilotRoutingModule } from './autopilot-routing.module';
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
@@ -37,6 +38,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         OpenSlidesTranslationModule.forChild(),
         PollModule,
         MotionPollModule,
+        TopicPollModule,
         AssignmentPollModule
     ]
 })

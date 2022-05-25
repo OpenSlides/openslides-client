@@ -5,8 +5,6 @@ import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -39,7 +37,7 @@ export class PollCollectionComponent<C extends BaseViewModel> extends BaseCompon
      * CLEANUP: This function belongs to "HasViewPolls"/ ViewModelWithPolls
      */
     public get hasProjectedModelOpenPolls(): boolean {
-        if (this.currentProjection instanceof ViewMotion || this.currentProjection instanceof ViewAssignment) {
+        if (isHavingViewPolls(this.currentProjection)) {
             const currPolls: ViewPoll[] = this.currentProjection.polls;
             return currPolls.some((p: ViewPoll) => p.isStarted);
         }
@@ -107,6 +105,8 @@ export class PollCollectionComponent<C extends BaseViewModel> extends BaseCompon
             return this.operator.hasPerms(this.permission.motionCanManagePolls);
         } else if (poll.pollClassType === PollClassType.Assignment) {
             return this.operator.hasPerms(this.permission.assignmentCanManage);
+        } else if (poll.pollClassType === PollClassType.Topic) {
+            return this.operator.hasPerms(this.permission.pollCanManage);
         }
         return false;
     }

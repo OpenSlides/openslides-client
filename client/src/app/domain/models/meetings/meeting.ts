@@ -174,6 +174,30 @@ export class Settings {
     public assignment_poll_default_100_percent_base!: PollPercentBase;
     public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
     public assignment_poll_default_backend!: PollBackendDurationType;
+
+    //topic poll
+    topic_poll_ballot_paper_selection: BallotPaperSelection;
+    topic_poll_ballot_paper_number: number;
+    topic_poll_add_candidates_to_list_of_speakers: boolean;
+    topic_poll_enable_max_votes_per_option: boolean;
+    topic_poll_sort_poll_result_by_votes: boolean;
+    topic_poll_default_type: PollType;
+    topic_poll_default_method: PollMethod;
+    topic_poll_default_100_percent_base: PollPercentBase;
+    topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    topic_poll_default_backend: PollBackendDurationType;
+
+    //default poll
+    poll_ballot_paper_selection: BallotPaperSelection;
+    poll_ballot_paper_number: number;
+    poll_add_candidates_to_list_of_speakers: boolean;
+    poll_enable_max_votes_per_option: boolean;
+    poll_sort_poll_result_by_votes: boolean;
+    poll_default_type: PollType;
+    poll_default_method: PollMethod;
+    poll_default_100_percent_base: PollPercentBase;
+    poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
+    poll_default_backend: PollBackendDurationType;
 }
 
 export class Meeting extends BaseModel<Meeting> {

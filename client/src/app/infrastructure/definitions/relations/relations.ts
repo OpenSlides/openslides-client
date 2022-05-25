@@ -824,7 +824,7 @@ export const RELATIONS: Relation[] = [
     // ########## Polls
     ...makeGenericO2M({
         OViewModel: ViewPoll,
-        MPossibleViewModels: [ViewMotion, ViewAssignment],
+        MPossibleViewModels: [ViewMotion, ViewAssignment, ViewTopic],
         OViewModelField: `content_object`,
         MPossibleViewModelsField: `polls`
     }),

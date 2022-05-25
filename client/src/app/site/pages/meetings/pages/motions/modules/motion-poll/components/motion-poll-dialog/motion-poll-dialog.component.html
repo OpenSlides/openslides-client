@@ -1,10 +1,10 @@
-<os-poll-form
+<os-motion-poll-form
     [pollClassType]="pollClassType.Motion"
     [data]="pollData"
     [pollService]="motionPollService"
     [percentBases]="PercentBaseVerbose"
     #pollForm
-></os-poll-form>
+></os-motion-poll-form>
 <ng-container *ngIf="pollForm.contentForm.get('type')!.value === 'analog'">
     <div class="os-form-card-mobile" mat-dialog-content>
         <form [formGroup]="dialogVoteForm">

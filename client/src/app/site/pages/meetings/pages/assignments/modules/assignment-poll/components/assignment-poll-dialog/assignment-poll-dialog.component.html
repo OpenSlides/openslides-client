@@ -1,11 +1,11 @@
-<os-poll-form
+<os-assignment-poll-form
     [pollClassType]="pollClassType.Assignment"
     [data]="pollData"
     [pollService]="assignmentPollService"
     [pollMethods]="AssignmentPollMethodVerbose"
     [percentBases]="AssignmentPollPercentBaseVerbose"
     #pollForm
-></os-poll-form>
+></os-assignment-poll-form>
 
 <!-- Analog voting -->
 <ng-container *ngIf="isAnalogPoll && dialogVoteForm">

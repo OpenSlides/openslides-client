@@ -12,7 +12,7 @@
         <ng-container *ngIf="!data || !data.state || data.isCreated">
             <div class="info-grid">
                 <!-- Poll Type -->
-                <mat-form-field *ngIf="isEVotingEnabled">
+                <mat-form-field *ngIf="isEVotingEnabled && !hideSelects.type">
                     <mat-select [placeholder]="PollPropertyVerbose.type | translate" formControlName="type" required>
                         <mat-option *ngFor="let option of pollTypes | keyvalue" [value]="option.key">
                             {{ option.value | translate }}
@@ -30,7 +30,7 @@
                 </mat-form-field>
 
                 <!-- Groups entitled to Vote -->
-                <mat-form-field *ngIf="isEVotingSelected">
+                <mat-form-field *ngIf="isEVotingSelected && !hideSelects.entitledGroups">
                     <os-repo-search-selector
                         formControlName="entitled_group_ids"
                         [multiple]="true"
@@ -44,7 +44,7 @@
 
             <div class="info-grid">
                 <!-- Poll Methods -->
-                <mat-form-field *ngIf="pollMethods">
+                <mat-form-field *ngIf="pollMethods && !hideSelects.pollMethod">
                     <mat-select
                         [placeholder]="PollPropertyVerbose.pollmethod | translate"
                         formControlName="pollmethod"
@@ -89,11 +89,8 @@
                 </ng-container>
 
                 <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
-                <div
-                    *ngIf="pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)"
-                    class="third-option"
-                >
-                    <ng-container formGroupName="votes_amount">
+                <div *ngIf="pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)" class="third-option">
+                    <ng-container formGroupName="votes_amount" >
                         <!-- Max Amount of Votes per Option -->
                         <mat-form-field>
                             <input
@@ -111,7 +108,7 @@
             </div>
 
             <!-- Amount of Votes and global options -->
-            <div class="global-options" *ngIf="isAssignmentPoll">
+            <div class="global-options" *ngIf="!hideSelects.globalOptions">
                 <mat-checkbox formControlName="global_yes">
                     {{ PollPropertyVerbose.global_yes | translate }}
                 </mat-checkbox>
@@ -124,7 +121,7 @@
 
         <div class="info-grid">
             <!-- 100 Percent Base -->
-            <mat-form-field>
+            <mat-form-field *ngIf="!hideSelects.hundredPercentBase">
                 <mat-select
                     placeholder="{{ PollPropertyVerbose.onehundred_percent_base | translate }}"
                     formControlName="onehundred_percent_base"
@@ -135,7 +132,7 @@
                     </ng-container>
                 </mat-select>
             </mat-form-field>
-            <ng-container *ngIf="isEVotingSelected && isCreated">
+            <ng-container *ngIf="isEVotingSelected && isCreated && !hideSelects.backendDuration">
                 <mat-form-field>
                     <mat-select placeholder="{{ 'Voting duration' | translate }}" formControlName="backend" required>
                         <ng-container *ngFor="let option of pollBackendDurationChoices | keyvalue">

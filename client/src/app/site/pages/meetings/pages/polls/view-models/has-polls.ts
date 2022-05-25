@@ -2,10 +2,11 @@ import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ViewPoll } from './view-poll';
 
-export function isHavingViewPolls(instance: any): instance is HasPolls {
-    return !!instance?.polls;
-}
-
 export interface HasPolls<C extends BaseViewModel = any> {
     polls: ViewPoll<C>[];
+}
+
+export function isHavingViewPolls(item: any): item is HasPolls {
+    const isViewPollArray = Array.isArray(item?.polls) && !item.polls.some(value => !(value instanceof ViewPoll));
+    return typeof item === `object` && isViewPollArray;
 }
