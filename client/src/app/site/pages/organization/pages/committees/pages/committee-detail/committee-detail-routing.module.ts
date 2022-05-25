@@ -19,7 +19,6 @@ const routes: Routes = [
             })),
             {
                 path: `:committeeId`,
-                // component: CommitteeDetailComponent,
                 children: [
                     {
                         path: ``,

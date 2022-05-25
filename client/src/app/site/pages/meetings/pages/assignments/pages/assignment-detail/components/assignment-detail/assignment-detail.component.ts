@@ -464,7 +464,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     public addToAgenda(): void {
-        this.itemRepo.addToAgenda({}, this.assignment);
+        this.itemRepo.addToAgenda({}, this.assignment).resolve();
     }
 
     public removeFromAgenda(): void {

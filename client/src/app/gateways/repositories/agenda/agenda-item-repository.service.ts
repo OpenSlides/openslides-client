@@ -105,7 +105,6 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
             content_object_id: contentObject.getModel()?.fqid || contentObject.fqid,
             ...this.getOptionalPayload(data)
         }));
-        console.log(`addItemToAgenda`, payload);
         return this.createAction(AgendaItemAction.CREATE, payload);
     }
 

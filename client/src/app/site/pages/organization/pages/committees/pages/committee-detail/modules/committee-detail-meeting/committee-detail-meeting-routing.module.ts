@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { CommitteeDetailMeetingMainComponent } from './components/committee-detail-meeting-main/committee-detail-meeting-main.component';
 import { MeetingEditComponent } from './components/meeting-edit/meeting-edit.component';
+import { MeetingImportComponent } from './components/meeting-import/meeting-import.component';
 
 const routes: Routes = [
     {
@@ -12,6 +13,10 @@ const routes: Routes = [
             {
                 path: `create`,
                 component: MeetingEditComponent
+            },
+            {
+                path: `import`,
+                component: MeetingImportComponent
             },
             {
                 path: `edit`,
