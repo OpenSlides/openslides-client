@@ -44,6 +44,6 @@ export const FontDefaults: { [place in FontPlace]: string } = {
     bold_italic: `assets/fonts/fira-sans-latin-500italic.woff`,
     monospace: `assets/fonts/roboto-condensed-bold.woff`,
     chyron_speaker_name: `assets/fonts/fira-sans-latin-400.woff`,
-    projector_h1: `assets/fonts/fira-sans-latin-500italic.woff`,
-    projector_h2: `assets/fonts/fira-sans-latin-500italic.woff`
+    projector_h1: `assets/fonts/fira-sans-latin-500.woff`,
+    projector_h2: `assets/fonts/fira-sans-latin-500.woff`
 };
