@@ -18,14 +18,24 @@ export const LogoDisplayNames: { [place in LogoPlace]: string } = {
     pdf_ballot_paper: `PDF ballot paper logo`
 };
 
-export type FontPlace = 'regular' | 'italic' | 'bold' | 'bold_italic' | 'monospace' | 'chyron_speaker_name';
+export type FontPlace =
+    | 'regular'
+    | 'italic'
+    | 'bold'
+    | 'bold_italic'
+    | 'monospace'
+    | 'chyron_speaker_name'
+    | 'projector_h1'
+    | 'projector_h2';
 export const FontDisplayNames: { [place in FontPlace]: string } = {
     regular: `Font regular`,
     italic: `Font italic`,
     bold: `Font bold`,
     bold_italic: `Font bold italic`,
     monospace: `Font monospace`,
-    chyron_speaker_name: `Chyron speaker name`
+    chyron_speaker_name: `Chyron speaker name`,
+    projector_h1: `Projector h1`,
+    projector_h2: `Projector h2`
 };
 export const FontDefaults: { [place in FontPlace]: string } = {
     regular: `assets/fonts/fira-sans-latin-400.woff`,
@@ -33,5 +43,7 @@ export const FontDefaults: { [place in FontPlace]: string } = {
     bold: `assets/fonts/fira-sans-latin-500.woff`,
     bold_italic: `assets/fonts/fira-sans-latin-500italic.woff`,
     monospace: `assets/fonts/roboto-condensed-bold.woff`,
-    chyron_speaker_name: `assets/fonts/fira-sans-latin-400.woff`
+    chyron_speaker_name: `assets/fonts/fira-sans-latin-400.woff`,
+    projector_h1: `assets/fonts/fira-sans-latin-500.woff`,
+    projector_h2: `assets/fonts/fira-sans-latin-400.woff`
 };
