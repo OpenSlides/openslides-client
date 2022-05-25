@@ -76,7 +76,11 @@ export class RelationManagerService {
                 }
                 if (relation.many) {
                     const modelIds = Object.keys(modelMap);
-                    return (model[relation.ownIdField as keyof BaseModel] as any).intersect(modelIds).length > 0;
+                    const otherModelIds = (model[relation.ownIdField as keyof BaseModel] as any).map(data =>
+                        data.toString()
+                    );
+                    const modelIdsFromModelMap = modelIds.map(data => data.toString());
+                    return otherModelIds.intersect(modelIdsFromModelMap).length > 0;
                 } else {
                     return !!modelMap[model[relation.ownIdField as keyof BaseModel] as number];
                 }

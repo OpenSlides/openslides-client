@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
@@ -18,7 +18,7 @@ const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
     styleUrls: [`./motion-poll-detail-content.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy {
+export class MotionPollDetailContentComponent extends BaseUiComponent implements OnDestroy, OnInit {
     private _poll!: PollData | null;
 
     public get chartData(): ChartData {
@@ -32,7 +32,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     @Input()
     public set poll(pollData: PollData | null) {
         this._poll = pollData;
-        if (pollData) {
+        if (this._poll) {
             this.setupTableData();
             this.cd.markForCheck();
         }
@@ -84,6 +84,14 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
         private cd: ChangeDetectorRef
     ) {
         super();
+    }
+
+    public ngOnInit(): void {
+        this.subscriptions.push(
+            this._poll.options_as_observable.subscribe(data => {
+                this.setupTableData();
+            })
+        );
     }
 
     private setupTableData(): void {

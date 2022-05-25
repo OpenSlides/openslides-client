@@ -23,6 +23,10 @@ export class SingleOptionChartTableComponent {
     @Input()
     public set tableData(tableData: PollTableData[]) {
         this._tableData = tableData;
+        if (this._poll) {
+            this.setChartData();
+            this.cd.markForCheck();
+        }
     }
 
     @Input()
@@ -80,7 +84,7 @@ export class SingleOptionChartTableComponent {
     }
 
     public get shouldShowChart(): boolean {
-        return true;
+        return !this.tableData.some(option => option.value[0].amount < 0);
     }
 
     public constructor(private cd: ChangeDetectorRef, private defaultPollService: PollService) {}
