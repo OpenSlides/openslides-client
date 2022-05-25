@@ -64,7 +64,7 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get meeting_ids(): Id[] {
-        return this.user.meeting_ids;
+        return this.user.meeting_ids || [];
     }
 
     // Will be set by the repository
@@ -73,7 +73,11 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     public getFullName!: () => string;
     public getLevelAndNumber!: () => string;
 
-    // Will be injected by the repository.
+    /**
+     * A function which will return the id of the currently active meeting, if one is chosen.
+     *
+     * @returns The id of the currently active meeting
+     */
     public getEnsuredActiveMeetingId!: () => Id;
 
     /**

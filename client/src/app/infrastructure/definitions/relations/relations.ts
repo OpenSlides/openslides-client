@@ -634,8 +634,7 @@ export const RELATIONS: Relation[] = [
         ownIdField: `user_ids`,
         many: true,
         generic: false,
-        structured: false,
-        isFullList: true
+        structured: false
     },
     // user/meeting_ids -> meeting
     {

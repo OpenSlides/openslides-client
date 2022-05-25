@@ -280,6 +280,10 @@ export class OperatorService {
         });
     }
 
+    public isInMeeting(meetingId: Id): boolean {
+        return this.user.meeting_ids?.includes(meetingId) || false;
+    }
+
     private checkReadyState(): void {
         if (this._ready) {
             return;
