@@ -13,9 +13,9 @@ import {
     PollPercentBase,
     PollTableData,
     PollType,
+    VOTE_MAJORITY,
     VotingResult,
-    YES_KEY,
-    VOTE_MAJORITY
+    YES_KEY
 } from 'src/app/domain/models/poll/poll-constants';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
@@ -24,6 +24,13 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 import { MotionPollServiceModule } from '../motion-poll-service.module';
+
+export interface TableDataEntryCreationInput {
+    poll: PollData;
+    result: VotingResult;
+    option?: OptionData;
+    showPercent?: boolean;
+}
 
 /**
  * Service class for motion polls.
@@ -106,30 +113,31 @@ export class MotionPollService extends PollService {
             .getVoteTableKeys(poll)
             .some(key => options.some(option => option[key.vote as OptionDataKey] === VOTE_MAJORITY));
         let tableData: PollTableData[] = options.flatMap(option =>
-            super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, option, showPercent))
+            super
+                .getVoteTableKeys(poll)
+                .map(key =>
+                    this.createTableDataEntry({ poll: poll, result: key, option: option, showPercent: showPercent })
+                )
         );
-        tableData.push(...super.getSumTableKeys(poll).map(key => this.createTableDataEntry(poll, key)));
+        tableData.push(
+            ...super.getSumTableKeys(poll).map(key => this.createTableDataEntry({ poll: poll, result: key }))
+        );
 
         tableData = tableData.filter(localeTableData => !localeTableData.value.some(result => result.hide));
         return tableData;
     }
 
-    private createTableDataEntry(
-        poll: PollData,
-        result: VotingResult,
-        option?: OptionData,
-        showPercent: boolean = undefined
-    ): PollTableData {
+    private createTableDataEntry(data: TableDataEntryCreationInput): PollTableData {
         return {
-            votingOption: result.vote || ``,
+            votingOption: data.result.vote || ``,
             value: [
                 {
-                    amount: (option
-                        ? option[result.vote as OptionDataKey]
-                        : poll[result.vote as PollDataKey]) as number,
-                    hide: result.hide,
-                    icon: result.icon,
-                    showPercent: showPercent ?? result.showPercent
+                    amount: (data.option
+                        ? data.option[data.result.vote as OptionDataKey]
+                        : data.poll[data.result.vote as PollDataKey]) as number,
+                    hide: data.result.hide,
+                    icon: data.result.icon,
+                    showPercent: data.showPercent ?? data.result.showPercent
                 }
             ]
         };

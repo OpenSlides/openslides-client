@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
+
 import { PollService } from '../../services/poll.service';
 import { ChartData } from '../chart/chart.component';
 
