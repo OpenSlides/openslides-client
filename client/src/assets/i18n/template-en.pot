@@ -443,12 +443,14 @@ msgstr ""
 msgid "Are you sure you want to renumber all motions of this category?"
 msgstr ""
 
-msgid "Are you sure you want to reset all options to factory defaults?"
-msgstr ""
-
 msgid ""
 "Are you sure you want to reset all options to factory defaults? All changes "
 "of this settings group will be lost!"
+msgstr ""
+
+msgid ""
+"Are you sure you want to reset all options to factory defaults? Changes of "
+"all settings group will be lost!"
 msgstr ""
 
 msgid "Are you sure you want to reset all passwords to the default ones?"
