@@ -1,16 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { VotingPrivacyWarningDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewTopic } from '../../../../view-models';
 
@@ -64,17 +59,12 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
     }
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
-        translate: TranslateService,
-        promptService: PromptService,
-        choiceService: ChoiceService,
-        repo: PollControllerService,
         private formBuilder: FormBuilder,
         private operator: OperatorService,
         private votingService: VotingService,
         private votingPrivacyDialog: VotingPrivacyWarningDialogService
     ) {
-        super(componentServiceCollector, translate, promptService, choiceService, repo);
+        super();
     }
 
     public ngOnInit(): void {
