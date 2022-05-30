@@ -1,6 +1,7 @@
 #container {
     background-color: lightgoldenrodyellow;
     position: relative;
+    overflow: hidden;
 
     #offline-indicator {
         top: 0 !important;
