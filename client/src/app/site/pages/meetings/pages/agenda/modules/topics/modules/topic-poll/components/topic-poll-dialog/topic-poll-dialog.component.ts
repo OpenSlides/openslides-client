@@ -19,7 +19,6 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewTopic } from '../../../../view-models';
 import { TopicPollMethodVerbose } from '../../definitions';
 import { TopicPollService } from '../../services/topic-poll.service';
-import { TopicPollFormComponent } from '../topic-poll-form/topic-poll-form.component';
 
 let uniqueId = 0;
 export class TextOptionSelectable implements Selectable {
@@ -44,9 +43,6 @@ export class TextOptionSelectable implements Selectable {
 export class TopicPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     @ViewChild(`scrollframe`, { static: false }) scrollFrame: ElementRef;
     @ViewChildren(`item`) itemElements: QueryList<any>;
-
-    @ViewChild(TopicPollFormComponent, { static: true })
-    protected override pollForm: TopicPollFormComponent | null = null;
 
     private scrollContainer: any;
     private isNearBottom = true;
