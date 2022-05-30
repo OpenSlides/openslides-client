@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -8,7 +8,6 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { MotionPollService } from '../../services';
-import { MotionPollFormComponent } from '../motion-poll-form/motion-poll-form.component';
 
 @Component({
     selector: `os-motion-poll-dialog`,
@@ -17,9 +16,6 @@ import { MotionPollFormComponent } from '../motion-poll-form/motion-poll-form.co
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent {
     public PercentBaseVerbose = PollPercentBaseVerbose;
-
-    @ViewChild(MotionPollFormComponent, { static: true })
-    protected override pollForm: MotionPollFormComponent | null = null;
 
     public constructor(
         public motionPollService: MotionPollService,

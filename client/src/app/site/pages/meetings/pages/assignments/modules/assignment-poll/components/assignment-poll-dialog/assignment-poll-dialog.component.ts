@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -16,7 +16,6 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { AssignmentPollMethodVerbose, AssignmentPollPercentBaseVerbose } from '../../definitions';
 import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
-import { AssignmentPollFormComponent } from '../assignment-poll-form/assignment-poll-form.component';
 
 @Component({
     selector: `os-assignment-poll-dialog`,
@@ -25,9 +24,6 @@ import { AssignmentPollFormComponent } from '../assignment-poll-form/assignment-
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public unknownUserLabel = UnknownUserLabel;
-
-    @ViewChild(AssignmentPollFormComponent, { static: true })
-    protected override pollForm: AssignmentPollFormComponent | null = null;
 
     /**
      * List of accepted special non-numerical values.

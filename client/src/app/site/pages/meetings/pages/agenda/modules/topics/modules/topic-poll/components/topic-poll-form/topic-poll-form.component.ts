@@ -14,6 +14,7 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
     selector: `os-topic-poll-form`,
     templateUrl: `../../../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.html`,
     styleUrls: [`../../../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
+    providers: [{ provide: BasePollFormComponent, useExisting: TopicPollFormComponent }],
     encapsulation: ViewEncapsulation.None
 })
 export class TopicPollFormComponent extends BasePollFormComponent {
