@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot } from '@angular/router';
 
-import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
-import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
-import { FallbackRoutesService } from '../services/fallback-routes.service';
+import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
 import { OperatorService } from '../services/operator.service';
+import { RerouteService } from '../services/reroute.service';
 
 enum CannotAccessReason {
     NO_MEANING = 1,
@@ -22,12 +19,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     private _cannotAccessReason: CannotAccessReason | null = null;
 
     public constructor(
-        private router: Router,
+        private reroute: RerouteService,
+        private osRouter: OpenSlidesRouterService,
         private operator: OperatorService,
-        private activeMeeting: ActiveMeetingService,
-        private meetingSettingService: MeetingSettingsService,
-        private fallbackRoutesService: FallbackRoutesService,
-        private osRouter: OpenSlidesRouterService
+        private authCheck: AuthCheckService
     ) {}
 
     /**
@@ -40,29 +35,23 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      * @param route the route the user wants to navigate to
      */
     public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-        if (!(await this.hasStateMeaning(state))) {
-            this._cannotAccessReason = CannotAccessReason.NO_MEANING;
-            return false;
-        }
-        const basePerm: Permission[] = route.data[`meetingPermissions`];
-        if (!basePerm) {
+        if (this.hasAlreadyBeenChecked(state)){
             return true;
         }
-        const meetingSetting: keyof Settings = route.data[`meetingSetting`];
-        await this.operator.ready;
-        if ((this.operator.isAnonymous && this.activeMeeting.guestsEnabled) || this.operator.isAuthenticated) {
-            const hasPerm = !!this.activeMeeting.meetingId ? this.hasPerms(basePerm) : true;
-            const hasSetting = this.isMeetingSettingEnabled(meetingSetting);
-            if (!hasSetting) {
-                this._cannotAccessReason = CannotAccessReason.NO_SETTING;
-            } else if (!hasPerm) {
-                this._cannotAccessReason = CannotAccessReason.NO_PERM;
+        this._cannotAccessReason = null;
+        if (this.osRouter.isOrganizationUrl(state.url)) {
+            if (!(await this.authCheck.isAuthorizedToSeeOrganization())) {
+                this._cannotAccessReason = CannotAccessReason.NO_MEANING;
+                return false;
             }
-            return hasPerm && hasSetting;
-        } else {
-            this.osRouter.navigateToLogin();
+        } else if (!(await this.authCheck.isInMeeting(state.url))) {
             return false;
         }
+        if (!(await this.authCheck.isAuthenticated())) {
+            this.reroute.toLogin();
+            return false;
+        }
+        return await this.authCheck.isAuthorized(route.data);
     }
 
     /**
@@ -71,6 +60,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      * @param route the route the user wants to navigate to
      */
     public async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+        if (this.hasAlreadyBeenChecked(state)){
+            return true;
+        }
         await this.operator.ready;
         const canActivateRoute = await this.canActivate(route, state);
 
@@ -78,80 +70,19 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             return true;
         } else {
             if (this._cannotAccessReason === CannotAccessReason.NO_MEANING) {
-                this.forwardToOnlyMeeting();
+                this.reroute.forwardToOnlyMeeting(state.url === `/info` ? [`info`] : []);
             } else {
-                this.handleForbiddenRoute(route);
+                this.reroute.handleForbiddenRoute(route.data, route.url);
             }
         }
         return false;
     }
 
     /**
-     * Determine if the route has any (real) meaning for the user
+     * True if the permission guard has returned true for the current url immediately before this function is called.
+     * Helps to avoid unneccassary re-calculation of the same information.
      */
-    private async hasStateMeaning(state: RouterStateSnapshot): Promise<boolean> {
-        if (state.url === `/`) {
-            await this.operator.ready;
-            try {
-                return this.operator.knowsMultipleMeetings;
-            } catch (e) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private hasPerms(basePerm: Permission | Permission[]): boolean {
-        if (!basePerm) {
-            return true;
-        }
-        const toCheck = Array.isArray(basePerm) ? basePerm : [basePerm];
-        return this.operator.hasPerms(...toCheck);
-    }
-
-    private isMeetingSettingEnabled(meetingSetting?: keyof Settings): boolean {
-        if (!meetingSetting) {
-            return true;
-        }
-        return this.meetingSettingService.instant(meetingSetting) as boolean;
-    }
-
-    /**
-     * Handles a forbidden route. If the route is "/" (start page), It is tried to
-     * use a fallback route provided by AuthGuardFallbackRoutes. If this won't work
-     * or it wasn't the start page in the first place, the operator will be redirected
-     * to an error page.
-     */
-    private handleForbiddenRoute(route: ActivatedRouteSnapshot): void {
-        if (route.url.length === 0) {
-            // start page
-            const fallbackRoute = this.fallbackRoutesService.getFallbackRoute();
-            if (fallbackRoute) {
-                this.router.navigate([fallbackRoute]);
-                return;
-            }
-        }
-        const routeParams = route.parent?.params;
-        const meetingId = routeParams?.[`meetingId`];
-
-        if (meetingId) {
-            this.router.navigate([`error`], {
-                queryParams: {
-                    meetingId,
-                    error: `Authentication Error`,
-                    msg: route.data[`meetingPermissions`]
-                }
-            });
-        } else {
-            this.osRouter.navigateToLogin();
-        }
-    }
-
-    /**
-     * If the user requested a route without direct meaning, forward to their meaningful meeting
-     */
-    private forwardToOnlyMeeting(): void {
-        const meetingId = this.operator.onlyMeeting;
-        this.router.navigate([meetingId]);
+    private hasAlreadyBeenChecked(state: RouterStateSnapshot): boolean {
+        return state.url === this.authCheck.lastSuccessfulUrl;
     }
 }
