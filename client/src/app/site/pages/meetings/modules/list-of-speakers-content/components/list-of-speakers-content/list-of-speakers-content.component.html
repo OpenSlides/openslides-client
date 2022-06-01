@@ -87,6 +87,7 @@
 
             <!-- Extra menu with call controls -->
             <button
+                *ngIf="canManage"
                 mat-icon-button
                 [matMenuTriggerFor]="manageSpeakerMenu"
                 [matMenuTriggerData]="{ speaker: activeSpeaker }"
