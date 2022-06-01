@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
+import { accountHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { UserExport } from 'src/app/domain/models/users/user.export';
 import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -16,7 +16,7 @@ export class AccountExportService {
 
     public downloadCsvImportExample(): void {
         this.csvExportService.dummyCSVExport<UserExport>(
-            userHeadersAndVerboseNames,
+            accountHeadersAndVerboseNames,
             AccountCsvExportExample,
             `${this.translate.instant(`account-example`)}.csv`
         );
@@ -25,7 +25,7 @@ export class AccountExportService {
     public downloadAccountCsvFile(dataSource: ViewUser[]): void {
         this.csvExportService.export(
             dataSource,
-            Object.entries(userHeadersAndVerboseNames).map(([key, value]) => ({
+            Object.entries(accountHeadersAndVerboseNames).map(([key, value]) => ({
                 property: key as keyof ViewUser,
                 label: value
             })),

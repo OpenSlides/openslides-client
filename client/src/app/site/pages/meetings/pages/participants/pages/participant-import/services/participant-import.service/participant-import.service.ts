@@ -3,7 +3,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
-import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
+import { participantHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
@@ -104,7 +104,7 @@ export class ParticipantImportService extends BaseUserImportService {
 
     protected getConfig(): ImportConfig<User> {
         return {
-            modelHeadersAndVerboseNames: userHeadersAndVerboseNames,
+            modelHeadersAndVerboseNames: participantHeadersAndVerboseNames,
             verboseNameFn: plural => this.repo.getVerboseName(plural),
             createFn: (entries: any[]) => this.createUsers(entries),
             shouldCreateModelFn: user => user.status === `new`

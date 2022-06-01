@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { participantHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { UserExport } from 'src/app/domain/models/users/user.export';
 import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
-import { PARTICIPANT_HEADERS_AND_VERBOSE_NAMES } from '../../pages/participant-import/definitions/index';
 import { ParticipantExportModule } from '../participant-export.module';
 import { participantsExportExample } from '../participants-export-example';
 
@@ -54,7 +54,7 @@ export class ParticipantCsvExportService {
     public exportCsvExample(): void {
         const rows: UserExport[] = participantsExportExample;
         this.csvExport.dummyCSVExport<UserExport>(
-            PARTICIPANT_HEADERS_AND_VERBOSE_NAMES,
+            participantHeadersAndVerboseNames,
             rows,
             `${this.translate.instant(`participants-example`)}.csv`
         );
