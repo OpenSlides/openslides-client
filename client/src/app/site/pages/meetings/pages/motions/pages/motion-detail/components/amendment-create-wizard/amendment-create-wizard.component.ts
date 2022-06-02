@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, first, firstValueFrom, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -177,13 +177,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 
-        const response = await this.repo.createParagraphBased(motionCreate);
-        const { sequential_number } = (await firstValueFrom(
-            this.motionRepo.getViewModelObservable(response.id).pipe(
-                filter(motion => !!motion),
-                first()
-            )
-        )) as any;
+        const { sequential_number } = await this.repo.createParagraphBased(motionCreate);
         this.router.navigate([this.activeMeetingId, `motions`, sequential_number]);
     }
 
@@ -193,7 +187,6 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     private loadMotionByUrl(): void {
         // load existing motion
         if (this._parentMotionId) {
-            // this.requestUpdatesForMotion(this._parentMotionId);
             this.subscriptions.push(
                 this.motionRepo.getViewModelObservable(this._parentMotionId).subscribe(newViewMotion => {
                     this.initialize(newViewMotion);

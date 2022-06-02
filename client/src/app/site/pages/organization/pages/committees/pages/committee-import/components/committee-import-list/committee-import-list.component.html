@@ -25,7 +25,12 @@
         </div>
     </ng-template>
 
-    <div *osScrollingTableCell="'name'; row as row" class="one-line" [matTooltip]="row.newEntry.name">
+    <div
+        *osScrollingTableCell="'name'; row as row; config: { width: 250 }"
+        class="one-line"
+        [matTooltip]="row.newEntry.name"
+    >
+        <div *osScrollingTableCellLabel>{{ 'Title' | translate }}</div>
         <div class="one-line">
             {{ row.newEntry.name }}
         </div>
@@ -33,10 +38,10 @@
             <div class="one-line">
                 {{ row.newEntry.description }}
             </div>
-            <div *ngIf="row.newEntry.organization_tag_ids?.length" class="one-line flex-vertical-center">
+            <div *ngIf="row.newEntry.organization_tag_ids" class="one-line flex-vertical-center">
                 <mat-icon class="icon-14">local_offer</mat-icon>
                 <div class="margin-left-4 margin-right-4">
-                    <span *ngFor="let tag of row.newEntry.organization_tag_ids; let last = last">
+                    <span *ngFor="let tag of row.newEntry.organization_tag_ids | toArray; let last = last">
                         {{ tag.name }}
                         <mat-icon class="newBadge" color="accent" inline *ngIf="!tag.id">add</mat-icon>
                         &nbsp;
@@ -46,9 +51,10 @@
             </div>
         </div>
     </div>
-    <div *osScrollingTableCell="'meeting'; row as row; value as meetings" class="one-line">
+    <div *osScrollingTableCell="'meeting'; row as row; config: { width: 250 }" class="one-line">
+        <div *osScrollingTableCellLabel>{{ 'Meeting' | translate }}</div>
         <div class="one-line">
-            <span *ngFor="let meeting of meetings; let last = last">
+            <span *ngFor="let meeting of row.model.meeting | toArray; let last = last">
                 {{ meeting.name }}
                 <mat-icon class="newBadge" color="accent" inline *ngIf="meeting.willBeCreated">add</mat-icon>
                 &nbsp;

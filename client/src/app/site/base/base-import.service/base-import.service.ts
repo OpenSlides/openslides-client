@@ -1,4 +1,5 @@
 import { Directive, EventEmitter } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, map, Observable } from 'rxjs';
@@ -186,7 +187,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         | undefined;
 
     protected readonly translate: TranslateService = this.importServiceCollector.translate;
-    // protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
+    protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
 
     /**
      * The last parsed file object (may be reparsed with new encoding, thus kept in memory)
@@ -702,26 +703,26 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      */
     private checkHeaderLength(): boolean {
         const snackbarDuration = 3000;
-        // if (this._receivedHeaders.length < this.requiredHeaderLength) {
-        //     this.matSnackbar.open(this.translate.instant(`The file has too few columns to be parsed properly.`), ``, {
-        //         duration: snackbarDuration
-        //     });
+        if (this._receivedHeaders.length < this.requiredHeaderLength) {
+            this.matSnackbar.open(this.translate.instant(`The file has too few columns to be parsed properly.`), ``, {
+                duration: snackbarDuration
+            });
 
-        //     this.clearPreview();
-        //     return false;
-        // } else if (this._receivedHeaders.length < this.expectedHeaders.length) {
-        //     this.matSnackbar.open(
-        //         this.translate.instant(`The file seems to have some ommitted columns. They will be considered empty.`),
-        //         ``,
-        //         { duration: snackbarDuration }
-        //     );
-        // } else if (this._receivedHeaders.length > this.expectedHeaders.length) {
-        //     this.matSnackbar.open(
-        //         this.translate.instant(`The file seems to have additional columns. They will be ignored.`),
-        //         ``,
-        //         { duration: snackbarDuration }
-        //     );
-        // }
+            this.clearPreview();
+            return false;
+        } else if (this._receivedHeaders.length < this.expectedHeaders.length) {
+            this.matSnackbar.open(
+                this.translate.instant(`The file seems to have some ommitted columns. They will be considered empty.`),
+                ``,
+                { duration: snackbarDuration }
+            );
+        } else if (this._receivedHeaders.length > this.expectedHeaders.length) {
+            this.matSnackbar.open(
+                this.translate.instant(`The file seems to have additional columns. They will be ignored.`),
+                ``,
+                { duration: snackbarDuration }
+            );
+        }
         return true;
     }
 
