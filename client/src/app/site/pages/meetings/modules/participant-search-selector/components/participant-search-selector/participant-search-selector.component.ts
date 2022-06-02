@@ -3,14 +3,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { UserSelectionData } from '../..';
+
 import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
 import { ViewUser } from '../../../../view-models/view-user';
+import { UserSelectionData } from '../..';
 
 @Component({
-    selector: 'os-participant-search-selector',
-    templateUrl: './participant-search-selector.component.html',
-    styleUrls: ['./participant-search-selector.component.scss']
+    selector: `os-participant-search-selector`,
+    templateUrl: `./participant-search-selector.component.html`,
+    styleUrls: [`./participant-search-selector.component.scss`]
 })
 export class ParticipantSearchSelectorComponent extends BaseUiComponent implements OnInit {
     /**
@@ -25,7 +26,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
      * Needs to be ubdated by parent component.
      */
     @Input()
-    public nonSelectableUsersSubject! : BehaviorSubject<number[]>;
+    public nonSelectableUsersSubject!: BehaviorSubject<number[]>;
 
     /**
      * Placeholder string for the search field. Is automatically translated.
@@ -53,10 +54,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
 
     public usersForm: FormGroup;
 
-    public constructor(
-        private userRepo: ParticipantControllerService,
-        formBuilder: FormBuilder
-    ) {
+    public constructor(private userRepo: ParticipantControllerService, formBuilder: FormBuilder) {
         super();
 
         this.usersForm = formBuilder.group({
@@ -99,7 +97,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
      * Sets the current value of the filteredUsersSubject to an Array that holds exactly every single user,
      * who should be available for selection (i.e. who is not included in nonSelectableUsersSubject.value)
      */
-    private filterUsers(){
+    private filterUsers() {
         const notAvailable = this.nonSelectableUsersSubject.value;
         const availableUsers = this.users.filter(user => !notAvailable.includes(user.id));
         this._filteredUsersSubject.next(availableUsers);

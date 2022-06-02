@@ -349,7 +349,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 user =>
                     !(!this.onlyPresentUsers || user.isPresentInMeeting()) ||
                     this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
-            ).map(user => user.id);
+            )
+            .map(user => user.id);
         this.nonAvailableUsersSubject.next(nonAvailableUsers);
     }
 

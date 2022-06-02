@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { ParticipantSearchSelectorComponent } from './participant-search-selector.component';
 
-describe('ParticipantSearchSelectorComponent', () => {
+describe(`ParticipantSearchSelectorComponent`, () => {
     let component: ParticipantSearchSelectorComponent;
     let fixture: ComponentFixture<ParticipantSearchSelectorComponent>;
 
@@ -17,7 +18,7 @@ describe('ParticipantSearchSelectorComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it(`should create`, () => {
         expect(component).toBeTruthy();
     });
 });

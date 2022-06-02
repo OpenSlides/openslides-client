@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { DirectivesModule } from 'src/app/ui/directives';
+import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+
 import { ParticipantSearchSelectorComponent } from './components/participant-search-selector/participant-search-selector.component';
 
 @NgModule({
