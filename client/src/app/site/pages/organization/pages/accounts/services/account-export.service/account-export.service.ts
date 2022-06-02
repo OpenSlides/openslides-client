@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { accountHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { UserExport } from 'src/app/domain/models/users/user.export';
 import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { AccountCsvExportExample } from '../../export/csv-export-example';
+import { accountHeadersAndVerboseNames } from '../../pages/account-import/definitions';
 import { AccountExportServiceModule } from '../account-export-service.module';
 
 @Injectable({

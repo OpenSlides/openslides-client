@@ -3,7 +3,6 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
-import { participantHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
@@ -18,6 +17,7 @@ import { ImportServiceCollectorService } from 'src/app/site/services/import-serv
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
 import { GroupControllerService } from '../../../../modules';
+import { participantHeadersAndVerboseNames } from '../../definitions';
 import { ParticipantImportServiceModule } from '../participant-import-service.module';
 
 const GROUP_PROPERTY = `group_ids`;

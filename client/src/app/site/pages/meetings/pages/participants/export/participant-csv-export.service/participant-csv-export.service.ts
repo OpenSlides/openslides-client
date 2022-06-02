@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { participantHeadersAndVerboseNames } from 'src/app/domain/models/users/user.constants';
 import { UserExport } from 'src/app/domain/models/users/user.export';
 import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
+import { participantHeadersAndVerboseNames } from '../../pages/participant-import/definitions';
 import { ParticipantExportModule } from '../participant-export.module';
 import { participantsExportExample } from '../participants-export-example';
 
