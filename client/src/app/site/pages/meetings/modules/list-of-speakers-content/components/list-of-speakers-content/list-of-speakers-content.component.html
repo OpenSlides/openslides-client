@@ -227,7 +227,7 @@
         *ngIf="canManage"
     >
         <os-participant-search-selector
-            [nonSelectableUsersSubject]="nonAvailableUsersSubject"
+            [nonSelectableUserIds]="nonAvailableUserIds"
             placeholder="Select or search new speaker ..."
             (userSelected)="addUserAsNewSpeaker($event)"
         ></os-participant-search-selector>

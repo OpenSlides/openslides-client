@@ -66,9 +66,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     public tagsObserver = new BehaviorSubject<ViewTag[]>([]);
 
     /**
-     * Subject containing the currently selected candidates
+     * Array containing the currently selected candidates
      */
-    public candidatesSubject = new BehaviorSubject<number[]>([]);
+    public candidateUserIds: number[] = [];
 
     /**
      * Used for the search value selector
@@ -88,7 +88,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public set assignment(assignment: ViewAssignment) {
         this._assignment = assignment;
-        this.updateCandidatesSubject();
+        this.updateCandidatesArray();
     }
 
     /**
@@ -321,7 +321,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     public async addCandidate(data: UserSelectionData): Promise<void> {
         if (data.userId && typeof data.userId === `number`) {
             await this.assignmentCandidateRepo.create(this.assignment, data.userId);
-            this.updateCandidatesSubject();
+            this.updateCandidatesArray();
         }
     }
 
@@ -332,11 +332,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async removeCandidate(candidate: ViewAssignmentCandidate): Promise<void> {
         await this.assignmentCandidateRepo.delete(candidate);
-        this.updateCandidatesSubject();
+        this.updateCandidatesArray();
     }
 
-    private updateCandidatesSubject() {
-        this.candidatesSubject.next(this._assignment.candidatesAsUsers.map(user => user.id));
+    private updateCandidatesArray() {
+        this.candidateUserIds = this._assignment.candidatesAsUsers.map(user => user.id);
     }
 
     /**

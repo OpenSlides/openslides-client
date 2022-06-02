@@ -35,13 +35,12 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     public get motion(): ViewMotion {
         return this._motion;
     }
-    private _motion!: ViewMotion;
 
     /**
      * The current list of submitters.
      */
     public readonly editSubmitterSubject = new BehaviorSubject<Submitter[]>([]);
-    public readonly editSubmitterUsersSubject = new BehaviorSubject<number[]>([]);
+    public editSubmitterUserIds: number[] = [];
 
     /**
      * The observable from editSubmitterSubject. Fixing this value is a performance boost, because
@@ -65,6 +64,8 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
 
     private _editMode = false;
 
+    private _motion!: ViewMotion;
+
     private _addSubmittersSet = new Set<Id>();
     private _removeSubmittersMap: IdMap = {};
 
@@ -82,8 +83,9 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.editSubmitterSubject.subscribe(submitters =>
-                this.editSubmitterUsersSubject.next(submitters.map(submitter => submitter.user_id ?? submitter.id))
+            this.editSubmitterSubject.subscribe(
+                submitters =>
+                    (this.editSubmitterUserIds = submitters.map(submitter => submitter.user_id ?? submitter.id))
             )
         );
     }

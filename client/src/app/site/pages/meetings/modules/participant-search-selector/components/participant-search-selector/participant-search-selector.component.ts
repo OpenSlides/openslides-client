@@ -14,19 +14,27 @@ import { UserSelectionData } from '../..';
     styleUrls: [`./participant-search-selector.component.scss`]
 })
 export class ParticipantSearchSelectorComponent extends BaseUiComponent implements OnInit {
+    private _filteredUsersSubject = new BehaviorSubject<ViewUser[]>([]);
+    private _nonSelectableUserIds: number[] = [];
+
+    /**
+     * Array that holds all participants of the current meeting.
+     */
+    private _users: ViewUser[] = [];
+
     /**
      * To check permissions in the template
      */
     public readonly permission = Permission;
 
-    private _filteredUsersSubject = new BehaviorSubject<ViewUser[]>([]);
-
     /**
-     * Subject that holds all users, that should not be selectable.
-     * Needs to be ubdated by parent component.
+     * Array that holds all users, that should not be selectable.
      */
     @Input()
-    public nonSelectableUsersSubject!: BehaviorSubject<number[]>;
+    public set nonSelectableUserIds(userIds: number[]) {
+        this._nonSelectableUserIds = userIds;
+        this.filterUsers();
+    }
 
     /**
      * Placeholder string for the search field. Is automatically translated.
@@ -46,11 +54,6 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
     public get filteredUsersSubject(): BehaviorSubject<ViewUser[]> {
         return this._filteredUsersSubject;
     }
-
-    /**
-     * Array that holds all participants of the current meeting.
-     */
-    private users: ViewUser[] = [];
 
     public usersForm: FormGroup;
 
@@ -72,13 +75,11 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
                     this.usersForm.reset();
                 }
             }),
-            //The list should be updated when the participants have been edited...
+            //The list should be updated when the participants have been edited
             this.userRepo.getViewModelListObservable().subscribe(users => {
-                this.users = users;
+                this._users = users;
                 this.filterUsers();
-            }),
-            //...or if the users that should not be selectable have changed.
-            this.nonSelectableUsersSubject.subscribe(userIds => this.filterUsers())
+            })
         );
     }
 
@@ -98,8 +99,8 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
      * who should be available for selection (i.e. who is not included in nonSelectableUsersSubject.value)
      */
     private filterUsers() {
-        const notAvailable = this.nonSelectableUsersSubject.value;
-        const availableUsers = this.users.filter(user => !notAvailable.includes(user.id));
+        const notAvailable = this._nonSelectableUserIds;
+        const availableUsers = this._users.filter(user => !notAvailable.includes(user.id));
         this._filteredUsersSubject.next(availableUsers);
     }
 

@@ -59,7 +59,7 @@
 
     <div class="search-users">
         <os-participant-search-selector
-            [nonSelectableUsersSubject]="editSubmitterUsersSubject"
+            [nonSelectableUserIds]="editSubmitterUserIds"
             placeholder="Select or search new submitter ..."
             (userSelected)="addSubmitter($event)"
         ></os-participant-search-selector>
