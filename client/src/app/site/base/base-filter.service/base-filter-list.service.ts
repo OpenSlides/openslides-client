@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/base/filter-service';
+import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
+import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
@@ -31,34 +31,15 @@ interface RepositoryFilterConfig<OV extends BaseViewModel, V> {
  */
 @Directive()
 export abstract class BaseFilterListService<V extends BaseViewModel> implements FilterListService<V> {
-    /**
-     * stores the currently used raw data to be used for the filter
-     */
-    private inputData: V[] = [];
-
-    /**
-     * Subscription for the inputData list.
-     * Acts as an semaphore for new filtered data
-     */
-    protected inputDataSubscription: Subscription | null = null;
-
-    /**
-     * The currently used filters.
-     */
-    public filterDefinitions: OsFilter<V>[] = [];
+    public get filterDefinitionsObservable(): Observable<OsFilter<V>[]> {
+        return this._filterDefinitionsSubject.pipe(distinctUntilChanged());
+    }
 
     /**
      * @returns the total count of items before the filter
      */
     public get unfilteredCount(): number {
-        return this.inputData ? this.inputData.length : 0;
-    }
-
-    /**
-     * @returns the amount of items that pass the filter service's filters
-     */
-    public get filteredCount(): number {
-        return this.outputSubject.getValue().length;
+        return this._inputData ? this._inputData.length : 0;
     }
 
     /**
@@ -84,15 +65,21 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     }
 
     /**
-     * The observable output for the filtered data
+     * get stacked filters
      */
-    private readonly outputSubject = new BehaviorSubject<V[]>([]);
+    public get filterStack(): OsFilterIndicator<V>[] {
+        return this._filterStack;
+    }
+
+    public get unfilteredCountObservable(): Observable<number> {
+        return this._source.pipe(map(items => items.length));
+    }
 
     /**
      * @return Observable data for the filtered output subject
      */
     public get outputObservable(): Observable<V[]> {
-        return this.outputSubject.asObservable();
+        return this._outputSubject.asObservable();
     }
 
     /**
@@ -105,21 +92,44 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     }
 
     /**
-     * Stack OsFilters
+     * Subscription for the inputData list.
+     * Acts as an semaphore for new filtered data
      */
-    private _filterStack: OsFilterIndicator<V>[] = [];
-
-    /**
-     * get stacked filters
-     */
-    public get filterStack(): OsFilterIndicator<V>[] {
-        return this._filterStack;
-    }
+    protected inputDataSubscription: Subscription | null = null;
 
     /**
      * The key to access stored valued
      */
     protected abstract readonly storageKey: string;
+
+    /**
+     * Stack OsFilters
+     */
+    private _filterStack: OsFilterIndicator<V>[] = [];
+
+    /**
+     * The currently used filters.
+     */
+    private set filterDefinitions(filters: OsFilter<V>[]) {
+        this._filterDefinitionsSubject.next(filters);
+    }
+
+    private get filterDefinitions(): OsFilter<V>[] {
+        return this._filterDefinitionsSubject.value;
+    }
+
+    /**
+     * The observable output for the filtered data
+     */
+    private readonly _outputSubject = new BehaviorSubject<V[]>([]);
+    private readonly _filterDefinitionsSubject = new BehaviorSubject<OsFilter<V>[]>([]);
+
+    /**
+     * stores the currently used raw data to be used for the filter
+     */
+    private _inputData: V[] = [];
+
+    private _source: Observable<V[]>;
 
     public constructor(private activeFiltersStore: ActiveFiltersStoreService) {}
 
@@ -129,6 +139,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param inputData Observable array with ViewModels
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
+        this._source = inputData;
         const storedFilter: OsFilter<V>[] | null = await this.activeFiltersStore.load<V>(this.storageKey);
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
@@ -144,62 +155,16 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             this.inputDataSubscription = null;
         }
         this.inputDataSubscription = inputData.subscribe(data => {
-            this.inputData = data;
+            this._inputData = data;
             this.updateFilteredData();
         });
     }
 
     /**
-     * Recreates the filter stack out of active filter definitions
-     */
-    private activeFiltersToStack(): void {
-        const stack: OsFilterIndicator<V>[] = [];
-        for (const activeFilter of this.activeFilters) {
-            const activeOptions = activeFilter.options.filter((option: OsFilterOption | string) => {
-                if (typeof option === `string`) {
-                    return false;
-                }
-                return option.isActive;
-            });
-            for (const option of activeOptions) {
-                stack.push({
-                    property: activeFilter.property,
-                    option: option as OsFilterOption
-                });
-            }
-        }
-        this._filterStack = stack;
-    }
-
-    /**
-     * Checks if the (stored) filter list matches the current definition of OsFilter<V>
-     *
-     * @param storedFilter
-     * @returns boolean
-     */
-    private isOsFilter(storedFilter: OsFilter<V>[]): boolean {
-        if (Array.isArray(storedFilter) && storedFilter.length) {
-            return storedFilter.every(
-                filter =>
-                    // Interfaces do not exist at runtime. Manually check if the
-                    // Required information of the interface are present
-                    filter.hasOwnProperty(`options`) && filter.hasOwnProperty(`property`) && !!filter.property
-            );
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Enforce children implement a method that returns actual filter definitions
-     */
-    protected abstract getFilterDefinitions(): OsFilter<V>[];
-
-    /**
      * Takes the filter definition from children and using {@link getFilterDefinitions}
      * and sets/updates {@link filterDefinitions}
      */
-    public async setFilterDefinitions(): Promise<void> {
+    public async updateFilterDefinitions(): Promise<void> {
         if (!this.filterDefinitions) {
             return;
         }
@@ -220,33 +185,63 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         this.storeActiveFilters();
     }
 
-    private getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters: OsFilter<V>[]): number {
-        if (!nextFilterDefinition) {
-            return 0;
+    /**
+     * Removes all active options of a given filter, clearing it
+     *
+     * @param filter
+     * @param update
+     */
+    public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
+        filter.options.forEach(option => {
+            if (typeof option === `object` && option.isActive) {
+                this.removeFilterOption(filter.property, option);
+            }
+        });
+        if (update) {
+            this.storeActiveFilters();
         }
-        let count = 0;
-        const matchingExistingFilter = storedFilters.find(oldDef => oldDef.property === nextFilterDefinition.property);
-        for (const option of nextFilterDefinition.options) {
-            if (typeof option !== `object`) {
-                continue;
-            }
-            if (!matchingExistingFilter || !matchingExistingFilter.options) {
-                continue;
-            }
-            const existingOption = matchingExistingFilter.options.find(toCompare => {
-                if (typeof toCompare === `string` || !toCompare) {
-                    return false;
-                }
-                return JSON.stringify(toCompare.condition) === JSON.stringify(option.condition);
-            }) as OsFilterOption;
-            if (existingOption) {
-                option.isActive = existingOption.isActive;
-            }
-            if (option.isActive) {
-                ++count;
-            }
+    }
+
+    /**
+     * Removes all filters currently in use from this filterService
+     */
+    public clearAllFilters(): void {
+        if (this.filterDefinitions && this.filterDefinitions.length) {
+            this.filterDefinitions.forEach(filter => {
+                this.clearFilter(filter, false);
+            });
+            this.storeActiveFilters();
         }
-        return count;
+    }
+
+    /**
+     * Retrieves a translatable label or filter property used for displaying the filter
+     *
+     * @param filter
+     * @returns a name, capitalized first character
+     */
+    public getFilterName(filter: OsFilter<V>): string {
+        if (filter.label) {
+            return filter.label;
+        } else {
+            const itemProperty = filter.property as string;
+            return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
+        }
+    }
+
+    /**
+     * Toggles a filter option, to be called after a checkbox state has changed.
+     *
+     * @param filterName a filter name as string
+     * @param option filter option
+     */
+    public toggleFilterOption(filterName: keyof V, option: OsFilterOption): void {
+        if (option.isActive) {
+            this.removeFilterOption(filterName, option);
+        } else {
+            this.addFilterOption(filterName, option);
+        }
+        this.storeActiveFilters();
     }
 
     /**
@@ -285,7 +280,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 }
 
                 filter.options = filterProperties;
-                this.setFilterDefinitions();
+                this.updateFilterDefinitions();
             }
         });
     }
@@ -298,54 +293,45 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         this.activeFiltersStore.save<V>(this.storageKey, this.filterDefinitions);
     }
 
-    /**
-     * Applies current filters in {@link filterDefinitions} to the {@link inputData} list
-     * and publishes the filtered data to the observable {@link outputSubject}
-     */
-    private updateFilteredData(): void {
-        let filteredData: V[] = [];
-        if (this.inputData) {
-            const preFilteredList = this.preFilter(this.inputData);
-            if (preFilteredList) {
-                this.inputData = preFilteredList;
-            }
+    // /**
+    //  * Applies current filters in {@link filterDefinitions} to the {@link inputData} list
+    //  * and publishes the filtered data to the observable {@link outputSubject}
+    //  */
+    // private updateFilteredData(): void {
+    //     let filteredData: V[] = [];
+    //     if (this.inputData) {
+    //         const preFilteredList = this.preFilter(this.inputData);
+    //         if (preFilteredList) {
+    //             this.inputData = preFilteredList;
+    //         }
 
-            if (!this.filterDefinitions || !this.filterDefinitions.length) {
-                filteredData = this.inputData;
-            } else {
-                filteredData = this.inputData.filter(item =>
-                    this.filterDefinitions.every(filter => !filter.count || this.isPassingFilter(item, filter))
-                );
-            }
-        }
+    //         if (!this.filterDefinitions || !this.filterDefinitions.length) {
+    //             filteredData = this.inputData;
+    //         } else {
+    //             filteredData = this.inputData.filter(item =>
+    //                 this.filterDefinitions.every(filter => !filter.count || this.isPassingFilter(item, filter))
+    //             );
+    //         }
+    //     }
 
-        this.outputSubject.next(filteredData);
-        this.activeFiltersToStack();
-    }
+    //     this.outputSubject.next(filteredData);
+    //     this.activeFiltersToStack();
+    // }
 
-    /**
-     * Had to be overwritten by children if required
-     * Adds the possibility to filter the inputData before the user applied filter
-     *
-     * @param rawInputData will be set to {@link this.inputData}
-     * @returns should be a filtered version of `rawInputData`. Returns void if unused
-     */
-    protected preFilter(rawInputData: V[]): V[] | void {}
-
-    /**
-     * Toggles a filter option, to be called after a checkbox state has changed.
-     *
-     * @param filterName a filter name as string
-     * @param option filter option
-     */
-    public toggleFilterOption(filterName: keyof V, option: OsFilterOption): void {
-        if (option.isActive) {
-            this.removeFilterOption(filterName, option);
-        } else {
-            this.addFilterOption(filterName, option);
-        }
-        this.storeActiveFilters();
-    }
+    // /**
+    //  * Toggles a filter option, to be called after a checkbox state has changed.
+    //  *
+    //  * @param filterName a filter name as string
+    //  * @param option filter option
+    //  */
+    // public toggleFilterOption(filterName: keyof V, option: OsFilterOption): void {
+    //     if (option.isActive) {
+    //         this.removeFilterOption(filterName, option);
+    //     } else {
+    //         this.addFilterOption(filterName, option);
+    //     }
+    //     this.storeActiveFilters();
+    // }
 
     /**
      * Apply a newly created filter
@@ -416,6 +402,90 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     }
 
     /**
+     * Had to be overwritten by children if required
+     * Adds the possibility to filter the inputData before the user applied filter
+     *
+     * @param rawInputData will be set to {@link this.inputData}
+     * @returns should be a filtered version of `rawInputData`. Returns void if unused
+     */
+    protected preFilter(rawInputData: V[]): V[] | void {}
+
+    /**
+     * Enforce children implement a method that returns actual filter definitions
+     */
+    protected abstract getFilterDefinitions(): OsFilter<V>[];
+
+    /**
+     * Recreates the filter stack out of active filter definitions
+     */
+    private activeFiltersToStack(): void {
+        const stack: OsFilterIndicator<V>[] = [];
+        for (const activeFilter of this.activeFilters) {
+            const activeOptions = activeFilter.options.filter((option: OsFilterOption | string) => {
+                if (typeof option === `string`) {
+                    return false;
+                }
+                return option.isActive;
+            });
+            for (const option of activeOptions) {
+                stack.push({
+                    property: activeFilter.property,
+                    option: option as OsFilterOption
+                });
+            }
+        }
+        this._filterStack = stack;
+    }
+
+    /**
+     * Checks if the (stored) filter list matches the current definition of OsFilter<V>
+     *
+     * @param storedFilter
+     * @returns boolean
+     */
+    private isOsFilter(storedFilter: OsFilter<V>[]): boolean {
+        if (Array.isArray(storedFilter) && storedFilter.length) {
+            return storedFilter.every(
+                filter =>
+                    // Interfaces do not exist at runtime. Manually check if the
+                    // Required information of the interface are present
+                    filter.hasOwnProperty(`options`) && filter.hasOwnProperty(`property`) && !!filter.property
+            );
+        } else {
+            return false;
+        }
+    }
+
+    private getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters: OsFilter<V>[]): number {
+        if (!nextFilterDefinition) {
+            return 0;
+        }
+        let count = 0;
+        const matchingExistingFilter = storedFilters.find(oldDef => oldDef.property === nextFilterDefinition.property);
+        for (const option of nextFilterDefinition.options) {
+            if (typeof option !== `object`) {
+                continue;
+            }
+            if (!matchingExistingFilter || !matchingExistingFilter.options) {
+                continue;
+            }
+            const existingOption = matchingExistingFilter.options.find(toCompare => {
+                if (typeof toCompare === `string` || !toCompare) {
+                    return false;
+                }
+                return JSON.stringify(toCompare.condition) === JSON.stringify(option.condition);
+            }) as OsFilterOption;
+            if (existingOption) {
+                option.isActive = existingOption.isActive;
+            }
+            if (option.isActive) {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    /**
      * Checks if a given BaseViewModel passes a filter.
      *
      * @param item Usually a view model
@@ -474,46 +544,28 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     }
 
     /**
-     * Retrieves a translatable label or filter property used for displaying the filter
-     *
-     * @param filter
-     * @returns a name, capitalized first character
+     * Applies current filters in {@link filterDefinitions} to the {@link _inputData} list
+     * and publishes the filtered data to the observable {@link _outputSubject}
      */
-    public getFilterName(filter: OsFilter<V>): string {
-        if (filter.label) {
-            return filter.label;
-        } else {
-            const itemProperty = filter.property as string;
-            return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
-        }
-    }
-
-    /**
-     * Removes all active options of a given filter, clearing it
-     *
-     * @param filter
-     * @param update
-     */
-    public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
-        filter.options.forEach(option => {
-            if (typeof option === `object` && option.isActive) {
-                this.removeFilterOption(filter.property, option);
+    private updateFilteredData(): void {
+        let filteredData: V[] = [];
+        if (this._inputData) {
+            const preFilteredList = this.preFilter(this._inputData);
+            if (preFilteredList) {
+                this._inputData = preFilteredList;
             }
-        });
-        if (update) {
-            this.storeActiveFilters();
-        }
-    }
 
-    /**
-     * Removes all filters currently in use from this filterService
-     */
-    public clearAllFilters(): void {
-        if (this.filterDefinitions && this.filterDefinitions.length) {
-            this.filterDefinitions.forEach(filter => {
-                this.clearFilter(filter, false);
-            });
-            this.storeActiveFilters();
+            if (!this.filterDefinitions || !this.filterDefinitions.length) {
+                filteredData = this._inputData;
+            } else {
+                const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
+                filteredData = this._inputData.filter(item =>
+                    activeFilters.every(filter => this.isPassingFilter(item, filter))
+                );
+            }
         }
+
+        this._outputSubject.next(filteredData);
+        this.activeFiltersToStack();
     }
 }

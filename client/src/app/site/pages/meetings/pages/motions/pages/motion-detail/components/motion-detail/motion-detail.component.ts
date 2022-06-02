@@ -106,7 +106,8 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
                 fieldset: [`forwarded`, `created`, `sequential_number`],
                 follow: [{ idField: `meeting_id`, fieldset: [], additionalFields: [`name`, `description`] }]
             },
-            subscriptionName: MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION
+            subscriptionName: MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION,
+            hideWhenDestroyed: true
         });
     }
 }

@@ -19,11 +19,9 @@
 
 <os-list
     [listObservableProvider]="controller"
-    [columns]="tableColumnDefinition"
     [(selectedRows)]="selectedRows"
     [multiSelect]="isMultiSelect"
     listStorageKey="member"
-    (dataSourceChange)="onDataSourceChange($event)"
     [filterProps]="['full_name', 'default_structure_level', 'default_number']"
     [filterService]="filterService"
     [sortService]="sortService"
@@ -32,7 +30,7 @@
     [vScrollFixed]="60"
 >
     <!-- Name column -->
-    <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
+    <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
         <div class="nameCell flex-vertical-center">
             <div>
@@ -45,7 +43,7 @@
         </div>
     </div>
     <!-- Info column -->
-    <div *pblNgridCellDef="'info'; row as user" class="committee-wrapper">
+    <div *osScrollingTableCell="'info'; row as user" class="committee-wrapper">
         <div class="flex-center">
             <os-icon-container
                 *ngIf="!!user.committee_ids?.length"
@@ -64,14 +62,14 @@
         </div>
     </div>
     <!-- Active or not active column -->
-    <div *pblNgridCellDef="'is_active'; row as user">
+    <div *osScrollingTableCell="'is_active'; row as user; config: { width: 100 }">
         <div>
             <mat-label class="inactive-label" *ngIf="!user.is_active">{{ 'Inactive' | translate }}</mat-label>
         </div>
     </div>
     <!-- Menu column -->
     <ng-container *osOmlPerms="OML.can_manage_users">
-        <div *pblNgridCellDef="'menu'; row as user" class="cell-slot fill">
+        <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
             <div>
                 <button mat-icon-button [matMenuTriggerFor]="singleMenu" [matMenuTriggerData]="{ member: user }">
                     <mat-icon>more_vert</mat-icon>

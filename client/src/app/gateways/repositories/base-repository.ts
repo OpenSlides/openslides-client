@@ -1,5 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, Observable, Subject } from 'rxjs';
+import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 
 import { Id } from '../../domain/definitions/key-types';
@@ -16,6 +17,8 @@ import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
 const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
+
+export interface CreateResponse extends Identifiable, HasSequentialNumber {}
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
     /**
@@ -37,7 +40,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      *
      * It's used to debounce messages on the sortedViewModelListSubject
      */
-    protected readonly unsafeViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject<V[]>([]);
+    protected readonly unsafeViewModelListSubject = new BehaviorSubject<V[]>([]);
 
     /**
      * Observable subject for the sorted view model list. Only accessible models are in the list.
@@ -46,7 +49,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * updates, if e.g. an autoupdate with a lot motions come in. The result is just one
      * update of the new list instead of many unnecessary updates.
      */
-    protected readonly viewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject<V[]>([]);
+    protected readonly viewModelListSubject = new BehaviorSubject<V[]>([]);
 
     /**
      * Observable subject for any changes of view models. Unaccessible view models are included.

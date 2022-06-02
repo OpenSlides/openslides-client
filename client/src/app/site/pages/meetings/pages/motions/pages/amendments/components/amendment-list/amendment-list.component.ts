@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { distinctUntilChanged, firstValueFrom, Observable, of, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -45,26 +44,6 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     public itemVisibility = ItemTypeChoices;
 
     public showSequentialNumber: boolean = false;
-
-    /**
-     * Column defintiion
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `meta`,
-            minWidth: 250,
-            width: `50%`
-        },
-        {
-            prop: `summary`,
-            minWidth: 280,
-            width: `50%`
-        },
-        {
-            prop: `speakers`,
-            width: this.singleButtonWidth
-        }
-    ];
 
     /**
      * To filter stuff
@@ -136,12 +115,12 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
 
     // todo put in own file
     public async openExportDialog(): Promise<void> {
-        const dialogRef = await this.dialog.open(this.dataSource.source);
+        const dialogRef = await this.dialog.open(this.listComponent.source);
         const exportInfo = await firstValueFrom(dialogRef.afterClosed());
         if (exportInfo) {
             this.motionExport.evaluateExportRequest(
                 exportInfo,
-                this.isMultiSelect ? this.selectedRows : this.dataSource.filteredData
+                this.isMultiSelect ? this.selectedRows : this.listComponent.source
             );
         }
     }
@@ -151,7 +130,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      */
     public exportAmendmentListPdf(): void {
         const parentMotion = this.parentMotionId ? this.amendmentRepo.getViewModel(this.parentMotionId)! : undefined;
-        this.pdfExport.exportAmendmentList(this.dataSource.filteredData, parentMotion);
+        this.pdfExport.exportAmendmentList(this.listComponent.source, parentMotion);
     }
 
     public getAmendmentDiffLines(amendment: ViewMotion): string {

@@ -46,11 +46,12 @@
         </ng-template>
     </mat-tab>
 
-    <div *pblNgridCellDef="'newEntry.agenda_duration'; row as entry">
+    <div *osScrollingTableCell="'agenda_duration'; row as entry; config: { width: 150 }">
+        <div *osScrollingTableCellLabel>{{ 'Duration' | translate }}</div>
         {{ getDuration(entry.newEntry.agenda_duration) }}
     </div>
-
-    <div *pblNgridCellDef="'newEntry.agenda_type'; row as entry">
+    <div *osScrollingTableCell="'agenda_type'; row as entry; config: { width: 150 }">
+        <div *osScrollingTableCellLabel>{{ 'Internal item' | translate }}</div>
         {{ getTypeString(entry.newEntry.agenda_type) | translate }}
     </div>
 </os-import-list>

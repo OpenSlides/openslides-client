@@ -1,9 +1,10 @@
-import { PblColumnDefinition } from '@pebula/ngrid';
-export type ImportListHeaderDefinition = PblColumnDefinition & HeaderDefinition;
+export type ImportListHeaderDefinition = HeaderDefinition;
 
 interface HeaderDefinition {
     label: string;
-    prop: string;
+    property: string;
+    type?: `boolean` | `string` | `number`;
     isRequired?: boolean;
     isTableColumn?: boolean;
+    width?: number;
 }

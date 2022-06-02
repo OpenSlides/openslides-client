@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Permission } from 'src/app/domain/definitions/permission';
 import {
     BasePollDetailComponent,
@@ -27,19 +26,6 @@ import { MotionPollDialogService } from '../../../../modules/motion-poll/service
     encapsulation: ViewEncapsulation.None
 })
 export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotion, MotionPollService> {
-    public columnDefinitionSingleVotesTable: PblColumnDefinition[] = [
-        {
-            prop: `user`,
-            width: `50%`,
-            label: `Participant`
-        },
-        {
-            prop: `vote`,
-            width: `50%`,
-            label: `Vote`
-        }
-    ];
-
     public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`];
 
     public get showResults(): boolean {

@@ -56,6 +56,10 @@ export abstract class BaseModel<T = any> implements Identifiable, Deserializable
         Object.assign(this, input);
     }
 
+    public toString(): string {
+        return this.fqid;
+    }
+
     private handleRemovedTemplateFields({
         origin,
         update,

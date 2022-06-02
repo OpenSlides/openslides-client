@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 
@@ -18,24 +17,6 @@ export class EntitledUsersTableComponent {
 
     @Input()
     public listStorageKey!: string;
-
-    public columnDefinitionEntitledUsersTable: PblColumnDefinition[] = [
-        {
-            prop: `user_id`,
-            width: `40%`,
-            label: `Participant`
-        },
-        {
-            prop: `voted`,
-            width: `30%`,
-            label: `Voted`
-        },
-        {
-            prop: `delegation`,
-            width: `30%`,
-            label: `Delegated to`
-        }
-    ];
 
     public readonly permission = Permission;
 

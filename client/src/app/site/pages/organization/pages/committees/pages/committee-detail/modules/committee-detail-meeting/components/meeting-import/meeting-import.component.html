@@ -6,9 +6,9 @@
 </os-head-bar>
 
 <mat-card class="os-card">
-    <os-file-upload
-        [columns]="columns"
-        [uploadFileFn]="getUploadFileFn()"
-        (uploadSucceeded)="onUploadSucceeded()"
-    ></os-file-upload>
+    <os-file-upload [uploadFileFn]="getUploadFileFn()" (uploadSucceeded)="onUploadSucceeded()">
+        <div *osScrollingTableCell="'title'">
+            <div *osScrollingTableCellLabel>{{ 'Title' | translate }}</div>
+        </div>
+    </os-file-upload>
 </mat-card>

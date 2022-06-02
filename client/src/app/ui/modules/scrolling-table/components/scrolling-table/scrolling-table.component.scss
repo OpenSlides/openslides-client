@@ -1,0 +1,62 @@
+@mixin scrolling-table-style() {
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.025);
+    }
+
+    .scrolling-table-cell {
+        position: relative;
+        flex: 1;
+        padding-left: 12px;
+        padding-right: 12px;
+        box-sizing: content-box;
+        width: 100%;
+        height: 100%;
+
+        &:not(:first-child) {
+            border-left: 1px solid rgba(0, 0, 0, 0);
+        }
+
+        &.selection-cell {
+            max-width: 40px;
+            min-width: 40px;
+        }
+
+        &:first-child {
+            padding-left: 24px;
+        }
+        &:last-child {
+            padding-right: 24px;
+        }
+    }
+}
+
+:host,
+.scrolling-table-container {
+    display: block;
+    height: inherit;
+    user-select: none;
+}
+
+.scrolling-table-header {
+    @include scrolling-table-style();
+
+    .scrolling-table-cell {
+        font-weight: 500;
+    }
+}
+
+.scrolling-table--no-data-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.virtual-scroll-viewport {
+    height: 100%;
+
+    .scrolling-table-row {
+        @include scrolling-table-style();
+    }
+}

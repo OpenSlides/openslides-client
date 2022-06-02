@@ -17,7 +17,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
 import { auditTime, distinctUntilChanged, firstValueFrom, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
@@ -25,6 +24,7 @@ import { ImportStep, ImportStepPhase } from 'src/app/infrastructure/utils/import
 import { CsvMapping, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { ImportService } from 'src/app/ui/base/import-service';
 
+import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 import { ImportListHeaderDefinition } from '../../definitions';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
@@ -37,6 +37,9 @@ import { ImportListStatusTemplateDirective } from '../../directives/import-list-
     encapsulation: ViewEncapsulation.None
 })
 export class ImportListComponent<M extends Identifiable> implements OnInit, OnDestroy {
+    public readonly END_POSITION = END_POSITION;
+    public readonly START_POSITION = START_POSITION;
+
     @ContentChildren(ImportListFirstTabDirective, { read: MatTab })
     public importListFirstTabs!: QueryList<MatTab>;
 
@@ -45,9 +48,6 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
 
     @ContentChild(ImportListStatusTemplateDirective, { read: TemplateRef })
     public importListStateTemplate: TemplateRef<any>;
-    // public set importListStateTemplate(template: TemplateRef<any>) {
-    //     console.log(`set state template:`, template);
-    // }
 
     @ViewChild(`fileInput`)
     private fileInput!: ElementRef<HTMLInputElement>;
@@ -89,34 +89,7 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     @Output()
     public selectedTabChanged = new EventEmitter<number>();
 
-    public get defaultColumns(): PblColumnDefinition[] {
-        return [
-            {
-                label: ``,
-                prop: `status`,
-                minWidth: 25,
-                width: `25px`,
-                maxWidth: 25
-            },
-            {
-                label: `#`,
-                prop: `importTrackId`,
-                minWidth: 25,
-                maxWidth: 25
-            }
-        ];
-    }
-
     public readonly Phase = ImportStepPhase;
-
-    public get columnSet(): PblNgridColumnSet {
-        return this._columnSet!;
-    }
-
-    /**
-     * Data source for ngrid
-     */
-    public vScrollDataSource!: PblDataSource<ImportModel<M>>;
 
     /**
      * Switch that turns true if a file has been selected in the input
@@ -124,6 +97,10 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     public hasFile!: Observable<boolean>;
     public get rawFileObservable(): Observable<File | null> {
         return this._importer?.rawFileObservable || of(null);
+    }
+
+    public get defaultColumns(): ImportListHeaderDefinition[] {
+        return this._defaultColumns;
     }
 
     /**
@@ -217,11 +194,15 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
         return this._requiredFields;
     }
 
+    public get dataSource(): Observable<ImportModel<M>[]> {
+        return this._dataSource;
+    }
+
     public headerValueMap: any = {};
 
-    private _root = this.host.nativeElement;
+    private _dataSource: Observable<ImportModel<M>[]> = of([]);
     private _requiredFields: string[] = [];
-    private _columnSet: PblNgridColumnSet | null = null;
+    private _defaultColumns: ImportListHeaderDefinition[] = [];
 
     public constructor(private host: ElementRef<HTMLElement>, private dialog: MatDialog) {}
 
@@ -230,9 +211,8 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
      */
     public ngOnInit(): void {
         this._importer.clearPreview();
-        this._columnSet = this.createColumnSet();
+        this._defaultColumns = this.createColumns();
         this._requiredFields = this.createRequiredFields();
-        this.resetRowHeight();
     }
 
     public ngOnDestroy(): void {
@@ -259,12 +239,7 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
             map(entries => entries.length > 0)
         );
 
-        this.vScrollDataSource = createDS<ImportModel<M>>()
-            .keepAlive()
-            .onTrigger(() => newEntriesObservable)
-            .create();
-
-        this.setFilter();
+        this._dataSource = newEntriesObservable;
     }
 
     public hasSeveralTabs(): boolean {
@@ -298,16 +273,14 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
      */
     public setFilter(): void {
         if (this.shown === `all`) {
-            this.vScrollDataSource.setFilter();
+            // this.vScrollDataSource.setFilter();
         } else if (this.shown === `noerror`) {
-            const noErrorFilter = (data: ImportModel<any>) => data.status === `done` || data.status !== `error`;
-
-            this.vScrollDataSource.setFilter(noErrorFilter);
+            // const noErrorFilter = (data: ImportModel<any>) => data.status === `done` || data.status !== `error`;
+            // this.vScrollDataSource.setFilter(noErrorFilter);
         } else if (this.shown === `error`) {
-            const hasErrorFilter = (data: ImportModel<any>) =>
-                data.status === `error` || !!data.errors.length || data.hasDuplicates;
-
-            this.vScrollDataSource.setFilter(hasErrorFilter);
+            // const hasErrorFilter = (data: ImportModel<any>) =>
+            //     data.status === `error` || !!data.errors.length || data.hasDuplicates;
+            // this.vScrollDataSource.setFilter(hasErrorFilter);
         }
     }
 
@@ -448,29 +421,23 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
         }
     }
 
-    private createColumnSet(): PblNgridColumnSet {
-        return columnFactory()
-            .default({ minWidth: 150 })
-            .table(...this.defaultColumns, ...this.createColumns())
-            .build();
-    }
-
-    private createColumns(): PblColumnDefinition[] {
+    private createColumns(): ImportListHeaderDefinition[] {
         const getHeaderProp = (prop: string) => {
-            return prop.startsWith(`newEntry.`) ? prop : `newEntry.${prop}`;
+            return prop.startsWith(`newEntry.`) ? prop.slice(`newEntry.`.length) : prop;
         };
-        const definitions = this.columns ?? this.headerDefinition;
+        const definitions = this.columns ?? [this.headerDefinition];
         if (!definitions) {
             throw new Error(`You have to specify the columns to show`);
         }
         if (Array.isArray(definitions) && definitions.length > 0) {
-            return definitions
+            const computedDefinitions = definitions
                 .filter((definition: ImportListHeaderDefinition) => definition.isTableColumn)
                 .map(column => ({
                     ...column,
-                    prop: getHeaderProp(column.prop),
-                    type: this.getTypeByProperty(getHeaderProp(column.prop).slice(`newEntry.`.length))
+                    property: getHeaderProp(column.property),
+                    type: this.getTypeByProperty(getHeaderProp(column.property))
                 }));
+            return computedDefinitions;
         }
         return [];
     }
@@ -483,18 +450,6 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
                 .map(definition => definition.label as string);
         } else {
             return [];
-        }
-    }
-
-    /**
-     * Resets the height of the displayed rows to the passed `rowHeight`-property.
-     */
-    private resetRowHeight(): void {
-        const styleProperty = `--os-row-height`;
-        if (this.rowHeight > 0) {
-            this._root.style.setProperty(styleProperty, `${this.rowHeight}px`);
-        } else {
-            this._root.style.removeProperty(styleProperty);
         }
     }
 

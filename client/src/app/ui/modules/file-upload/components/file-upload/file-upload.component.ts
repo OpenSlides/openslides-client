@@ -1,11 +1,10 @@
-import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import { columnFactory, createDS, PblColumnDefinition, PblDataSource, PblNgridColumnSet } from '@pebula/ngrid';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 
-export interface FileData {
+export interface FileData extends Identifiable {
     mediafile: File;
     title: string;
     [key: string]: any;
@@ -13,12 +12,14 @@ export interface FileData {
 
 const PBL_ROW_HEIGHT = 70;
 
+let uniqueCounter = 0;
+
 @Component({
     selector: `os-file-upload`,
     templateUrl: `./file-upload.component.html`,
     styleUrls: [`./file-upload.component.scss`]
 })
-export class FileUploadComponent implements OnInit {
+export class FileUploadComponent {
     /**
      * Determine wether to show the progress bar
      */
@@ -26,18 +27,15 @@ export class FileUploadComponent implements OnInit {
     public showProgress = false;
 
     public get isEmpty(): boolean {
-        return this.filesSubject.value.length === 0;
+        return this._filesSubject.value.length === 0;
     }
 
     public get tableHeight(): string {
-        return `${PBL_ROW_HEIGHT * (this.filesSubject.value.length + 1)}px`;
+        return `${PBL_ROW_HEIGHT * (this._filesSubject.value.length + 1)}px`;
     }
 
     @ContentChild(TemplateRef, { static: true })
     public additionalContent: TemplateRef<any> | null = null;
-
-    @Input()
-    public columns: PblColumnDefinition[] = [];
 
     /**
      * Determine if uploading should happen parallel or synchronously.
@@ -49,7 +47,7 @@ export class FileUploadComponent implements OnInit {
     public progressObservable = new BehaviorSubject<number>(0);
 
     public get isUploadDisabled(): boolean {
-        return this.filesSubject.value.length === 0;
+        return this._filesSubject.value.length === 0;
     }
 
     @Input()
@@ -64,33 +62,15 @@ export class FileUploadComponent implements OnInit {
     @Output()
     public uploadFailured = new EventEmitter<string>();
 
-    public columnSet!: PblNgridColumnSet;
+    public get dataSource(): Observable<FileData[]> {
+        return this._filesSubject;
+    }
 
-    public dataSource!: PblDataSource<FileData>;
-
-    private endColumns: PblColumnDefinition[] = [
-        {
-            prop: `remove`,
-            label: ``,
-            width: `40px`
-        }
-    ];
-
-    private filesSubject = new BehaviorSubject<FileData[]>([]);
+    private readonly _filesSubject = new BehaviorSubject<FileData[]>([]);
 
     private errorMessage = ``;
 
     private fileUploadedIds: Id[] = [];
-
-    public ngOnInit(): void {
-        this.dataSource = createDS<FileData>()
-            .keepAlive()
-            .onTrigger(() => this.filesSubject)
-            .create();
-        this.columnSet = columnFactory()
-            .table(...this.columns, ...this.endColumns)
-            .build();
-    }
 
     /**
      * Handler for the select file event
@@ -124,7 +104,7 @@ export class FileUploadComponent implements OnInit {
     }
 
     public async onUploadButton(): Promise<void> {
-        const files = [...this.filesSubject.value];
+        const files = [...this._filesSubject.value];
         this.errorMessage = ``;
         this.showProgress = true;
 
@@ -149,15 +129,15 @@ export class FileUploadComponent implements OnInit {
     }
 
     public onClearButton(): void {
-        this.filesSubject.next([]);
+        this._filesSubject.next([]);
     }
 
     public onRemoveButton(file: FileData): void {
-        const files = this.filesSubject.value;
+        const files = this._filesSubject.value;
         const index = files.findIndex(f => f === file);
         if (index > -1) {
             files.splice(index, 1);
-            this.filesSubject.next(files);
+            this._filesSubject.next(files);
         }
     }
 
@@ -177,7 +157,7 @@ export class FileUploadComponent implements OnInit {
 
     private addFile(file: File): void {
         const fileData = this.addFileFn ? this.addFileFn(file) : this.createFileData(file);
-        this.filesSubject.next(this.filesSubject.value.concat(fileData));
+        this._filesSubject.next(this._filesSubject.value.concat(fileData));
     }
 
     private async uploadFile(file: FileData): Promise<void> {
@@ -196,6 +176,7 @@ export class FileUploadComponent implements OnInit {
 
     private createFileData(file: File): FileData {
         return {
+            id: ++uniqueCounter,
             title: file.name,
             mediafile: file
         };

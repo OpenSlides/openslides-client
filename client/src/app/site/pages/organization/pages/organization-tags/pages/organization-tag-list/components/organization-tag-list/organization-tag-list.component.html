@@ -19,26 +19,24 @@
 
 <os-list
     [listObservable]="repo.getViewModelListObservable()"
-    [columns]="tableColumnDefinition"
     [(selectedRows)]="selectedRows"
     [multiSelect]="isMultiSelect"
     listStorageKey="orgaTags"
-    (dataSourceChange)="onDataSourceChange($event)"
     [vScrollFixed]="60"
     [filterProps]="['name']"
     [hiddenInMobile]="['info', 'menu']"
 >
-    <div *pblNgridCellDef="'name'; row as orgaTag" class="cell-slot fill">
+    <div *osScrollingTableCell="'name'; row as orgaTag" class="cell-slot fill">
         <div>
             <os-chip [color]="orgaTag.color">{{ orgaTag.name }}</os-chip>
         </div>
     </div>
-    <div *pblNgridCellDef="'edit'; row as orgaTag" class="cell-slot fill">
+    <div *osScrollingTableCell="'edit'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
         <button mat-icon-button (click)="editOrganizationTag(orgaTag)">
             <mat-icon>edit</mat-icon>
         </button>
     </div>
-    <div *pblNgridCellDef="'delete'; row as orgaTag" class="cell-slot fill">
+    <div *osScrollingTableCell="'delete'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
         <button mat-icon-button color="warn" (click)="deleteOrganizationTags(orgaTag)">
             <mat-icon>delete</mat-icon>
         </button>

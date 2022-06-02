@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -28,24 +27,6 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      * The different phases of an assignment. Info is fetched from server
      */
     public phaseOptions = AssignmentPhases;
-
-    /**
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            width: `100%`
-        },
-        {
-            prop: `phase`,
-            minWidth: 180
-        },
-        {
-            prop: `candidates`,
-            width: this.singleButtonWidth
-        }
-    ];
 
     /**
      * Define extra filter properties
@@ -109,7 +90,6 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      * otherwise the whole list of assignments is exported.
      */
     public async downloadAssignmentButton(assignments?: ViewAssignment[]): Promise<void> {
-        // await this.modelRequestService.instant(ASSIGNMENT_TO_PDF_REQUEST(this.activeMeetingId!), `assignment-to-pdf`);
         this.pdfService.exportMultipleAssignments(assignments ?? this.repo.getViewModelList());
     }
 

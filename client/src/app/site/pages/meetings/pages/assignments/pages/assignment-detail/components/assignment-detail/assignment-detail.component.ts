@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, filter, first, firstValueFrom, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
@@ -448,7 +449,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     private async createAssignment(): Promise<void> {
         try {
             const response = await this.assignmentRepo.create(this.assignmentForm.value);
-            await this.navigateAfterCreation(response.id);
+            await this.navigateAfterCreation(response);
         } catch (e) {
             this.raiseError(e);
         }
@@ -478,16 +479,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
-    private async navigateAfterCreation(id: Id): Promise<void> {
-        const assignment = await firstValueFrom(
-            this.assignmentRepo.getViewModelObservable(id).pipe(
-                filter(toCheck => !!toCheck),
-                first()
-            )
-        );
-        if (assignment) {
-            this.router.navigate([assignment.getDetailStateUrl()]);
-        }
+    private async navigateAfterCreation(assignment: HasSequentialNumber): Promise<void> {
+        this.router.navigate([`${this.activeMeetingId}`, `assignments`, `${assignment.sequential_number}`]);
     }
 
     private getDialogData(pollId?: Id): PollDialogData | ViewPoll {

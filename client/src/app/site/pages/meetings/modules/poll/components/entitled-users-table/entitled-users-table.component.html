@@ -1,25 +1,21 @@
 <div *osPerms="permission.userCanSee">
     <os-list
         [listObservable]="entitledUsersObservable"
-        [columns]="columnDefinitionEntitledUsersTable"
         [filterProps]="filterPropsEntitledUsersTable"
         [fullScreen]="false"
-        [vScrollFixed]="-1"
     >
-        <!-- Header -->
-        <div *pblNgridHeaderCellDef="'*'; col as col">
-            {{ col.label | translate }}
-        </div>
-
         <!-- Content -->
-        <div *pblNgridCellDef="'user_id'; row as entry">
+        <div *osScrollingTableCell="'user_id'; row as entry">
+            <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
             <span *ngIf="entry.user">{{ entry.user.getFullName() }}</span>
             <i *ngIf="!entry.user">{{ 'Anonymous' | translate }}</i>
         </div>
-        <div *pblNgridCellDef="'voted'; row as entry">
+        <div *osScrollingTableCell="'voted'; row as entry">
+            <div *osScrollingTableCellLabel>{{ 'Voted' | translate }}</div>
             <mat-icon *ngIf="entry.voted">check_box</mat-icon>
         </div>
-        <div *pblNgridCellDef="'delegation'; row as entry">
+        <div *osScrollingTableCell="'delegation'; row as entry">
+            <div *osScrollingTableCellLabel>{{ 'Delegated to' | translate }}</div>
             <div *ngIf="entry.vote_delegated_to_id">
                 <span class="repr-prefix">represented by</span>
                 &nbsp;

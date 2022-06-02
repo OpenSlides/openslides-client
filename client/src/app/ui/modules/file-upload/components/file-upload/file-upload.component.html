@@ -36,20 +36,17 @@
 </mat-card>
 
 <ng-template #tableTemplate>
-    <pbl-ngrid
-        *ngIf="columnSet && !isEmpty"
+    <os-scrolling-table
+        *ngIf="!isEmpty"
         vScrollFixed="50"
         [showHeader]="true"
-        [columns]="columnSet"
         [dataSource]="dataSource"
         [ngStyle]="{ height: tableHeight }"
     >
-        <ng-content select=".cell-slot"></ng-content>
-
-        <div *pblNgridCellDef="'remove'; row as file">
+        <div *osScrollingTableCell="'remove'; row as file">
             <button mat-icon-button (click)="onRemoveButton(file)" matTooltip="{{ 'Remove file' | translate }}">
                 <mat-icon>close</mat-icon>
             </button>
         </div>
-    </pbl-ngrid>
+    </os-scrolling-table>
 </ng-template>

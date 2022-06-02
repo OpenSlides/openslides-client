@@ -1,6 +1,3 @@
-/** Imports the ngrid-theming */
-@use '~@pebula/ngrid' as ngrid;
-
 /** Imports the material-design-theming */
 @use '@angular/material' as mat;
 
@@ -13,25 +10,16 @@
 
 /** Mix the component-related style-rules. Every single custom style goes here */
 @mixin openslides-components-theme($theme) {
+    @include mat.all-component-themes($theme);
     @include os-component-themes($theme);
 }
 
-@mixin ngrid-theme($theme) {
-    @include ngrid.ngrid-typography();
-    @include ngrid.ngrid-theme($theme);
-    @include ngrid.predefined-spacing($theme);
-}
-
 .openslides-light-theme {
-    @include mat.all-component-themes($openslides-light-theme);
     @include openslides-components-theme($openslides-light-theme);
-    @include ngrid-theme(ngrid.define-light-theme(ngrid.define-palette(ngrid.$blue-palette)));
 }
 
 .openslides-dark-theme {
-    @include mat.all-component-themes($openslides-dark-theme);
     @include openslides-components-theme($openslides-dark-theme);
-    @include ngrid-theme(ngrid.define-dark-theme(ngrid.define-palette(ngrid.$blue-palette)));
 }
 
 [class^='openslides-'][class*='-light-theme'] {

@@ -1,5 +1,4 @@
 <os-file-upload
-    [columns]="vScrollColumns"
     [addFileFn]="getAddFileFn()"
     [uploadFileFn]="getUploadFileFn()"
     [parallel]="parallel"
@@ -29,17 +28,20 @@
         </div>
     </ng-template>
 
-    <div *pblNgridCellDef="'title'; row as file" class="cell-slot">
+    <div *osScrollingTableCell="'title'; row as file" class="cell-slot">
+        <div *osScrollingTableCellLabel>{{ 'Title' | translate }}</div>
         <mat-form-field>
             <input matInput [(ngModel)]="file.title" />
         </mat-form-field>
     </div>
 
-    <div *pblNgridCellDef="'filename'; row as file" class="cell-slot">
+    <div *osScrollingTableCell="'filename'; row as file" class="cell-slot">
+        <div *osScrollingTableCellLabel>{{ 'Filename' | translate }}</div>
         {{ file.mediafile.name }}
     </div>
 
-    <div *pblNgridCellDef="'information'; row as file" class="cell-slot">
+    <div *osScrollingTableCell="'information'; row as file" class="cell-slot">
+        <div *osScrollingTableCellLabel>{{ 'Information' | translate }}</div>
         <div class="file-info-cell">
             <span>
                 <mat-icon [inline]="true">insert_drive_file</mat-icon>

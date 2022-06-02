@@ -256,10 +256,6 @@
         color: white;
     }
 
-    .background-dark-brightest {
-        background: #8f8f8f;
-    }
-
     /**
      * CLEANUP:
      * whole theme-related stylesheets can be replaced using classes like this one
@@ -391,8 +387,20 @@
         color: if($is-dark-theme, white, rgba(0, 0, 0, 0.65));
     }
 
-    .underline {
-        border-bottom: 1px solid mat.get-color-from-palette($foreground, divider, if($is-dark-theme, 0.7, 0.42));
+    .divider {
+        $divider-color: 1px solid mat.get-color-from-palette($foreground, divider);
+        &-bottom {
+            border-bottom: $divider-color;
+        }
+        &-left {
+            border-left: $divider-color;
+        }
+        &-right {
+            border-right: $divider-color;
+        }
+        &-top {
+            border-top: $divider-color;
+        }
     }
 
     /** remove unwanted spaces from group displays */

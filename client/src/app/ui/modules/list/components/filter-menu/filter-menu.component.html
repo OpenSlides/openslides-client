@@ -1,6 +1,6 @@
 <div class="filter-menu-content-wrapper">
     <mat-accordion (keyup)="checkKeyEvent($event)">
-        <mat-expansion-panel *ngFor="let filter of service.filterDefinitions">
+        <mat-expansion-panel *ngFor="let filter of service.filterDefinitionsObservable | async">
             <mat-expansion-panel-header *ngIf="filter && filter.options && filter.options.length">
                 <mat-panel-title>
                     <span>{{ service.getFilterName(filter) | translate }}</span>
@@ -9,25 +9,37 @@
                     </mat-basic-chip>
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div class="indent" *ngIf="filter.options && filter.options.length">
-                <mat-action-list class="filtermenu-expanded">
-                    <div *ngFor="let option of filter.options">
-                        <div *ngIf="isFilter(option)">
-                            <mat-checkbox
-                                [ngClass]="option.isChild ? 'filter-child' : ''"
-                                [checked]="!!option.isActive"
-                                (change)="service.toggleFilterOption(filter.property, option)"
-                            >
-                                {{ option.label | translate }}
-                            </mat-checkbox>
-                        </div>
-                        <div class="filter-subtitle" *ngIf="!isFilter(option)">
-                            <mat-divider *ngIf="option === '-'"></mat-divider>
-                            <span *ngIf="option !== '-'">{{ option | translate }}</span>
-                        </div>
-                    </div>
-                </mat-action-list>
-            </div>
+            <ng-template matExpansionPanelContent>
+                <div
+                    class="indent"
+                    *ngIf="filter.options && filter.options.length"
+                    [ngStyle]="{ height: getActionListContentHeight(filter.options) }"
+                >
+                    <mat-action-list class="filtermenu-expanded">
+                        <cdk-virtual-scroll-viewport [itemSize]="ROW_HEIGHT">
+                            <ng-container *cdkVirtualFor="let option of filter.options">
+                                <div class="filter-menu--option-row flex-vertical-center">
+                                    <mat-checkbox
+                                        #filterCheckBox
+                                        *ngIf="isFilter(option)"
+                                        [ngClass]="option.isChild ? 'filter-child' : ''"
+                                        [checked]="!!option.isActive"
+                                        [matTooltip]="option.label"
+                                        [matTooltipDisabled]="!shouldShowTooltip(filterCheckBox)"
+                                        (change)="service.toggleFilterOption(filter.property, option)"
+                                    >
+                                        {{ option.label | translate }}
+                                    </mat-checkbox>
+                                    <div class="filter-subtitle" *ngIf="!isFilter(option)">
+                                        <mat-divider *ngIf="option === '-'"></mat-divider>
+                                        <span *ngIf="option !== '-'">{{ option | translate }}</span>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </cdk-virtual-scroll-viewport>
+                    </mat-action-list>
+                </div>
+            </ng-template>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

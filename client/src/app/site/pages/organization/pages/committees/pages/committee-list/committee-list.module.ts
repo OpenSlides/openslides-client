@@ -11,6 +11,7 @@ import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
+import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
 import { CommitteeListRoutingModule } from './committee-list-routing.module';
 import { CommitteeListComponent } from './components/committee-list/committee-list.component';
@@ -24,6 +25,7 @@ import { CommitteeListServiceModule } from './services/committee-list-service.mo
         CommitteeListServiceModule,
         IconContainerModule,
         ListModule,
+        ScrollingTableModule,
         HeadBarModule,
         ChipModule,
         ChoiceDialogModule,

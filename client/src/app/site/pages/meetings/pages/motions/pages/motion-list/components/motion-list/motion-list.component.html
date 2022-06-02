@@ -22,7 +22,7 @@
         <div *ngIf="hasCategories && !isMultiSelect">
             <button
                 mat-button
-                *ngIf="selectedView !== 'tiles'"
+                *ngIf="selectedView === 'list'"
                 (click)="onChangeView('tiles')"
                 matTooltip="{{ 'Tile view' | translate }}"
             >
@@ -31,7 +31,7 @@
 
             <button
                 mat-button
-                *ngIf="selectedView !== 'list'"
+                *ngIf="selectedView === 'tiles'"
                 (click)="onChangeView('list')"
                 matTooltip="{{ 'List view' | translate }}"
             >
@@ -48,15 +48,13 @@
         [listObservableProvider]="motionRepo"
         [filterService]="filterService"
         [sortService]="sortService"
-        [columns]="tableColumnDefinition"
         [multiSelect]="isMultiSelect"
         [filterProps]="filterProps"
         [hiddenInMobile]="getColumnsHiddenInMobile()"
         [(selectedRows)]="selectedRows"
-        (dataSourceChange)="onDataSourceChange($event)"
     >
         <!-- number -->
-        <div *pblNgridCellDef="'number'; row as motion" class="cell-slot fill">
+        <div *osScrollingTableCell="'number'; row as motion; config: { width: 60 }" class="cell-slot fill">
             <os-detail-view-navigator [model]="motion" *ngIf="!isMultiSelect"></os-detail-view-navigator>
             <div class="column-number innerTable">
                 {{ motion.number }}
@@ -64,7 +62,7 @@
         </div>
 
         <!-- Title -->
-        <div *pblNgridCellDef="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
+        <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
             <os-detail-view-navigator [model]="motion" *ngIf="!isMultiSelect"></os-detail-view-navigator>
             <div class="column-title innerTable">
                 <div class="title-line ellipsis-overflow">
@@ -130,7 +128,7 @@
 
         <!-- Category, blocks and tags -->
         <div
-            *pblNgridCellDef="'state'; row as motion"
+            *osScrollingTableCell="'state'; row as motion; config: { minWidth: 160 }"
             class="cell-slot fill"
             [ngClass]="isMultiSelect ? '' : 'clickable'"
             (click)="openEditInfo(motion)"
@@ -161,7 +159,7 @@
         </div>
 
         <!-- Menu -->
-        <div *pblNgridCellDef="'menu'; row as motion" class="cell-slot fill">
+        <div *osScrollingTableCell="'menu'; config: { width: 40 }; row as motion" class="cell-slot fill">
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"

@@ -5,6 +5,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { Action, createEmptyAction } from 'src/app/gateways/actions';
+import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { NullablePartial } from 'src/app/infrastructure/utils';
@@ -35,7 +36,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     ///////////////////////// Bridge to the dedicated repo
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    public create(...motions: NullablePartial<Motion>[]): Promise<Identifiable[]> {
+    public create(...motions: NullablePartial<Motion>[]): Promise<CreateResponse[]> {
         return this.repo.create(...motions);
     }
 

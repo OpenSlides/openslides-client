@@ -8,11 +8,11 @@
         [placeholder]="placeholder"
         class="rounded-input background-default"
         [ngClass]="[size, borderRadius, hasChildren ? 'children-bottom' : '']"
-        [formControl]="modelForm"
+        [formControl]="dedicatedContentForm"
         (keyup)="keyPressed($event)"
         (blur)="blur()"
     />
-    <div *ngIf="modelForm.value !== ''" class="input-suffix foreground-icon">
-        <mat-icon (click)="clear()">close</mat-icon>
+    <div *ngIf="contentForm.value !== ''" class="input-suffix foreground-icon" (mousedown)="clear($event)">
+        <mat-icon>close</mat-icon>
     </div>
 </div>

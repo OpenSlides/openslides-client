@@ -25,22 +25,24 @@
 </os-head-bar>
 
 <os-list
-    [listObservableProvider]="committeeController"
-    [columns]="tableColumnDefinition"
-    [alwaysShowMenu]="true"
+    [listObservable]="committeeController.getViewModelListObservable()"
     [multiSelect]="isMultiSelect"
-    [(selectedRows)]="selectedRows"
-    (dataSourceChange)="onDataSourceChange($event)"
+    [alwaysShowMenu]="true"
     [filterProps]="['name']"
     [hiddenInMobile]="['forwarding', 'managers', 'meta']"
     [sortService]="sortService"
     [filterService]="filterService"
+    [(selectedRows)]="selectedRows"
 >
-    <div *pblNgridCellDef="'name'; value as name; row as committee" class="cell-slot fill">
-        <a class="detail-link" [routerLink]="committee.id" *ngIf="!isMultiSelect && committee.canAccess()"></a>
+    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot">
+        <a
+            class="stretch-to-fill-parent"
+            [routerLink]="committee.id"
+            *ngIf="!isMultiSelect && committee.canAccess()"
+        ></a>
         <div>
             <div class="title-line ellipsis-overflow">
-                {{ name }}
+                {{ committee.name }}
                 <div class="subtitle" *ngIf="committee.description?.trim()">
                     {{ committee.description }}
                 </div>
@@ -52,8 +54,7 @@
             </div>
         </div>
     </div>
-
-    <div *pblNgridCellDef="'forwarding'; row as committee" class="cell-slot fill">
+    <div *osScrollingTableCell="'forwarding'; row as committee; config: { width: 70 }">
         <div class="forwarding-wrapper">
             <div *ngIf="committee.forward_to_committees?.length">
                 <os-icon-container
@@ -80,7 +81,7 @@
         </div>
     </div>
 
-    <div *pblNgridCellDef="'meta'; row as committee" class="cell-slot fill">
+    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 70 }">
         <div>
             <div *ngIf="committee.meetingAmount">
                 <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="event_available">
@@ -100,7 +101,7 @@
         </div>
     </div>
 
-    <div *pblNgridCellDef="'menu'; row as committee" class="cell-slot fill">
+    <div *osScrollingTableCell="'menu'; row as committee; config: { width: 40 }">
         <button
             *osOmlPerms="OML.can_manage_organization"
             mat-icon-button

@@ -16,12 +16,12 @@ import { getAgendaSubscriptionConfig, getTopicSubscriptionConfig } from '../../c
 export class AgendaMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.updateSubscribeTo(
-                getAgendaSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
-                getTopicSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
-                getMotionListSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
-                getMotionBlockSubscriptionConfig(id, () => this.getNextMeetingIdObservable()),
-                getAssignmentSubscriptionConfig(id, () => this.getNextMeetingIdObservable())
+            this.subscribeTo(
+                getAgendaSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
+                getTopicSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
+                getMotionListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
+                getMotionBlockSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
+                getAssignmentSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
             );
         }
     }

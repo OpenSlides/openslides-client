@@ -1,25 +1,48 @@
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-import { BehaviorSubject, distinctUntilChanged, filter, Observable } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 
 import { MeetingDataStoreService } from './meeting-data-store.service';
 
 export class NoActiveMeetingError extends Error {}
 
+interface MeetingIdDifferEvent {
+    currentMeetingId: Id | null;
+    nextMeetingId: Id | null;
+}
+
+export interface MeetingIdChangedEvent extends MeetingIdDifferEvent {
+    hasChanged: boolean;
+}
+
 @Injectable({
     providedIn: `root`
 })
 export class ActiveMeetingIdService {
-    public get meetingIdObservable(): Observable<number | null> {
-        return this._meetingIdSubject.asObservable();
+    public get meetingIdChanged(): Observable<MeetingIdChangedEvent> {
+        return this._meetingIdChangedSubject.pipe(
+            map(event => ({ ...event, hasChanged: event.currentMeetingId !== event.nextMeetingId }))
+        );
     }
 
-    public get meetingId(): number | null {
-        return this._meetingIdSubject.getValue();
+    /**
+     * Fires, if the meeting id will be changed. It sends the next meeting id.
+     */
+    public get meetingIdObservable(): Observable<Id | null> {
+        return this._meetingIdSubject;
     }
 
-    // undefined is for detecting, that this service wasn't loaded yet
-    private _meetingIdSubject = new BehaviorSubject<number | null>(null);
+    /**
+     * Holds the next meeting id
+     */
+    public get meetingId(): Id | null {
+        return this._meetingIdSubject.value;
+    }
+
+    private readonly _meetingIdChangedSubject = new Subject<MeetingIdDifferEvent>();
+    // undefined to specify it is not initialized
+    private readonly _meetingIdSubject = new BehaviorSubject<Id | null>(undefined);
 
     public constructor(router: Router, private DS: MeetingDataStoreService) {
         router.events
@@ -37,13 +60,14 @@ export class ActiveMeetingIdService {
             });
     }
 
-    private setMeetingId(newMeetingId: any): void {
-        newMeetingId = Number(newMeetingId) || null;
+    private setMeetingId(nextMeetingId: number | null | undefined): void {
+        nextMeetingId = Number(nextMeetingId) || null;
 
-        if (newMeetingId === this.meetingId) {
+        if (nextMeetingId === this.meetingId) {
             return;
         }
         this.DS.clearMeetingModels();
-        this._meetingIdSubject.next(newMeetingId);
+        this._meetingIdChangedSubject.next({ currentMeetingId: this.meetingId, nextMeetingId });
+        this._meetingIdSubject.next(nextMeetingId);
     }
 }

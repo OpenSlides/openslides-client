@@ -1,6 +1,6 @@
 import { Directive, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { Router, RoutesRecognized } from '@angular/router';
-import { combineLatest, filter, map, Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { combineLatest, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -89,11 +89,12 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         }
     }
 
+    protected hasMeetingIdChangedObservable(): Observable<boolean> {
+        return this.openslidesRouter.meetingIdChanged.pipe(map(event => event.hasChanged));
+    }
+
     protected getNextMeetingIdObservable(): Observable<Id | null> {
-        return this.router.events.pipe(
-            filter(event => event instanceof RoutesRecognized),
-            map((event: any) => this.getNextMeetingId(event))
-        );
+        return this.openslidesRouter.meetingIdChanged.pipe(map(event => event.nextMeetingId));
     }
 
     private async initModelSubscriptions(): Promise<void> {
@@ -104,16 +105,6 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
                 this.setupSubscription(request);
             }
         }
-    }
-
-    private getNextMeetingId(event: RoutesRecognized): Id | null {
-        const url = event.url;
-        const urlSegments = url.split(`/`);
-        let meetingId: Id | null = null;
-        if (urlSegments.length >= 2) {
-            meetingId = +urlSegments[1] || null;
-        }
-        return meetingId;
     }
 
     private async setupSubscription(request: ModelRequestConfig): Promise<void> {

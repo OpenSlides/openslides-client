@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { VoteValue } from 'src/app/domain/models/poll';
 import {
@@ -34,21 +33,6 @@ export class AssignmentPollDetailComponent
     extends BasePollDetailComponent<ViewAssignment, AssignmentPollService>
     implements OnInit
 {
-    public columnDefinitionSingleVotes: PblColumnDefinition[] = [
-        {
-            prop: `user`,
-            label: `Participant`,
-            width: `40%`,
-            minWidth: 300
-        },
-        {
-            prop: `votes`,
-            label: `Votes`,
-            width: `60%`,
-            minWidth: 300
-        }
-    ];
-
     public filterProps = [`user.getFullName`];
 
     public isReady = false;

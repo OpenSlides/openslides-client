@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { toBase64 } from 'src/app/infrastructure/utils';
@@ -10,34 +9,14 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { FileData } from '../../../file-upload/components/file-upload/file-upload.component';
 
+let uniqueCounter = 0;
+
 @Component({
     selector: `os-media-upload-content`,
     templateUrl: `./media-upload-content.component.html`,
     styleUrls: [`./media-upload-content.component.scss`]
 })
 export class MediaUploadContentComponent extends BaseUiComponent implements OnInit {
-    /**
-     * Columns to display in the upload-table
-     */
-    public vScrollColumns: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            label: this.translate.instant(`Title`)
-        },
-        {
-            prop: `filename`,
-            label: this.translate.instant(`Filename`)
-        },
-        {
-            prop: `information`,
-            label: this.translate.instant(`Information`)
-        },
-        {
-            prop: `access_groups`,
-            label: this.translate.instant(`Access groups`)
-        }
-    ];
-
     /**
      * Determine wether to show the progress bar
      */
@@ -141,6 +120,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
 
     public getAddFileFn(): (file: File) => FileData {
         return file => ({
+            id: ++uniqueCounter,
             mediafile: file,
             title: file.name,
             form: this.formBuilder.group({

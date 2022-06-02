@@ -21,13 +21,11 @@
     [listObservableProvider]="repo"
     [filterService]="filterService"
     [sortService]="sortService"
-    [columns]="tableColumnDefinition"
     [filterProps]="filterProps"
     [showListOfSpeakers]="false"
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['group', 'presence']"
     [(selectedRows)]="selectedRows"
-    (dataSourceChange)="onDataSourceChange($event)"
 >
     <!-- extra content in the filter bar -->
     <div class="filter-bar-info-slot" *ngIf="showVoteWeight">
@@ -36,7 +34,7 @@
     </div>
 
     <!-- Name column -->
-    <div *pblNgridCellDef="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
+    <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
         <div class="nameCell">
             <div>
@@ -64,7 +62,7 @@
 
     <!-- group column -->
     <div
-        *pblNgridCellDef="'group'; row as user"
+        *osScrollingTableCell="'group'; row as user; config: { width: 200 }"
         class="cell-slot fill"
         [ngClass]="isMultiSelect ? '' : 'clickable'"
         (click)="openEditInfo(user, $event)"
@@ -104,7 +102,7 @@
     </div>
 
     <!-- Info column -->
-    <div *pblNgridCellDef="'infos'; row as user" class="cell-slot fill">
+    <div *osScrollingTableCell="'infos'; row as user; config: { width: 40 }" class="cell-slot fill">
         <div class="infoCell">
             <!-- Email-sent indicator -->
             <mat-icon
@@ -125,7 +123,7 @@
     </div>
 
     <!-- Presence column -->
-    <div *pblNgridCellDef="'presence'; row as user" class="cell-slot fill">
+    <div *osScrollingTableCell="'presence'; row as user; config: { width: 100 }" class="cell-slot fill">
         <mat-checkbox
             class="checkbox-ripple-padding"
             (change)="setPresent(user)"
@@ -137,7 +135,7 @@
     </div>
 
     <!-- Menu -->
-    <div *pblNgridCellDef="'menu'; row as user" class="cell-slot fill">
+    <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">
         <button
             mat-icon-button
             [disabled]="isMultiSelect"

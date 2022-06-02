@@ -9,15 +9,13 @@
     [vScrollFixed]="64"
     [listObservableProvider]="repo"
     [showFilterBar]="true"
-    [columns]="tableColumnDefinition"
     [sortService]="sortService"
     [multiSelect]="isMultiSelect"
     [(selectedRows)]="selectedRows"
     [filterProps]="filterProps"
-    (dataSourceChange)="onDataSourceChange($event)"
 >
     <!-- Title column -->
-    <div *pblNgridCellDef="'title'; value as title; row as block; rowContext as rowContext" class="cell-slot fill">
+    <div *osScrollingTableCell="'title'; value as title; row as block; rowContext as rowContext" class="cell-slot fill">
         <os-detail-view-navigator [model]="block" *ngIf="!isMultiSelect"></os-detail-view-navigator>
         <!--
         TODO: Tooltips do not work when hidden under the absolute link, but they can't be above it either,
@@ -46,12 +44,12 @@
     </div>
 
     <!-- Amount -->
-    <div *pblNgridCellDef="'amount'; row as block" class="cell-slot fill">
+    <div *osScrollingTableCell="'amount'; row as block" class="cell-slot fill">
         <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ getMotionAmount(block) }}</span>
     </div>
 
     <!-- Menu -->
-    <div *pblNgridCellDef="'menu'; row as block" class="cell-slot fill">
+    <div *osScrollingTableCell="'menu'; row as block" class="cell-slot fill">
         <button
             mat-icon-button
             [disabled]="isMultiSelect"

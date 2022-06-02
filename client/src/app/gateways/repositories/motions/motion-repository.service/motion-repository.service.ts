@@ -17,6 +17,7 @@ import {
 import { Motion } from '../../../../domain/models/motions/motion';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
+import { CreateResponse } from '../../base-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
@@ -54,7 +55,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return super.getViewModelListObservable().pipe(map(motions => this.getCurrentMotions(motions)));
     }
 
-    public create(...motions: NullablePartial<Motion>[]): Promise<Identifiable[]> {
+    public create(...motions: NullablePartial<Motion>[]): Promise<CreateResponse[]> {
         const payload = motions.map(motion => this.getCreatePayload(motion));
         return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
     }

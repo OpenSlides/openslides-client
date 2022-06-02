@@ -1,3 +1,4 @@
 export enum KeyCode {
-    ENTER = `Enter`
+    ENTER = `Enter`,
+    SHIFT = `Shift`
 }

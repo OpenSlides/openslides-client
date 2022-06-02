@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { SortService } from 'src/app/ui/base/sort-service';
+import { SortService } from 'src/app/ui/modules/list/definitions/sort-service';
 /**
  * Base sorting service with main functionality for sorting.
  *

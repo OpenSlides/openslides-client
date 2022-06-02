@@ -11,23 +11,16 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    columnFactory,
-    createDS,
-    DataSourcePredicate,
-    PblColumnDefinition,
-    PblColumnFactory,
-    PblDataSource,
-    PblNgridColumnSet,
-    PblNgridComponent
-} from '@pebula/ngrid';
-import { distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
+import { map, Observable, of, Subject, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
 import { ViewPortService } from '../../../../../site/services/view-port.service';
-import { FilterListService } from '../../../../base/filter-service';
-import { SortListService } from '../../../../base/sort-service';
+import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
+import { FilterListService } from '../../definitions/filter-service';
+import { SearchService } from '../../definitions/search-service';
+import { SortListService } from '../../definitions/sort-service';
+import { ListSearchService } from '../../services/list-search.service';
 
 /**
  * To hide columns via restriction
@@ -44,11 +37,8 @@ export interface ColumnRestriction<P = any> {
     encapsulation: ViewEncapsulation.None
 })
 export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy {
-    /**
-     * Declare the table
-     */
-    @ViewChild(PblNgridComponent)
-    protected ngrid!: PblNgridComponent;
+    @ViewChild(ScrollingTableComponent, { static: true })
+    public readonly scrollingTableComponent: ScrollingTableComponent<V> | undefined;
 
     @ContentChild(`startColumnView`, { read: TemplateRef, static: false })
     public startColumnView: TemplateRef<any> | null = null;
@@ -81,6 +71,9 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     @Input()
     public filterService: FilterListService<V> | undefined;
 
+    @Input()
+    public searchService: SearchService<V> | undefined;
+
     /**
      * Current state of the multi select mode.
      */
@@ -105,12 +98,6 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
      */
     @Input()
     public selectedRows: V[] = [];
-
-    /**
-     * The specific column definition to display in the table
-     */
-    @Input()
-    public columns: PblColumnDefinition[] = [];
 
     /**
      * Properties to filter for in the search field of the sort-filter-bar
@@ -143,35 +130,20 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     public vScrollFixed = 110;
 
     /**
+     * The actual height of the ListComponent. You can pass only a string to adjust the height,
+     * because it is passed to the [ngStyle] of the underlying template.
+     * The viewport height is decreased by `90px`. This is almost the summary of the height of the global
+     * and local headbar.
+     */
+    @Input()
+    public componentHeight = `calc(100vh - 90px)`;
+
+    /**
      * Determines whether the table should have a fixed 100vh height or not.
      * If not, the height must be set by the component
      */
     @Input()
     public fullScreen = true;
-
-    /**
-     * Most, of not all list views require these
-     */
-    @Input()
-    public startColumnDefinitions: PblColumnDefinition[] = [
-        {
-            prop: `selection`,
-            label: ``,
-            width: `40px`
-        }
-    ];
-
-    /**
-     * End columns
-     */
-    @Input()
-    public endColumnDefinitions: PblColumnDefinition[] = [
-        {
-            prop: `menu`,
-            label: ``,
-            width: `40px`
-        }
-    ];
 
     /**
      * A function to determine whether a column will be hidden or not. Every restriction will be hidden, when
@@ -195,31 +167,14 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     public alsoFilterByProperties: string[] = [`id`];
 
     /**
-     * Inform about changes in the dataSource
-     */
-    @Output()
-    public dataSourceChange = new EventEmitter<PblDataSource<V>>();
-
-    /**
      * Double binding the selected rows
      */
     @Output()
     public selectedRowsChange = new EventEmitter<V[]>();
 
-    /**
-     * Table data source
-     */
-    public dataSource: PblDataSource<V> | undefined;
-
-    /**
-     * The column set to display in the table
-     */
-    public columnSet: PblNgridColumnSet | undefined;
-
-    /**
-     * To dynamically recreate the columns
-     */
-    public columnFactory: PblColumnFactory | undefined;
+    public get source(): V[] {
+        return this.scrollingTableComponent.source;
+    }
 
     /**
      * Check if mobile and required semaphore for change detection
@@ -235,22 +190,9 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
         return this._searchFilterValueSubject.asObservable();
     }
 
-    /**
-     * Gets the amount of filtered data
-     */
-    public get countFilter(): number {
-        return this.dataSource?.filteredData?.length || 0;
-    }
-
-    /**
-     * @returns The total length of the data-source.
-     */
-    public get totalCount(): number {
-        return this.dataSource?.length || 0;
-    }
-
     public get currentOffset(): number {
-        return this.ngrid.viewport.measureScrollOffset();
+        return 0;
+        // return this.ngrid.viewport.measureScrollOffset();
     }
 
     /**
@@ -286,10 +228,18 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
         return hidden;
     }
 
+    public get currentCountObservable(): Observable<number> {
+        return this.dataListObservable.pipe(map(items => items.length));
+    }
+
+    public get totalCountObservable(): Observable<number> {
+        return this._source.pipe(map(items => items.length));
+    }
+
     /**
      * Observable to the raw data
      */
-    protected dataListObservable: Observable<V[]> | undefined;
+    public dataListObservable: Observable<V[]> = of([]);
 
     protected isHoldingShiftKey = false;
 
@@ -301,14 +251,12 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     protected subs: Subscription[] = [];
 
     private _searchFilterValueSubject = new Subject<string>();
+    private _source: Observable<V[]> = of([]);
 
     private _toRestrictFn: (restriction: ColumnRestriction) => boolean;
     private _toHideFn: () => string[];
 
-    public constructor(
-        protected vp: ViewPortService,
-        protected cd: ChangeDetectorRef // protected store: StorageService
-    ) {
+    public constructor(protected vp: ViewPortService, protected cd: ChangeDetectorRef) {
         this._toRestrictFn = restriction =>
             this.toRestrictFn ? this.toRestrictFn(restriction) : this.defaultToRestrictFn(restriction);
         this._toHideFn = () => (this.toHideFn ? this.toHideFn() : this.defaultToHideFn());
@@ -322,8 +270,8 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     }
 
     public async ngOnInit(): Promise<void> {
+        this.searchService = this.searchService || new ListSearchService(this.filterProps, this.alsoFilterByProperties);
         this.initDataListObservable();
-        this.initDataSource();
         this.changeRowHeight();
         this.cd.detectChanges();
     }
@@ -347,26 +295,6 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     }
 
     /**
-     * Generic click handler for rows. Allow so (multi) select anywhere
-     * @param event the clicked row
-     */
-    public onSelectRow(event: any): void {
-        if (this.multiSelect && this.dataSource) {
-            const clickedModel: V = event.row;
-            const alreadySelected = this.dataSource.selection.isSelected(clickedModel);
-            if (this.isHoldingShiftKey) {
-                this.selectMultipleRows(clickedModel, this.previousSelectedRow!);
-            }
-            if (alreadySelected) {
-                this.dataSource.selection.deselect(clickedModel);
-            } else {
-                this.dataSource.selection.select(clickedModel);
-                this.previousSelectedRow = clickedModel;
-            }
-        }
-    }
-
-    /**
      * Central search/filter function. Can be extended and overwritten by a filterPredicate.
      * Functions for that are usually called 'setFulltextFilter'
      *
@@ -374,7 +302,6 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
      */
     public searchFilter(filterValue: string): void {
         this.inputValue = filterValue;
-        this.dataSource?.syncFilter();
     }
 
     public onKeyDown(keyEvent: KeyboardEvent): void {
@@ -390,82 +317,7 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
     }
 
     public scrollTo(offset: number): void {
-        this.ngrid.viewport.scrollToOffset(offset);
-    }
-
-    /**
-     * Checks the array of selected items against the datastore data. This is
-     * meant to reselect items by their id even if some of their data changed,
-     * and to remove selected data that don't exist anymore.
-     * To be called after an update of data. Checks if updated selected items
-     * are still present in the dataSource, and (re-)selects them. This should
-     * be called as the observed datasource updates.
-     */
-    protected checkSelection(): void {
-        if (this.multiSelect && this.dataSource) {
-            const previouslySelectedRows: V[] = [];
-            this.selectedRows.forEach(selectedRow => {
-                const newRow = this.dataSource?.source.find(item => item.id === selectedRow.id);
-                if (newRow) {
-                    previouslySelectedRows.push(newRow);
-                }
-            });
-
-            this.dataSource.selection.clear();
-            this.dataSource.selection.select(...previouslySelectedRows);
-        }
-    }
-
-    /**
-     * Function to create the DataSource
-     */
-    private initDataSource(): void {
-        this.dataSource = this.createDataSource();
-
-        // inform listening components about changes in the data source
-        this.dataSource.onSourceChanged.subscribe(() => {
-            this.dataSourceChange.next(this.dataSource!);
-            this.checkSelection();
-        });
-
-        // data selection
-        this.dataSource.selection.changed.subscribe(selection => {
-            this.selectedRows = selection.source.selected;
-            this.selectedRowsChange.emit(this.selectedRows);
-        });
-
-        // Define the columns. Has to be in the OnInit cause "columns" is slower than
-        // the constructor of this class
-        this.columnSet = columnFactory()
-            .default({ width: `60px` })
-            .table(...this.startColumnDefinitions, ...this.columns, ...this.endColumnDefinitions)
-            .build();
-
-        this.dataSource.setFilter(this.getFilterPredicate());
-
-        // refresh the data source if the filter changed
-        if (this.filterService) {
-            this.subs.push(
-                this.filterService.outputObservable.pipe(distinctUntilChanged()).subscribe(() => {
-                    this.dataSource!.refresh();
-                })
-            );
-        }
-
-        // refresh the data source if the sorting changed
-        if (this.sortService) {
-            this.subs.push(
-                this.sortService.outputObservable.subscribe(() => {
-                    this.dataSource!.refresh();
-                })
-            );
-        }
-    }
-
-    private createDataSource(): PblDataSource<V> {
-        return createDS<V>()
-            .onTrigger(() => this.dataListObservable || [])
-            .create();
+        // this.ngrid.viewport.scrollToOffset(offset);
     }
 
     /**
@@ -474,11 +326,11 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
      */
     private initDataListObservable(): void {
         if (this.listObservableProvider || this.listObservable) {
-            const listObservable = this.listObservableProvider
+            this._source = this.listObservableProvider
                 ? this.listObservableProvider.getViewModelListObservable()
                 : this.listObservable;
 
-            let dataListObservable: Observable<V[]> = listObservable!;
+            let dataListObservable: Observable<V[]> = this._source!;
             if (this.filterService) {
                 this.filterService.initFilters(dataListObservable);
                 dataListObservable = this.filterService.outputObservable;
@@ -486,6 +338,10 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
             if (this.sortService) {
                 this.sortService.initSorting(dataListObservable);
                 dataListObservable = this.sortService.outputObservable;
+            }
+            if (this.searchService) {
+                this.searchService.initSearchService(dataListObservable);
+                dataListObservable = this.searchService.outputObservable;
             }
             this.dataListObservable = dataListObservable;
         }
@@ -500,120 +356,6 @@ export class ListComponent<V extends Identifiable> implements OnInit, OnDestroy 
         } else {
             document.documentElement.style.removeProperty(`--pbl-height`);
         }
-    }
-
-    /**
-     * Selects multiple rows between `firstRow` and `secondRow`.
-     * The indices of the two rows are compared to each other to
-     * get a subarray beginning at the lower index up to the higher one.
-     *
-     * @param firstRow The first one of two selected rows.
-     * @param secondRow The second one of two selected rows.
-     */
-    private selectMultipleRows(firstRow: V, secondRow: V): void {
-        const sourceArray = this.dataSource?.source ?? [];
-        const index = sourceArray.findIndex(row => row.id === firstRow.id);
-        const previousIndex = sourceArray.findIndex(row => row.id === secondRow.id);
-        if (index === previousIndex) {
-            return;
-        }
-        if (index > previousIndex) {
-            this.dataSource?.selection.select(...sourceArray.slice(previousIndex, index));
-        } else {
-            this.dataSource?.selection.select(...sourceArray.slice(index, previousIndex));
-        }
-    }
-
-    /**
-     * @returns the filter predicate object
-     */
-    private getFilterPredicate(): DataSourcePredicate {
-        const toFiltering = (originItem: V, splittedProp: string[], trimmedInput: string) => {
-            const splittedPropsCopy = [...splittedProp];
-            let property: unknown;
-            let model: unknown = originItem;
-            if (!originItem) {
-                return null;
-            }
-            do {
-                const subProp = splittedPropsCopy.shift();
-                property = (model as any)[subProp!];
-                model = property;
-            } while (!!property && !!splittedPropsCopy.length);
-            if (!property) {
-                return null;
-            }
-
-            let propertyAsString = ``;
-            // If the property is a function, call it.
-            if (typeof property === `function`) {
-                propertyAsString = `` + property.bind(originItem)();
-            } else if (Array.isArray(property) || (property as any).constructor === Array) {
-                propertyAsString = (property as any).join(``);
-            } else {
-                propertyAsString = `` + property;
-            }
-
-            if (propertyAsString) {
-                const foundProp = propertyAsString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
-
-                if (foundProp) {
-                    return true;
-                }
-            }
-            return ``;
-        };
-
-        return (item: V): boolean => {
-            if (!this.inputValue) {
-                return true;
-            }
-
-            const trimmedInput = this.inputValue.trim().toLowerCase();
-            if (this.includedInProperty(item, trimmedInput, this.alsoFilterByProperties)) {
-                return true;
-            }
-
-            // custom filter predicates
-            if (!(this.filterProps && this.filterProps.length)) {
-                console.warn(`No filter props are given`);
-                return false;
-            }
-            for (const prop of this.filterProps) {
-                // find nested props
-                const splittedProp = prop.split(`.`);
-                // let currValue: any = item;
-                const result = toFiltering(item, splittedProp, trimmedInput);
-                if (result) {
-                    return true;
-                }
-            }
-            return false;
-        };
-    }
-
-    /**
-     * A recursive function that searches for the first property name in a given array,
-     * that is included in a given object and then returns true, if the value of said property includes a given trimmed input string.
-     *
-     * @param item the object whose properties should be checked
-     * @param trimmedInput the string whose inclusion in the property value should be checked
-     * @param properties an array of property names
-     * @returns true if the trimmedInput is included in the chosen property value
-     */
-    private includedInProperty(item: V, trimmedInput: string, properties: string[]): boolean {
-        if (properties.length > 0 && !!item[properties[0]]) {
-            const propertyValueString = `` + item[properties[0]];
-            const foundPropertyValue = propertyValueString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
-            if (foundPropertyValue) {
-                return true;
-            }
-            return false;
-        }
-        if (properties.length > 1) {
-            return this.includedInProperty(item, trimmedInput, properties.slice(1));
-        }
-        return false;
     }
 
     /**

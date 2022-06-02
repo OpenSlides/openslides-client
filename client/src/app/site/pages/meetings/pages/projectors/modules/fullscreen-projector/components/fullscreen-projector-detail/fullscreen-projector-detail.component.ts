@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { DomService } from 'src/app/openslides-main-module/services/dom.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
@@ -18,6 +18,7 @@ export class FullscreenProjectorDetailComponent implements OnInit {
      * Constructor. Updates the projector dimensions on a resize.
      */
     public constructor(
+        private viewContainer: ViewContainerRef,
         private domService: DomService,
         private osRouter: OpenSlidesRouterService,
         private sequentialNumberMappingService: SequentialNumberMappingService
@@ -39,9 +40,8 @@ export class FullscreenProjectorDetailComponent implements OnInit {
                     .subscribe(id => {
                         if (id) {
                             this._projectorId = id;
-                            this.domService.attachComponent(FullscreenProjectorComponent, {
-                                id: this._projectorId
-                            });
+                            const body = this.domService.buildBodyPane(this.viewContainer);
+                            body.attach(FullscreenProjectorComponent, { id: this._projectorId });
                         }
                     });
             }

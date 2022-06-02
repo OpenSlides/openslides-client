@@ -8,7 +8,7 @@ import { SpinnerService } from 'src/app/site/modules/global-spinner';
     styleUrls: [`./openslides-overlay-container.component.scss`]
 })
 export class OpenSlidesOverlayContainerComponent {
-    constructor(_viewContainer: ViewContainerRef, _domService: DomService, _spinnerService: SpinnerService) {
+    public constructor(_viewContainer: ViewContainerRef, _domService: DomService, _spinnerService: SpinnerService) {
         _domService.setViewContainer(_viewContainer);
         _spinnerService.show(undefined, { hideWhenStable: true });
     }

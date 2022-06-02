@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@a
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -30,24 +29,6 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
      * Holds the tag that's currently being edited, or null.
      */
     public currentTag: ViewTag | null = null;
-
-    /**
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `name`,
-            width: `100%`
-        },
-        {
-            prop: `edit`,
-            width: this.singleButtonWidth
-        },
-        {
-            prop: `delete`,
-            width: this.singleButtonWidth
-        }
-    ];
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,

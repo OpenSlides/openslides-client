@@ -20,18 +20,16 @@
     [listObservable]="agendaItemsObservable"
     [vScrollFixed]="76"
     [filterService]="filterService"
-    [columns]="tableColumnDefinition"
     [multiSelect]="isMultiSelect"
     [restricted]="restrictedColumns"
     [hiddenInMobile]="['info']"
     [alwaysShowMenu]="true"
     [filterProps]="filterProps"
     [(selectedRows)]="selectedRows"
-    (dataSourceChange)="onDataSourceChange($event)"
     [getSpeakerButtonObject]="getSpeakerButtonObject"
 >
     <!-- Title column -->
-    <div *pblNgridCellDef="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
+    <div *osScrollingTableCell="'title'; row as item; rowContext as rowContext" class="cell-slot fill">
         <os-detail-view-navigator [model]="item.content_object" *ngIf="!isMultiSelect"></os-detail-view-navigator>
         <div [ngStyle]="{ 'margin-left': item.level * 25 + 'px' }" class="innerTable">
             <!-- Title line -->
@@ -62,7 +60,11 @@
     </div>
 
     <!-- Info Column -->
-    <div *pblNgridCellDef="'info'; row as item" class="cell-slot fill clickable" (click)="openEditInfo(item)">
+    <div
+        *osScrollingTableCell="'info'; row as item; config: { width: 120 }"
+        class="cell-slot fill clickable"
+        (click)="openEditInfo(item)"
+    >
         <div class="info-col-items">
             <!-- Tags -->
             <div *ngIf="item.tags && item.tags.length">
@@ -89,7 +91,10 @@
     </div>
 
     <!-- Menu -->
-    <div *pblNgridCellDef="'menu'; row as item" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'menu'; row as item; config: { width: 40, position: END_POSITION }"
+        class="cell-slot fill"
+    >
         <button
             mat-icon-button
             [disabled]="isMultiSelect"

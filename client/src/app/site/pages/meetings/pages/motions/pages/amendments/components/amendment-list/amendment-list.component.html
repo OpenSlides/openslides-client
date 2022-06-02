@@ -31,15 +31,13 @@
     [listObservableProvider]="amendmentRepo"
     [sortService]="amendmentSortService"
     [filterService]="amendmentFilterService"
-    [columns]="tableColumnDefinition"
     [filterProps]="filterProps"
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['summary']"
     [(selectedRows)]="selectedRows"
-    (dataSourceChange)="onDataSourceChange($event)"
 >
     <!-- Meta -->
-    <div *pblNgridCellDef="'meta'; row as motion" class="cell-slot fill">
+    <div *osScrollingTableCell="'meta'; row as motion" class="cell-slot fill">
         <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
         <div class="innerTable">
             <!-- number and line -->
@@ -83,7 +81,7 @@
     </div>
 
     <!-- Summary -->
-    <div *pblNgridCellDef="'summary'; row as motion" class="cell-slot fill">
+    <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
         <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
         <div class="innerTable">
             <div class="motion-text" [innerHtml]="getAmendmentSummary(motion) | trust: 'html'"></div>
@@ -91,7 +89,7 @@
     </div>
 
     <!-- Menu -->
-    <div *pblNgridCellDef="'menu'; row as motion" class="cell-slot fill">
+    <div *osScrollingTableCell="'menu'; row as motion" class="cell-slot fill">
         <button
             mat-icon-button
             [disabled]="isMultiSelect"

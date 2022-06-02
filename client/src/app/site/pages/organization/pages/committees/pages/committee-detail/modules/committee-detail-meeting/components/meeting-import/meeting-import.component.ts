@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
@@ -17,14 +16,7 @@ import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/
     styleUrls: [`./meeting-import.component.scss`]
 })
 export class MeetingImportComponent extends BaseComponent implements OnInit {
-    public columns: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            label: this.translate.instant(`Title`)
-        }
-    ];
-
-    private committeeId: Id | null = null;
+    private _committeeId: Id | null = null;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
@@ -40,7 +32,7 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
                 if (params[`committeeId`]) {
-                    this.committeeId = +params[`committeeId`];
+                    this._committeeId = +params[`committeeId`];
                 }
             })
         );
@@ -60,7 +52,7 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
                 });
                 reader.readAsText(file.mediafile);
             });
-            return this.repo.import(this.committeeId, meeting);
+            return this.repo.import(this._committeeId, meeting);
         };
     }
 }

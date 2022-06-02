@@ -3,7 +3,8 @@
     <div class="filter-count one-line">
         <span>{{ filterCount }}&nbsp;</span>
         <span>{{ 'of' | translate }}</span>
-        <span>&nbsp;{{ totalCount }}</span>
+        &nbsp;
+        <span>{{ totalCount }}</span>
         <ng-content select=".extra-info-slot"></ng-content>
     </div>
 
@@ -46,12 +47,11 @@
         <!-- Search bar -->
         <os-rounded-input
             #searchField
-            [model]="searchFieldInput"
+            *ngIf="searchService"
+            placeholder="{{ 'Search' | translate }}"
             [size]="'small'"
             [fullWidth]="false"
-            [lazyInput]="true"
-            (oninput)="searchFieldChange.emit($event)"
-            placeholder="{{ 'Search' | translate }}"
+            (inputChanged)="onInputChanged($event)"
         ></os-rounded-input>
     </div>
 </div>

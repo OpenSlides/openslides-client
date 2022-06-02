@@ -1,16 +1,8 @@
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewChild
-} from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { debounceTime, Subscription } from 'rxjs';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { forwardRef } from '@angular/core';
+import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { debounceTime } from 'rxjs';
+import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 /**
  * Type declared to see, which values are possible for some inputs.
@@ -20,9 +12,10 @@ export type Size = 'small' | 'medium' | 'large';
 @Component({
     selector: `os-rounded-input`,
     templateUrl: `./rounded-input.component.html`,
-    styleUrls: [`./rounded-input.component.scss`]
+    styleUrls: [`./rounded-input.component.scss`],
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RoundedInputComponent), multi: true }]
 })
-export class RoundedInputComponent implements OnInit, OnDestroy {
+export class RoundedInputComponent extends BaseFormControlComponent<string> implements OnInit {
     /**
      * Binds the class to the parent-element.
      */
@@ -35,28 +28,10 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      * Reference to the `<input />`-element.
      */
     @ViewChild(`osInput`, { static: true })
-    public osInput!: ElementRef;
+    public osInput!: ElementRef<HTMLInputElement>;
 
-    /**
-     * Setter for the model. This could be useful, if the value of the input
-     * should be set from outside of this component.
-     *
-     * @param value The new value of the input.
-     */
-    @Input()
-    public set model(value: string) {
-        if (value) {
-            this.modelForm.setValue(value);
-        }
-    }
-
-    /**
-     * Getter for the model.
-     *
-     * @returns {string} The value of the FormControl. If this is undefined or null, it returns an empty string.
-     */
-    public get model(): string {
-        return this.modelForm ? this.modelForm.value : ``;
+    public get dedicatedContentForm(): FormControl {
+        return this.contentForm as FormControl;
     }
 
     /**
@@ -75,12 +50,6 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
     public fullWidth = false;
 
     /**
-     * Custom `FormControl`.
-     */
-    @Input()
-    public modelForm: FormControl;
-
-    /**
      * Boolean, whether the input should be focussed automatically, if the component enters the DOM.
      */
     @Input()
@@ -91,12 +60,6 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      */
     @Input()
     public keepFocus = false;
-
-    /**
-     * Boolean, whether the input should fire the value-change-event after a specific time.
-     */
-    @Input()
-    public lazyInput = false;
 
     /**
      * Placeholder for the input. Defaults to `Search...`.
@@ -120,21 +83,15 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
      * Boolean to indicate, whether the borders should be rounded with a smaller size.
      */
     @Input()
-    public set typeBorderRadius(radius: Size) {
-        this._borderRadius = radius + `-border-radius`;
+    public set borderRadiusSize(size: Size) {
+        this._borderRadius = size + `-border-radius`;
     }
 
     /**
      * EventHandler for the input-changes.
      */
     @Output()
-    public oninput: EventEmitter<string> = new EventEmitter();
-
-    /**
-     * EventHandler for the key-events.
-     */
-    @Output()
-    public onkeyup: EventEmitter<KeyboardEvent> = new EventEmitter();
+    public inputChanged = new EventEmitter<string>();
 
     /**
      * Getter to get the border-radius as a string.
@@ -144,10 +101,6 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
     public get borderRadius(): string {
         return this._borderRadius;
     }
-    /**
-     * Subscription, that will handle the value-changes of the input.
-     */
-    private subscription: Subscription | null = null;
 
     /**
      * Variable for the border-radius as class.
@@ -155,42 +108,26 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
     private _borderRadius = `large-border-radius`;
 
     /**
-     * Default constructor
-     */
-    public constructor() {
-        this.modelForm = new FormControl(this.model);
-    }
-
-    /**
      * Overwrites `OnInit` - initializes the subscription.
      */
-    public ngOnInit(): void {
+    public override ngOnInit(): void {
+        super.ngOnInit();
         if (this.autofocus) {
             this.focus();
         }
-        this.subscription = this.modelForm.valueChanges
-            .pipe(debounceTime(this.lazyInput ? 250 : 0))
-            .subscribe(nextValue => {
-                this.oninput.emit(nextValue);
-            });
-    }
-
-    /**
-     * Overwrites `OnDestroy` - clears the subscription.
-     */
-    public ngOnDestroy(): void {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-            this.subscription = null;
-        }
+        this.subscriptions.push(
+            this.contentForm.valueChanges.pipe(debounceTime(250)).subscribe(nextValue => {
+                this.inputChanged.emit(nextValue);
+            })
+        );
     }
 
     /**
      * Function to clear the input and refocus it.
      */
-    public clear(): void {
-        this.focus();
-        this.modelForm.setValue(``);
+    public clear(event?: MouseEvent): void {
+        event?.preventDefault();
+        this.contentForm.setValue(``);
     }
 
     /**
@@ -219,6 +156,13 @@ export class RoundedInputComponent implements OnInit, OnDestroy {
         if (this.clearOnEscape && event.key === `Escape`) {
             this.clear();
         }
-        this.onkeyup.emit(event);
+    }
+
+    protected createForm(): FormControl {
+        return this.fb.control(``);
+    }
+
+    protected updateForm(value: string): void {
+        this.contentForm.setValue(value);
     }
 }

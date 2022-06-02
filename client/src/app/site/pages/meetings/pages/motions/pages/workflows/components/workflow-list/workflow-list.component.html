@@ -25,23 +25,24 @@
 
 <os-projectable-list
     [listObservableProvider]="workflowRepo"
-    [columns]="tableColumnDefinition"
     [allowProjector]="false"
     [hiddenInMobile]="['menu']"
     [showListOfSpeakers]="false"
     [filterProps]="filterProps"
     [multiSelect]="isMultiSelect"
     [(selectedRows)]="selectedRows"
-    (dataSourceChange)="onDataSourceChange($event)"
 >
     <!-- Name column -->
-    <div *pblNgridCellDef="'name'; value as name; row as workflow; rowContext as rowContext" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'name'; value as name; row as workflow; rowContext as rowContext"
+        class="cell-slot fill"
+    >
         <os-detail-view-navigator [model]="workflow"></os-detail-view-navigator>
         <div>{{ name | translate }}</div>
     </div>
 
     <!-- Delete column -->
-    <div *pblNgridCellDef="'delete'; row as workflow" class="cell-slot fill">
+    <div *osScrollingTableCell="'delete'; row as workflow" class="cell-slot fill">
         <button type="button" mat-icon-button (click)="onDeleteWorkflow(workflow)">
             <mat-icon color="warn">delete</mat-icon>
         </button>

@@ -17,19 +17,17 @@
     [listObservable]="categoriesObservable"
     [allowProjector]="false"
     [showListOfSpeakers]="false"
-    [columns]="tableColumnDefinition"
     [filterProps]="filterProps"
     [hiddenInMobile]="['menu']"
-    (dataSourceChange)="onDataSourceChange($event)"
 >
     <!-- Title -->
-    <div *pblNgridCellDef="'title'; row as category; rowContext as rowContext" class="cell-slot fill">
+    <div *osScrollingTableCell="'title'; row as category; rowContext as rowContext" class="cell-slot fill">
         <os-detail-view-navigator [model]="category"></os-detail-view-navigator>
         <div [style.margin-left]="getMargin(category)">{{ category.prefixedName }}</div>
     </div>
 
     <!-- Amount -->
-    <div *pblNgridCellDef="'amount'; row as category" class="cell-slot fill">
+    <div *osScrollingTableCell="'amount'; row as category; config: { width: 45 }" class="cell-slot fill">
         <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ getMotionAmount(category) }}</span>
     </div>
 </os-projectable-list>
@@ -58,7 +56,12 @@
             <!-- Name -->
             <p>
                 <mat-form-field>
-                    <input formControlName="name" matInput placeholder="{{ 'Name of the new category' | translate }}" required />
+                    <input
+                        formControlName="name"
+                        matInput
+                        placeholder="{{ 'Name of the new category' | translate }}"
+                        required
+                    />
                     <mat-error>
                         {{ 'A name is required' | translate }}
                     </mat-error>

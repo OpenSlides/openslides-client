@@ -12,7 +12,7 @@
 </os-head-bar>
 
 <os-import-list [importer]="importer" [possibleFields]="possibleFields" [columns]="columns">
-    <div *pblNgridCellDef="'newEntry.text'; row as entry">
+    <div *osScrollingTableCell="'text'; row as entry">
         {{ getShortPreview(entry.newEntry.text) }}
     </div>
 </os-import-list>

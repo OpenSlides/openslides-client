@@ -27,24 +27,21 @@
     <os-list
         class="user-statistics-table--virtual-scroll"
         [listObservable]="statisticsByStructureLevelObservable"
-        [columns]="columnDefinition"
         [filterProps]="filterProps"
         [vScrollFixed]="45"
         [fullScreen]="false"
     >
-        <!-- Header -->
-        <div *pblNgridHeaderCellDef="'*'; col as col">
-            {{ col.label | translate }}
-        </div>
-
         <!-- Content -->
-        <div *pblNgridCellDef="'structureLevel'; row as object">
+        <div *osScrollingTableCell="'structureLevel'; row as object">
+            <div *osScrollingTableCellLabel>{{ 'Structure level' | translate }}</div>
             {{ object.structureLevel | translate }}
         </div>
-        <div *pblNgridCellDef="'durationOfWordRequests'; row as object">
+        <div *osScrollingTableCell="'durationOfWordRequests'; row as object">
+            <div *osScrollingTableCellLabel>{{ 'Duration of requests to speak' | translate }}</div>
             {{ parseDuration(object.speakingTime) }}
         </div>
-        <div *pblNgridCellDef="'numberOfWordRequests'; row as object">
+        <div *osScrollingTableCell="'numberOfWordRequests'; row as object">
+            <div *osScrollingTableCellLabel>{{ 'Number of requests to speak' | translate }}</div>
             {{ object.finishedSpeakers.length }}
         </div>
     </os-list>

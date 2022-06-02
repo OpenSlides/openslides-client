@@ -23,7 +23,6 @@ export abstract class BaseImportListComponent<M extends Identifiable> extends Ba
     /**
      * Switch that turns true if a file has been selected in the input
      */
-
     public get canImport(): boolean {
         return this._hasFile && this._modelsToCreateAmount > 0;
     }

@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RoutesRecognized } from '@angular/router';
 import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subject, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import {
+    ActiveMeetingIdService,
+    MeetingIdChangedEvent
+} from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { AuthService } from 'src/app/site/services/auth.service';
 
 enum UrlTarget {
@@ -26,6 +29,10 @@ export class OpenSlidesRouterService {
         return this._nextUrlTargetSubject.pipe(map(nextTarget => nextTarget === UrlTarget.ORGANIZATION_LAYER));
     }
 
+    public get meetingIdChanged(): Observable<MeetingIdChangedEvent> {
+        return this.activeMeetingIdService.meetingIdChanged;
+    }
+
     private readonly _nextUrlTargetSubject = new Subject<UrlTarget>();
     private readonly _currentParamMap = new BehaviorSubject<{ [paramName: string]: any }>({});
 
@@ -44,12 +51,11 @@ export class OpenSlidesRouterService {
             .pipe(
                 filter(event => event instanceof RoutesRecognized),
                 tap(event => this.checkNextTarget(event as any)),
-                map((event: any) => {
-                    return this.buildParamMap(event.state.root);
-                }),
+                map((event: any) => this.buildParamMap(event.state.root)),
                 distinctUntilChanged()
             )
             .subscribe(event => this._currentParamMap.next(event));
+        activeMeetingIdService.meetingIdChanged.subscribe(event => console.log(`has meeting changed?`, event));
     }
 
     public navigateToLogin(): void {

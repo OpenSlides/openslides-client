@@ -1,10 +1,13 @@
 import { AfterViewInit, Directive, ViewChild } from '@angular/core';
 import { NavigationStart } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 import { filter } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
+import {
+    END_POSITION,
+    START_POSITION
+} from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
 import { StorageService } from '../../gateways/storage.service';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
@@ -15,8 +18,11 @@ const createStorageSearchIndex = (prefix: string) => `${prefix}:search`;
 
 @Directive()
 export abstract class BaseListViewComponent<V extends BaseViewModel> extends BaseComponent implements AfterViewInit {
+    public readonly END_POSITION = END_POSITION;
+    public readonly START_POSITION = START_POSITION;
+
     @ViewChild(ListComponent)
-    private readonly _listComponent: ListComponent<V> | undefined;
+    protected readonly listComponent: ListComponent<V> | undefined;
 
     /**
      * Returns the current state of the multiSelect modus
@@ -25,31 +31,12 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
         return this._multiSelectMode;
     }
 
-    public get dataSource(): PblDataSource<V> {
-        return this._dataSource;
-    }
-
-    /**
-     * NGrid column width for single buttons
-     */
-    public readonly singleButtonWidth = `40px`;
-
-    /**
-     * NGrid column width for single buttons with badge
-     */
-    public readonly badgeButtonWidth = `45px`;
-
     /**
      * An array of currently selected items, upon which multi select actions can be performed
      * see {@link selectItem}.
      * Filled using double binding from list-view-tables
      */
     public selectedRows: V[];
-
-    /**
-     * Force children to have a tableColumnDefinition
-     */
-    public abstract tableColumnDefinition: PblColumnDefinition[];
 
     protected get storage(): StorageService {
         return this.componentServiceCollector.storage;
@@ -69,10 +56,6 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      * Current state of the multi select mode. TODO Could be merged with edit mode?
      */
     private _multiSelectMode = false;
-    /**
-     * The source of the table data, will be filled by an event emitter
-     */
-    private _dataSource!: PblDataSource<V>;
 
     public constructor(componentServiceCollector: ComponentServiceCollectorService, translate: TranslateService) {
         super(componentServiceCollector, translate);
@@ -82,23 +65,14 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
     public ngAfterViewInit(): void {
         this.restoreScrollOffset();
         this.restoreSearchQuery();
-        if (this._listComponent) {
+        if (this.listComponent) {
             this.subscriptions.push(
                 this.router.events
                     .pipe(filter(event => event instanceof NavigationStart))
                     .subscribe(() => this.saveScrollOffset()),
-                this._listComponent.searchFilterUpdated.subscribe(nextValue => this.saveSearchQuery(nextValue))
+                this.listComponent.searchFilterUpdated.subscribe(nextValue => this.saveSearchQuery(nextValue))
             );
         }
-    }
-
-    /**
-     * Detect changes to data source
-     *
-     * @param newDataSource
-     */
-    public onDataSourceChange(newDataSource: PblDataSource<V>): void {
-        this._dataSource = newDataSource;
     }
 
     /**
@@ -117,8 +91,8 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      * Select all files in the current data source
      */
     public selectAll(): void {
-        if (this.dataSource) {
-            this.dataSource.selection.select(...this.dataSource.filteredData);
+        if (this.listComponent) {
+            this.listComponent.scrollingTableComponent.selectAll();
         }
     }
 
@@ -126,14 +100,14 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      * Handler to quickly unselect all items.
      */
     public deselectAll(): void {
-        if (this.dataSource) {
-            this.dataSource.selection.clear();
+        if (this.listComponent) {
+            this.listComponent.scrollingTableComponent.deselectAll();
         }
     }
 
     private saveScrollOffset(): void {
         if (this.listStorageIndex) {
-            this.storage.set(createStorageOffsetIndex(this.listStorageIndex), this._listComponent!.currentOffset);
+            this.storage.set(createStorageOffsetIndex(this.listStorageIndex), this.listComponent!.currentOffset);
         }
     }
 
@@ -141,7 +115,7 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
         if (this.listStorageIndex) {
             this.storage.get<number>(createStorageOffsetIndex(this.listStorageIndex)).then(offset => {
                 if (offset) {
-                    this._listComponent?.scrollTo(offset);
+                    this.listComponent?.scrollTo(offset);
                 }
             });
         }
@@ -157,7 +131,7 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
         if (this.listStorageIndex) {
             this.storage.get<string>(createStorageSearchIndex(this.listStorageIndex)).then(query => {
                 if (query) {
-                    this._listComponent?.searchFilter(query);
+                    this.listComponent?.searchFilter(query);
                 }
             });
         }

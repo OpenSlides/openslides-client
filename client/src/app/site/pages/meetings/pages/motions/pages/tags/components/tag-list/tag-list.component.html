@@ -6,26 +6,24 @@
 
 <os-list
     [listObservableProvider]="repo"
-    [columns]="tableColumnDefinition"
     [hiddenInMobile]="['menu']"
     [(selectedRows)]="selectedRows"
-    (dataSourceChange)="onDataSourceChange($event)"
     [filterProps]="['name']"
 >
     <!-- Name column -->
-    <div *pblNgridCellDef="'name'; value as name" class="cell-slot fill">
+    <div *osScrollingTableCell="'name'; value as name" class="cell-slot fill">
         <div>
             {{ name }}
         </div>
     </div>
     <!-- edit column -->
-    <div *pblNgridCellDef="'edit'; row as tag" class="cell-slot fill">
+    <div *osScrollingTableCell="'edit'; row as tag; config: { width: 45 }" class="cell-slot fill">
         <button mat-icon-button (click)="openTagDialog(tag)">
             <mat-icon>edit</mat-icon>
         </button>
     </div>
     <!-- delete column -->
-    <div *pblNgridCellDef="'delete'; row as tag" class="cell-slot fill">
+    <div *osScrollingTableCell="'delete'; row as tag; config: { width: 45 }" class="cell-slot fill">
         <button mat-icon-button color="warn" (click)="onDeleteButton(tag)">
             <mat-icon>delete</mat-icon>
         </button>

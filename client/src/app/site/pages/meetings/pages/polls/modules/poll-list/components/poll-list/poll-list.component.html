@@ -5,30 +5,29 @@
 <os-projectable-list
     [listObservableProvider]="pollRepo"
     [vScrollFixed]="64"
-    [columns]="tableColumnDefinition"
     [filterProps]="filterProps"
     [filterService]="filterService"
 >
     <!-- Poll Title -->
-    <div *pblNgridCellDef="'title'; row as poll; rowContext as context" class="cell-slot fill">
+    <div *osScrollingTableCell="'title'; row as poll; rowContext as context" class="cell-slot fill">
         <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
         <span>{{ poll.title }}</span>
     </div>
 
     <!-- Motion Or Assigmnent Title Title -->
-    <div *pblNgridCellDef="'classType'; row as poll" class="cell-slot fill">
+    <div *osScrollingTableCell="'classType'; row as poll" class="cell-slot fill">
         <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
         <span>{{ poll.getContentObject().getListTitle() }}</span>
     </div>
 
     <!-- State -->
-    <div *pblNgridCellDef="'state'; row as poll" class="cell-slot fill">
+    <div *osScrollingTableCell="'state'; row as poll" class="cell-slot fill">
         <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
         <span>{{ poll.stateVerbose | translate }}</span>
     </div>
 
     <!-- Voted Indicator -->
-    <div *pblNgridCellDef="'votability'; row as poll" class="cell-slot fill">
+    <div *osScrollingTableCell="'votability'; row as poll" class="cell-slot fill">
         <ng-container *ngIf="canBeVoteFor(poll); then inProgress; else notInProgress"></ng-container>
     </div>
 </os-projectable-list>
