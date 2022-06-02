@@ -8,6 +8,7 @@ import { ReadableBytesPipe } from './readable-bytes/readable-bytes.pipe';
 import { ReversePipe } from './reverse/reverse.pipe';
 import { OpenSlidesSlicePipe } from './slice/openslides-slice.pipe';
 import { TimePipe } from './time/time.pipe';
+import { ToArrayPipe } from './to-array/to-array.pipe';
 import { ToStringPipe } from './to-string/to-string.pipe';
 import { TrustPipe } from './trust/trust.pipe';
 
@@ -20,7 +21,8 @@ const DECLARATIONS = [
     OpenSlidesSlicePipe,
     OpenSlidesAsyncPipe,
     EntriesPipe,
-    ToStringPipe
+    ToStringPipe,
+    ToArrayPipe
 ];
 
 @NgModule({

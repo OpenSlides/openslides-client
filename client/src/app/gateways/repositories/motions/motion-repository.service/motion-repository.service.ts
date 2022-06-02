@@ -163,7 +163,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.sendBulkActionToBackend(MotionAction.FOLLOW_RECOMMENDATION, payload);
     }
 
-    public createTextBased(partialMotion: Partial<Motion>): Action<Identifiable> {
+    public createTextBased(partialMotion: Partial<Motion>): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             lead_motion_id: partialMotion.lead_motion_id,
@@ -186,7 +186,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_TEXTBASED_AMENDMENT, payload);
     }
 
-    public createParagraphBased(partialMotion: Partial<Motion>): Action<Identifiable> {
+    public createParagraphBased(partialMotion: Partial<Motion>): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             lead_motion_id: partialMotion.lead_motion_id,
@@ -209,7 +209,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
 
-    public createStatuteAmendment(partialMotion: Partial<Motion>): Action<Identifiable> {
+    public createStatuteAmendment(partialMotion: Partial<Motion>): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             title: partialMotion.title,

@@ -7,6 +7,7 @@ import {
     COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
     CommitteeCsvPort,
     FORWARD_TO_COMMITTEE_IDS,
+    ID,
     MANAGER_IDS,
     MEETING,
     MEETING_ADMIN_IDS,
@@ -266,6 +267,9 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             .getViewModelList()
             .find(_committee => _committee.name === input[NAME]) as any;
         const status = !!existingCommittee ? `merge` : `new`;
+        if (existingCommittee) {
+            input[ID] = existingCommittee.id;
+        }
         return new ImportModel({
             model: input,
             importTrackId,
@@ -281,6 +285,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             verboseNameFn: plural => this.repo.getVerboseName(plural),
             getDuplicatesFn: (entry: Partial<CommitteeCsvPort>) =>
                 this.repo.getViewModelList().filter(committee => committee.name === entry.name),
+            shouldCreateModelFn: entry => entry.status === `new`,
             createFn: entries => this.repo.create(...(entries as any)),
             updateFn: entries => this.repo.update(null, ...(entries as any)),
             requiredFields: [NAME]
