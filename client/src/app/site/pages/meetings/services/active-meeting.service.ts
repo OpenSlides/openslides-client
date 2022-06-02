@@ -157,6 +157,10 @@ export class ActiveMeetingService {
         });
     }
 
+    private getHasMeetingIdChangedObservable(): Observable<boolean> {
+        return this.activeMeetingIdService.meetingIdChanged.pipe(map(event => event.hasChanged));
+    }
+
     private async refreshAutoupdateSubscription(): Promise<void> {
         this.modelRequestService.updateSubscribeTo(
             getMeetingDetailGroupSubscriptionConfig(
@@ -165,8 +169,8 @@ export class ActiveMeetingService {
             ),
             getMeetingDetailSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
             getMediafilesSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
-            getProjectorListSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
-            getParticipantSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable)
+            getProjectorListSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable()),
+            getParticipantSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable())
         );
     }
 }

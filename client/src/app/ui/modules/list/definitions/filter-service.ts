@@ -54,9 +54,9 @@ export interface FilterListService<V> {
     readonly unfilteredCount: number;
     readonly filterCount: number;
     readonly hasFilterOptions: boolean;
-    readonly filterDefinitions: OsFilter<V>[];
     readonly filterStack: OsFilterIndicator<V>[];
     readonly outputObservable: Observable<V[]>;
+    readonly filterDefinitionsObservable: Observable<OsFilter<V>[]>;
     getFilterName(filter: OsFilter<V>): string;
     toggleFilterOption(property: keyof V, option: OsFilterOption): void;
     clearAllFilters(): void;

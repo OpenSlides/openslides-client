@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasListOfSpeakers, hasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
@@ -7,15 +6,16 @@ import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-model
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ColumnRestriction, ListComponent } from 'src/app/ui/modules/list/components';
+import {
+    END_POSITION,
+    START_POSITION
+} from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
 import { ProjectableListService } from '../../services/projectable-list.service';
 
 export interface CssClassDefinition {
     [key: string]: boolean;
 }
-
-const PROJECTOR_BUTTON_WIDTH = 60;
-const PROJECTOR_VIEW_WIDTH = 24;
 
 /**
  * List of projectable view models
@@ -25,9 +25,13 @@ const PROJECTOR_VIEW_WIDTH = 24;
     templateUrl: `./projectable-list.component.html`,
     styleUrls: [`./projectable-list.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [{ provide: ListComponent, useExisting: ProjectableListComponent }]
 })
 export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableViewModel> extends ListComponent<V> {
+    public readonly END_POSITION = END_POSITION;
+    public readonly START_POSITION = START_POSITION;
+
     /**
      * If a Projector column should be shown (at all)
      */
@@ -44,40 +48,6 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
     public getSpeakerButtonObject: ((viewModel: V) => BaseViewModel & HasListOfSpeakers) | null = null;
 
     public readonly permission = Permission;
-
-    /**
-     * Most, of not all list views require these
-     */
-    @Input()
-    public override startColumnDefinitions: PblColumnDefinition[] = [
-        {
-            prop: `selection`,
-            label: ``,
-            width: `40px`
-        },
-        {
-            prop: `projector`,
-            label: ``,
-            width: `${this.projectorColumnWidth}px`
-        }
-    ];
-
-    /**
-     * End columns
-     */
-    @Input()
-    public override endColumnDefinitions: PblColumnDefinition[] = [
-        {
-            prop: `speaker`,
-            label: ``,
-            width: `45px`
-        },
-        {
-            prop: `menu`,
-            label: ``,
-            width: `40px`
-        }
-    ];
 
     public readonly isProjectedFn = (model: BaseProjectableViewModel) => this.service.isProjected(model);
 
@@ -104,14 +74,6 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
 
     @Input()
     public override alsoFilterByProperties: string[] = [`sequential_number`, `id`];
-
-    private get projectorColumnWidth(): number {
-        if (this.operator.hasPerms(Permission.projectorCanManage)) {
-            return PROJECTOR_BUTTON_WIDTH;
-        } else {
-            return PROJECTOR_VIEW_WIDTH;
-        }
-    }
 
     public constructor(
         vp: ViewPortService,

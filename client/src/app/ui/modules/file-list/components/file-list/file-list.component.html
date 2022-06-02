@@ -45,18 +45,20 @@
 </div>
 
 <!-- the actual file manager -->
-<pbl-ngrid
+<os-list
     class="file-manager-table"
-    showHeader="false"
-    vScrollAuto
-    [dataSource]="dataSource"
-    matCheckboxSelection="selection"
-    [columns]="columnSet"
-    [hideColumns]="hiddenColumns"
-    (rowClick)="onSelectRow($event)"
+    [listObservable]="directoryObservable"
+    [vScrollFixed]="60"
+    [showFilterBar]="false"
+    [alwaysShowMenu]="true"
+    [componentHeight]="fileListHeight"
+    [multiSelect]="isMultiSelect"
 >
     <!-- Icon column -->
-    <div *pblNgridCellDef="'icon'; row as mediafile" class="fill clickable">
+    <div
+        *osScrollingTableCell="'icon'; row as mediafile; config: { width: 40, position: START_POSITION }"
+        class="fill clickable"
+    >
         <a
             class="detail-link"
             target="_blank"
@@ -72,7 +74,7 @@
     </div>
 
     <!-- Title column -->
-    <div *pblNgridCellDef="'title'; row as mediafile" class="fill clickable">
+    <div *osScrollingTableCell="'title'; row as mediafile; config: { position: START_POSITION }" class="fill clickable">
         <a
             class="detail-link"
             target="_blank"
@@ -95,15 +97,12 @@
     </div>
 
     <!-- Mimetype (usually hidden) -->
-    <div *pblNgridCellDef="'minetype'; row as mediafile" class="fill clickable">
+    <div *osScrollingTableCell="'minetype'; row as mediafile" class="fill clickable">
         {{ mediafile.mimetype }}
     </div>
 
-    <!-- Info column -->
-    <ng-content></ng-content>
-
     <!-- Indicator column -->
-    <div *pblNgridCellDef="'indicator'; row as mediafile" class="fill">
+    <div *osScrollingTableCell="'indicator'; row as mediafile; config: { width: 40 }" class="fill">
         <div
             [matMenuTriggerFor]="singleMediafileMenu"
             [matMenuTriggerData]="{ mediafile: mediafile }"
@@ -115,7 +114,7 @@
     </div>
 
     <!-- Menu column -->
-    <div *pblNgridCellDef="'menu'; row as mediafile" class="fill">
+    <div *osScrollingTableCell="'menu'; row as mediafile; config: { width: 40 }" class="fill">
         <button
             mat-icon-button
             [matMenuTriggerFor]="singleMediafileMenu"
@@ -128,10 +127,10 @@
     </div>
 
     <!-- No Results -->
-    <div *pblNgridNoDataRef class="pbl-ngrid-no-data">
+    <div *osScrollingTableNoData class="pbl-ngrid-no-data">
         <span>{{ 'No data' | translate }}</span>
     </div>
-</pbl-ngrid>
+</os-list>
 
 <!-- Menu for single files in the list -->
 <mat-menu #singleMediafileMenu="matMenu">

@@ -1,7 +1,9 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 export const topicHeadersAndVerboseNames = {
-    title: `Title`,
-    text: `Text`,
-    agenda_duration: `Duration`,
-    agenda_comment: `Comment`,
-    agenda_type: `Internal item`
+    title: _(`Title`),
+    text: _(`Text`),
+    agenda_duration: _(`Duration`),
+    agenda_comment: _(`Comment`),
+    agenda_type: _(`Internal item`)
 };

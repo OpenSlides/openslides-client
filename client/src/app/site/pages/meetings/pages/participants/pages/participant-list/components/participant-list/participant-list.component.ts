@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
@@ -70,7 +69,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public get totalVoteWeight(): number {
-        const votes = this.dataSource?.filteredData?.reduce(
+        const votes = this.listComponent.source?.reduce(
             (previous, current) => previous + (current.vote_weight() || 0),
             0
         );
@@ -80,28 +79,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     public get isUserInScope(): boolean {
         return this._isUserInScope;
     }
-
-    /**
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `short_name`,
-            width: `85%`
-        },
-        {
-            prop: `group`,
-            minWidth: 200
-        },
-        {
-            prop: `infos`,
-            width: this.singleButtonWidth
-        },
-        {
-            prop: `presence`,
-            width: `100px`
-        }
-    ];
 
     /**
      * Define extra filter properties
@@ -222,7 +199,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * as CSV (including personal information such as initial passwords)
      */
     public csvExportUserList(): void {
-        this.csvExport.export(this.dataSource!.filteredData);
+        this.csvExport.export(this.listComponent.source);
     }
 
     /**
@@ -230,7 +207,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * (access information, including personal information such as initial passwords)
      */
     public onDownloadAccessPdf(): void {
-        this.pdfExport.exportAccessDocuments(...this.dataSource.filteredData);
+        this.pdfExport.exportAccessDocuments(...this.listComponent.source);
     }
 
     /**
@@ -238,7 +215,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      * with all users currently matching the filter
      */
     public pdfExportUserList(): void {
-        this.pdfExport.exportParticipants(...this.dataSource.filteredData);
+        this.pdfExport.exportParticipants(...this.listComponent.source);
     }
 
     /**

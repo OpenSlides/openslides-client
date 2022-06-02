@@ -1,10 +1,3 @@
-$pbl-height: var(--pbl-height);
-
-.list-view-frame {
-    // remove the height of the top-bar
-    height: calc(100vh - 90px);
-}
-
 .list-view-table-wrapper {
     display: flex;
     flex-flow: column;
@@ -15,42 +8,19 @@ $pbl-height: var(--pbl-height);
         display: block;
     }
 
-    /**
-    * Compilcated ngrid hack: The meta row won't disappear (just like that)
-    * Select the first ever container pbl-ngrid-container div and hide
-    */
-    .pbl-ngrid-container {
-        > div {
-            height: 0;
-        }
-    }
-
     .vscroll-list-view {
         flex: 1 1 auto;
         height: 100%;
+    }
 
-        .projector-button {
-            margin: auto;
-            display: flex;
-        }
-
-        .pbl-ngrid-row {
-            height: $pbl-height;
-            user-select: none;
-        }
-
-        .pbl-ngrid-row:last-of-type {
-            margin-bottom: 60px !important;
-        }
-
-        .pbl-ngrid-cell {
-            height: inherit;
-        }
-
-        .multiselect {
-            .pbl-ngrid-cell {
-                cursor: pointer;
-            }
-        }
+    .no-data-placeholder {
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        top: 5%;
+        left: 0;
+        right: 0;
+        width: 100px; /* Need a specific value to work */
+        font-style: italic;
     }
 }

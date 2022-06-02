@@ -3,6 +3,7 @@ import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
+import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 
 import { ViewMotion } from '../../../view-models';
@@ -41,18 +42,18 @@ export class AmendmentControllerService {
             .pipe(map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id)));
     }
 
-    public async createTextBased(partialMotion: Partial<Motion>): Promise<Identifiable> {
-        const result = await (this.repo.createTextBased(partialMotion).resolve() as Promise<Identifiable[]>);
+    public async createTextBased(partialMotion: Partial<Motion>): Promise<CreateResponse> {
+        const result = await (this.repo.createTextBased(partialMotion).resolve() as Promise<CreateResponse[]>);
         return result[0];
     }
 
-    public async createParagraphBased(partialMotion: Partial<Motion>): Promise<Identifiable> {
-        const result = await (this.repo.createParagraphBased(partialMotion).resolve() as Promise<Identifiable[]>);
+    public async createParagraphBased(partialMotion: Partial<Motion>): Promise<CreateResponse> {
+        const result = await (this.repo.createParagraphBased(partialMotion).resolve() as Promise<CreateResponse[]>);
         return result[0];
     }
 
-    public async createStatuteAmendment(partialMotion: Partial<Motion>): Promise<Identifiable> {
-        const result = await (this.repo.createStatuteAmendment(partialMotion).resolve() as Promise<Identifiable[]>);
+    public async createStatuteAmendment(partialMotion: Partial<Motion>): Promise<CreateResponse> {
+        const result = await (this.repo.createStatuteAmendment(partialMotion).resolve() as Promise<CreateResponse[]>);
         return result[0];
     }
 }

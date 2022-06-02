@@ -1,3 +1,5 @@
+import { Identifiable } from 'src/app/domain/interfaces';
+
 import { CsvImportStatus } from './import-utils';
 
 export type ImportModelConfig<ToCreate> = Partial<ImportModel<ToCreate>> & {
@@ -10,7 +12,12 @@ export function createImportModel<ToCreate>(config: ImportModelConfig<ToCreate>)
     return new ImportModel(config);
 }
 
-export class ImportModel<ToCreate> {
+export class ImportModel<ToCreate> implements Identifiable {
+    public readonly id: number;
+
+    /**
+     * @deprecated: The `id` property is used as same value
+     */
     public readonly importTrackId: number;
     public readonly afterImportFields: { [field: string]: any };
 
@@ -30,6 +37,7 @@ export class ImportModel<ToCreate> {
 
     public constructor({ model, importTrackId, afterImportFields, ...config }: ImportModelConfig<ToCreate>) {
         this.model = model;
+        this.id = importTrackId;
         this.importTrackId = importTrackId;
         this.afterImportFields = afterImportFields || [];
         this.errors = config.errors || [];

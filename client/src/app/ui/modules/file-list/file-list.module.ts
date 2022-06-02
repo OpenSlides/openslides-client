@@ -8,11 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { PblNgridModule } from '@pebula/ngrid';
-import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
-import { PblNgridMaterialModule } from '@pebula/ngrid-material';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
+import { ListModule } from 'src/app/ui/modules/list';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
@@ -33,9 +31,7 @@ const DECLARATIONS = [FileListComponent];
         MatTooltipModule,
         MatButtonModule,
         MatDialogModule,
-        PblNgridModule,
-        PblNgridMaterialModule,
-        PblNgridTargetEventsModule,
+        ListModule,
         SearchSelectorModule,
         IconContainerModule,
         PipesModule,

@@ -3,6 +3,11 @@
     height: 100%;
     div.indent {
         margin-left: 24px;
+
+        mat-action-list,
+        cdk-virtual-scroll-viewport {
+            height: 100%;
+        }
     }
 
     .mat-expansion-panel {
@@ -15,6 +20,7 @@
     }
 
     .filter-subtitle {
+        flex: 1;
         margin-top: 5px;
         margin-bottom: 5px;
         opacity: 0.9;
@@ -25,10 +31,21 @@
         margin-left: 20px;
     }
 
+    .filter-menu--option-row {
+        height: 24px;
+    }
+
     mat-checkbox {
         // adds breaks to mat-checkboxes with long labels
         .mat-checkbox-layout {
             white-space: normal;
+        }
+
+        .mat-checkbox-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 290px;
         }
 
         // rather than center the checkbox, put the checkbox in the first line

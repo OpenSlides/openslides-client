@@ -1,7 +1,5 @@
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';
 
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
@@ -12,13 +10,6 @@ import { MotionWorkflowControllerService } from '../../../../modules/workflows/s
     styleUrls: [`./workflow-import.component.scss`]
 })
 export class WorkflowImportComponent {
-    public columns: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            label: _(`Title`)
-        }
-    ];
-
     public constructor(private repo: MotionWorkflowControllerService, private location: Location) {}
 
     public onUploadSucceeded(): void {

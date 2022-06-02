@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { SortListService } from 'src/app/ui/base/sort-service';
+import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';

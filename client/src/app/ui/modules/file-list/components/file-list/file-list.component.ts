@@ -4,21 +4,23 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { columnFactory, createDS, PblColumnDefinition, PblDataSource } from '@pebula/ngrid';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ListComponent } from 'src/app/ui/modules/list/components';
+
+import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 
 interface MoveEvent {
     files: ViewMediafile[];
@@ -53,6 +55,9 @@ interface BeforeEditingEvent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileListComponent implements OnInit, OnDestroy {
+    public readonly END_POSITION = END_POSITION;
+    public readonly START_POSITION = START_POSITION;
+
     @Input()
     public editFolderTemplate: TemplateRef<any> | null = null;
 
@@ -87,8 +92,6 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         return hidden;
     }
-
-    public dataSource!: PblDataSource<ViewMediafile>;
 
     @Input()
     public set currentDirectory(directory: ViewMediafile | null) {
@@ -129,58 +132,18 @@ export class FileListComponent implements OnInit, OnDestroy {
     @ViewChild(`moveDialog`)
     private _moveDialog: TemplateRef<any> | null = null;
 
-    /**
-     * Define the column definition
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `selection`,
-            width: `40px`
-        },
-        {
-            prop: `icon`,
-            label: ``,
-            width: `40px`
-        },
-        {
-            prop: `title`,
-            width: `100%`,
-            minWidth: 60
-        },
-        /**
-         * Shows the mimetype of files,
-         * Useful for debugging certain behavior
-         */
-        /*
-        {
-             prop: 'mimetype',
-             width: '100%',
-             minWidth: 60
-        },
-        */
-        {
-            prop: `info`,
-            width: `20%`,
-            minWidth: 60
-        },
-        {
-            prop: `indicator`,
-            label: ``,
-            width: `40px`
-        },
-        {
-            prop: `menu`,
-            label: ``,
-            width: `40px`
-        }
-    ];
+    @ViewChild(ListComponent)
+    private _listComponent: ListComponent<ViewMediafile> | undefined;
+
+    public get directoryObservable(): Observable<ViewMediafile[]> {
+        return this._directoryBehaviorSubject.asObservable();
+    }
 
     /**
-     * Create the column set
+     * The height of the file list. The viewport height is decreased by `130px`. This is almost the summary of the
+     * height of the global and the local headbar and the custom table header.
      */
-    public columnSet = columnFactory()
-        .table(...this.tableColumnDefinition)
-        .build();
+    public readonly fileListHeight = `calc(100vh - 130px)`;
 
     public get directoryChain(): ViewMediafile[] {
         return this._directoryChain;
@@ -197,7 +160,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     public selectedRows: ViewMediafile[] = [];
 
-    private readonly directoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
+    private readonly _directoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
     private _sourceFileSubscription: Subscription | null = null;
 
@@ -208,15 +171,11 @@ export class FileListComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         if (this.sourceFiles instanceof Observable) {
             this._sourceFileSubscription = this.sourceFiles.subscribe(files =>
-                this.directoryBehaviorSubject.next(files)
+                this._directoryBehaviorSubject.next(files)
             );
         } else {
-            this.directoryBehaviorSubject.next(this.sourceFiles);
+            this._directoryBehaviorSubject.next(this.sourceFiles);
         }
-        this.createDataSource();
-        this.dataSource.selection.changed.subscribe(selection =>
-            this.selected.emit({ files: selection.source.selected })
-        );
     }
 
     public ngOnDestroy(): void {
@@ -239,17 +198,16 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         if (files.some(file => file.is_directory)) {
             this.filteredDirectoryBehaviorSubject.next(
-                this.directoryBehaviorSubject.value.filter(dir => !files.some(file => dir.url.startsWith(file.url)))
+                this._directoryBehaviorSubject.value.filter(dir => !files.some(file => dir.url.startsWith(file.url)))
             );
         } else {
-            this.filteredDirectoryBehaviorSubject.next(this.directoryBehaviorSubject.value);
+            this.filteredDirectoryBehaviorSubject.next(this._directoryBehaviorSubject.value);
         }
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.moved.emit({ files, directoryId: this.moveForm.value.directory_id });
-                this.dataSource.selection.clear();
                 this.cd.markForCheck();
             }
         });
@@ -269,18 +227,6 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.deleted.emit({ file });
     }
 
-    public onSelectRow(event: any /* actually: PblNgridDataMatrixRow<ViewMediafile> */): void {
-        if (this.isMultiSelect) {
-            const clickedModel: ViewMediafile = event.row;
-            const alreadySelected = this.dataSource.selection.isSelected(clickedModel);
-            if (alreadySelected) {
-                this.dataSource.selection.deselect(clickedModel);
-            } else {
-                this.dataSource.selection.select(clickedModel);
-            }
-        }
-    }
-
     public getMediaUrl(file: ViewMediafile): string {
         return `/download/${file.id}`;
     }
@@ -289,8 +235,8 @@ export class FileListComponent implements OnInit, OnDestroy {
      * Select all files in the current data source
      */
     public selectAll(): void {
-        if (this.dataSource) {
-            this.dataSource.selection.select(...this.dataSource.filteredData);
+        if (this._listComponent) {
+            this._listComponent.scrollingTableComponent.selectAll();
         }
     }
 
@@ -298,18 +244,8 @@ export class FileListComponent implements OnInit, OnDestroy {
      * Handler to quickly unselect all items.
      */
     public deselectAll(): void {
-        if (this.dataSource) {
-            this.dataSource.selection.clear();
+        if (this._listComponent) {
+            this._listComponent.scrollingTableComponent.deselectAll();
         }
-    }
-
-    private createDataSource(): void {
-        this.dataSource = createDS<ViewMediafile>()
-            .onTrigger(() => this.directoryBehaviorSubject)
-            .create();
-
-        this.dataSource.selection.changed.subscribe(selection => {
-            this.selectedRows = selection.source.selected;
-        });
     }
 }

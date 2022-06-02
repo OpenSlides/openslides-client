@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { ActiveFiltersStoreService, OsFilter } from 'src/app/ui/base/filter-service';
+import { ActiveFiltersStoreService, OsFilter } from 'src/app/ui/modules/list/definitions';
 
 @Injectable({
     providedIn: `root`

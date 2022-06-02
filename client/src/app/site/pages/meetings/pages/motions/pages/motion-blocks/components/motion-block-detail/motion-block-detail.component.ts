@@ -3,7 +3,6 @@ import { FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
@@ -38,28 +37,6 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * To quick-filter the list
      */
     public filterProps = [`submitters`, `title`, `number`];
-
-    /**
-     * Columns to display in table when desktop view is available
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            width: `70%`
-        },
-        {
-            prop: `recommendation`,
-            label: this.translate.instant(`Recommendation`),
-            width: `30%`,
-            minWidth: 60
-        },
-        {
-            prop: `remove`,
-            label: ``,
-            width: `40px`
-        }
-    ];
 
     /**
      * Restrictions for specific columns
@@ -169,8 +146,8 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * Following a recommendation implies, that a valid recommendation exists.
      */
     public isFollowingProhibited(): boolean {
-        if (this.dataSource && this.dataSource.source) {
-            return this.dataSource.source.every(motion => motion.isInFinalState() || !motion.recommendation_id);
+        if (this.listComponent?.source) {
+            return this.listComponent.source.every(motion => motion.isInFinalState() || !motion.recommendation_id);
         } else {
             return false;
         }

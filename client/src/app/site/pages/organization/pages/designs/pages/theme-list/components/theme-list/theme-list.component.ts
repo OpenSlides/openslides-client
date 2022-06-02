@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
@@ -17,21 +16,6 @@ import { ThemeControllerService } from '../../../../services/theme-controller.se
     styleUrls: [`./theme-list.component.scss`]
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `name`,
-            width: `100%`
-        },
-        {
-            prop: `colors`,
-            minWidth: 120
-        },
-        {
-            prop: `is_active`,
-            width: this.singleButtonWidth
-        }
-    ];
-
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,

@@ -14,7 +14,7 @@
             [(ngModel)]="infoDialog.vote_delegations_from_ids"
             [multiple]="true"
             placeholder="{{ 'Voting right received from (principals)' | translate }}"
-            [inputListValues]="getOtherUsersObservable()"
+            [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field>
@@ -23,7 +23,7 @@
             [multiple]="false"
             [includeNone]="true"
             placeholder="{{ 'Voting right delegated to (proxy)' | translate }}"
-            [inputListValues]="getOtherUsersObservable()"
+            [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
     <mat-form-field>

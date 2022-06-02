@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
+import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
@@ -17,7 +17,7 @@ export class AssignmentControllerService extends BaseMeetingControllerService<Vi
         super(controllerServiceCollector, Assignment, repo);
     }
 
-    public create(assignment: any): Promise<Identifiable> {
+    public create(assignment: any): Promise<CreateResponse> {
         return this.repo.create(assignment);
     }
 

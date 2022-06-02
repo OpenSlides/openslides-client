@@ -1,14 +1,15 @@
 import { Component, EventEmitter, HostListener, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDrawer } from '@angular/material/sidenav';
 import { TranslateService } from '@ngx-translate/core';
 import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { FilterListService } from 'src/app/ui/base/filter-service';
-import { SortListService } from 'src/app/ui/base/sort-service';
+import { FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
+import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { RoundedInputComponent } from '../../../input/components/rounded-input/rounded-input.component';
-import { FilterMenuComponent } from '../filter-menu/filter-menu.component';
+import { SearchService } from '../../definitions/search-service';
 import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet.component';
 
 /**
@@ -39,20 +40,17 @@ export class SortFilterBarComponent<V> {
      * The currently active sorting service for the list view
      */
     @Input()
-    public sortService!: SortListService<V>;
-
-    /** Optional number to overwrite the display of the filtered data count, if any additional filters
-     * (e.g. the angular search bar) are applied on top of these filters
-     */
-    @Input()
-    public filterCount: number = 0;
+    public sortService: SortListService<V> | undefined;
 
     /**
      * The currently active filter service for the list view. It is supposed to
      * be a FilterListService extendingFilterListService.
      */
     @Input()
-    public filterService!: FilterListService<V>;
+    public filterService: FilterListService<V> | undefined;
+
+    @Input()
+    public searchService: SearchService<V> | undefined;
 
     /**
      * Optional string to tell the verbose name of the filtered items. This string is displayed,
@@ -77,8 +75,8 @@ export class SortFilterBarComponent<V> {
     /**
      * The filter side drawer
      */
-    @ViewChild(`filterMenu`, { static: true })
-    public filterMenu: FilterMenuComponent<V>;
+    @ViewChild(MatDrawer, { static: true })
+    public filterMenu: MatDrawer;
 
     /**
      * The bottom sheet used to alter sorting in mobile view
@@ -86,45 +84,17 @@ export class SortFilterBarComponent<V> {
     @ViewChild(`sortBottomSheet`)
     public sortBottomSheet!: SortBottomSheetComponent<V>;
 
-    /**
-     * Optional boolean, whether the filter and sort service should be shown.
-     */
-    private _showFilterSort = true;
-
-    /**
-     * Holds the total amount of data.
-     */
-    private _totalCount: number = 0;
-
-    /**
-     * Setter for `showFilterSort`
+    /** Optional number to overwrite the display of the filtered data count, if any additional filters
+     * (e.g. the angular search bar) are applied on top of these filters
      */
     @Input()
-    public set showFilterSort(show: boolean) {
-        this._showFilterSort = show;
-    }
-
-    /**
-     * Getter for `showFilterSort`
-     */
-    public get showFilterSort(): boolean {
-        return this._showFilterSort;
-    }
+    public filterCount = 0;
 
     /**
      * Overwrites the total-count. If there is no filter-service set, this is used by default.
      */
     @Input()
-    public set totalCount(count: number) {
-        this._totalCount = count;
-    }
-
-    /**
-     * Return the total count of potential filters
-     */
-    public get totalCount(): number {
-        return this.filterService ? this.filterService.unfilteredCount : this._totalCount;
-    }
+    public totalCount = 0;
 
     public get sortOptions(): any {
         return this.sortService.sortOptions;
@@ -144,26 +114,18 @@ export class SortFilterBarComponent<V> {
         this.sortService.sortProperty = option.property;
     }
 
-    /**
-     * Constructor. Also creates a filtermenu component and a bottomSheet
-     * @param translate
-     * @param vp
-     * @param bottomSheet
-     */
     public constructor(
         protected translate: TranslateService,
         public vp: ViewPortService,
         private bottomSheet: MatBottomSheet
-    ) {
-        this.filterMenu = new FilterMenuComponent();
-    }
+    ) {}
 
     /**
      * on Click, remove Filter
      * @param filter
      */
     public removeFilterFromStack(filter: OsFilterIndicator<V>): void {
-        this.filterService.toggleFilterOption(filter.property, filter.option);
+        this.filterService!.toggleFilterOption(filter.property, filter.option);
     }
 
     /**
@@ -171,7 +133,7 @@ export class SortFilterBarComponent<V> {
      */
     public onClearAllButton(event: MouseEvent): void {
         event.stopPropagation();
-        this.filterService.clearAllFilters();
+        this.filterService!.clearAllFilters();
     }
 
     /**
@@ -185,6 +147,12 @@ export class SortFilterBarComponent<V> {
                     this.sortService.sortProperty = result;
                 }
             });
+        }
+    }
+
+    public onInputChanged(nextInput: string): void {
+        if (this.searchService) {
+            this.searchService.search(nextInput);
         }
     }
 

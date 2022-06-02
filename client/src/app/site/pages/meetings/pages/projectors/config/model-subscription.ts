@@ -1,4 +1,4 @@
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -6,7 +6,7 @@ const PROJECTOR_SUBSCRIPTION = `projector_list`;
 
 export const getProjectorListSubscriptionConfig = (
     id: Id,
-    getNextMeetingIdObservable: () => Observable<Id | null>
+    hasMeetingIdChangedObservable: () => Observable<boolean>
 ) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
@@ -27,5 +27,5 @@ export const getProjectorListSubscriptionConfig = (
         ]
     },
     subscriptionName: PROJECTOR_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
+    hideWhen: hasMeetingIdChangedObservable()
 });

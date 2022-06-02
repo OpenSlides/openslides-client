@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -22,21 +21,6 @@ import { AccountSortService } from '../../services/account-list-sort.service/acc
     styleUrls: [`./account-list.component.scss`]
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> {
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `short_name`,
-            width: `50%`
-        },
-        {
-            prop: `info`,
-            width: `50%`
-        },
-        {
-            prop: `is_active`,
-            width: `100px`
-        }
-    ];
-
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -94,7 +78,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     }
 
     public csvExportMemberList(): void {
-        this.exporter.downloadAccountCsvFile(this.dataSource!.filteredData);
+        this.exporter.downloadAccountCsvFile(this.listComponent.source);
     }
 
     public getOmlByUser(user: ViewUser): string {

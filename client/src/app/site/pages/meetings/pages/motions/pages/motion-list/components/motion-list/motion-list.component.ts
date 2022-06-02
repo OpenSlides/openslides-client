@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { firstValueFrom, map } from 'rxjs';
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
@@ -57,31 +56,12 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     /**
      * String to define the current selected view.
      */
-    public selectedView: MotionListviewType = `tiles`;
+    public selectedView: MotionListviewType | undefined = undefined; // Not initialized
 
     /**
      * The motion, the user has currently selected in the quick-edit-dialog.
      */
     public selectedMotion: ViewMotion | null = null;
-
-    /**
-     * Columns to display in table when desktop view is available
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `number`
-        },
-        {
-            prop: `title`,
-            width: `80%`
-        },
-        {
-            prop: `state`,
-            width: `20%`,
-            minWidth: 160
-        }
-    ];
 
     /**
      * Value of the configuration variable `motions_statutes_enabled` - are statutes enabled?
@@ -310,7 +290,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      * active and there are rows selected
      */
     public async openExportDialog(): Promise<void> {
-        const motions = this.isMultiSelect ? this.selectedRows : this.dataSource.filteredData;
+        const motions = this.isMultiSelect ? this.selectedRows : this.listComponent.source;
         await this.exportDialog.export(motions);
     }
 

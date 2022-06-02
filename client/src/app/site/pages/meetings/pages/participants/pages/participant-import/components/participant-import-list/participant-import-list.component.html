@@ -25,7 +25,7 @@
         </div>
     </ng-template>
 
-    <div *pblNgridCellDef="'newEntry.group_ids'; row as entry">
+    <div *osScrollingTableCell="'group_ids'; row as entry">
         <span *ngFor="let group of entry.newEntry.group_ids; let last = last">
             <span>{{ group.name | translate }}</span>
             <span *ngIf="!group.id">

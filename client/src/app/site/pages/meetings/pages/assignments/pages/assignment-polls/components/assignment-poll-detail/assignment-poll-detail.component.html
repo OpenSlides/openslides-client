@@ -44,26 +44,17 @@
                     <!-- Single Votes Table -->
                     <div class="named-result-table">
                         <os-list
-                            class="single-votes-table"
                             *ngIf="votesDataObservable"
+                            class="single-votes-table"
                             [listObservable]="votesDataObservable"
-                            [columns]="columnDefinitionSingleVotes"
                             [filterProps]="filterProps"
                             [fullScreen]="false"
-                            [vScrollFixed]="-1"
                             listStorageKey="assignment-poll-vote"
                             [showMenu]="false"
                         >
-                            <!-- Header -->
-                            <div *pblNgridHeaderCellDef="'user'; col as col">
-                                {{ col.label | translate }}
-                            </div>
-                            <div *pblNgridHeaderCellDef="'votes'; col as col">
-                                {{ col.label | translate }}
-                            </div>
-
                             <!-- Content -->
-                            <div *pblNgridCellDef="'user'; row as vote">
+                            <div *osScrollingTableCell="'user'; row as vote">
+                                <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
                                 <div *ngIf="vote.user">
                                     {{ vote.user.getShortName() }}
                                     <div class="user-subtitle">
@@ -91,7 +82,8 @@
                                 </div>
                             </div>
 
-                            <div *pblNgridCellDef="'votes'; row as vote">
+                            <div *osScrollingTableCell="'votes'; row as vote">
+                                <div *osScrollingTableCellLabel>{{ 'Votes' | translate }}</div>
                                 <div class="single-vote-result" *ngFor="let candidate of vote.votes">
                                     {{ candidate }}
                                 </div>

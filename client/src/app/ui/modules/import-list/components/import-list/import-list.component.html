@@ -189,44 +189,12 @@
     </div>
 </ng-template>
 
-<ng-template #statusTemplate>
-    <div *pblNgridCellDef="'status'; row as row">
-        <ng-container [ngSwitch]="row.status">
-            <div *ngSwitchCase="'error'">
-                <mat-icon class="red-warning-text" matTooltip="{{ getErrorDescription(row) }}">
-                    {{ getActionIcon(row) }}
-                </mat-icon>
-                <mat-icon
-                    color="warn"
-                    *ngIf="hasError(row, 'ParsingErrors')"
-                    matTooltip="{{ getVerboseError('ParsingErrors') | translate }}"
-                >
-                    warning
-                </mat-icon>
-            </div>
-            <div *ngSwitchCase="'done'">
-                <mat-icon matTooltip="{{ (modelName | translate) + ' ' + ('has been imported' | translate) }}">
-                    {{ getActionIcon(row) }}
-                </mat-icon>
-            </div>
-            <div *ngSwitchCase="'new'">
-                <mat-icon matTooltip="{{ (modelName | translate) + ' ' + ('will be imported' | translate) }}">
-                    {{ getActionIcon(row) }}
-                </mat-icon>
-            </div>
-            <div *ngSwitchDefault>
-                <ng-container *ngTemplateOutlet="importListStateTemplate; context: { row: row }"></ng-container>
-            </div>
-        </ng-container>
-    </div>
-</ng-template>
-
 <ng-template #modelNameTemplate let-model="model">
     {{ model.name | translate }}
     <mat-icon class="newBadge" color="accent" inline *ngIf="model.willBeCreated">add</mat-icon>
 </ng-template>
 
-<ng-template #entryTemplate let-row="row" let-entry="entry" let-def="def">
+<ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row">
     <div *ngIf="entry[def]" class="flex-vertical-center">
         <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
             warning
@@ -252,47 +220,68 @@
 </ng-template>
 
 <ng-template #previewList>
-    <pbl-ngrid
+    <os-scrolling-table
         class="import-list-preview-table"
-        [attr.vScrollFixed]="rowHeight !== -1 ? rowHeight : false"
-        [attr.vScrollAuto]="rowHeight === -1"
+        [rowHeight]="50"
+        [dataSource]="dataSource"
         [showHeader]="true"
-        [dataSource]="vScrollDataSource"
-        [columns]="columnSet"
+        rowClass="import-list-preview-row"
     >
-        <div *pblNgridHeaderCellDef="'*'; col as col" class="full-width">
-            <div class="one-line">
-                {{ col.label | translate }}
-            </div>
-            <div class="small-text" *ngIf="col.prop !== 'status' && col.prop !== 'importTrackId'">
-                <mat-form-field *ngIf="isUnknown(col.prop) && showUnknownHeaders && hasLeftReceivedHeaders">
-                    <mat-label>{{ 'Choose a header' | translate }}</mat-label>
-                    <mat-select [ngModel]="headerValueMap" (ngModelChange)="onChangeUnknownHeaderKey(col.prop, $event)">
-                        <mat-option *ngFor="let option of leftReceivedHeaders" [value]="option">
-                            {{ option }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+        <div
+            *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
+            class="flex-vertical-center"
+        >
+            <ng-container [ngSwitch]="row.status">
+                <ng-container *ngSwitchCase="'error'">
+                    <mat-icon class="red-warning-text" matTooltip="{{ getErrorDescription(row) }}">
+                        {{ getActionIcon(row) }}
+                    </mat-icon>
+                    <mat-icon
+                        color="warn"
+                        *ngIf="hasError(row, 'ParsingErrors')"
+                        matTooltip="{{ getVerboseError('ParsingErrors') | translate }}"
+                    >
+                        warning
+                    </mat-icon>
+                </ng-container>
+                <ng-container *ngSwitchCase="'done'">
+                    <mat-icon matTooltip="{{ (modelName | translate) + ' ' + ('has been imported' | translate) }}">
+                        {{ getActionIcon(row) }}
+                    </mat-icon>
+                </ng-container>
+                <ng-container *ngSwitchCase="'new'">
+                    <mat-icon matTooltip="{{ (modelName | translate) + ' ' + ('will be imported' | translate) }}">
+                        {{ getActionIcon(row) }}
+                    </mat-icon>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                    <ng-container *ngTemplateOutlet="importListStateTemplate; context: { row: row }"></ng-container>
+                </ng-container>
+            </ng-container>
         </div>
-        <ng-container *ngTemplateOutlet="statusTemplate"></ng-container>
-        <div *pblNgridCellDef="'importTrackId'; value as value">
+        <div *osScrollingTableCell="'importTrackId'; value as value; config: { width: 25, position: START_POSITION }">
+            <div *osScrollingTableCellLabel>#</div>
             {{ value }}
         </div>
-        <div *pblNgridCellTypeDef="'boolean'; value as value">
-            <mat-checkbox disabled [checked]="value"></mat-checkbox>
-        </div>
-        <div
-            class="ngrid-preview one-line"
-            *pblNgridCellDef="'*'; row as row; col as col; value as value"
-            [matTooltip]="getTooltip(value)"
-        >
-            <ng-container
-                *ngTemplateOutlet="entryTemplate; context: { entry: row.newEntry, row: row, def: col.prop }"
-            ></ng-container>
-        </div>
-        <ng-content></ng-content>
-    </pbl-ngrid>
+
+        <ng-container *ngFor="let column of defaultColumns">
+            <div
+                *osScrollingTableCell="
+                    column.property;
+                    row as row;
+                    definition as def;
+                    isDefault: true;
+                    config: { width: column.width, minWidth: 150 }
+                "
+            >
+                <div *osScrollingTableCellLabel>{{ column.label | translate }}</div>
+                <!-- row is `ImportModel`, entry is the csv data as object, def is the "property" -->
+                <ng-container
+                    *ngTemplateOutlet="entryTemplate; context: { entry: row.model, def: def, row: row }"
+                ></ng-container>
+            </div>
+        </ng-container>
+    </os-scrolling-table>
 </ng-template>
 
 <ng-template #fullscreenDialog>

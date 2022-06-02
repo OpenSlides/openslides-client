@@ -25,7 +25,7 @@
         </div>
     </ng-template>
 
-    <div *pblNgridCellDef="'newEntry.name'; row as row" class="one-line" [matTooltip]="row.newEntry.name">
+    <div *osScrollingTableCell="'name'; row as row" class="one-line" [matTooltip]="row.newEntry.name">
         <div class="one-line">
             {{ row.newEntry.name }}
         </div>
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div *pblNgridCellDef="'newEntry.meeting'; row as row; value as meetings" class="one-line">
+    <div *osScrollingTableCell="'meeting'; row as row; value as meetings" class="one-line">
         <div class="one-line">
             <span *ngFor="let meeting of meetings; let last = last">
                 {{ meeting.name }}

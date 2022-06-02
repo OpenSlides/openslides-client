@@ -12,12 +12,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { PblNgridModule } from '@pebula/ngrid';
-import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
-import { PblNgridMaterialModule } from '@pebula/ngrid-material';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { InputModule } from 'src/app/ui/modules/input';
+import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
 import { FilterMenuComponent } from './components/filter-menu/filter-menu.component';
 import { ListComponent } from './components/list/list.component';
@@ -36,15 +35,14 @@ const MODULES = [
     MatBottomSheetModule,
     MatBadgeModule,
     MatButtonModule,
+    MatTooltipModule,
     ScrollingModule,
-    PblNgridModule,
-    PblNgridMaterialModule,
-    PblNgridTargetEventsModule
+    ScrollingTableModule
 ];
 const DECLARATIONS = [ListComponent];
 
 @NgModule({
-    exports: [...DECLARATIONS, PblNgridModule],
+    exports: [...DECLARATIONS, ScrollingTableModule],
     declarations: [...DECLARATIONS, SortFilterBarComponent, SortBottomSheetComponent, FilterMenuComponent],
     imports: [CommonModule, OpenSlidesTranslationModule.forChild(), IconContainerModule, InputModule, ...MODULES]
 })

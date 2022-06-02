@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
@@ -18,24 +17,6 @@ const POLL_LIST_STORAGE_INDEX = `polls`;
     styleUrls: [`./poll-list.component.scss`]
 })
 export class PollListComponent extends BaseMeetingListViewComponent<ViewPoll> {
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            width: `40%`
-        },
-        {
-            prop: `classType`,
-            width: `30%`
-        },
-        {
-            prop: `state`,
-            width: `30%`
-        },
-        {
-            prop: `votability`,
-            width: `25px`
-        }
-    ];
     public filterProps = [`title`, `state`];
 
     public constructor(

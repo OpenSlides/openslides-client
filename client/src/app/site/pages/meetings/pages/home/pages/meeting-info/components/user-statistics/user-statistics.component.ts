@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -41,24 +40,6 @@ export class UserStatisticsComponent extends BaseComponent {
     public get openedStatistics(): boolean {
         return this.statisticIsOpen;
     }
-
-    public readonly columnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `structureLevel`,
-            width: `40%`,
-            label: `Structure level`
-        },
-        {
-            prop: `durationOfWordRequests`,
-            width: `30%`,
-            label: this.translate.instant(`Duration of requests to speak`)
-        },
-        {
-            prop: `numberOfWordRequests`,
-            width: `30%`,
-            label: this.translate.instant(`Number of requests to speak`)
-        }
-    ];
 
     public readonly filterProps: string[] = [`structureLevel`];
 

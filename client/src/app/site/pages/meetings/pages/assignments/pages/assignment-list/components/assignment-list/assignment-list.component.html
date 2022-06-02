@@ -22,15 +22,13 @@
     [listObservableProvider]="repo"
     [filterService]="filterService"
     [sortService]="sortService"
-    [columns]="tableColumnDefinition"
     [filterProps]="filterProps"
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="getColumnsHiddenInMobile()"
     [(selectedRows)]="selectedRows"
-    (dataSourceChange)="onDataSourceChange($event)"
 >
     <!-- Title -->
-    <div *pblNgridCellDef="'title'; row as assignment; rowContext as rowContext" class="cell-slot fill">
+    <div *osScrollingTableCell="'title'; row as assignment; rowContext as rowContext" class="cell-slot fill">
         <os-detail-view-navigator [model]="assignment" *ngIf="!isMultiSelect"></os-detail-view-navigator>
         <div class="innerTable">
             <div class="title-line ellipsis-overflow">
@@ -45,7 +43,10 @@
     </div>
 
     <!-- Phase -->
-    <div *pblNgridCellDef="'phase'; row as assignment" class="cell-slot fill mat-chip-wrapper">
+    <div
+        *osScrollingTableCell="'phase'; row as assignment; config: { width: 180 }"
+        class="cell-slot fill mat-chip-wrapper"
+    >
         <mat-chip-list>
             <mat-chip color="primary" selected>
                 {{ assignment.phaseString | translate }}
@@ -54,7 +55,7 @@
     </div>
 
     <!-- Candidates -->
-    <div *pblNgridCellDef="'candidates'; row as assignment" class="cell-slot fill">
+    <div *osScrollingTableCell="'candidates'; row as assignment; config: { width: 40 }" class="cell-slot fill">
         <mat-chip-list>
             <mat-chip color="accent" selected matTooltip="{{ 'Number of candidates' | translate }}">
                 {{ getCandidateAmount(assignment) }}
@@ -63,7 +64,7 @@
     </div>
 
     <!-- Menu -->
-    <div *pblNgridCellDef="'menu'; row as assignment" class="cell-slot fill">
+    <div *osScrollingTableCell="'menu'; row as assignment; config: { width: 40 }" class="cell-slot fill">
         <button
             mat-icon-button
             [disabled]="isMultiSelect"

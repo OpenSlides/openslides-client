@@ -1,6 +1,6 @@
 import { User } from './user';
 
-export const userHeadersAndVerboseNames: { [key in keyof User]?: string } = {
+export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     title: `Title`,
     first_name: `Given name`,
     last_name: `Surname`,

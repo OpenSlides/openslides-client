@@ -19,7 +19,7 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
         return this.modelHeaders.map(property => {
             const singleColumnDef: ImportListHeaderDefinition = {
                 label: this.translate.instant(this.modelHeadersAndVerboseNames[property]),
-                prop: `newEntry.${property}`,
+                property: `newEntry.${property}`,
                 type: this.guessType(property as keyof User),
                 isTableColumn: true
             };

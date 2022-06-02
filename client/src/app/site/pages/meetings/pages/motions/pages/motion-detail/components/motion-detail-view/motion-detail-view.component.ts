@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, filter, first, firstValueFrom, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
+import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
@@ -359,7 +359,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      */
     public async createMotion(newMotionValues: Partial<Motion>): Promise<void> {
         try {
-            let response: Identifiable;
+            let response: HasSequentialNumber;
             if (this._parentId) {
                 response = await this.amendmentRepo.createTextBased({
                     ...newMotionValues,
@@ -368,7 +368,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             } else {
                 response = (await this.repo.create(newMotionValues))[0];
             }
-            await this.navigateAfterCreation(response.id);
+            await this.navigateAfterCreation(response);
         } catch (e) {
             this.raiseError(e);
         }
@@ -483,13 +483,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.init();
     }
 
-    private async navigateAfterCreation(id: Id): Promise<void> {
-        const motion = await firstValueFrom(
-            this.repo.getViewModelObservable(id).pipe(
-                filter(toCheck => !!toCheck),
-                first()
-            )
-        );
+    private async navigateAfterCreation(motion: HasSequentialNumber): Promise<void> {
         this.router.navigate([this.activeMeetingId, `motions`, motion!.sequential_number]);
     }
 }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ColorService } from 'src/app/site/services/color.service';
@@ -18,21 +17,6 @@ import { ViewOrganizationTag } from '../../../../view-models';
     styleUrls: [`./organization-tag-list.component.scss`]
 })
 export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrganizationTag> {
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `name`,
-            width: `100%`
-        },
-        {
-            prop: `edit`,
-            width: this.singleButtonWidth
-        },
-        {
-            prop: `delete`,
-            width: this.singleButtonWidth
-        }
-    ];
-
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,

@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
@@ -66,20 +65,6 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     }
 
     public itemListSlide: ProjectionBuildDescriptor | null = null;
-
-    /**
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            width: `100%`
-        },
-        {
-            prop: `info`,
-            minWidth: 120
-        }
-    ];
 
     public restrictedColumns: ColumnRestriction<Permission>[] = [
         {
@@ -307,7 +292,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * Export all items as CSV
      */
     public csvExportItemList(): void {
-        this.agendaItemExportService.exportAsCsv(this.dataSource!.filteredData);
+        this.agendaItemExportService.exportAsCsv(this.listComponent.source);
     }
 
     /**
@@ -315,7 +300,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * items will not be exported
      */
     public onDownloadPdf(): void {
-        this.agendaItemExportService.exportAsPdf(this.dataSource!.filteredData);
+        this.agendaItemExportService.exportAsPdf(this.listComponent.source);
     }
 
     /**

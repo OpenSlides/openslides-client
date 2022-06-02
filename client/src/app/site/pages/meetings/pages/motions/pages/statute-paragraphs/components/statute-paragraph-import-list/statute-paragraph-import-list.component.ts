@@ -18,7 +18,7 @@ export class StatuteParagraphImportListComponent extends BaseImportListComponent
     public possibleFields = Object.values(statuteParagraphHeadersAndVerboseNames);
 
     public columns: ImportListHeaderDefinition[] = Object.keys(statuteParagraphHeadersAndVerboseNames).map(header => ({
-        prop: `newEntry.${header}`,
+        property: `newEntry.${header}`,
         label: _(statuteParagraphHeadersAndVerboseNames[header]),
         isTableColumn: true,
         isRequired: true

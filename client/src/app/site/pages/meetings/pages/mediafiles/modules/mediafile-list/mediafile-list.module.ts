@@ -9,7 +9,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { PblNgridModule } from '@pebula/ngrid';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -40,7 +39,6 @@ import { MediafileListServiceModule } from './services/mediafile-list-service.mo
         MatDialogModule,
         MatDividerModule,
         MatInputModule,
-        PblNgridModule,
         FileListModule,
 
         MeetingsComponentCollectorModule,

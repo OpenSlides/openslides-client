@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PblNgridModule } from '@pebula/ngrid';
+import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
 import { ImportListComponent } from './components/import-list/import-list.component';
@@ -26,7 +26,7 @@ const DECLARATIONS = [
 ];
 
 @NgModule({
-    exports: [...DECLARATIONS, MatTabsModule, PblNgridModule],
+    exports: [...DECLARATIONS, MatTabsModule, ScrollingTableModule],
     declarations: DECLARATIONS,
     imports: [
         CommonModule,
@@ -39,8 +39,8 @@ const DECLARATIONS = [
         MatButtonModule,
         MatDialogModule,
         FormsModule,
-        PblNgridModule,
         PortalModule,
+        ScrollingTableModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })

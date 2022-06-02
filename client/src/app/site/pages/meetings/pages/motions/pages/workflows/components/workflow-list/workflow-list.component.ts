@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -23,19 +22,6 @@ export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMoti
      * Holds the new workflow title
      */
     public newWorkflowTitle: string = ``;
-
-    /**
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `name`,
-            width: `100%`
-        },
-        {
-            prop: `delete`
-        }
-    ];
 
     /**
      * Define extra filter properties

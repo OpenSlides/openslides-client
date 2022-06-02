@@ -19,7 +19,7 @@ export class MotionImportListComponent extends BaseImportListComponent<Motion> {
 
     public get columns(): ImportListHeaderDefinition[] {
         return motionExpectedHeaders.map(header => ({
-            prop: `newEntry.${header}`,
+            property: `newEntry.${header}`,
             label: this.translate.instant(getVerboseNameOfMotionProperty(header)),
             isTableColumn: true,
             isRequired: header === `title` || header === `text`

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
@@ -78,11 +77,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * The form to edit Files
      */
     public fileEditForm: FormGroup | null = null;
-
-    /**
-     * Just to fulfill base class'es interface
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [];
 
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
@@ -183,8 +177,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
 
         this.directoryObservable = this.repo.getDirectoryObservable(directoryId);
         this.folderSubscription = this.directoryObservable.subscribe(mediafiles => {
-            if (mediafiles && this.dataSource) {
-                this.dataSource.refresh();
+            if (mediafiles) {
                 this.cd.markForCheck();
             }
         });
@@ -313,7 +306,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         });
     }
 
-    public downloadMultiple(mediafiles: ViewMediafile[] = this.dataSource!.source): void {
+    public downloadMultiple(mediafiles: ViewMediafile[] = this.listComponent.source): void {
         const eventName = this.meetingSettingsService.instant(`name`);
         const dirName = this.directory?.title ?? this.translate.instant(`Files`);
         const archiveName = `${eventName} - ${dirName}`.trim();

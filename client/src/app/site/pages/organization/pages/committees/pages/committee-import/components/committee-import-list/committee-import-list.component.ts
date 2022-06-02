@@ -25,53 +25,53 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
 
     public columns: ImportListHeaderDefinition[] = [
         {
-            prop: `newEntry.name`,
-            minWidth: 250,
+            property: `newEntry.name`,
+            width: 250,
             label: _(`Title`),
             isRequired: true,
             isTableColumn: true
         },
         {
-            prop: `newEntry.forward_to_committee_ids`,
-            minWidth: 250,
+            property: `newEntry.forward_to_committee_ids`,
+            width: 250,
             label: _(`Can forward motions to committee`),
             isTableColumn: true
         },
         {
-            prop: `manager_ids`,
-            minWidth: 250,
+            property: `manager_ids`,
+            width: 250,
             label: _(`Committee management`),
             isTableColumn: true
         },
         {
-            prop: `meeting`,
-            minWidth: 250,
+            property: `meeting`,
+            width: 250,
             label: _(`Meeting`),
             isTableColumn: true
         },
         {
-            prop: `organization_tag_ids`,
+            property: `organization_tag_ids`,
             label: _(`Tags`)
         },
         {
-            prop: `meeting_start_date`,
+            property: `meeting_start_date`,
             label: _(`Start date`)
         },
         {
-            prop: `meeting_end_date`,
+            property: `meeting_end_date`,
             label: _(`End date`)
         },
         {
-            prop: MEETING_ADMIN_IDS,
+            property: MEETING_ADMIN_IDS,
             label: _(`Meeting administrator`),
             isTableColumn: true,
-            minWidth: 250
+            width: 250
         },
         {
-            prop: MEETING_TEMPLATE_ID,
+            property: MEETING_TEMPLATE_ID,
             label: _(`Meeting template`),
             isTableColumn: true,
-            minWidth: 250
+            width: 250
         }
     ];
 

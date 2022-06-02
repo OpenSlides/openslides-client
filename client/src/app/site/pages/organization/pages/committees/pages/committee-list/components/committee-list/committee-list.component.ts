@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -23,22 +22,6 @@ export const NAVIGATION_FROM_LIST = `list`;
     styleUrls: [`./committee-list.component.scss`]
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> {
-    public readonly tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `name`,
-            minWidth: 250,
-            width: `100%`
-        },
-        {
-            prop: `forwarding`,
-            width: `70px`
-        },
-        {
-            prop: `meta`,
-            width: `70px`
-        }
-    ];
-
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,

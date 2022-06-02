@@ -27,8 +27,8 @@ export class TopicImportComponent extends BaseImportListComponent<Topic> {
     public possibleFields = Object.values(topicHeadersAndVerboseNames);
 
     public columns: ImportListHeaderDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
-        prop: `newEntry.${header}`,
-        label: this.translate.instant((<any>topicHeadersAndVerboseNames)[header]),
+        property: header,
+        label: (<any>topicHeadersAndVerboseNames)[header],
         isTableColumn: true,
         isRequired: header === `title`
     }));

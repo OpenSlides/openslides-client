@@ -17,8 +17,10 @@ export class DetailViewNavigatorComponent {
     public getRouterLink(): string {
         if (isDetailNavigable(this.model)) {
             return this.model.getDetailStateUrl();
-        } else {
+        } else if (this.model) {
             return this.model.id?.toString();
+        } else {
+            return ``; // If a model gets destroyed, while this function is invoked, it must returned an empty string
         }
     }
 }

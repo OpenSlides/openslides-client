@@ -8,7 +8,6 @@ import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { environment } from 'src/environments/environment';
 
-import { SlidesModule } from '../site/pages/meetings/modules/projector/modules/slides/slides.module';
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
 import { OpenSlidesOverlayContainerComponent } from './components/openslides-overlay-container/openslides-overlay-container.component';
 import { httpInterceptorProviders } from './interceptors';
@@ -32,7 +31,6 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule];
         OpenSlidesMainRoutingModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        SlidesModule, // TODO: We should remove this!
         OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`ngsw-worker.js`, {

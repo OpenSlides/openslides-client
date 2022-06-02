@@ -7,6 +7,7 @@ import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/serv
 import { Assignment } from '../../../../domain/models/assignments/assignment';
 import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
+import { CreateResponse } from '../../base-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentAction } from './assignment.action';
 
@@ -44,7 +45,7 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
         };
     }
 
-    public create(partialAssignment: Partial<Assignment>): Promise<Identifiable> {
+    public create(partialAssignment: Partial<Assignment>): Promise<CreateResponse> {
         partialAssignment.phase = undefined;
         const payload = {
             meeting_id: this.activeMeetingId,

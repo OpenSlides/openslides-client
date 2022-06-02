@@ -2,7 +2,6 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -37,20 +36,6 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
      * Holds the create form
      */
     public createForm: FormGroup;
-
-    /**
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            width: `100%`
-        },
-        {
-            prop: `amount`,
-            width: this.singleButtonWidth
-        }
-    ];
 
     /**
      * Define extra filter properties

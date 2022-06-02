@@ -78,8 +78,8 @@ export class ModelRequestService {
             }
         };
         if (isDelayed) {
-            const delay = Math.floor(Math.random() * 390 + 110); // [110, 500]
-            setTimeout(() => fn(), delay);
+            // const delay = Math.floor(Math.random() * 390 + 110); // [110, 500]
+            setTimeout(() => fn(), 0);
         } else {
             fn();
         }

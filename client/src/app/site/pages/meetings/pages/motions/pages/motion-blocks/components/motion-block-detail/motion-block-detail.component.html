@@ -47,14 +47,12 @@
     <os-projectable-list
         [listObservableProvider]="motionRepo"
         [filterService]="filterService"
-        [columns]="tableColumnDefinition"
         [restricted]="restrictedColumns"
         [filterProps]="filterProps"
         [hiddenInMobile]="['remove']"
-        (dataSourceChange)="onDataSourceChange($event)"
     >
         <!-- Title column -->
-        <div *pblNgridCellDef="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
+        <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
             <a
                 class="detail-link"
                 [routerLink]="motion.getDetailStateUrl()"
@@ -107,14 +105,14 @@
         </div>
 
         <!-- Recommendation column -->
-        <div *pblNgridCellDef="'recommendation'; row as motion" class="cell-slot fill">
+        <div *osScrollingTableCell="'recommendation'; row as motion" class="cell-slot fill">
             <mat-basic-chip *ngIf="!!motion.recommendation" disableRipple class="bluegrey">
                 {{ getRecommendationLabel(motion) }}
             </mat-basic-chip>
         </div>
 
         <!-- Remove from block column -->
-        <div *pblNgridCellDef="'remove'; row as motion" class="cell-slot fill">
+        <div *osScrollingTableCell="'remove'; row as motion" class="cell-slot fill">
             <button
                 type="button"
                 mat-icon-button
@@ -127,7 +125,7 @@
         </div>
 
         <!-- Menu -->
-        <div *pblNgridCellDef="'menu'; row as motion" class="cell-slot fill">
+        <div *osScrollingTableCell="'menu'; row as motion" class="cell-slot fill">
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"

@@ -192,7 +192,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
         this.subscribeWorkflows();
         this.operator.operatorUpdated.subscribe(() => {
-            this.setFilterDefinitions();
+            this.updateFilterDefinitions();
         });
     }
 
@@ -317,7 +317,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
             this.setStateFilters(workflowFilters, finalStates, nonFinalStates);
             this.setRecommendationFilters(recoFilters);
-            this.setFilterDefinitions();
+            this.updateFilterDefinitions();
         });
     }
 

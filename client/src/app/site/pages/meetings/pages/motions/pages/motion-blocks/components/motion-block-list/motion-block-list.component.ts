@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PblColumnDefinition } from '@pebula/ngrid';
 import { Observable, of } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
@@ -46,22 +45,6 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
     public get canEdit(): boolean {
         return this.operator.hasPerms(Permission.motionCanManage, Permission.motionCanManageMetadata);
     }
-
-    /**
-     * Define the columns to show
-     */
-    public tableColumnDefinition: PblColumnDefinition[] = [
-        {
-            prop: `title`,
-            label: this.translate.instant(`Title`),
-            width: `100%`
-        },
-        {
-            prop: `amount`,
-            label: this.translate.instant(`Motions`),
-            width: `40px`
-        }
-    ];
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
