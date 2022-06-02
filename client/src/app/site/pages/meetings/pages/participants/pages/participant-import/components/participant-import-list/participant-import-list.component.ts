@@ -5,7 +5,7 @@ import { User } from 'src/app/domain/models/users/user';
 import { BaseUserImportListComponent } from 'src/app/site/base/base-user-import-list.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
-import { PARTICIPANT_HEADERS_AND_VERBOSE_NAMES } from '../../definitions';
+import { participantHeadersAndVerboseNames } from '../../definitions';
 import { ParticipantImportService } from '../../services';
 
 @Component({
@@ -23,7 +23,7 @@ export class ParticipantImportListComponent extends BaseUserImportListComponent 
         formBuilder: FormBuilder,
         public override readonly importer: ParticipantImportService
     ) {
-        super(componentServiceCollector, translate, importer, formBuilder, PARTICIPANT_HEADERS_AND_VERBOSE_NAMES);
+        super(componentServiceCollector, translate, importer, formBuilder, participantHeadersAndVerboseNames);
     }
 
     /**
