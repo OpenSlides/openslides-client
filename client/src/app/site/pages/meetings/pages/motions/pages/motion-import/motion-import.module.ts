@@ -6,6 +6,7 @@ import { ImportListModule } from 'src/app/ui/modules/import-list';
 
 import { MotionImportListComponent } from './components/motion-import-list/motion-import-list.component';
 import { MotionImportRoutingModule } from './motion-import-routing.module';
+import { MotionsImportServiceModule } from './services/motions-import-service.module';
 
 @NgModule({
     declarations: [MotionImportListComponent],
@@ -13,6 +14,7 @@ import { MotionImportRoutingModule } from './motion-import-routing.module';
         CommonModule,
         MotionImportRoutingModule,
         HeadBarModule,
+        MotionsImportServiceModule,
         ImportListModule,
         OpenSlidesTranslationModule.forChild()
     ]

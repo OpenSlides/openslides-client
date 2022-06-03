@@ -16,6 +16,7 @@ import { MotionCsvExportService } from '../../../services/export/motion-csv-expo
 import { CategoryImportHelper } from '../import/category-import-helper';
 import { MotionBlockImportHelper } from '../import/motion-block-import-helper';
 import { TagImportHelper } from '../import/tag-import-helper';
+import { MotionsImportServiceModule } from './motions-import-service.module';
 
 const CATEGORY_PROPERTY = `category`;
 const MOTION_BLOCK_PROPERTY = `motion_block`;
@@ -24,7 +25,7 @@ const SUBMITTER_PROPERTY = `submitters`;
 const SUPPORTER_PROPERTY = `supporters`;
 
 @Injectable({
-    providedIn: `root`
+    providedIn: MotionsImportServiceModule
 })
 export class MotionImportService extends BaseImportService<Motion> {
     /**
