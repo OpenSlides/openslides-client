@@ -5,6 +5,7 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { PollServiceModule } from '../poll-service.module';
 
 export enum VotingError {
@@ -36,7 +37,7 @@ const VotingErrorVerbose = {
 export class VotingService {
     private _currentUser: ViewUser | null = null;
 
-    public constructor(private operator: OperatorService) {
+    public constructor(private activeMeetingService: ActiveMeetingService, private operator: OperatorService) {
         this.operator.userObservable.subscribe(user => (this._currentUser = user));
     }
 
@@ -67,7 +68,11 @@ export class VotingService {
         if (this.operator.isAnonymous) {
             return VotingError.USER_IS_ANONYMOUS;
         }
-        if (!this.operator.isInGroupIdsNonAdminCheck(...(poll.entitled_group_ids || []))) {
+        if (
+            !(poll.entitled_group_ids || []).some(id =>
+                user.group_ids(this.activeMeetingService.meetingId).includes(id)
+            )
+        ) {
             return VotingError.USER_HAS_NO_PERMISSION;
         }
         if (poll.type === PollType.Analog) {
