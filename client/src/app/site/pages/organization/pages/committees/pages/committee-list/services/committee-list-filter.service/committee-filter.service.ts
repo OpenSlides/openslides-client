@@ -40,7 +40,7 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
                 label: this.translate.instant(`Forward motions`),
                 options: [
                     { label: this.translate.instant(`Can forward motions`), condition: true },
-                    { label: this.translate.instant(`Cannot forward motions`), condition: false }
+                    { label: this.translate.instant(`Cannot forward motions`), condition: [false, null] }
                 ]
             },
             {
@@ -48,7 +48,7 @@ export class CommitteeFilterService extends BaseFilterListService<ViewCommittee>
                 label: this.translate.instant(`Receive motions`),
                 options: [
                     { label: this.translate.instant(`Can receive motions`), condition: true },
-                    { label: this.translate.instant(`Cannot receive motions`), condition: false }
+                    { label: this.translate.instant(`Cannot receive motions`), condition: [false, null] }
                 ]
             },
             this.orgaTagFilterOptions
