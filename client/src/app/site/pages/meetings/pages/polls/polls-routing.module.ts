@@ -7,7 +7,13 @@ const routes: Routes = [
     {
         path: ``,
         component: PollMainComponent,
-        children: []
+        children: [
+            {
+                path: ``,
+                pathMatch: `full`,
+                loadChildren: () => import(`./modules/poll-list/poll-list.module`).then(m => m.PollListModule)
+            }
+        ]
     }
 ];
 

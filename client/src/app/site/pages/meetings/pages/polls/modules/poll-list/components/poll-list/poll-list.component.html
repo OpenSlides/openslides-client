@@ -17,7 +17,7 @@
     <!-- Motion Or Assigmnent Title Title -->
     <div *osScrollingTableCell="'classType'; row as poll" class="cell-slot fill">
         <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
-        <span>{{ poll.getContentObject().getListTitle() }}</span>
+        <span>{{ poll.getContentObject()?.getListTitle() }}</span>
     </div>
 
     <!-- State -->
