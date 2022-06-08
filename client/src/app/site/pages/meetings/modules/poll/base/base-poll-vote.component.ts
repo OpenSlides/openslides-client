@@ -93,8 +93,11 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     }
 
     public getVotingError(user: ViewUser = this.user): string {
-        console.info(`Cannot vote because:`, this.votingService.getVotePermissionErrorVerbose(this.poll, user));
         return this.votingService.getVotePermissionErrorVerbose(this.poll, user) || ``;
+    }
+
+    public getVotingErrorFromName(errorName: string) {
+        return this.votingService.getVotePermissionErrorVerboseFromName(errorName) || ``;
     }
 
     protected async sendVote(userId: Id, votePayload: any): Promise<void> {
