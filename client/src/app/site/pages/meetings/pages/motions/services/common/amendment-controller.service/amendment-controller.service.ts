@@ -7,23 +7,24 @@ import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 
 import { ViewMotion } from '../../../view-models';
+import { MotionControllerService } from '../motion-controller.service';
 
 @Injectable({
     providedIn: `root`
 })
 export class AmendmentControllerService {
-    constructor(private repo: MotionRepositoryService) {}
+    public constructor(private controller: MotionControllerService, private repo: MotionRepositoryService) {}
 
     public getViewModelObservable(amendmentId: Id): Observable<ViewMotion | null> {
-        return this.repo.getViewModelObservable(amendmentId);
+        return this.controller.getViewModelObservable(amendmentId);
     }
 
     public getViewModel(amendmentId: Id): ViewMotion | null {
-        return this.repo.getViewModel(amendmentId);
+        return this.controller.getViewModel(amendmentId);
     }
 
     public getViewModelList(): ViewMotion[] {
-        return this.repo.getViewModelList().filter(motion => !!motion.lead_motion_id);
+        return this.controller.getViewModelList().filter(motion => !!motion.lead_motion_id);
     }
 
     public getViewModelListFor(motion: Identifiable): ViewMotion[] {
@@ -31,15 +32,15 @@ export class AmendmentControllerService {
     }
 
     public getViewModelListObservable(): Observable<ViewMotion[]> {
-        return this.repo
+        return this.controller
             .getViewModelListObservable()
             .pipe(map(motions => motions.filter(motion => !!motion.lead_motion_id)));
     }
 
     public getViewModelListObservableFor(motion: Identifiable): Observable<ViewMotion[]> {
-        return this.repo
-            .getViewModelListObservable()
-            .pipe(map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id)));
+        return this.getViewModelListObservable().pipe(
+            map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id))
+        );
     }
 
     public async createTextBased(partialMotion: Partial<Motion>): Promise<CreateResponse> {
