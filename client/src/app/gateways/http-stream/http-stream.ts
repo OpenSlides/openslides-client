@@ -1,4 +1,4 @@
-import { HttpDownloadProgressEvent, HttpEvent, HttpHeaderResponse } from '@angular/common/http';
+import { HttpDownloadProgressEvent, HttpErrorResponse, HttpEvent, HttpHeaderResponse } from '@angular/common/http';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 
 import { EndpointConfiguration } from './endpoint-configuration';
@@ -23,6 +23,13 @@ const FINISH_EVENT_TYPE = 4;
 interface StreamData<T> {
     data: T;
     stream: HttpStream<T>;
+}
+
+type ReconnectFn = (context: ShouldReconnectContext) => boolean | Promise<boolean>;
+
+export interface ShouldReconnectContext {
+    httpStream: HttpStream<any>;
+    error: any;
 }
 
 export interface HttpStreamOptions<T> {
@@ -66,7 +73,7 @@ export interface HttpStreamOptions<T> {
      * This will be done up to the number of reconnects before close (except this number is equal to 0).
      * Also a function can be provided, which returns a boolean.
      */
-    shouldReconnectOnFailure?: boolean | (() => boolean);
+    shouldReconnectOnFailure?: boolean | Promise<boolean> | ReconnectFn;
     /**
      * An amount of reconnects before a stream will not be opened again
      *
@@ -201,7 +208,7 @@ export class HttpStream<T> {
     private _parser!: StreamMessageParser<T>;
 
     private _reconnectsBeforeClose: number;
-    private _shouldReconnectOnFailure: boolean | (() => boolean);
+    private _shouldReconnectOnFailure: boolean | Promise<boolean> | ReconnectFn;
     private _reconnectTimeout: number | (() => number);
 
     private _hasErrorReported = false;
@@ -279,7 +286,7 @@ export class HttpStream<T> {
             this._parser.isSingleAction = true;
             this._parser.read(event);
         } catch (e) {
-            this.handleStreamError(e);
+            this.handleError(e);
         }
     }
 
@@ -291,15 +298,22 @@ export class HttpStream<T> {
         this._parser.read(event);
     }
 
-    private handleStreamError(error: unknown): void {
+    private async handleStreamError(error: unknown): Promise<void> {
+        if (error instanceof HttpErrorResponse) {
+            error = error.error;
+            try {
+                error = this.parseCommunicationError(error as any);
+            } catch (e) {}
+        }
+        this.handleError(error);
+    }
+
+    private async handleError(error: unknown): Promise<void> {
         console.log(`Handle stream error:`, error);
         console.log(
             `${this.id}:${this.description}: Retry counter ${this._reconnectAttempts} of ${this._reconnectsBeforeClose}`
         );
-        const shouldReconnect =
-            typeof this._shouldReconnectOnFailure === `function`
-                ? this._shouldReconnectOnFailure()
-                : this._shouldReconnectOnFailure;
+        const shouldReconnect = await this.shouldReconnect(error);
         if (shouldReconnect && !this.hasReachedReconnectLimit) {
             this.handleReconnect();
         } else if (shouldReconnect && this.hasReachedReconnectLimit) {
@@ -316,7 +330,15 @@ export class HttpStream<T> {
         }
     }
 
-    private async handleReconnect(): Promise<void> {
+    private async shouldReconnect(error: unknown): Promise<boolean> {
+        if (typeof this._shouldReconnectOnFailure === `function`) {
+            return await this._shouldReconnectOnFailure({ httpStream: this, error });
+        } else {
+            return await this._shouldReconnectOnFailure;
+        }
+    }
+
+    private handleReconnect(): void {
         const timeout =
             typeof this._reconnectTimeout === `function` ? this._reconnectTimeout() : this._reconnectTimeout;
         setTimeout(() => {
@@ -347,7 +369,7 @@ export class HttpStream<T> {
     private handleCommunicationError(type: ErrorType, errorContent: string, reason: string): void {
         if (!this._hasErrorReported) {
             this._hasErrorReported = true;
-            this.handleStreamError(new ErrorDescription(type, this.parseCommunicationError(errorContent), reason));
+            this.handleError(new ErrorDescription(type, this.parseCommunicationError(errorContent), reason));
         }
     }
 

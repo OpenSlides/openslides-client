@@ -7,6 +7,7 @@ import { ConnectionStatusService } from '../../site/services/connection-status.s
 import { HttpService } from '../http.service';
 import { HttpStream, HttpStreamOptions } from '.';
 import { EndpointConfiguration } from './endpoint-configuration';
+import { ShouldReconnectContext } from './http-stream';
 import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 import { ErrorDescription } from './stream-utils';
 
@@ -22,6 +23,10 @@ type CreateEndpointFn = { endpointIndex: string; customUrlFn: (baseEndpointUrl: 
 interface RequestOptions {
     bodyFn?: HttpBodyGetter;
     paramsFn?: HttpParamsGetter;
+}
+
+enum PossibleStreamError {
+    AUTH = `auth`
 }
 
 @Injectable({
@@ -40,7 +45,7 @@ export class HttpStreamService {
         {
             onError = (_, description) =>
                 this.onError(this.getEndpointConfiguration(endpointConfiguration), description),
-            shouldReconnectOnFailure = () => this.shouldReconnect(),
+            shouldReconnectOnFailure = context => this.shouldReconnect(context),
             reconnectTimeout = () => Math.random() * 3000 + 2000,
             ...otherOptions
         }: HttpStreamOptions<T> = {},
@@ -86,7 +91,12 @@ export class HttpStreamService {
         });
     }
 
-    private shouldReconnect(): boolean {
+    private shouldReconnect({ error }: ShouldReconnectContext): boolean | Promise<boolean> {
+        if (error.type === PossibleStreamError.AUTH) {
+            this.authService.logout();
+            return false;
+        }
+
         // do not continue, if we are offline!
         if (this.connectionStatus.isOffline()) {
             console.log(`we are offline?`);
