@@ -222,23 +222,15 @@
     </div>
 
     <!-- Search for speakers -->
-    <div *ngIf="canManage">
-        <form *ngIf="filteredUsers.length" [formGroup]="addSpeakerForm" class="search-new-speaker-form">
-            <mat-form-field class="search-users-field full-width">
-                <os-list-search-selector
-                    class="search-users"
-                    formControlName="user_id"
-                    placeholder="{{ 'Select or search new speaker ...' | translate }}"
-                    [inputListValues]="filteredUsersSubject"
-                    (clickNotFound)="onCreateUser($event)"
-                >
-                    <ng-template osNotFoundDescription>
-                        <mat-icon>add</mat-icon>
-                        {{ 'Create user' | translate }}
-                    </ng-template>
-                </os-list-search-selector>
-            </mat-form-field>
-        </form>
+    <div
+        class="search-new-speaker-form"
+        *ngIf="canManage"
+    >
+        <os-participant-search-selector
+            [nonSelectableUserIds]="nonAvailableUserIds"
+            placeholder="Select or search new speaker ..."
+            (userSelected)="addUserAsNewSpeaker($event)"
+        ></os-participant-search-selector>
     </div>
 
     <div class="add-self-buttons" *osPerms="permission.listOfSpeakersCanBeSpeaker">

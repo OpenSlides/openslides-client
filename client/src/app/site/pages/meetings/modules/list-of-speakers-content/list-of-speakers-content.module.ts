@@ -11,10 +11,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
 
 import { ParticipantCommonServiceModule } from '../../pages/participants/services/common/participant-common-service.module';
+import { ParticipantSearchSelectorModule } from '../participant-search-selector';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ListOfSpeakersContentTitleDirective } from './directives/list-of-speakers-content-title.directive';
 import { PointOfOrderDialogModule } from './modules/point-of-order-dialog/point-of-order-dialog.module';
@@ -36,7 +36,7 @@ const DECLARATIONS = [ListOfSpeakersContentComponent, ListOfSpeakersContentTitle
         MatButtonModule,
         ReactiveFormsModule,
         SortingListModule,
-        SearchSelectorModule,
+        ParticipantSearchSelectorModule,
         ParticipantCommonServiceModule,
         PointOfOrderDialogModule,
         DirectivesModule,

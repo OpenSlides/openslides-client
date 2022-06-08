@@ -174,33 +174,20 @@
                     </os-sorting-list>
                 </div>
 
+                <!-- Add Candidates -->
                 <div class="add-candidates">
                     <!-- Search for candidates -->
-                    <div class="search-field" *ngIf="hasPerms('addOthers')">
-                        <form
-                            *ngIf="
-                                hasPerms('addOthers') &&
-                                usersAsPossibleCandidates &&
-                                usersAsPossibleCandidates.value &&
-                                usersAsPossibleCandidates.value.length
-                            "
-                            [formGroup]="candidatesForm"
-                        >
-                            <mat-form-field>
-                                <os-list-search-selector
-                                    formControlName="userId"
-                                    [multiple]="false"
-                                    placeholder="{{ 'Select a new candidate' | translate }}"
-                                    [inputListValues]="usersAsPossibleCandidates"
-                                    (clickNotFound)="createNewCandidate($event)"
-                                >
-                                    <ng-template osNotFoundDescription *osPerms="permission.userCanManage">
-                                        <mat-icon>add</mat-icon>
-                                        {{ 'Create user' | translate }}
-                                    </ng-template>
-                                </os-list-search-selector>
-                            </mat-form-field>
-                        </form>
+                    <div
+                        class="search-new-speaker-form"
+                        *ngIf="
+                            hasPerms('addOthers')
+                        "
+                    >
+                        <os-participant-search-selector
+                            [nonSelectableUserIds]="candidateUserIds"
+                            placeholder="Select a new candidate"
+                            (userSelected)="addCandidate($event)"
+                        ></os-participant-search-selector>
                     </div>
 
                     <!-- Add me and remove me if OP has correct permission -->

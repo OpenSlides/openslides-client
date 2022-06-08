@@ -10,16 +10,15 @@ import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
 import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -57,18 +56,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     public phaseOptions = AssignmentPhases;
 
     /**
-     * A BehaviourSubject with a filtered list of users (excluding users already
-     * in the list of candidates). It is updated each time {@link filterCandidates}
-     * is called (triggered by autoupdates)
-     */
-    public usersAsPossibleCandidates = new BehaviorSubject<ViewUser[]>([]);
-
-    /**
-     * Form for adding/removing candidates.
-     */
-    public candidatesForm: FormGroup;
-
-    /**
      * Form for editing the assignment itself (TODO mergeable with candidates?)
      */
     public assignmentForm: FormGroup;
@@ -77,6 +64,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Used in the search Value selector to assign tags
      */
     public tagsObserver = new BehaviorSubject<ViewTag[]>([]);
+
+    /**
+     * Array containing the currently selected candidates
+     */
+    public candidateUserIds: number[] = [];
 
     /**
      * Used for the search value selector
@@ -96,8 +88,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public set assignment(assignment: ViewAssignment) {
         this._assignment = assignment;
-
-        this.filterCandidates();
+        this.updateCandidatesArray();
     }
 
     /**
@@ -143,11 +134,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     private _navigationSubscription: Subscription | null = null;
 
     /**
-     * List of users.
-     */
-    private _allUsers = new BehaviorSubject<ViewUser[]>([]);
-
-    /**
      * Constructor. Build forms and subscribe to needed configs and updates
      */
     public constructor(
@@ -157,7 +143,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         formBuilder: FormBuilder,
         public assignmentRepo: AssignmentControllerService,
         private assignmentCandidateRepo: AssignmentCandidateControllerService,
-        private userRepo: ParticipantControllerService,
         private itemRepo: AgendaItemControllerService,
         private promptService: PromptService,
         private pdfService: AssignmentExportService,
@@ -166,13 +151,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         private pollController: PollControllerService
     ) {
         super(componentServiceCollector, translate);
-        this.updateSubscription(
-            `allUsers`,
-            this.userRepo.getViewModelListObservable().subscribe(users => {
-                this._allUsers.next(users);
-                this.filterCandidates();
-            })
-        );
         this.assignmentForm = formBuilder.group({
             phase: null,
             tag_ids: [[]],
@@ -186,24 +164,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             agenda_type: [``],
             number_poll_candidates: [false]
         });
-        this.candidatesForm = formBuilder.group({
-            userId: null
-        });
-    }
-
-    /* Triggers an update of the filter for the list of available candidates
-     * (triggered on an autoupdate of either users or the assignment)
-     */
-    private filterCandidates(): void {
-        if (this.assignment?.candidates?.length) {
-            this.usersAsPossibleCandidates.next(
-                this._allUsers
-                    .getValue()
-                    .filter(user => !this.assignment.candidates.some(candidate => candidate.user_id === user.id))
-            );
-        } else {
-            this.usersAsPossibleCandidates.next(this._allUsers.getValue());
-        }
     }
 
     public onIdFound(id: Id | null): void {
@@ -236,17 +196,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                     if (!this.isEditing) {
                         this.patchForm(this.assignment);
                     }
-                }
-            })
-        );
-        this.updateSubscription(
-            `candidates`,
-            this.candidatesForm.valueChanges.subscribe(async formResult => {
-                // resetting a form triggers a form.next(null) - check if data is present
-                if (formResult && formResult.userId) {
-                    await this.addCandidate(formResult.userId);
-                    this.candidatesForm.setValue({ userId: null });
-                    this.candidatesForm.reset();
                 }
             })
         );
@@ -369,9 +318,10 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      *
      * @param userId the id of a ViewUser
      */
-    public async addCandidate(userId: number): Promise<void> {
-        if (userId && typeof userId === `number`) {
-            await this.assignmentCandidateRepo.create(this.assignment, userId);
+    public async addCandidate(data: UserSelectionData): Promise<void> {
+        if (data.userId && typeof data.userId === `number`) {
+            await this.assignmentCandidateRepo.create(this.assignment, data.userId);
+            this.updateCandidatesArray();
         }
     }
 
@@ -382,13 +332,18 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async removeCandidate(candidate: ViewAssignmentCandidate): Promise<void> {
         await this.assignmentCandidateRepo.delete(candidate);
+        this.updateCandidatesArray();
+    }
+
+    private updateCandidatesArray() {
+        this.candidateUserIds = this._assignment.candidatesAsUsers.map(user => user.id);
     }
 
     /**
      * Adds the operator to list of candidates
      */
     public async addSelf(): Promise<void> {
-        await this.addCandidate(this.operator.operatorId!);
+        await this.addCandidate({ userId: this.operator.operatorId! });
     }
 
     /**
@@ -406,14 +361,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async onSortingChange(candidates: Selectable[]): Promise<void> {
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
-    }
-
-    /**
-     * Creates unfound candidate on the fly and add the the list
-     */
-    public async createNewCandidate(username: string): Promise<void> {
-        const newUserObj = await this.userRepo.createFromString(username);
-        await this.addCandidate(newUserObj.id);
     }
 
     /**

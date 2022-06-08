@@ -30,6 +30,7 @@ import { SortingModule } from 'src/app/ui/modules/sorting';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
 import { AttachmentControlModule } from '../../../../modules/meetings-component-collector/attachment-control/attachment-control.module';
+import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { ParticipantCommonServiceModule } from '../../../participants/services/common/participant-common-service.module';
 import { MotionForwardDialogModule } from '../../components/motion-forward-dialog/motion-forward-dialog.module';
@@ -122,6 +123,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatSelectModule,
         MatListModule,
         MatInputModule,
+        ParticipantSearchSelectorModule,
 
         // Detail view
         MotionSubmitterCommonServiceModule,

@@ -1,0 +1,18 @@
+<form [formGroup]="usersForm">
+    <mat-form-field class="search-users-field full-width">
+        <os-list-search-selector
+            class="search-users"
+            formControlName="userId"
+            [multiple]="false"
+            placeholder="{{ placeholder | translate }}"
+            [inputListValues]="filteredUsersSubject"
+            (clickNotFound)="createNewSelectedUser($event)">
+            <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">
+                <div>
+                    <mat-icon class="os-not-found-button-content">add</mat-icon>
+                    <span class="os-not-found-button-content">{{ 'Create user' | translate }}</span>
+                </div>
+            </ng-template>
+        </os-list-search-selector>
+    </mat-form-field>
+</form>

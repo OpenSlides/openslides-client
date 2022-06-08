@@ -11,10 +11,8 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { firstValueFrom, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
@@ -32,6 +30,7 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
+import { UserSelectionData } from '../../../participant-search-selector';
 import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
 
@@ -48,18 +47,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     @ViewChild(SortingListComponent)
     public listElement!: SortingListComponent;
 
-    private _listOfSpeakers: ViewListOfSpeakers | null = null;
     public finishedSpeakers: ViewSpeaker[] = [];
     public waitingSpeakers: ViewSpeaker[] = [];
     public activeSpeaker: ViewSpeaker | null = null;
 
-    /**
-     * Required for the user search selector
-     */
-    public addSpeakerForm: FormGroup;
-
-    public usersSubject = new BehaviorSubject<ViewUser[]>([]);
-    public filteredUsersSubject = new BehaviorSubject<ViewUser[]>([]);
+    public users: ViewUser[] = [];
+    public nonAvailableUserIds: number[] = [];
 
     public isSortMode: boolean = false;
 
@@ -78,15 +71,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public enableProContraSpeech: boolean = false;
-    private pointOfOrderEnabled: boolean = false;
-    private canMarkSelf: boolean = false;
 
     public get title(): string {
         return this._listOfSpeakers?.getTitle() || ``;
-    }
-
-    public get filteredUsers(): ViewUser[] {
-        return this.filteredUsersSubject.value;
     }
 
     public get closed(): boolean {
@@ -98,11 +85,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     }
 
     public get canAddDueToPresence(): boolean {
-        return !this.onlyPresentUsers || this.currentUser!.isPresentInMeeting();
-    }
-
-    private get onlyPresentUsers(): boolean {
-        return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
+        return !this.onlyPresentUsers || this._currentUser!.isPresentInMeeting();
     }
 
     @Input()
@@ -128,15 +111,24 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.isSortMode = isActive;
     }
 
+    public isCallEnabled: Observable<boolean> = this.interactionService.showLiveConfObservable;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
     @Output()
     private canReaddLastSpeakerEvent = new EventEmitter<boolean>();
 
-    private currentUser: ViewUser | null = null;
+    private _currentUser: ViewUser | null = null;
 
-    public isCallEnabled: Observable<boolean> = this.interactionService.showLiveConfObservable;
+    private _listOfSpeakers: ViewListOfSpeakers | null = null;
+
+    private pointOfOrderEnabled: boolean = false;
+    private canMarkSelf: boolean = false;
+
+    private get onlyPresentUsers(): boolean {
+        return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
+    }
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -153,7 +145,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
-        this.addSpeakerForm = new FormGroup({ user_id: new FormControl() });
     }
 
     public ngOnInit(): void {
@@ -161,17 +152,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.subscriptions.push(
             // Observe the user list
             this.userRepository.getViewModelListObservable().subscribe(users => {
-                this.usersSubject.next(users);
-                this.filterUsers();
+                this.users = users;
+                this.filterNonAvailableUsers();
                 this.cd.markForCheck();
-            }),
-            // ovserve changes to the add-speaker form
-            this.addSpeakerForm.valueChanges.subscribe(async formResult => {
-                // resetting a form triggers a form.next(null) - check if user_id
-                if (formResult?.user_id && typeof formResult?.user_id === `number`) {
-                    await this.addUserAsNewSpeaker(formResult.user_id);
-                    this.addSpeakerForm.reset();
-                }
             }),
             // observe changes to the viewport
             this.viewport.isMobileSubject.subscribe(isMobile => {
@@ -182,7 +165,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 this.updateSpeakers();
                 this.cd.markForCheck();
             }),
-            this.operator.userObservable.subscribe(user => (this.currentUser = user))
+            this.operator.userObservable.subscribe(user => (this._currentUser = user))
         );
     }
 
@@ -206,17 +189,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.canReaddLastSpeakerEvent.emit(canReaddLast);
     }
 
-    /**
-     * Create a speaker out of an id
-     *
-     * @param userId the user id to add to the list. No parameter adds the operators user as speaker.
-     */
-    public addNewSpeaker(userId: number): void {
-        this.speakerRepo.create(this._listOfSpeakers!, userId).then(() => this.addSpeakerForm.reset());
-    }
-
     public addMyself(): void {
-        this.addNewSpeaker(this.currentUser!.id);
+        this.addUserAsNewSpeaker({ userId: this._currentUser!.id });
     }
 
     /**
@@ -232,7 +206,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         const speakerToDelete = speaker || this.findOperatorSpeaker();
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);
-            this.filterUsers();
+            this.filterNonAvailableUsers();
         }
     }
 
@@ -241,7 +215,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
-                await this.speakerRepo.create(this.listOfSpeakers, this.currentUser!.id, {
+                await this.speakerRepo.create(this.listOfSpeakers, this._currentUser!.id, {
                     pointOfOrder: true,
                     note: result.note
                 });
@@ -273,7 +247,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async onStartButton(speaker: ViewSpeaker): Promise<void> {
         try {
             await this.speakerRepo.startToSpeak(speaker);
-            this.filterUsers();
+            this.filterNonAvailableUsers();
         } catch (e) {
             this.raiseError(e);
         }
@@ -285,7 +259,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async onStopButton(): Promise<void> {
         try {
             await this.speakerRepo.stopToSpeak(this.activeSpeaker!);
-            this.filterUsers();
+            this.filterNonAvailableUsers();
         } catch (e) {
             this.raiseError(e);
         }
@@ -364,31 +338,22 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.activeSpeaker = allSpeakers?.find(speaker => speaker.state === SpeakerState.CURRENT) || null;
         this.updateCanReaddLastSpeaker();
         this.isListOfSpeakersEmpty();
+
+        this.filterNonAvailableUsers();
     }
 
     /**
-     * Triggers an update of the filter for the list of available potential speakers
-     * (triggered on an update of users or config)
+     * Creates an array of users who currently shouldn't be selectable for the speaker list.
      */
-    private filterUsers(): void {
-        const availableUsers = this.usersSubject
-            .getValue()
+    private filterNonAvailableUsers() {
+        const nonAvailableUsers = this.users
             .filter(
                 user =>
-                    (!this.onlyPresentUsers || user.isPresentInMeeting()) &&
-                    !this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
-            );
-        this.filteredUsersSubject.next(availableUsers);
-    }
-
-    /**
-     * Imports a new user by the given username.
-     *
-     * @param username The name of the new user.
-     */
-    public async onCreateUser(username: string): Promise<void> {
-        const newUser = await this.userRepository.createFromString(username);
-        this.addUserAsNewSpeaker(newUser.id);
+                    !(!this.onlyPresentUsers || user.isPresentInMeeting()) ||
+                    this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
+            )
+            .map(user => user.id);
+        this.nonAvailableUserIds = nonAvailableUsers;
     }
 
     /**
@@ -397,11 +362,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      *
      * @param userId Optional. The id of a user, which is add as speaker.
      */
-    public async addUserAsNewSpeaker(userId: Id | null = null): Promise<void> {
-        if (!userId) {
-            userId = this.operator.operatorId;
+    public async addUserAsNewSpeaker(data: UserSelectionData): Promise<void> {
+        if (!data.userId) {
+            data.userId = this.operator.operatorId;
         }
-        await this.speakerRepo.create(this.listOfSpeakers, userId!);
+        await this.speakerRepo.create(this.listOfSpeakers, data.userId!);
     }
 
     /**
@@ -450,7 +415,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.subscriptions.push(
             // observe changes the agenda_present_speakers_only setting
             this.meetingSettingService.get(`list_of_speakers_present_users_only`).subscribe(() => {
-                this.filterUsers();
+                this.filterNonAvailableUsers();
             }),
             // observe changes to the agenda_show_first_contribution setting
             // observe point of order settings

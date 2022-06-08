@@ -1,13 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { Action } from 'src/app/gateways/actions';
+import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MotionSubmitterControllerService } from '../../../../modules/submitters/services/motion-submitter-controller.service/motion-submitter-controller.service';
@@ -36,25 +35,12 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     public get motion(): ViewMotion {
         return this._motion;
     }
-    private _motion!: ViewMotion;
-
-    /**
-     * Keep all users to display them.
-     */
-    public get usersObservable(): Observable<ViewUser[]> {
-        const submitters = this.editSubmitterSubject.value.map(submitter => submitter.user_id ?? submitter.id);
-        return this._users.pipe(map(users => users.filter(user => !submitters.includes(user.id))));
-    }
-
-    /**
-     * The form to add new submitters
-     */
-    public addSubmitterForm: FormControl;
 
     /**
      * The current list of submitters.
      */
     public readonly editSubmitterSubject = new BehaviorSubject<Submitter[]>([]);
+    public editSubmitterUserIds: number[] = [];
 
     /**
      * The observable from editSubmitterSubject. Fixing this value is a performance boost, because
@@ -76,8 +62,9 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
         return this._editMode;
     }
 
-    private _users: Observable<ViewUser[]> = of([]);
     private _editMode = false;
+
+    private _motion!: ViewMotion;
 
     private _addSubmittersSet = new Set<Id>();
     private _removeSubmittersMap: IdMap = {};
@@ -91,17 +78,15 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     ) {
         super();
 
-        this.addSubmitterForm = new FormControl([]);
         this.editSubmitterObservable = this.editSubmitterSubject.asObservable();
     }
 
     public ngOnInit(): void {
         this.subscriptions.push(
-            this.addSubmitterForm.valueChanges.subscribe(nextValue => {
-                if (nextValue) {
-                    this.addUserAsSubmitter(this.userRepository.getViewModel(nextValue)!);
-                }
-            })
+            this.editSubmitterSubject.subscribe(
+                submitters =>
+                    (this.editSubmitterUserIds = submitters.map(submitter => submitter.user_id ?? submitter.id))
+            )
         );
     }
 
@@ -142,10 +127,6 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
         this.isEditMode = true;
         this.editSubmitterSubject.next(this.motion.submitters);
         this._oldSubmitters = new Set(this.motion.submitters.map(submitter => submitter.user_id));
-        this.resetForm();
-
-        // get all users for the submitter add form
-        this._users = this.userRepository.getViewModelListObservable();
     }
 
     public async createNewSubmitter(username: string): Promise<void> {
@@ -178,6 +159,14 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
         this.editSubmitterSubject.next(submitters.filter(user => user.fqid !== submitter.fqid));
     }
 
+    public addSubmitter(data: UserSelectionData): void {
+        if (data.user) {
+            this.addUserAsSubmitter(data.user);
+        } else {
+            this.addUserAsSubmitter(this.userRepository.getViewModel(data.userId));
+        }
+    }
+
     /**
      * Adds the user to the submitters, if they aren't already in there.
      */
@@ -191,10 +180,5 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
         }
         const submitters = this.editSubmitterSubject.value;
         this.editSubmitterSubject.next(submitters.concat(submitter));
-        this.resetForm();
-    }
-
-    private resetForm(): void {
-        this.addSubmitterForm.reset();
     }
 }
