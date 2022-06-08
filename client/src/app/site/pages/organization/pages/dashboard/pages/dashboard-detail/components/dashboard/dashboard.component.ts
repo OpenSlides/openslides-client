@@ -5,6 +5,7 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
 @Component({
@@ -36,7 +37,8 @@ export class DashboardComponent extends BaseComponent {
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private meetingRepo: MeetingControllerService,
-        private themeService: ThemeService
+        private themeService: ThemeService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Calendar`);
@@ -58,16 +60,17 @@ export class DashboardComponent extends BaseComponent {
     private loadMeetings(): void {
         this.subscriptions.push(
             this.meetingRepo.getViewModelListObservable().subscribe(meetings => {
+                const filteredMeetings = meetings.filter(meeting => this.operator.isInMeeting(meeting.id));
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);
-                this.noDateMeetings = meetings.filter(meeting => !meeting.start_time && !meeting.end_time);
-                this.previousMeetings = meetings
+                this.noDateMeetings = filteredMeetings.filter(meeting => !meeting.start_time && !meeting.end_time);
+                this.previousMeetings = filteredMeetings
                     .filter(meeting => (meeting.endDate as Date) < currentDate)
                     .sort((a, b) => b.end_time - a.end_time);
-                this.futureMeetings = meetings
+                this.futureMeetings = filteredMeetings
                     .filter(meeting => (meeting.startDate as Date) > currentDate)
                     .sort((a, b) => a.end_time - b.end_time);
-                this.currentMeetings = meetings.filter(
+                this.currentMeetings = filteredMeetings.filter(
                     meeting => (meeting.endDate as Date) >= currentDate && (meeting.startDate as Date) <= currentDate
                 );
             })

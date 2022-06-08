@@ -92,6 +92,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public meetingForm!: FormGroup;
     public theDuplicateFromId: Id | null = null;
 
+    public sortFn: (valueA: Partial<ViewMeeting>, valueB: Partial<ViewMeeting>) => number = (a, b) => {
+        return a && typeof a.getTitle() === `string` && !!a.COLLECTION && !!b.COLLECTION
+            ? a.getTitle().localeCompare(b.getTitle())
+            : 0;
+    };
+
     public committee!: ViewCommittee;
 
     private meetingId: Id | null = null;
