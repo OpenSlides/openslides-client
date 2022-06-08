@@ -18,7 +18,6 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SortingModule } from 'src/app/ui/modules/sorting';
 
 import { MotionCategoryCommonServiceModule } from '../../modules';
-import { MotionsCommonServiceModule } from '../../services/common/motions-service.module';
 import { CategoriesRoutingModule } from './categories-routing.module';
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
 import { CategoryDetailSortComponent } from './components/category-detail-sort/category-detail-sort.component';
@@ -35,7 +34,6 @@ import { CategoryListSortComponent } from './components/category-list-sort/categ
     imports: [
         CommonModule,
         CategoriesRoutingModule,
-        MotionsCommonServiceModule,
         MotionCategoryCommonServiceModule,
         MatDialogModule,
         MatFormFieldModule,

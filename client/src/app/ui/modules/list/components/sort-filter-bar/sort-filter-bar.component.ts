@@ -34,7 +34,7 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
 })
 export class SortFilterBarComponent<V> {
     @ViewChild(`searchField`, { static: true })
-    public searchField!: RoundedInputComponent;
+    private readonly _searchFieldComponent!: RoundedInputComponent | undefined;
 
     /**
      * The currently active sorting service for the list view
@@ -62,15 +62,25 @@ export class SortFilterBarComponent<V> {
     /**
      * Custom input for the search-field.
      * Used to change the value of the input from outside of this component.
+     *
+     * @todo: We should rename this to `searchValue` and `searchValueChange` to achieve two way data-binding
      */
     @Input()
-    public searchFieldInput: string = ``;
+    public set searchFieldInput(input: string) {
+        this.searchService?.search(input);
+        this.searchFieldChanged.emit(input);
+        this._searchField = input;
+    }
+
+    public get searchFieldInput(): string {
+        return this._searchField;
+    }
 
     /**
      * EventEmitter to emit the next search-value.
      */
     @Output()
-    public searchFieldChange = new EventEmitter<string>();
+    public searchFieldChanged = new EventEmitter<string>();
 
     /**
      * The filter side drawer
@@ -114,6 +124,8 @@ export class SortFilterBarComponent<V> {
         this.sortService.sortProperty = option.property;
     }
 
+    private _searchField = ``;
+
     public constructor(
         protected translate: TranslateService,
         public vp: ViewPortService,
@@ -147,12 +159,6 @@ export class SortFilterBarComponent<V> {
                     this.sortService.sortProperty = result;
                 }
             });
-        }
-    }
-
-    public onInputChanged(nextInput: string): void {
-        if (this.searchService) {
-            this.searchService.search(nextInput);
         }
     }
 
@@ -197,7 +203,7 @@ export class SortFilterBarComponent<V> {
         if (event.ctrlKey && event.key === `f`) {
             event.preventDefault();
             event.stopPropagation();
-            this.searchField.focus();
+            this._searchFieldComponent.focus();
         }
     }
 }

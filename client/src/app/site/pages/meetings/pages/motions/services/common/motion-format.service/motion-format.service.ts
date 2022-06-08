@@ -13,7 +13,6 @@ import {
 import { ViewMotion } from '../../../view-models';
 import { AmendmentControllerService } from '../amendment-controller.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service';
-import { MotionsCommonServiceModule } from '../motions-service.module';
 
 interface MotionFormatResult {
     origin_id: Id;
@@ -60,7 +59,7 @@ interface FormatMotionConfig extends Arguments {
 }
 
 @Injectable({
-    providedIn: MotionsCommonServiceModule
+    providedIn: `root`
 })
 export class MotionFormatService {
     public constructor(

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { DiffCache } from '../../../../definitions';
-import { ChangeRecommendationsModule } from '../../change-recommendations.module';
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
@@ -105,7 +104,7 @@ interface InsertLineNumbersConfig {
  * ```
  */
 @Injectable({
-    providedIn: ChangeRecommendationsModule
+    providedIn: `root`
 })
 export class LineNumberingService {
     /**

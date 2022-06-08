@@ -92,7 +92,7 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      */
     public selectAll(): void {
         if (this.listComponent) {
-            this.listComponent.scrollingTableComponent.selectAll();
+            this.listComponent.selectAll();
         }
     }
 
@@ -101,7 +101,7 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      */
     public deselectAll(): void {
         if (this.listComponent) {
-            this.listComponent.scrollingTableComponent.deselectAll();
+            this.listComponent.deselectAll();
         }
     }
 

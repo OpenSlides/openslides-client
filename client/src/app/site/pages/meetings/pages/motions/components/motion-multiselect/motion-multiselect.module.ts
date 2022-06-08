@@ -15,7 +15,6 @@ import {
     TagCommonServiceModule
 } from '../../modules';
 import { MotionWorkflowCommonServiceModule } from '../../modules/workflows/motion-workflow-common-service.module';
-import { MotionsCommonServiceModule } from '../../services/common/motions-service.module';
 import { MotionMultiselectActionsComponent } from './components/motion-multiselect-actions/motion-multiselect-actions.component';
 import { MotionMultiselectServiceModule } from './services/motion-multiselect-service.module';
 
@@ -35,7 +34,6 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
         AgendaItemCommonServiceModule,
-        MotionsCommonServiceModule,
         MotionSubmitterCommonServiceModule,
         MotionWorkflowCommonServiceModule,
         TagCommonServiceModule,

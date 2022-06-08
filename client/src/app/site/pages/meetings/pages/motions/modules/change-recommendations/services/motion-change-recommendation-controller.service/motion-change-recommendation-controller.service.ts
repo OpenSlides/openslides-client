@@ -10,13 +10,12 @@ import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/mee
 
 import { LineRange } from '../../../../definitions';
 import { ViewMotion } from '../../../../view-models';
-import { ChangeRecommendationsModule } from '../../change-recommendations.module';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from '../motion-diff.service';
 
 @Injectable({
-    providedIn: ChangeRecommendationsModule
+    providedIn: `root`
 })
 export class MotionChangeRecommendationControllerService extends BaseMeetingControllerService<
     ViewMotionChangeRecommendation,

@@ -12,7 +12,7 @@
         (keyup)="keyPressed($event)"
         (blur)="blur()"
     />
-    <div *ngIf="contentForm.value !== ''" class="input-suffix foreground-icon" (mousedown)="clear($event)">
+    <div *ngIf="!!contentForm.value" class="input-suffix foreground-icon" (mousedown)="clear($event)">
         <mat-icon>close</mat-icon>
     </div>
 </div>

@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { ChangeRecommendationsModule } from '../../modules/change-recommendations';
-
 @NgModule({
-    imports: [ChangeRecommendationsModule]
+    imports: []
 })
 export class MotionsCommonServiceModule {}

@@ -13,7 +13,6 @@ import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-cont
 
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { MotionBlockCommonServiceModule } from '../../modules';
-import { MotionsCommonServiceModule } from '../../services/common/motions-service.module';
 import { MotionBlockCreateDialogModule } from './components/motion-block-create-dialog/motion-block-create-dialog.module';
 import { MotionBlockDetailComponent } from './components/motion-block-detail/motion-block-detail.component';
 import { MotionBlockEditDialogModule } from './components/motion-block-edit-dialog/motion-block-edit-dialog.module';
@@ -25,7 +24,6 @@ import { MotionBlockServiceModule } from './services/motion-block-service.module
     declarations: [MotionBlockDetailComponent, MotionBlockListComponent],
     imports: [
         CommonModule,
-        MotionsCommonServiceModule,
         MotionBlocksRoutingModule,
         MotionBlockCommonServiceModule,
         MotionBlockServiceModule,

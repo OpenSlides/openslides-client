@@ -15,9 +15,8 @@ import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/mee
 
 import { DiffLinesInParagraph } from '../../../definitions';
 import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
-import { MotionsCommonServiceModule } from '../motions-service.module';
 
-@Injectable({ providedIn: MotionsCommonServiceModule })
+@Injectable({ providedIn: `root` })
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {
     private _lineLength = 80;
 

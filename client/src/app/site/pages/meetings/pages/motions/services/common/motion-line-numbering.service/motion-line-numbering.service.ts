@@ -14,7 +14,6 @@ import {
 } from '../../../modules/change-recommendations/services';
 import { ViewMotion } from '../../../view-models';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { MotionsCommonServiceModule } from '../motions-service.module';
 
 /**
  * Describes the single paragraphs from the base motion.
@@ -42,7 +41,7 @@ export interface ParagraphToChoose {
 }
 
 @Injectable({
-    providedIn: MotionsCommonServiceModule
+    providedIn: `root`
 })
 export class MotionLineNumberingService {
     private amendmentChangeRecoMap: { [amendmentId: string]: ViewMotionChangeRecommendation[] } = {};
