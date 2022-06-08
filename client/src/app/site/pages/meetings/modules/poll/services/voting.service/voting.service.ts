@@ -92,4 +92,8 @@ export class VotingService {
             return VotingErrorVerbose[error];
         }
     }
+
+    public getVotePermissionErrorVerboseFromName(errorName: string) {
+        return VotingErrorVerbose[VotingError[errorName]] ?? _(`There is an unknown voting problem.`);
+    }
 }
