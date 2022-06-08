@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -141,7 +141,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
                 const amendmentParagraph = this.motion.amendment_paragraph(paragraphNo);
                 if (amendmentParagraph) {
                     contentPatch.selected_paragraphs.push(paragraph);
-                    contentPatch.amendment_paragraph_$[paragraphNo] = [amendmentParagraph, Validators.required];
+                    contentPatch.amendment_paragraph_$[paragraphNo] = [amendmentParagraph];
                 }
             });
             // If the motion has been shortened after the amendment has been created, we will show the paragraphs
