@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import { Functionable } from 'src/app/infrastructure/utils';
+import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 
 import { HttpService } from '../../http.service';
 import { ExportServiceModule } from '../export-service.module';
@@ -248,7 +249,8 @@ export class PdfDocumentService {
         // private matSnackBar: MatSnackBar,
         private progressSnackBarService: ProgressSnackBarService,
         private progressService: ProgressSnackBarControlService,
-        private pdfImagesService: PdfImagesService
+        private pdfImagesService: PdfImagesService,
+        private mediaManageService: MediaManageService
     ) {}
 
     /**
@@ -485,15 +487,11 @@ export class PdfDocumentService {
      * @param lrMargin optional margin overrides
      * @returns an object that contains the necessary header definition
      */
-    private getHeader({
-        logoHeaderLeftUrl,
-        logoHeaderRightUrl,
-        line1,
-        line2,
-        lrMargin
-    }: PdfDocumentHeaderConfig): object {
+    private getHeader({ line1, line2, lrMargin }: PdfDocumentHeaderConfig): object {
         let text: string;
         const columns = [];
+        let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
+        let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
 
         // add the left logo to the header column
         if (logoHeaderLeftUrl) {
@@ -552,19 +550,15 @@ export class PdfDocumentService {
      * @param lrMargin optionally overriding the margins
      * @returns the footer doc definition
      */
-    private getFooter({
-        exportInfo,
-        logoFooterLeftUrl,
-        logoFooterRightUrl,
-        lrMargin,
-        pageNumberPosition: numberPosition
-    }: PdfDocumentFooterConfig): object {
+    private getFooter({ exportInfo, lrMargin, pageNumberPosition: numberPosition }: PdfDocumentFooterConfig): object {
         const columns = [];
         const showPageNr = exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(`page`) : true;
         const showDate = exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(`date`) : false;
         let logoContainerWidth: string;
         let pageNumberPosition: string;
         let logoContainerSize: number[];
+        let logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_l`);
+        let logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_r`);
 
         let footerPageNumber = ``;
         if (showPageNr) {
