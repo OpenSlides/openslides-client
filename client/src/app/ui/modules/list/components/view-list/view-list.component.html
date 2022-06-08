@@ -1,4 +1,4 @@
-<!-- <mat-drawer-container class="list-view-frame" [ngStyle]="{ height: componentHeight }">
+<mat-drawer-container class="list-view-frame" [ngStyle]="{ height: componentHeight }">
     <div class="list-view-table-wrapper">
         <os-sort-filter-bar
             *ngIf="showFilterBar"
@@ -8,7 +8,7 @@
             [filterService]="filterService!"
             [sortService]="sortService!"
             [searchService]="searchService!"
-            [searchFieldInput]="inputValue"
+            [searchFieldInput]="searchFieldValue"
             (searchFieldChanged)="searchFilterUpdated.emit($event)"
         >
             <div class="extra-info-slot">
@@ -26,29 +26,4 @@
             <div *osScrollingTableNoData class="no-data-placeholder subtitle">{{ 'No data' | translate }}</div>
         </os-scrolling-table>
     </div>
-</mat-drawer-container> -->
-
-<os-view-list
-    [alsoFilterByProperties]="alsoFilterByProperties"
-    [alwaysShowMenu]="alwaysShowMenu"
-    [componentHeight]="componentHeight"
-    [filterService]="filterService"
-    [filterProps]="filterProps"
-    [hiddenColumns]="hiddenColumns"
-    [listObservable]="listObservable"
-    [listObservableProvider]="listObservableProvider"
-    [multiSelect]="multiSelect"
-    [searchFieldValue]="inputValue"
-    [searchService]="searchService"
-    [selectedRows]="selectedRows"
-    [showFilterBar]="showFilterBar"
-    [showMenu]="showMenu"
-    [sortService]="sortService"
-    [vScrollFixed]="vScrollFixed"
-    (selectedRowsChange)="selectedRowsChange.emit($event)"
-    (searchFilterUpdated)="searchFilterUpdated.emit($event)"
-></os-view-list>
-
-<ng-template #content>
-    <ng-content></ng-content>
-</ng-template>
+</mat-drawer-container>

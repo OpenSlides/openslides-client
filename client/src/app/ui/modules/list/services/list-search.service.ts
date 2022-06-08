@@ -13,6 +13,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     private _sourceSubscription: Subscription | null = null;
     private _outputSubject = new BehaviorSubject<V[]>([]);
 
+    private _currentSearchFilter: string = ``;
     private _filterPropsMap: { [filterProps: string]: string[] } = {};
 
     public constructor(private readonly filterProps: string[], private readonly alsoFilterByProperties: string[]) {
@@ -25,11 +26,33 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     }
 
     public search(input: string): void {
+        this._currentSearchFilter = input?.toLowerCase();
+        this.filter();
+    }
+
+    private refreshSearch(): void {
+        this.filter();
+    }
+
+    private refreshSubscription(): void {
+        if (this._sourceSubscription) {
+            this._sourceSubscription.unsubscribe();
+            this._sourceSubscription = null;
+        }
+        if (this._sourceObservable) {
+            this._sourceSubscription = this._sourceObservable.subscribe(items => {
+                this._source = items;
+                this.refreshSearch();
+            });
+        }
+    }
+
+    private filter(): void {
         if (!this.filterProps?.length) {
             console.warn(`No filter props are given`);
             return;
         }
-        const trimmedInput = input.trim();
+        const trimmedInput = this._currentSearchFilter?.trim();
         const nextOutput = this._source.filter(item => {
             const idString = String(item.id);
             const foundId = idString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
@@ -45,23 +68,6 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
             return this.filterProps.some(prop => !this.isFiltered(item, this._filterPropsMap[prop], trimmedInput));
         });
         this._outputSubject.next(nextOutput);
-    }
-
-    private refreshSearch(): void {
-        this._outputSubject.next(this._source);
-    }
-
-    private refreshSubscription(): void {
-        if (this._sourceSubscription) {
-            this._sourceSubscription.unsubscribe();
-            this._sourceSubscription = null;
-        }
-        if (this._sourceObservable) {
-            this._sourceSubscription = this._sourceObservable.subscribe(items => {
-                this._source = items;
-                this.refreshSearch();
-            });
-        }
     }
 
     /**

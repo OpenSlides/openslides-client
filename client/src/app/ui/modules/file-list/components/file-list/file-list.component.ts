@@ -236,7 +236,7 @@ export class FileListComponent implements OnInit, OnDestroy {
      */
     public selectAll(): void {
         if (this._listComponent) {
-            this._listComponent.scrollingTableComponent.selectAll();
+            this._listComponent.selectAll();
         }
     }
 
@@ -245,7 +245,7 @@ export class FileListComponent implements OnInit, OnDestroy {
      */
     public deselectAll(): void {
         if (this._listComponent) {
-            this._listComponent.scrollingTableComponent.deselectAll();
+            this._listComponent.deselectAll();
         }
     }
 }

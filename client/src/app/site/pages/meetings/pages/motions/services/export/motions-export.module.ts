@@ -3,11 +3,9 @@ import { MotionPollModule } from 'src/app/site/pages/meetings/pages/motions/modu
 import { MeetingPdfExportModule } from 'src/app/site/pages/meetings/services/export';
 
 import { MotionCommentCommonServiceModule, MotionStatuteParagraphServiceModule } from '../../modules';
-import { MotionsCommonServiceModule } from '../common/motions-service.module';
 
 @NgModule({
     imports: [
-        MotionsCommonServiceModule,
         MotionCommentCommonServiceModule,
         MotionStatuteParagraphServiceModule,
         MotionPollModule,

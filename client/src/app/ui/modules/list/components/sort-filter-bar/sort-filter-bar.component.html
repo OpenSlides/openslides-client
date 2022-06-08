@@ -51,7 +51,7 @@
             placeholder="{{ 'Search' | translate }}"
             [size]="'small'"
             [fullWidth]="false"
-            (inputChanged)="onInputChanged($event)"
+            [(ngModel)]="searchFieldInput"
         ></os-rounded-input>
     </div>
 </div>

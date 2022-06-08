@@ -1,6 +1,7 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +23,7 @@ import { FilterMenuComponent } from './components/filter-menu/filter-menu.compon
 import { ListComponent } from './components/list/list.component';
 import { SortBottomSheetComponent } from './components/sort-bottom-sheet/sort-bottom-sheet.component';
 import { SortFilterBarComponent } from './components/sort-filter-bar/sort-filter-bar.component';
+import { ViewListComponent } from './components/view-list/view-list.component';
 
 const MODULES = [
     MatSidenavModule,
@@ -36,10 +38,11 @@ const MODULES = [
     MatBadgeModule,
     MatButtonModule,
     MatTooltipModule,
+    FormsModule,
     ScrollingModule,
     ScrollingTableModule
 ];
-const DECLARATIONS = [ListComponent];
+const DECLARATIONS = [ListComponent, ViewListComponent];
 
 @NgModule({
     exports: [...DECLARATIONS, ScrollingTableModule],

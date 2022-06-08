@@ -20,7 +20,7 @@ import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-mode
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { ColumnRestriction } from 'src/app/ui/modules/list/components';
+import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 

@@ -4,10 +4,9 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ViewMotion } from '../../../view-models';
-import { MotionsCommonServiceModule } from '../motions-service.module';
 
 @Injectable({
-    providedIn: MotionsCommonServiceModule
+    providedIn: `root`
 })
 export class MotionPermissionService {
     public configMinSupporters: number = 0;

@@ -1,21 +1,22 @@
-<os-list
-    [listObservableProvider]="listObservableProvider"
-    [listObservable]="listObservable"
-    [sortService]="sortService"
-    [filterService]="filterService"
-    [multiSelect]="multiSelect"
-    [hiddenInMobile]="hiddenInMobile"
-    [restricted]="restricted"
-    [selectedRows]="selectedRows"
-    [filterProps]="filterProps"
-    [showFilterBar]="showFilterBar"
-    [alwaysShowMenu]="alwaysShowMenu"
-    [showMenu]="showMenu"
-    [vScrollFixed]="vScrollFixed"
-    [toHideFn]="toHideFn"
-    [toRestrictFn]="toRestrictFn"
+<os-view-list
     [alsoFilterByProperties]="alsoFilterByProperties"
+    [alwaysShowMenu]="alwaysShowMenu"
+    [componentHeight]="componentHeight"
+    [filterService]="filterService"
+    [filterProps]="filterProps"
+    [hiddenColumns]="hiddenColumns"
+    [listObservable]="listObservable"
+    [listObservableProvider]="listObservableProvider"
+    [multiSelect]="multiSelect"
+    [searchFieldValue]="inputValue"
+    [searchService]="searchService"
+    [selectedRows]="selectedRows"
+    [showFilterBar]="showFilterBar"
+    [showMenu]="showMenu"
+    [sortService]="sortService"
+    [vScrollFixed]="vScrollFixed"
     (selectedRowsChange)="selectedRowsChange.emit($event)"
+    (searchFilterUpdated)="searchFilterUpdated.emit($event)"
 >
     <!-- Projector column -->
     <div
@@ -52,4 +53,4 @@
     >
         <os-speaker-button [object]="_getSpeakerButtonObject(viewModel)" [disabled]="multiSelect"></os-speaker-button>
     </div>
-</os-list>
+</os-view-list>

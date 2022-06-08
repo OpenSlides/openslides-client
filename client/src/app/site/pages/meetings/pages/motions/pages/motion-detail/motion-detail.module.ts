@@ -37,7 +37,6 @@ import { MotionForwardDialogModule } from '../../components/motion-forward-dialo
 import { PersonalNoteServiceModule } from '../../modules';
 import { MotionPollModule } from '../../modules/motion-poll';
 import { MotionSubmitterCommonServiceModule } from '../../modules/submitters/motion-submitter-common-service.module';
-import { MotionsCommonServiceModule } from '../../services/common/motions-service.module';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
@@ -92,7 +91,6 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionDetailDirectivesModule,
         MotionDetailServiceModule,
         MotionForwardDialogModule,
-        MotionsCommonServiceModule,
         MotionsListServiceModule,
         MotionsExportModule,
         AgendaItemCommonServiceModule,

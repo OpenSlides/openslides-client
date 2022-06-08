@@ -3,7 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
-import { ChangeRecommendationsModule } from '../../change-recommendations.module';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
 
@@ -153,7 +152,7 @@ interface ExtractedContent {
  * ```
  */
 @Injectable({
-    providedIn: ChangeRecommendationsModule
+    providedIn: `root`
 })
 export class MotionDiffService {
     // @TODO Decide on a more sophisticated implementation
