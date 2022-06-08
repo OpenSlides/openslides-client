@@ -145,7 +145,7 @@ export abstract class BaseComponent implements OnDestroy {
      * @param message The message to show or an "real" error, which will be passed to the console.
      */
     public raiseError = (message: any): void => {
-        console.log(`raiseError`, message);
+        console.debug(`raiseError`, message);
         let errorNotification: string;
         if (message instanceof Error) {
             if (message.message) {
@@ -168,7 +168,7 @@ export abstract class BaseComponent implements OnDestroy {
      * This snack bar will only dismiss if the user clicks the 'OK'-button.
      */
     protected raiseWarning = (message: string): void => {
-        // this.messageSnackBar = this.matSnackBar.open(message, this.translate.instant(`OK`));
+        this.messageSnackBar = this.matSnackBar.open(message, this.translate.instant(`OK`));
     };
 
     /**
