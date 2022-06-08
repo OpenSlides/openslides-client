@@ -167,7 +167,6 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
                     this.formChanged.emit({ amendment_paragraph_$: value });
                     this.validStateChanged.emit(this.contentForm!.valid);
                     this.cd.markForCheck();
-                    console.log(`WATCH: contentForm: `, value);
                 }
             })
         );
