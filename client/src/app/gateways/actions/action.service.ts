@@ -43,8 +43,10 @@ export class ActionService {
                 throw new Error(`The action service did not return responses for each request.`);
             }
             return results[0] as T[];
+        } else if (response !== null) {
+            throw new Error(`Unknown return type from action service`);
         }
-        throw new Error(`Unknown return type from action service`);
+        return null;
     }
 
     public create<T>(...requests: ActionRequest[]): Action<T> {

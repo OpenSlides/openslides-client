@@ -1,5 +1,7 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 
 import {
@@ -10,6 +12,7 @@ import {
     ResponseType
 } from '../infrastructure/definitions/http';
 import { ProcessError } from '../infrastructure/errors';
+import { OpenSlidesInjector } from '../infrastructure/utils/di/openslides-injector';
 import { toBase64 } from '../infrastructure/utils/functions';
 
 const defaultHeaders = { [`Content-Type`]: `application/json` };
@@ -56,7 +59,14 @@ export class HttpService {
             const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>(method, url, options));
             return response?.body as T;
         } catch (error) {
-            throw new ProcessError(error);
+            if (error instanceof HttpErrorResponse) {
+                const snackBar = OpenSlidesInjector.get(MatSnackBar);
+                const translate = OpenSlidesInjector.get(TranslateService);
+                snackBar.open(`${translate.instant(`Error`)}: ${error.error.message}`, `Ok`);
+                return null;
+            } else {
+                throw new ProcessError(error);
+            }
         }
     }
 

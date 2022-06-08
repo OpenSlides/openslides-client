@@ -2,6 +2,7 @@ import { Injectable, Injector, Type } from '@angular/core';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
+import { OpenSlidesInjector } from 'src/app/infrastructure/utils/di/openslides-injector';
 import { AgendaAppConfig } from 'src/app/site/pages/meetings/pages/agenda/agenda.config';
 import { AssignmentsAppConfig } from 'src/app/site/pages/meetings/pages/assignments/assignments.config';
 import { ChatAppConfig } from 'src/app/site/pages/meetings/pages/chat/chat.config';
@@ -60,7 +61,9 @@ export class AppLoadService {
         private modelMapper: CollectionMapperService,
         private mainMenuService: MainMenuService,
         private fallbackRoutesService: FallbackRoutesService
-    ) {}
+    ) {
+        OpenSlidesInjector.setInjector(injector);
+    }
 
     public async loadApps(): Promise<void> {
         const repositories: OnAfterAppsLoaded[] = [];
