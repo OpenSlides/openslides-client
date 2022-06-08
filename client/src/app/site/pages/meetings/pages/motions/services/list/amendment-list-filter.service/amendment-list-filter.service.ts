@@ -119,9 +119,9 @@ export class AmendmentListFilterService extends MotionListFilterService {
     }
 
     /**
-     * Override the parents 'isWorkflowEnabled', only consider the enabledWorkflows.amendment
+     * Override the parents 'isWorkflowEnabled', only consider the enabledWorkflows.amendment if it exists
      */
     protected override isWorkflowEnabled(workflowId: number): boolean {
-        return workflowId === this.enabledWorkflows.amendment;
+        return workflowId === (this.enabledWorkflows.amendment ?? this.enabledWorkflows.motion);
     }
 }

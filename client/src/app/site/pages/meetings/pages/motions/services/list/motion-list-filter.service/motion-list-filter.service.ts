@@ -106,7 +106,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         label: `Speakers`,
         options: [
             { condition: true, label: this.translate.instant(`Has speakers`) },
-            { condition: false, label: this.translate.instant(`Has no speakers`) }
+            { condition: [false, null], label: this.translate.instant(`Has no speakers`) }
         ]
     };
 
@@ -130,7 +130,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
                     label: this.translate.instant(`Is favorite`)
                 },
                 {
-                    condition: false,
+                    condition: [false, null],
                     label: this.translate.instant(`Is not favorite`)
                 }
             ]
@@ -144,7 +144,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
                     label: this.translate.instant(`Has notes`)
                 },
                 {
-                    condition: false,
+                    condition: [false, null],
                     label: this.translate.instant(`Does not have notes`)
                 }
             ]
