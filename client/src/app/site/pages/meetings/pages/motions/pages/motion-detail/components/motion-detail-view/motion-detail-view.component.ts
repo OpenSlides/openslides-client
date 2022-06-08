@@ -62,7 +62,16 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Sets the motions, e.g. via an autoupdate. Reload important things here:
      * - Reload the recommendation. Not changed with autoupdates, but if the motion is loaded this needs to run.
      */
-    public motion!: ViewMotion;
+    public set motion(motion: ViewMotion) {
+        this._motion = motion;
+        if (motion) {
+            this.init();
+        }
+    }
+
+    public get motion(): ViewMotion {
+        return this._motion;
+    }
 
     public temporaryMotion: any = {};
 
@@ -97,6 +106,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      */
     private _sortedMotionsObservable: Observable<ViewMotion[]> = of([]);
 
+    private _motion: ViewMotion | null = null;
     private _motionId: Id | null = null;
     private _parentId: Id | null = null;
 
@@ -129,7 +139,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
      * Sets all required subjects and fills in the required information
      */
     public ngOnInit(): void {
-        this.init();
         this.subscriptions.push(
             this.activeMeetingIdService.meetingIdObservable.subscribe(() => {
                 this.hasLoaded.next(false);
@@ -422,12 +431,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.registerSubjects();
 
         // use the filter and the search service to get the current sorting
-        // TODO: the `instant` can fail, if the page reloads.
-        if (this.meetingSettingsService.instant(`motions_amendments_in_main_list`)) {
-            this.motionFilterService.initFilters(this._motionObserver);
-            this.motionSortService.initSorting(this.motionFilterService.outputObservable);
-            this._sortedMotionsObservable = this.motionSortService.outputObservable;
-        } else if (this.motion && this.motion.lead_motion_id) {
+        if (this.motion && this.motion.lead_motion_id) {
             // only use the amendments for this motion
             this.amendmentFilterService.initFilters(
                 this.amendmentRepo.getViewModelListObservableFor({ id: this.motion.lead_motion_id })
@@ -435,7 +439,9 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             this.amendmentSortService.initSorting(this.amendmentFilterService.outputObservable);
             this._sortedMotionsObservable = this.amendmentSortService.outputObservable;
         } else {
-            this._sortedMotions = [];
+            this.motionFilterService.initFilters(this._motionObserver);
+            this.motionSortService.initSorting(this.motionFilterService.outputObservable);
+            this._sortedMotionsObservable = this.motionSortService.outputObservable;
         }
 
         if (this._sortedMotionsObservable) {
