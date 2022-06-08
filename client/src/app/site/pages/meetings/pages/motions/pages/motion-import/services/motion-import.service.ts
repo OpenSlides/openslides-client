@@ -87,12 +87,14 @@ export class MotionImportService extends BaseImportService<Motion> {
             [SUBMITTER_PROPERTY]: new UserImportHelper({
                 repo: this.userRepo,
                 verboseName: `Submitters`,
-                property: `submitter_ids`
+                property: `submitter_ids`,
+                importedAs: SUBMITTER_PROPERTY
             }),
             [SUPPORTER_PROPERTY]: new UserImportHelper({
                 repo: this.userRepo,
                 verboseName: `Supporters`,
-                property: `supporter_ids`
+                property: `supporter_ids`,
+                importedAs: SUPPORTER_PROPERTY
             })
         };
     }

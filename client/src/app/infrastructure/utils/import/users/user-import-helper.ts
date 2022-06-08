@@ -22,6 +22,7 @@ interface UserImportConfig<Model> {
     verboseName?: string;
     useDefault?: number[];
     searchService?: UserSearchService;
+    importedAs?: string;
     mapPropertyToFn?: (item: Model, ids: Id[]) => void;
 }
 
@@ -65,6 +66,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
     private readonly _verboseName: string;
     private readonly _property: keyof Model;
     private readonly _useDefault?: number[];
+    private readonly _importedAs?: string;
 
     private readonly _userSearchService?: UserSearchService;
 
@@ -81,13 +83,14 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         this._property = config.property;
         this._verboseName = config.verboseName || ``;
         this._useDefault = config.useDefault;
+        this._importedAs = config.importedAs;
         this._userSearchService = config.searchService;
         this._mapPropertyToFn = config.mapPropertyToFn || ((item, ids) => (item[this._property] = ids as any));
     }
 
     public async onBeforeFind(allImportModels: ImportModel<Model>[]): Promise<void> {
         const toFind = allImportModels.flatMap(model =>
-            this._repo.parseStringIntoUser(model.model[this.idProperty] as any)
+            this._repo.parseStringIntoUser(model.model[this._importedAs ?? this.idProperty] as any)
         ) as any;
         if (this._userSearchService) {
             UserImportHelperSharedContext.addExistingUsers(await this._userSearchService.getDuplicates(toFind));
