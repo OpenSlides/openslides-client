@@ -1,4 +1,4 @@
-import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { FormGroupDirective, NgForm, UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 /**
@@ -6,7 +6,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
  * with `setError` on the parent element.
  */
 export class ParentErrorStateMatcher implements ErrorStateMatcher {
-    public isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    public isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
         const isSubmitted = !!(form && form.submitted);
         const controlTouched = !!(control && (control.dirty || control.touched));
         const controlInvalid = !!(control && control.invalid);

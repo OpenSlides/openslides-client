@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -44,7 +44,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
      * injects the poll itself
      */
     public constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         dialogRef: MatDialogRef<BasePollDialogComponent>,
         public readonly assignmentPollService: AssignmentPollService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll

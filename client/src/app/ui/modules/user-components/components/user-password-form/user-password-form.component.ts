@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
@@ -37,7 +37,7 @@ export class UserPasswordFormComponent implements OnInit, OnDestroy {
     /**
      * formGroup for the admin user
      */
-    public adminPasswordForm: FormGroup;
+    public adminPasswordForm: UntypedFormGroup;
 
     /**
      * Value of the formGroup for a user.
@@ -65,7 +65,7 @@ export class UserPasswordFormComponent implements OnInit, OnDestroy {
 
     private passwordFormSubscription: Subscription | null = null;
 
-    public constructor(private operator: OperatorService, private fb: FormBuilder) {
+    public constructor(private operator: OperatorService, private fb: UntypedFormBuilder) {
         this.adminPasswordForm = this.createForm();
     }
 
@@ -106,7 +106,7 @@ export class UserPasswordFormComponent implements OnInit, OnDestroy {
         this.hidePassword = false;
     }
 
-    private createForm(): FormGroup {
+    private createForm(): UntypedFormGroup {
         return this.fb.group({
             newPassword: [``, Validators.required]
         });

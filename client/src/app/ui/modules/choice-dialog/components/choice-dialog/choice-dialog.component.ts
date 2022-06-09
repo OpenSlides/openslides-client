@@ -1,5 +1,5 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { ChoiceAnswer, ChoiceDialogConfig } from '../../definitions';
@@ -20,7 +20,7 @@ export class ChoiceDialogComponent {
     /**
      * Form to hold the selection
      */
-    public selectForm: FormGroup;
+    public selectForm: UntypedFormGroup;
 
     /**
      * Checks if there is something selected
@@ -47,7 +47,7 @@ export class ChoiceDialogComponent {
 
     public constructor(
         public dialogRef: MatDialogRef<ChoiceDialogComponent, ChoiceAnswer>,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) public readonly data: ChoiceDialogConfig
     ) {
         this.selectForm = this.formBuilder.group({

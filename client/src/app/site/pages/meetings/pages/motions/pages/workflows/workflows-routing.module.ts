@@ -8,7 +8,7 @@ import { WorkflowListComponent } from './components/workflow-list/workflow-list.
 const routes: Routes = [
     {
         path: ``,
-        pathMatch: `pathMatch`,
+        pathMatch: `full`,
         component: WorkflowListComponent
     },
     {

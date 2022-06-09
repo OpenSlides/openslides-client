@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -57,7 +57,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * The form to edit blocks
      */
     @ViewChild(`blockEditForm`, { static: true })
-    public blockEditForm: FormGroup | null = null;
+    public blockEditForm: UntypedFormGroup | null = null;
 
     /**
      * Holds the block ID

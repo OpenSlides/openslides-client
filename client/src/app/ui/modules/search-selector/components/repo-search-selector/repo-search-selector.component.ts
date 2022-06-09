@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, NgControl } from '@angular/forms';
+import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { map, OperatorFunction } from 'rxjs';
 
@@ -41,7 +41,7 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     private _repo!: ViewModelListProvider<any>;
 
     public constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl,

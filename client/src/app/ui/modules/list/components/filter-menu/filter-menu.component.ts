@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { Identifiable } from 'src/app/domain/interfaces';
 
 import { FilterListService, OsFilterOption, OsFilterOptions } from '../../definitions/filter-service';
 
@@ -33,7 +34,7 @@ const MAX_CHECKBOX_WIDTH = 290; // Maximum width of a checkbox (in px).
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterMenuComponent<V> implements OnInit, OnDestroy {
+export class FilterMenuComponent<V extends Identifiable> implements OnInit, OnDestroy {
     /**
      * The height of one row in an action list
      */

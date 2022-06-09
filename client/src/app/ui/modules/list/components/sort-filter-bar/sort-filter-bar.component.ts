@@ -1,7 +1,17 @@
-import { Component, EventEmitter, HostListener, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    Output,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
 import { TranslateService } from '@ngx-translate/core';
+import { Identifiable } from 'src/app/domain/interfaces';
 import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -30,9 +40,10 @@ import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet
     selector: `os-sort-filter-bar`,
     templateUrl: `./sort-filter-bar.component.html`,
     styleUrls: [`./sort-filter-bar.component.scss`],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SortFilterBarComponent<V> {
+export class SortFilterBarComponent<V extends Identifiable> {
     @ViewChild(`searchField`, { static: true })
     private readonly _searchFieldComponent!: RoundedInputComponent | undefined;
 

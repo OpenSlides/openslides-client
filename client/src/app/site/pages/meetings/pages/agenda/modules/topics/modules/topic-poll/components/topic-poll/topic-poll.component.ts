@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -33,7 +33,7 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
     /**
      * Form for updating the poll's description
      */
-    public descriptionForm: FormGroup;
+    public descriptionForm: UntypedFormGroup;
 
     /**
      * @returns true if the description on the form differs from the poll's description
@@ -69,7 +69,7 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         promptService: PromptService,
         choiceService: ChoiceService,
         repo: PollControllerService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private operator: OperatorService,
         private votingService: VotingService,
         private votingPrivacyDialog: VotingPrivacyWarningDialogService

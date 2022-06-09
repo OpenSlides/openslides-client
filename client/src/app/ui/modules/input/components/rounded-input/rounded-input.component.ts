@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { forwardRef } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
@@ -30,8 +30,8 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     @ViewChild(`osInput`, { static: true })
     public osInput!: ElementRef<HTMLInputElement>;
 
-    public get dedicatedContentForm(): FormControl {
-        return this.contentForm as FormControl;
+    public get dedicatedContentForm(): UntypedFormControl {
+        return this.contentForm as UntypedFormControl;
     }
 
     /**
@@ -158,7 +158,7 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
         }
     }
 
-    protected createForm(): FormControl {
+    protected createForm(): UntypedFormControl {
         return this.fb.control(``);
     }
 

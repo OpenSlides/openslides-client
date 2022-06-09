@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -108,7 +108,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public readonly LineNumberingMode = LineNumberingMode;
 
-    public contentForm!: FormGroup;
+    public contentForm!: UntypedFormGroup;
 
     public workflows: ViewMotionWorkflow[] = [];
 
@@ -147,7 +147,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private dialog: MotionChangeRecommendationDialogService,
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
@@ -413,7 +413,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     /**
      * Creates the forms for the Motion and the MotionVersion
      */
-    private createForm(): FormGroup {
+    private createForm(): UntypedFormGroup {
         const motionFormControls: MotionFormControlsConfig = {
             title: [``, Validators.required],
             text: [``, this.isParagraphBasedAmendment ? null : Validators.required],

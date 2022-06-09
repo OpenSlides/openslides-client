@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -24,7 +24,7 @@ export class MotionPersonalNoteComponent extends BaseComponent {
     /**
      * The edit form for the note
      */
-    public personalNoteForm: FormGroup;
+    public personalNoteForm: UntypedFormGroup;
 
     /**
      * Saves, if the users edits the note.
@@ -47,7 +47,7 @@ export class MotionPersonalNoteComponent extends BaseComponent {
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private repo: PersonalNoteControllerService,
         private pdfService: MotionPdfExportService
     ) {

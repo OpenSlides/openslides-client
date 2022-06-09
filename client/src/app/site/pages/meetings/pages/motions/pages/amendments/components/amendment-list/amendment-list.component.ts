@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, firstValueFrom, Observable, of, switchMap } from 'rxjs';
@@ -25,7 +25,8 @@ const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
 @Component({
     selector: `os-amendment-list`,
     templateUrl: `./amendment-list.component.html`,
-    styleUrls: [`./amendment-list.component.scss`]
+    styleUrls: [`./amendment-list.component.scss`],
+    encapsulation: ViewEncapsulation.None
 })
 export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
     /**

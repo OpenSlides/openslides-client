@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -15,7 +15,7 @@ import { AgendaContentObjectFormService } from '../../services/agenda-content-ob
 })
 export class AgendaContentObjectFormComponent implements AfterViewInit, OnDestroy {
     @Input()
-    public form!: FormGroup;
+    public form!: UntypedFormGroup;
 
     public get hasItemsObservable(): Observable<boolean> {
         return this._itemsSubject.pipe(map(items => items.length > 0));

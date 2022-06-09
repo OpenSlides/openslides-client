@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -58,9 +58,9 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     @Output()
     public errorEvent = new EventEmitter<string>();
 
-    public directorySelectionForm: FormGroup;
+    public directorySelectionForm: UntypedFormGroup;
 
-    public constructor(private formBuilder: FormBuilder, private translate: TranslateService) {
+    public constructor(private formBuilder: UntypedFormBuilder, private translate: TranslateService) {
         super();
     }
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { GlobalVote, PollMethod, PollType, VoteValue } from 'src/app/domain/models/poll';
 import {
@@ -46,7 +46,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
     public TopicPollMethod = PollMethod;
     public PollType = PollType;
     public voteActions: VoteOption[] = [];
-    public formControlMap: { [optionId: number]: FormControl } = {};
+    public formControlMap: { [optionId: number]: UntypedFormControl } = {};
 
     public get minVotes(): number {
         return this.poll.min_votes_amount;
@@ -123,9 +123,9 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    public getFormControl(optionId: number): FormControl {
+    public getFormControl(optionId: number): UntypedFormControl {
         if (!this.formControlMap[optionId]) {
-            this.formControlMap[optionId] = new FormControl(0, [
+            this.formControlMap[optionId] = new UntypedFormControl(0, [
                 Validators.required,
                 Validators.min(0),
                 Validators.max(this.poll.max_votes_per_option)

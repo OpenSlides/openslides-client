@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -84,7 +84,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     /**
      * FormGroup for the search-list.
      */
-    public extensionFieldForm!: FormGroup;
+    public extensionFieldForm!: UntypedFormGroup;
 
     /**
      * Boolean to decide, whether to open the extension-input and search-list.
@@ -106,7 +106,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      *
      * @param formBuilder The FormBuilder
      */
-    public constructor(private formBuilder: FormBuilder, private router: Router) {}
+    public constructor(private formBuilder: UntypedFormBuilder, private router: Router) {}
 
     /**
      * OnInit-method.

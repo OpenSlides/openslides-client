@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { FormBuilder, NgControl } from '@angular/forms';
+import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -28,7 +28,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     public override readonly multiple = true;
 
     public constructor(
-        fb: FormBuilder,
+        fb: UntypedFormBuilder,
         fm: FocusMonitor,
         element: ElementRef,
         ngControl: NgControl,

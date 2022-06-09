@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -52,7 +52,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
 
     public brokenParagraphs: string[] = [];
 
-    public contentForm: FormGroup | null = null;
+    public contentForm: UntypedFormGroup | null = null;
 
     public amendmentErrorMessage: string | null = null;
 
@@ -64,7 +64,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);

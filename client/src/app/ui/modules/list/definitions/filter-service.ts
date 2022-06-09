@@ -1,4 +1,6 @@
 import { Observable } from 'rxjs';
+import { Identifiable } from 'src/app/domain/interfaces';
+import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
 /**
  * Describes the available filters for a listView.
@@ -50,7 +52,7 @@ type OsFilterOptionCondition = OsFilterOptionConditionType | OsFilterOptionCondi
 
 type OsFilterOptionConditionType = null | string | boolean | number;
 
-export interface FilterListService<V> {
+export interface FilterListService<V extends Identifiable> extends ViewModelListProvider<V> {
     readonly unfilteredCount: number;
     readonly filterCount: number;
     readonly hasFilterOptions: boolean;

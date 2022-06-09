@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, forwardRef, Input } from '@angular/core';
-import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
@@ -17,7 +17,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public readonly hasInitialized = new Deferred<boolean>();
 
-    public override contentForm!: FormControl;
+    public override contentForm!: UntypedFormControl;
 
     /**
      * Settings for the TinyMCE editor selector
@@ -50,7 +50,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         paste_preprocess: this.onPastePreprocess
     };
 
-    public constructor(fb: FormBuilder, translate: TranslateService) {
+    public constructor(fb: UntypedFormBuilder, translate: TranslateService) {
         super(fb);
         this.tinyMceSettings.language_url = `/assets/tinymce/langs/` + translate.currentLang + `.js`;
         this.tinyMceSettings.language = translate.currentLang;
@@ -67,7 +67,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         };
     }
 
-    protected createForm(): FormControl {
+    protected createForm(): UntypedFormControl {
         return this.fb.control([``]);
     }
     protected updateForm(value: string | null): void {

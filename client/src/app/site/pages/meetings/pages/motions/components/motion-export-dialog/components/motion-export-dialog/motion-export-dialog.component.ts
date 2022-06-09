@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButtonToggle } from '@angular/material/button-toggle';
 import { MatDialogRef } from '@angular/material/dialog';
 import { auditTime, Observable } from 'rxjs';
@@ -51,7 +51,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
     /**
      * The form that contains the export information.
      */
-    public exportForm!: FormGroup;
+    public exportForm!: UntypedFormGroup;
 
     /**
      * Store the subject to the ViewMotionCommentSection
@@ -119,7 +119,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
      * the dialog is open.
      */
     public constructor(
-        public formBuilder: FormBuilder,
+        public formBuilder: UntypedFormBuilder,
         public dialogRef: MatDialogRef<MotionExportDialogComponent>,
         public meetingSettingsService: MeetingSettingsService,
         public commentRepo: MotionCommentSectionControllerService,

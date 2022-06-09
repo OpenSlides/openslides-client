@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseUserImportListComponent } from 'src/app/site/base/base-user-import-list.component';
@@ -20,7 +20,7 @@ export class ParticipantImportListComponent extends BaseUserImportListComponent 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         public override readonly importer: ParticipantImportService
     ) {
         super(componentServiceCollector, translate, importer, formBuilder, participantHeadersAndVerboseNames);

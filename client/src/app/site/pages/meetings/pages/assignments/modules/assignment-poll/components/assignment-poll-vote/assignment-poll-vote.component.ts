@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { GlobalVote, PollMethod, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
@@ -52,7 +52,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     public AssignmentPollMethod = PollMethod;
     public PollType = PollType;
     public voteActions: VoteOption[] = [];
-    public formControlMap: { [optionId: number]: FormControl } = {};
+    public formControlMap: { [optionId: number]: UntypedFormControl } = {};
 
     public get pollHint(): string | null {
         if (this.poll?.content_object) {
@@ -136,9 +136,9 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         }
     }
 
-    public getFormControl(optionId: number): FormControl {
+    public getFormControl(optionId: number): UntypedFormControl {
         if (!this.formControlMap[optionId]) {
-            this.formControlMap[optionId] = new FormControl(0, [
+            this.formControlMap[optionId] = new UntypedFormControl(0, [
                 Validators.required,
                 Validators.min(0),
                 Validators.max(this.poll.max_votes_per_option)

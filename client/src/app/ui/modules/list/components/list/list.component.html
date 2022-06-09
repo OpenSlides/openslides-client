@@ -1,33 +1,3 @@
-<!-- <mat-drawer-container class="list-view-frame" [ngStyle]="{ height: componentHeight }">
-    <div class="list-view-table-wrapper">
-        <os-sort-filter-bar
-            *ngIf="showFilterBar"
-            class="sort-filter-bar"
-            [totalCount]="totalCountObservable | async"
-            [filterCount]="currentCountObservable | async"
-            [filterService]="filterService!"
-            [sortService]="sortService!"
-            [searchService]="searchService!"
-            [searchFieldInput]="inputValue"
-            (searchFieldChanged)="searchFilterUpdated.emit($event)"
-        >
-            <div class="extra-info-slot">
-                <ng-content select=".filter-bar-info-slot"></ng-content>
-            </div>
-        </os-sort-filter-bar>
-
-        <os-scrolling-table
-            [dataSource]="dataListObservable"
-            [rowHeight]="vScrollFixed"
-            [hiddenColumns]="hiddenColumns"
-            [selectionMode]="multiSelect"
-            (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"
-        >
-            <div *osScrollingTableNoData class="no-data-placeholder subtitle">{{ 'No data' | translate }}</div>
-        </os-scrolling-table>
-    </div>
-</mat-drawer-container> -->
-
 <os-view-list
     [alsoFilterByProperties]="alsoFilterByProperties"
     [alwaysShowMenu]="alwaysShowMenu"

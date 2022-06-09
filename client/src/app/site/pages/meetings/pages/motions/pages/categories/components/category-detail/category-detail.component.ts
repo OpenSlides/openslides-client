@@ -1,5 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
@@ -30,7 +30,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     /**
      * The form to edit the selected category
      */
-    public editForm!: FormGroup;
+    public editForm!: UntypedFormGroup;
 
     /**
      * Reference to the template for edit-dialog
@@ -73,7 +73,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
         private repo: MotionCategoryControllerService,
         private motionService: MotionControllerService,
         private promptService: PromptService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog
     ) {
         super(componentServiceCollector, translate);

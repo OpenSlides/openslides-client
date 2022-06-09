@@ -125,7 +125,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
         props: ImportFindProperties<MainModel>
     ): CsvMapping<SideModel> | CsvMapping<SideModel>[] {
         if (!this._findFn) {
-            throw new Error(`No function to find any models for property ${this.idProperty} is defined`);
+            throw new Error(`No function to find any models for property ${String(this.idProperty)} is defined`);
         }
         if (!name) {
             return this.getReturnValue();

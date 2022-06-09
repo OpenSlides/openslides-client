@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
@@ -35,7 +35,7 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
     /**
      * Holds the create form
      */
-    public createForm: FormGroup;
+    public createForm: UntypedFormGroup;
 
     /**
      * Define extra filter properties
@@ -55,7 +55,7 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: MotionCategoryControllerService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog,
         private operator: OperatorService,
         private treeService: TreeService

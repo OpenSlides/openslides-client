@@ -1,5 +1,12 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormArray, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import {
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    UntypedFormArray,
+    UntypedFormBuilder,
+    UntypedFormGroup,
+    Validators
+} from '@angular/forms';
 
 interface TranslationBox {
     original: string;
@@ -30,19 +37,19 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
     /**
      * The parent form-group.
      */
-    public translationForm!: FormGroup;
+    public translationForm!: UntypedFormGroup;
 
     /**
      * Reference to the form-control within the `translationForm`.
      */
-    public translationBoxes!: FormArray;
+    public translationBoxes!: UntypedFormArray;
 
     /**
      * Default constructor.
      *
      * @param formBuilder FormBuilder
      */
-    public constructor(private formBuilder: FormBuilder) {}
+    public constructor(private formBuilder: UntypedFormBuilder) {}
 
     /**
      * Initializes the form-controls.
@@ -52,7 +59,7 @@ export class CustomTranslationComponent implements ControlValueAccessor, OnInit 
             translationBoxes: this.formBuilder.array([])
         });
 
-        this.translationBoxes = this.translationForm.get(`translationBoxes`) as FormArray;
+        this.translationBoxes = this.translationForm.get(`translationBoxes`) as UntypedFormArray;
         this.translationBoxes.valueChanges.subscribe((value: TranslationBox[]) => {
             if (this.translationBoxes.valid) {
                 this.propagateChange(value.mapToObject(entry => ({ [entry.original]: entry.translation })));

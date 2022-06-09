@@ -11,7 +11,7 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
@@ -84,7 +84,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
         private promptService: PromptService,
         private cd: ChangeDetectorRef,
         private dialog: ChatGroupDialogService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private vp: ViewPortService,
         private operator: OperatorService
     ) {

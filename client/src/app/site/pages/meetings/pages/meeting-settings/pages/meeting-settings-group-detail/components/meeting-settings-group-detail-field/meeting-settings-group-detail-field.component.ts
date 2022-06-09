@@ -9,7 +9,7 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Moment, unix as moment } from 'moment';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
@@ -87,7 +87,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     /**
      * The form for this configItem.
      */
-    public form!: FormGroup;
+    public form!: UntypedFormGroup;
 
     /** Accessor to get the validity of this field. */
     public get valid(): boolean {
@@ -118,7 +118,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private cd: ChangeDetectorRef,
         private groupRepo: GroupControllerService,
         public meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService,

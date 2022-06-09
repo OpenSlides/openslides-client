@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -72,7 +72,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private readonly CHOOSE_PARTICIPANT_STEP = 1;
     public readonly CREATE_PARTICIPANT_STEP = 2;
 
-    public readonly createUserForm: FormGroup;
+    public readonly createUserForm: UntypedFormGroup;
 
     public isFormValid = false;
 
@@ -121,7 +121,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        fb: FormBuilder,
+        fb: UntypedFormBuilder,
         public readonly repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
         private userService: UserService,

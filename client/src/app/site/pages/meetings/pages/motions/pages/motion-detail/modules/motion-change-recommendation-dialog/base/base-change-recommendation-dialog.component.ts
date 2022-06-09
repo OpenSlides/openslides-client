@@ -1,5 +1,5 @@
 import { Directive, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
 
@@ -31,11 +31,11 @@ export abstract class BaseChangeRecommendationDialogComponent<T extends BaseChan
     /**
      * Change recommendation content.
      */
-    public contentForm!: FormGroup;
+    public contentForm!: UntypedFormGroup;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: T,
-        protected formBuilder: FormBuilder,
+        protected formBuilder: UntypedFormBuilder,
         protected repo: MotionChangeRecommendationControllerService,
         protected dialogRef: MatDialogRef<BaseChangeRecommendationDialogComponent<T>>
     ) {

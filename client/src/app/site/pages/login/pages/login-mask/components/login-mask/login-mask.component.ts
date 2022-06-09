@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -59,7 +59,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Form group for the login form
      */
-    public loginForm: FormGroup;
+    public loginForm: UntypedFormGroup;
 
     /**
      * Custom Form validation
@@ -85,7 +85,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         private authService: AuthService,
         private operator: OperatorService,
         private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
         private browserSupport: BrowserSupportService // private spinnerService: SpinnerService
@@ -199,7 +199,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Create the login Form
      */
-    private createForm(): FormGroup {
+    private createForm(): UntypedFormGroup {
         return this.formBuilder.group({
             username: [``, [Validators.required, Validators.maxLength(128)]],
             password: [``, [Validators.required, Validators.maxLength(128)]]

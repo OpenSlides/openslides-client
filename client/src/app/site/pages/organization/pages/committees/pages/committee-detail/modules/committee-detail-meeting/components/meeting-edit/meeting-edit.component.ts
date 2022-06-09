@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -89,7 +89,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     public isCreateView: boolean = false;
 
-    public meetingForm!: FormGroup;
+    public meetingForm!: UntypedFormGroup;
     public theDuplicateFromId: Id | null = null;
 
     public committee!: ViewCommittee;
@@ -107,7 +107,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private meetingRepo: MeetingControllerService,
         private committeeRepo: CommitteeControllerService,
         public orgaTagRepo: OrganizationTagControllerService,

@@ -7,7 +7,7 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -49,12 +49,12 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
         return `attachment-control`;
     }
 
-    public formGroup!: FormGroup;
+    public formGroup!: UntypedFormGroup;
 
     private dialogRef: MatDialogRef<any> | null = null;
 
     public constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private dialogService: MatDialog,
         public readonly repo: MediafileControllerService
     ) {
@@ -102,7 +102,7 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
         this.errorHandler.emit(error);
     }
 
-    protected createForm(): FormControl | FormGroup {
+    protected createForm(): UntypedFormControl | UntypedFormGroup {
         this.formGroup = this.fb.group({ mediafile_ids: [] });
         return this.fb.control([]);
     }

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -16,7 +16,7 @@ export class ProjectorCountdownDialogComponent implements OnInit {
     /**
      * The form data
      */
-    public countdownForm!: FormGroup;
+    public countdownForm!: UntypedFormGroup;
 
     /**
      * Holds the default time which was set in the config
@@ -26,7 +26,7 @@ export class ProjectorCountdownDialogComponent implements OnInit {
     public constructor(
         meetingSettingsService: MeetingSettingsService,
         private translate: TranslateService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private durationService: DurationService,
         @Inject(MAT_DIALOG_DATA) public data: CountdownDialogData
     ) {

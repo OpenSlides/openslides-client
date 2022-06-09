@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 
@@ -9,11 +9,11 @@ import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
     styleUrls: [`./motion-block-create-dialog.component.scss`]
 })
 export class MotionBlockCreateDialogComponent {
-    public readonly createBlockForm: FormGroup;
+    public readonly createBlockForm: UntypedFormGroup;
 
     public constructor(
         private dialogRef: MatDialogRef<MotionBlockCreateDialogComponent, Partial<MotionBlock>>,
-        formBuilder: FormBuilder
+        formBuilder: UntypedFormBuilder
     ) {
         this.createBlockForm = formBuilder.group({
             title: [``, Validators.required],

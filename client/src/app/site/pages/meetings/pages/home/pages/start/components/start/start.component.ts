@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -23,7 +23,7 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
     /**
      * Formular for the content.
      */
-    public startForm: FormGroup;
+    public startForm: UntypedFormGroup;
 
     public get welcomeTitleObservable(): Observable<string> {
         return this.meetingSettingsService.get(`welcome_title`);
@@ -37,7 +37,7 @@ export class StartComponent extends BaseMeetingComponent implements OnInit {
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private meetingRepositoryService: MeetingControllerService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);

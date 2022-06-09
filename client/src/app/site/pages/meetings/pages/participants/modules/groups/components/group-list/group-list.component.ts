@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
@@ -45,7 +45,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
     public selectedGroup: ViewGroup | null = null;
 
     @ViewChild(`groupForm`, { static: true })
-    public groupForm: FormGroup | null = null;
+    public groupForm: UntypedFormGroup | null = null;
 
     /**
      * Reference to the template
@@ -65,7 +65,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
         private dialog: MatDialog,
         private repo: GroupControllerService,
         private promptService: PromptService,
-        private formBuilder: FormBuilder
+        private formBuilder: UntypedFormBuilder
     ) {
         super(componentServiceCollector, translate);
     }

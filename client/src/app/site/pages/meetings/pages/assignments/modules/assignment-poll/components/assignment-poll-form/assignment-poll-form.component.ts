@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import {
     BasePollFormComponent,
@@ -29,7 +29,7 @@ export class AssignmentPollFormComponent extends BasePollFormComponent implement
     constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService,
-        fb: FormBuilder,
+        fb: UntypedFormBuilder,
         groupRepo: GroupControllerService,
         dialog: VotingPrivacyWarningDialogService,
         meetingSettingService: MeetingSettingsService
