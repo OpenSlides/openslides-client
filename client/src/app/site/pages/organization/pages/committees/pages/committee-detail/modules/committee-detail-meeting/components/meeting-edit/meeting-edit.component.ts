@@ -63,11 +63,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             map(organization => {
                 return [
                     TEMPLATE_MEETINGS_LABEL,
-                    ...organization.template_meetings,
+                    ...organization.template_meetings.sort(this.sortFn),
                     ACTIVE_MEETINGS_LABEL,
-                    ...organization.active_meetings,
+                    ...organization.active_meetings.sort(this.sortFn),
                     ARCHIVED_MEETINGS_LABEL,
-                    ...organization.archived_meetings
+                    ...organization.archived_meetings.sort(this.sortFn)
                 ];
             })
         );
@@ -92,10 +92,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public meetingForm!: FormGroup;
     public theDuplicateFromId: Id | null = null;
 
-    public sortFn: (valueA: Partial<ViewMeeting>, valueB: Partial<ViewMeeting>) => number = (a, b) => {
-        return a && typeof a.getTitle() === `string` && !!a.COLLECTION && !!b.COLLECTION
-            ? a.getTitle().localeCompare(b.getTitle())
-            : 0;
+    public sortFn: (valueA: Selectable, valueB: Selectable) => number = (a, b) => {
+        return a && typeof a.getTitle() === `string` ? a.getTitle().localeCompare(b.getTitle()) : -1;
     };
 
     public committee!: ViewCommittee;

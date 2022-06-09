@@ -27,7 +27,7 @@
                 [ngModel]="theDuplicateFromId"
                 [ngModelOptions]="{ standalone: true }"
                 (ngModelChange)="onUpdateDuplicateFrom($event)"
-                [sortFn]="sortFn"
+                [sortFn]="false"
             ></os-list-search-selector>
             <mat-hint>
                 {{ 'Participants and administrators are copied completely and cannot be edited here.' | translate }}
