@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
@@ -117,7 +117,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     public ngOnInit(): void {
         const self = this;
         this.highlightedLineMatcher = new (class implements ErrorStateMatcher {
-            public isErrorState(control: FormControl): boolean {
+            public isErrorState(control: UntypedFormControl): boolean {
                 const value: string = control && control.value ? control.value + `` : ``;
                 const maxLineNumber = self.motionLineNumbering.getLastLineNumber(self.motion, self.lineLength);
                 return value.match(/[^\d]/) !== null || parseInt(value, 10) >= maxLineNumber;

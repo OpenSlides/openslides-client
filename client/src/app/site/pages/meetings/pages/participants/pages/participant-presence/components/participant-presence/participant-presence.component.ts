@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -13,7 +13,7 @@ export class ParticipantPresenceComponent implements OnInit {
     /**
      * The form group for the input field
      */
-    public userForm!: FormGroup;
+    public userForm!: UntypedFormGroup;
 
     /**
      * Contains the last user entered. Is null if there is no user or the last
@@ -27,7 +27,7 @@ export class ParticipantPresenceComponent implements OnInit {
      */
     public errorMsg: string | null = null;
 
-    public constructor(private userRepo: ParticipantControllerService, private formBuilder: FormBuilder) {}
+    public constructor(private userRepo: ParticipantControllerService, private formBuilder: UntypedFormBuilder) {}
 
     /**
      * initializes the form control

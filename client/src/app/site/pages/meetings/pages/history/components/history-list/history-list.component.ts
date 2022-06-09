@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -50,7 +50,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      * The form for the selection of the motion
      * When more models are supported, add a "collection"-dropdown
      */
-    public motionSelectForm: FormGroup;
+    public motionSelectForm: UntypedFormGroup;
 
     /**
      * The observer for the all motions
@@ -67,7 +67,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private viewModelStore: ViewModelStoreService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private motionRepo: MotionRepositoryService,
         private activatedRoute: ActivatedRoute,
         private presenter: HistoryPresenterService,

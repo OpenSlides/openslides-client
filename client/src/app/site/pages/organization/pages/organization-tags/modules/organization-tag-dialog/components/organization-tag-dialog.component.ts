@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HtmlColor } from 'src/app/domain/definitions/key-types';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -20,7 +20,7 @@ export class OrganizationTagDialogComponent extends BaseUiComponent implements O
         return this._lastValidColor;
     }
 
-    public organizationTagForm!: FormGroup;
+    public organizationTagForm!: UntypedFormGroup;
 
     private get colorForm(): AbstractControl | null {
         return this.organizationTagForm.get(`color`);
@@ -32,7 +32,7 @@ export class OrganizationTagDialogComponent extends BaseUiComponent implements O
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: OrganizationTagDialogData,
         private dialogRef: MatDialogRef<OrganizationTagDialogComponent>,
-        private fb: FormBuilder
+        private fb: UntypedFormBuilder
     ) {
         super();
     }

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,7 +47,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      */
     public fileToEdit!: ViewMediafile;
 
-    public newDirectoryForm: FormGroup;
+    public newDirectoryForm: UntypedFormGroup;
     public groupsBehaviorSubject: Observable<ViewGroup[]>;
 
     /**
@@ -76,7 +76,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     /**
      * The form to edit Files
      */
-    public fileEditForm: FormGroup | null = null;
+    public fileEditForm: UntypedFormGroup | null = null;
 
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
@@ -97,7 +97,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         public sortService: MediafileListSortService,
         private operator: OperatorService,
         private dialog: MatDialog,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef
     ) {

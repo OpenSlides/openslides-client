@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
@@ -21,7 +21,7 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
 
     private dialogRef!: MatDialogRef<any>;
 
-    public tagForm: FormGroup = this.formBuilder.group({
+    public tagForm: UntypedFormGroup = this.formBuilder.group({
         name: [``, [Validators.required]]
     });
 
@@ -35,7 +35,7 @@ export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> impl
         protected override translate: TranslateService,
         public repo: TagControllerService,
         private dialog: MatDialog,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private promptService: PromptService,
         private cd: ChangeDetectorRef
     ) {

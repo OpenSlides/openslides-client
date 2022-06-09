@@ -16,7 +16,7 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
     ViewMotionSubmitter,
     MotionSubmitter
 > {
-    constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionSubmitter);
     }
 
@@ -28,7 +28,8 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
         };
     }
 
-    public getTitle = (submitter: ViewMotionSubmitter) => submitter?.user.getTitle();
+    public getTitle = (submitter: ViewMotionSubmitter) =>
+        submitter?.user?.getTitle() || this.translate.instant(`Unknown participant`);
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Submitters` : `Submitter`);
 

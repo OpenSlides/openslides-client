@@ -1,5 +1,5 @@
 import { Directive, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
 import {
@@ -41,7 +41,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     /**
      * The form-group for the meta-info.
      */
-    public contentForm: FormGroup;
+    public contentForm: UntypedFormGroup;
     public parentErrorStateMatcher = new ParentErrorStateMatcher();
 
     public PollType = PollType;
@@ -136,7 +136,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         public groupRepo: GroupControllerService,
         private dialog: VotingPrivacyWarningDialogService,
         protected meetingSettingService: MeetingSettingsService
@@ -194,14 +194,14 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      * form.votes_amount.min_votes_amount/max_votes_amount
      * @param formGroup
      */
-    private patchFormValues(formGroup: FormGroup): void {
+    private patchFormValues(formGroup: UntypedFormGroup): void {
         for (const key of Object.keys(formGroup.controls)) {
             const currentControl = formGroup.controls[key];
-            if (currentControl instanceof FormControl) {
+            if (currentControl instanceof UntypedFormControl) {
                 if (this.data[key]) {
                     currentControl.patchValue(this.data[key]);
                 }
-            } else if (currentControl instanceof FormGroup) {
+            } else if (currentControl instanceof UntypedFormGroup) {
                 this.patchFormValues(currentControl);
             }
         }
@@ -302,7 +302,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         return { ...this.data, ...this.serializeForm(this.contentForm) };
     }
 
-    private serializeForm(formGroup: FormGroup): Partial<ViewPoll> {
+    private serializeForm(formGroup: UntypedFormGroup): Partial<ViewPoll> {
         /**
          * getRawValue() includes disabled controls.
          * Required since the server assumes missing fields would imply "true"

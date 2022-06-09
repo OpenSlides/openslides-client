@@ -7,7 +7,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
@@ -46,7 +46,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * The update form. Will be refreahed for each projector. Just one update
      * form can be shown per time.
      */
-    public updateForm: FormGroup;
+    public updateForm: UntypedFormGroup;
 
     /**
      * show a preview of the changes
@@ -83,7 +83,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     private readonly _aspectRatioRe = RegExp(`[1-9]+[0-9]*:[1-9]+[0-9]*`);
 
     public constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public projector: ViewProjector,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,

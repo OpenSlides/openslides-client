@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 @Component({
@@ -41,12 +41,12 @@ export class CheckInputComponent extends BaseUiComponent implements OnInit, Cont
     /**
      * The form-control-reference.
      */
-    public contentForm!: FormControl;
+    public contentForm!: UntypedFormControl;
 
     /**
      * Default constructor.
      */
-    public constructor(private formBuilder: FormBuilder) {
+    public constructor(private formBuilder: UntypedFormBuilder) {
         super();
         this.initForm();
     }

@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 import { User } from '../../domain/models/users/user';
@@ -11,7 +11,7 @@ import { BaseUserImportService } from './base-user-import.service';
 
 @Directive()
 export abstract class BaseUserImportListComponent extends BaseImportListComponent<User> {
-    public textAreaForm: FormControl;
+    public textAreaForm: UntypedFormControl;
 
     public possibleFields = Object.values(this.modelHeadersAndVerboseNames);
 
@@ -36,7 +36,7 @@ export abstract class BaseUserImportListComponent extends BaseImportListComponen
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: BaseUserImportService,
-        protected formBuilder: FormBuilder,
+        protected formBuilder: UntypedFormBuilder,
         protected modelHeadersAndVerboseNames: { [key: string]: string }
     ) {
         super(componentServiceCollector, translate, importer);

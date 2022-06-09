@@ -1,5 +1,5 @@
 import { Directive, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { Fqid } from 'src/app/domain/definitions/key-types';
@@ -37,7 +37,7 @@ export interface OptionsObjectForText {
  */
 @Directive()
 export abstract class BasePollDialogComponent extends BaseUiComponent implements OnInit {
-    public dialogVoteForm!: FormGroup;
+    public dialogVoteForm!: UntypedFormGroup;
 
     /**
      * Behaviorsubject for the view:
@@ -94,7 +94,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     public constructor(
         public dialogRef: MatDialogRef<BasePollDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public pollData: ViewPoll,
-        protected formBuilder: FormBuilder
+        protected formBuilder: UntypedFormBuilder
     ) {
         super();
         this.addKeyListener();
@@ -338,10 +338,10 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         }
     }
 
-    public get optionsFromVoteForm(): FormGroup | null {
+    public get optionsFromVoteForm(): UntypedFormGroup | null {
         const dialogVoteFormControls = this.dialogVoteForm?.controls;
         if (dialogVoteFormControls && !!dialogVoteFormControls[`options`]) {
-            return dialogVoteFormControls[`options`] as FormGroup;
+            return dialogVoteFormControls[`options`] as UntypedFormGroup;
         } else {
             return null;
         }

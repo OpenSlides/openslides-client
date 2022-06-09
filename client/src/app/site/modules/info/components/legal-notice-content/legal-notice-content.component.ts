@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -50,7 +50,7 @@ export class LegalNoticeContentComponent extends BaseUiComponent implements OnIn
     /**
      * FormGroup for editing value.
      */
-    public formGroup: FormGroup;
+    public formGroup: UntypedFormGroup;
 
     /**
      * State, whether this is in editing-mode.
@@ -73,7 +73,7 @@ export class LegalNoticeContentComponent extends BaseUiComponent implements OnIn
         protected translate: TranslateService,
         private orgaSettings: OrganizationSettingsService,
         private httpClient: HttpClient,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super();
         this.formGroup = fb.group({

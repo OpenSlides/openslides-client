@@ -1,7 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnDestroy, Optional, Self } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NgControl } from '@angular/forms';
+import {
+    ControlValueAccessor,
+    NgControl,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup
+} from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
@@ -86,7 +92,7 @@ export abstract class BaseFormFieldControlComponent<T>
 
     public abstract get controlType(): string;
 
-    public contentForm: FormControl | FormGroup;
+    public contentForm: UntypedFormControl | UntypedFormGroup;
 
     public stateChanges = new Subject<void>();
 
@@ -103,7 +109,7 @@ export abstract class BaseFormFieldControlComponent<T>
     protected subscriptions: Subscription[] = [];
 
     public constructor(
-        protected fb: FormBuilder,
+        protected fb: UntypedFormBuilder,
         protected fm: FocusMonitor,
         protected element: ElementRef<HTMLElement>,
         @Optional() @Self() public ngControl: NgControl
@@ -174,7 +180,7 @@ export abstract class BaseFormFieldControlComponent<T>
 
     protected abstract initializeForm(): void;
 
-    protected abstract createForm(): FormControl | FormGroup;
+    protected abstract createForm(): UntypedFormControl | UntypedFormGroup;
 
     protected abstract updateForm(value: T | null): void;
 

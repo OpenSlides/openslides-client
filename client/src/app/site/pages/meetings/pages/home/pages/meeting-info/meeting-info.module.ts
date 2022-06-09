@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { InfoModule } from 'src/app/site/modules/info';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 
@@ -19,6 +20,7 @@ import { MeetingInfoRoutingModule } from './meeting-info-routing.module';
         MatCardModule,
         HeadBarModule,
         ListModule,
+        DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
         InfoModule
     ]

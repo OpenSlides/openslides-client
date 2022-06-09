@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -16,7 +16,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
     /**
      * THis form holds one control for the new password.
      */
-    public newPasswordForm: FormGroup;
+    public newPasswordForm: UntypedFormGroup;
 
     /**
      * The user_id that should be provided in the queryparams.
@@ -34,7 +34,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private activatedRoute: ActivatedRoute,
         private userRepo: UserControllerService
     ) {

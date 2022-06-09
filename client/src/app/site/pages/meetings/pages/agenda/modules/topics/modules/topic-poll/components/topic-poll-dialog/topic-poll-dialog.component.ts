@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -75,7 +75,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
     }
 
     constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         dialogRef: MatDialogRef<BasePollDialogComponent>,
         public topicPollService: TopicPollService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>

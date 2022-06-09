@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { DurationService } from 'src/app/site/services/duration.service';
@@ -21,7 +21,7 @@ export class AgendaItemInfoDialogComponent implements OnInit {
     /**
      * Holds the agenda item form
      */
-    public agendaInfoForm: FormGroup;
+    public agendaInfoForm: UntypedFormGroup;
 
     /**
      * Hold item visibility
@@ -31,7 +31,7 @@ export class AgendaItemInfoDialogComponent implements OnInit {
     public tags: ViewTag[] = [];
 
     public constructor(
-        public formBuilder: FormBuilder,
+        public formBuilder: UntypedFormBuilder,
         public durationService: DurationService,
         public dialogRef: MatDialogRef<AgendaItemInfoDialogComponent>,
         public tagRepo: TagControllerService,

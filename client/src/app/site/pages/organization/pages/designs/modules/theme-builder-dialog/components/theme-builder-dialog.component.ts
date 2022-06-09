@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Theme } from 'src/app/domain/models/theme/theme';
@@ -18,7 +18,7 @@ type ThemeBuilderDialogData = {
     styleUrls: [`./theme-builder-dialog.component.scss`]
 })
 export class ThemeBuilderDialogComponent extends BaseUiComponent implements AfterViewInit {
-    public paletteBuilderForm: FormGroup | null = null;
+    public paletteBuilderForm: UntypedFormGroup | null = null;
 
     public _paletteKeys: string[] = [`500`];
     private _themePalettes: ThemePalette[] = [`primary`, `accent`, `warn`];
@@ -27,7 +27,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
 
     public constructor(
         private dialogRef: MatDialogRef<ThemeBuilderDialogComponent>,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private colorService: ColorService,
         private themeService: ThemeService,
         private organizationService: OrganizationService,
@@ -75,7 +75,7 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
         return `${paletteName}_${paletteKey}`;
     }
 
-    private createForm(): FormGroup {
+    private createForm(): UntypedFormGroup {
         const formGroup: { [paletteKey: string]: any[] } = {
             name: [``, Validators.required]
         };

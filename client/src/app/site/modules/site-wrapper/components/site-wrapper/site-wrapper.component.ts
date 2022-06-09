@@ -65,7 +65,7 @@ export class SiteWrapperComponent implements OnInit, OnDestroy {
         }
     }
 
-    private handleRouterEvents(routerEvent: Event): void {
+    private handleRouterEvents(routerEvent: any): void {
         // detect routing data such as base perm and noInterruption
         if (routerEvent instanceof ActivationEnd && routerEvent.snapshot.children.length === 0) {
             this._routingData = routerEvent.snapshot.data;

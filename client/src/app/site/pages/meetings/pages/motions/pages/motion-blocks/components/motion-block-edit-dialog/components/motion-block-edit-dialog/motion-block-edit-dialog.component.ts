@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 
@@ -9,12 +9,12 @@ import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
     styleUrls: [`./motion-block-edit-dialog.component.scss`]
 })
 export class MotionBlockEditDialogComponent {
-    public readonly blockEditForm: FormGroup;
+    public readonly blockEditForm: UntypedFormGroup;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly block: Partial<MotionBlock>,
         private dialogRef: MatDialogRef<MotionBlockEditDialogComponent, Partial<MotionBlock>>,
-        formBuilder: FormBuilder
+        formBuilder: UntypedFormBuilder
     ) {
         this.blockEditForm = formBuilder.group({
             title: [this.block.title, Validators.required],

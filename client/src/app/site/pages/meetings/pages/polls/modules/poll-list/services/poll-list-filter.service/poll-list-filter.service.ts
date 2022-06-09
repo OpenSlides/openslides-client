@@ -25,7 +25,7 @@ export class PollListFilterService extends BaseMeetingFilterListService<ViewPoll
      * Filter out analog polls
      * @param viewPoll All polls
      */
-    protected override preFilter(viewPoll: ViewPoll[]): ViewPoll[] | void {
+    protected override preFilter(viewPoll: ViewPoll[]): ViewPoll[] {
         return viewPoll.filter(poll => !poll.isAnalog);
     }
 

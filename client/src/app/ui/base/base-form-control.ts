@@ -1,6 +1,6 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 /**
@@ -49,7 +49,7 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
         return this._id;
     }
 
-    public contentForm: FormControl | FormGroup;
+    public contentForm: UntypedFormControl | UntypedFormGroup;
     public stateChanges = new Subject<void>();
 
     protected subscriptions: Subscription[] = [];
@@ -57,7 +57,7 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
     private readonly _id: number;
     private _disabled = false;
 
-    public constructor(protected fb: FormBuilder) {
+    public constructor(protected fb: UntypedFormBuilder) {
         this._id = ++BaseFormControlComponent.formControlId;
         this.contentForm = this.createForm();
     }
@@ -96,7 +96,7 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
 
     protected _onTouched = (value: T | null) => {};
 
-    protected abstract createForm(): FormControl | FormGroup;
+    protected abstract createForm(): UntypedFormControl | UntypedFormGroup;
 
     protected abstract updateForm(value: T | null): void;
 

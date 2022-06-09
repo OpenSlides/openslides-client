@@ -48,10 +48,6 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
     @Input()
     public getSpeakerButtonObject: ((viewModel: V) => BaseViewModel & HasListOfSpeakers) | null = null;
 
-    public readonly permission = Permission;
-
-    public readonly isProjectedFn = (model: BaseProjectableViewModel) => this.service.isProjected(model);
-
     @Input()
     public override toRestrictFn = (restriction: ColumnRestriction<Permission>) =>
         !this.operator.hasPerms(restriction.permission);
@@ -75,6 +71,18 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
 
     @Input()
     public override alsoFilterByProperties: string[] = [`sequential_number`, `id`];
+
+    public get projectorButtonColumnWidth(): number {
+        if (this.operator.hasPerms(Permission.projectorCanManage)) {
+            return 60;
+        } else {
+            return 24;
+        }
+    }
+
+    public readonly permission = Permission;
+
+    public readonly isProjectedFn = (model: BaseProjectableViewModel) => this.service.isProjected(model);
 
     public constructor(
         vp: ViewPortService,

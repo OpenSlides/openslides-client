@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -58,7 +58,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     /**
      * Form for editing the assignment itself (TODO mergeable with candidates?)
      */
-    public assignmentForm: FormGroup;
+    public assignmentForm: UntypedFormGroup;
 
     /**
      * Used in the search Value selector to assign tags
@@ -140,7 +140,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private operator: OperatorService,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         public assignmentRepo: AssignmentControllerService,
         private assignmentCandidateRepo: AssignmentCandidateControllerService,
         private itemRepo: AgendaItemControllerService,

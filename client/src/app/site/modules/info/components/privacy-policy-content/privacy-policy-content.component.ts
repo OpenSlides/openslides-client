@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -48,7 +48,7 @@ export class PrivacyPolicyContentComponent extends BaseUiComponent implements On
     /**
      * FormGroup for editing value.
      */
-    public formGroup: FormGroup;
+    public formGroup: UntypedFormGroup;
 
     /**
      * State, whether this is in editing-mode.
@@ -65,7 +65,7 @@ export class PrivacyPolicyContentComponent extends BaseUiComponent implements On
     public constructor(
         protected translate: TranslateService,
         private orgaSettings: OrganizationSettingsService,
-        fb: FormBuilder
+        fb: UntypedFormBuilder
     ) {
         super();
         this.formGroup = fb.group({

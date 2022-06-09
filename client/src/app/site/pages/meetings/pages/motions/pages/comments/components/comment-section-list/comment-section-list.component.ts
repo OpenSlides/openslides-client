@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,7 +37,7 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
     /**
      * formgroup for editing and creating of comments
      */
-    public commentFieldForm: FormGroup;
+    public commentFieldForm: UntypedFormGroup;
 
     public groups: Observable<ViewGroup[]>;
 
@@ -45,7 +45,7 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: MotionCommentSectionControllerService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private promptService: PromptService,
         private dialog: MatDialog,
         private groupRepo: GroupControllerService

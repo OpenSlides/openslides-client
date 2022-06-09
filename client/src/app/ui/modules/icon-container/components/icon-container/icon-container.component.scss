@@ -4,6 +4,7 @@
     & mat-icon {
         font-size: $iconSize;
         width: $iconSize;
+        min-width: $iconSize;
         height: $iconSize;
         margin-top: 0 !important;
 

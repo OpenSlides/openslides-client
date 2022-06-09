@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
@@ -54,7 +54,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public brokenParagraphs: string[] = [];
 
-    public contentForm: FormGroup | null = null;
+    public contentForm: UntypedFormGroup | null = null;
 
     public amendmentErrorMessage: string | null = null;
 
@@ -66,7 +66,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
@@ -139,7 +139,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
             paragraphsToChoose.forEach((paragraph: ParagraphToChoose, paragraphNo: number): void => {
                 const amendmentParagraph = this.motion.amendment_paragraph(paragraphNo);
-                if (amendmentParagraph) {
+                if (amendmentParagraph !== null && amendmentParagraph !== undefined) {
                     contentPatch.selected_paragraphs.push(paragraph);
                     contentPatch.amendment_paragraph_$[paragraphNo] = [amendmentParagraph];
                 }

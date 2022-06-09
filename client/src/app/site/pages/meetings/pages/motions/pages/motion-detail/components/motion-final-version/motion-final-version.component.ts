@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
@@ -18,7 +18,7 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
     @Input()
     public formattedText: UnsafeHtml = ``;
 
-    public contentForm!: FormGroup;
+    public contentForm!: UntypedFormGroup;
 
     public isEditMode = false;
 
@@ -26,7 +26,7 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
-        private fb: FormBuilder
+        private fb: UntypedFormBuilder
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
     }
@@ -65,7 +65,7 @@ export class MotionFinalVersionComponent extends BaseMotionDetailChildComponent 
         this.leaveEditMode();
     }
 
-    private createForm(): FormGroup {
+    private createForm(): UntypedFormGroup {
         return this.fb.group({
             modified_final_version: [``, Validators.required]
         });

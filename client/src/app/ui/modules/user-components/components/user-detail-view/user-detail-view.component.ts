@@ -8,7 +8,7 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -105,7 +105,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     @Output()
     public submitEvent = new EventEmitter<void>();
 
-    public personalInfoForm!: FormGroup;
+    public personalInfoForm!: UntypedFormGroup;
 
     public genders = GENDERS;
 
@@ -126,7 +126,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private _additionalFormControls: any = {};
     private _formValueChangeSubscription: Subscription | null = null;
 
-    public constructor(private fb: FormBuilder, private operator: OperatorService) {
+    public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
         super();
     }
 

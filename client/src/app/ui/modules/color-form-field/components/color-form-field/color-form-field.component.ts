@@ -1,5 +1,5 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 
 import { BaseFormControlComponent } from '../../../../base/base-form-control';
 
@@ -22,15 +22,15 @@ export class ColorFormFieldComponent extends BaseFormControlComponent<string> {
     @Output()
     public changed = new EventEmitter<string>();
 
-    public get formControl(): FormControl {
-        return this.contentForm as FormControl;
+    public get formControl(): UntypedFormControl {
+        return this.contentForm as UntypedFormControl;
     }
 
     public onReset(): void {
         this.resetted.emit(this.formControlName);
     }
 
-    protected createForm(): FormControl {
+    protected createForm(): UntypedFormControl {
         return this.fb.control(``);
     }
 

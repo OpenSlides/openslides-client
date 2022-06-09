@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { PollPercentBaseVerbose, VoteValue } from 'src/app/domain/models/poll';
@@ -20,7 +20,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
     public constructor(
         public motionPollService: MotionPollService,
         dialogRef: MatDialogRef<BasePollDialogComponent>,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewMotion>
     ) {
         super(dialogRef, pollData, formBuilder);

@@ -127,9 +127,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     /**
      * stores the currently used raw data to be used for the filter
      */
-    private _inputData: V[] = [];
+    private get _inputData(): V[] {
+        return this._source.value;
+    }
 
-    private _source: Observable<V[]>;
+    private _source = new BehaviorSubject<V[]>([]);
 
     public constructor(private activeFiltersStore: ActiveFiltersStoreService) {}
 
@@ -139,7 +141,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param inputData Observable array with ViewModels
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
-        this._source = inputData;
         const storedFilter: OsFilter<V>[] | null = await this.activeFiltersStore.load<V>(this.storageKey);
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
@@ -155,9 +156,13 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             this.inputDataSubscription = null;
         }
         this.inputDataSubscription = inputData.subscribe(data => {
-            this._inputData = data;
+            this._source.next(this.preFilter(data));
             this.updateFilteredData();
         });
+    }
+
+    public getViewModelListObservable(): Observable<V[]> {
+        return this._source;
     }
 
     /**
@@ -293,46 +298,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         this.activeFiltersStore.save<V>(this.storageKey, this.filterDefinitions);
     }
 
-    // /**
-    //  * Applies current filters in {@link filterDefinitions} to the {@link inputData} list
-    //  * and publishes the filtered data to the observable {@link outputSubject}
-    //  */
-    // private updateFilteredData(): void {
-    //     let filteredData: V[] = [];
-    //     if (this.inputData) {
-    //         const preFilteredList = this.preFilter(this.inputData);
-    //         if (preFilteredList) {
-    //             this.inputData = preFilteredList;
-    //         }
-
-    //         if (!this.filterDefinitions || !this.filterDefinitions.length) {
-    //             filteredData = this.inputData;
-    //         } else {
-    //             filteredData = this.inputData.filter(item =>
-    //                 this.filterDefinitions.every(filter => !filter.count || this.isPassingFilter(item, filter))
-    //             );
-    //         }
-    //     }
-
-    //     this.outputSubject.next(filteredData);
-    //     this.activeFiltersToStack();
-    // }
-
-    // /**
-    //  * Toggles a filter option, to be called after a checkbox state has changed.
-    //  *
-    //  * @param filterName a filter name as string
-    //  * @param option filter option
-    //  */
-    // public toggleFilterOption(filterName: keyof V, option: OsFilterOption): void {
-    //     if (option.isActive) {
-    //         this.removeFilterOption(filterName, option);
-    //     } else {
-    //         this.addFilterOption(filterName, option);
-    //     }
-    //     this.storeActiveFilters();
-    // }
-
     /**
      * Apply a newly created filter
      *
@@ -408,7 +373,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param rawInputData will be set to {@link this.inputData}
      * @returns should be a filtered version of `rawInputData`. Returns void if unused
      */
-    protected preFilter(rawInputData: V[]): V[] | void {}
+    protected preFilter(rawInputData: V[]): V[] {
+        return rawInputData;
+    }
 
     /**
      * Enforce children implement a method that returns actual filter definitions
@@ -550,11 +517,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     private updateFilteredData(): void {
         let filteredData: V[] = [];
         if (this._inputData) {
-            const preFilteredList = this.preFilter(this._inputData);
-            if (preFilteredList) {
-                this._inputData = preFilteredList;
-            }
-
             if (!this.filterDefinitions || !this.filterDefinitions.length) {
                 filteredData = this._inputData;
             } else {

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -28,7 +28,7 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     @Input()
     public comment?: ViewMotionComment;
 
-    public commentForm!: FormGroup;
+    public commentForm!: UntypedFormGroup;
 
     public isCommentEdited = false;
 
@@ -39,7 +39,7 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private pdfService: MotionPdfExportService,
         private commentRepo: MotionCommentControllerService
     ) {

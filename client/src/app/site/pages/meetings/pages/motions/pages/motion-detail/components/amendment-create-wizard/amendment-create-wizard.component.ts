@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -52,7 +52,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * Change recommendation content.
      */
-    public contentForm!: FormGroup;
+    public contentForm!: UntypedFormGroup;
 
     /**
      * Indicates the maximum line length as defined in the configuration.
@@ -74,7 +74,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private repo: AmendmentControllerService,
         private motionRepo: MotionControllerService,
         private motionLineNumbering: MotionLineNumberingService,
@@ -231,7 +231,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         this.contentForm.value.selectedParagraphs.forEach((para: ParagraphToChoose) => {
             this.contentForm.removeControl(`text_` + para.paragraphNo);
         });
-        this.contentForm.addControl(`text_` + paragraph.paragraphNo, new FormControl(paragraph.html));
+        this.contentForm.addControl(`text_` + paragraph.paragraphNo, new UntypedFormControl(paragraph.html));
         this.contentForm.patchValue({
             selectedParagraphs: [paragraph]
         });
@@ -259,7 +259,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
                 (para1: ParagraphToChoose, para2: ParagraphToChoose): number => para1.paragraphNo - para2.paragraphNo
             );
 
-            this.contentForm.addControl(`text_` + paragraph.paragraphNo, new FormControl(paragraph.html));
+            this.contentForm.addControl(`text_` + paragraph.paragraphNo, new UntypedFormControl(paragraph.html));
             this.contentForm.patchValue({
                 selectedParagraphs: newParagraphs
             });

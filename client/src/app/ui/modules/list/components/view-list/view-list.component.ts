@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
@@ -10,7 +19,8 @@ import { FilterListService, SearchService, SortListService } from '../../definit
     selector: `os-view-list`,
     templateUrl: `./view-list.component.html`,
     styleUrls: [`./view-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class ViewListComponent<V extends Identifiable> implements OnInit {
     @ViewChild(ScrollingTableComponent, { static: true })
@@ -159,6 +169,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
 
             let dataListObservable: Observable<V[]> = this._source!;
             if (this.filterService) {
+                this._source = this.filterService.getViewModelListObservable();
                 this.filterService.initFilters(dataListObservable);
                 dataListObservable = this.filterService.outputObservable;
             }

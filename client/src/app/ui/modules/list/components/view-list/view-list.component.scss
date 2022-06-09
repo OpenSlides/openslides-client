@@ -8,11 +8,6 @@
         display: block;
     }
 
-    .vscroll-list-view {
-        flex: 1 1 auto;
-        height: 100%;
-    }
-
     .no-data-placeholder {
         position: absolute;
         margin-left: auto;
@@ -22,5 +17,9 @@
         right: 0;
         width: 100px; /* Need a specific value to work */
         font-style: italic;
+    }
+
+    .cdk-virtual-scroll-content-wrapper {
+        width: 100%;
     }
 }

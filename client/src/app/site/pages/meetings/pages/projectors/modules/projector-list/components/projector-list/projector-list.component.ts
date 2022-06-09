@@ -8,7 +8,7 @@ import {
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, timer } from 'rxjs';
@@ -33,7 +33,7 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
     /**
      * The create form.
      */
-    public createForm: FormGroup;
+    public createForm: UntypedFormGroup;
 
     /**
      * All aspect ratio keys/strings for the UI.
@@ -58,7 +58,7 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private repo: ProjectorControllerService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private operator: OperatorService,
         private dialogService: MatDialog,
         private cd: ChangeDetectorRef,

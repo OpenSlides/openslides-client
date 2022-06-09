@@ -14,6 +14,7 @@ mat-card {
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 33.333% 33.333% 33.333%;
+    gap: 5px;
     width: 100%;
 
     > div {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -17,7 +17,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);
 
-    public orgaSettingsForm: FormGroup | null = null;
+    public orgaSettingsForm: UntypedFormGroup | null = null;
 
     public get hasEdits(): boolean {
         return this.orgaSettingsForm?.dirty || false;
@@ -29,7 +29,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private controller: OrganizationControllerService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
@@ -50,7 +50,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
         );
     }
 
-    private createForm(): FormGroup {
+    private createForm(): UntypedFormGroup {
         let rawSettingsForm: any = {};
         if (this._currentOrgaSettings) {
             rawSettingsForm = {

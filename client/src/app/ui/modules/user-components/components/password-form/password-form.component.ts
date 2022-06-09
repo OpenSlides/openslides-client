@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { PasswordForm } from '../../definitions';
@@ -31,14 +31,14 @@ export class PasswordFormComponent extends BaseUiComponent implements OnInit {
     @Output()
     public validEvent = new EventEmitter<boolean>();
 
-    public changePasswordForm!: FormGroup;
-    public newPasswordForm!: FormControl;
+    public changePasswordForm!: UntypedFormGroup;
+    public newPasswordForm!: UntypedFormControl;
 
     public hideOldPassword = true;
     public hideNewPassword = true;
     public hideConfirmPassword = true;
 
-    public constructor(private fb: FormBuilder) {
+    public constructor(private fb: UntypedFormBuilder) {
         super();
     }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -58,7 +58,7 @@ export class TopicDetailComponent extends BaseMeetingComponent {
     /**
      * Topic form
      */
-    public topicForm: FormGroup | null = null;
+    public topicForm: UntypedFormGroup | null = null;
 
     /**
      * Subject for agenda items
@@ -81,7 +81,7 @@ export class TopicDetailComponent extends BaseMeetingComponent {
         organizationSettingsService: OrganizationSettingsService,
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private repo: TopicControllerService,
         private promptService: PromptService,
         private operator: OperatorService,

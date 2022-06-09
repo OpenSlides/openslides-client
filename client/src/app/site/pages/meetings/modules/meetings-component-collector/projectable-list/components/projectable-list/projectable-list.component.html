@@ -20,7 +20,11 @@
 >
     <!-- Projector column -->
     <div
-        *osScrollingTableCell="'projector'; row as viewModel; config: { width: 60, position: START_POSITION }"
+        *osScrollingTableCell="
+            'projector';
+            row as viewModel;
+            config: { width: projectorButtonColumnWidth, position: START_POSITION }
+        "
         class="fill ngrid-lg"
     >
         <os-projector-button

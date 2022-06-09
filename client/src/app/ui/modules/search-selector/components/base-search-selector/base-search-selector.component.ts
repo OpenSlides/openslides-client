@@ -10,7 +10,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
@@ -106,8 +106,8 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Output()
     public selectionChanged = new EventEmitter<OsOptionSelectionChanged>();
 
-    public override contentForm!: FormControl;
-    public searchValueForm!: FormControl;
+    public override contentForm!: UntypedFormControl;
+    public searchValueForm!: UntypedFormControl;
 
     public get showNotFoundButton(): boolean {
         return !!this.notFoundTemplate && !this.filteredItemsSubject.getValue().length && !!this.searchValueForm.value;
@@ -245,7 +245,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         }
     }
 
-    protected override createForm(): FormControl {
+    protected override createForm(): UntypedFormControl {
         return this.fb.control(this.multiple ? [] : null);
     }
 

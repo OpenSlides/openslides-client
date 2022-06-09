@@ -11,7 +11,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -153,8 +153,8 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     public readonly filteredDirectoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
-    public fileEditForm!: FormGroup;
-    public moveForm!: FormGroup;
+    public fileEditForm!: UntypedFormGroup;
+    public moveForm!: UntypedFormGroup;
 
     public directory: ViewMediafile | null = null;
 
@@ -164,7 +164,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     private _sourceFileSubscription: Subscription | null = null;
 
-    public constructor(private dialog: MatDialog, private cd: ChangeDetectorRef, private fb: FormBuilder) {
+    public constructor(private dialog: MatDialog, private cd: ChangeDetectorRef, private fb: UntypedFormBuilder) {
         this.moveForm = fb.group({ directory_id: [] });
     }
 

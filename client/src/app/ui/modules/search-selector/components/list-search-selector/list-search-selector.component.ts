@@ -8,7 +8,7 @@ import {
     Self,
     ViewEncapsulation
 } from '@angular/core';
-import { FormBuilder, NgControl } from '@angular/forms';
+import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { auditTime, distinctUntilChanged, Observable } from 'rxjs';
 
@@ -50,7 +50,7 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
     public readonly controlType = `list-search-selector`;
 
     public constructor(
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl

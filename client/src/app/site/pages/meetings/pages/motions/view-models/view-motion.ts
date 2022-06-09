@@ -219,7 +219,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     /**
      * @warning This is injected. Do not use it!
      */
-    public getAmendmentParagraphLines!: (includeUnchanged?: boolean) => DiffLinesInParagraph[] | null;
+    public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] | null = () => null;
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;

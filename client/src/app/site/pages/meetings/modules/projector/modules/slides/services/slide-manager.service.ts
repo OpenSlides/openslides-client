@@ -67,7 +67,7 @@ export class SlideManagerService {
 
         // Load the module factory.
         let ngModuleFactory: NgModuleFactory<any>;
-        const loadedModule = await manifest.loadChildren();
+        const loadedModule = (await manifest.loadChildren()) as any;
         if (loadedModule instanceof NgModuleFactory) {
             ngModuleFactory = loadedModule;
         } else {

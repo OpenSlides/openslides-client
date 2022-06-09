@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,7 +37,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
 
     public isCreateView: boolean = false;
-    public committeeForm!: FormGroup;
+    public committeeForm!: UntypedFormGroup;
     public meetingsObservable: Observable<ViewMeeting[]>;
 
     public editCommittee!: ViewCommittee;
@@ -51,7 +51,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public committeeRepo: CommitteeControllerService,
         public orgaTagRepo: OrganizationTagControllerService,
         private meetingRepo: MeetingControllerService,

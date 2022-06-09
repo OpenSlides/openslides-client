@@ -1,5 +1,4 @@
 import { Directive, ElementRef, EventEmitter, OnInit, Output } from '@angular/core';
-import { ResizeSensor } from 'css-element-queries';
 
 export interface ElementSize {
     height: number;
@@ -32,7 +31,7 @@ export class ResizedDirective implements OnInit {
      * Inits the ResizeSensor. triggers initial size change.
      */
     public ngOnInit(): void {
-        new ResizeSensor(this.element.nativeElement, () => this.onSizeChanged());
+        new ResizeObserver(() => this.onSizeChanged()).observe(this.element.nativeElement);
         this.onSizeChanged();
     }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
@@ -22,7 +22,7 @@ export class TopicImportComponent extends BaseImportListComponent<Topic> {
     /**
      * A form for text input
      */
-    public textAreaForm: FormGroup;
+    public textAreaForm: UntypedFormGroup;
 
     public possibleFields = Object.values(topicHeadersAndVerboseNames);
 
@@ -43,7 +43,7 @@ export class TopicImportComponent extends BaseImportListComponent<Topic> {
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         public override importer: TopicImportService,
-        formBuilder: FormBuilder,
+        formBuilder: UntypedFormBuilder,
         private durationService: DurationService
     ) {
         super(componentServiceCollector, translate, importer);

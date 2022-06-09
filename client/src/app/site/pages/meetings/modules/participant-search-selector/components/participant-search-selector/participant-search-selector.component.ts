@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -55,9 +55,9 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
         return this._filteredUsersSubject;
     }
 
-    public usersForm: FormGroup;
+    public usersForm: UntypedFormGroup;
 
-    public constructor(private userRepo: ParticipantControllerService, formBuilder: FormBuilder) {
+    public constructor(private userRepo: ParticipantControllerService, formBuilder: UntypedFormBuilder) {
         super();
 
         this.usersForm = formBuilder.group({
