@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
+import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -21,13 +21,13 @@ export class VotingBannerService {
     private subText = _(`Click here to vote!`);
 
     public constructor(
-        pollRepo: PollRepositoryService,
+        pollRepo: PollControllerService,
         private banner: BannerService,
         private translate: TranslateService,
         private historyService: HistoryService,
         private votingService: VotingService,
         private activeMeeting: ActiveMeetingService,
-        private sendVotesService: VoteRepositoryService
+        private sendVotesService: VoteControllerService
     ) {
         pollRepo
             .getViewModelListObservable()
@@ -92,6 +92,8 @@ export class VotingBannerService {
             return `${motionTranslation} ${contentObject.getNumberOrTitle()}: ${votingOpenedTranslation}`;
         } else if (poll.isAssignmentPoll) {
             return `${contentObject.getTitle()}: ${this.translate.instant(`Ballot opened`)}`;
+        } else if (poll.isTopicPoll) {
+            return `${contentObject.getTitle()}: ${poll.getTitle()}: ${this.translate.instant(`Voting opened`)}`;
         } else {
             return this.translate.instant(`Voting opened`);
         }
