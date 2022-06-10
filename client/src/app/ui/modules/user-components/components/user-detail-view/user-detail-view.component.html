@@ -127,7 +127,7 @@
         </div>
 
         <div *ngIf="isAllowed('seeName')">
-            <mat-checkbox formControlName="is_active">{{ 'active' | translate }}</mat-checkbox>
+            <mat-checkbox formControlName="is_active" *ngIf="!isSelf">{{ 'active' | translate }}</mat-checkbox>
             <mat-checkbox formControlName="is_physical_person">{{ 'natural person' | translate }}</mat-checkbox>
         </div>
     </form>
