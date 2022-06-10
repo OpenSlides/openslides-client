@@ -116,17 +116,9 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     }
 
     public getSlide(): ProjectionBuildDescriptor {
-        let projectionDefault: Projectiondefault;
-        if (this.isMotionPoll) {
-            projectionDefault = Projectiondefault.motionPoll;
-        } else if (this.isAssignmentPoll) {
-            projectionDefault = Projectiondefault.assignmentPoll;
-        } else {
-            projectionDefault = Projectiondefault.poll;
-        }
         return {
             content_object_id: this.content_object_id,
-            projectionDefault,
+            projectionDefault: Projectiondefault.poll,
             getDialogTitle: this.getTitle
         };
     }

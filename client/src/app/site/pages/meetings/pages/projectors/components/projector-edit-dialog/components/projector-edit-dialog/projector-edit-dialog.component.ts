@@ -18,6 +18,11 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 const ASPECT_RATIO_FORM_KEY = `aspectRatio`;
 
+interface ProjectorEditDialogConfig {
+    projector?: ViewProjector;
+    applyChangesFn?: (projector: Partial<Projector>) => void | Promise<void>;
+}
+
 /**
  * Dialog to edit the given projector
  * Shows a preview
@@ -73,6 +78,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     public customAspectRatio: boolean = false;
 
+    public get projector(): ViewProjector | null {
+        return this.data.projector || null;
+    }
+
     private get _aspectRatioControl(): AbstractControl {
         return this.updateForm.get(ASPECT_RATIO_FORM_KEY)!;
     }
@@ -85,14 +94,14 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     public constructor(
         formBuilder: UntypedFormBuilder,
         private translate: TranslateService,
-        @Inject(MAT_DIALOG_DATA) public projector: ViewProjector,
+        @Inject(MAT_DIALOG_DATA) private data: ProjectorEditDialogConfig,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
         private cd: ChangeDetectorRef
     ) {
         super();
 
-        if (projector) {
-            this.previewProjector = new ViewProjector(projector.getModel());
+        if (data.projector) {
+            this.previewProjector = new ViewProjector(data.projector.getModel());
 
             if (!this.defaultAspectRatio.some(ratio => ratio === this.previewProjector!.aspectRatio)) {
                 this.customAspectRatio = true;
@@ -148,7 +157,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * Saves the current changes on the projector
      */
     public applyChanges(): void {
-        this.fitUpdatePayload(this.updateForm.value);
+        const nextProjector = this.fitUpdatePayload(this.updateForm.value);
+        if (this.data.applyChangesFn) {
+            this.data.applyChangesFn(nextProjector);
+        }
     }
 
     /**
