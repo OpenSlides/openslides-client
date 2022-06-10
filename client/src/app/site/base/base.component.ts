@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { StorageService } from 'src/app/gateways/storage.service';
 import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
 
 import { Id } from '../../domain/definitions/key-types';
@@ -72,6 +73,10 @@ export abstract class BaseComponent implements OnDestroy {
 
     protected get matSnackBar(): MatSnackBar {
         return this.componentServiceCollector.matSnackBar;
+    }
+
+    protected get storage(): StorageService {
+        return this.componentServiceCollector.storage;
     }
 
     public get router(): Router {

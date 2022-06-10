@@ -13,11 +13,13 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
@@ -47,6 +49,8 @@ interface BeforeEditingEvent {
     file: ViewMediafile;
 }
 
+const SUBSCRIPTION_NAME = `file_list_subscription`;
+
 @Component({
     selector: `os-file-list`,
     templateUrl: `./file-list.component.html`,
@@ -54,7 +58,7 @@ interface BeforeEditingEvent {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileListComponent implements OnInit, OnDestroy {
+export class FileListComponent extends BaseUiComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -106,6 +110,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     public sourceFiles!: Observable<ViewMediafile[]> | ViewMediafile[];
 
     @Input()
+    public sortFn: (fileA: ViewMediafile, fileB: ViewMediafile) => number;
+
+    @Input()
     public tooltipFn: (file: ViewMediafile) => string = () => ``;
 
     @Input()
@@ -144,14 +151,11 @@ export class FileListComponent implements OnInit, OnDestroy {
      * height of the global and the local headbar and the custom table header.
      */
     public readonly fileListHeight = `calc(100vh - 130px)`;
+    public readonly filteredDirectoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
     public get directoryChain(): ViewMediafile[] {
         return this._directoryChain;
     }
-
-    private _directoryChain: ViewMediafile[] = [];
-
-    public readonly filteredDirectoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
     public fileEditForm!: UntypedFormGroup;
     public moveForm!: UntypedFormGroup;
@@ -160,28 +164,38 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     public selectedRows: ViewMediafile[] = [];
 
+    private get currentFileList(): ViewMediafile[] {
+        return this._directoryBehaviorSubject.value;
+    }
+
+    private _languageCollator: Intl.Collator;
+    private _directoryChain: ViewMediafile[] = [];
+
     private readonly _directoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
-    private _sourceFileSubscription: Subscription | null = null;
-
-    public constructor(private dialog: MatDialog, private cd: ChangeDetectorRef, private fb: UntypedFormBuilder) {
+    public constructor(
+        private dialog: MatDialog,
+        private cd: ChangeDetectorRef,
+        private fb: UntypedFormBuilder,
+        private translate: TranslateService
+    ) {
+        super();
         this.moveForm = fb.group({ directory_id: [] });
     }
 
     public ngOnInit(): void {
+        this._languageCollator = new Intl.Collator(this.translate.currentLang);
+        this.translate.onLangChange.subscribe(changeEvent => {
+            this._languageCollator = new Intl.Collator(changeEvent.lang);
+            this.updateView();
+        });
         if (this.sourceFiles instanceof Observable) {
-            this._sourceFileSubscription = this.sourceFiles.subscribe(files =>
-                this._directoryBehaviorSubject.next(files)
+            this.updateSubscription(
+                SUBSCRIPTION_NAME,
+                this.sourceFiles.subscribe(files => this.updateView(files))
             );
         } else {
-            this._directoryBehaviorSubject.next(this.sourceFiles);
-        }
-    }
-
-    public ngOnDestroy(): void {
-        if (this._sourceFileSubscription) {
-            this._sourceFileSubscription.unsubscribe();
-            this._sourceFileSubscription = null;
+            this.updateView(this.sourceFiles);
         }
     }
 
@@ -247,5 +261,19 @@ export class FileListComponent implements OnInit, OnDestroy {
         if (this._listComponent) {
             this._listComponent.deselectAll();
         }
+    }
+
+    private updateView(nextFiles: ViewMediafile[] = this.currentFileList): void {
+        const defaultSortFn = (fileA: ViewMediafile, fileB: ViewMediafile) => {
+            if (fileA.is_directory && !fileB.is_directory) {
+                return -1;
+            }
+            if (!fileA.is_directory && fileB.is_directory) {
+                return 1;
+            }
+            return this._languageCollator.compare(fileA.getTitle(), fileB.getTitle());
+        };
+        const nextFileList = nextFiles.slice().sort((a, b) => this.sortFn?.(a, b) || defaultSortFn(a, b));
+        this._directoryBehaviorSubject.next(nextFileList);
     }
 }

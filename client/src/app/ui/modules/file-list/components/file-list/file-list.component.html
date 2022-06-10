@@ -97,7 +97,7 @@
     </div>
 
     <!-- Mimetype (usually hidden) -->
-    <div *osScrollingTableCell="'minetype'; row as mediafile" class="fill clickable">
+    <div *osScrollingTableCell="'mimetype'; row as mediafile; isHidden: true" class="fill clickable">
         {{ mediafile.mimetype }}
     </div>
 
@@ -124,11 +124,6 @@
         >
             <mat-icon>more_vert</mat-icon>
         </button>
-    </div>
-
-    <!-- No Results -->
-    <div *osScrollingTableNoData class="pbl-ngrid-no-data">
-        <span>{{ 'No data' | translate }}</span>
     </div>
 </os-list>
 

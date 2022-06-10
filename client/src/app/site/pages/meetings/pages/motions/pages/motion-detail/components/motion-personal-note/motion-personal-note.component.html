@@ -6,12 +6,12 @@
 
     <!-- Actions -->
     <ng-container class="meta-text-block-action-row">
-        <button mat-icon-button *ngIf="!isEditMode" (click)="editPersonalNote()" matTooltip="{{ 'Edit' | translate }}">
+        <button mat-icon-button *ngIf="!isEditing" (click)="editPersonalNote()" matTooltip="{{ 'Edit' | translate }}">
             <mat-icon>edit</mat-icon>
         </button>
         <button
             mat-icon-button
-            *ngIf="!isEditMode && personalNoteText"
+            *ngIf="!isEditing && (personalNoteObservable | async)"
             (click)="printPersonalNote()"
             matTooltip="{{ 'Export personal note only' | translate }}"
         >
@@ -20,7 +20,7 @@
         <button
             mat-icon-button
             color="warn"
-            *ngIf="isEditMode"
+            *ngIf="isEditing"
             (click)="savePersonalNote()"
             matTooltip="{{ 'Save' | translate }}"
         >
@@ -28,8 +28,8 @@
         </button>
         <button
             mat-icon-button
-            *ngIf="isEditMode"
-            (click)="isEditMode = false"
+            *ngIf="isEditing"
+            (click)="leaveEditMode()"
             matTooltip="{{ 'Cancel edit' | translate }}"
         >
             <mat-icon>close</mat-icon>
@@ -38,15 +38,15 @@
 
     <!-- Content -->
     <ng-container class="meta-text-block-content">
-        <ng-container *ngIf="!isEditMode">
-            <div *ngIf="personalNoteText" [innerHTML]="personalNoteText | trust: 'html'"></div>
-            <div class="no-content" *ngIf="!hasPersonalNote || !personalNoteText">
+        <ng-container *ngIf="!isEditing">
+            <div *ngIf="personalNoteObservable | async as note" [innerHTML]="note?.note | trust: 'html'"></div>
+            <div class="no-content" *ngIf="(hasPersonalNoteObservable | async) === false">
                 {{ 'No personal note' | translate }}
             </div>
         </ng-container>
-        <form [formGroup]="personalNoteForm" *ngIf="isEditMode">
+        <form [formGroup]="formGroup" *ngIf="isEditing">
             <!-- The HTML Editor -->
-            <os-editor formControlName="note"></os-editor>
+            <os-editor formControlName="text"></os-editor>
         </form>
         <div *ngIf="saveHint">
             <span>{{ 'Touch the book icon to enter text' | translate }}</span>
