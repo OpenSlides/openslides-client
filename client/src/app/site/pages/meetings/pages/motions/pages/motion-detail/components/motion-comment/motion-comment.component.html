@@ -1,18 +1,18 @@
-<os-action-card [showActionRow]="canBeEdited" [disableExpandControl]="isCommentEdited" icon="comment">
+<os-action-card [showActionRow]="canBeEdited" [disableExpandControl]="isEditing" icon="comment">
     <ng-container class="meta-text-block-title">
         <span>{{ section?.getTitle() }}</span>
     </ng-container>
 
     <ng-container class="meta-text-block-content">
-        <ng-container *ngIf="!isCommentEdited">
+        <ng-container *ngIf="!isEditing">
             <div *ngIf="comment" [innerHTML]="comment.comment | trust: 'html'"></div>
             <div class="no-content" *ngIf="!comment">
                 {{ 'No comment' | translate }}
             </div>
         </ng-container>
-        <form [formGroup]="commentForm" *ngIf="isCommentEdited">
+        <form [formGroup]="formGroup" *ngIf="isEditing">
             <!-- The HTML Editor -->
-            <os-editor [id]="sectionId" formControlName="comment"></os-editor>
+            <os-editor [id]="sectionId" formControlName="text"></os-editor>
         </form>
         <div *ngIf="saveHint">
             <span>{{ 'Touch the book icon to enter text' | translate }}</span>
@@ -24,7 +24,7 @@
     <ng-container class="meta-text-block-action-row">
         <button
             mat-icon-button
-            *ngIf="!isCommentEdited && canBeEdited"
+            *ngIf="!isEditing && canBeEdited"
             (click)="editComment()"
             matTooltip="{{ 'Edit' | translate }}"
         >
@@ -32,7 +32,7 @@
         </button>
         <button
             mat-icon-button
-            *ngIf="!isCommentEdited && hasComment()"
+            *ngIf="!isEditing && hasComment()"
             (click)="exportCommentAsPDf()"
             matTooltip="{{ 'Export comment' | translate }}"
         >
@@ -41,7 +41,7 @@
         <button
             mat-icon-button
             color="warn"
-            *ngIf="isCommentEdited"
+            *ngIf="isEditing"
             (click)="saveComment()"
             matTooltip="{{ 'Save' | translate }}"
         >
@@ -49,8 +49,8 @@
         </button>
         <button
             mat-icon-button
-            *ngIf="isCommentEdited"
-            (click)="cancelEditing()"
+            *ngIf="isEditing"
+            (click)="leaveEditMode()"
             matTooltip="{{ 'Cancel edit' | translate }}"
         >
             <mat-icon>close</mat-icon>

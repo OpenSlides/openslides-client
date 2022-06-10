@@ -1,79 +1,60 @@
-import { Component, Input } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 import { PersonalNoteControllerService } from '../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
+import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-detail-meta.component';
+
+const SUBSCRIPTION_NAME = `personal_note_subscription`;
 
 @Component({
     selector: `os-motion-personal-note`,
     templateUrl: `./motion-personal-note.component.html`,
-    styleUrls: [`./motion-personal-note.component.scss`]
+    styleUrls: [`./motion-personal-note.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionPersonalNoteComponent extends BaseComponent {
-    /**
-     * The motion, which the personal note belong to.
-     */
-    @Input()
-    public motion!: ViewMotion;
-
-    /**
-     * The edit form for the note
-     */
-    public personalNoteForm: UntypedFormGroup;
-
-    /**
-     * Saves, if the users edits the note.
-     */
-    public isEditMode = false;
-
-    public get personalNoteText(): string {
-        const pn = this.motion?.getPersonalNote();
-        return pn ? pn.note : ``;
+export class MotionPersonalNoteComponent extends BaseMotionDetailActionCardComponent {
+    public get personalNoteObservable(): Observable<PersonalNote | null> {
+        return this._personalNoteSubject;
     }
 
-    public get hasPersonalNote(): boolean {
-        return !!this.motion?.getPersonalNote();
+    public get hasPersonalNoteObservable(): Observable<boolean> {
+        return this._personalNoteSubject.pipe(map(note => !!note?.note));
     }
 
-    public get personalNote(): PersonalNote | null {
-        return this.motion?.getPersonalNote();
+    private get personalNote(): PersonalNote | null {
+        return this._personalNoteSubject.value;
     }
+
+    private readonly _personalNoteSubject = new BehaviorSubject<ViewPersonalNote | null>(null);
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
+        cd: ChangeDetectorRef,
         formBuilder: UntypedFormBuilder,
         private repo: PersonalNoteControllerService,
         private pdfService: MotionPdfExportService
     ) {
-        super(componentServiceCollector, translate);
-        this.personalNoteForm = formBuilder.group({
-            note: [``]
-        });
+        super(componentServiceCollector, translate, cd, formBuilder);
     }
 
-    /**
-     * Sets up the form.
-     */
     public editPersonalNote(): void {
-        this.personalNoteForm.reset();
-        this.personalNoteForm.patchValue({
-            note: this.personalNoteText
-        });
-        this.isEditMode = true;
+        this.enterEditMode(this.personalNote?.note);
     }
 
     /**
      * Saves the personal note. If it does not exists, it will be created.
      */
     public async savePersonalNote(): Promise<void> {
-        await this.repo.setPersonalNote({ note: this.personalNoteForm.get(`note`)?.value }, this.motion);
-        this.isEditMode = false;
+        const contentObject: any = !!this.personalNote ? { getPersonalNote: () => this.personalNote } : this.motion;
+        await this.repo.setPersonalNote({ note: this.getTextFromForm() }, contentObject);
+        await this.leaveEditMode();
     }
 
     /**
@@ -81,5 +62,16 @@ export class MotionPersonalNoteComponent extends BaseComponent {
      */
     public printPersonalNote(): void {
         this.pdfService.exportPersonalNote(this.motion);
+    }
+
+    protected override onUpdate(): void {
+        this.subscriptions.updateSubscription(
+            SUBSCRIPTION_NAME,
+            this.repo.getPersonalNoteFor(this.motion.fqid).subscribe(note => this._personalNoteSubject.next(note))
+        );
+    }
+
+    protected getStorageIndex(): string {
+        return `${PersonalNote.COLLECTION}:${this.motion.id}`;
     }
 }

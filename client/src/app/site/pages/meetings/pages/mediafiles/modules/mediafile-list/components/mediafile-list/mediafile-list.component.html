@@ -43,7 +43,11 @@
     (deleted)="onDeleteFile($event.file)"
     (selected)="onSelect($event.files)"
 >
-    <div *osScrollingTableCell="'info'; row as mediafile" class="fill clickable" (click)="onEditFile(mediafile)">
+    <div
+        *osScrollingTableCell="'info'; row as mediafile; config: { width: 200 }"
+        class="fill clickable"
+        (click)="onEditFile(mediafile)"
+    >
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
             <span *ngFor="let group of mediafile.access_groups | slice: 0:3; let last = last">
                 <span>{{ group.getTitle() | translate }}</span>

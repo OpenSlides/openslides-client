@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { Fqid } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { Action } from 'src/app/gateways/actions';
@@ -19,6 +21,12 @@ export class PersonalNoteControllerService extends BaseMeetingControllerService<
         protected override repo: PersonalNoteRepositoryService
     ) {
         super(controllerServiceCollector, PersonalNote, repo);
+    }
+
+    public getPersonalNoteFor(contentObjectId: Fqid): Observable<ViewPersonalNote> {
+        return this.getViewModelListObservable().pipe(
+            map(notes => notes.find(note => note.content_object_id === contentObjectId))
+        );
     }
 
     public async setPersonalNote(

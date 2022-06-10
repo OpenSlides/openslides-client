@@ -9,7 +9,6 @@ import {
     START_POSITION
 } from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
-import { StorageService } from '../../gateways/storage.service';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { BaseViewModel } from './base-view-model';
 
@@ -37,10 +36,6 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
      * Filled using double binding from list-view-tables
      */
     public selectedRows: V[];
-
-    protected get storage(): StorageService {
-        return this.componentServiceCollector.storage;
-    }
 
     /**
      * Toggle for enabling the multiSelect mode. Defaults to false (inactive)

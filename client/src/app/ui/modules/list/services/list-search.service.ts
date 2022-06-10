@@ -11,10 +11,10 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     private _source: V[] = [];
     private _sourceObservable: Observable<V[]> | null = null;
     private _sourceSubscription: Subscription | null = null;
-    private _outputSubject = new BehaviorSubject<V[]>([]);
-
     private _currentSearchFilter: string = ``;
     private _filterPropsMap: { [filterProps: string]: string[] } = {};
+
+    private readonly _outputSubject = new BehaviorSubject<V[]>([]);
 
     public constructor(private readonly filterProps: string[], private readonly alsoFilterByProperties: string[]) {
         this._filterPropsMap = filterProps.mapToObject(prop => ({ [prop]: prop.split(`.`) }));
@@ -50,6 +50,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     private filter(): void {
         if (!this.filterProps?.length) {
             console.warn(`No filter props are given`);
+            this._outputSubject.next(this._source);
             return;
         }
         const trimmedInput = this._currentSearchFilter?.trim();

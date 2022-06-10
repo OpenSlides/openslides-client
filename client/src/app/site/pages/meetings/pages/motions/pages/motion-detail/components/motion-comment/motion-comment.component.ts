@@ -1,24 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewMotion, ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
+import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
+import { ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 import { MotionCommentControllerService } from '../../../../modules/comments/services/motion-comment-controller.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
+import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-detail-meta.component';
 
 @Component({
     selector: `os-motion-comment`,
     templateUrl: `./motion-comment.component.html`,
-    styleUrls: [`./motion-comment.component.scss`]
+    styleUrls: [`./motion-comment.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MotionCommentComponent extends BaseComponent implements OnInit {
-    @Input()
-    public motion!: ViewMotion;
-
+export class MotionCommentComponent extends BaseMotionDetailActionCardComponent {
     @Input()
     public section!: ViewMotionCommentSection;
 
@@ -28,10 +26,6 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     @Input()
     public comment?: ViewMotionComment;
 
-    public commentForm!: UntypedFormGroup;
-
-    public isCommentEdited = false;
-
     public get sectionId(): string {
         return this.section.id.toString();
     }
@@ -39,24 +33,16 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        private fb: UntypedFormBuilder,
+        cd: ChangeDetectorRef,
+        fb: UntypedFormBuilder,
         private pdfService: MotionPdfExportService,
         private commentRepo: MotionCommentControllerService
     ) {
-        super(componentServiceCollector, translate);
-    }
-
-    public ngOnInit(): void {
-        this.initForms();
+        super(componentServiceCollector, translate, cd, fb);
     }
 
     public editComment(): void {
-        this.commentForm.setValue({ comment: this.comment ? this.comment.comment : `` });
-        this.isCommentEdited = !this.isCommentEdited;
-    }
-
-    public cancelEditing(): void {
-        this.isCommentEdited = false;
+        this.enterEditMode(this.comment?.comment || ``);
     }
 
     public async saveComment(): Promise<void> {
@@ -67,7 +53,7 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
         } else {
             await this.handleRequest(this.updateComment());
         }
-        this.cancelEditing();
+        await this.leaveEditMode();
     }
 
     public hasComment(): boolean {
@@ -75,31 +61,23 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     }
 
     public isCommentFormEmpty(): boolean {
-        return this.getCommentTextFromForm() === ``;
-    }
-
-    public getCommentTextFromForm(): UnsafeHtml {
-        return this.commentForm.get(`comment`)!.value;
+        return this.getTextFromForm() === ``;
     }
 
     public exportCommentAsPDf(): void {
         this.pdfService.exportComment(this.section, this.motion);
     }
 
-    private initForms(): void {
-        this.commentForm = this.fb.group({ comment: [``] });
-    }
-
     private createComment(): Promise<Identifiable> {
         return this.commentRepo.create({
             motion_id: this.motion.id,
             section_id: this.section.id,
-            comment: this.getCommentTextFromForm()
+            comment: this.getTextFromForm()
         });
     }
 
     private updateComment(): Promise<void> {
-        return this.commentRepo.update({ comment: this.getCommentTextFromForm() }, this.comment!);
+        return this.commentRepo.update({ comment: this.getTextFromForm() }, this.comment!);
     }
 
     private deleteComment(): Promise<void> {
@@ -107,6 +85,10 @@ export class MotionCommentComponent extends BaseComponent implements OnInit {
     }
 
     private async handleRequest(request: Promise<any>): Promise<void> {
-        // return request.catch(error => this.raiseError(`${error} :"${this.section.name}"`));
+        return request.catch(error => this.raiseError(`${error} :"${this.section.name}"`));
+    }
+
+    protected getStorageIndex(): string {
+        return `${MotionComment.COLLECTION}:${this.motion.id}`;
     }
 }
