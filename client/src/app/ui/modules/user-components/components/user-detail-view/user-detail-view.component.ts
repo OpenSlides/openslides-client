@@ -109,8 +109,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     public genders = GENDERS;
 
-    public get isSuperadminEditingSelf(): boolean {
-        return this.operator.isSuperAdmin && this.isEditing && this.operator.operatorId === this._user.id;
+    public get isSelf(): boolean {
+        return this.operator.operatorId === this._user.id;
     }
 
     private set _initialState(state: any | null) {
