@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/projector/modules/slides/components/motions/base/base-motion-slide';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
@@ -25,7 +25,8 @@ const MAX_COLUMNS = 3;
 @Component({
     selector: `os-motion-block-slide`,
     templateUrl: `./motion-block-slide.component.html`,
-    styleUrls: [`./motion-block-slide.component.scss`]
+    styleUrls: [`./motion-block-slide.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBlockSlideData> {
     /**
@@ -37,6 +38,10 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      * If this is set, all motions have the same recommendation, saved in this variable.
      */
     public commonRecommendation: string | null = null;
+
+    public get motions(): MotionBlockSlideMotionRepresentation[] {
+        return this.data.data?.motions || [];
+    }
 
     /**
      * @returns the amount of motions in this block
@@ -94,7 +99,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      */
     protected override setData(value: SlideData<MotionBlockSlideData>): void {
         // modify all title information
-        if (value?.data) {
+        if (value?.data?.motions) {
             value.data.motions.forEach(motion => modifyAgendaItemNumber(motion));
             Object.values(value.data.referenced).forEach(motion => modifyAgendaItemNumber(motion));
         }

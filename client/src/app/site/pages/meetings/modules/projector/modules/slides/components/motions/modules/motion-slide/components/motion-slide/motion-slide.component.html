@@ -113,7 +113,7 @@
             ></div>
 
             <!-- Amendment text -->
-            <section class="text-holder" *ngIf="isParagraphBasedAmendment() && crMode !== 'diff'">
+            <section class="text-holder" *ngIf="isParagraphBasedAmendment()">
                 <div class="alert alert-info" *ngIf="getAmendedParagraphs().length === 0">
                     <span>{{ 'No changes at the text.' | translate }}</span>
                 </div>
@@ -124,62 +124,15 @@
                     [class.line-numbers-inline]="isLineNumberingInline()"
                     [class.line-numbers-outside]="isLineNumberingOutside()"
                 >
-                    <h3 *ngIf="paragraph.diffLineTo === paragraph.diffLineFrom + 1" class="amendment-line-header">
+                    <h3 *ngIf="paragraph.diffLineTo === paragraph.diffLineFrom" class="amendment-line-header">
                         <span>{{ 'Line' | translate }}</span>
                         {{ paragraph.diffLineFrom }}:
                     </h3>
-                    <h3 *ngIf="paragraph.diffLineTo !== paragraph.diffLineFrom + 1" class="amendment-line-header">
+                    <h3 *ngIf="paragraph.diffLineTo !== paragraph.diffLineFrom" class="amendment-line-header">
                         <span>{{ 'Line' | translate }}</span>
-                        {{ paragraph.diffLineFrom }} - {{ paragraph.diffLineTo - 1 }}:
+                        {{ paragraph.diffLineFrom }} - {{ paragraph.diffLineTo }}:
                     </h3>
                     <div [innerHtml]="paragraph.text | trust: 'html'"></div>
-                </div>
-            </section>
-
-            <!-- The actual diff view of an amendment. This logic is based on the os-motion-detail-diff component -->
-            <section class="text-holder" *ngIf="isParagraphBasedAmendment() && crMode === 'diff'">
-                <div *ngIf="getTitleChangingObject() as changedTitle">
-                    <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix">
-                        <div class="status-row" *ngIf="changedTitle.isRejected()">
-                            <i class="grey">{{ 'Rejected' | translate }}</i>
-                        </div>
-
-                        <div
-                            class="motion-text motion-text-diff"
-                            [class.line-numbers-none]="isLineNumberingNone()"
-                            [class.line-numbers-inline]="isLineNumberingInline()"
-                            [class.line-numbers-outside]="isLineNumberingOutside()"
-                            [attr.data-change-id]="changedTitle.getChangeId()"
-                        >
-                            <div class="bold">{{ 'Changed title' | translate }}:</div>
-                            <div [innerHTML]="getFormattedTitleDiff() | trust: 'html'"></div>
-                        </div>
-                    </div>
-                </div>
-                <div *ngFor="let change of getAllTextChangingObjects(); let i = index">
-                    <div
-                        class="diff-box diff-box-{{ change.getChangeId() }} clearfix"
-                        [class.collides]="hasCollissions(change, getAllTextChangingObjects())"
-                    >
-                        <div class="status-row" *ngIf="isChangeRecommendation(change) && change.isRejected()">
-                            <i class="grey">{{ 'Rejected' | translate }}</i>
-                        </div>
-
-                        <div class="status-row" *ngIf="isAmendment(change) && showAllAmendments">
-                            <i class="grey">
-                                {{ change.amendment.id }} - {{ change.amendment.state!.name | translate }}
-                            </i>
-                        </div>
-
-                        <div
-                            class="motion-text motion-text-diff"
-                            [class.line-numbers-none]="isLineNumberingNone()"
-                            [class.line-numbers-inline]="isLineNumberingInline()"
-                            [class.line-numbers-outside]="isLineNumberingOutside()"
-                            [attr.data-change-id]="change.getChangeId()"
-                            [innerHTML]="getAmendmentDiff(change) | trust: 'html'"
-                        ></div>
-                    </div>
                 </div>
             </section>
 
