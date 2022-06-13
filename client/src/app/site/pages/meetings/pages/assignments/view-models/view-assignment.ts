@@ -54,6 +54,10 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
         return this.candidate_ids?.length || 0;
     }
 
+    public getVotingText(translateFn: (text: string) => string, poll?: ViewPoll<ViewAssignment>): string {
+        return `${this.getTitle()}: ${translateFn(`Ballot opened`)}`;
+    }
+
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/assignments/${this.sequential_number}`;
     }

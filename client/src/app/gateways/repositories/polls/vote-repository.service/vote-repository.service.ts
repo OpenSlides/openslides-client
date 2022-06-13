@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { HttpService } from 'src/app/gateways/http.service';
-import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewVote } from 'src/app/site/pages/meetings/pages/polls';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
@@ -41,18 +41,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         return await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
     }
 
-    public async setHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
-        const pollIds: Id[] = viewPolls.map(poll => poll.id);
-        const voteResp = await this.hasVotedFor(...pollIds);
-
-        if (voteResp) {
-            for (const poll of viewPolls) {
-                poll.hasVoted = voteResp[poll.id];
-            }
-        }
-    }
-
-    private async hasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
+    public async hasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
         if (ids.length) {
             return await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
         }

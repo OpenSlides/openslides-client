@@ -3,6 +3,7 @@ import { Decimal } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { toDecimal } from 'src/app/infrastructure/utils';
+import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
@@ -30,6 +31,7 @@ interface AnalogPollGlobalValues {
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
     public constructor(
         repoServiceCollector: RepositoryMeetingServiceCollectorService,
+        private voteController: VoteControllerService,
         private voteRepo: VoteRepositoryService
     ) {
         super(repoServiceCollector, Poll);
@@ -342,7 +344,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     protected override createViewModel(model: Poll): ViewPoll {
         const viewPoll = super.createViewModel(model);
 
-        this.voteRepo.setHasVotedOnPoll(viewPoll).then(() => {});
+        this.voteController.setHasVotedOnPoll(viewPoll).then(() => {});
 
         return viewPoll;
     }

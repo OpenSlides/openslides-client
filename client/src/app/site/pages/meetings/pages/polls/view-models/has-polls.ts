@@ -4,6 +4,7 @@ import { ViewPoll } from './view-poll';
 
 export interface HasPolls<C extends BaseViewModel = any> {
     polls: ViewPoll<C>[];
+    getVotingText: (translateFn: (text: string) => string, poll?: ViewPoll<C>) => string;
 }
 
 export function isHavingViewPolls(item: any): item is HasPolls {

@@ -6,13 +6,17 @@ import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting'
 
 import { HasAttachment } from '../../../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../../../motions/modules/tags/view-models/has-tags';
-import { HasPolls } from '../../../../polls';
+import { HasPolls, ViewPoll } from '../../../../polls';
 
 export class ViewTopic extends BaseProjectableViewModel<Topic> {
     public static COLLECTION = Topic.COLLECTION;
 
     public get topic(): Topic {
         return this._model;
+    }
+
+    public getVotingText(translateFn: (text: string) => string, poll?: ViewPoll<ViewTopic>): string {
+        return `${this.getTitle()}: ${poll.getTitle()}: ${translateFn(`Voting opened`)}`;
     }
 
     public override getDetailStateUrl(): string {
