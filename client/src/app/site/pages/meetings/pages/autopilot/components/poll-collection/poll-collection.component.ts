@@ -89,7 +89,7 @@ export class PollCollectionComponent<C extends BaseViewModel> extends BaseCompon
         const model = contentObject.getVerboseName();
         const pollTitle = poll.getTitle();
 
-        if (this.showExtendedTitle) {
+        if (this.showExtendedTitle && contentObject !== this.currentProjection) {
             return `(${model}) ${listTitle} - ${pollTitle}`;
         } else {
             return pollTitle;
