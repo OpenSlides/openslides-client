@@ -61,6 +61,7 @@
     .vote-submitted {
         color: $votes-yes-color;
         font-size: 200%;
+        overflow: visible;
     }
 }
 
