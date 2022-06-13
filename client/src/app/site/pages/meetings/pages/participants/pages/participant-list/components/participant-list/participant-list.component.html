@@ -17,12 +17,11 @@
     </div>
 </os-head-bar>
 
-<os-projectable-list
+<os-list
     [listObservableProvider]="repo"
     [filterService]="filterService"
     [sortService]="sortService"
     [filterProps]="filterProps"
-    [showListOfSpeakers]="false"
     [multiSelect]="isMultiSelect"
     [hiddenInMobile]="['group', 'presence']"
     [(selectedRows)]="selectedRows"
@@ -51,7 +50,7 @@
             </div>
             <div class="icon-group">
                 <mat-icon matTooltip="{{ 'Is no natural person' | translate }}" *ngIf="!user.is_physical_person">
-                    auto_awesome_mosaic
+                    account_balance
                 </mat-icon>
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canManage">
                     block
@@ -146,7 +145,7 @@
             <mat-icon>more_vert</mat-icon>
         </button>
     </div>
-</os-projectable-list>
+</os-list>
 
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">

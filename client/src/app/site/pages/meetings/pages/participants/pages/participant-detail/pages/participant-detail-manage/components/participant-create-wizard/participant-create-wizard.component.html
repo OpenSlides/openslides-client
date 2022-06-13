@@ -13,12 +13,12 @@
 
     <!-- Next-button -->
     <div class="extra-controls-slot">
-        <div *ngIf="matStepper.selectedIndex !== FILL_FORM_PARTICIPANT_STEP">
+        <div *ngIf="(currentStepIndexObservable | async) !== FILL_FORM_PARTICIPANT_STEP">
             <button type="button" mat-button (click)="matStepper.previous()">
                 <span class="upper">{{ 'Previous' | translate }}</span>
             </button>
         </div>
-        <div *ngIf="matStepper.selectedIndex !== CREATE_PARTICIPANT_STEP">
+        <div *ngIf="(currentStepIndexObservable | async) !== CREATE_PARTICIPANT_STEP">
             <button mat-button (click)="matStepper.next()">
                 <span class="upper">{{ 'Next' | translate }}</span>
             </button>
@@ -27,7 +27,7 @@
 </os-head-bar>
 
 <form [formGroup]="createUserForm">
-    <mat-horizontal-stepper
+    <mat-stepper
         #matStepper
         [linear]="true"
         [selectedIndex]="currentStepIndexObservable | async"
@@ -240,5 +240,5 @@
                 </os-user-detail-view>
             </ng-template>
         </mat-step>
-    </mat-horizontal-stepper>
+    </mat-stepper>
 </form>
