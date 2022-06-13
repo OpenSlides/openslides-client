@@ -173,20 +173,17 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this.prepareForm();
         this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
         if (this.user) {
-            console.log(`LOG: patch user called in 'enterEditMode'`);
             this.patchFormValues();
         }
     }
 
     private prepareForm(): void {
         this.createForm();
-        console.log(`LOG: patch user called in 'prepareForm'`);
         this.patchFormValues();
         this.preparePropagation();
     }
 
     private preparePropagation(): void {
-        console.log(`LOG: I am somehow patching values`);
         if (this._formValueChangeSubscription) {
             this._formValueChangeSubscription.unsubscribe();
             this._formValueChangeSubscription = null;
@@ -202,15 +199,23 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
      * Updates the formcontrols of the `personalInfoForm` with the values from a given user.
      */
     private patchFormValues(): void {
-        if (!this.user?.id) {
+        if (!this.user) {
             return;
         }
-        console.log(`LOG: somehow detected a user!`, this.user);
         const personalInfoPatch: any = {};
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
             personalInfoPatch[ctrl] = this.getFormValuePatch(ctrl as keyof ViewUser);
         });
-        this.personalInfoForm.patchValue(personalInfoPatch, { emitEvent: false });
+        const isActiveExists = typeof this.user?.is_active === `boolean`;
+        const isPersonExists = typeof this.user?.is_physical_person === `boolean`;
+        this.personalInfoForm.patchValue(
+            {
+                ...personalInfoPatch,
+                ...(isActiveExists ? {} : { is_active: true }),
+                ...(isPersonExists ? {} : { is_physical_person: true })
+            },
+            { emitEvent: false }
+        );
         this._initialState = personalInfoPatch;
     }
 
