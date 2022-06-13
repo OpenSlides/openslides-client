@@ -145,8 +145,14 @@
                     &nbsp;
                     <span>({{ user.pronoun }})</span>
                 </ng-container>
-                <mat-icon *ngIf="!user.is_active && isAllowed('seeExtra')" matTooltip="{{ 'Inactive' | translate }}">
+                <mat-icon *ngIf="!user.is_active && isAllowed('manage')" matTooltip="{{ 'Inactive' | translate }}">
                     block
+                </mat-icon>
+                <mat-icon
+                    *ngIf="!user.is_physical_person && isAllowed('manage')"
+                    matTooltip="{{ 'Is no natural person' | translate }}"
+                >
+                    account_balance
                 </mat-icon>
             </span>
         </div>

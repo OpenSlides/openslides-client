@@ -59,13 +59,6 @@ export const PERMISSIONS: AppPermission[] = [
         ]
     },
     {
-        name: `Files`,
-        permissions: [
-            { display_name: `Can see the list of files`, value: Permission.mediafileCanSee },
-            { display_name: `Can manage files`, value: Permission.mediafileCanManage }
-        ]
-    },
-    {
         name: `Participants`,
         permissions: [
             { display_name: `Can see participants`, value: Permission.userCanSee },
@@ -74,6 +67,13 @@ export const PERMISSIONS: AppPermission[] = [
                 value: Permission.userCanManagePresence
             },
             { display_name: `Can manage participants`, value: Permission.userCanManage }
+        ]
+    },
+    {
+        name: `Files`,
+        permissions: [
+            { display_name: `Can see the list of files`, value: Permission.mediafileCanSee },
+            { display_name: `Can manage files`, value: Permission.mediafileCanManage }
         ]
     },
     {

@@ -160,7 +160,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         this._currentStepIndexSubject.next(index);
     }
 
-    public async onStepChanged(event: StepperSelectionEvent): Promise<void> {
+    public onStepChanged(event: StepperSelectionEvent): void {
         if (event.selectedIndex === this.CHOOSE_PARTICIPANT_STEP) {
             this.onChooseAccount();
         }
