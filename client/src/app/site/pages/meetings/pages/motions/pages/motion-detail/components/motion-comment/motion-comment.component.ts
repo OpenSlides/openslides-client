@@ -8,7 +8,7 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 
 import { MotionCommentControllerService } from '../../../../modules/comments/services/motion-comment-controller.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
-import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-detail-meta.component';
+import { BaseMotionDetailActionCardComponent } from '../../base/base-motion-detail-action-card.component';
 
 @Component({
     selector: `os-motion-comment`,
@@ -26,7 +26,10 @@ export class MotionCommentComponent extends BaseMotionDetailActionCardComponent 
     @Input()
     public comment?: ViewMotionComment;
 
-    public get sectionId(): string {
+    @Input()
+    public index!: number;
+
+    protected get sectionId(): string {
         return this.section.id.toString();
     }
 
@@ -89,6 +92,6 @@ export class MotionCommentComponent extends BaseMotionDetailActionCardComponent 
     }
 
     protected getStorageIndex(): string {
-        return `${MotionComment.COLLECTION}:${this.motion.id}`;
+        return `${MotionComment.COLLECTION}:${this.motion.id}_${this.index}`;
     }
 }

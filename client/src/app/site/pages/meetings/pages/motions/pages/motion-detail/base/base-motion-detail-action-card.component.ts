@@ -76,6 +76,7 @@ export abstract class BaseMotionDetailActionCardComponent extends BaseComponent 
 
     private async onAfterMotionChange(): Promise<void> {
         const text = await this.storage.get<string>(this.getStorageIndex());
+        console.log(`onAfterMotionChange:`, this.getStorageIndex(), text);
         if (this.motion && text) {
             this.enterEditMode(text);
         }
