@@ -237,7 +237,7 @@
         </div>
 
         <!-- Categories -->
-        <div *ngIf="perms.isAllowed('manage') || categories.length">
+        <div *ngIf="perms.isAllowed('manage') || hasCategories">
             <button mat-menu-item routerLink="categories">
                 <mat-icon>category</mat-icon>
                 <span>{{ 'Categories' | translate }}</span>
@@ -245,7 +245,7 @@
         </div>
 
         <!-- Motion blocks -->
-        <div *ngIf="perms.isAllowed('manage') || motionBlocks.length">
+        <div *ngIf="perms.isAllowed('manage') || hasMotionBlocks">
             <button mat-menu-item routerLink="blocks">
                 <mat-icon>widgets</mat-icon>
                 <span>{{ 'Motion blocks' | translate }}</span>
@@ -254,7 +254,7 @@
 
         <mat-divider
             *ngIf="
-                (categories.length || motionBlocks.length || hasAmendments() || perms.isAllowed('manage')) &&
+                (hasCategories || hasMotionBlocks || hasAmendments() || perms.isAllowed('manage')) &&
                 (perms.isAllowed('manage') || selectedView === 'list' || perms.isAllowed('can_manage_config'))
             "
         ></mat-divider>

@@ -70,7 +70,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.sendBulkActionToBackend(MotionAction.CREATE_FORWARDED, payload);
     }
 
-    public update(update: NullablePartial<Motion>, ...viewMotions: ViewMotion[]): Action<void> {
+    public update(
+        update: NullablePartial<Motion & { workflow_id: Id }>,
+        ...viewMotions: (Motion & { workflow_id: Id })[]
+    ): Action<void> {
         const payload = viewMotions.map(motion => this.getUpdatePayload(update, motion));
         return this.createAction(MotionAction.UPDATE, payload);
     }
@@ -163,7 +166,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.sendBulkActionToBackend(MotionAction.FOLLOW_RECOMMENDATION, payload);
     }
 
-    public createTextBased(partialMotion: Partial<Motion>): Action<CreateResponse> {
+    public createTextBased(partialMotion: Partial<Motion & { workflow_id: Id }>): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             lead_motion_id: partialMotion.lead_motion_id,
@@ -186,7 +189,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_TEXTBASED_AMENDMENT, payload);
     }
 
-    public createParagraphBased(partialMotion: Partial<Motion>): Action<CreateResponse> {
+    public createParagraphBased(partialMotion: Partial<Motion & { workflow_id: Id }>): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             lead_motion_id: partialMotion.lead_motion_id,
@@ -209,7 +212,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.createAction(AmendmentAction.CREATE_PARAGRAPHBASED_AMENDMENT, payload);
     }
 
-    public createStatuteAmendment(partialMotion: Partial<Motion>): Action<CreateResponse> {
+    public createStatuteAmendment(partialMotion: Partial<Motion & { workflow_id: Id }>): Action<CreateResponse> {
         const payload = {
             meeting_id: this.activeMeetingIdService.meetingId,
             title: partialMotion.title,
@@ -265,7 +268,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `sort_weight`,
             `sort_parent_id`,
             `state_id`,
-            `workflow_id`,
             `text`,
             `change_recommendation_ids`,
             `attachment_ids`
@@ -357,9 +359,9 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         };
     }
 
-    private getUpdatePayload(update: any, viewMotion: ViewMotion): any {
+    private getUpdatePayload(update: any, viewMotion: Motion & { workflow_id: Id }): any {
         const updatePayload = Object.keys(update).mapToObject(key => {
-            if (JSON.stringify(update[key]) !== JSON.stringify(viewMotion[key as keyof ViewMotion])) {
+            if (JSON.stringify(update[key]) !== JSON.stringify(viewMotion[key as keyof Motion & { workflow_id: Id }])) {
                 return { [key]: update[key] };
             }
             return {};

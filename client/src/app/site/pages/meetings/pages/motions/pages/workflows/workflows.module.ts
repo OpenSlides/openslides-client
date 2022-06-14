@@ -17,7 +17,6 @@ import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/mo
 import { FileUploadModule } from 'src/app/ui/modules/file-upload';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
-import { MotionWorkflowCommonServiceModule } from '../../modules/workflows/motion-workflow-common-service.module';
 import { WorkflowDetailComponent } from './components/workflow-detail/workflow-detail.component';
 import { WorkflowImportComponent } from './components/workflow-import/workflow-import.component';
 import { WorkflowListComponent } from './components/workflow-list/workflow-list.component';
@@ -29,7 +28,6 @@ import { WorkflowsRoutingModule } from './workflows-routing.module';
     imports: [
         CommonModule,
         WorkflowsRoutingModule,
-        MotionWorkflowCommonServiceModule,
         MotionWorkflowServiceModule,
         MeetingsComponentCollectorModule,
         FileUploadModule,

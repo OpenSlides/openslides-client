@@ -4,13 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map } from 'rxjs';
 import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import {
-    ViewMotionBlock,
-    ViewMotionCategory,
-    ViewMotionState,
-    ViewMotionWorkflow,
-    ViewTag
-} from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotionCategory, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -20,6 +14,7 @@ import { MotionExportDialogService } from '../../../../components/motion-export-
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
@@ -81,11 +76,6 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
 
     public recommendationEnabled: boolean = false;
 
-    public tags: ViewTag[] = [];
-    public workflows: ViewMotionWorkflow[] = [];
-    public categories: ViewMotionCategory[] = [];
-    public motionBlocks: ViewMotionBlock[] = [];
-
     /**
      * Define extra filter properties
      *
@@ -108,8 +98,12 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      */
     public motionsVerboseName: string = ``;
 
-    public get hasCategories(): boolean {
+    protected get hasCategories(): boolean {
         return this._hasCategories;
+    }
+
+    protected get hasMotionBlocks(): boolean {
+        return this._hasMotionBlocks;
     }
 
     /**
@@ -117,6 +111,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      */
     private _recommender?: string;
     private _hasCategories = false;
+    private _hasMotionBlocks = false;
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -126,7 +121,8 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         public sortService: MotionListSortService,
         private infoDialog: MotionListInfoDialogService,
         private exportDialog: MotionExportDialogService,
-        private categoryRepo: MotionCategoryControllerService,
+        private categoryController: MotionCategoryControllerService,
+        private motionBlockController: MotionBlockControllerService,
         public motionRepo: MotionControllerService,
         public amendmentController: AmendmentControllerService,
         public motionService: MotionForwardDialogService,
@@ -163,13 +159,16 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             this.meetingSettingsService
                 .get(`motions_show_sequential_number`)
                 .subscribe(show => (this.showSequential = show)),
-            this.categoryRepo
+            this.categoryController
                 .getViewModelListObservable()
                 .pipe(map(categories => categories?.length > 0))
                 .subscribe(isAvailable => {
                     this._hasCategories = isAvailable;
                     this.setupTileView(isAvailable);
                 }),
+            this.motionBlockController.getViewModelListObservable().subscribe(motionBlocks => {
+                this._hasMotionBlocks = motionBlocks.filter(motionBlock => !motionBlock.internal).length > 0;
+            }),
             this.motionRepo.getViewModelListObservable().subscribe(motions => {
                 if (motions && motions.length) {
                     this.createMotionTiles(motions);

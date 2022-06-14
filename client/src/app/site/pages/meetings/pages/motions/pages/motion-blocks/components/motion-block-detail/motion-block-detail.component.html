@@ -35,7 +35,7 @@
                 *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
                 mat-button
                 (click)="onFollowRecButton()"
-                [disabled]="isFollowingProhibited()"
+                [disabled]="isFollowButtonDisabledObservable() | async"
             >
                 <os-icon-container icon="done_all">
                     <span>{{ 'Follow recommendations for all motions' | translate }}</span>
@@ -112,7 +112,7 @@
         </div>
 
         <!-- Remove from block column -->
-        <div *osScrollingTableCell="'remove'; row as motion" class="cell-slot fill">
+        <div *osScrollingTableCell="'remove'; row as motion; config: { width: 60 }" class="cell-slot fill">
             <button
                 type="button"
                 mat-icon-button
@@ -158,7 +158,7 @@
             *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]"
             mat-menu-item
             (click)="onFollowRecButton()"
-            [disabled]="isFollowingProhibited()"
+            [disabled]="isFollowButtonDisabledObservable() | async"
         >
             <mat-icon>done_all</mat-icon>
             <span>{{ 'Follow recommendations for all motions' | translate }}</span>

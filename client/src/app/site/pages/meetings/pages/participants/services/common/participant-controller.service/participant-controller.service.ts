@@ -183,29 +183,6 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return responseMessage;
     }
 
-    public bulkAddGroupsToUsers(groupIds: Ids, ...users: ViewUser[]): Promise<void> {
-        this.repo.preventAlterationOnDemoUsers(users);
-        const patchFn = (user: ViewUser) => {
-            groupIds = groupIds.concat(user.group_ids());
-            return {
-                id: user.id,
-                group_$_ids: {
-                    [this.activeMeetingId!]: groupIds.filter((groupId, index, self) => self.indexOf(groupId) === index)
-                }
-            };
-        };
-        return this.repo.update(patchFn, ...users).resolve() as Promise<void>;
-    }
-
-    public bulkRemoveGroupsFromUsers(groupIds: Ids, ...users: ViewUser[]): Promise<void> {
-        this.repo.preventAlterationOnDemoUsers(users);
-        const patchFn = (user: ViewUser) => ({
-            id: user.id,
-            group_$_ids: { [this.activeMeetingId!]: user.group_ids().filter(groupId => !groupIds.includes(groupId)) }
-        });
-        return this.repo.update(patchFn, ...users).resolve() as Promise<void>;
-    }
-
     public setPresent(isPresent: boolean, ...users: ViewUser[]): Action<void> {
         this.repo.preventAlterationOnDemoUsers(users);
         const payload: any[] = users.map(user => ({

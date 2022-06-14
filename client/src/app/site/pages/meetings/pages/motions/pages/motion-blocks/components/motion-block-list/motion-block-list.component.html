@@ -44,7 +44,7 @@
     </div>
 
     <!-- Amount -->
-    <div *osScrollingTableCell="'amount'; row as block" class="cell-slot fill">
+    <div *osScrollingTableCell="'amount'; row as block; config: { width: 60 }" class="cell-slot fill">
         <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ getMotionAmount(block) }}</span>
     </div>
 

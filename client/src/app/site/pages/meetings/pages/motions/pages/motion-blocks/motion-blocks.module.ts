@@ -12,7 +12,6 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-container.module';
 
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
-import { MotionBlockCommonServiceModule } from '../../modules';
 import { MotionBlockCreateDialogModule } from './components/motion-block-create-dialog/motion-block-create-dialog.module';
 import { MotionBlockDetailComponent } from './components/motion-block-detail/motion-block-detail.component';
 import { MotionBlockEditDialogModule } from './components/motion-block-edit-dialog/motion-block-edit-dialog.module';
@@ -25,7 +24,6 @@ import { MotionBlockServiceModule } from './services/motion-block-service.module
     imports: [
         CommonModule,
         MotionBlocksRoutingModule,
-        MotionBlockCommonServiceModule,
         MotionBlockServiceModule,
         MotionBlockCreateDialogModule,
         MotionBlockEditDialogModule,

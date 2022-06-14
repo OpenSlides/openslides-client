@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
+import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { GENDERS } from 'src/app/domain/models/users/user';
 import { UserStateField } from 'src/app/gateways/repositories/users';
@@ -231,11 +232,30 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.groupsObservable, true, choices);
         if (selectedChoice) {
-            console.log(`selectedChoice`, selectedChoice);
+            const choosedGroupIds = selectedChoice.items as Ids;
             if (selectedChoice.action === ADD) {
-                this.repo.bulkAddGroupsToUsers(selectedChoice.items as number[], ...this.selectedRows);
+                this.repo
+                    .update(user => {
+                        return {
+                            id: user.id,
+                            group_ids: user.group_ids().concat(choosedGroupIds)
+                        };
+                    }, ...this.selectedRows)
+                    .resolve();
             } else {
-                this.repo.bulkRemoveGroupsFromUsers(selectedChoice.items as number[], ...this.selectedRows);
+                this.repo
+                    .update(user => {
+                        const nextGroupIds = new Set(user.group_ids());
+                        choosedGroupIds.forEach(id => nextGroupIds.delete(id));
+                        return {
+                            id: user.id,
+                            group_ids:
+                                nextGroupIds.size === 0
+                                    ? [this.activeMeeting.default_group_id]
+                                    : Array.from(nextGroupIds)
+                        };
+                    }, ...this.selectedRows)
+                    .resolve();
             }
         }
     }

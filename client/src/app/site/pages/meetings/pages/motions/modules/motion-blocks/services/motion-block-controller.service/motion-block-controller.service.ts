@@ -6,14 +6,13 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionBlockCommonServiceModule } from '../../motion-block-common-service.module';
 import { ViewMotionBlock } from '../../view-models';
 
 @Injectable({
-    providedIn: MotionBlockCommonServiceModule
+    providedIn: `root`
 })
 export class MotionBlockControllerService extends BaseMeetingControllerService<ViewMotionBlock, MotionBlock> {
-    constructor(
+    public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: MotionBlockRepositoryService,
         private motionRepo: MotionControllerService

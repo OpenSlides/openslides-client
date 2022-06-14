@@ -5,11 +5,10 @@ import { MotionStateRepositoryService } from 'src/app/gateways/repositories/moti
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-import { MotionStateCommonServiceModule } from '../../motion-state-common-service.module';
 import { ViewMotionState } from '../../view-models';
 
 @Injectable({
-    providedIn: MotionStateCommonServiceModule
+    providedIn: `root`
 })
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {
     constructor(

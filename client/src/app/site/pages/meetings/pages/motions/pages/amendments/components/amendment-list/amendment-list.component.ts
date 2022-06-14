@@ -135,7 +135,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     }
 
     public getAmendmentDiffLines(amendment: ViewMotion): string {
-        const diffLines = amendment.getAmendmentParagraphLines() as DiffLinesInParagraph[];
+        const diffLines = amendment.getAmendmentParagraphLines();
         if (diffLines.length) {
             return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {

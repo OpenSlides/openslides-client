@@ -7,12 +7,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { MotionBlockEditDialogComponent } from './components/motion-block-edit-dialog/motion-block-edit-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
     declarations: [MotionBlockEditDialogComponent],
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        MatButtonModule,
+        MatInputModule,
         MatCheckboxModule,
         MatDialogModule,
         MatFormFieldModule,

@@ -48,9 +48,11 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
         private meetingSettingService: MeetingSettingsService
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
+        this.shouldPropagateOnRegistering = false;
     }
 
     public override ngOnInit(): void {
+        super.ngOnInit();
         this.init();
     }
 

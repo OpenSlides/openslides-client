@@ -50,12 +50,12 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return this._model;
     }
 
-    public get workflow_id(): Id {
-        return this.state!.workflow_id;
+    public get workflow_id(): Id | null {
+        return this.state?.workflow_id || null;
     }
 
-    public get workflow(): ViewMotionWorkflow {
-        return this.state!.workflow;
+    public get workflow(): ViewMotionWorkflow | null {
+        return this.state?.workflow || null;
     }
 
     public get submittersAsUsers(): ViewUser[] {
@@ -225,7 +225,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     /**
      * @warning This is injected. Do not use it!
      */
-    public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] | null = () => null;
+    public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] = () => [];
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;

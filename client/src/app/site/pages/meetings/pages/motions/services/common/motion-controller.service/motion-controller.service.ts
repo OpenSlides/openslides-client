@@ -39,7 +39,10 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         return this.repo.create(...motions);
     }
 
-    public update(update?: NullablePartial<Motion>, ...motions: ViewMotion[]): Action<void> {
+    public update(
+        update?: NullablePartial<Motion & { workflow_id: Id }>,
+        ...motions: (Motion & { workflow_id: Id })[]
+    ): Action<void> {
         if (update) {
             return this.repo.update(update, ...motions);
         }
