@@ -54,6 +54,7 @@ export class MessageControlsComponent {
      * Brings the projection dialog
      */
     public onBringDialog(): void {
+        console.log(`LOG: message-controls`);
         this.projectionDialogService.openProjectDialogFor(this.message.getProjectionBuildDescriptor());
     }
 

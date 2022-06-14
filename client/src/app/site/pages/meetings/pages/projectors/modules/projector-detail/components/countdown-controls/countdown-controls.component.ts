@@ -111,6 +111,7 @@ export class CountdownControlsComponent {
      * Brings the projection dialog
      */
     public onBringDialog(): void {
+        console.log(`LOG: countdown-controls`);
         this.projectionDialogService.openProjectDialogFor(this.countdown.getProjectionBuildDescriptor());
     }
 

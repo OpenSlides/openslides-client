@@ -42,6 +42,7 @@ export class ProjectionDialogComponent {
             const defaultProjector: ViewProjector | null = this.activeMeetingService.meeting!.default_projector(
                 this.descriptor.projectionDefault
             );
+            console.log(`LOG: `, defaultProjector);
             if (defaultProjector && !this.selectedProjectors.includes(defaultProjector)) {
                 this.selectedProjectors.push(defaultProjector);
             }
