@@ -92,10 +92,6 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         }
     }
 
-    public getContentObjectDetailStateURL(): string {
-        return this.getDetailStateUrl();
-    }
-
     public get hasVotes(): boolean {
         return this.results.flatMap(option => option.votes).some(vote => vote.weight > 0);
     }

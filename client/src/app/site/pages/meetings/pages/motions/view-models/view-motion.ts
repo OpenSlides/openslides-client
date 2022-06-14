@@ -18,7 +18,7 @@ import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
-import { HasPolls } from '../../polls';
+import { HasPolls, VotingTextContext } from '../../polls';
 import { DiffLinesInParagraph } from '../definitions';
 import { ViewMotionChangeRecommendation, ViewMotionStatuteParagraph, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
@@ -215,6 +215,12 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
+
+    public getVotingText(context: VotingTextContext<ViewMotion>): string {
+        const motionTranslation = context.translateFn(`Motion`);
+        const votingOpenedTranslation = context.translateFn(`Voting opened`);
+        return `${motionTranslation} ${this.getNumberOrTitle()}: ${votingOpenedTranslation}`;
+    }
 
     /**
      * @warning This is injected. Do not use it!

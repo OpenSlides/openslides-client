@@ -9,7 +9,7 @@ import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachment } from '../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
-import { HasPolls } from '../../polls/view-models/has-polls';
+import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
 import { ViewPoll } from '../../polls/view-models/view-poll';
 import { AssignmentPhases } from '../definitions';
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
@@ -52,6 +52,10 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
      */
     public get candidateAmount(): number {
         return this.candidate_ids?.length || 0;
+    }
+
+    public getVotingText(context: VotingTextContext<ViewAssignment>): string {
+        return `${this.getTitle()}: ${context.translateFn(`Ballot opened`)}`;
     }
 
     public override getDetailStateUrl(): string {
