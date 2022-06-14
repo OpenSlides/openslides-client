@@ -249,13 +249,17 @@ export class MotionHtmlToPdfService {
                 newParagraph.margin[1] = this.getMarginTop(nodeName);
                 newParagraph.margin[3] = this.getMarginBottom(nodeName);
 
-                if (this.lineNumberingMode === LineNumberingMode.Outside) {
+                if (this.lineNumberingMode === LineNumberingMode.Outside && classes.includes(`insert`)) {
                     // that is usually the case for inserted change which should appear
-                    // under a set of line numbers with correct alignment
-                    if (classes.includes(`insert`)) {
+                    // under a set of line numbers with correct alignment.
+                    // List items are already aligned correctly by pdfmake. Therefore, margins
+                    // left must be zero for them.
+                    if (nodeName === `li`) {
+                        newParagraph.margin[0] = 0;
+                    } else {
                         newParagraph.margin[0] = 20;
-                        newParagraph.margin[3] = this.P_MARGIN_BOTTOM;
                     }
+                    newParagraph.margin[3] = this.P_MARGIN_BOTTOM;
                 }
 
                 // stop enumeration if the list was inserted
