@@ -27,6 +27,8 @@ export class VotingBannerService {
 
     private subText = _(`Click here to vote!`);
 
+    private pollsToVote: ViewPoll[] = [];
+
     public constructor(
         pollRepo: PollControllerService,
         private banner: BannerService,
@@ -51,13 +53,13 @@ export class VotingBannerService {
         // refresh the voting info on all polls. This is a single request to the vote service
         await this.sendVotesService.setHasVotedOnPoll(...polls);
         // display no banner if in history mode or there are no polls to vote
-        const pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
-        if ((this.historyService.isInHistoryMode() && this.currentBanner) || !pollsToVote.length) {
+        this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
+        if ((this.historyService.isInHistoryMode() && this.currentBanner) || !this.pollsToVote.length) {
             this.sliceBanner();
             return;
         }
 
-        const { text, link } = this.getBannerCreationData(pollsToVote);
+        const { text, link } = this.getBannerCreationData();
         const banner = this.createBanner(text, link);
         this.sliceBanner(banner);
     }
@@ -80,13 +82,19 @@ export class VotingBannerService {
         };
     }
 
-    private getBannerCreationData(pollsToVote: ViewPoll[]): BannerCreationData {
-        const isSinglePoll = pollsToVote.length === 1;
+    private getBannerCreationData(): BannerCreationData {
+        const isSinglePoll = this.pollsToVote.length === 1;
         const text = isSinglePoll
-            ? this.getTextForPoll(pollsToVote[0])
-            : `${pollsToVote.length} ${this.translate.instant(`open votes`)}`;
-        const link = isSinglePoll ? this.getUrlForPoll(pollsToVote[0]) : `/${this.activeMeeting.meetingId}/polls/`;
+            ? this.getTextForPoll(this.getSinglePoll())
+            : `${this.pollsToVote.length} ${this.translate.instant(`open votes`)}`;
+        const link = isSinglePoll
+            ? this.getUrlForPoll(this.getSinglePoll())
+            : `/${this.activeMeeting.meetingId}/polls/`;
         return { text, link };
+    }
+
+    private getSinglePoll(): ViewPoll {
+        return this.pollsToVote[0];
     }
 
     /**
@@ -98,10 +106,11 @@ export class VotingBannerService {
      */
     private getTextForPoll(poll: ViewPoll): string {
         const contentObject = poll.getContentObject();
-        return (
-            contentObject?.getVotingText(text => this.translate.instant(text), poll) ??
-            this.translate.instant(`Voting opened`)
-        );
+        if (contentObject) {
+            return contentObject.getVotingText(text => this.translate.instant(text), poll);
+        } else {
+            return this.translate.instant(`Voting opened`);
+        }
     }
 
     /**
@@ -114,7 +123,7 @@ export class VotingBannerService {
     private getUrlForPoll(poll: ViewPoll): string {
         return this.operator.hasPerms(Permission.meetingCanSeeAutopilot)
             ? `/${this.activeMeeting.meetingId}/autopilot/`
-            : poll.getContentObjectDetailStateURL();
+            : poll.getDetailStateUrl();
     }
 
     /**
