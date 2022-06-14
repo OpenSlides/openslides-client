@@ -110,7 +110,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public genders = GENDERS;
 
     public get isSelf(): boolean {
-        return this.operator.operatorId === this._user.id;
+        return this.operator.operatorId === this._user?.id;
     }
 
     private set _initialState(state: any | null) {
@@ -206,7 +206,16 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
             personalInfoPatch[ctrl] = this.getFormValuePatch(ctrl as keyof ViewUser);
         });
-        this.personalInfoForm.patchValue(personalInfoPatch, { emitEvent: false });
+        const isActiveExists = typeof this.user?.is_active === `boolean`;
+        const isPersonExists = typeof this.user?.is_physical_person === `boolean`;
+        this.personalInfoForm.patchValue(
+            {
+                ...personalInfoPatch,
+                ...(isActiveExists ? {} : { is_active: true }),
+                ...(isPersonExists ? {} : { is_physical_person: true })
+            },
+            { emitEvent: false }
+        );
         this._initialState = personalInfoPatch;
     }
 
