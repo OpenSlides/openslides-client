@@ -3,6 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
@@ -145,12 +146,16 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
      * Determine if following the recommendations should be possible.
      * Following a recommendation implies, that a valid recommendation exists.
      */
-    public isFollowingProhibited(): boolean {
-        if (this.listComponent?.source) {
-            return this.listComponent.source.every(motion => motion.isInFinalState() || !motion.recommendation_id);
-        } else {
-            return false;
-        }
+    public isFollowButtonDisabledObservable(): Observable<boolean> {
+        return this.filterService.getViewModelListObservable().pipe(
+            map(motions => {
+                if (motions.length) {
+                    return motions.every(motion => motion.isInFinalState() || !motion.recommendation_id);
+                } else {
+                    return false;
+                }
+            })
+        );
     }
 
     /**

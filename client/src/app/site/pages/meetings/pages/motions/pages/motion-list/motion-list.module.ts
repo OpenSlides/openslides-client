@@ -19,7 +19,6 @@ import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 import { MotionExportDialogModule } from '../../components/motion-export-dialog/motion-export-dialog.module';
 import { MotionForwardDialogModule } from '../../components/motion-forward-dialog/motion-forward-dialog.module';
 import { MotionMultiselectModule } from '../../components/motion-multiselect/motion-multiselect.module';
-import { MotionCategoryCommonServiceModule } from '../../modules/categories/motion-categorie-common-service.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { MotionListComponent } from './components/motion-list/motion-list.component';
 import { MotionListInfoDialogModule } from './modules/motion-list-info-dialog/motion-list-info-dialog.module';
@@ -34,7 +33,6 @@ import { MotionListRoutingModule } from './motion-list-routing.module';
         MotionListInfoDialogModule,
         MotionForwardDialogModule,
         MotionExportDialogModule,
-        MotionCategoryCommonServiceModule,
         MotionMultiselectModule,
         MatIconModule,
         MatCardModule,

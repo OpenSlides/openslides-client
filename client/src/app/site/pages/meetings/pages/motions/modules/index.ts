@@ -1,6 +1,5 @@
 export * from './categories';
 export * from './change-recommendations';
-export * from './change-recommendations';
 export * from './comments';
 export * from './motion-blocks';
 export * from './personal-notes';

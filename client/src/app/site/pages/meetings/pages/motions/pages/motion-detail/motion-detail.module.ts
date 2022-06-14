@@ -34,9 +34,7 @@ import { ParticipantSearchSelectorModule } from '../../../../modules/participant
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { ParticipantCommonServiceModule } from '../../../participants/services/common/participant-common-service.module';
 import { MotionForwardDialogModule } from '../../components/motion-forward-dialog/motion-forward-dialog.module';
-import { PersonalNoteServiceModule } from '../../modules';
 import { MotionPollModule } from '../../modules/motion-poll';
-import { MotionSubmitterCommonServiceModule } from '../../modules/submitters/motion-submitter-common-service.module';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
@@ -124,8 +122,6 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         ParticipantSearchSelectorModule,
 
         // Detail view
-        MotionSubmitterCommonServiceModule,
-        PersonalNoteServiceModule,
         ScrollingModule,
         MatBadgeModule,
 

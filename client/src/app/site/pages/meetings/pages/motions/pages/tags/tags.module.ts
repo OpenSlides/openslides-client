@@ -10,7 +10,6 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 
-import { TagCommonServiceModule } from '../../modules';
 import { TagListComponent } from './components/tag-list/tag-list.component';
 import { TagsRoutingModule } from './tags-routing.module';
 
@@ -19,7 +18,6 @@ import { TagsRoutingModule } from './tags-routing.module';
     imports: [
         CommonModule,
         TagsRoutingModule,
-        TagCommonServiceModule,
         MatIconModule,
         MatFormFieldModule,
         MatButtonModule,

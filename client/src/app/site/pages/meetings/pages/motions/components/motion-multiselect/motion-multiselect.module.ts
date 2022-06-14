@@ -8,13 +8,6 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
-import {
-    MotionBlockCommonServiceModule,
-    MotionSubmitterCommonServiceModule,
-    PersonalNoteServiceModule,
-    TagCommonServiceModule
-} from '../../modules';
-import { MotionWorkflowCommonServiceModule } from '../../modules/workflows/motion-workflow-common-service.module';
 import { MotionMultiselectActionsComponent } from './components/motion-multiselect-actions/motion-multiselect-actions.component';
 import { MotionMultiselectServiceModule } from './services/motion-multiselect-service.module';
 
@@ -25,7 +18,6 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
     exports: DECLARATIONS,
     imports: [
         CommonModule,
-        MotionBlockCommonServiceModule,
         MotionMultiselectServiceModule,
         MatIconModule,
         MatDividerModule,
@@ -33,11 +25,7 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
         ChoiceDialogModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
-        AgendaItemCommonServiceModule,
-        MotionSubmitterCommonServiceModule,
-        MotionWorkflowCommonServiceModule,
-        TagCommonServiceModule,
-        PersonalNoteServiceModule
+        AgendaItemCommonServiceModule
     ]
 })
 export class MotionMultiselectModule {}

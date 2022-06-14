@@ -9,7 +9,6 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 
 import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { DiffLinesInParagraph } from '../../../../definitions/index';
 import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
@@ -135,7 +134,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     }
 
     public getAmendmentDiffLines(amendment: ViewMotion): string {
-        const diffLines = amendment.getAmendmentParagraphLines() as DiffLinesInParagraph[];
+        const diffLines = amendment.getAmendmentParagraphLines();
         if (diffLines.length) {
             return diffLines.map(diffLine => this.linenumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {

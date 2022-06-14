@@ -14,10 +14,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SortingModule } from 'src/app/ui/modules/sorting';
 
-import { MotionCategoryCommonServiceModule } from '../../modules';
 import { CategoriesRoutingModule } from './categories-routing.module';
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
 import { CategoryDetailSortComponent } from './components/category-detail-sort/category-detail-sort.component';
@@ -34,7 +34,6 @@ import { CategoryListSortComponent } from './components/category-list-sort/categ
     imports: [
         CommonModule,
         CategoriesRoutingModule,
-        MotionCategoryCommonServiceModule,
         MatDialogModule,
         MatFormFieldModule,
         MatMenuModule,
@@ -50,6 +49,7 @@ import { CategoryListSortComponent } from './components/category-list-sort/categ
         MeetingsComponentCollectorModule,
         HeadBarModule,
         DirectivesModule,
+        ChoiceDialogModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })

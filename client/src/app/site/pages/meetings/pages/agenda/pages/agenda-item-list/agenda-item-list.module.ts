@@ -15,7 +15,6 @@ import { IconContainerModule } from 'src/app/ui/modules/icon-container/icon-cont
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
-import { TagCommonServiceModule } from '../../../motions';
 import { AgendaItemCommonServiceModule } from '../../services/agenda-item-common-service.module';
 import { AgendaItemListRoutingModule } from './agenda-item-list-routing.module';
 import { AgendaItemInfoDialogComponent } from './components/agenda-item-info-dialog/agenda-item-info-dialog.component';
@@ -48,7 +47,6 @@ const OS_MODULES = [
         AgendaItemListRoutingModule,
         AgendaItemListServiceModule,
         AgendaItemCommonServiceModule,
-        TagCommonServiceModule,
         ...NG_MODULES,
         ...OS_MODULES
     ]

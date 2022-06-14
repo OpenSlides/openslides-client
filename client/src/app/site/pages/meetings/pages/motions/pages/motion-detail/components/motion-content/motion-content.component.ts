@@ -41,6 +41,9 @@ interface MotionFormFields {
 
     // For agenda creations
     agenda_parent_id: Id;
+
+    // Motion
+    workflow_id: Id;
 }
 
 type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [key in keyof Motion]?: any };
@@ -330,9 +333,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         }
         if (this.isExisting) {
             const contentPatch: { [key: string]: any } = {};
-            const tmp: any = deepCopy(this.motion.motion);
             Object.keys(this.contentForm.controls).forEach(ctrl => {
-                contentPatch[ctrl] = tmp[ctrl];
+                contentPatch[ctrl] = this.motion[ctrl];
             });
 
             if (this.isParagraphBasedAmendment) {
