@@ -97,7 +97,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
             this.projectorService.toggle(descriptor, [this.projector]);
         } else {
             // open the projection dialog
-            console.log(`LOG: projector-button`);
             this.projectionDialogService.openProjectDialogFor(descriptor);
         }
     }
