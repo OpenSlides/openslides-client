@@ -15,3 +15,21 @@ export enum Projectiondefault {
     motionPoll = `motion_poll`,
     poll = `poll`
 }
+
+export const ProjectiondefaultVerbose: { [key in keyof typeof Projectiondefault]: string } = {
+    agendaAllItems: `Agenda Items`,
+    topics: `Topics`,
+    listOfSpeakers: `List of Speakers`,
+    currentListOfSpeakers: `Current List of Speakers`,
+    motion: `Motions`,
+    amendment: `Amendments`,
+    motionBlock: `Motion Blocks`,
+    assignment: `Assignments`,
+    user: `Users`,
+    mediafile: `Mediafiles`,
+    projectorMessage: `Messages`,
+    projectorCountdown: `Countdowns`,
+    assignmentPoll: `Assignment Polls`,
+    motionPoll: `Motion Polls`,
+    poll: `Polls`
+};

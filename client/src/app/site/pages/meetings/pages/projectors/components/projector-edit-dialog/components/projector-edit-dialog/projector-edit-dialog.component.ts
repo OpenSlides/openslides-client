@@ -11,9 +11,12 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
+import { Projectiondefault, ProjectiondefaultVerbose } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { ProjectorComponent } from 'src/app/site/pages/meetings/modules/projector/components/projector/projector.component';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 const ASPECT_RATIO_FORM_KEY = `aspectRatio`;
@@ -82,6 +85,14 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         return this.data.projector || null;
     }
 
+    /**
+     * Options for the `Projection defaults`-selector
+     */
+    public readonly projectionDefaultOptions = Object.keys(ProjectiondefaultVerbose).map(key => ({
+        key: Projectiondefault[key],
+        text: ProjectiondefaultVerbose[key]
+    }));
+
     private get _aspectRatioControl(): AbstractControl {
         return this.updateForm.get(ASPECT_RATIO_FORM_KEY)!;
     }
@@ -91,12 +102,15 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     private readonly _aspectRatioRe = RegExp(`[1-9]+[0-9]*:[1-9]+[0-9]*`);
 
+    private _defaultProjectors: { [key: string]: number } = {};
+
     public constructor(
         formBuilder: UntypedFormBuilder,
         private translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) private data: ProjectorEditDialogConfig,
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private activeMeeting: ActiveMeetingService
     ) {
         super();
 
@@ -122,13 +136,18 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             show_header_footer: [],
             show_title: [],
             show_logo: [],
-            show_clock: []
+            show_clock: [],
+            projectiondefault_ids: [[]]
         });
 
-        // react to form changes
         this.subscriptions.push(
+            // react to form changes
             this.updateForm.valueChanges.pipe(auditTime(100)).subscribe(() => {
                 this.onChangeForm();
+            }),
+            // react to changes in the meeting (important for projector defaults)
+            this.activeMeeting.meetingObservable.subscribe(meeting => {
+                this.handleMeeting(meeting);
             })
         );
     }
@@ -203,11 +222,86 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         }
     }
 
+    /**
+     * Processes all relevant data in a meeting (such as the projection defaults)
+     * @param meeting the changed meeting
+     */
+    private handleMeeting(meeting: ViewMeeting): void {
+        Object.keys(ProjectiondefaultVerbose).forEach(key => {
+            const defaultProjectorId = meeting.default_projector(Projectiondefault[key]).id;
+            this.handleChangeInDefaultProjector(key, defaultProjectorId);
+        });
+    }
+
+    /**
+     * Takes note of changes in a specific ViewModel's default-projector and toggles the corresponding checkbox in the `Projector defaults`-selector if neccessary
+     * @param key the key of Projectiondefault, that describes the ViewModel
+     * @param defaultProjectorId the new value for the default projector
+     */
+    private handleChangeInDefaultProjector(key: string, defaultProjectorId: number): void {
+        if (this.getDefaultProjectorId(key) === defaultProjectorId) {
+            return;
+        }
+        const toggleCheckbox =
+            this.isCurrentProjectorDefault(key) !== (defaultProjectorId === this.projector.id) ? true : false;
+        this._defaultProjectors[key] = defaultProjectorId;
+        if (toggleCheckbox && this.updateForm) {
+            let newValue;
+            const formValue = this.updateForm.value[`projectiondefault_ids`] as string[];
+            if (formValue.filter(selection => selection === Projectiondefault[key]).length) {
+                newValue = formValue.filter(value => value !== Projectiondefault[key]);
+            } else {
+                formValue.push(Projectiondefault[key]);
+                newValue = formValue;
+            }
+            this.updateForm.patchValue({
+                projectiondefault_ids: newValue
+            });
+        }
+    }
+
+    private isCurrentProjectorDefault(projectordefaultKey: string): boolean {
+        return this.getDefaultProjectorId(projectordefaultKey) === this.projector.id;
+    }
+
+    private getDefaultProjectorId(projectordefaultKey: string): number {
+        return this._defaultProjectors[projectordefaultKey];
+    }
+
     private fitUpdatePayload(contentForm: any): Partial<Projector> {
-        const payload: Partial<Projector> = { ...contentForm };
-        const aspectRatio = payload.aspectRatio!.split(`:`);
-        payload.aspect_ratio_numerator = parseInt(aspectRatio[0], 10);
-        payload.aspect_ratio_denominator = parseInt(aspectRatio[1], 10);
+        const payload: Partial<Projector> = { ...this.processPayload(contentForm) };
+        return payload;
+    }
+
+    /**
+     * Ensures that the update forms content is brought into the form that it should have in the payload
+     */
+    private processPayload(contentFormData: any): any {
+        if (Object.keys(contentFormData).includes(`projectiondefault_ids`)) {
+            const projectiondefaults = contentFormData[`projectiondefault_ids`];
+            contentFormData.projectiondefault_ids = this.getProjectionDefaultsPayload(projectiondefaults);
+        }
+        const aspectRatio = (contentFormData.aspectRatio! as string).split(`:`);
+        contentFormData.aspect_ratio_numerator = parseInt(aspectRatio[0], 10);
+        contentFormData.aspect_ratio_denominator = parseInt(aspectRatio[1], 10);
+        return contentFormData;
+    }
+
+    private getProjectionDefaultsPayload(projectiondefaultKeys: string[]): { [key: string]: any } {
+        let payload = {};
+        // All defaults that are set to true should be set to the current projectors id
+        for (let i = 0; i < projectiondefaultKeys.length; i++) {
+            payload[projectiondefaultKeys[i]] = this.projector.id;
+        }
+        // All defaults that were set to false should be set to standard, if they were previously set to current projector
+        const notSelectedKeys = Object.keys(ProjectiondefaultVerbose).filter(
+            key => !projectiondefaultKeys.includes(key)
+        );
+        for (let i = 0; i < notSelectedKeys.length; i++) {
+            if (this.isCurrentProjectorDefault(notSelectedKeys[i])) {
+                payload[Projectiondefault[notSelectedKeys[i]]] = this.activeMeeting.meeting!.reference_projector_id;
+            }
+        }
         return payload;
     }
 }

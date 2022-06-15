@@ -28,8 +28,15 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.create(payload);
     }
 
-    public update(payload: any, projector: Identifiable): Promise<void> {
-        return this.repo.update(payload, projector);
+    public update(payload: any, projector: Identifiable): Promise<void> | Promise<[void, void]> {
+        if (payload.projectiondefault_ids) {
+            const defaultsPromise = this.updateProjectordefaults(payload.projectiondefault_ids);
+            delete payload[`projectiondefault_ids`];
+            const updatePromise = this.repo.update(payload, projector);
+            return Promise.all([updatePromise, defaultsPromise]);
+        } else {
+            return this.repo.update(payload, projector);
+        }
     }
 
     public delete(projector: Identifiable): Promise<void> {
@@ -144,5 +151,12 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
                 return null;
             }) || []
         );
+    }
+
+    private async updateProjectordefaults(defaultKeys: { [key: string]: any }): Promise<void> {
+        if (Object.keys(defaultKeys).length) {
+            return this.meetingRepo.update({ id: this.activeMeetingId, default_projector_$_id: defaultKeys });
+        }
+        return;
     }
 }
