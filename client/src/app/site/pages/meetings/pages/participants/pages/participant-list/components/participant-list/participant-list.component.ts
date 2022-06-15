@@ -232,7 +232,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.groupsObservable, true, choices);
         if (selectedChoice) {
-            const choosedGroupIds = selectedChoice.items as Ids;
+            const choosedGroupIds = selectedChoice.ids as Ids;
             if (selectedChoice.action === ADD) {
                 this.repo
                     .update(user => {

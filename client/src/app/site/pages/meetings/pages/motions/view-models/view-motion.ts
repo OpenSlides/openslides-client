@@ -247,10 +247,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         if (this.changedAmendmentLines?.length) {
             return this.changedAmendmentLines
                 .map(diffLine => {
-                    if (diffLine.diffLineTo === diffLine.diffLineFrom + 1) {
+                    if (diffLine.diffLineTo === diffLine.diffLineFrom) {
                         return `` + diffLine.diffLineFrom;
                     } else {
-                        return `${diffLine.diffLineFrom} - ${diffLine.diffLineTo - 1}`;
+                        return `${diffLine.diffLineFrom} - ${diffLine.diffLineTo}`;
                     }
                 })
                 .toString();

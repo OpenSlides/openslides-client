@@ -4,9 +4,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
+import { GlobalHeadbarModule } from 'src/app/site/modules/global-headbar';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
-import { GlobalHeadbarModule } from 'src/app/ui/modules/global-headbar/global-headbar.module';
 import { SidenavModule } from 'src/app/ui/modules/sidenav';
 
 import { InteractionModule } from '../../pages/interaction/interaction.module';

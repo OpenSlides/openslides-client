@@ -63,9 +63,9 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         );
         if (selectedChoice) {
             if (selectedChoice.action === ADD) {
-                this.committeeController.bulkForwardToCommittees(this.selectedRows, selectedChoice.items as number[]);
+                this.committeeController.bulkForwardToCommittees(this.selectedRows, selectedChoice.ids as number[]);
             } else {
-                this.committeeController.bulkUnforwardToCommittees(this.selectedRows, selectedChoice.items as number[]);
+                this.committeeController.bulkUnforwardToCommittees(this.selectedRows, selectedChoice.ids as number[]);
             }
         }
     }

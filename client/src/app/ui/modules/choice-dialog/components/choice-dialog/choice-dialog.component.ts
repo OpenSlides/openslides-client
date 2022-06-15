@@ -1,6 +1,9 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { Selectable } from 'src/app/domain/interfaces';
+import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
 
 import { ChoiceAnswer, ChoiceDialogConfig } from '../../definitions';
 
@@ -40,10 +43,7 @@ export class ChoiceDialogComponent {
         }
     }
 
-    /**
-     * All selected ids, if this is a multiselect choice
-     */
-    public selectedMultiChoices: number[] = [];
+    private readonly _selectedItems: { [id: Id]: Selectable } = {};
 
     public constructor(
         public dialogRef: MatDialogRef<ChoiceDialogComponent, ChoiceAnswer>,
@@ -58,18 +58,31 @@ export class ChoiceDialogComponent {
     /**
      * Closes the dialog with the selected choices
      */
-    public closeDialog(ok: boolean, action?: string): void {
+    protected closeDialog(ok: boolean, action?: string): void {
         if (!this.data.multiSelect && this.selectedChoice === null) {
             action = this.data.clearChoiceOption;
         }
         if (ok) {
             const resultValue = this.selectForm.get(`select`)?.value;
+            const ids = Array.isArray(resultValue) ? resultValue : [resultValue];
+            const items = Object.values(this._selectedItems);
             this.dialogRef.close({
                 action: action ? action : null,
-                items: resultValue
+                ids,
+                firstId: ids.at(0),
+                items,
+                firstItem: items.at(0)
             });
         } else {
             this.dialogRef.close();
+        }
+    }
+
+    protected onSelectionChanged({ selected, value }: OsOptionSelectionChanged): void {
+        if (selected) {
+            this._selectedItems[value.id] = value;
+        } else {
+            delete this._selectedItems[value.id];
         }
     }
 }

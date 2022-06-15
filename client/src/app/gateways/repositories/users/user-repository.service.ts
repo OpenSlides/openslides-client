@@ -388,6 +388,15 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.sendActionToBackend(UserAction.FORGET_PASSWORD_CONFIRM, payload);
     }
 
+    public setPresent(context: { isPresent: boolean; meetingId: Id; users: Identifiable[] }): Action<void> {
+        const payload = context.users.map(user => ({
+            is_present: context.isPresent,
+            meeting_id: context.meetingId,
+            id: user.id
+        }));
+        return this.createAction(UserAction.SET_PRESENT, payload);
+    }
+
     private sanitizePayload(payload: any): any {
         const temp = { ...payload };
         for (const key of Object.keys(temp).filter(field => !this.isFieldAllowedToBeEmpty(field))) {

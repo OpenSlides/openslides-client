@@ -1,42 +1,44 @@
-<div class="account-dialog-title flex-container">
-    <h2 mat-dialog-title class="left-align no-margin">{{ self?.short_name }}</h2>
-    <button mat-icon-button [matDialogClose]="null">
-        <mat-icon>close</mat-icon>
-    </button>
-</div>
-<mat-divider></mat-divider>
-<div mat-dialog-content class="account-dialog-container">
-    <div class="account-dialog-menu-items">
-        <mat-selection-list [multiple]="false">
-            <ng-container *ngFor="let item of menuItems">
-                <mat-list-option
-                    [value]="item"
-                    [selected]="activeMenuItem === item.name"
-                    (click)="activeMenuItem = item.name"
-                >
-                    {{ item.name | translate }}
-                </mat-list-option>
-                <mat-divider></mat-divider>
-            </ng-container>
-        </mat-selection-list>
+<div>
+    <div class="account-dialog-title flex-container">
+        <h2 mat-dialog-title class="left-align no-margin">{{ self?.short_name }}</h2>
+        <button mat-icon-button [matDialogClose]="null">
+            <mat-icon>close</mat-icon>
+        </button>
     </div>
-    <mat-divider [vertical]="true"></mat-divider>
-    <div class="account-dialog-content">
-        <div class="content-wrapper" (keydown)="onKeyDown($event)">
-            <ng-container [ngSwitch]="activeMenuItem">
-                <ng-container
-                    *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
-                    [ngTemplateOutlet]="showProfileView"
-                ></ng-container>
-                <ng-container
-                    *ngSwitchCase="menuItemsRef.SHOW_MEETINGS"
-                    [ngTemplateOutlet]="showMeetingsView"
-                ></ng-container>
-                <ng-container
-                    *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
-                    [ngTemplateOutlet]="changePasswordView"
-                ></ng-container>
-            </ng-container>
+    <mat-divider></mat-divider>
+    <div mat-dialog-content class="account-dialog-container">
+        <div class="account-dialog-menu-items">
+            <mat-selection-list [multiple]="false">
+                <ng-container *ngFor="let item of menuItems">
+                    <mat-list-option
+                        [value]="item"
+                        [selected]="activeMenuItem === item.name"
+                        (click)="activeMenuItem = item.name"
+                    >
+                        {{ item.name | translate }}
+                    </mat-list-option>
+                    <mat-divider></mat-divider>
+                </ng-container>
+            </mat-selection-list>
+        </div>
+        <mat-divider [vertical]="true"></mat-divider>
+        <div class="account-dialog-content">
+            <div class="content-wrapper" (keydown)="onKeyDown($event)">
+                <ng-container [ngSwitch]="activeMenuItem">
+                    <ng-container
+                        *ngSwitchCase="menuItemsRef.SHOW_PROFILE"
+                        [ngTemplateOutlet]="showProfileView"
+                    ></ng-container>
+                    <ng-container
+                        *ngSwitchCase="menuItemsRef.SHOW_MEETINGS"
+                        [ngTemplateOutlet]="showMeetingsView"
+                    ></ng-container>
+                    <ng-container
+                        *ngSwitchCase="menuItemsRef.CHANGE_PASSWORD"
+                        [ngTemplateOutlet]="changePasswordView"
+                    ></ng-container>
+                </ng-container>
+            </div>
         </div>
     </div>
 </div>

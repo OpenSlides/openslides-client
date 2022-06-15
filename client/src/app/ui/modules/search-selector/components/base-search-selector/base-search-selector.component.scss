@@ -8,13 +8,32 @@
     }
 }
 
-.os-search-selector--chip-container {
-    margin: 5px;
-    width: max-content;
-    height: 30px;
+.os-search-selector--chip-wrapper {
+    height: 3em;
+    line-height: 3em;
 
-    .mat-chip {
-        max-width: 150px;
+    .os-search-selector--chip-container {
+        padding: 5px;
+        width: max-content;
+        height: 100%;
+
+        .mat-chip {
+            max-width: 150px;
+        }
+    }
+}
+
+.os-search-selector--input-wrapper {
+    height: 3em;
+    line-height: 3em;
+
+    input {
+        height: 100%;
+        width: calc(100% - 60px); // the summary of 44px + 16px
+        padding: 0 44px 0 16px;
+        outline: none;
+        border: none;
+        border-radius: 4px 4px 0 0; // only the top corners
     }
 }
 

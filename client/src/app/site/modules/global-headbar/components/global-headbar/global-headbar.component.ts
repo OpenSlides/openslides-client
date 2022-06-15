@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-
-import { ActiveMeetingService } from '../../../../site/pages/meetings/services/active-meeting.service';
-import { OrganizationService } from '../../../../site/pages/organization/services/organization.service';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 
 @Component({
     selector: `os-global-headbar`,

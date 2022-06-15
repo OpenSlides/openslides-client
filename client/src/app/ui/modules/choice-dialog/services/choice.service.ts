@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom, Observable } from 'rxjs';
+import { Selectable } from 'src/app/domain/interfaces';
 
-import { Displayable } from '../../../../domain/interfaces';
 import { infoDialogSettings } from '../../../../infrastructure/utils/dialog-settings';
 import { ChoiceDialogModule } from '../choice-dialog.module';
 import { ChoiceDialogComponent } from '../components/choice-dialog/choice-dialog.component';
@@ -17,7 +17,7 @@ export class ChoiceService {
     /**
      * Opens the dialog. Returns the chosen value after the user accepts.
      */
-    public async open(config: ChoiceDialogConfig): Promise<ChoiceAnswer>;
+    public async open<T extends Selectable = Selectable>(config: ChoiceDialogConfig<T>): Promise<ChoiceAnswer<T>>;
     /**
      * @deprecated This signature is deprecated and will be removed in the next version. Instead, pass an object.
      * @param title The title to display in the dialog
@@ -31,20 +31,20 @@ export class ChoiceService {
      * have this string's value
      * @returns an answer {@link ChoiceAnswer}
      */
-    public async open(
+    public async open<T extends Selectable = Selectable>(
         title: string,
-        choices?: Observable<Displayable[]> | Displayable[],
+        choices?: Observable<T[]> | T[],
         multiSelect?: boolean,
         actions?: string[],
         clearChoiceOption?: string
-    ): Promise<ChoiceAnswer>;
-    public async open(
+    ): Promise<ChoiceAnswer<T>>;
+    public async open<T extends Selectable = Selectable>(
         titleOrConfig: string | ChoiceDialogConfig,
-        choices?: Observable<Displayable[]> | Displayable[],
+        choices?: Observable<T[]> | T[],
         multiSelect: boolean = false,
         actions?: string[],
         clearChoiceOption?: string
-    ): Promise<ChoiceAnswer> {
+    ): Promise<ChoiceAnswer<T>> {
         const data =
             typeof titleOrConfig !== `string`
                 ? titleOrConfig

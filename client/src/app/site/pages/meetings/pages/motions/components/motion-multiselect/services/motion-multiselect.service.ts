@@ -71,7 +71,7 @@ export class MotionMultiselectService {
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () =>
-                    this.repo.update({ workflow_id: selectedChoice.items as number }, ...motions).resolve()
+                    this.repo.update({ workflow_id: selectedChoice.firstId }, ...motions).resolve()
             });
         }
     }
@@ -91,7 +91,7 @@ export class MotionMultiselectService {
         if (selectedChoice) {
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
-                hideAfterPromiseResolved: () => this.repo.setState(selectedChoice.items as number, ...motions).resolve()
+                hideAfterPromiseResolved: () => this.repo.setState(selectedChoice.firstId, ...motions).resolve()
             });
         }
     }
@@ -127,7 +127,7 @@ export class MotionMultiselectService {
                 hideAfterPromiseResolved: () =>
                     selectedChoice.action
                         ? this.repo.resetRecommendation(...motions).resolve()
-                        : this.repo.setRecommendation(selectedChoice.items as number, ...motions).resolve()
+                        : this.repo.setRecommendation(selectedChoice.firstId, ...motions).resolve()
             });
         }
     }
@@ -146,7 +146,7 @@ export class MotionMultiselectService {
             multiSelect: false,
             clearChoiceOption
         });
-        const categoryId = selectedChoice?.action ? null : (selectedChoice?.items as number);
+        const categoryId = selectedChoice?.action ? null : selectedChoice?.firstId;
         if (selectedChoice && categoryId) {
             const message = this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
@@ -175,7 +175,7 @@ export class MotionMultiselectService {
         );
         if (selectedChoice) {
             let action: Action<any> | null = null;
-            const users = (selectedChoice.items as Ids).map(userId => ({ id: userId }));
+            const users = (selectedChoice.ids as Ids).map(userId => ({ id: userId }));
             if (selectedChoice.action === ADD) {
                 action = Action.from(...motions.map(motion => this.submitterRepo.create(motion, ...users)));
             } else if (selectedChoice.action === REMOVE) {
@@ -217,12 +217,12 @@ export class MotionMultiselectService {
             let requestData: Action<void>[] = [];
             if (selectedChoice.action === ADD) {
                 requestData = motions.map(motion => {
-                    const tagIds = new Set((motion.tag_ids || []).concat(selectedChoice.items));
+                    const tagIds = new Set((motion.tag_ids || []).concat(selectedChoice.ids));
                     return this.repo.update({ tag_ids: Array.from(tagIds) }, motion);
                 });
             } else if (selectedChoice.action === REMOVE) {
                 requestData = motions.map(motion => {
-                    const tagIdsToRemove = new Set(selectedChoice.items as number[]);
+                    const tagIdsToRemove = new Set(selectedChoice.ids as number[]);
                     return this.repo.update({ tag_ids: Array.from(tagIdsToRemove) }, motion);
                 });
             } else {
@@ -250,7 +250,7 @@ export class MotionMultiselectService {
             multiSelect: false,
             clearChoiceOption
         });
-        const blockId = selectedChoice?.action ? null : (selectedChoice?.items as number);
+        const blockId = selectedChoice?.action ? null : selectedChoice?.firstId;
         if (selectedChoice && blockId) {
             const message = this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
@@ -270,14 +270,14 @@ export class MotionMultiselectService {
             const actions: Action<any>[] = [];
             const motionsNotInAgenda = motions.filter(motion => !motion.agenda_item_id);
             if (motionsNotInAgenda.length) {
-                const payload = { parent_id: selectedChoice.items as number, type: AgendaItemType.HIDDEN };
+                const payload = { parent_id: selectedChoice.firstId, type: AgendaItemType.HIDDEN };
                 actions.push(this.agendaRepo.addToAgenda(payload, ...motions));
             }
             if (motions.length > motionsNotInAgenda.length) {
                 actions.push(
                     this.agendaRepo.assignToParent({
                         ids: motions.map(motion => motion.agenda_item_id).filter(id => !!id),
-                        parent_id: selectedChoice.items as number
+                        parent_id: selectedChoice.firstId
                     })
                 );
             }
@@ -316,14 +316,14 @@ export class MotionMultiselectService {
             if (!selectedChoice) {
                 return;
             }
-            if (!selectedChoice.items) {
+            if (!selectedChoice.ids) {
                 throw new Error(this.translate.instant(`No items selected`));
             }
             const parentId =
                 selectedChoice.action === TO_PARENT
-                    ? (selectedChoice.items as number)
-                    : this.repo.getViewModel(selectedChoice.items as number)!.lead_motion_id;
-            const olderSibling = selectedChoice.action === INSERT_AFTER ? (selectedChoice.items as number) : undefined;
+                    ? selectedChoice.firstId
+                    : this.repo.getViewModel(selectedChoice.firstId)!.lead_motion_id;
+            const olderSibling = selectedChoice.action === INSERT_AFTER ? selectedChoice.firstId : undefined;
             const sortedTree = this.treeService.insertBranchesIntoTree(
                 partialTree,
                 itemsToMove,
