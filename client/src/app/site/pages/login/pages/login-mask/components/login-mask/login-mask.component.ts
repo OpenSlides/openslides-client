@@ -149,7 +149,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e: any) {
             // this.spinnerService.hide();
-            this.loginErrorMsg = e;
+            this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${e.message}`;
         }
     }
 

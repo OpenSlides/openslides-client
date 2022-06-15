@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 
 import {
@@ -14,13 +13,14 @@ import {
 import { ProcessError } from '../infrastructure/errors';
 import { OpenSlidesInjector } from '../infrastructure/utils/di/openslides-injector';
 import { toBase64 } from '../infrastructure/utils/functions';
+import { ErrorMapService } from './error-map.service';
 
 const defaultHeaders = { [`Content-Type`]: `application/json` };
 @Injectable({
     providedIn: `root`
 })
 export class HttpService {
-    public constructor(private http: HttpClient) {}
+    public constructor(private http: HttpClient, private errorMapper: ErrorMapService) {}
 
     /**
      * Send the a http request the the given path.
@@ -61,9 +61,12 @@ export class HttpService {
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
                 const snackBar = OpenSlidesInjector.get(MatSnackBar);
-                const translate = OpenSlidesInjector.get(TranslateService);
                 if (!!error.error.message) {
-                    snackBar.open(`${translate.instant(`Error`)}: ${error.error.message}`, `Ok`);
+                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, error.url);
+                    if (typeof cleanError !== `string`) {
+                        throw cleanError;
+                    }
+                    snackBar.open(cleanError, `Ok`);
                 }
                 return null;
             } else {
