@@ -13,6 +13,7 @@ import { OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatOption, MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -61,7 +62,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
      * Label showing, if there are no options for a specific search.
      */
     @Input()
-    public noOptionsFoundLabel = `No options found`;
+    public noOptionsFoundLabel = _(`No options found`);
 
     /**
      * A function can be passed to transform a value before it is set as value of the underlying form-control.
@@ -185,7 +186,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         this.addOrRemoveId(itemId);
     }
 
-    public addOrRemoveId(id: Id): void {
+    private addOrRemoveId(id: Id): void {
         if (!Array.isArray(this.selectedIds)) {
             this.selectedIds = [];
         }
@@ -199,7 +200,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             selected = true;
         }
         this.setNextValue(this.selectedIds);
-        this.selectionChanged.emit({ value, selected });
     }
 
     public onOpenChanged(event: boolean): void {
@@ -211,7 +211,10 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     public onSelectionChange(value: Selectable, change: MatOptionSelectionChange): void {
         if (change.isUserInput && this.multiple) {
-            this.addOrRemoveId(value.id);
+            if (this.multiple) {
+                this.addOrRemoveId(value.id);
+            }
+            this.selectionChanged.emit({ value, selected: change.source.selected });
         }
     }
 

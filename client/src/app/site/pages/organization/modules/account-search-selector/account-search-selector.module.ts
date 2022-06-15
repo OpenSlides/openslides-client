@@ -6,7 +6,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 
@@ -27,7 +26,6 @@ const DECLARATIONS = [AccountSearchSelectorComponent];
         MatChipsModule,
         MatTooltipModule,
         ScrollingModule,
-        NgxMatSelectSearchModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })

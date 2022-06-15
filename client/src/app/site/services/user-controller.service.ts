@@ -96,6 +96,10 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         return this.repo.forgetPasswordConfirm(payload);
     }
 
+    public setPresent(context: { isPresent: boolean; meetingId: Id; users: Identifiable[] }): Action<void> {
+        return this.repo.setPresent(context);
+    }
+
     /**
      * Generates a random password
      *

@@ -6,6 +6,7 @@ import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permi
 import { OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
@@ -50,32 +51,29 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     }
 
     public async assignMeetingToUsers(): Promise<void> {
-        const content = this.translate.instant(
-            `This will add or remove the selected accounts to the following meeting:`
-        );
+        const title = this.translate.instant(`This will add or remove the selected accounts to the following meeting:`);
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);
-        const choices = [ADD, REMOVE];
-        const meetingList = this.meetingRepo.getViewModelList();
-        const selectedChoice = await this.choiceService.open(content, meetingList, false, choices);
-        if (selectedChoice) {
-            /**
-             * TODO: would be nice if the couce service could return the
-             * selected view models and not just the numbers
-             */
-            const selectedMeeting = meetingList.find(meeting => {
-                return (selectedChoice.items as number) === meeting.id;
-            });
-            if (!selectedMeeting) {
-                throw new Error(`Wrong meeting selected`);
+        const actions = [ADD, REMOVE];
+        const result = await this.choiceService.open<ViewMeeting>({
+            title,
+            choices: this.meetingRepo.getViewModelList(),
+            multiSelect: true,
+            actions
+        });
+        if (result) {
+            if (!result.items.length) {
+                throw new Error(_(`No meeting selected`));
             }
-            if (selectedChoice.action === ADD) {
-                this.controller.bulkAddUserToMeeting(this.selectedRows, selectedMeeting).resolve();
+            if (result.action === ADD) {
+                this.controller.bulkAddUserToMeeting(this.selectedRows, ...result.items).resolve();
             } else {
-                this.controller.bulkRemoveUserFromMeeting(this.selectedRows, selectedMeeting).resolve();
+                this.controller.bulkRemoveUserFromMeeting(this.selectedRows, ...result.items).resolve();
             }
         }
     }
+
+    public async changeActiveState(): Promise<void> {}
 
     public csvExportMemberList(): void {
         this.exporter.downloadAccountCsvFile(this.listComponent.source);

@@ -208,7 +208,7 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
             const actions = [this.translate.instant(`Insert before`), this.translate.instant(`Insert behind`)];
             const selectedChoice = await this.choiceService.open(content, choices, false, actions);
             if (selectedChoice) {
-                const newIndex = selectedChoice.items as number;
+                const newIndex = selectedChoice.firstId;
 
                 this.sortSelector.drop(
                     {

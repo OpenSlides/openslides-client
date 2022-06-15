@@ -69,7 +69,6 @@
     "ng2-pdf-viewer": "^8.0.1",
     "ngx-device-detector": "^3.0.0",
     "ngx-file-drop": "^13.0.0",
-    "ngx-mat-select-search": "^4.0.2",
     "ngx-material-timepicker": "^5.5.3",
     "ngx-papaparse": "^5.0.0",
     "pdfmake": "^0.2.5",

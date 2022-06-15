@@ -7,34 +7,39 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { UserComponentsModule } from 'src/app/ui/modules/user-components';
 
-import { UserComponentsModule } from '../../../user-components';
+import { OpenSlidesTranslationModule } from '../translations';
 import { AccountButtonComponent } from './components/account-button/account-button.component';
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
-import { GlobalAccountServiceModule } from './services/global-account-service.module';
+import { GlobalHeadbarComponent } from './components/global-headbar/global-headbar.component';
+import { GlobalSearchComponent } from './components/global-search/global-search.component';
 
-const COMPONENTS = [AccountButtonComponent, AccountDialogComponent];
+const MODULES = [
+    MatToolbarModule,
+    MatIconModule,
+    MatListModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatDialogModule
+];
+const DECLARATIONS = [GlobalHeadbarComponent];
 
 @NgModule({
-    declarations: COMPONENTS,
-    exports: [...COMPONENTS],
+    exports: DECLARATIONS,
+    declarations: [...DECLARATIONS, AccountButtonComponent, AccountDialogComponent, GlobalSearchComponent],
     imports: [
         CommonModule,
-        UserComponentsModule,
-        GlobalAccountServiceModule,
         OpenSlidesTranslationModule.forChild(),
+        UserComponentsModule,
         RouterModule,
-        MatIconModule,
-        MatListModule,
-        MatButtonModule,
-        MatDividerModule,
-        MatMenuModule,
-        MatTooltipModule,
-        MatDialogModule,
-        ScrollingModule
+        ScrollingModule,
+        ...MODULES
     ]
 })
-export class AccountModule {}
+export class GlobalHeadbarModule {}

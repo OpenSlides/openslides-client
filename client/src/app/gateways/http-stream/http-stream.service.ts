@@ -53,7 +53,8 @@ export class HttpStreamService {
     ): HttpStream<T> {
         const endpoint = this.getEndpointConfiguration(endpointConfiguration);
         const requestOptions = this.getOptions(bodyFn, paramsFn);
-        const stream = this.http.getObservableFor<HttpEvent<string>>(endpoint.method, endpoint.url, requestOptions);
+        const httpContext = { method: endpoint.method, url: endpoint.url, options: requestOptions };
+        const stream = this.http.getObservableFor<HttpEvent<string>>(httpContext);
         return new HttpStream(() => stream, {
             endpoint,
             onError,

@@ -16,7 +16,6 @@ import { ThemeService } from 'src/app/site/services/theme.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { GlobalAccountService } from '../../services/global-account.service';
 import { AccountDialogComponent } from '../account-dialog/account-dialog.component';
 
 @Component({
@@ -75,7 +74,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         private theme: ThemeService,
         private meetingSettingsService: MeetingSettingsService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private globalAccountService: GlobalAccountService
+        private controller: UserControllerService
     ) {
         super();
     }
@@ -118,7 +117,11 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public toggleOperatorPresence(): void {
-        this.globalAccountService.setPresent(!this.isPresent, this.user!);
+        this.controller.setPresent({
+            isPresent: !this.isPresent,
+            meetingId: this.activeMeetingId,
+            users: [this.user!]
+        });
     }
 
     public openAccountDialog(): void {

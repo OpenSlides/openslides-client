@@ -56,7 +56,7 @@ export class HttpService {
         };
 
         try {
-            const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>(method, url, options));
+            const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>({ method, url, options }));
             return response?.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
@@ -70,7 +70,15 @@ export class HttpService {
         }
     }
 
-    public getObservableFor<T = any>(method: HttpMethod, url: string, options: HttpOptions = {}): Observable<T> {
+    public getObservableFor<T = any>({
+        method,
+        url,
+        options = {}
+    }: {
+        method: HttpMethod;
+        url: string;
+        options: HttpOptions;
+    }): Observable<T> {
         return this.http.request<T>(method, url, {
             observe: options.observe ?? (`body` as any),
             responseType: options?.responseType ?? (`json` as any),

@@ -7,7 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { DirectivesModule } from 'src/app/ui/directives';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
 import { ListSearchSelectorComponent } from './components/list-search-selector/list-search-selector.component';
@@ -33,7 +33,7 @@ const DECLARATIONS = [
         MatTooltipModule,
         MatButtonModule,
         ScrollingModule,
-        NgxMatSelectSearchModule,
+        DirectivesModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })
