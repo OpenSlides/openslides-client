@@ -1,5 +1,5 @@
 .head-button {
-    position: fixed;
+    position: fixed !important;
     z-index: 10; // should always be in top of everything else
     right: 20px;
     bottom: 55px;
