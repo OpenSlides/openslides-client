@@ -88,10 +88,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     /**
      * Options for the `Projection defaults`-selector
      */
-    public readonly projectionDefaultOptions = Object.keys(ProjectiondefaultVerbose).map(key => ({
-        key: Projectiondefault[key],
-        text: ProjectiondefaultVerbose[key]
-    }));
+    public readonly projectiondefaultVerbose = ProjectiondefaultVerbose;
 
     private get _aspectRatioControl(): AbstractControl {
         return this.updateForm.get(ASPECT_RATIO_FORM_KEY)!;
@@ -147,7 +144,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             }),
             // react to changes in the meeting (important for projector defaults)
             this.activeMeeting.meetingObservable.subscribe(meeting => {
-                this.handleMeeting(meeting);
+                this.updateProjectorDefaults(meeting);
             })
         );
     }
@@ -226,8 +223,8 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * Processes all relevant data in a meeting (such as the projection defaults)
      * @param meeting the changed meeting
      */
-    private handleMeeting(meeting: ViewMeeting): void {
-        Object.keys(ProjectiondefaultVerbose).forEach(key => {
+    private updateProjectorDefaults(meeting: ViewMeeting): void {
+        Object.keys(this.projectiondefaultVerbose).forEach(key => {
             const defaultProjectorId = meeting.default_projector(Projectiondefault[key]).id;
             this.handleChangeInDefaultProjector(key, defaultProjectorId);
         });
@@ -246,16 +243,14 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             this.isCurrentProjectorDefault(key) !== (defaultProjectorId === this.projector.id) ? true : false;
         this._defaultProjectors[key] = defaultProjectorId;
         if (toggleCheckbox && this.updateForm) {
-            let newValue;
-            const formValue = this.updateForm.value[`projectiondefault_ids`] as string[];
-            if (formValue.filter(selection => selection === Projectiondefault[key]).length) {
-                newValue = formValue.filter(value => value !== Projectiondefault[key]);
+            let formValue = this.updateForm.value[`projectiondefault_ids`] as string[];
+            if (formValue.filter(selection => selection === key).length) {
+                formValue = formValue.filter(value => value !== key);
             } else {
-                formValue.push(Projectiondefault[key]);
-                newValue = formValue;
+                formValue.push(key);
             }
             this.updateForm.patchValue({
-                projectiondefault_ids: newValue
+                projectiondefault_ids: formValue
             });
         }
     }
@@ -291,10 +286,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         let payload = {};
         // All defaults that are set to true should be set to the current projectors id
         for (let i = 0; i < projectiondefaultKeys.length; i++) {
-            payload[projectiondefaultKeys[i]] = this.projector.id;
+            payload[Projectiondefault[projectiondefaultKeys[i]]] = this.projector.id;
         }
         // All defaults that were set to false should be set to standard, if they were previously set to current projector
-        const notSelectedKeys = Object.keys(ProjectiondefaultVerbose).filter(
+        const notSelectedKeys = Object.keys(this.projectiondefaultVerbose).filter(
             key => !projectiondefaultKeys.includes(key)
         );
         for (let i = 0; i < notSelectedKeys.length; i++) {

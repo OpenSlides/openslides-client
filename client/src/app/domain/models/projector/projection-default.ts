@@ -1,3 +1,5 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 export enum Projectiondefault {
     agendaAllItems = `agenda_all_items`,
     topics = `topics`,
@@ -17,19 +19,19 @@ export enum Projectiondefault {
 }
 
 export const ProjectiondefaultVerbose: { [key in keyof typeof Projectiondefault]: string } = {
-    agendaAllItems: `Agenda Items`,
-    topics: `Topics`,
-    listOfSpeakers: `List of Speakers`,
-    currentListOfSpeakers: `Current List of Speakers`,
-    motion: `Motions`,
-    amendment: `Amendments`,
-    motionBlock: `Motion Blocks`,
-    assignment: `Assignments`,
-    user: `Users`,
-    mediafile: `Mediafiles`,
-    projectorMessage: `Messages`,
-    projectorCountdown: `Countdowns`,
-    assignmentPoll: `Assignment Polls`,
-    motionPoll: `Motion Polls`,
-    poll: `Polls`
+    agendaAllItems: _(`Agenda`),
+    topics: _(`Topics`),
+    listOfSpeakers: _(`List of speakers`),
+    currentListOfSpeakers: _(`Current list of speakers`),
+    motion: _(`Motions`),
+    amendment: _(`Amendments`),
+    motionBlock: _(`Motion blocks`),
+    assignment: _(`Elections`),
+    user: _(`Users`),
+    mediafile: _(`Media files`),
+    projectorMessage: _(`Messages`),
+    projectorCountdown: _(`Countdowns`),
+    assignmentPoll: _(`Election polls`),
+    motionPoll: _(`Motion polls`),
+    poll: _(`Polls`)
 };
