@@ -62,7 +62,9 @@ export class HttpService {
             if (error instanceof HttpErrorResponse) {
                 const snackBar = OpenSlidesInjector.get(MatSnackBar);
                 const translate = OpenSlidesInjector.get(TranslateService);
-                snackBar.open(`${translate.instant(`Error`)}: ${error.error.message}`, `Ok`);
+                if (!!error.error.message) {
+                    snackBar.open(`${translate.instant(`Error`)}: ${error.error.message}`, `Ok`);
+                }
                 return null;
             } else {
                 throw new ProcessError(error);
