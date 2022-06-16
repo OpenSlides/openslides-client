@@ -146,6 +146,11 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         try {
             // this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
             const { username, password } = this.formatLoginInputValues(this.loginForm.value);
+            if (!username || !password) {
+                throw new Error(
+                    `No ${!username ? (!password ? `username and no password` : `username`) : `password`} entered!`
+                );
+            }
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e: any) {
             // this.spinnerService.hide();
