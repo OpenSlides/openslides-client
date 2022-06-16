@@ -14,7 +14,8 @@ import { PollSlideData, PollSlideDataFields, SlidePollOption, SlidePollOptionFie
 export enum PollContentObjectType {
     Standalone = `standalone`,
     Motion = `motion`,
-    Assignment = `assignment`
+    Assignment = `assignment`,
+    Topic = `topic`
 }
 
 @Component({
@@ -113,7 +114,6 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
     }
 
     private createOptionData(data: SlidePollOption, weight: number = 1): OptionData {
-        console.log(data);
         const getOptionTitle: () => OptionTitle = () => {
             if (data.text) {
                 return { title: data.text };
