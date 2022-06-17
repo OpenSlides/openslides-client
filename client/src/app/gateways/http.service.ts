@@ -60,8 +60,8 @@ export class HttpService {
             return response?.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
-                const snackBar = OpenSlidesInjector.get(MatSnackBar);
                 if (!!error.error.message) {
+                    const snackBar = OpenSlidesInjector.get(MatSnackBar);
                     const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, error.url);
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
