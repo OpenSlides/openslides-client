@@ -8,7 +8,7 @@ export interface TitleInformationWithAgendaItem {
 // should refer to the provided `agenda_item_number` in the payload.
 // Note that not every object has a agenda item number in it's title information.
 export function modifyAgendaItemNumber(titleInformation: TitleInformationWithAgendaItem): void {
-    if (titleInformation.agenda_item_number) {
+    if (titleInformation?.agenda_item_number) {
         titleInformation.agenda_item = { item_number: titleInformation.agenda_item_number };
     }
 }
