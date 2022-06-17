@@ -23,9 +23,11 @@ export const getProjectorListSubscriptionConfig = (
             `projector_countdown_ids`,
             `projector_message_ids`,
             `default_projector_$_id`,
-            `reference_projector_id`,
             { idField: `speaker_ids`, additionalFields: [`user_id`] },
             `list_of_speakers_ids`
+        ],
+        additionalFields: [
+            `reference_projector_id`
         ]
     },
     subscriptionName: PROJECTOR_SUBSCRIPTION,
