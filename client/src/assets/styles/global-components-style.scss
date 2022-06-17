@@ -403,6 +403,12 @@
         }
     }
 
+    .assignment-result-table {
+        tr {
+            border-bottom: 1px solid mat.get-color-from-palette($background, focused-button);
+        }
+    }
+
     /** remove unwanted spaces from group displays */
     .inline-flex {
         display: inline-flex;

@@ -301,19 +301,16 @@ export abstract class PollService {
         return [
             {
                 vote: `votesvalid`,
-                icon: `done`,
                 hide: poll.votesvalid === VOTE_UNDOCUMENTED,
                 showPercent: this.showPercentOfValidOrCast(poll)
             },
             {
                 vote: `votesinvalid`,
-                icon: `not_interested`,
                 hide: poll.votesinvalid === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
                 showPercent: poll.onehundred_percent_base === PollPercentBase.Cast
             },
             {
                 vote: `votescast`,
-                icon: `label`,
                 hide: poll.votescast === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
                 showPercent: poll.onehundred_percent_base === PollPercentBase.Cast
             }

@@ -14,16 +14,12 @@
         height: 48px;
 
         td:first-child {
-            padding-right: 1em;
+            padding-right: 0.5em;
         }
     }
 
     tr.sums {
         border-bottom: none;
-        td {
-            padding-top: 1em;
-            padding-bottom: 1em;
-        }
     }
 
     .result {
