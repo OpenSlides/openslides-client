@@ -12,19 +12,21 @@ export const getProjectorListSubscriptionConfig = (
         viewModelCtor: ViewMeeting,
         ids: [id],
         follow: [
-            `projector_ids`,
-            { idField: `projection_ids`, follow: [`content_object_id`] },
-            { idField: `all_projection_ids`, follow: [`content_object_id`] },
+            {
+                idField: `projector_ids`,
+                follow: [
+                    { idField: `current_projection_ids`, fieldset: `content`, follow: [`content_object_id`] },
+                    { idField: `preview_projection_ids`, follow: [`content_object_id`] },
+                    { idField: `history_projection_ids`, follow: [`content_object_id`] }
+                ]
+            },
             `projector_countdown_ids`,
             `projector_message_ids`,
             `default_projector_$_id`,
-            {
-                idField: `reference_projector_id`,
-                follow: [{ idField: `current_projection_ids`, follow: [`content_object_id`] }]
-            },
             { idField: `speaker_ids`, additionalFields: [`user_id`] },
             `list_of_speakers_ids`
-        ]
+        ],
+        additionalFields: [`reference_projector_id`]
     },
     subscriptionName: PROJECTOR_SUBSCRIPTION,
     hideWhen: hasMeetingIdChangedObservable()

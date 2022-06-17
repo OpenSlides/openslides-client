@@ -34,10 +34,13 @@ export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<Vi
             `preview_projector_id`,
             `current_projector_id`,
             `history_projector_id`,
-            `content`,
             `current_projector_id`
         ];
-        return { [DEFAULT_FIELDSET]: defaultKeys };
+        const contentKeys: (keyof Projection)[] = defaultKeys.concat([`content`]);
+        return {
+            [DEFAULT_FIELDSET]: defaultKeys,
+            content: contentKeys
+        };
     }
 
     public async updateOption(projection: ViewProjection): Promise<void> {
