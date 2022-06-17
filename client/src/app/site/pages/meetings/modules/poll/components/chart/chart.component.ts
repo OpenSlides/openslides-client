@@ -136,7 +136,7 @@ export class ChartComponent {
             const perLabel = 60;
             return `${baseHeight + perLabel * this.labels.length}px`;
         } else {
-            return undefined;
+            return `300px`;
         }
     }
 
