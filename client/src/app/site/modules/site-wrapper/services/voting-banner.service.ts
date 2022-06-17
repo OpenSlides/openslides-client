@@ -107,7 +107,7 @@ export class VotingBannerService {
     private getTextForPoll(poll: ViewPoll): string {
         const contentObject = poll.getContentObject();
         if (contentObject) {
-            return contentObject.getVotingText({poll, translateFn: text => this.translate.instant(text)});
+            return contentObject.getVotingText({ poll, translateFn: text => this.translate.instant(text) });
         } else {
             return this.translate.instant(`Voting opened`);
         }

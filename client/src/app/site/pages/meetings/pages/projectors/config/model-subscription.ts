@@ -26,9 +26,7 @@ export const getProjectorListSubscriptionConfig = (
             { idField: `speaker_ids`, additionalFields: [`user_id`] },
             `list_of_speakers_ids`
         ],
-        additionalFields: [
-            `reference_projector_id`
-        ]
+        additionalFields: [`reference_projector_id`]
     },
     subscriptionName: PROJECTOR_SUBSCRIPTION,
     hideWhen: hasMeetingIdChangedObservable()
