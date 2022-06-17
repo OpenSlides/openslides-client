@@ -55,6 +55,10 @@ interface AutoupdateConnectConfig {
      * Selects the last n updates to the requested fields. `true` is equivalent to `n = 1`.
      */
     single?: true | number;
+    /**
+     * Determines if the autoupdate service should compress the data, defaults to 1 (=true)
+     */
+    compress?: number;
 }
 
 interface AutoupdateSubscriptionMap {
@@ -94,6 +98,7 @@ export class AutoupdateService {
         private httpStreamService: HttpStreamService,
         private viewmodelStoreUpdate: ViewModelStoreUpdateService
     ) {
+        this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
             AUTOUPDATE_DEFAULT_ENDPOINT,
             new AutoupdateEndpoint(`/system/autoupdate`)
@@ -116,7 +121,9 @@ export class AutoupdateService {
     }
 
     public setAutoupdateConfig(config: AutoupdateConnectConfig | null): void {
-        this._currentQueryParams = config as QueryParams;
+        this._currentQueryParams = (
+            !!config ? (typeof config.compress === `number` ? config : { ...config, compress: 1 }) : { compress: 1 }
+        ) as QueryParams;
     }
 
     /**
