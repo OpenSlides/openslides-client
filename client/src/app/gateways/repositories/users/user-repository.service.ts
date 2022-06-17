@@ -390,7 +390,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
     public setPresent(context: { isPresent: boolean; meetingId: Id; users: Identifiable[] }): Action<void> {
         const payload = context.users.map(user => ({
-            is_present: context.isPresent,
+            present: context.isPresent,
             meeting_id: context.meetingId,
             id: user.id
         }));

@@ -117,11 +117,13 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public toggleOperatorPresence(): void {
-        this.controller.setPresent({
-            isPresent: !this.isPresent,
-            meetingId: this.activeMeetingId,
-            users: [this.user!]
-        });
+        this.controller
+            .setPresent({
+                isPresent: !this.isPresent,
+                meetingId: this.activeMeetingId,
+                users: [this.user!]
+            })
+            .resolve();
     }
 
     public openAccountDialog(): void {
