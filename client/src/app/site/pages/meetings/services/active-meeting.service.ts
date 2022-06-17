@@ -99,7 +99,7 @@ export class ActiveMeetingService {
                 this.setupModelSubscription(id);
             }
         });
-        this.lifecycle.openslidesBooted.subscribe(() => this.setupModelSubscription(this.meetingId));
+        this.lifecycle.openslidesBooted.subscribe();
     }
 
     /**
