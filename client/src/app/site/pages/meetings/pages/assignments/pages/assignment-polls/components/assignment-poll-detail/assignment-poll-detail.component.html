@@ -31,13 +31,8 @@
         </div>
 
         <div class="assignment-result-wrapper" *ngIf="poll">
-            <!-- Result Table -->
+            <!-- Result -->
             <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
-
-            <!-- Result Chart -->
-            <div class="chart-wrapper" *ngIf="showResults && poll.stateHasVotes">
-                <os-chart class="assignment-result-chart" [labels]="candidatesLabels" [data]="chartData"></os-chart>
-            </div>
 
             <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting"  (selectedTabChange)="onTabChange()">
                 <mat-tab label="{{ 'Single votes' | translate }}">
