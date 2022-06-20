@@ -12,3 +12,13 @@ td {
 .mat-basic-chip.large {
     font-size: 100%;
 }
+
+.block-recommendation {
+    font-size: 12px;
+    min-height: 22px !important;
+    border-radius: 5px !important;
+    padding: 0 8px !important;
+    margin: 0;
+    line-height: 2;
+    display: inline-flex;
+}
