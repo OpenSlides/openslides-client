@@ -32,6 +32,12 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         return this.hasPerms() || this.poll.isPublished;
     }
 
+    public get isViewingVoteslist(): boolean {
+        return this._isViewingVoteslist;
+    }
+
+    private _isViewingVoteslist = true;
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -61,6 +67,14 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         );
     }
 
+    public getVoteIcon(voteValue: string): string {
+        return this.voteOptionStyle[voteValue]?.icon;
+    }
+
+    public getVoteCSS(voteValue: string): string {
+        return this.voteOptionStyle[voteValue]?.css;
+    }
+
     protected createVotesData(): BaseVoteData[] {
         return this.poll?.options[0]?.votes;
     }
@@ -75,5 +89,9 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
 
     protected hasPerms(): boolean {
         return this.operator.hasPerms(Permission.motionCanManagePolls);
+    }
+
+    public onTabChange(): void {
+        this._isViewingVoteslist = !this.isViewingVoteslist;
     }
 }

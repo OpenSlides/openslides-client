@@ -8,6 +8,7 @@ import { MatTableModule } from '@angular/material/table';
 
 import { ScrollingTableComponent } from './components/scrolling-table/scrolling-table.component';
 import { ScrollingTableCellDirective } from './directives/scrolling-table-cell.directive';
+import { ScrollingTableCellIsHiddenDirective } from './directives/scrolling-table-cell-is-hidden.directive';
 import { ScrollingTableCellLabelDirective } from './directives/scrolling-table-cell-label.directive';
 import { ScrollingTableNoDataDirective } from './directives/scrolling-table-no-data.directive';
 import { ScrollingTableServiceModule } from './services/scrolling-table-service.module';
@@ -16,6 +17,7 @@ const DECLARATIONS = [
     ScrollingTableComponent,
     ScrollingTableCellDirective,
     ScrollingTableCellLabelDirective,
+    ScrollingTableCellIsHiddenDirective,
     ScrollingTableNoDataDirective
 ];
 

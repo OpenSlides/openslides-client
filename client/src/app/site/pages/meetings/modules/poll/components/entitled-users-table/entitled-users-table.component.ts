@@ -12,11 +12,23 @@ import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-
     encapsulation: ViewEncapsulation.None
 })
 export class EntitledUsersTableComponent {
+    private _isViewingThis: boolean = true;
+
     @Input()
     public entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
 
     @Input()
     public listStorageKey!: string;
+
+    @Input()
+    public set isViewingThis(value: boolean) {
+        console.log(`IS VIEWING entitled users: `, value);
+        this._isViewingThis = value;
+    }
+
+    public get isViewingThis(): boolean {
+        return this._isViewingThis;
+    }
 
     public readonly permission = Permission;
 

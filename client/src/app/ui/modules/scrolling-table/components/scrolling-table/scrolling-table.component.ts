@@ -61,6 +61,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             source.subscribe(items => {
                 this._source = items;
                 this.buildDataTable();
+                console.log(`NEW DATA: \n`, items);
             })
         );
     }
@@ -130,7 +131,12 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     public ngOnInit(): void {
         this.manageService.currentScrollingTableComponent = this;
-        this.subscriptions.push(this.manageService.cellDefinitionsObservable.subscribe(() => this.cd.markForCheck()));
+        this.subscriptions.push(
+            this.manageService.cellDefinitionsObservable.subscribe(def => {
+                console.log(`NEW CELL DEFINITIONS: `, def);
+                this.cd.markForCheck();
+            })
+        );
     }
 
     public override ngOnDestroy(): void {

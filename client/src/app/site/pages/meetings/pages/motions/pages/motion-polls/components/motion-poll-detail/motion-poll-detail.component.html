@@ -34,9 +34,9 @@
         <os-motion-poll-detail-content [poll]="poll"></os-motion-poll-detail-content>
 
         <!-- Named table: only show if votes are present -->
-        <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting">
+        <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting" (selectedTabChange)="onTabChange()">
             <mat-tab label="{{ 'Single votes' | translate }}">
-                <div class="named-result-table">
+                <div class="named-result-table" *ngIf="isViewingVoteslist">
                     <os-list
                         class="single-votes-table"
                         [listObservable]="votesDataObservable"
@@ -76,8 +76,8 @@
                         </div>
                         <div *osScrollingTableCell="'vote'; row as vote" class="vote-cell">
                             <div *osScrollingTableCellLabel>{{ 'Vote' | translate }}</div>
-                            <div class="vote-cell-icon-container" [ngClass]="voteOptionStyle[vote.value].css">
-                                <mat-icon>{{ voteOptionStyle[vote.value].icon }}</mat-icon>
+                            <div class="vote-cell-icon-container" [ngClass]="getVoteCSS(vote.value)">
+                                <mat-icon>{{ getVoteIcon(vote.value) }}</mat-icon>
                             </div>
                             <div>{{ vote.valueVerbose | translate }}</div>
                         </div>
@@ -85,7 +85,7 @@
                 </div>
             </mat-tab>
             <mat-tab label="{{ 'Entitled users' | translate }}">
-                <os-entitled-users-table [entitledUsersObservable]="entitledUsersObservable"></os-entitled-users-table>
+                <os-entitled-users-table [entitledUsersObservable]="entitledUsersObservable" [isViewingThis]="!isViewingVoteslist"></os-entitled-users-table>
             </mat-tab>
         </mat-tab-group>
 

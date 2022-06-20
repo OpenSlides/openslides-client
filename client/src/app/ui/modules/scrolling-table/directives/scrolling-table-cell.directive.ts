@@ -40,6 +40,10 @@ export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDe
         setTimeout(() => (this._labelTemplate = template));
     }
 
+    public set isHidden(template: any) {
+        setTimeout(() => (this._isHidden = template));
+    }
+
     public get labelTemplate(): any {
         return this._labelTemplate;
     }
