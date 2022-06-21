@@ -60,7 +60,7 @@ export class AuthService {
         this.holdBackTokenSubscription();
         try {
             const response = await this.authAdapter.login({ username, password });
-            if (response.success) {
+            if (response?.success) {
                 // Shutdowning kills all connections. The operator is listening for token changes, so
                 // we must hold them back to this point.
                 this.lifecycleService.reboot();
