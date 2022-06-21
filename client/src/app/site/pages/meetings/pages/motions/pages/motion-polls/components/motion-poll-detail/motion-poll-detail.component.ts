@@ -12,6 +12,7 @@ import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 
 import { VoteControllerService } from '../../../../../../modules/poll/services/vote-controller.service/vote-controller.service';
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
@@ -32,9 +33,19 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         return this.hasPerms() || this.poll.isPublished;
     }
 
+    public get self(): MotionPollDetailComponent {
+        return this;
+    }
+
     public get isViewingVoteslist(): boolean {
         return this._isViewingVoteslist;
     }
+
+    public get isViewingEntitledUserslist(): boolean {
+        return this._isViewingEntitledUserslist;
+    }
+
+    private _isViewingEntitledUserslist = false;
 
     private _isViewingVoteslist = true;
 
@@ -50,7 +61,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         operator: OperatorService,
         cd: ChangeDetectorRef,
         participantRepo: ParticipantControllerService,
-        private pollDialog: MotionPollDialogService
+        private pollDialog: MotionPollDialogService,
+        private scrollTableManage: ScrollingTableManageService
     ) {
         super(
             componentServiceCollector,
@@ -65,14 +77,6 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
             cd,
             participantRepo
         );
-    }
-
-    public getVoteIcon(voteValue: string): string {
-        return this.voteOptionStyle[voteValue]?.icon;
-    }
-
-    public getVoteCSS(voteValue: string): string {
-        return this.voteOptionStyle[voteValue]?.css;
     }
 
     protected createVotesData(): BaseVoteData[] {
@@ -92,6 +96,23 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
     }
 
     public onTabChange(): void {
-        this._isViewingVoteslist = !this.isViewingVoteslist;
+        const isSwitchingToEntitledList = this._isViewingVoteslist === true;
+        //only set the new list after the old cell definitions have been deleted
+        const clearSubscription = this.scrollTableManage.cellDefinitionsObservable.subscribe(data => {
+            if (!data.length) {
+                this.toggleIsViewing(!isSwitchingToEntitledList, isSwitchingToEntitledList);
+                clearSubscription.unsubscribe();
+            }
+        });
+        this.toggleIsViewing(isSwitchingToEntitledList, !isSwitchingToEntitledList);
+    }
+
+    private toggleIsViewing(votesList: boolean, entitledUsersList: boolean): void {
+        if (votesList) {
+            this._isViewingVoteslist = !this.isViewingVoteslist;
+        }
+        if (entitledUsersList) {
+            this._isViewingEntitledUserslist = !this.isViewingEntitledUserslist;
+        }
     }
 }

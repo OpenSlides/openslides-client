@@ -61,7 +61,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             source.subscribe(items => {
                 this._source = items;
                 this.buildDataTable();
-                console.log(`NEW DATA: \n`, items);
             })
         );
     }
