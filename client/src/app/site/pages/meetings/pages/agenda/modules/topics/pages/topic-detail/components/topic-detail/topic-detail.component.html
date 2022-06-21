@@ -111,9 +111,9 @@
                 <os-topic-poll [pollId]="poll" (dialogOpened)="openDialog(poll)"></os-topic-poll>
             </ng-container>
         </ng-container>
-        <div class="create-poll-button" *ngIf="isEVotingEnabled">
+        <div class="create-poll-button" *ngIf="topic && isEVotingEnabled">
             <button
-                *ngIf="topic && permission.pollCanManage && permission.agendaItemCanManage"
+                *osPerms="[permission.pollCanManage, permission.agendaItemCanManage]"
                 create-poll-button
                 mat-stroked-button
                 (click)="openDialog()"
