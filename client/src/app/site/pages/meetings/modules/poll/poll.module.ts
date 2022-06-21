@@ -19,6 +19,7 @@ import { CheckInputComponent } from './components/check-input/check-input.compon
 import { EntitledUsersTableComponent } from './components/entitled-users-table/entitled-users-table.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
+import { VotesTableComponent } from './components/votes-table/votes-table.component';
 import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
 import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from './pipes';
 import { PollServiceModule } from './services/poll-service.module';
@@ -30,7 +31,8 @@ const COMPONENTS = [
     ChartComponent,
     CheckInputComponent,
     EntitledUsersTableComponent,
-    SingleOptionChartTableComponent
+    SingleOptionChartTableComponent,
+    VotesTableComponent
 ];
 
 @NgModule({

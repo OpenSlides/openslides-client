@@ -16,6 +16,7 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 
 import { VoteControllerService } from '../../../../../../modules/poll/services/vote-controller.service/vote-controller.service';
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
@@ -59,7 +60,8 @@ export class AssignmentPollDetailComponent
         operator: OperatorService,
         cd: ChangeDetectorRef,
         participantRepo: ParticipantControllerService,
-        private pollDialog: AssignmentPollDialogService
+        private pollDialog: AssignmentPollDialogService,
+        scrollTableManage: ScrollingTableManageService
     ) {
         super(
             componentServiceCollector,
@@ -72,7 +74,8 @@ export class AssignmentPollDetailComponent
             votesRepo,
             operator,
             cd,
-            participantRepo
+            participantRepo,
+            scrollTableManage
         );
     }
 
