@@ -132,7 +132,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         this.manageService.currentScrollingTableComponent = this;
         this.subscriptions.push(
             this.manageService.cellDefinitionsObservable.subscribe(def => {
-                console.log(`NEW CELL DEFINITIONS: `, def);
                 this.cd.markForCheck();
             })
         );

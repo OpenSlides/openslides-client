@@ -16,6 +16,7 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 
 import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
 import { EntitledUsersTableEntry } from '../definitions';
@@ -81,6 +82,22 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
         return this._entitledUsersSubject.asObservable();
     }
 
+    public get self(): BasePollDetailComponent<V, S> {
+        return this;
+    }
+
+    public get isViewingVoteslist(): boolean {
+        return this._isViewingVoteslist;
+    }
+
+    public get isViewingEntitledUserslist(): boolean {
+        return this._isViewingEntitledUserslist;
+    }
+
+    private _isViewingEntitledUserslist = false;
+
+    private _isViewingVoteslist = true;
+
     protected optionsLoaded = new Deferred();
 
     private entitledUsersSubscription: Subscription | null = null;
@@ -111,7 +128,8 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
         protected votesRepo: VoteControllerService,
         protected operator: OperatorService,
         protected cd: ChangeDetectorRef,
-        protected userRepo: ParticipantControllerService
+        protected userRepo: ParticipantControllerService,
+        private scrollTableManage: ScrollingTableManageService
     ) {
         super(componentServiceCollector, translate);
 
@@ -254,5 +272,26 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
         super.ngOnDestroy();
         this.entitledUsersSubscription?.unsubscribe();
         this.entitledUsersSubscription = null;
+    }
+
+    public onTabChange(): void {
+        const isSwitchingToEntitledList = this._isViewingVoteslist === true;
+        //only set the new list after the old cell definitions have been deleted
+        const clearSubscription = this.scrollTableManage.cellDefinitionsObservable.subscribe(data => {
+            if (!data.length) {
+                this.toggleIsViewing(!isSwitchingToEntitledList, isSwitchingToEntitledList);
+                clearSubscription.unsubscribe();
+            }
+        });
+        this.toggleIsViewing(isSwitchingToEntitledList, !isSwitchingToEntitledList);
+    }
+
+    private toggleIsViewing(votesList: boolean, entitledUsersList: boolean): void {
+        if (votesList) {
+            this._isViewingVoteslist = !this.isViewingVoteslist;
+        }
+        if (entitledUsersList) {
+            this._isViewingEntitledUserslist = !this.isViewingEntitledUserslist;
+        }
     }
 }

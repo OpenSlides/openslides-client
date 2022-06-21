@@ -39,61 +39,26 @@
                 <os-chart class="assignment-result-chart" [labels]="candidatesLabels" [data]="chartData"></os-chart>
             </div>
 
-            <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting">
+            <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting"  (selectedTabChange)="onTabChange()">
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <!-- Single Votes Table -->
                     <div class="named-result-table">
-                        <os-list
+                        <os-votes-table
                             *ngIf="votesDataObservable"
-                            class="single-votes-table"
-                            [listObservable]="votesDataObservable"
-                            [filterProps]="filterProps"
-                            [fullScreen]="false"
+                            [votesDataObservable]="votesDataObservable"
                             listStorageKey="assignment-poll-vote"
-                            [showMenu]="false"
+                            [filterProps]="filterProps"
+                            [isViewingThis]="isViewingVoteslist"
+                            [parent]="self"
+                            [templateType]="'assignment'"
                         >
-                            <!-- Content -->
-                            <div *osScrollingTableCell="'user'; row as vote">
-                                <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
-                                <div *ngIf="vote.user">
-                                    {{ vote.user.getShortName() }}
-                                    <div class="user-subtitle">
-                                        <!-- Level and number -->
-                                        <div *ngIf="vote.user.getLevelAndNumber()">
-                                            {{ vote.user.getLevelAndNumber() }}
-                                        </div>
-
-                                        <!-- Vote weight -->
-                                        <div *ngIf="voteWeightEnabled | async">
-                                            {{ 'Vote weight' | translate }}: {{ vote.user.vote_weight() }}
-                                        </div>
-
-                                        <!-- Delegation -->
-                                        <div *ngIf="hasUserVoteDelegation(vote.user)">
-                                            <span>
-                                                ({{ 'represented by' | translate }}
-                                                {{ getUsersVoteDelegation(vote.user).getShortName().trim() }})
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="!vote.user">
-                                    <i>{{ 'Anonymous' | translate }}</i>
-                                </div>
-                            </div>
-
-                            <div *osScrollingTableCell="'votes'; row as vote">
-                                <div *osScrollingTableCellLabel>{{ 'Votes' | translate }}</div>
-                                <div class="single-vote-result" *ngFor="let candidate of vote.votes">
-                                    {{ candidate }}
-                                </div>
-                            </div>
-                        </os-list>
+                        </os-votes-table>
                     </div>
                 </mat-tab>
                 <mat-tab label="{{ 'Entitled users' | translate }}">
                     <os-entitled-users-table
                         [entitledUsersObservable]="entitledUsersObservable"
+                        [isViewingThis]="isViewingEntitledUserslist"
                     ></os-entitled-users-table>
                 </mat-tab>
             </mat-tab-group>

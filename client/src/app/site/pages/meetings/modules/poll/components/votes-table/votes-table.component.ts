@@ -30,13 +30,17 @@ export class VotesTableComponent {
     @Input()
     public parent: BasePollDetailComponent<BaseViewModel, PollService>;
 
+    @Input()
+    public templateType: string = ``;
+
     public get isViewingThis(): boolean {
         return this._isViewingThis;
     }
 
     public readonly permission = Permission;
 
-    public filterPropsSingleVotesTable = [`user.full_name`, `valueVerbose`];
+    @Input()
+    public filterProps = [`user.full_name`, `valueVerbose`];
 
     public getVoteIcon(voteValue: string): string {
         return this.parent.voteOptionStyle[voteValue]?.icon;
@@ -44,5 +48,12 @@ export class VotesTableComponent {
 
     public getVoteCSS(voteValue: string): string {
         return this.parent.voteOptionStyle[voteValue]?.css;
+    }
+
+    public getTemplateType(): string {
+        if ([`assignment`].includes(this.templateType.toLowerCase())) {
+            return this.templateType.toLowerCase();
+        }
+        return `default`;
     }
 }

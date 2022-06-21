@@ -33,22 +33,6 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         return this.hasPerms() || this.poll.isPublished;
     }
 
-    public get self(): MotionPollDetailComponent {
-        return this;
-    }
-
-    public get isViewingVoteslist(): boolean {
-        return this._isViewingVoteslist;
-    }
-
-    public get isViewingEntitledUserslist(): boolean {
-        return this._isViewingEntitledUserslist;
-    }
-
-    private _isViewingEntitledUserslist = false;
-
-    private _isViewingVoteslist = true;
-
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -62,7 +46,7 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         cd: ChangeDetectorRef,
         participantRepo: ParticipantControllerService,
         private pollDialog: MotionPollDialogService,
-        private scrollTableManage: ScrollingTableManageService
+        scrollTableManage: ScrollingTableManageService
     ) {
         super(
             componentServiceCollector,
@@ -75,7 +59,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
             votesRepo,
             operator,
             cd,
-            participantRepo
+            participantRepo,
+            scrollTableManage
         );
     }
 
@@ -93,26 +78,5 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
 
     protected hasPerms(): boolean {
         return this.operator.hasPerms(Permission.motionCanManagePolls);
-    }
-
-    public onTabChange(): void {
-        const isSwitchingToEntitledList = this._isViewingVoteslist === true;
-        //only set the new list after the old cell definitions have been deleted
-        const clearSubscription = this.scrollTableManage.cellDefinitionsObservable.subscribe(data => {
-            if (!data.length) {
-                this.toggleIsViewing(!isSwitchingToEntitledList, isSwitchingToEntitledList);
-                clearSubscription.unsubscribe();
-            }
-        });
-        this.toggleIsViewing(isSwitchingToEntitledList, !isSwitchingToEntitledList);
-    }
-
-    private toggleIsViewing(votesList: boolean, entitledUsersList: boolean): void {
-        if (votesList) {
-            this._isViewingVoteslist = !this.isViewingVoteslist;
-        }
-        if (entitledUsersList) {
-            this._isViewingEntitledUserslist = !this.isViewingEntitledUserslist;
-        }
     }
 }

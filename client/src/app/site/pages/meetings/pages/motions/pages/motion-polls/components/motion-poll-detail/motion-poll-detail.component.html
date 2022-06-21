@@ -38,14 +38,12 @@
             <mat-tab label="{{ 'Single votes' | translate }}">
                 <div class="named-result-table">
                     <os-votes-table [votesDataObservable]="votesDataObservable" listStorageKey="motion-poll-vote" [isViewingThis]="isViewingVoteslist" [parent]="self"></os-votes-table>
-
                 </div>
             </mat-tab>
             <mat-tab label="{{ 'Entitled users' | translate }}">
                 <os-entitled-users-table [entitledUsersObservable]="entitledUsersObservable" [isViewingThis]="isViewingEntitledUserslist"></os-entitled-users-table>
             </mat-tab>
         </mat-tab-group>
-
         <os-motion-poll-meta-information [poll]="poll"></os-motion-poll-meta-information>
     </ng-container>
 </ng-template>

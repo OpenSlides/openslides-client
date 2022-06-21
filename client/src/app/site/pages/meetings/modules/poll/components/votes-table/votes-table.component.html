@@ -2,7 +2,7 @@
     <div *ngIf="isViewingThis">
         <os-list
             [listObservable]="votesDataObservable"
-            [filterProps]="filterPropsSingleVotesTable"
+            [filterProps]="filterProps"
             [fullScreen]="false"
         >
             <!-- Content -->
@@ -10,7 +10,6 @@
                 <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
                 <div *ngIf="vote.user">
                     {{ vote.user.getShortName() }}
-
                     <div class="user-subtitle">
                         <!-- Level and number -->
                         <div *ngIf="vote.user.getLevelAndNumber()">
@@ -35,12 +34,22 @@
                     <i>{{ 'Anonymous' | translate }}</i>
                 </div>
             </div>
-            <div *osScrollingTableCell="'vote'; row as vote" class="vote-cell">
-                <div *osScrollingTableCellLabel>{{ 'Vote' | translate }}</div>
-                <div class="vote-cell-icon-container" [ngClass]="getVoteCSS(vote.value)">
-                    <mat-icon>{{ getVoteIcon(vote.value) }}</mat-icon>
+            <div *ngIf="getTemplateType()==='default'">
+                <div *osScrollingTableCell="'vote'; row as vote" class="vote-cell">
+                    <div *osScrollingTableCellLabel>{{ 'Vote' | translate }}</div>
+                    <div class="vote-cell-icon-container" [ngClass]="getVoteCSS(vote.value)">
+                        <mat-icon>{{ getVoteIcon(vote.value) }}</mat-icon>
+                    </div>
+                    <div>{{ vote.valueVerbose | translate }}</div>
                 </div>
-                <div>{{ vote.valueVerbose | translate }}</div>
+            </div>
+            <div *ngIf="getTemplateType()==='assignment'">
+                <div *osScrollingTableCell="'votes'; row as vote">
+                    <div *osScrollingTableCellLabel>{{ 'Votes' | translate }}</div>
+                    <div class="single-vote-result" *ngFor="let candidate of vote.votes">
+                        {{ candidate }}
+                    </div>
+                </div>
             </div>
         </os-list>
     </div>
