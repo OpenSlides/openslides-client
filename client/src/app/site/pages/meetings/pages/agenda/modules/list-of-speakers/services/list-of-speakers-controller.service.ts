@@ -113,6 +113,6 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
      * @returns A number, that represents the speaking-time.
      */
     private getSpeakingTimeAsNumber(speaker: ViewSpeaker): number {
-        return Math.floor((new Date(speaker.end_time).valueOf() - new Date(speaker.begin_time).valueOf()) / 1000);
+        return Math.floor(new Date(speaker.end_time).valueOf() - new Date(speaker.begin_time).valueOf());
     }
 }
