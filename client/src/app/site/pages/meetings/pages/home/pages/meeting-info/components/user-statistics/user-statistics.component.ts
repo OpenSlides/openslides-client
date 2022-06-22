@@ -110,7 +110,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
                 transformedData.push({ id: this.getNewId(), ...value });
             }
         });
-        this.relationSpeakingTimeStructureLevelSubject.next(transformedData);
+        this.relationSpeakingTimeStructureLevelSubject.next(transformedData.sort((a, b) => {return b.finishedSpeakers.length - a.finishedSpeakers.length}));
     }
 
     private getNewId(): number {
