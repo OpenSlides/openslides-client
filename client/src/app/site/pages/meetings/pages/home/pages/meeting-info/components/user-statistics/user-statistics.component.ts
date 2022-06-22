@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -7,7 +7,10 @@ import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agen
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 
-import { SpeakingTimeStructureLevelObject } from '../../../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
+import {
+    ListOfSpeakersControllerService,
+    SpeakingTimeStructureLevelObject
+} from '../../../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
 
 interface IdentifiedSpeakingTimeStructureLevelObject extends Identifiable, SpeakingTimeStructureLevelObject {}
 
@@ -18,7 +21,7 @@ interface IdentifiedSpeakingTimeStructureLevelObject extends Identifiable, Speak
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserStatisticsComponent extends BaseComponent {
+export class UserStatisticsComponent extends BaseComponent implements OnInit {
     public finishedSpeakers = this.speakerRepo.finishedSpeakersObservable();
     public pointOfOrders = this.speakerRepo.pointOfOrderSpeakerObservable();
     public uniqueSpeakers = this.speakerRepo.uniqueSpeakersObservable();
@@ -51,13 +54,26 @@ export class UserStatisticsComponent extends BaseComponent {
         IdentifiedSpeakingTimeStructureLevelObject[]
     >([]);
 
+    private _structureLevelIdMap = new Map<string, number>([]);
+
+    private _lastStructureLevelId = Math.max(...Array.from(this._structureLevelIdMap.values())) ?? 0;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private speakerRepo: SpeakerControllerService,
+        private speakerListRepo: ListOfSpeakersControllerService,
         private durationService: DurationService
     ) {
         super(componentServiceCollector, translate);
+    }
+
+    public ngOnInit(): void {
+        this.subscriptions.push(
+            this.speakerListRepo.getViewModelListObservable().subscribe(value => {
+                this.updateRelationSpeakingTimeStructureLevelSubject();
+            })
+        );
     }
 
     /**
@@ -82,5 +98,27 @@ export class UserStatisticsComponent extends BaseComponent {
         return !withHours
             ? this.durationService.durationToString(time, `m`)
             : this.durationService.durationToStringWithHours(time);
+    }
+
+    private updateRelationSpeakingTimeStructureLevelSubject(): void {
+        const data = this.speakerListRepo.getSpeakingTimeStructureLevelRelation();
+        const transformedData: IdentifiedSpeakingTimeStructureLevelObject[] = [];
+        data.forEach(value => {
+            if (this._structureLevelIdMap.get(value.structureLevel)) {
+                transformedData.push({ id: this._structureLevelIdMap.get(value.structureLevel), ...value });
+            } else {
+                transformedData.push({ id: this.getNewId(), ...value });
+            }
+        });
+        this.relationSpeakingTimeStructureLevelSubject.next(
+            transformedData.sort((a, b) => {
+                return b.finishedSpeakers.length - a.finishedSpeakers.length;
+            })
+        );
+    }
+
+    private getNewId(): number {
+        this._lastStructureLevelId++;
+        return this._lastStructureLevelId;
     }
 }
