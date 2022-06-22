@@ -1,4 +1,5 @@
 import { HttpDownloadProgressEvent, HttpErrorResponse, HttpEvent, HttpHeaderResponse } from '@angular/common/http';
+import * as fzstd from 'fzstd';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 
 import { EndpointConfiguration } from './endpoint-configuration';
@@ -104,7 +105,8 @@ class StreamMessageParser<T> {
     public constructor(
         private readonly onMessage: (content: T) => void,
         private readonly onError: (type: ErrorType, errorContent: string, reason: string) => void,
-        private readonly description: string
+        private readonly description: string,
+        private url?: string
     ) {}
 
     public read(event: HttpEvent<string>): void {
@@ -146,7 +148,8 @@ class StreamMessageParser<T> {
     }
 
     private handleContent(content: string, errorReason: string = `Reported by server`): void {
-        const parsedContent = this.parse(content);
+        const decompressedContent = this.decompressContent(content);
+        const parsedContent = this.parse(decompressedContent);
         if (parsedContent instanceof ErrorDescription) {
             this.propagateError(content, parsedContent.reason, parsedContent.type);
         } else if (isCommunicationError(parsedContent) || isCommunicationErrorWrapper(parsedContent)) {
@@ -154,6 +157,21 @@ class StreamMessageParser<T> {
         } else {
             this.propagateMessage(parsedContent);
         }
+    }
+
+    private decompressContent(content: string): string {
+        // only try to decode if the message came from the autoupdate service
+        if (!!this.url && this.url.split(`/`)[1] === `system` && /autoupdate/.test(this.url.split(`/`)[2])) {
+            try {
+                const atobbed = Uint8Array.from(atob(content), c => c.charCodeAt(0));
+                const decompressedArray = fzstd.decompress(atobbed);
+                const decompressedString = new TextDecoder().decode(decompressedArray);
+                return decompressedString;
+            } catch (e) {
+                console.warn(`Decompress failed`, e.message);
+            }
+        }
+        return content;
     }
 
     private parse(content: string): T | ErrorDescription {
@@ -351,7 +369,8 @@ export class HttpStream<T> {
         this._parser = new StreamMessageParser<T>(
             content => this.handleParsedContent(content),
             (type, errorContent, reason) => this.handleCommunicationError(type, errorContent, reason),
-            `${this.id}`
+            `${this.id}`,
+            this.endpoint.url
         );
     }
 
