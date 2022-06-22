@@ -93,20 +93,20 @@
             </div>
 
             <!-- projection defaults -->
-            <!-- <h3>{{ 'Projection defaults' | translate }}</h3> -->
-            <!--<mat-select
-                formControlName="projectiondefaults_id"
-                placeholder="{{ 'Projection defaults' | translate }}"
-                [multiple]="true"
-            >
-                <mat-option *ngFor="let pd of projectionDefaults" [value]="pd.id">
-                    {{ pd.getTitle() | translate }}
-                </mat-option>
-            </mat-select>
+            <h3>{{ 'Projection defaults' | translate }}</h3>
+            <mat-form-field>
+                <mat-select
+                    formControlName="projectiondefault_ids"
+                    placeholder="{{ 'Projection defaults' | translate }}"
+                    [multiple]="true"
+                >
+                    <mat-option *ngFor="let pd of projectiondefaultVerbose | keyvalue" [value]="pd.key">
+                        {{ pd.value | translate }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-            TODO: use PROJECTIONDEFAULTS
 
-        -->
 
             <!-- colors -->
             <div class="spacer-top-10">
