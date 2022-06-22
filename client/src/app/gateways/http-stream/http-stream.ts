@@ -246,7 +246,7 @@ export class HttpStream<T> {
         this._shouldReconnectOnFailure = config.shouldReconnectOnFailure ?? false;
         this._reconnectTimeout = config.reconnectTimeout ?? 2000;
 
-        this.buildMessageParser(this.endpoint.url);
+        this.buildMessageParser();
 
         if (config.shouldStartImmediately) {
             this.open();
@@ -365,12 +365,12 @@ export class HttpStream<T> {
         }, Math.abs(timeout));
     }
 
-    private buildMessageParser(url: string): void {
+    private buildMessageParser(): void {
         this._parser = new StreamMessageParser<T>(
             content => this.handleParsedContent(content),
             (type, errorContent, reason) => this.handleCommunicationError(type, errorContent, reason),
             `${this.id}`,
-            url
+            this.endpoint.url
         );
     }
 
