@@ -67,7 +67,7 @@
                     [repo]="participantRepo"
                     (clickNotFound)="createNewSubmitter($event)"
                 >
-                    <ng-template osNotFoundDescription>
+                    <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">
                         <mat-icon>add</mat-icon>
                         {{ 'Create user' | translate }}
                     </ng-template>

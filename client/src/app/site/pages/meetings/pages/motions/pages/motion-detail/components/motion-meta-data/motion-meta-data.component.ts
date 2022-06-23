@@ -5,6 +5,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -86,7 +87,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         motionServiceCollector: MotionDetailServiceCollectorService,
         public perms: MotionPermissionService,
         private operator: OperatorService,
-        private motionForwardingService: MotionForwardDialogService
+        private motionForwardingService: MotionForwardDialogService,
+        private presenter: GetForwardingMeetingsPresenterService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
     }
@@ -196,8 +198,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return this.perms.isAllowed(`createpoll`, this.motion) && !!this.motion.recommendation?.recommendation_label;
     }
 
-    public canForwardMotion(): boolean {
-        return !!this.motion.state?.allow_motion_forwarding && this.operator.hasPerms(Permission.motionCanForward);
+    public async canForwardMotion(): Promise<boolean> {
+        const forwardingMeetings = await this.presenter.call({ meeting_id: this.activeMeeting.id });
+        return (
+            !!this.motion.state?.allow_motion_forwarding &&
+            this.operator.hasPerms(Permission.motionCanForward) &&
+            !!forwardingMeetings.length
+        );
     }
 
     public async forwardMotionToMeetings(): Promise<void> {

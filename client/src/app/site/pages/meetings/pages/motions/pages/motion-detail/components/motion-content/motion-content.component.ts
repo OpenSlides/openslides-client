@@ -300,7 +300,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     public async createNewSubmitter(username: string): Promise<void> {
         const newUserObj = await this.createNewUser(username);
-        this.addNewUserToFormCtrl(newUserObj, `submitters_id`);
+        this.addNewUserToFormCtrl(newUserObj, `submitter_ids`);
     }
 
     public async createNewSupporter(username: string): Promise<void> {
