@@ -223,7 +223,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         const rows = Object.values(this._dataSourceMap)
             .filter(provider => provider.isSelected)
             .map(provider => provider.row);
-        this.buildDataTable();
         this.selectionChanged.emit({ affectedRows, selected: rows.length, selectedRows: rows });
     }
 
