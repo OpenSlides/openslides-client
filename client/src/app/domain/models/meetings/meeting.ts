@@ -35,7 +35,6 @@ export class Settings {
 
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
-    public url_name!: string; // For unique urls.
     public is_template!: boolean; // Unique within a committee
     public enable_anonymous!: boolean;
 
