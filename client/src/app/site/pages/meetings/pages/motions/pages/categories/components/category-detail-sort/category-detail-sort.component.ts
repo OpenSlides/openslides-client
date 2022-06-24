@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
@@ -24,6 +25,8 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
     styleUrls: [`./category-detail-sort.component.scss`]
 })
 export class CategoryDetailSortComponent extends BaseMeetingComponent implements OnInit, CanComponentDeactivate {
+    public readonly COLLECTION = ViewMotionCategory.COLLECTION;
+
     /**
      * The current category. Determined by the route
      */
@@ -72,6 +75,10 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
     @ViewChild(`sorter`, { static: true })
     public sortSelector!: SortingListComponent;
 
+    private _categoryId: number;
+
+    private _hasCategoryId = false;
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -88,34 +95,14 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
      * Subscribes to the category and motions of this category.
      */
     public ngOnInit(): void {
-        const categoryId: number = +this.route.snapshot.params[`id`];
-
-        this.subscriptions.push(
-            this.repo.getViewModelObservable(categoryId).subscribe(cat => {
-                this.category = cat;
-            }),
-            this.motionRepo.getViewModelListObservable().subscribe(motions => {
-                const filtered = motions.filter(m => m.category_id === categoryId);
-                this.motionsBackup = [...filtered];
-                this.motionsCount = filtered.length;
-                if (this.motionsCopy.length === 0) {
-                    this.initializeList(filtered);
-                } else {
-                    this.motionsSubject.next(this.handleMotionUpdates(filtered));
-                }
-            })
-        );
+        //this.createMotionSubscriptions({onInit: true});
+        console.log(`viewInit`);
     }
 
-    /**
-     * Function to (re-)set the current list of motions.
-     *
-     * @param motions An array containing the new motions.
-     */
-    private initializeList(motions: ViewMotion[]): void {
-        motions.sort((a, b) => a.category_weight - b.category_weight);
-        this.motionsSubject.next(motions);
-        this.motionsCopy = motions;
+    public onIdFound(id: Id | null): void {
+        this._categoryId = id;
+
+        this.createMotionSubscriptions();
     }
 
     /**
@@ -153,38 +140,6 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
     }
 
     /**
-     * This function handles the incoming motions after the user sorted them previously.
-     *
-     * @param nextMotions are the motions that are received from the server.
-     *
-     * @returns An array containing the new motions or not the removed motions.
-     */
-    private handleMotionUpdates(nextMotions: ViewMotion[]): ViewMotion[] {
-        const copy = this.motionsCopy;
-        if (nextMotions.length > copy.length) {
-            for (const motion of nextMotions) {
-                if (!this.motionsCopy.includes(motion)) {
-                    copy.push(motion);
-                }
-            }
-        } else if (nextMotions.length < copy.length) {
-            for (const motion of copy) {
-                if (!nextMotions.includes(motion)) {
-                    copy.splice(copy.indexOf(motion), 1);
-                }
-            }
-        } else {
-            for (const motion of copy) {
-                if (!nextMotions.includes(motion)) {
-                    const updatedMotion = nextMotions.find(theMotion => theMotion.id === motion.id);
-                    copy.splice(copy.indexOf(motion), 1, updatedMotion!);
-                }
-            }
-        }
-        return copy;
-    }
-
-    /**
      * Function to open a prompt dialog,
      * so the user will be warned if he has made changes and not saved them.
      *
@@ -219,5 +174,81 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
                 );
             }
         }
+    }
+
+    private createMotionSubscriptions(): void {
+        if (!this._hasCategoryId) {
+            this._hasCategoryId = true;
+            this.subscriptions.push(
+                this.repo.getViewModelObservable(this._categoryId).subscribe(cat => {
+                    this.category = cat;
+                }),
+                this.motionRepo.getViewModelListObservable().subscribe(motions => {
+                    const filtered = motions.filter(m => m.category_id === this._categoryId);
+                    this.motionsBackup = [...filtered];
+                    this.motionsCount = filtered.length;
+                    if (this.motionsCopy.length === 0) {
+                        this.initializeList(filtered);
+                    } else {
+                        this.motionsSubject.next(this.handleMotionUpdates(filtered));
+                    }
+                })
+            );
+        }
+    }
+
+    /**
+     * Function to (re-)set the current list of motions.
+     *
+     * @param motions An array containing the new motions.
+     */
+    private initializeList(motions: ViewMotion[]): void {
+        motions.sort((a, b) => a.category_weight - b.category_weight);
+        this.motionsSubject.next(motions);
+        this.motionsCopy = motions;
+    }
+
+    /**
+     * This function handles the incoming motions after the user sorted them previously.
+     *
+     * @param nextMotions are the motions that are received from the server.
+     *
+     * @returns An array containing the new motions or not the removed motions.
+     */
+    private handleMotionUpdates(nextMotions: ViewMotion[]): ViewMotion[] {
+        const copy = this.motionsCopy;
+        if (nextMotions.length > copy.length) {
+            for (const motion of nextMotions) {
+                if (
+                    !Object.values(copy)
+                        .map(motion => motion.id)
+                        .includes(motion.id)
+                ) {
+                    copy.push(motion);
+                }
+            }
+        } else if (nextMotions.length < copy.length) {
+            for (const motion of copy) {
+                if (
+                    !Object.values(nextMotions)
+                        .map(motion => motion.id)
+                        .includes(motion.id)
+                ) {
+                    copy.splice(copy.indexOf(motion), 1);
+                }
+            }
+        } else {
+            for (const motion of copy) {
+                if (
+                    !Object.values(nextMotions)
+                        .map(motion => motion.id)
+                        .includes(motion.id)
+                ) {
+                    const updatedMotion = nextMotions.find(theMotion => theMotion.id === motion.id);
+                    copy.splice(copy.indexOf(motion), 1, updatedMotion!);
+                }
+            }
+        }
+        return copy;
     }
 }

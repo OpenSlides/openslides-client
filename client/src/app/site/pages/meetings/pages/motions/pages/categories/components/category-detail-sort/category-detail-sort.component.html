@@ -1,30 +1,33 @@
-<os-head-bar [editMode]="hasChanged" (saveEvent)="sendUpdate()" (mainEvent)="onCancel()" [nav]="false">
-    <!-- Title -->
-    <div class="title-slot">
-        <h2 *ngIf="category">{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
-    </div>
-</os-head-bar>
+<os-detail-view [collection]="COLLECTION" (idFound)="onIdFound($event)">
+    <os-head-bar [editMode]="hasChanged" (saveEvent)="sendUpdate()" (mainEvent)="onCancel()" [nav]="false">
+        <!-- Title -->
+        <div class="title-slot">
+            <h2 *ngIf="category">{{ 'Sort motions' | translate }} ({{ category.prefixedName }})</h2>
+        </div>
+    </os-head-bar>
 
-<mat-card class="os-form-card">
-    <div *ngIf="isMultiSelect">
-        <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
-        <span>{{ 'selected' | translate }}</span>
-        <button mat-button (click)="moveToPosition()">
-            <span>{{ 'move ...' | translate }}</span>
-        </button>
-    </div>
-    <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
-        <ng-template let-motion>
-            <div class="single-motion-line">
-                <span>
-                    {{ motion.getTitle() }}
-                </span>
-                <span>
-                    <mat-basic-chip class="bluegrey" disableRipple matTooltip="{{ 'Sequential number' | translate }}">
-                        {{ motion.id }}
-                    </mat-basic-chip>
-                </span>
-            </div>
-        </ng-template>
-    </os-sorting-list>
-</mat-card>
+    <mat-card class="os-form-card">
+        <div *ngIf="isMultiSelect">
+            <span>{{ sortSelector.multiSelectedIndex.length }}&nbsp;</span>
+            <span>{{ 'selected' | translate }}</span>
+            <button mat-button (click)="moveToPosition()">
+                <span>{{ 'move ...' | translate }}</span>
+            </button>
+        </div>
+        <os-sorting-list (sortEvent)="onListUpdate($event)" [input]="motionObservable" #sorter>
+            <ng-template let-motion>
+                <div class="single-motion-line">
+                    <span>
+                        {{ motion.getTitle() }}
+                    </span>
+                    <span>
+                        <mat-basic-chip class="bluegrey" disableRipple
+                            matTooltip="{{ 'Sequential number' | translate }}">
+                            {{ motion.id }}
+                        </mat-basic-chip>
+                    </span>
+                </div>
+            </ng-template>
+        </os-sorting-list>
+    </mat-card>
+</os-detail-view>
