@@ -276,7 +276,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     }
 
     private validatePayload(participant: Partial<User>): any {
-        return {
+        const result = {
             ...participant,
             structure_level_$: participant.structure_level_$ || {
                 [this.activeMeetingId!]: participant.structure_level
@@ -293,5 +293,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 [this.activeMeetingId!]: participant.vote_delegations_from_ids
             }
         };
+        console.log(`VALIDATE PAYLOAD:`, participant, result, `\nMEETING ${this.activeMeetingId} GROUP IDS: `, this.activeMeetingService.meeting.group_ids);
+        return result;
     }
 }
