@@ -276,12 +276,16 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     }
 
     private validatePayload(participant: Partial<User>): any {
-        const result = {
+        return {
             ...participant,
             structure_level_$: participant.structure_level_$ || {
                 [this.activeMeetingId!]: participant.structure_level
             },
-            group_$_ids: participant.group_$_ids || { [this.activeMeetingId!]: participant.group_ids },
+            group_$_ids: participant.group_$_ids || {
+                [this.activeMeetingId!]: participant.group_ids
+                    ? participant.group_ids
+                    : [this.activeMeeting.meeting!.default_group_id]
+            },
             number_$: participant.number_$ || { [this.activeMeetingId!]: participant.number },
             vote_weight_$: participant.vote_weight_$ || {
                 [this.activeMeetingId!]: toDecimal(participant.vote_weight as any)
@@ -293,7 +297,5 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 [this.activeMeetingId!]: participant.vote_delegations_from_ids
             }
         };
-        console.log(`VALIDATE PAYLOAD:`, participant, result, `\nMEETING ${this.activeMeetingId} GROUP IDS: `, this.activeMeetingService.meeting.group_ids);
-        return result;
     }
 }
