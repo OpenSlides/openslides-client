@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      * @param route the route the user wants to navigate to
      */
     public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-        if (this.hasAlreadyBeenChecked(state)){
+        if (this.hasAlreadyBeenChecked(state)) {
             return true;
         }
         this._cannotAccessReason = null;
@@ -60,7 +60,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      * @param route the route the user wants to navigate to
      */
     public async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-        if (this.hasAlreadyBeenChecked(state)){
+        if (this.hasAlreadyBeenChecked(state)) {
             return true;
         }
         await this.operator.ready;

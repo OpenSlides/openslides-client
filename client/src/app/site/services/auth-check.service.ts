@@ -16,7 +16,7 @@ export class AuthCheckService {
     private _lastSuccessfulUrl: string | null = null;
 
     /**
-     * The last url to be approved by the permission guard, will be automatically emptied after the first read;
+     * The last url to be approved by the permission guard, will be automatically emptied after the first read.
      */
     public get lastSuccessfulUrl() {
         const url = this._lastSuccessfulUrl;
@@ -24,7 +24,7 @@ export class AuthCheckService {
         return url;
     }
 
-    public set lastSuccessfulUrl(successfulUrl: string | null){
+    public set lastSuccessfulUrl(successfulUrl: string | null) {
         this._lastSuccessfulUrl = successfulUrl;
     }
 
