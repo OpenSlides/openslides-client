@@ -17,12 +17,12 @@
             {{ getTitleWithChanges() }}
         </h1>
         <button
-            class="primary-accent-by-theme"
+            class="favorite-button primary-accent-by-theme"
             mat-icon-button
             (click)="toggleFavorite()"
             matTooltip="{{ 'Mark as personal favorite' | translate }}"
         >
-            <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
+            <mat-icon class="favorite-icon">{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
         </button>
     </div>
 
