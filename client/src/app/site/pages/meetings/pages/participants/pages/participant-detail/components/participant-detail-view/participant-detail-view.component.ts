@@ -15,6 +15,7 @@ import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/vi
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserService } from 'src/app/site/services/user.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
@@ -114,6 +115,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: ParticipantControllerService,
+        private userController: UserControllerService,
         private operator: OperatorService,
         private promptService: PromptService,
         private pdfService: ParticipantPdfExportService,
@@ -270,7 +272,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         const title = this.translate.instant(`Sending an invitation email`);
         const content = this.translate.instant(`Are you sure you want to send an invitation email to the user?`);
         if (await this.promptService.open(title, content)) {
-            this.repo.sendInvitationEmails([this.user!]).then(this.raiseError, this.raiseError);
+            this.userController
+                .sendInvitationEmails([this.user!], this.activeMeetingId)
+                .then(this.raiseError, this.raiseError);
         }
     }
 

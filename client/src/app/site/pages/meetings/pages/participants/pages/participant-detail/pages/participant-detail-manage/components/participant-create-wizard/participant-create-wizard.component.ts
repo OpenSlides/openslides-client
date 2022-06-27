@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
+import { OneOfValidator } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
@@ -14,7 +15,6 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
-import { OneOfValidator } from 'src/app/ui/modules/user-components';
 
 import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';

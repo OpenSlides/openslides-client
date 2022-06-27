@@ -32,7 +32,11 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `reset_password_verbose_errors`,
             `enable_chat`,
             `limit_of_meetings`,
-            `limit_of_users`
+            `limit_of_users`,
+            `users_email_body`,
+            `users_email_replyto`,
+            `users_email_sender`,
+            `users_email_subject`
         );
         const detailFieldset: (keyof Organization)[] = coreFieldset.concat(`committee_ids`, `organization_tag_ids`);
         return {

@@ -9,10 +9,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
-import { UserComponentsModule } from 'src/app/ui/modules/user-components';
 import { PipesModule } from 'src/app/ui/pipes/pipes.module';
 
 import { ParticipantExportModule } from '../../export/participant-export.module';

@@ -61,6 +61,21 @@
             </os-icon-container>
         </div>
     </div>
+
+    <!-- Info column -->
+    <div *osScrollingTableCell="'infos'; row as user; config: { width: 40 }" class="cell-slot fill">
+        <div class="infoCell">
+            <!-- Email-sent indicator -->
+            <mat-icon
+                inline
+                *ngIf="user.isLastEmailSend"
+                matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
+            >
+                mail
+            </mat-icon>
+        </div>
+    </div>
+
     <!-- Active or not active column -->
     <div *osScrollingTableCell="'is_active'; row as user; config: { width: 100 }">
         <div>
@@ -85,7 +100,7 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <button mat-menu-item class="red-warning-text" (click)="deleteSelected([member])">
+        <button mat-menu-item class="red-warning-text" (click)="deleteUsers([member])">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
         </button>
@@ -111,24 +126,20 @@
         </ng-container>
     </div>
     <div *ngIf="isMultiSelect">
-        <button mat-menu-item (click)="selectAll()">
-            <mat-icon>done_all</mat-icon>
-            <span>{{ 'Select all' | translate }}</span>
-        </button>
-
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
-            <mat-icon>clear</mat-icon>
-            <span>{{ 'Deselect all' | translate }}</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
-            <mat-icon>auto_awesome_mosaic</mat-icon>
-            <span>{{ 'Set/remove meeting' | translate }} ...</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item class="red-warning-text" [disabled]="!selectedRows.length" (click)="deleteSelected()">
-            <mat-icon>delete</mat-icon>
-            <span>{{ 'Delete' | translate }}</span>
-        </button>
+        <os-user-multiselect-actions
+            [(selectedUsers)]="selectedRows"
+            (selectAll)="selectAll()"
+            (deselectAll)="deselectAll()"
+            (deleting)="deleteUsers()"
+        >
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
+                <mat-icon>auto_awesome_mosaic</mat-icon>
+                <span>{{ 'Set/remove meeting' | translate }} ...</span>
+            </button>
+            <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">
+                <mat-icon>block</mat-icon>
+                <span>{{ 'Enable/disable accounts' | translate }}</span>
+            </button>
+        </os-user-multiselect-actions>
     </div>
 </mat-menu>

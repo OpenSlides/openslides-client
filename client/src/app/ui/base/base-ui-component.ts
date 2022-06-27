@@ -16,12 +16,6 @@ export class BaseUiComponent implements OnDestroy {
         this.subscriptions.clear();
     }
 
-    public raiseWarning(message: string): void {}
-
-    public raiseError(message: string): void {}
-
-    public closeSnackbar(): void {}
-
     /**
      * Helper for indexed *ngFor components
      *
@@ -37,4 +31,8 @@ export class BaseUiComponent implements OnDestroy {
     public trackById(_index: number, item: Id | Identifiable): Id {
         return typeof item === `number` ? item : item.id;
     }
+
+    protected closeSnackbar = (): void => {};
+    protected raiseError = (message: string): void => {};
+    protected raiseWarning = (message: string): void => {};
 }

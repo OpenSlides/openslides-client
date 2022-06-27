@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,6 +9,7 @@ import { MeetingControllerService } from 'src/app/site/pages/meetings/services/m
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 
 import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
@@ -19,7 +20,8 @@ import { AccountSortService } from '../../services/account-list-sort.service/acc
 @Component({
     selector: `os-account-list`,
     templateUrl: `./account-list.component.html`,
-    styleUrls: [`./account-list.component.scss`]
+    styleUrls: [`./account-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     public constructor(
@@ -31,7 +33,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private route: ActivatedRoute,
         private exporter: AccountExportService,
         private meetingRepo: MeetingControllerService,
-        private choiceService: ChoiceService
+        private choiceService: ChoiceService,
+        private userController: UserControllerService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Accounts`);
@@ -46,7 +49,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         this.router.navigate([account.id, `edit`], { relativeTo: this.route });
     }
 
-    public async deleteSelected(accounts: ViewUser[] = this.selectedRows): Promise<void> {
+    public async deleteUsers(accounts: ViewUser[] = this.selectedRows): Promise<void> {
         await this.controller.doDeleteOrRemove(accounts);
     }
 
@@ -73,7 +76,29 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         }
     }
 
-    public async changeActiveState(): Promise<void> {}
+    public async changeActiveState(): Promise<void> {
+        const title = this.translate.instant(`This will change the active status of the selected accounts`);
+        const SET_ACTIVE = _(`Set active`);
+        const SET_INACTIVE = _(`Set inactive`);
+        const result = await this.choiceService.open({ title, actions: [SET_ACTIVE, SET_INACTIVE] });
+        if (result) {
+            const isActive = result.action === SET_ACTIVE;
+            this.userController.update({ is_active: isActive }, ...this.selectedRows).resolve();
+        }
+    }
+
+    /**
+     * Get information about the last time an invitation email was sent to a user
+     *
+     * @param user
+     * @returns a string representation about the last time an email was sent to a user
+     */
+    public getEmailSentTime(user: ViewUser): string {
+        if (!user.isLastEmailSend) {
+            return this.translate.instant(`No email sent`);
+        }
+        return this.userController.getLastEmailSentTimeString(user);
+    }
 
     public csvExportMemberList(): void {
         this.exporter.downloadAccountCsvFile(this.listComponent.source);

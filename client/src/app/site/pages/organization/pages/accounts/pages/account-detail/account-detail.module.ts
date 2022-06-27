@@ -9,10 +9,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
-import { UserComponentsModule } from 'src/app/ui/modules/user-components';
 
 import { CommitteeCommonServiceModule } from '../../../committees/services/committee-common-service.module';
 import { AccountCommonServiceModule } from '../../services/common/account-common-service.module';
@@ -31,12 +32,13 @@ import { AccountPasswordComponent } from './components/account-password/account-
         MatIconModule,
         MatTooltipModule,
         MatMenuModule,
-        FormsModule,
-        ReactiveFormsModule,
         MatFormFieldModule,
         MatDividerModule,
-        RouterModule,
         MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        PromptDialogModule,
         HeadBarModule,
         DirectivesModule,
         UserComponentsModule,

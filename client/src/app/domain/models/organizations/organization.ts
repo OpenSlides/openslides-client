@@ -1,3 +1,5 @@
+import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+
 import { Id } from '../../definitions/key-types';
 import { BaseModel } from '../base/base-model';
 
@@ -20,6 +22,11 @@ export class OrganizationSetting {
     public enable_chat!: boolean;
     public limit_of_meetings!: number;
     public limit_of_users!: number;
+
+    public users_email_sender!: string; // default: OpenSlides
+    public users_email_subject!: string; // default: OpenSlides access data
+    public users_email_replyto!: string;
+    public users_email_body!: UnsafeHtml;
 }
 
 export class Organization extends BaseModel<Organization> {

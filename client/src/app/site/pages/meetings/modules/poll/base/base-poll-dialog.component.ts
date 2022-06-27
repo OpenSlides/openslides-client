@@ -16,9 +16,9 @@ import {
     VoteValueVerbose
 } from 'src/app/domain/models/poll';
 import { Option } from 'src/app/domain/models/poll/option';
+import { OneOfValidator } from 'src/app/site/modules/user-components';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { OneOfValidator } from 'src/app/ui/modules/user-components';
 
 import { BasePollFormComponent } from '../components/base-poll-form/base-poll-form.component';
 

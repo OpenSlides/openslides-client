@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
 import { Action, ActionService } from 'src/app/gateways/actions';
@@ -14,13 +13,13 @@ import {
 } from 'src/app/gateways/repositories/users';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
+import { UserDeleteDialogService } from 'src/app/site/modules/user-components';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { UserDeleteDialogService } from 'src/app/ui/modules/user-components';
 
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
@@ -134,55 +133,6 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             .resolve() as any;
     }
 
-    public async sendInvitationEmails(
-        users: Identifiable[],
-        meetingIds: Ids = [this.activeMeetingId!]
-    ): Promise<string> {
-        const response = await this.repo.sendInvitationEmails(users, meetingIds);
-
-        const numEmails = response.filter(email => email.sent).length;
-        const noEmails = response.filter(email => !email.sent);
-        let responseMessage: string;
-        if (numEmails === 0) {
-            responseMessage = this.translate.instant(`No emails were send.`);
-        } else if (numEmails === 1) {
-            responseMessage = this.translate.instant(`One email was send sucessfully.`);
-        } else {
-            responseMessage = this.translate.instant(`%num% emails were send sucessfully.`);
-            responseMessage = responseMessage.replace(`%num%`, numEmails.toString());
-        }
-
-        if (noEmails.length) {
-            responseMessage += ` `;
-
-            if (noEmails.length === 1) {
-                responseMessage += this.translate.instant(
-                    `The user %user% has no email, so the invitation email could not be send.`
-                );
-            } else {
-                responseMessage += this.translate.instant(
-                    `The users %user% have no email, so the invitation emails could not be send.`
-                );
-            }
-
-            // This one builds a username string like "user1, user2 and user3" with the full names.
-            const usernames = noEmails
-                .map(email => this.getViewModel(email.recipient_user_id))
-                .filter(user => !!user)
-                .map(user => user!.short_name);
-            let userString: string;
-            if (usernames.length > 1) {
-                const lastUsername = usernames.pop();
-                userString = usernames.join(`, `) + ` ` + this.translate.instant(`and`) + ` ` + lastUsername;
-            } else {
-                userString = usernames.join(`, `);
-            }
-            responseMessage = responseMessage.replace(`%user%`, userString);
-        }
-
-        return responseMessage;
-    }
-
     public setPresent(isPresent: boolean, ...users: ViewUser[]): Action<void> {
         this.repo.preventAlterationOnDemoUsers(users);
         const payload: any[] = users.map(user => ({
@@ -232,7 +182,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     }
 
     public getLastSentEmailTimeString(user: ViewUser): string {
-        return this.userController.lastSentEmailTimeString(user);
+        return this.userController.getLastEmailSentTimeString(user);
     }
 
     public getViewModelByNumber(participantNumber: string): ViewUser | null {

@@ -4,12 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
+import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { UserDetailViewComponent } from 'src/app/ui/modules/user-components';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewCommittee } from '../../../../../committees';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
@@ -54,7 +55,8 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         private operator: OperatorService,
         public readonly committeeController: CommitteeControllerService,
         private accountController: AccountControllerService,
-        private userController: UserControllerService
+        private userController: UserControllerService,
+        private promptService: PromptService
     ) {
         super(componentServiceCollector, translate);
     }
@@ -91,6 +93,28 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         if (!this.isNewUser) {
             this.isEditingUser = false;
         }
+    }
+    /**
+     * (Re)- send an invitation email for this user after confirmation
+     */
+    public async sendInvitationEmail(): Promise<void> {
+        const title = this.translate.instant(`Sending an invitation email`);
+        const content = this.translate.instant(`Are you sure you want to send an invitation email to the user?`);
+        if (await this.promptService.open(title, content)) {
+            this.userController.sendInvitationEmails([this.user!]).then(this.raiseError, this.raiseError);
+        }
+    }
+
+    /**
+     * Get information about the last time an invitation email was sent to a user
+     *
+     * @returns a string representation about the last time an email was sent to a user
+     */
+    public getEmailSentTime(): string {
+        if (!this.user.isLastEmailSend) {
+            return this.translate.instant(`No email sent`);
+        }
+        return this.userController.getLastEmailSentTimeString(this.user);
     }
 
     /**
