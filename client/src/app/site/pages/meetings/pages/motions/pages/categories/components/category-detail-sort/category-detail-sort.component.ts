@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -24,7 +24,7 @@ import { MotionControllerService } from '../../../../services/common/motion-cont
     templateUrl: `./category-detail-sort.component.html`,
     styleUrls: [`./category-detail-sort.component.scss`]
 })
-export class CategoryDetailSortComponent extends BaseMeetingComponent implements OnInit, CanComponentDeactivate {
+export class CategoryDetailSortComponent extends BaseMeetingComponent implements CanComponentDeactivate {
     public readonly COLLECTION = ViewMotionCategory.COLLECTION;
 
     /**
@@ -91,17 +91,8 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
         super(componentServiceCollector, translate);
     }
 
-    /**
-     * Subscribes to the category and motions of this category.
-     */
-    public ngOnInit(): void {
-        //this.createMotionSubscriptions({onInit: true});
-        console.log(`viewInit`);
-    }
-
     public onIdFound(id: Id | null): void {
         this._categoryId = id;
-
         this.createMotionSubscriptions();
     }
 
