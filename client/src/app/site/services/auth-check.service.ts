@@ -70,11 +70,11 @@ export class AuthCheckService {
     }
 
     /**
-     * Checks if the operator is in a specified meeting
+     * Checks if the operator has access to a specified meeting
      * @param info a number or string containing the meetingId of the meeting that is to be checked, or a full url (from which a meetingId can be extracted)
      * @returns true if the extracted meetingId represents a meeting, that the operator knows
      */
-    public async isInMeeting(info: number | string): Promise<boolean> {
+    public async hasAccessToMeeting(info: number | string): Promise<boolean> {
         let meetingIdString = info;
         if (typeof info === `string`) {
             meetingIdString = this.osRouter.getMeetingId(info);
@@ -83,7 +83,7 @@ export class AuthCheckService {
             return false;
         }
         await this.operator.ready;
-        return this.operator.isInMeeting(Number(meetingIdString));
+        return this.operator.isInMeeting(Number(meetingIdString)) || this.operator.isSuperAdmin;
     }
 
     private async hasPerms(basePerm: Permission | Permission[], omlPerm?: OML | OML[]): Promise<boolean> {

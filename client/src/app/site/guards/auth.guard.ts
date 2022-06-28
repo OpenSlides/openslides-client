@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                 this._cannotAccessReason = CannotAccessReason.NO_MEANING;
                 return false;
             }
-        } else if (!(await this.authCheck.isInMeeting(state.url))) {
+        } else if (!(await this.authCheck.hasAccessToMeeting(state.url))) {
             return false;
         }
         if (!(await this.authCheck.isAuthenticated())) {

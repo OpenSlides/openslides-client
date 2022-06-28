@@ -22,7 +22,7 @@ export class PermissionGuard implements CanLoad {
                 this.reroute.forwardToOnlyMeeting(this.getCurrentNavigationUrl() === `/info` ? [`info`] : []);
                 return false;
             }
-        } else if (!(await this.authCheck.isInMeeting(this.getCurrentNavigationUrl()))) {
+        } else if (!(await this.authCheck.hasAccessToMeeting(this.getCurrentNavigationUrl()))) {
             this.reroute.handleForbiddenRoute(route.data, segments);
         }
         if (route.data) {
