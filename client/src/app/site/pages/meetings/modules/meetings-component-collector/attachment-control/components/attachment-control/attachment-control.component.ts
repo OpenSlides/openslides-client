@@ -15,6 +15,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { GroupControllerService, ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 @Component({
@@ -51,12 +52,21 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
 
     public formGroup!: UntypedFormGroup;
 
+    public get availableGroups(): Observable<ViewGroup[]> {
+        return this.groupsRepo.getViewModelListObservable();
+    }
+
+    public get directoriesObservable(): Observable<ViewMediafile[]> {
+        return this.repo.getDirectoryListObservable();
+    }
+
     private dialogRef: MatDialogRef<any> | null = null;
 
     public constructor(
         formBuilder: UntypedFormBuilder,
         private dialogService: MatDialog,
-        public readonly repo: MediafileControllerService
+        public readonly repo: MediafileControllerService,
+        private groupsRepo: GroupControllerService
     ) {
         super(formBuilder);
     }

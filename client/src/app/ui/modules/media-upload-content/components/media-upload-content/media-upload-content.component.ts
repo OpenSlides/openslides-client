@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, isObservable, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { toBase64 } from 'src/app/infrastructure/utils';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
@@ -79,6 +79,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
                 this.directoryId = formResult.directoryId;
             })
         );
+        console.log(`DIRECTORIES: `, isObservable(this.directories) ? await firstValueFrom(this.directories) : this.directories);
     }
 
     public getDirectoryTitle(): string {
