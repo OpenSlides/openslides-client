@@ -168,7 +168,8 @@ class StreamMessageParser<T> {
                 const decompressedString = new TextDecoder().decode(decompressedArray);
                 return decompressedString;
             } catch (e) {
-                console.warn(`Decompress failed`, e.message);
+                // If it fails, assume that the content wasn't encoded in the first place, but throw a warning for safety.
+                console.warn(`Received uncompressed message from autoupdate.`);
             }
         }
         return content;
