@@ -1,7 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mapable, Mutable } from 'src/app/infrastructure/utils';
@@ -158,10 +157,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     private select(rows: T[]): void {
         this.changeSelection(rows, true);
-    }
-
-    public onChange(event: MatCheckboxChange, row: T): void {
-        this.changeSelection([row], event.checked);
     }
 
     public onRowClick(event: Event, row: T): void {
