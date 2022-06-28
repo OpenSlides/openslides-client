@@ -29,9 +29,20 @@ export class CountdownControlsComponent {
     public projector!: ViewProjector;
 
     /**
+     * Determines if the underlying countdown is used for either a list of speakers or a poll.
+     * If so, the countdown is not supposed to be deleted.
+     */
+    public get isFixedCountdown(): boolean {
+        return (
+            !!this.countdown?.used_as_list_of_speakers_countdown_meeting_id ||
+            !!this.countdown?.used_as_poll_countdown_meeting_id
+        );
+    }
+
+    /**
      * The time in seconds to make the countdown orange, is the countdown is below this value.
      */
-    public warningTime!: number;
+    protected warningTime!: number;
 
     public constructor(
         private translate: TranslateService,

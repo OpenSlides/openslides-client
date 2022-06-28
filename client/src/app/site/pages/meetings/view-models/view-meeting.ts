@@ -120,5 +120,7 @@ interface IMeetingRelations {
     is_active_in_organization: ViewOrganization;
     is_archived_in_organization: ViewOrganization;
     template_for_organization: ViewOrganization;
+    poll_countdown: ViewProjectorCountdown;
+    list_of_speakers_countdown: ViewProjectorCountdown;
 }
 export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle, HasOrganizationTags {}

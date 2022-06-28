@@ -32,7 +32,15 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
 
     public override getFieldsets(): Fieldsets<ProjectorCountdown> {
         return {
-            [DEFAULT_FIELDSET]: [`title`, `description`, `default_time`, `countdown_time`, `running`]
+            [DEFAULT_FIELDSET]: [
+                `title`,
+                `description`,
+                `default_time`,
+                `countdown_time`,
+                `running`,
+                `used_as_list_of_speakers_countdown_meeting_id`,
+                `used_as_poll_countdown_meeting_id`
+            ]
         };
     }
 

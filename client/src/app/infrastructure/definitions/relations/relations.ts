@@ -554,6 +554,18 @@ export const RELATIONS: Relation[] = [
         MField: `meeting`,
         isFullList: true
     }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewProjectorCountdown,
+        AField: `list_of_speakers_countdown`,
+        BField: `used_as_list_of_speakers_countdown_meeting`
+    }),
+    ...makeO2O({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewProjectorCountdown,
+        AField: `poll_countdown`,
+        BField: `used_as_poll_countdown_meeting`
+    }),
     // Projector -> Meeting
     {
         ownViewModels: [ViewProjector],

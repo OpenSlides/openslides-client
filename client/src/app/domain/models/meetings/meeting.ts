@@ -247,6 +247,9 @@ export class Meeting extends BaseModel<Meeting> {
     public default_group_id!: Id; // group/default_group_for_meeting_id;
     public admin_group_id!: Id; // group/admin_group_for_meeting_id;
 
+    public list_of_speakers_countdown_id: Id; // projector_countdown/used_as_list_of_speakers_meeting_id;
+    public poll_countdown_id: Id; // projector_countdown/used_as_poll_countdown_meeting_id;
+
     public committee_id!: Id; // committee/meeting_ids;
     public default_meeting_for_committee_id!: Id; // committee/default_meeting_id;
 
