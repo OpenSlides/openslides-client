@@ -273,18 +273,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     /**
-     * Handler for bulk sending e-mail invitations. Uses selectedRows defined via
-     * multiSelect mode.
-     */
-    public async sendInvitationEmailSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to send emails to all selected participants?`);
-        const content = this.selectedRows.length + ` ` + this.translate.instant(`emails`);
-        if (await this.promptService.open(title, content)) {
-            this.repo.sendInvitationEmails(this.selectedRows).then(this.raiseError, this.raiseError);
-        }
-    }
-
-    /**
      * Get information about the last time an invitation email was sent to a user
      *
      * @param user
@@ -309,6 +297,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();
         }
+    }
+
+    /**
+     * Bulk deletes users. Needs multiSelect mode to fill selectedRows
+     */
+    protected async removeUsersFromMeeting(): Promise<void> {
+        await this.repo.removeUsersFromMeeting(this.selectedRows);
     }
 
     /**

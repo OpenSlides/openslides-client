@@ -34,7 +34,7 @@ export interface ShortNameInformation extends NameInformation {
 
 export type UserPatchFn = { [key in keyof User]?: any } | ((user: ViewUser) => { [key in keyof User]?: any });
 
-interface EmailSentResult {
+export interface EmailSentResult {
     sent: boolean;
     recipient_user_id: Id;
     recipient_meeting_id: Id;
@@ -337,13 +337,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      *
      * @param users All affected users
      */
-    public async sendInvitationEmails(users: Identifiable[], meetingIds: Id[]): Promise<EmailSentResult[]> {
+    public sendInvitationEmails(users: Identifiable[], meetingId: Id): Action<EmailSentResult> {
         this.preventInDemo();
-        const payload: any[] = users.flatMap(user => meetingIds.map(meeting_id => ({ id: user.id, meeting_id })));
-        return (await this.createAction<EmailSentResult>(
-            UserAction.SEND_INVITATION_EMAIL,
-            payload
-        ).resolve()) as EmailSentResult[];
+        const payload: any[] = users.flatMap(user => ({ id: user.id, meeting_id: meetingId }));
+        return this.createAction<EmailSentResult>(UserAction.SEND_INVITATION_EMAIL, payload);
     }
 
     /**

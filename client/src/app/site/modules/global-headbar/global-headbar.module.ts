@@ -10,9 +10,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { UserComponentsModule } from 'src/app/ui/modules/user-components';
 
 import { OpenSlidesTranslationModule } from '../translations';
+import { UserComponentsModule } from '../user-components';
 import { AccountButtonComponent } from './components/account-button/account-button.component';
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
 import { GlobalHeadbarComponent } from './components/global-headbar/global-headbar.component';

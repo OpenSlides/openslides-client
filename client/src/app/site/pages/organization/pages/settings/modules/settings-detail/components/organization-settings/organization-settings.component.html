@@ -11,8 +11,9 @@
 </os-head-bar>
 
 <form [formGroup]="orgaSettingsForm" (ngSubmit)="onSubmit()" *ngIf="orgaSettingsForm">
-    <mat-card class="os-card spacer-bottom-60">
+    <mat-card class="os-card">
         <div class="orga-settings-form">
+            <h2>{{ 'General' | translate }}</h2>
             <mat-form-field>
                 <mat-label>{{ 'Name' | translate }}</mat-label>
                 <input matInput formControlName="name" />
@@ -26,6 +27,28 @@
             <mat-form-field>
                 <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
                 <input matInput formControlName="login_text" />
+            </mat-form-field>
+        </div>
+    </mat-card>
+
+    <mat-card class="os-card spacer-bottom-60">
+        <div class="orga-settings-form">
+            <h2>{{ 'Email settings' | translate }}</h2>
+            <mat-form-field>
+                <mat-label>{{ 'Sender name' | translate }}</mat-label>
+                <input matInput formControlName="users_email_sender" />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Reply address' | translate }}</mat-label>
+                <input matInput formControlName="users_email_replyto" />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Email subject' | translate }}</mat-label>
+                <input matInput formControlName="users_email_subject" />
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>{{ 'Email body' | translate }}</mat-label>
+                <textarea formControlName="users_email_body" rows="10" matInput></textarea>
             </mat-form-field>
         </div>
     </mat-card>

@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
@@ -27,6 +28,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         ParticipantListServiceModule,
         ParticipantListInfoDialogModule,
         ParticipantExportModule,
+        UserComponentsModule,
         ChoiceDialogModule,
         HeadBarModule,
         IconContainerModule,

@@ -58,7 +58,11 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 description: [this._currentOrgaSettings.description],
                 legal_notice: [this._currentOrgaSettings.legal_notice],
                 privacy_policy: [this._currentOrgaSettings.privacy_policy],
-                login_text: [this._currentOrgaSettings.login_text]
+                login_text: [this._currentOrgaSettings.login_text],
+                users_email_body: [this._currentOrgaSettings.users_email_body],
+                users_email_replyto: [this._currentOrgaSettings.users_email_replyto],
+                users_email_sender: [this._currentOrgaSettings.users_email_sender],
+                users_email_subject: [this._currentOrgaSettings.users_email_subject]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {

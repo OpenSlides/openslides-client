@@ -1,0 +1,48 @@
+<button mat-menu-item (click)="selectAll.emit()">
+    <mat-icon>done_all</mat-icon>
+    <span>{{ 'Select all' | translate }}</span>
+</button>
+
+<button mat-menu-item [disabled]="!selectedUsers.length" (click)="deselectAll.emit()">
+    <mat-icon>clear</mat-icon>
+    <span>{{ 'Deselect all' | translate }}</span>
+</button>
+
+<ng-container *ngIf="canManage">
+    <mat-divider></mat-divider>
+
+    <!-- <ng-container *ngIf="implicitContent">
+        <ng-container *ngTemplateOutlet="implicitContent"></ng-container>
+        <mat-divider></mat-divider>
+    </ng-container> -->
+    <div #ref>
+        <ng-content></ng-content>
+    </div>
+    <mat-divider *ngIf="ref.children.length"></mat-divider>
+
+    <button mat-menu-item [disabled]="!selectedUsers.length" (click)="sendInvitationEmailSelected()">
+        <mat-icon>mail</mat-icon>
+        <span>{{ 'Send invitation email' | translate }}</span>
+    </button>
+
+    <button mat-menu-item [disabled]="!selectedUsers.length" (click)="resetPasswordsToDefaultSelected()">
+        <mat-icon>vpn_key</mat-icon>
+        <span>{{ 'Reset passwords to the default ones' | translate }}</span>
+    </button>
+
+    <button mat-menu-item [disabled]="!selectedUsers.length" (click)="generateNewPasswordsPasswordsSelected()">
+        <mat-icon>vpn_key</mat-icon>
+        <span>{{ 'Generate new passwords' | translate }}</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item class="red-warning-text" [disabled]="!selectedUsers.length" (click)="deleteSelected()">
+        <mat-icon>delete</mat-icon>
+        <span>{{ 'Delete' | translate }}</span>
+    </button>
+</ng-container>
+
+<!-- <ng-template>
+    <ng-content></ng-content>
+</ng-template> -->

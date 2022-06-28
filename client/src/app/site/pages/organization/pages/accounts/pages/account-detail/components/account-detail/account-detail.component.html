@@ -137,6 +137,13 @@
             <h4>{{ 'User permission' | translate }}</h4>
             <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
         </div>
+
+        <div *ngIf="user?.isLastEmailSend">
+            <div>
+                <h4>{{ 'Last email sent' | translate }}</h4>
+                <span>{{ getEmailSentTime() }}</span>
+            </div>
+        </div>
     </ng-template>
 </os-user-detail-view>
 
@@ -154,6 +161,11 @@
         <span>{{ 'Change password' | translate }}</span>
     </button>
     <ng-container *osOmlPerms="OML.can_manage_users">
+        <!-- invitation email -->
+        <button mat-menu-item *ngIf="user?.email" (click)="sendInvitationEmail()">
+            <mat-icon>mail</mat-icon>
+            <span>{{ 'Send invitation email' | translate }}</span>
+        </button>
         <mat-divider></mat-divider>
         <button (click)="deleteUser()" mat-menu-item class="red-warning-text">
             <mat-icon>delete</mat-icon>

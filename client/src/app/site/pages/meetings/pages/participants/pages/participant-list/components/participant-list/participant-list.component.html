@@ -214,9 +214,10 @@
         </div>
     </div>
     <div *ngIf="isMultiSelect">
-        <os-participant-multiselect-actions
+        <os-user-multiselect-actions
             [selectedUsers]="selectedRows"
             [canManage]="canManage"
+            (deleting)="removeUsersFromMeeting()"
             (selectAll)="selectAll()"
             (deselectAll)="deselectAll()"
         >
@@ -244,11 +245,6 @@
             </button>
 
             <mat-divider></mat-divider>
-
-            <button mat-menu-item [disabled]="!selectedRows.length" (click)="sendInvitationEmailSelected()">
-                <mat-icon>mail</mat-icon>
-                <span>{{ 'Send invitation email' | translate }}</span>
-            </button>
-        </os-participant-multiselect-actions>
+        </os-user-multiselect-actions>
     </div>
 </mat-menu>

@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -11,7 +12,6 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { PasswordForm, PasswordFormComponent } from 'src/app/ui/modules/user-components';
 
 interface MenuItem {
     name: string;
