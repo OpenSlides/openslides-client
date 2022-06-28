@@ -19,6 +19,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { ListComponent } from 'src/app/ui/modules/list/components';
 
@@ -177,7 +178,8 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         private dialog: MatDialog,
         private cd: ChangeDetectorRef,
         private fb: UntypedFormBuilder,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private repo: MediafileControllerService
     ) {
         super();
         this.moveForm = fb.group({ directory_id: [] });
@@ -212,15 +214,22 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
         if (files.some(file => file.is_directory)) {
             this.filteredDirectoryBehaviorSubject.next(
-                this._directoryBehaviorSubject.value.filter(dir => !files.some(file => dir.url.startsWith(file.url)))
+                this._directoryBehaviorSubject.value.filter(
+                    dir => dir.is_directory && !files.some(file => dir.url.startsWith(file.url))
+                )
             );
         } else {
-            this.filteredDirectoryBehaviorSubject.next(this._directoryBehaviorSubject.value);
+            this.filteredDirectoryBehaviorSubject.next(
+                this._directoryBehaviorSubject.value.filter(dir => dir.is_directory)
+            );
         }
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                if (!!this.moveForm.value.directory_id) {
+                    this.repo.move(files, this.moveForm.value.directory_id);
+                }
                 this.moved.emit({ files, directoryId: this.moveForm.value.directory_id });
                 this.cd.markForCheck();
             }
