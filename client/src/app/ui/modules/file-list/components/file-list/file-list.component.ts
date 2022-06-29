@@ -214,14 +214,12 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
         if (files.some(file => file.is_directory)) {
             this.filteredDirectoryBehaviorSubject.next(
-                this._directoryBehaviorSubject.value.filter(
-                    dir => dir.is_directory && !files.some(file => dir.url.startsWith(file.url))
-                )
+                this.repo
+                    .getViewModelList()
+                    .filter(dir => dir.is_directory && !files.some(file => dir.url.startsWith(file.url)))
             );
         } else {
-            this.filteredDirectoryBehaviorSubject.next(
-                this._directoryBehaviorSubject.value.filter(dir => dir.is_directory)
-            );
+            this.filteredDirectoryBehaviorSubject.next(this.repo.getViewModelList().filter(dir => dir.is_directory));
         }
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
 
