@@ -88,7 +88,8 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         const payload = {
             id: viewMediafile.id,
             access_group_ids: update.access_group_ids,
-            title: update.title
+            title: update.title,
+            parent_id: update.parent_id
         };
         return this.sendActionToBackend(MediafileAction.UPDATE, payload);
     }

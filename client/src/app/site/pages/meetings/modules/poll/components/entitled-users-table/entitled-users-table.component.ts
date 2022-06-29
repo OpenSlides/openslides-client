@@ -22,7 +22,6 @@ export class EntitledUsersTableComponent {
 
     @Input()
     public set isViewingThis(value: boolean) {
-        console.log(`IS VIEWING entitled users: `, value);
         this._isViewingThis = value;
     }
 
