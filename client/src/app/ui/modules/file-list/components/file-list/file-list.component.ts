@@ -225,9 +225,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                if (!!this.moveForm.value.directory_id) {
-                    this.repo.move(files, this.moveForm.value.directory_id);
-                }
+                this.repo.move(files, this.moveForm.value.directory_id || null);
                 this.moved.emit({ files, directoryId: this.moveForm.value.directory_id });
                 this.cd.markForCheck();
             }
