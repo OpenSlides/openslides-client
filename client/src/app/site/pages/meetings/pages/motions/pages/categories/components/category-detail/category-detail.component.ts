@@ -102,7 +102,12 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
                 super.setTitle(this.selectedCategory.prefixedName);
 
                 this.categories = categories
-                    .filter(category => category.oldestParent.id === this._categoryId)
+                    .filter(category =>
+                        [category]
+                            .concat(...category.allParents)
+                            .map(cat => cat.id)
+                            .includes(this._categoryId)
+                    )
                     .sort((a, b) => a.level - b.level);
 
                 // setup datasources:
