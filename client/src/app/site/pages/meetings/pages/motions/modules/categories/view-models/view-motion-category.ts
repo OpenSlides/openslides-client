@@ -20,6 +20,14 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> /* impleme
         }
     }
 
+    public get allParents(): ViewMotionCategory[] {
+        if (!this.parent_id || !this.parent) {
+            return [];
+        } else {
+            return [this.parent].concat(this.parent.allParents);
+        }
+    }
+
     public get prefixedName(): string {
         return this.prefix ? this.prefix + ` - ` + this.name : this.name;
     }
