@@ -70,10 +70,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     public get totalVoteWeight(): number {
-        const votes = this.listComponent.source?.reduce(
-            (previous, current) => previous + (current.vote_weight() || 0),
-            0
-        );
+        let votes;
+        if (this.listComponent) {
+            votes = this.listComponent.source?.reduce(
+                (previous, current) => previous + (current.vote_weight() || 0),
+                0
+            );
+        }
         return votes ?? 0;
     }
 
