@@ -162,7 +162,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         });
         this.translatedValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if (
-            (typeof this.value === `string` && this.value !== ``) ||
+            (typeof this.value === `string` && this.value !== `` && this.setting.type !== `choice`) ||
             this.setting.type === `string` ||
             this.setting.type === `markupText` ||
             this.setting.type === `text`
