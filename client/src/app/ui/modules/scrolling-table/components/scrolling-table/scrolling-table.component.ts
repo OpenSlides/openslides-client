@@ -215,7 +215,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     private onBeforeSelectionChanged(rows: T[], isChecked?: boolean): void {
         for (const row of rows) {
             const index = row.id;
-            this._dataSourceMap[index].isSelected = isChecked || !this._dataSourceMap[index].isSelected;
+            this._dataSourceMap[index].isSelected = isChecked ?? !this._dataSourceMap[index].isSelected;
         }
     }
 
