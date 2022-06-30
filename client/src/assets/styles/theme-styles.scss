@@ -31,11 +31,15 @@
             display: inherit;
         }
     }
+
+    .grey-icon {
+        color: #707070;
+    }
 }
 
 /**
- * Custom configuration for dark themes
- */
+* Custom configuration for dark themes
+*/
 [class^='openslides-'][class*='-dark-theme'] {
     color: white;
     .logo-container {
@@ -45,5 +49,9 @@
         img.default {
             display: none;
         }
+    }
+
+    .grey-icon {
+        color: white;
     }
 }

@@ -4,7 +4,7 @@
         <!-- Scrollable folder bar -->
         <span class="folder-nav-bar h-scroller">
             <button class="folder" mat-button (click)="changeDirectory(null)" [disabled]="isMultiSelect">
-                <mat-icon class="foreground-icon">home</mat-icon>
+                <mat-icon class="grey-icon foreground-icon">home</mat-icon>
             </button>
             <span class="folder-section" *ngFor="let directory of directoryChain; let last = last">
                 <span class="arrow">
@@ -70,7 +70,7 @@
             (click)="changeDirectory(mediafile.id)"
             *ngIf="mediafile.is_directory && !isMultiSelect"
         ></a>
-        <mat-icon class="foreground-icon">{{ mediafile.getIcon() }}</mat-icon>
+        <mat-icon class="grey-icon foreground-icon">{{ mediafile.getIcon() }}</mat-icon>
     </div>
 
     <!-- Title column -->

@@ -8,11 +8,11 @@
             (click)="setProjectorAsReference()"
             matTooltip="{{ 'Sets this projector as the reference for the current list of speakers' | translate }}"
         >
-            <mat-icon *ngIf="projector.isReferenceProjector">star</mat-icon>
-            <mat-icon *ngIf="!projector.isReferenceProjector">star_border</mat-icon>
+            <mat-icon class="grey-icon" *ngIf="projector.isReferenceProjector">star</mat-icon>
+            <mat-icon class="grey-icon" *ngIf="!projector.isReferenceProjector">star_border</mat-icon>
         </button>
         <button mat-icon-button (click)="editProjector()" matTooltip="{{ 'Edit projector' | translate }}">
-            <mat-icon>edit</mat-icon>
+            <mat-icon class="grey-icon">edit</mat-icon>
         </button>
         <button
             mat-icon-button
@@ -20,7 +20,7 @@
             (click)="onDeleteButton()"
             matTooltip="{{ 'Delete projector' | translate }}"
         >
-            <mat-icon>delete</mat-icon>
+            <mat-icon class="grey-icon">delete</mat-icon>
         </button>
     </ng-container>
     <ng-container class="meta-text-block-content">
