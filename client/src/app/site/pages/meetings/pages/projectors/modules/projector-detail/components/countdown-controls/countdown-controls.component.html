@@ -16,10 +16,29 @@
             >
                 <mat-icon>open_in_new</mat-icon>
             </button>
-            <button type="button" class="small-mat-icon-button" mat-icon-button (click)="onEdit()">
+            <button
+                [matTooltip]="'Edit' | translate"
+                type="button"
+                class="small-mat-icon-button"
+                mat-icon-button
+                (click)="onEdit()"
+            >
                 <mat-icon>edit</mat-icon>
             </button>
-            <button type="button" class="small-mat-icon-button" mat-icon-button (click)="onDelete()">
+            <div
+                *ngIf="isFixedCountdown"
+                class="small-mat-icon-button mat-icon-button-disabled disabled"
+                [matTooltip]="'It is not allowed to delete countdowns used for list of speakers or polls' | translate"
+            >
+                <mat-icon>close</mat-icon>
+            </div>
+            <button
+                *ngIf="!isFixedCountdown"
+                type="button"
+                class="small-mat-icon-button"
+                mat-icon-button
+                (click)="onDelete()"
+            >
                 <mat-icon>close</mat-icon>
             </button>
         </div>

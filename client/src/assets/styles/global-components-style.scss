@@ -45,6 +45,10 @@
         background: mat.get-color-from-palette($background, background) !important;
     }
 
+    .disabled {
+        color: mat.get-color-from-palette($foreground, disabled-button);
+    }
+
     .fake-disabled {
         background: mat.get-color-from-palette($background, unselected-chip) !important;
         opacity: 1 !important;

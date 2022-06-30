@@ -1,4 +1,5 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
 import { ProjectorCountdown } from '../../../../../../domain/models/projector/projector-countdown';
@@ -43,5 +44,8 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
         return Projectiondefault.projectorCountdown;
     }
 }
-interface IProjectorCountdownRelations {}
-export interface ViewProjectorCountdown extends ProjectorCountdown, IProjectorCountdownRelations, HasMeeting {}
+interface ProjectorCountdownRelations {
+    used_as_list_of_speakers_countdown_meeting: ViewMeeting;
+    used_as_poll_countdown_meeting: ViewMeeting;
+}
+export interface ViewProjectorCountdown extends ProjectorCountdown, ProjectorCountdownRelations, HasMeeting {}
