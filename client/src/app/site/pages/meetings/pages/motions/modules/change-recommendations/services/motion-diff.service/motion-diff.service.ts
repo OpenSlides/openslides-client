@@ -2114,7 +2114,8 @@ export class MotionDiffService {
         motionHtml: string,
         changes: ViewUnifiedChange[],
         lineLength: number,
-        highlightLine?: number
+        highlightLine?: number,
+        firstLine = 1
     ): string {
         let html = motionHtml;
 
@@ -2125,7 +2126,7 @@ export class MotionDiffService {
 
         changes.forEach((change: ViewUnifiedChange) => {
             if (!change.isTitleChange()) {
-                html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: 1 });
+                html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: firstLine });
                 html = this.replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
             }
         });
@@ -2134,7 +2135,7 @@ export class MotionDiffService {
             html,
             lineLength,
             highlight: highlightLine,
-            firstLine: 1
+            firstLine: firstLine
         });
 
         return html;
