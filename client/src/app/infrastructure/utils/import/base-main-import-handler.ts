@@ -47,6 +47,8 @@ export abstract class BaseMainImportHandler<MainModel extends ImportIdentifiable
         return this._modelsToCreateSubject.value;
     }
 
+    protected existingModels: ImportModel<MainModel>[];
+
     private _modelsToCreateSubject = new BehaviorSubject<ImportModel<MainModel>[]>([]);
     private _modelsImportedSubject = new BehaviorSubject<ImportModel<MainModel>[]>([]);
 
@@ -96,6 +98,7 @@ export abstract class BaseMainImportHandler<MainModel extends ImportIdentifiable
     }
 
     private resolveEntries(): MainModel[] {
+        this.existingModels.map(model => this._resolveEntryFn(model));
         return this.modelsToCreate.map(model => this._resolveEntryFn(model));
     }
 

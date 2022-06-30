@@ -90,7 +90,9 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
 
     public async onBeforeFind(allImportModels: ImportModel<Model>[]): Promise<void> {
         const toFind = allImportModels.flatMap(model =>
-            this._repo.parseStringIntoUser(model.model[this._importedAs ?? this.idProperty] as any)
+            model.model[this._importedAs ?? this.idProperty]
+                .split(`;`)
+                .map(name => this._repo.parseStringIntoUser(name))
         ) as any;
         if (this._userSearchService) {
             UserImportHelperSharedContext.addExistingUsers(await this._userSearchService.getDuplicates(toFind));
