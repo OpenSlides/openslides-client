@@ -24,5 +24,6 @@ export class StaticMainImportHandler<ToCreate extends ImportIdentifiable> extend
 
     public pipeModels(models: ImportModel<ToCreate>[]): void | Promise<void> {
         this.modelsToCreate = models.filter(this._shouldCreateModelFn);
+        this.existingModels = models.filter(model => !this._shouldCreateModelFn(model));
     }
 }
