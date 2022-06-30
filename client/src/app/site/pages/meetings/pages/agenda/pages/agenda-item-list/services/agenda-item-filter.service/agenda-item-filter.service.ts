@@ -57,7 +57,7 @@ export class AgendaItemFilterService extends BaseMeetingFilterListService<ViewAg
                 label: `Status`,
                 property: `closed`,
                 options: [
-                    { label: this.translate.instant(`Open items`), condition: false },
+                    { label: this.translate.instant(`Open items`), condition: [false, null] },
                     { label: this.translate.instant(`Closed items`), condition: true }
                 ]
             },

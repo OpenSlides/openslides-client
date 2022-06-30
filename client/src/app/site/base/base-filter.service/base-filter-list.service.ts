@@ -111,6 +111,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * The currently used filters.
      */
     private set filterDefinitions(filters: OsFilter<V>[]) {
+        console.log(`SETTING FILTER DEFINITIONS: `, filters)
         this._filterDefinitionsSubject.next(filters);
     }
 
@@ -485,7 +486,8 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     private isPassingFilterOption(item: V, property: unknown, condition: OsFilterOptionCondition): boolean {
         const conditions = Array.isArray(condition) ? condition : [condition];
-        let toCheck = property;
+        console.log(`IS PASSING OPTION: `, conditions);
+        let toCheck = property !== undefined ? property : null;
 
         if (typeof toCheck === `function`) {
             toCheck = toCheck.bind(item)();
