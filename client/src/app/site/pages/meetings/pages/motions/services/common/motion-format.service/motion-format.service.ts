@@ -145,9 +145,15 @@ export class MotionFormatService {
     }
 
     private getFinalView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
+        const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         const appliedChanges: ViewUnifiedChange[] = changes.filter(change => change.showInFinalView());
-        return this.diffService.getTextWithChanges(targetMotion.text, appliedChanges, lineLength, highlightedLine);
+        return this.diffService.getTextWithChanges(
+            targetMotion.text,
+            appliedChanges,
+            lineLength,
+            highlightedLine,
+            firstLine
+        );
     };
 
     private getModifiedFinalView = (
@@ -186,7 +192,7 @@ export class MotionFormatService {
     };
 
     private getChangedView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
-        const { changes, lineLength, highlightedLine }: DifferedViewArguments = args;
+        const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         const filteredChangeRecommendations = changes.filter(
             change => change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION
         );
@@ -194,7 +200,8 @@ export class MotionFormatService {
             targetMotion.text,
             filteredChangeRecommendations,
             lineLength,
-            highlightedLine!
+            highlightedLine!,
+            firstLine
         );
     };
 
