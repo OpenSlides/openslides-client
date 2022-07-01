@@ -24,6 +24,16 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import 'cypress-wait-until';
+
+Cypress.Commands.add(`urlShouldAllOf`, (...toCheck: {chainer: string, values: any[]}[]) => {
+    toCheck.forEach(check => {
+        check.values.forEach(value => {
+            cy.url().should(check.chainer, value);
+        })
+    })
+})
+
 /**
  * Login
  */
@@ -178,13 +188,13 @@ Cypress.Commands.add('createCommittee', (name: string = Date.now().toString()) =
 });
 
 Cypress.Commands.add(`createMeeting`, (name: string = `OS4Party`, admin_ids: number[] = [1]) => {
-    return cy.createCommittee().then(({ id }) => {
+    return cy.createCommittee(name).then(({ id }) => {
         const meetingData = {
             committee_id: id,
             name,
             admin_ids
         };
-        return cy.os4request(`meeting.create`, meetingData).then(res => ({ id: res.id, name }));
+        return cy.os4request(`meeting.create`, meetingData).then(res => ({ id: res.id, name, committeeId: id }));
     });
 });
 
@@ -196,6 +206,25 @@ Cypress.Commands.add(`createAccount`, (name: string = `Mississipi`) => {
     };
     cy.os4request(`user.create`, accountData).then(res => ({ id: res.id, name }));
 });
+
+Cypress.Commands.add(`deleteAccounts`, (...ids: number[]) => {
+    ids.forEach((value, index) => {
+        cy.os4request(`user.delete`, {id: ids[index]});
+    })
+});
+
+Cypress.Commands.add(`deleteMeetings`, (...ids: number[]) => {
+    ids.forEach((value, index) => {
+        cy.os4request(`meeting.delete`, {id: ids[index]});
+    })
+});
+
+Cypress.Commands.add(`deleteCommittees`, (...ids: number[]) => {
+    ids.forEach((value, index) => {
+        cy.os4request(`committee.delete`, {id: ids[index]});
+    })
+});
+
 /**
  * Extend "request" with auth header
  */
