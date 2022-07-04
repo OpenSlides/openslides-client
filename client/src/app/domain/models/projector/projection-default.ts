@@ -27,11 +27,11 @@ export const ProjectiondefaultVerbose: { [key in keyof typeof Projectiondefault]
     amendment: _(`Amendments`),
     motionBlock: _(`Motion blocks`),
     assignment: _(`Elections`),
-    user: _(`Users`),
-    mediafile: _(`Media files`),
+    user: _(`Participants`),
+    mediafile: _(`Files`),
     projectorMessage: _(`Messages`),
     projectorCountdown: _(`Countdowns`),
-    assignmentPoll: _(`Election polls`),
-    motionPoll: _(`Motion polls`),
+    assignmentPoll: _(`Ballots`),
+    motionPoll: _(`Motion votes`),
     poll: _(`Polls`)
 };

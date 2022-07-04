@@ -18,9 +18,6 @@ msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Accounts"
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Veranstaltungen"
 
-msgid "%num% emails were send sucessfully."
-msgstr "%num% E-Mails wurden erfolgreich versandt."
-
 msgid "-Ä"
 msgstr "-Ä"
 
@@ -142,6 +139,9 @@ msgstr "Mitteilung hinzufügen"
 
 msgid "Add new custom translation"
 msgstr "Neue benutzerdefinierte Übersetzung hinzufügen"
+
+msgid "Add option"
+msgstr "Option hinzufügen"
 
 msgid "Add to agenda"
 msgstr "Zur Tagesordnung hinzufügen"
@@ -283,12 +283,6 @@ msgstr "Änderungsanträge können mehrere Absätze ändern"
 
 msgid "Amendments to"
 msgstr "Änderungsanträge zu"
-
-msgid "Amount of accounts"
-msgstr "Anzahl der Accounts"
-
-msgid "Amount of meetings"
-msgstr "Anzahl der Veranstaltungen"
 
 msgid "Amount of votes"
 msgstr "Anzahl der Stimmen"
@@ -478,19 +472,16 @@ msgid "Are you sure you want to renumber all motions of this category?"
 msgstr ""
 "Sollen alle Anträge dieses Sachgebiets wirklich neu nummeriert werden?"
 
+msgid "Are you sure you want to reset all options to factory defaults?"
+msgstr ""
+"Sollen wirklich alle Optionen auf Werkseinstellung zurückgesetzt werden?"
+
 msgid ""
 "Are you sure you want to reset all options to factory defaults? All changes "
 "of this settings group will be lost!"
 msgstr ""
 "Sollen wirklich alle Optionen auf Werkseinstellung zurückgesetzt werden? "
 "Alle Änderungen auf dieser Einstellungsseite gehen verloren!"
-
-msgid ""
-"Are you sure you want to reset all options to factory defaults? Changes of "
-"all settings group will be lost!"
-msgstr ""
-"Wollen Sie wirklich alle Werte auf Werkseinstellungen zurücksetzen? "
-"Änderungen in allen Einstellungsrubriken gehen verloren!"
 
 msgid "Are you sure you want to reset all passwords to the default ones?"
 msgstr ""
@@ -566,9 +557,6 @@ msgstr "Hintergrundfarbe"
 
 msgid "Ballot"
 msgstr "Wahlgang"
-
-msgid "Ballot opened"
-msgstr "Wahlgang eröffnet"
 
 msgid "Ballot papers"
 msgstr "Stimmzettel"
@@ -741,14 +729,8 @@ msgstr "Bearbeitung abbrechen"
 msgid "Cancel editing without saving"
 msgstr "Bearbeitung ohne Speichern abbrechen"
 
-msgid "Candidate"
-msgstr "Kandidat*in"
-
 msgid "Candidates"
 msgstr "Kandidaten*innen"
-
-msgid "Cannot create PDF files on this browser."
-msgstr "In diesem Browser können keine PDF-Dateien erstellt werden."
 
 msgid "Cannot do that in demo mode!"
 msgstr "Diese Aktion ist im Demo-Modus nicht möglich!"
@@ -820,9 +802,6 @@ msgstr "Auswahl"
 msgid "Choose 0 to disable the supporting system."
 msgstr "Zum Deaktivieren des Unterstützersystems '0' eingeben."
 
-msgid "Choose a header"
-msgstr "Spaltenüberschrift auswählen"
-
 msgid "Chyron"
 msgstr "Bauchbinde"
 
@@ -879,12 +858,6 @@ msgstr "Kommentar"
 
 msgid "Comment fields"
 msgstr "Kommentarfelder"
-
-msgid "Comment section"
-msgstr ""
-
-msgid "Comment sections"
-msgstr ""
 
 msgid "Comment {arg1} updated"
 msgstr "Kommentar {arg1} aktualisiert"
@@ -1298,6 +1271,9 @@ msgstr "Nachrichtentext"
 msgid "Email sent"
 msgstr "E-Mail gesendet"
 
+msgid "Email settings"
+msgstr "E-Mail-Einstellungen"
+
 msgid "Email subject"
 msgstr "Betreff"
 
@@ -1335,6 +1311,9 @@ msgstr "Virtuellen Help-Desk-Raum einschalten"
 
 msgid "Enable/disable account ..."
 msgstr "Account ein-/ausschalten ..."
+
+msgid "Enable/disable accounts"
+msgstr "Accounts ein-/ausschalten"
 
 msgid "Encoding of the file"
 msgstr "Encoding der Datei"
@@ -1450,9 +1429,6 @@ msgstr "Erweiterung"
 msgid "Favorites"
 msgstr "Favoriten"
 
-msgid "File"
-msgstr "Datei"
-
 msgid "Filename"
 msgstr "Dateiname"
 
@@ -1560,9 +1536,6 @@ msgstr "Springe zur Zeile"
 
 msgid "Got an email"
 msgstr "Bekam eine E-Mail"
-
-msgid "Group"
-msgstr "Gruppe"
 
 msgid "Groups"
 msgstr "Gruppen"
@@ -1775,14 +1748,14 @@ msgstr "ist Redner*in"
 msgid "Is submitter"
 msgstr "ist Antragsteller*in"
 
-msgid "Item"
-msgstr "Eintrag"
+msgid ""
+"It is not allowed to delete countdowns used for list of speakers or polls"
+msgstr ""
+"Countdowns, die für Redelisten oder elektronische Stimmabgaben verwendet "
+"werden, dürfen nicht gelöscht werden."
 
 msgid "Item number"
 msgstr "Tagesordnungspunkt-Nummer"
-
-msgid "Items"
-msgstr "Einträge"
 
 msgid "Jitsi domain"
 msgstr "Jitsi-Domain"
@@ -1865,9 +1838,6 @@ msgstr "Redelisten sind zunächst geschlossen"
 msgid "List view"
 msgstr "Listenansicht"
 
-msgid "Lists of speakers"
-msgstr "Redeliste"
-
 msgid "Live conference"
 msgstr "Livekonferenz"
 
@@ -1885,6 +1855,9 @@ msgstr "Livestream-URL"
 msgid "Livestream poster image url"
 msgstr "Livestream-Posterbild-URL"
 
+msgid "Loading data. Please wait ..."
+msgstr "Daten werden geladen. Bitte warten ..."
+
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1899,9 +1872,6 @@ msgstr "Abmelden"
 
 msgid "Lowest applause amount"
 msgstr "Niedrigster Applauswert"
-
-msgid "Main motion and line number"
-msgstr "Hauptantrag und Zeilennummer"
 
 msgid "Mark as personal favorite"
 msgstr "Als persönlichen Favorit markieren"
@@ -2028,6 +1998,12 @@ msgstr "Ausgewählte Einträge verschieben ..."
 msgid "Move to agenda item"
 msgstr "Zu TOP verschieben"
 
+msgid "Multiple users found for same username!"
+msgstr "Mehrere Benutzer für denselben Benutzernamen gefunden!"
+
+msgid "Multiple users with same credentials!"
+msgstr "Mehrere Benutzer mit denselben Anmeldedaten gefunden!"
+
 msgid "Multiselect"
 msgstr "Mehrfachauswahl"
 
@@ -2051,6 +2027,9 @@ msgstr "Name des Empfehlungsgebers"
 
 msgid "Name of recommender for statute amendments"
 msgstr "Name des Empfehlungsgebers für Satzungsänderungsanträge"
+
+msgid "Name of the new category"
+msgstr "Name des neuen Sachgebiets"
 
 msgid "Natural person"
 msgstr "natürliche Person"
@@ -2109,11 +2088,17 @@ msgstr "Neuer Antrag"
 msgid "New motion block"
 msgstr "Neuer Antragsblock"
 
+msgid "New option"
+msgstr "Neue Option"
+
 msgid "New participant"
 msgstr "Neue*r Teilnehmer*in"
 
 msgid "New password"
 msgstr "Neues Passwort"
+
+msgid "New poll"
+msgstr "Neue Umfrage"
 
 msgid "New state"
 msgstr "Neuer Status"
@@ -2178,9 +2163,6 @@ msgstr "Keine Stimmrechtsübertragungen"
 msgid "No email sent"
 msgstr "Keine E-Mail gesendet"
 
-msgid "No emails were send."
-msgstr "Es wurden keine E-Mails versandt."
-
 msgid "No encryption"
 msgstr "Keine Verschlüsselung"
 
@@ -2193,11 +2175,17 @@ msgstr "Keine Einträge ausgewählte"
 msgid "No meeting"
 msgstr "Keine Veranstaltung"
 
+msgid "No meeting selected"
+msgstr "Keine Veranstaltung ausgewählt"
+
 msgid "No meetings available"
 msgstr "Keine Veranstaltungen vorhanden"
 
 msgid "No motion block set"
 msgstr "kein Antragsblock gesetzt"
+
+msgid "No options found"
+msgstr "Keine Optionen gefunden"
 
 msgid "No per candidate"
 msgstr "Nein pro Kandidat"
@@ -2222,9 +2210,6 @@ msgstr "Es wurde kein Nutzer mit E-Mail-Adresse {0} gefunden."
 
 msgid "No verbose name is defined"
 msgstr "Es ist kein ausführlicher Name definiert"
-
-msgid "No."
-msgstr "Nr."
 
 msgid "None"
 msgstr "aus"
@@ -2323,9 +2308,6 @@ msgstr "Ok"
 msgid "Old password"
 msgstr "Altes Passwort"
 
-msgid "One email was send sucessfully."
-msgstr "Eine E-Mail wurde erfolgreich versandt."
-
 msgid "Only countdown"
 msgstr "Nur Countdown"
 
@@ -2374,9 +2356,6 @@ msgstr "OpenSlides ist vorübergehend auf folgenden Zeitpunkt zurückgesetzt:"
 msgid "OpenSlides recommends"
 msgstr "OpenSlides empfiehlt"
 
-msgid "Option"
-msgstr "Wahlmöglichkeit"
-
 msgid "Options"
 msgstr "Optionen"
 
@@ -2385,9 +2364,6 @@ msgstr "Organisation"
 
 msgid "Organization specific information"
 msgstr "Organisationsspezifische Informationen"
-
-msgid "Organizations"
-msgstr "Organisationen"
 
 msgid "Origin"
 msgstr "Herkunft"
@@ -2564,6 +2540,9 @@ msgstr "Abstimmung gelöscht"
 msgid "Poll updated"
 msgstr "Abstimmung aktualisiert"
 
+msgid "Polls"
+msgstr "Umfragen"
+
 msgid "Preamble text for PDF document (all elections)"
 msgstr "Einleitungstext für PDF-Dokument (alle Wahlen) "
 
@@ -2606,11 +2585,8 @@ msgstr "Projizieren"
 msgid "Project selection?"
 msgstr "Auswahl projizieren?"
 
-msgid "Projection"
-msgstr "Projektion"
-
-msgid "Projections"
-msgstr "Projektionen"
+msgid "Projection defaults"
+msgstr "Projektionsvorgaben"
 
 msgid "Projector"
 msgstr "Projektor"
@@ -2736,6 +2712,9 @@ msgstr "Vom Antragsblock entfernen "
 msgid "Remove me"
 msgstr "Entferne mich"
 
+msgid "Remove option"
+msgstr "Option entfernen"
+
 msgid "Reopen"
 msgstr "wieder öffnen"
 
@@ -2836,20 +2815,11 @@ msgstr "Geheime Stimmabgaben können nicht garantiert werden"
 msgid "Select"
 msgstr "Auswählen"
 
-msgid "Select a new candidate"
-msgstr "Kandidat/in auswählen ..."
-
 msgid "Select all"
 msgstr "Alle auswählen"
 
 msgid "Select file"
 msgstr "Datei auswählen"
-
-msgid "Select or search new speaker ..."
-msgstr "Redner*in auswählen oder suchen ..."
-
-msgid "Select or search new submitter ..."
-msgstr "Antragsteller*in auswählen oder suchen ..."
 
 msgid "Select paragraphs"
 msgstr "Absätze auswählen"
@@ -2935,6 +2905,9 @@ msgstr "Empfehlung setzen"
 
 msgid "Set status"
 msgstr "Status setzen"
+
+msgid "Set status for selected accounts"
+msgstr "Status für ausgewählte Accounts setzen:"
 
 msgid "Set status for selected participants:"
 msgstr "Status für ausgewählte Teilnehmende setzen:"
@@ -3087,9 +3060,6 @@ msgstr "Einfacher Arbeitsablauf"
 msgid "Single votes"
 msgstr "Einzelstimmen"
 
-msgid "Size"
-msgstr "Größe"
-
 msgid "Slide"
 msgstr "Folie"
 
@@ -3119,9 +3089,6 @@ msgstr "Anträge sortieren nach"
 
 msgid "Sort name of participants by"
 msgstr "Namen der Teilnehmenden sortieren nach"
-
-msgid "Speaker"
-msgstr "Redner*in"
 
 msgid "Speakers"
 msgstr "Redner*innen"
@@ -3186,9 +3153,6 @@ msgstr "Auswahl jetzt senden?"
 msgid "Submit vote now"
 msgstr "Stimme(n) jetzt senden"
 
-msgid "Submitter"
-msgstr "Antragsteller*in"
-
 msgid "Submitters"
 msgstr "Antragsteller*in"
 
@@ -3197,6 +3161,9 @@ msgstr "Antragsteller*in geändert"
 
 msgid "Suitable accounts found"
 msgstr "Passende Accounts gefunden"
+
+msgid "Sum of votes"
+msgstr "Summe der Einzelstimmen"
 
 msgid "Sum of votes without general options"
 msgstr "Summe der Stimmen ohne generelle Optionen"
@@ -3209,6 +3176,9 @@ msgstr "Zusammenfassung der Änderungen"
 
 msgid "Summary of changes:"
 msgstr "Zusammenfassung der Änderungen:"
+
+msgid "Superadmin settings"
+msgstr "Superadmin-Einstellungen"
 
 msgid "Support"
 msgstr "Unterstützen"
@@ -3240,11 +3210,17 @@ msgstr "Veranstaltungsvorlage"
 msgid "Text"
 msgstr "Text"
 
+msgid "Text for this option couldn't load."
+msgstr "Der Text für diese Option konnte nicht geladen werden."
+
 msgid "Text import"
 msgstr "Textimport"
 
 msgid "Text separator"
 msgstr "Texttrenner"
+
+msgid "The account is deactivated."
+msgstr "Der Account ist inaktiv."
 
 msgid "The assembly may decide:"
 msgstr "Die Versammlung möge beschließen:"
@@ -3257,6 +3233,19 @@ msgstr "Der Veranstalter hat noch kein Impressum hinterlegt."
 
 msgid "The event manager has not set up a privacy policy yet."
 msgstr "Der Veranstalter hat noch keine Datenschutzerklärung hinterlegt."
+
+msgid "The file has too few columns to be parsed properly."
+msgstr "Die Datei enthält zu wenige Spalten, um richtig erkannt zu werden."
+
+msgid "The file seems to have additional columns. They will be ignored."
+msgstr ""
+"Die Datei scheint zusätzliche Spalten zu haben. Diese werden ignoriert."
+
+msgid ""
+"The file seems to have some ommitted columns. They will be considered empty."
+msgstr ""
+"Die Datei scheint einige ausgelassene Spalten zu haben. Sie werden als leer "
+"betrachtet."
 
 msgid "The link is broken. Please contact your system administrator."
 msgstr ""
@@ -3306,18 +3295,6 @@ msgstr "Der Antragstext darf nicht leer sein."
 msgid "The title is required"
 msgstr "Ein Titel ist erforderlich"
 
-msgid ""
-"The user %user% has no email, so the invitation email could not be send."
-msgstr ""
-"%user% besitzt keine E-Mail-Adresse; eine E-Mail konnte daher nicht gesendet"
-" werden."
-
-msgid ""
-"The users %user% have no email, so the invitation emails could not be send."
-msgstr ""
-"%user% besitzen keine E-Mail-Adressen; E-Mails konnte daher nicht gesendet "
-"werden."
-
 msgid "There are some columns that do not match the template"
 msgstr "Es gibt einige Spalten, die nicht mit der Vorlage übereinstimmen"
 
@@ -3328,6 +3305,9 @@ msgid "There is an error with this amendment. Please edit it manually."
 msgstr ""
 "In diesem Änderungsantrag ist ein Fehler. Bitte bearbeiten Sie den Text "
 "manuell."
+
+msgid "There is an unknown voting problem."
+msgstr "Es gibt ein unbekanntes Problem bei der elektronischen Stimmabgabe."
 
 msgid "Thereof point of orders"
 msgstr "davon Geschäftsordnungsanträge"
@@ -3521,11 +3501,17 @@ msgstr ""
 "Wird für Einladungs-E-Mails sowie WLAN-QR-Code im Zugangsdaten-PDF "
 "verwendet."
 
+msgid "User not found."
+msgstr "Benutzer nicht gefunden."
+
 msgid "User permission"
 msgstr "Benutzerberechtigung"
 
 msgid "Username"
 msgstr "Benutzername"
+
+msgid "Username or password is incorrect."
+msgstr "Benutzername oder Passwort war nicht korrekt."
 
 msgid "Username or password is not correct."
 msgstr "Benutzername oder Passwort war nicht korrekt."
@@ -3562,6 +3548,9 @@ msgstr "Abstimmung aktualisiert"
 
 msgid "Vote weight"
 msgstr "Stimmgewicht"
+
+msgid "Voted"
+msgstr "Stimme abgegeben"
 
 msgid "Votes"
 msgstr "Stimmen"
@@ -3680,6 +3669,9 @@ msgstr "Ja"
 
 msgid "Yes per candidate"
 msgstr "Ja pro Kandidat"
+
+msgid "Yes per option"
+msgstr "Ja pro Option"
 
 msgid "Yes, delete"
 msgstr "Ja, löschen"
@@ -3812,6 +3804,11 @@ msgstr "Sie haben Änderungen vorgenommen."
 msgid "You override the personally set password!"
 msgstr "Sie überschreiben hiermit das persönlich gesetzte Passwort!"
 
+msgid "You reached the maximum amount of votes. Deselect one option first."
+msgstr ""
+"Sie haben die maximale Anzahl von Stimmen erreicht. Deselektieren Sie zuerst"
+" eine Auswahl."
+
 msgid "You reached the maximum amount of votes. Deselect somebody first."
 msgstr ""
 "Sie haben die maximale Anzahl von Stimmen erreicht. Deselektieren Sie zuerst"
@@ -3881,9 +3878,6 @@ msgstr "vertagt"
 msgid "analog"
 msgstr "analog"
 
-msgid "and"
-msgstr "und"
-
 msgid "are required"
 msgstr "sind erforderlich"
 
@@ -3910,9 +3904,6 @@ msgstr "konnten nicht erstellt werden"
 
 msgid "could not be defined"
 msgstr "konnten nicht definiert werden"
-
-msgid "could not be referenced"
-msgstr "konnte nicht referenziert werden"
 
 msgid "created"
 msgstr "erstellt"
@@ -3973,9 +3964,6 @@ msgstr "hat die Arbeit an diesem Antrag gespeichert."
 
 msgid "have been created"
 msgstr "wurden erstellt"
-
-msgid "have been referenced"
-msgstr "wurde referenziert"
 
 msgid "hidden"
 msgstr "versteckt"
