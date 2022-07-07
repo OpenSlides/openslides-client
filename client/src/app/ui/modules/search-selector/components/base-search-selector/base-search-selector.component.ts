@@ -115,7 +115,9 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public get empty(): boolean {
-        return Array.isArray(this._snapshotValue) ? !this._snapshotValue.length : !this._snapshotValue;
+        return Array.isArray(this._snapshotValue)
+            ? !this._snapshotValue.length
+            : this._snapshotValue === null || this._snapshotValue === undefined;
     }
 
     public get selectedItems(): Selectable[] {
@@ -191,13 +193,10 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             this.selectedIds = [];
         }
         const index = this.selectedIds.indexOf(id);
-        const value = this._selectableItemsIdMap[id];
-        let selected = false;
         if (index > -1) {
             this.selectedIds.splice(index, 1);
         } else {
             this.selectedIds.push(id);
-            selected = true;
         }
         this.setNextValue(this.selectedIds);
     }

@@ -1,12 +1,13 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { UploadSuccessEvent } from 'src/app/ui/modules/media-upload-content/components/media-upload-content/media-upload-content.component';
 
 @Component({
     selector: `os-mediafile-upload`,
@@ -42,10 +43,11 @@ export class MediafileUploadComponent implements OnInit {
     }
 
     public constructor(
-        private location: Location,
+        private router: Router,
         private route: ActivatedRoute,
         private repo: MediafileControllerService,
-        private groupsRepo: GroupControllerService
+        private groupsRepo: GroupControllerService,
+        private activeMeetingIdService: ActiveMeetingIdService
     ) {}
 
     public ngOnInit(): void {
@@ -55,8 +57,12 @@ export class MediafileUploadComponent implements OnInit {
     /**
      * Handler for successful uploads
      */
-    public uploadSuccess(): void {
-        this.location.back();
+    public uploadSuccess(event: UploadSuccessEvent): void {
+        const parts = [this.activeMeetingIdService.meetingId, `mediafiles`];
+        if (event.parentId) {
+            parts.push(event.parentId);
+        }
+        this.router.navigate(parts);
     }
 
     /**

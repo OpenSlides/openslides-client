@@ -19,7 +19,7 @@
         [directories]="directoriesObservable"
         [currentDirectory]="currentDirectory"
         [uploadFn]="uploadFn"
-        (uploadSuccessEvent)="uploadSuccess()"
+        (uploadSuccessEvent)="uploadSuccess($event)"
         (errorEvent)="showError($event)"
     >
         <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
