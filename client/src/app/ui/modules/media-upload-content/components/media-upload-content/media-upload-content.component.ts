@@ -40,9 +40,6 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     public directoryId: number | null | undefined;
 
     @Input()
-    public currentDirectory: ViewMediafile | null = null;
-
-    @Input()
     public directories: Observable<ViewMediafile[]> | ViewMediafile[] = [];
 
     @Input()
@@ -82,7 +79,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     public async ngOnInit(): Promise<void> {
         // Initialize the form here to have already the directory id and current directory
         this.directorySelectionForm = this.formBuilder.group({
-            directoryId: this.directoryId || null
+            directoryId: this.directoryId || 0
         });
         // detect changes in the form
         this.subscriptions.push(
@@ -90,10 +87,6 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
                 this.directoryId = formResult.directoryId;
             })
         );
-    }
-
-    public getDirectoryTitle(): string {
-        return this.repo.getViewModel(this.directoryId)?.title || ``;
     }
 
     /**

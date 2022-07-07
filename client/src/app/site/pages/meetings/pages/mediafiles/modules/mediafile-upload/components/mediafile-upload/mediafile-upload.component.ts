@@ -27,13 +27,6 @@ export class MediafileUploadComponent implements OnInit {
         return this.repo.getDirectoryListObservable();
     }
 
-    public get currentDirectory(): ViewMediafile | null {
-        if (this.directoryId) {
-            return this.repo.getViewModel(this.directoryId);
-        }
-        return null;
-    }
-
     public get uploadFn(): (file: any) => Promise<Identifiable> {
         return file => this.repo.createFile(file);
     }
