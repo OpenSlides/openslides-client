@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import {
@@ -83,7 +83,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public directory: ViewMediafile | null = null;
     public directoryChain: ViewMediafile[] = [];
 
-    public directoryObservable: Observable<ViewMediafile[]> = new Observable();
+    public directoryObservable: Observable<ViewMediafile[]>;
+    private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
@@ -112,6 +113,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
             access_group_ids: []
         });
         this.groupsBehaviorSubject = this.groupRepo.getViewModelListObservable();
+        this.directoryObservable = this.directorySubject.asObservable();
     }
 
     /**
@@ -175,12 +177,9 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public changeDirectory(directoryId: number | null): void {
         this.clearSubscriptions();
 
-        this.directoryObservable = this.repo.getDirectoryObservable(directoryId);
-        this.folderSubscription = this.directoryObservable.subscribe(mediafiles => {
-            if (mediafiles) {
-                this.cd.markForCheck();
-            }
-        });
+        // pipe the directory observable to the directorySubject so that the actual observable which
+        // is given to the file list does not change
+        this.folderSubscription = this.repo.getDirectoryObservable(directoryId).subscribe(this.directorySubject);
 
         if (directoryId) {
             this.directorySubscription = this.repo.getViewModelObservable(directoryId).subscribe(newDirectory => {
