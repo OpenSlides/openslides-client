@@ -13,7 +13,7 @@
                 <mat-icon *ngIf="entry.voted">check_box</mat-icon>
             </div>
             <div *osScrollingTableCell="'delegation'; row as entry">
-                <div *osScrollingTableCellLabel>{{ 'Delegated to' | translate }}</div>
+                <div *osScrollingTableCellLabel>{{ 'represented by' | translate }}</div>
                 <div *ngIf="entry.vote_delegated_to_id">
                     <span class="repr-prefix">{{ 'represented by' | translate }}</span>
                     &nbsp;

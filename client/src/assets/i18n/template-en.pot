@@ -10,9 +10,6 @@ msgstr ""
 msgid "\"0\" means an unlimited number of active meetings"
 msgstr ""
 
-msgid "%num% emails were send sucessfully."
-msgstr ""
-
 msgid "-Ä"
 msgstr ""
 
@@ -124,6 +121,9 @@ msgid "Add message"
 msgstr ""
 
 msgid "Add new custom translation"
+msgstr ""
+
+msgid "Add option"
 msgstr ""
 
 msgid "Add to agenda"
@@ -257,12 +257,6 @@ msgid "Amendments can change multiple paragraphs"
 msgstr ""
 
 msgid "Amendments to"
-msgstr ""
-
-msgid "Amount of accounts"
-msgstr ""
-
-msgid "Amount of meetings"
 msgstr ""
 
 msgid "Amount of votes"
@@ -440,14 +434,12 @@ msgstr ""
 msgid "Are you sure you want to renumber all motions of this category?"
 msgstr ""
 
-msgid ""
-"Are you sure you want to reset all options to factory defaults? All changes "
-"of this settings group will be lost!"
+msgid "Are you sure you want to reset all options to factory defaults?"
 msgstr ""
 
 msgid ""
-"Are you sure you want to reset all options to factory defaults? Changes of "
-"all settings group will be lost!"
+"Are you sure you want to reset all options to factory defaults? All changes "
+"of this settings group will be lost!"
 msgstr ""
 
 msgid "Are you sure you want to reset all passwords to the default ones?"
@@ -520,9 +512,6 @@ msgid "Background color"
 msgstr ""
 
 msgid "Ballot"
-msgstr ""
-
-msgid "Ballot opened"
 msgstr ""
 
 msgid "Ballot papers"
@@ -696,13 +685,7 @@ msgstr ""
 msgid "Cancel editing without saving"
 msgstr ""
 
-msgid "Candidate"
-msgstr ""
-
 msgid "Candidates"
-msgstr ""
-
-msgid "Cannot create PDF files on this browser."
 msgstr ""
 
 msgid "Cannot do that in demo mode!"
@@ -774,9 +757,6 @@ msgstr ""
 msgid "Choose 0 to disable the supporting system."
 msgstr ""
 
-msgid "Choose a header"
-msgstr ""
-
 msgid "Chyron"
 msgstr ""
 
@@ -832,12 +812,6 @@ msgid "Comment"
 msgstr ""
 
 msgid "Comment fields"
-msgstr ""
-
-msgid "Comment section"
-msgstr ""
-
-msgid "Comment sections"
 msgstr ""
 
 msgid "Comment {arg1} updated"
@@ -1228,6 +1202,9 @@ msgstr ""
 msgid "Email sent"
 msgstr ""
 
+msgid "Email settings"
+msgstr ""
+
 msgid "Email subject"
 msgstr ""
 
@@ -1262,6 +1239,9 @@ msgid "Enable virtual help desk room"
 msgstr ""
 
 msgid "Enable/disable account ..."
+msgstr ""
+
+msgid "Enable/disable accounts"
 msgstr ""
 
 msgid "Encoding of the file"
@@ -1370,9 +1350,6 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
-msgid "File"
-msgstr ""
-
 msgid "Filename"
 msgstr ""
 
@@ -1479,9 +1456,6 @@ msgid "Go to line"
 msgstr ""
 
 msgid "Got an email"
-msgstr ""
-
-msgid "Group"
 msgstr ""
 
 msgid "Groups"
@@ -1693,13 +1667,10 @@ msgstr ""
 msgid "Is submitter"
 msgstr ""
 
-msgid "Item"
+msgid "It is not allowed to delete countdowns used for list of speakers or polls"
 msgstr ""
 
 msgid "Item number"
-msgstr ""
-
-msgid "Items"
 msgstr ""
 
 msgid "Jitsi domain"
@@ -1783,9 +1754,6 @@ msgstr ""
 msgid "List view"
 msgstr ""
 
-msgid "Lists of speakers"
-msgstr ""
-
 msgid "Live conference"
 msgstr ""
 
@@ -1801,6 +1769,9 @@ msgstr ""
 msgid "Livestream poster image url"
 msgstr ""
 
+msgid "Loading data. Please wait ..."
+msgstr ""
+
 msgid "Login"
 msgstr ""
 
@@ -1814,9 +1785,6 @@ msgid "Logout"
 msgstr ""
 
 msgid "Lowest applause amount"
-msgstr ""
-
-msgid "Main motion and line number"
 msgstr ""
 
 msgid "Mark as personal favorite"
@@ -1942,6 +1910,12 @@ msgstr ""
 msgid "Move to agenda item"
 msgstr ""
 
+msgid "Multiple users found for same username!"
+msgstr ""
+
+msgid "Multiple users with same credentials!"
+msgstr ""
+
 msgid "Multiselect"
 msgstr ""
 
@@ -1964,6 +1938,9 @@ msgid "Name of recommender"
 msgstr ""
 
 msgid "Name of recommender for statute amendments"
+msgstr ""
+
+msgid "Name of the new category"
 msgstr ""
 
 msgid "Natural person"
@@ -2023,10 +2000,16 @@ msgstr ""
 msgid "New motion block"
 msgstr ""
 
+msgid "New option"
+msgstr ""
+
 msgid "New participant"
 msgstr ""
 
 msgid "New password"
+msgstr ""
+
+msgid "New poll"
 msgstr ""
 
 msgid "New state"
@@ -2092,9 +2075,6 @@ msgstr ""
 msgid "No email sent"
 msgstr ""
 
-msgid "No emails were send."
-msgstr ""
-
 msgid "No encryption"
 msgstr ""
 
@@ -2107,10 +2087,16 @@ msgstr ""
 msgid "No meeting"
 msgstr ""
 
+msgid "No meeting selected"
+msgstr ""
+
 msgid "No meetings available"
 msgstr ""
 
 msgid "No motion block set"
+msgstr ""
+
+msgid "No options found"
 msgstr ""
 
 msgid "No per candidate"
@@ -2135,9 +2121,6 @@ msgid "No users with email {0} found."
 msgstr ""
 
 msgid "No verbose name is defined"
-msgstr ""
-
-msgid "No."
 msgstr ""
 
 msgid "None"
@@ -2229,9 +2212,6 @@ msgstr ""
 msgid "Old password"
 msgstr ""
 
-msgid "One email was send sucessfully."
-msgstr ""
-
 msgid "Only countdown"
 msgstr ""
 
@@ -2280,9 +2260,6 @@ msgstr ""
 msgid "OpenSlides recommends"
 msgstr ""
 
-msgid "Option"
-msgstr ""
-
 msgid "Options"
 msgstr ""
 
@@ -2290,9 +2267,6 @@ msgid "Organization"
 msgstr ""
 
 msgid "Organization specific information"
-msgstr ""
-
-msgid "Organizations"
 msgstr ""
 
 msgid "Origin"
@@ -2465,6 +2439,9 @@ msgstr ""
 msgid "Poll updated"
 msgstr ""
 
+msgid "Polls"
+msgstr ""
+
 msgid "Preamble text for PDF document (all elections)"
 msgstr ""
 
@@ -2507,10 +2484,7 @@ msgstr ""
 msgid "Project selection?"
 msgstr ""
 
-msgid "Projection"
-msgstr ""
-
-msgid "Projections"
+msgid "Projection defaults"
 msgstr ""
 
 msgid "Projector"
@@ -2635,6 +2609,9 @@ msgstr ""
 msgid "Remove me"
 msgstr ""
 
+msgid "Remove option"
+msgstr ""
+
 msgid "Reopen"
 msgstr ""
 
@@ -2733,19 +2710,10 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-msgid "Select a new candidate"
-msgstr ""
-
 msgid "Select all"
 msgstr ""
 
 msgid "Select file"
-msgstr ""
-
-msgid "Select or search new speaker ..."
-msgstr ""
-
-msgid "Select or search new submitter ..."
 msgstr ""
 
 msgid "Select paragraphs"
@@ -2830,6 +2798,9 @@ msgid "Set recommendation"
 msgstr ""
 
 msgid "Set status"
+msgstr ""
+
+msgid "Set status for selected accounts"
 msgstr ""
 
 msgid "Set status for selected participants:"
@@ -2973,9 +2944,6 @@ msgstr ""
 msgid "Single votes"
 msgstr ""
 
-msgid "Size"
-msgstr ""
-
 msgid "Slide"
 msgstr ""
 
@@ -3004,9 +2972,6 @@ msgid "Sort motions by"
 msgstr ""
 
 msgid "Sort name of participants by"
-msgstr ""
-
-msgid "Speaker"
 msgstr ""
 
 msgid "Speakers"
@@ -3072,9 +3037,6 @@ msgstr ""
 msgid "Submit vote now"
 msgstr ""
 
-msgid "Submitter"
-msgstr ""
-
 msgid "Submitters"
 msgstr ""
 
@@ -3082,6 +3044,9 @@ msgid "Submitters changed"
 msgstr ""
 
 msgid "Suitable accounts found"
+msgstr ""
+
+msgid "Sum of votes"
 msgstr ""
 
 msgid "Sum of votes without general options"
@@ -3094,6 +3059,9 @@ msgid "Summary of changes"
 msgstr ""
 
 msgid "Summary of changes:"
+msgstr ""
+
+msgid "Superadmin settings"
 msgstr ""
 
 msgid "Support"
@@ -3126,10 +3094,16 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
+msgid "Text for this option couldn't load."
+msgstr ""
+
 msgid "Text import"
 msgstr ""
 
 msgid "Text separator"
+msgstr ""
+
+msgid "The account is deactivated."
 msgstr ""
 
 msgid "The assembly may decide:"
@@ -3142,6 +3116,15 @@ msgid "The event manager has not set up a legal notice yet."
 msgstr ""
 
 msgid "The event manager has not set up a privacy policy yet."
+msgstr ""
+
+msgid "The file has too few columns to be parsed properly."
+msgstr ""
+
+msgid "The file seems to have additional columns. They will be ignored."
+msgstr ""
+
+msgid "The file seems to have some ommitted columns. They will be considered empty."
 msgstr ""
 
 msgid "The link is broken. Please contact your system administrator."
@@ -3187,12 +3170,6 @@ msgstr ""
 msgid "The title is required"
 msgstr ""
 
-msgid "The user %user% has no email, so the invitation email could not be send."
-msgstr ""
-
-msgid "The users %user% have no email, so the invitation emails could not be send."
-msgstr ""
-
 msgid "There are some columns that do not match the template"
 msgstr ""
 
@@ -3200,6 +3177,9 @@ msgid "There is an error in your vote."
 msgstr ""
 
 msgid "There is an error with this amendment. Please edit it manually."
+msgstr ""
+
+msgid "There is an unknown voting problem."
 msgstr ""
 
 msgid "Thereof point of orders"
@@ -3366,10 +3346,16 @@ msgstr ""
 msgid "Used for invitation emails and QRCode in PDF of access data."
 msgstr ""
 
+msgid "User not found."
+msgstr ""
+
 msgid "User permission"
 msgstr ""
 
 msgid "Username"
+msgstr ""
+
+msgid "Username or password is incorrect."
 msgstr ""
 
 msgid "Username or password is not correct."
@@ -3403,6 +3389,9 @@ msgid "Vote updated"
 msgstr ""
 
 msgid "Vote weight"
+msgstr ""
+
+msgid "Voted"
 msgstr ""
 
 msgid "Votes"
@@ -3511,6 +3500,9 @@ msgid "Yes"
 msgstr ""
 
 msgid "Yes per candidate"
+msgstr ""
+
+msgid "Yes per option"
 msgstr ""
 
 msgid "Yes, delete"
@@ -3626,6 +3618,9 @@ msgstr ""
 msgid "You override the personally set password!"
 msgstr ""
 
+msgid "You reached the maximum amount of votes. Deselect one option first."
+msgstr ""
+
 msgid "You reached the maximum amount of votes. Deselect somebody first."
 msgstr ""
 
@@ -3692,9 +3687,6 @@ msgstr ""
 msgid "analog"
 msgstr ""
 
-msgid "and"
-msgstr ""
-
 msgid "are required"
 msgstr ""
 
@@ -3720,9 +3712,6 @@ msgid "could not be created"
 msgstr ""
 
 msgid "could not be defined"
-msgstr ""
-
-msgid "could not be referenced"
 msgstr ""
 
 msgid "created"
@@ -3783,9 +3772,6 @@ msgid "has saved his work on this motion."
 msgstr ""
 
 msgid "have been created"
-msgstr ""
-
-msgid "have been referenced"
 msgstr ""
 
 msgid "hidden"

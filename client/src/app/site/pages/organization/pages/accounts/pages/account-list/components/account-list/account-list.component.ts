@@ -77,9 +77,9 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     }
 
     public async changeActiveState(): Promise<void> {
-        const title = this.translate.instant(`This will change the active status of the selected accounts`);
-        const SET_ACTIVE = _(`Set active`);
-        const SET_INACTIVE = _(`Set inactive`);
+        const title = this.translate.instant(`Set status for selected accounts`);
+        const SET_ACTIVE = _(`active`);
+        const SET_INACTIVE = _(`inactive`);
         const result = await this.choiceService.open({ title, actions: [SET_ACTIVE, SET_INACTIVE] });
         if (result) {
             const isActive = result.action === SET_ACTIVE;
