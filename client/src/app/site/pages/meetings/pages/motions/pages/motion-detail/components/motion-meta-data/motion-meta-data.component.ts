@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -20,7 +20,7 @@ import { MotionDetailServiceCollectorService } from '../../services/motion-detai
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`]
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -101,6 +101,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         private presenter: GetForwardingMeetingsPresenterService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
+    }
+
+    public ngOnInit(): void {
         this.updateForwardingMeetings();
     }
 
@@ -248,9 +251,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     }
 
     private updateForwardingMeetings() {
-        this.presenter.call({ meeting_id: this.activeMeeting.id }).then(meetings => {
-            this._forwardingMeetings = meetings;
-        });
+        if (this.operator.hasPerms(Permission.motionCanForward)) {
+            this.presenter.call({ meeting_id: this.activeMeeting.id }).then(meetings => {
+                this._forwardingMeetings = meetings;
+            });
+        }
     }
 
     /**
