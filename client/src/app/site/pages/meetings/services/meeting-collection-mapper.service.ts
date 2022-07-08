@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
+import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
 import {
     CollectionMappedTypes,
     CollectionMapperService,
@@ -29,7 +30,7 @@ export class MeetingCollectionMapperService extends CollectionMapperService impl
         if (!repo) {
             return false;
         }
-        return repo instanceof BaseMeetingRelatedRepository;
+        return repo instanceof BaseMeetingRelatedRepository || repo instanceof MediafileRepositoryService;
     }
 
     private registerMeetingRepository(mapping: CollectionMappedTypes<any, any>): void {
