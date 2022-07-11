@@ -62,14 +62,6 @@ export class AuthCheckService {
     }
 
     /**
-     * Returns true if an url is not meeting-specific
-     */
-    public isOrganizationUrl(url: string): boolean {
-        const urlSegments = url.slice(1).split(`/`);
-        return !urlSegments[0] || Number.isNaN(Number(urlSegments[0]));
-    }
-
-    /**
      * Checks if the operator has access to a specified meeting
      * @param info a number or string containing the meetingId of the meeting that is to be checked, or a full url (from which a meetingId can be extracted)
      * @returns true if the extracted meetingId represents a meeting, that the operator knows
