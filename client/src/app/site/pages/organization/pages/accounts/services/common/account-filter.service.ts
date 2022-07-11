@@ -43,4 +43,8 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         ];
         return staticFilterDefinitions;
     }
+
+    protected override preFilter(rawInputData: ViewUser[]): ViewUser[] {
+        return rawInputData.filter(user => !!user.username);
+    }
 }
