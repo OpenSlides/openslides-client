@@ -201,6 +201,10 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         }
     }
 
+    public onSelectedRowsChange(files: ViewMediafile[]) {
+        this.selected.emit({ files });
+    }
+
     public openMoveDialog(files: ViewMediafile[]): void {
         this.move(this._moveDialog!, files);
     }
