@@ -87,7 +87,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     }
 
     public getDirectoryTitle(): string {
-        return this.repo.getViewModel(this.directoryId)?.title || this.currentDirectory?.title || ``;
+        return this.repo.getViewModel(this.directoryId)?.title || ``;
     }
 
     /**
