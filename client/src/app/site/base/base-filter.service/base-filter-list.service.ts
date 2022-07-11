@@ -485,7 +485,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     private isPassingFilterOption(item: V, property: unknown, condition: OsFilterOptionCondition): boolean {
         const conditions = Array.isArray(condition) ? condition : [condition];
-        let toCheck = property;
+        let toCheck = property !== undefined ? property : null;
 
         if (typeof toCheck === `function`) {
             toCheck = toCheck.bind(item)();
