@@ -53,6 +53,7 @@
     [alwaysShowMenu]="true"
     [componentHeight]="fileListHeight"
     [multiSelect]="isMultiSelect"
+    (selectedRowsChange)="onSelectedRowsChange($event)"
 >
     <!-- Icon column -->
     <div
