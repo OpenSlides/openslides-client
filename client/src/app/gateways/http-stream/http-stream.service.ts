@@ -93,7 +93,7 @@ export class HttpStreamService {
     }
 
     private shouldReconnect({ error }: ShouldReconnectContext): boolean | Promise<boolean> {
-        if (error.type === PossibleStreamError.AUTH) {
+        if (error.error?.type === PossibleStreamError.AUTH) {
             this.authService.logout();
             return false;
         }
