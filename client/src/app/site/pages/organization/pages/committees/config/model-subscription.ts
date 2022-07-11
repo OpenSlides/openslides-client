@@ -9,7 +9,9 @@ export const getCommitteeListSubscriptionConfig = (getNextMeetingIdObservable: (
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
-        follow: [{ idField: `committee_ids`, fieldset: `list` }]
+        follow: [
+            { idField: `committee_ids`, fieldset: `list`, follow: [{ idField: `user_ids`, fieldset: `accountList` }] }
+        ]
     },
     subscriptionName: COMMITTEE_LIST_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !!id))
