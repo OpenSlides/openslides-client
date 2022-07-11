@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { toBase64 } from 'src/app/infrastructure/utils';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { FileData } from '../../../file-upload/components/file-upload/file-upload.component';
@@ -60,7 +61,11 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
 
     public directorySelectionForm: UntypedFormGroup;
 
-    public constructor(private formBuilder: UntypedFormBuilder, private translate: TranslateService) {
+    public constructor(
+        private formBuilder: UntypedFormBuilder,
+        private translate: TranslateService,
+        private repo: MediafileControllerService
+    ) {
         super();
     }
 
@@ -82,7 +87,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     }
 
     public getDirectoryTitle(): string {
-        return this.currentDirectory?.title || ``;
+        return this.repo.getViewModel(this.directoryId)?.title || ``;
     }
 
     /**
