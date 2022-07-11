@@ -2,7 +2,7 @@
     [addFileFn]="getAddFileFn()"
     [uploadFileFn]="getUploadFileFn()"
     [parallel]="parallel"
-    (uploadSucceeded)="uploadSuccessEvent.emit($event)"
+    (uploadSucceeded)="uploadSucceeded($event)"
     (uploadFailured)="errorEvent.emit($event)"
 >
     <ng-template #additionalContent>
@@ -18,13 +18,6 @@
                     [inputListValues]="directories"
                 ></os-list-search-selector>
             </mat-form-field>
-        </div>
-
-        <div>
-            <span>{{ 'Upload to:' | translate }}</span>
-            &nbsp;
-            <i *ngIf="!directoryId">{{ 'Base folder' | translate }}</i>
-            <i *ngIf="directoryId">{{ getDirectoryTitle() }}</i>
         </div>
     </ng-template>
 

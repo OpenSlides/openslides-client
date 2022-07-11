@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { toBase64 } from 'src/app/infrastructure/utils';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
@@ -11,6 +12,11 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { FileData } from '../../../file-upload/components/file-upload/file-upload.component';
 
 let uniqueCounter = 0;
+
+export interface UploadSuccessEvent {
+    uploadedIds: Id[];
+    parentId: Id;
+}
 
 @Component({
     selector: `os-media-upload-content`,
@@ -34,9 +40,6 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     public directoryId: number | null | undefined;
 
     @Input()
-    public currentDirectory: ViewMediafile | null = null;
-
-    @Input()
     public directories: Observable<ViewMediafile[]> | ViewMediafile[] = [];
 
     @Input()
@@ -51,7 +54,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
      * Emits an event on success
      */
     @Output()
-    public uploadSuccessEvent = new EventEmitter<number[]>();
+    public uploadSuccessEvent = new EventEmitter<UploadSuccessEvent>();
 
     /**
      * Emits an error event
@@ -76,7 +79,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
     public async ngOnInit(): Promise<void> {
         // Initialize the form here to have already the directory id and current directory
         this.directorySelectionForm = this.formBuilder.group({
-            directoryId: this.directoryId || null
+            directoryId: this.directoryId || 0
         });
         // detect changes in the form
         this.subscriptions.push(
@@ -84,10 +87,6 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
                 this.directoryId = formResult.directoryId;
             })
         );
-    }
-
-    public getDirectoryTitle(): string {
-        return this.repo.getViewModel(this.directoryId)?.title || ``;
     }
 
     /**
@@ -108,6 +107,10 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
      */
     public onChangeTitle(newTitle: string, file: FileData): void {
         file.title = newTitle;
+    }
+
+    public uploadSucceeded(uploadedIds: Id[]): void {
+        this.uploadSuccessEvent.emit({ uploadedIds, parentId: this.directoryId });
     }
 
     public getUploadFileFn(): (file: FileData) => Promise<Identifiable> {

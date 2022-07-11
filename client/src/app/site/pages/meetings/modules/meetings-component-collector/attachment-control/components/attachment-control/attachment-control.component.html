@@ -29,7 +29,7 @@
     <os-media-upload-content
         [directories]="directoriesObservable"
         [uploadFn]="uploadFn"
-        (uploadSuccessEvent)="uploadSuccess($event)"
+        (uploadSuccessEvent)="uploadSuccess($event.uploadedIds)"
         (errorEvent)="uploadError($event)"
     >
         <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
