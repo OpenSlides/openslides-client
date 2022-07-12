@@ -39,7 +39,8 @@ const getMeetingDetailSubscriptionConfig = (id: Id, getNextMeetingIdObservable: 
             `group_ids`,
             { idField: `option_ids`, follow: [`content_object_id`], additionalFields: [`text`] },
             `vote_ids`
-        ]
+        ],
+        additionalFields: [`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`]
     },
     subscriptionName: MEETING_DETAIL_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))

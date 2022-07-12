@@ -37,7 +37,7 @@
                             }
                         ],
                         "styles": ["src/styles.scss"],
-                        "scripts": [],
+                        "scripts": ["src/assets/jitsi/external_api.js"],
                         "webWorkerTsConfig": "tsconfig.worker.json",
                         "serviceWorker": true,
                         "ngswConfigPath": "ngsw-config.json"
