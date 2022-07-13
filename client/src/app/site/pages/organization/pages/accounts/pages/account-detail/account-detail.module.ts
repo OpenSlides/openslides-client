@@ -18,12 +18,18 @@ import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { CommitteeCommonServiceModule } from '../../../committees/services/committee-common-service.module';
 import { AccountCommonServiceModule } from '../../services/common/account-common-service.module';
 import { AccountDetailRoutingModule } from './account-detail-routing.module';
+import { AccountAddToMeetingsComponent } from './components/account-add-to-meetings/account-add-to-meetings.component';
 import { AccountDetailComponent } from './components/account-detail/account-detail.component';
 import { AccountDetailMainComponent } from './components/account-detail-main/account-detail-main.component';
 import { AccountPasswordComponent } from './components/account-password/account-password.component';
 
 @NgModule({
-    declarations: [AccountDetailComponent, AccountPasswordComponent, AccountDetailMainComponent],
+    declarations: [
+        AccountDetailComponent,
+        AccountPasswordComponent,
+        AccountDetailMainComponent,
+        AccountAddToMeetingsComponent
+    ],
     imports: [
         CommonModule,
         AccountDetailRoutingModule,

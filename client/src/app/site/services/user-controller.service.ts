@@ -4,6 +4,8 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { GetActiveUsersAmountPresenterService } from 'src/app/gateways/presenter';
 import {
+    AssignMeetingsPayload,
+    AssignMeetingsResult,
     EmailSentResult,
     FullNameInformation,
     ShortNameInformation,
@@ -79,6 +81,10 @@ export class UserControllerService extends BaseController<ViewUser, User> {
 
     public generateNewPasswords(users: Identifiable[]): Promise<void> {
         return this.repo.bulkGenerateNewPasswords(users);
+    }
+
+    public assignMeetings(user: Identifiable, data: AssignMeetingsPayload): Action<AssignMeetingsResult> {
+        return this.repo.assignMeetings(user, data);
     }
 
     /////////////////////////////
