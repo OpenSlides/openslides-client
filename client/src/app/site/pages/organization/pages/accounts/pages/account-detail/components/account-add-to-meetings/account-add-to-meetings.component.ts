@@ -68,6 +68,12 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
         nothing: new BehaviorSubject<string[]>([])
     };
 
+    public get waitingForResults(): boolean {
+        return this._waitingForResults;
+    }
+
+    private _waitingForResults = false;
+
     private userId: Id | null = null;
 
     public constructor(
@@ -101,6 +107,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     public async assign(): Promise<void> {
         if (this.user) {
+            this._waitingForResults = true;
             const result = await this.userController
                 .assignMeetings(this.user, { meeting_ids: this.selectedMeetings, group_name: this.groupName })
                 .resolve();
@@ -108,6 +115,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 this.parseIntoResultSubject(result);
                 this.clearForm();
             }
+            this._waitingForResults = false;
         }
     }
 
