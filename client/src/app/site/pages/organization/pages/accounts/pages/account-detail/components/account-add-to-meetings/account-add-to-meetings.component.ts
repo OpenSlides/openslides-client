@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
@@ -20,7 +20,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
     styleUrls: [`./account-add-to-meetings.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccountAddToMeetingsComponent extends BaseUiComponent implements OnInit {
+export class AccountAddToMeetingsComponent extends BaseUiComponent implements OnInit, AfterViewInit {
     public user: ViewUser | null = null;
     public canManage = false;
     public isOwnPage = false;
