@@ -38,19 +38,39 @@ export enum SearchUsersByNameOrEmailPresenterScope {
 export class SearchUsersByNameOrEmailPresenterService {
     public constructor(private presenter: PresenterService) {}
 
-    public async call({
-        permissionScope = SearchUsersByNameOrEmailPresenterScope.MEETING,
-        permissionRelatedId,
-        searchCriteria
-    }: {
-        permissionScope?: SearchUsersByNameOrEmailPresenterScope;
-        permissionRelatedId?: Id;
-        searchCriteria: SearchCriteria[];
-    }): Promise<PresenterResult> {
+    public async call(
+        {
+            permissionScope = SearchUsersByNameOrEmailPresenterScope.MEETING,
+            permissionRelatedId,
+            searchCriteria
+        }: {
+            permissionScope?: SearchUsersByNameOrEmailPresenterScope;
+            permissionRelatedId?: Id;
+            searchCriteria: SearchCriteria[];
+        },
+        minimizePayload = true
+    ): Promise<PresenterResult> {
         return await this.presenter.call<PresenterResult, PresenterData>(Presenter.SEARCH_USERS_BY_NAME_OR_EMAIL, {
             permission_type: permissionScope,
             permission_id: permissionRelatedId,
-            search: searchCriteria
+            search: minimizePayload ? this.minimizeSearchCriteria(searchCriteria) : searchCriteria
         });
+    }
+
+    private minimizeSearchCriteria(searchCriteria: SearchCriteria[]): SearchCriteria[] {
+        const data: SearchCriteria[] = [];
+        searchCriteria.forEach(criteria => {
+            let shouldPush = true;
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].username === criteria.username && data[i].email === criteria.email) {
+                    shouldPush = false;
+                    break;
+                }
+            }
+            if (shouldPush) {
+                data.push(criteria);
+            }
+        });
+        return data;
     }
 }
