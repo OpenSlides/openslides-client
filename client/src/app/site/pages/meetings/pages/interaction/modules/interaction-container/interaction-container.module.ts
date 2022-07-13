@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,6 +40,7 @@ const EXPORTS = [InteractionContainerComponent];
         MatDividerModule,
         MatTooltipModule,
         MatIconModule,
+        MatButtonModule,
         MatCardModule,
         NgParticlesModule,
         DirectivesModule,
