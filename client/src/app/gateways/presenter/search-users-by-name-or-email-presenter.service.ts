@@ -38,19 +38,32 @@ export enum SearchUsersByNameOrEmailPresenterScope {
 export class SearchUsersByNameOrEmailPresenterService {
     public constructor(private presenter: PresenterService) {}
 
-    public async call({
-        permissionScope = SearchUsersByNameOrEmailPresenterScope.MEETING,
-        permissionRelatedId,
-        searchCriteria
-    }: {
-        permissionScope?: SearchUsersByNameOrEmailPresenterScope;
-        permissionRelatedId?: Id;
-        searchCriteria: SearchCriteria[];
-    }): Promise<PresenterResult> {
+    public async call(
+        {
+            permissionScope = SearchUsersByNameOrEmailPresenterScope.MEETING,
+            permissionRelatedId,
+            searchCriteria
+        }: {
+            permissionScope?: SearchUsersByNameOrEmailPresenterScope;
+            permissionRelatedId?: Id;
+            searchCriteria: SearchCriteria[];
+        },
+        minimizePayload = true
+    ): Promise<PresenterResult> {
         return await this.presenter.call<PresenterResult, PresenterData>(Presenter.SEARCH_USERS_BY_NAME_OR_EMAIL, {
             permission_type: permissionScope,
             permission_id: permissionRelatedId,
-            search: searchCriteria
+            search: minimizePayload ? this.minimizeSearchCriteria(searchCriteria) : searchCriteria
         });
+    }
+
+    private minimizeSearchCriteria(searchCriteria: SearchCriteria[]): SearchCriteria[] {
+        const data: SearchCriteria[] = [];
+        searchCriteria.forEach(criteria => {
+            if (!data.find(date => date.username === criteria.username && date.email === criteria.email)) {
+                data.push(criteria);
+            }
+        });
+        return data;
     }
 }
