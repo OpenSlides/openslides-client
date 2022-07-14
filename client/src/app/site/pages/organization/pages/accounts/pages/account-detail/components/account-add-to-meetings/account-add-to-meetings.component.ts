@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -42,8 +42,8 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public assignMeetingsForm = this.formBuilder.group({
-        group_name: [``],
-        meeting_ids: [[]]
+        group_name: [``, Validators.required],
+        meeting_ids: [[], Validators.required]
     });
 
     public get selectedMeetings(): number[] {
@@ -55,11 +55,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public get hasResult(): boolean {
-        let dataLength = 0;
-        Object.keys(this.resultsTableDataSubjects).forEach(key => {
-            dataLength = dataLength + this.resultsTableDataSubjects[key].value.length;
-        });
-        return !!dataLength;
+        return Object.values(this.resultsTableDataSubjects).some(subject => subject.value.length);
     }
 
     public resultsTableDataSubjects = {
@@ -140,7 +136,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
         data.forEach(result => {
             Object.keys(this.resultsTableDataSubjects).forEach(key => {
                 this.resultsTableDataSubjects[key].next(
-                    this.resultsTableDataSubjects[key].concat(
+                    this.resultsTableDataSubjects[key].value.concat(
                         result[key].map(id => this.meetingController.getViewModel(id).getTitle())
                     )
                 );

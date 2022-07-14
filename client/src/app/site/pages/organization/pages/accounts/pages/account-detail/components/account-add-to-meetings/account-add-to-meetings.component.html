@@ -33,7 +33,7 @@
                     </mat-form-field>
                 </div>
                 <div class="grid-child">
-                    <button mat-button (click)="assign()" [disabled]="!selectedMeetings?.length || waitingForResults">Assign</button>
+                    <button mat-button (click)="assign()" [disabled]="!assignMeetingsForm.valid">Assign</button>
                 </div>
             </div>
         </form>
