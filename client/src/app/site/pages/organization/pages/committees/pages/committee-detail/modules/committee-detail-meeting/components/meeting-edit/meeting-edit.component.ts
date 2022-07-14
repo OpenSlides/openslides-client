@@ -235,7 +235,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
 
         if (this.isJitsiManipulationAllowed) {
-            rawForm[`jitsi_domain`] = [``];
+            rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*(?<!\/)$/)];
             rawForm[`jitsi_room_name`] = [``];
             rawForm[`jitsi_room_password`] = [``];
         }
