@@ -60,14 +60,7 @@ export class SearchUsersByNameOrEmailPresenterService {
     private minimizeSearchCriteria(searchCriteria: SearchCriteria[]): SearchCriteria[] {
         const data: SearchCriteria[] = [];
         searchCriteria.forEach(criteria => {
-            let shouldPush = true;
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].username === criteria.username && data[i].email === criteria.email) {
-                    shouldPush = false;
-                    break;
-                }
-            }
-            if (shouldPush) {
+            if (!data.find(date => date.username === criteria.username && date.email === criteria.email)) {
                 data.push(criteria);
             }
         });
