@@ -11,9 +11,9 @@
     <div class="assign-meetings-element">
         <h2>{{ 'Add to meetings' | translate }}</h2>
         <div class="assign-meetings-subtext">
-            <span>{{ 'Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.'}}</span>
+            <span translate>Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.</span>
             <p *ngIf="showLanguageWarning">
-                <i>{{ 'Regardless of current language settings, the group name must be consistent with that in the English language version.' | translate }}</i>
+                <i translate>Regardless of current language settings, the group name must be consistent with that in the English language version.</i>
             </p>
         </div>
         <form [formGroup]="assignMeetingsForm">
