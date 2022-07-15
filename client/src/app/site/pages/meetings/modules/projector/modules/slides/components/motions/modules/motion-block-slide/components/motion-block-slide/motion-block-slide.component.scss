@@ -1,5 +1,5 @@
 table {
-    line-height: 1.2;
+    line-height: 1;
     width: 100%;
     table-layout: fixed;
 }
@@ -21,4 +21,8 @@ td {
     margin: 0;
     line-height: 2;
     display: inline-flex;
+}
+
+.ellipsis-overflow {
+    padding-top: 2px;
 }
