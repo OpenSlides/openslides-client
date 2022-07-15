@@ -1,7 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
@@ -20,10 +21,10 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
     styleUrls: [`./account-add-to-meetings.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccountAddToMeetingsComponent extends BaseUiComponent implements OnInit, AfterViewInit {
+export class AccountAddToMeetingsComponent extends BaseUiComponent implements OnInit {
     public user: ViewUser | null = null;
     public canManage = false;
-    public isOwnPage = false;
+    public lastGroupName = ``;
 
     public meetingsSubject = new BehaviorSubject<ViewMeeting[]>([]);
 
@@ -58,7 +59,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
         return Object.values(this.resultsTableDataSubjects).some(subject => subject.value.length);
     }
 
-    public resultsTableDataSubjects = {
+    public resultsTableDataSubjects: { [key in keyof AssignMeetingsResult]: BehaviorSubject<string[]> } = {
         succeeded: new BehaviorSubject<string[]>([]),
         standard_group: new BehaviorSubject<string[]>([]),
         nothing: new BehaviorSubject<string[]>([])
@@ -66,6 +67,10 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     public get waitingForResults(): boolean {
         return this._waitingForResults;
+    }
+
+    public get showLanguageWarning(): boolean {
+        return this.translate.currentLang !== `en`;
     }
 
     private _waitingForResults = false;
@@ -78,7 +83,8 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
         private meetingController: MeetingControllerService,
         private router: Router,
         private osRouter: OpenSlidesRouterService,
-        private formBuilder: UntypedFormBuilder
+        private formBuilder: UntypedFormBuilder,
+        private translate: TranslateService
     ) {
         super();
     }
@@ -93,12 +99,8 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
             }),
             this.meetingController
                 .getViewModelListObservable()
-                .subscribe(meetings => this.meetingsSubject.next(meetings))
+                .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))
         );
-    }
-
-    public ngAfterViewInit(): void {
-        setTimeout(() => this.updatePermissions()); // Initial check
     }
 
     public async assign(): Promise<void> {
@@ -108,16 +110,11 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 .assignMeetings(this.user, { meeting_ids: this.selectedMeetings, group_name: this.groupName })
                 .resolve();
             if (result) {
+                this.lastGroupName = this.groupName;
                 this.parseIntoResultSubject(result);
-                this.clearForm();
             }
             this._waitingForResults = false;
         }
-    }
-
-    private clearForm(): void {
-        this.assignMeetingsForm.get(`group_name`).reset();
-        this.assignMeetingsForm.get(`meeting_ids`).reset([]);
     }
 
     /**
@@ -131,16 +128,9 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     private parseIntoResultSubject(data: AssignMeetingsResult[]): void {
         Object.keys(this.resultsTableDataSubjects).forEach(key => {
-            this.resultsTableDataSubjects[key].next([]);
-        });
-        data.forEach(result => {
-            Object.keys(this.resultsTableDataSubjects).forEach(key => {
-                this.resultsTableDataSubjects[key].next(
-                    this.resultsTableDataSubjects[key].value.concat(
-                        result[key].map(id => this.meetingController.getViewModel(id).getTitle())
-                    )
-                );
-            });
+            this.resultsTableDataSubjects[key].next(
+                data[0][key].map(id => this.meetingController.getViewModel(id).getTitle())
+            );
         });
     }
 
@@ -154,7 +144,6 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     private updatePermissions(): void {
-        this.isOwnPage = this.userId === this.operator.operatorId;
         this.canManage = this.operator.hasOrganizationPermissions(OML.can_manage_users);
     }
 }

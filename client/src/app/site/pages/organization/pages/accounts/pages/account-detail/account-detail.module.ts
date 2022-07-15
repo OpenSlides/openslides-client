@@ -5,6 +5,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
@@ -41,6 +42,7 @@ import { AccountPasswordComponent } from './components/account-password/account-
         MatFormFieldModule,
         MatDividerModule,
         MatSelectModule,
+        MatProgressSpinnerModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
