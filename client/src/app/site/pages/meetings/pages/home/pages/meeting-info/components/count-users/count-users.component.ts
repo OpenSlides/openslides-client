@@ -13,9 +13,7 @@ export class CountUsersComponent extends BaseUiComponent implements OnDestroy {
     public token: string | null = null;
     public stats: CountUserStatistics | null = null;
 
-    public constructor(
-        private countUsersStatisticService: CountUsersStatisticsService
-    ) {
+    public constructor(private countUsersStatisticService: CountUsersStatisticsService) {
         super();
     }
 
