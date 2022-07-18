@@ -249,13 +249,10 @@ export class NotifyService {
      * General send function for notify messages.
      */
     private async send<T>({ name, message, toAll, users, channels }: NotifySendOptions<T>): Promise<void> {
-        if (!this.channelId) {
-            throw new Error(`No channel id!`);
-        }
         const notify: NotifyRequest<T> = {
             name,
             message,
-            channel_id: this.channelId,
+            channel_id: this.channelId ?? this.activeMeetingIdService.meetingId?.toString(),
             to_meeting: this.activeMeetingIdService.meetingId!
         };
         if (toAll === true) {
@@ -267,6 +264,7 @@ export class NotifyService {
         if (channels) {
             notify.to_channels = channels;
         }
+        console.debug(`Send following data over ICC:`, PUBLISH_PATH, notify);
         await this.httpService.post<unknown>(PUBLISH_PATH, notify);
     }
 }
