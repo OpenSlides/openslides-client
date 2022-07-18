@@ -78,6 +78,9 @@ msgstr ""
 msgid "Account management"
 msgstr ""
 
+msgid "Account successfully assigned"
+msgstr ""
+
 msgid "Accounts"
 msgstr ""
 
@@ -127,6 +130,9 @@ msgid "Add option"
 msgstr ""
 
 msgid "Add to agenda"
+msgstr ""
+
+msgid "Add to meetings"
 msgstr ""
 
 msgid "Add to queue"
@@ -472,6 +478,9 @@ msgstr ""
 msgid "Ask, default yes"
 msgstr ""
 
+msgid "Assign"
+msgstr ""
+
 msgid "Assigned accounts"
 msgstr ""
 
@@ -482,6 +491,12 @@ msgid "At most"
 msgstr ""
 
 msgid "Attachments"
+msgstr ""
+
+msgid ""
+"Attention: Accounts will add to the default group of each meeting only. If "
+"another group is intended please use the 'Add to meetings' dialog in "
+"account detail view."
 msgstr ""
 
 msgid "Attention: You can NOT be undone this action!"
@@ -518,9 +533,6 @@ msgid "Ballot papers"
 msgstr ""
 
 msgid "Ballots"
-msgstr ""
-
-msgid "Base folder"
 msgstr ""
 
 msgid "Begin speech"
@@ -1458,6 +1470,15 @@ msgstr ""
 msgid "Got an email"
 msgstr ""
 
+msgid "Group name"
+msgstr ""
+
+msgid "Group not found - account is already in meeting, nothing assigned"
+msgstr ""
+
+msgid "Group not found - assigned to default group"
+msgstr ""
+
 msgid "Groups"
 msgstr ""
 
@@ -2078,6 +2099,9 @@ msgstr ""
 msgid "No encryption"
 msgstr ""
 
+msgid "No group name has been entered."
+msgstr ""
+
 msgid "No groups selected"
 msgstr ""
 
@@ -2091,6 +2115,9 @@ msgid "No meeting selected"
 msgstr ""
 
 msgid "No meetings available"
+msgstr ""
+
+msgid "No meetings have been selected."
 msgstr ""
 
 msgid "No motion block set"
@@ -2121,6 +2148,9 @@ msgid "No users with email {0} found."
 msgstr ""
 
 msgid "No verbose name is defined"
+msgstr ""
+
+msgid "No."
 msgstr ""
 
 msgid "None"
@@ -2424,6 +2454,11 @@ msgstr ""
 msgid "Please select the directory:"
 msgstr ""
 
+msgid ""
+"Please select your target meetings and state the name of the group, which "
+"the user should be assigned to in each meeting."
+msgstr ""
+
 msgid "Please update your browser or contact your system administration."
 msgstr ""
 
@@ -2565,6 +2600,12 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
+msgid ""
+"Regardless of current language settings, the entered group name must be "
+"consistent with original group name (for the built-in groups it is the "
+"English group name)."
+msgstr ""
+
 msgid "Reject"
 msgstr ""
 
@@ -2662,6 +2703,9 @@ msgstr ""
 msgid "Restrictions"
 msgstr ""
 
+msgid "Results"
+msgstr ""
+
 msgid "Right"
 msgstr ""
 
@@ -2714,6 +2758,18 @@ msgid "Select all"
 msgstr ""
 
 msgid "Select file"
+msgstr ""
+
+msgid "Select meetings ..."
+msgstr ""
+
+msgid "Select or search new candidate ..."
+msgstr ""
+
+msgid "Select or search new speaker ..."
+msgstr ""
+
+msgid "Select or search new submitter ..."
 msgstr ""
 
 msgid "Select paragraphs"
@@ -3238,7 +3294,7 @@ msgstr ""
 msgid "This will add or remove the following tags for all selected motions:"
 msgstr ""
 
-msgid "This will add or remove the selected accounts to the following meeting:"
+msgid "This will add or remove the selected accounts to following meetings:"
 msgstr ""
 
 msgid "This will move all selected motions as childs to:"
@@ -3322,9 +3378,6 @@ msgid "Upload"
 msgstr ""
 
 msgid "Upload files"
-msgstr ""
-
-msgid "Upload to:"
 msgstr ""
 
 msgid ""
