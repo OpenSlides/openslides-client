@@ -25,8 +25,7 @@
     <!-- Detail -->
     <div *ngIf="workflow">
         <div class="title-line">
-            <span>{{ 'First state' | translate }}</span>
-            :
+            <span>{{ 'First state' | translate }}</span>:
             <span *ngIf="workflow.first_state">{{ workflow.first_state.name | translate }}</span>
         </div>
 
@@ -123,7 +122,7 @@
                     </td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="headerRowDef"></tr>
+                <tr mat-header-row *matHeaderRowDef="headerRowDef; sticky: true"></tr>
                 <tr mat-row *matRowDef="let row; columns: headerRowDef"></tr>
             </table>
         </div>
