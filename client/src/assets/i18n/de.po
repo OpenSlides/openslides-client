@@ -95,6 +95,9 @@ msgstr "Zugangsdaten"
 msgid "Account management"
 msgstr "Accountverwaltung"
 
+msgid "Account successfully assigned"
+msgstr "Account erfolgreich zugewiesen"
+
 msgid "Accounts"
 msgstr "Accounts"
 
@@ -145,6 +148,9 @@ msgstr "Option hinzufügen"
 
 msgid "Add to agenda"
 msgstr "Zur Tagesordnung hinzufügen"
+
+msgid "Add to meetings"
+msgstr "Zu Veranstaltungen hinzufügen"
 
 msgid "Add to queue"
 msgstr "Zur Warteschlange hinzufügen"
@@ -232,7 +238,7 @@ msgid "Allow create poll"
 msgstr "Abstimmung möglich"
 
 msgid "Allow forwarding of motions"
-msgstr "Darf Anträge weiterleiten"
+msgstr "Antragsweiterleitung möglich"
 
 msgid ""
 "Allow only current speakers and list of speakers managers to enter the live "
@@ -516,6 +522,9 @@ msgstr "Nachfragen, voreingestellt nein"
 msgid "Ask, default yes"
 msgstr "Nachfragen, voreingestellt ja"
 
+msgid "Assign"
+msgstr "Zuweisen"
+
 msgid "Assigned accounts"
 msgstr "Zugewiesene Accounts"
 
@@ -527,6 +536,15 @@ msgstr "Höchstens"
 
 msgid "Attachments"
 msgstr "Anhänge"
+
+msgid ""
+"Attention: Accounts will add to the default group of each meeting only. If "
+"another group is intended please use the 'Add to meetings' dialog in account"
+" detail view."
+msgstr ""
+"Achtung: Accounts werden nur der Standardgruppe einer jeden Veranstaltung "
+"zugewiesen. Wenn eine andere Gruppe vorgesehen ist, verwenden Sie bitte den "
+"Dialog „Zu Veranstaltungen hinzufügen“ in der Account-Detailansicht."
 
 msgid "Attention: You can NOT be undone this action!"
 msgstr "Achtung: Sie können diese Aktion NICHT rückgängig machen!"
@@ -563,9 +581,6 @@ msgstr "Stimmzettel"
 
 msgid "Ballots"
 msgstr "Wahlgänge"
-
-msgid "Base folder"
-msgstr "Basisverzeichnis"
 
 msgid "Begin speech"
 msgstr "Rede beginnen"
@@ -1537,6 +1552,17 @@ msgstr "Springe zur Zeile"
 msgid "Got an email"
 msgstr "Bekam eine E-Mail"
 
+msgid "Group name"
+msgstr "Gruppenname"
+
+msgid "Group not found - account is already in meeting, nothing assigned"
+msgstr ""
+"Gruppe nicht gefunden - Account ist bereits in der Veranstaltung, nichts "
+"zugewiesen"
+
+msgid "Group not found - assigned to default group"
+msgstr "Gruppe nicht gefunden - an Standardgruppe zugewiesen"
+
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -2166,6 +2192,9 @@ msgstr "Keine E-Mail gesendet"
 msgid "No encryption"
 msgstr "Keine Verschlüsselung"
 
+msgid "No group name has been entered."
+msgstr "Es wurde noch kein Gruppenname eingegeben."
+
 msgid "No groups selected"
 msgstr "Keine Gruppen ausgewählt"
 
@@ -2180,6 +2209,9 @@ msgstr "Keine Veranstaltung ausgewählt"
 
 msgid "No meetings available"
 msgstr "Keine Veranstaltungen vorhanden"
+
+msgid "No meetings have been selected."
+msgstr "Es wurde noch keine Veranstaltung ausgewählt."
 
 msgid "No motion block set"
 msgstr "kein Antragsblock gesetzt"
@@ -2210,6 +2242,9 @@ msgstr "Es wurde kein Nutzer mit E-Mail-Adresse {0} gefunden."
 
 msgid "No verbose name is defined"
 msgstr "Es ist kein ausführlicher Name definiert"
+
+msgid "No."
+msgstr "Nr."
 
 msgid "None"
 msgstr "aus"
@@ -2523,6 +2558,13 @@ msgstr "Bitte melden Sie sich über Ihren Identity Provider an"
 msgid "Please select the directory:"
 msgstr "Bitte wählen Sie das Verzeichnis aus:"
 
+msgid ""
+"Please select your target meetings and state the name of the group, which "
+"the user should be assigned to in each meeting."
+msgstr ""
+"Bitte wählen Sie die Zielveranstaltungen aus und geben Sie den Namen der "
+"Gruppe an, welche dem Account in jeder Veranstaltung zugeordnet werden soll."
+
 msgid "Please update your browser or contact your system administration."
 msgstr ""
 "Bitte aktualisieren Sie Ihren Browser oder kontaktieren Sie Ihre "
@@ -2666,6 +2708,15 @@ msgstr "Auf diesen Antrag verweisende Anträge"
 msgid "Refresh"
 msgstr "Aktualisieren"
 
+msgid ""
+"Regardless of current language settings, the entered group name must be "
+"consistent with original group name (for the built-in groups it is the "
+"English group name)."
+msgstr ""
+"Unabhängig von den aktuellen Spracheinstellungen muss der eingegebene "
+"Gruppenname mit dem ursprünglichen Gruppennamen übereinstimmen (für die "
+"integrierten Gruppen ist es der englische Gruppenname)."
+
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -2767,6 +2818,9 @@ msgstr "Livestream neustarten"
 msgid "Restrictions"
 msgstr "Zugriffsbeschränkung"
 
+msgid "Results"
+msgstr "Ergebnisse"
+
 msgid "Right"
 msgstr "Rechts"
 
@@ -2820,6 +2874,18 @@ msgstr "Alle auswählen"
 
 msgid "Select file"
 msgstr "Datei auswählen"
+
+msgid "Select meetings ..."
+msgstr "Veranstaltungen auswählen ..."
+
+msgid "Select or search new candidate ..."
+msgstr "Kandidat*in auswählen oder suchen ..."
+
+msgid "Select or search new speaker ..."
+msgstr "Redner*in auswählen oder suchen ..."
+
+msgid "Select or search new submitter ..."
+msgstr "Antragsteller*in auswählen oder suchen ..."
 
 msgid "Select paragraphs"
 msgstr "Absätze auswählen"
@@ -3377,10 +3443,9 @@ msgstr ""
 "Folgende Schlagwörter werden für die ausgewählten Anträge hinzugefügt oder "
 "entfernt:"
 
-msgid ""
-"This will add or remove the selected accounts to the following meeting:"
+msgid "This will add or remove the selected accounts to following meetings:"
 msgstr ""
-"Die ausgewählten Accounts werden in die folgende Veranstaltung hinzugefügt "
+"Die ausgewählten Accounts werden in folgende Veranstaltungen hinzugefügt "
 "oder entfernt:"
 
 msgid "This will move all selected motions as childs to:"
@@ -3471,9 +3536,6 @@ msgstr "Hochladen"
 
 msgid "Upload files"
 msgstr "Dateien hochladen"
-
-msgid "Upload to:"
-msgstr "Hochladen in:"
 
 msgid ""
 "Use <strong>admin</strong> and <strong>admin</strong> for your first "

@@ -217,6 +217,7 @@ _(`No users with email {0} found.`);
 _(`You can not delete yourself.`);
 _(`You can not deactivate yourself.`);
 _(`Natural person`);
+_(`No.`);
 
 // default groups
 _(`Default`);

@@ -185,7 +185,7 @@
                     >
                         <os-participant-search-selector
                             [nonSelectableUserIds]="candidateUserIds"
-                            placeholder="Select a new candidate"
+                            placeholder="{{ 'Select or search new candidate ...' | translate }}"
                             (userSelected)="addCandidate($event)"
                         ></os-participant-search-selector>
                     </div>

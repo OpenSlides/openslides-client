@@ -54,7 +54,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
     }
 
     public async assignMeetingToUsers(): Promise<void> {
-        const title = this.translate.instant(`This will add or remove the selected accounts to the following meeting:`);
+        const title = this.translate.instant(`This will add or remove the selected accounts to following meetings:`);
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);
         const actions = [ADD, REMOVE];
@@ -64,7 +64,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             multiSelect: true,
             actions,
             content: this.translate.instant(
-                `Adding accounts here will add them to the meetings default group. If another group is intended, please use the 'Add to meetings' wizard.`
+                `Attention: Accounts will add to the default group of each meeting only. If another group is intended please use the 'Add to meetings' dialog in account detail view.`
             )
         });
         if (result) {

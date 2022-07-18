@@ -228,7 +228,7 @@
     >
         <os-participant-search-selector
             [nonSelectableUserIds]="nonAvailableUserIds"
-            placeholder="Select or search new speaker ..."
+            placeholder="{{ 'Select or search new speaker ...' | translate }}"
             (userSelected)="addUserAsNewSpeaker($event)"
         ></os-participant-search-selector>
     </div>

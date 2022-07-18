@@ -13,7 +13,7 @@
         <div class="assign-meetings-subtext">
             <span translate>Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.</span>
             <p *ngIf="showLanguageWarning">
-                <i translate>Regardless of current language settings, the group name must be consistent with that in the English language version.</i>
+                <i translate>Regardless of current language settings, the entered group name must be consistent with original group name (for the built-in groups it is the English group name).</i>
             </p>
         </div>
         <form [formGroup]="assignMeetingsForm">
@@ -23,7 +23,7 @@
                         <input
                             formControlName="group_name"
                             matInput
-                            placeholder="{{ 'Group name ' | translate }}"
+                            placeholder="{{ 'Group name' | translate }}"
                         >
                     </mat-form-field>
                 </div>
@@ -32,14 +32,14 @@
                         <os-list-search-selector
                             formControlName="meeting_ids"
                             [multiple]="true"
-                            placeholder="{{ 'Select meetings...' | translate }}"
+                            placeholder="{{ 'Select meetings ...' | translate }}"
                             [inputListValues]="meetingsObservable">
                        </os-list-search-selector>
                     </mat-form-field>
                 </div>
                 <div class="grid-child">
                     <button mat-button (click)="assign()" [disabled]="waitingForResults || !assignMeetingsForm.valid || !canManage">
-                        Assign
+                        {{ 'Assign' | translate }}
                     </button>
                 </div>
             </div>
@@ -59,13 +59,13 @@
     <div *ngIf="hasResult || waitingForResults" class="assign-meetings-element">
         <h2>{{ 'Results' | translate }}</h2>
         <div class="assign-meetings-subtext">
-            <span>{{ 'Group name: ' | translate }}'{{ lastGroupName || groupName}}'</span>
+            <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName}}'</span>
         </div>
         <table class="result-table">
             <tr>
-                <th class="verticalSplit">{{ 'Successfully assigned the user' | translate }}</th>
+                <th class="verticalSplit">{{ 'Account successfully assigned' | translate }}</th>
                 <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
-                <th class="verticalSplit">{{ 'Group not found - user was already present' | translate }}</th>
+                <th class="verticalSplit">{{ 'Group not found - account is already in meeting, nothing assigned' | translate }}</th>
             </tr>
             <tr>
                 <td class="verticalSplit">

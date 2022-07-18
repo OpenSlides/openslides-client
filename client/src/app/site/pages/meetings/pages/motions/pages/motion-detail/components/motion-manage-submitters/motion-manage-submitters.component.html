@@ -60,7 +60,7 @@
     <div class="search-users">
         <os-participant-search-selector
             [nonSelectableUserIds]="editSubmitterUserIds"
-            placeholder="Select or search new submitter ..."
+            placeholder="{{ 'Select or search new submitter ...' | translate }}"
             (userSelected)="addSubmitter($event)"
         ></os-participant-search-selector>
     </div>
