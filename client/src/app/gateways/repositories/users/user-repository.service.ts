@@ -22,6 +22,11 @@ export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid:
  */
 export type UserStateField = 'is_active' | 'is_present_in_meetings' | 'is_physical_person';
 
+export interface AssignMeetingsPayload {
+    meeting_ids: Id[];
+    group_name: string;
+}
+
 export interface NameInformation {
     username: string;
     first_name?: string;
@@ -39,6 +44,12 @@ export interface EmailSentResult {
     recipient_user_id: Id;
     recipient_meeting_id: Id;
     recipient: string; // email-address
+}
+
+export interface AssignMeetingsResult {
+    succeeded: Id[];
+    standard_group: Id[];
+    nothing: Id[];
 }
 
 interface LevelAndNumberInformation {
@@ -153,6 +164,17 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         this.preventInDemo();
         const data: any[] = users.map(user => ({ id: user.id }));
         return this.actions.create({ action: UserAction.DELETE, data });
+    }
+
+    public assignMeetings(user: Identifiable, data: AssignMeetingsPayload): Action<AssignMeetingsResult> {
+        const payload = [
+            {
+                id: user.id,
+                meeting_ids: data.meeting_ids,
+                group_name: data.group_name
+            }
+        ];
+        return this.createAction(UserAction.ASSIGN_MEETINGS, payload);
     }
 
     private getBaseUserPayload(partialUser: Partial<User>): any {

@@ -62,7 +62,10 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             title,
             choices: this.meetingRepo.getViewModelList(),
             multiSelect: true,
-            actions
+            actions,
+            content: this.translate.instant(
+                `Adding accounts here will add them to the meetings default group. If another group is intended, please use the 'Add to meetings' wizard.`
+            )
         });
         if (result) {
             if (!result.items.length) {

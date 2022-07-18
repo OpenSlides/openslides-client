@@ -1,0 +1,101 @@
+<os-head-bar
+    (mainEvent)="goBack()"
+    [nav]="false"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ user?.getFullName() }}</h2>
+    </div>
+</os-head-bar>
+<div>
+    <div class="assign-meetings-element">
+        <h2>{{ 'Add to meetings' | translate }}</h2>
+        <div class="assign-meetings-subtext">
+            <span translate>Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.</span>
+            <p *ngIf="showLanguageWarning">
+                <i translate>Regardless of current language settings, the group name must be consistent with that in the English language version.</i>
+            </p>
+        </div>
+        <form [formGroup]="assignMeetingsForm">
+            <div class="assign-meetings-form form-wrapper">
+                <div class="grid-child">
+                    <mat-form-field class="form-element">
+                        <input
+                            formControlName="group_name"
+                            matInput
+                            placeholder="{{ 'Group name ' | translate }}"
+                        >
+                    </mat-form-field>
+                </div>
+                <div class="grid-child">
+                    <mat-form-field class="form-element">
+                        <os-list-search-selector
+                            formControlName="meeting_ids"
+                            [multiple]="true"
+                            placeholder="{{ 'Select meetings...' | translate }}"
+                            [inputListValues]="meetingsObservable">
+                       </os-list-search-selector>
+                    </mat-form-field>
+                </div>
+                <div class="grid-child">
+                    <button mat-button (click)="assign()" [disabled]="waitingForResults || !assignMeetingsForm.valid || !canManage">
+                        Assign
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="potential-warning">
+            <div *ngIf="!!warningMessage">
+                <mat-icon line-height="100%" inline color="warn">
+                    warning
+                </mat-icon>
+                <i class="foreground-warn">
+                    {{ warningMessage | translate }}
+                </i>
+            </div>
+        </div>
+    </div>
+    <!-- Display results -->
+    <div *ngIf="hasResult || waitingForResults" class="assign-meetings-element">
+        <h2>{{ 'Results' | translate }}</h2>
+        <div class="assign-meetings-subtext">
+            <span>{{ 'Group name: ' | translate }}'{{ lastGroupName || groupName}}'</span>
+        </div>
+        <table class="result-table">
+            <tr>
+                <th class="verticalSplit">{{ 'Successfully assigned the user' | translate }}</th>
+                <th class="verticalSplit">{{ 'Group not found - assigned to default group' | translate }}</th>
+                <th class="verticalSplit">{{ 'Group not found - user was already present' | translate }}</th>
+            </tr>
+            <tr>
+                <td class="verticalSplit">
+                    <ng-container
+                        [ngTemplateOutlet]="tableData"
+                        [ngTemplateOutletContext]="{$implicit: 'succeeded'}">
+                    </ng-container>
+                </td>
+                <td class="verticalSplit">
+                    <ng-container
+                        [ngTemplateOutlet]="tableData"
+                        [ngTemplateOutletContext]="{$implicit: 'standard_group'}">
+                    </ng-container>
+                </td>
+                <td class="verticalSplit">
+                    <ng-container
+                        [ngTemplateOutlet]="tableData"
+                        [ngTemplateOutletContext]="{$implicit: 'nothing'}">
+                    </ng-container>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<ng-template #tableData let-key>
+    <div *ngIf="!waitingForResults">
+        <div *ngFor="let meetingName of resultsTableDataSubjects[key] | async">
+            {{ meetingName }}
+        </div>
+    </div>
+    <mat-spinner *ngIf="waitingForResults" class="small-spinner await-result-spinner"></mat-spinner>
+</ng-template>

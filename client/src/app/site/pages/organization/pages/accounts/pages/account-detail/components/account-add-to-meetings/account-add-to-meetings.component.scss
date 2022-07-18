@@ -1,0 +1,75 @@
+.assign-meetings-element {
+    width: 100%;
+    margin: 10px 20px;
+}
+
+.assign-meetings-subtext {
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.result-table {
+    table-layout: fixed;
+    text-align: left;
+    border-collapse: collapse;
+    width: 95%;
+    margin-left: 10px;
+
+    tr {
+        border: none;
+    }
+
+    td,
+    th {
+        border-right: solid 1px grey;
+        border-left: solid 1px grey;
+        vertical-align: top;
+        padding: 0 10px;
+    }
+
+    .verticalSplit {
+        border-top: none;
+        border-bottom: none;
+    }
+
+    .verticalSplit:first-of-type {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    .verticalSplit:last-of-type {
+        border-right: none;
+        padding-right: 0;
+    }
+}
+
+.assign-meetings-form {
+    margin: 0 10px;
+}
+
+.form-element {
+    width: 100%;
+}
+
+.form-wrapper {
+    width: 95%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 75px;
+    grid-gap: 20px;
+}
+
+.potential-warning {
+    height: 25px;
+    margin-left: 10px;
+
+    .mat-icon {
+        display: inline-flex;
+        vertical-align: middle;
+        $icon-size: 16px;
+    }
+}
+
+.await-result-spinner {
+    margin-left: auto;
+    margin-right: auto;
+}

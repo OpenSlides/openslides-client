@@ -100,6 +100,10 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
+        <a mat-menu-item [routerLink]="[member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
+            <mat-icon>auto_awesome_mosaic</mat-icon>
+            <span>{{ 'Add to meetings' | translate }}</span>
+        </a>
         <button mat-menu-item class="red-warning-text" (click)="deleteUsers([member])">
             <mat-icon>delete</mat-icon>
             <span>{{ 'Delete' | translate }}</span>
