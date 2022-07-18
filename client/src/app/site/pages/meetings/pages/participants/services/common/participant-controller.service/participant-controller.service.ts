@@ -52,7 +52,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     ) {
         super(controllerServiceCollector, User, repo);
         repo.getViewModelListObservable().subscribe(users => {
-            const meetingUsers = users.filter(user => user.meeting_ids.includes(this.activeMeetingId));
+            const meetingUsers = users.filter(user => user.group_ids(this.activeMeetingId).length);
             this._participantListSubject.next(meetingUsers);
         });
     }
