@@ -27,8 +27,8 @@ export class RerouteService {
         if (segments.length === 0) {
             // start page
             const fallbackRoute = this.fallbackRoutesService.getFallbackRoute();
-            if (fallbackRoute) {
-                this.router.navigate([fallbackRoute]);
+            if (fallbackRoute && this.operator.user) {
+                this.router.navigate([this.operator.user.meeting_ids[0], fallbackRoute]);
                 return;
             }
         }

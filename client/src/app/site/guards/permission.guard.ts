@@ -25,14 +25,13 @@ export class PermissionGuard implements CanLoad {
         } else if (!(await this.authCheck.hasAccessToMeeting(this.getCurrentNavigationUrl()))) {
             this.reroute.handleForbiddenRoute(route.data, segments);
         }
-        if (route.data) {
-            if (!(await this.authCheck.isAuthenticated())) {
-                this.reroute.toLogin();
-                return false;
-            } else if (!(await this.authCheck.isAuthorized(route.data))) {
-                this.reroute.handleForbiddenRoute(route.data, segments);
-                return false;
-            }
+        if (!(await this.authCheck.isAuthenticated())) {
+            this.reroute.toLogin();
+            return false;
+        }
+        if (route.data && !(await this.authCheck.isAuthorized(route.data))) {
+            this.reroute.handleForbiddenRoute(route.data, segments);
+            return false;
         }
         this.authCheck.lastSuccessfulUrl = this.getCurrentNavigationUrl();
         return true;
