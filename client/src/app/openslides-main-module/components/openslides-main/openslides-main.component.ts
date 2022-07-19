@@ -2,7 +2,7 @@ import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/co
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { LangChangeEvent,TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { first, firstValueFrom, tap } from 'rxjs';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
