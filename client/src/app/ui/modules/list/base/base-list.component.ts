@@ -1,3 +1,4 @@
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import { ChangeDetectorRef, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -159,8 +160,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     public inputValue: string = ``;
 
     public get currentOffset(): number {
-        return 0;
-        // return this.ngrid.viewport.measureScrollOffset();
+        return this._viewListComponent.scrollViewport.measureScrollOffset('top');
     }
 
     /**
@@ -239,7 +239,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public scrollTo(offset: number): void {
-        // this.ngrid.viewport.scrollToOffset(offset);
+        this._viewListComponent.scrollViewport.scrollTo({ top: offset });
     }
 
     public selectAll(): void {

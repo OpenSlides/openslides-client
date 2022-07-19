@@ -1,5 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
-import { AfterViewInit, Component, Input, OnInit, Output } from '@angular/core';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import { AfterViewInit, Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -82,6 +83,9 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     @Output()
     public selectionChanged = new EventEmitter<ScrollingTableSelectionChangeEvent<T>>();
+
+    @ViewChild(CdkVirtualScrollViewport)
+    public scrollViewport: CdkVirtualScrollViewport;
 
     public get hasDataObservable(): Observable<boolean> {
         return this.dataSource.pipe(map(items => !!items.length));

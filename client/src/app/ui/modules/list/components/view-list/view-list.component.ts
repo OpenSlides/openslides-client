@@ -1,3 +1,4 @@
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -133,6 +134,10 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
     @Output() public selectedRowsChange = new EventEmitter<V[]>();
 
     @Output() public searchFilterUpdated = new EventEmitter<string>();
+
+    public get scrollViewport(): CdkVirtualScrollViewport {
+        return this._scrollingTableComponent.scrollViewport;
+    }
 
     public get currentCountObservable(): Observable<number> {
         return this.dataListObservable.pipe(map(items => items.length));
