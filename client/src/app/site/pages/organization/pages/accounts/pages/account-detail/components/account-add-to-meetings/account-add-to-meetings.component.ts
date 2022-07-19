@@ -27,6 +27,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     public lastGroupName = ``;
 
     public meetingsSubject = new BehaviorSubject<ViewMeeting[]>([]);
+    public meetingsObservable: Observable<ViewMeeting[]> = null;
 
     public get warningMessage(): string {
         if (!this.selectedMeetings?.length) {
@@ -36,10 +37,6 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
             return _(`No group name has been entered.`);
         }
         return null;
-    }
-
-    public get meetingsObservable(): Observable<ViewMeeting[]> {
-        return this.meetingsSubject.asObservable();
     }
 
     public assignMeetingsForm = this.formBuilder.group({
@@ -90,6 +87,8 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public ngOnInit(): void {
+        this.meetingsObservable = this.meetingsSubject.asObservable();
+
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
                 if (params[`id`]) {
