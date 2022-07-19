@@ -27,7 +27,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     public lastGroupName = ``;
 
     public meetingsSubject = new BehaviorSubject<ViewMeeting[]>([]);
-    public meetingsObservable: Observable<ViewMeeting[]> = null;
+    public meetingsObservable: Observable<ViewMeeting[]> | null = null;
 
     public get warningMessage(): string {
         if (!this.selectedMeetings?.length) {
