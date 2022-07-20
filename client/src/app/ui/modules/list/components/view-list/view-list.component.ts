@@ -1,4 +1,4 @@
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     Component,

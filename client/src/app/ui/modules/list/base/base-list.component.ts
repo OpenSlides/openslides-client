@@ -1,4 +1,3 @@
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import { ChangeDetectorRef, Directive, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -160,7 +159,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     public inputValue: string = ``;
 
     public get currentOffset(): number {
-        return this._viewListComponent.scrollViewport.measureScrollOffset('top');
+        return this._viewListComponent.scrollViewport.measureScrollOffset(`top`);
     }
 
     /**

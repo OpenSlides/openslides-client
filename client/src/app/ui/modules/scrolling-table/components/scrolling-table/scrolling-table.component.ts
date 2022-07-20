@@ -1,5 +1,5 @@
 import { TemplatePortal } from '@angular/cdk/portal';
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { AfterViewInit, Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
