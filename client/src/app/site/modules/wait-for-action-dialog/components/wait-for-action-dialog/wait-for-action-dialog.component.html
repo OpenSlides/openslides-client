@@ -1,0 +1,23 @@
+<div>
+    <h2>{{ currentTitle | translate }}</h2>
+    <p>{{ 'Worker identification' | translate }}: {{ currentWorkerId }}</p>
+    <p>{{ 'Action type' | translate }}: {{ currentWorkerName }}</p>
+    <p>{{ 'If you choose to stop waiting for this action, you will not receive results from the server.' | translate }}</p>
+    <p><i>{{ 'Warning: The process may still continue to run on the server, therefore actions that include creating, updating or deleting data will still do so eventually.' | translate }}</i></p>
+    <div class="text-center">
+        <div class="wait-for-action-buttons">
+            <button mat-button (click)="wait()">
+                {{ 'Continue waiting' | translate }}
+            </button>
+            <button mat-button (click)="stop()">
+                {{ 'Stop waiting' | translate }}
+            </button>
+            <button mat-button [disabled]="!multiButtonNumber" (click)="wait(true)">
+                {{ multiWaitButtonLabel | translate }} {{multiButtonNumber}}
+            </button>
+            <button mat-button [disabled]="!multiButtonNumber" (click)="stop(true)">
+                {{ multiStopButtonLabel | translate }} {{multiButtonNumber}}
+            </button>
+        </div>
+    </div>
+</div>
