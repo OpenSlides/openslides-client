@@ -58,20 +58,7 @@ const ARCHIVED_MEETINGS_LABEL: Selectable = {
 export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
 
-    public get availableMeetingsObservable(): Observable<Selectable[]> {
-        return this.orga.organizationObservable.pipe(
-            map(organization => {
-                return [
-                    TEMPLATE_MEETINGS_LABEL,
-                    ...organization.template_meetings.sort(this.sortFn),
-                    ACTIVE_MEETINGS_LABEL,
-                    ...organization.active_meetings.sort(this.sortFn),
-                    ARCHIVED_MEETINGS_LABEL,
-                    ...organization.archived_meetings.sort(this.sortFn)
-                ];
-            })
-        );
-    }
+    public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
     private get isJitsiManipulationAllowed(): boolean {
         return !this.isCreateView && this.operator.isSuperAdmin;
@@ -140,6 +127,19 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
                 this.operatingUser = user;
                 this.onAfterCreateForm();
+            })
+        );
+
+        this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
+            map(organization => {
+                return [
+                    TEMPLATE_MEETINGS_LABEL,
+                    ...organization.template_meetings.sort(this.sortFn),
+                    ACTIVE_MEETINGS_LABEL,
+                    ...organization.active_meetings.sort(this.sortFn),
+                    ARCHIVED_MEETINGS_LABEL,
+                    ...organization.archived_meetings.sort(this.sortFn)
+                ];
             })
         );
     }
