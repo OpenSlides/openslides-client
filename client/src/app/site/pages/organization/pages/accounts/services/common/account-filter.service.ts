@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CommitteeRepositoryService } from 'src/app/gateways/repositories/committee-repository.service';
-import { BaseFilterListService, OsFilter, OsFilterOptions } from 'src/app/site/base/base-filter.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
