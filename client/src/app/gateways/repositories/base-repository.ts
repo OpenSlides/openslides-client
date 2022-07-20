@@ -132,7 +132,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         // All data is piped through an auditTime of 1ms. This is to prevent massive
         // updates, if e.g. an autoupdate with a lot motions come in. The result is just one
         // update of the new list instead of many unnecessary updates.
-        this.unsafeViewModelListSubject.pipe(auditTime(1)).subscribe(models => {
+        this.unsafeViewModelListSubject.pipe(auditTime(5)).subscribe(models => {
             if (models) {
                 this.updateViewModelListSubject(models);
             }

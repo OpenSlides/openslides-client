@@ -2,6 +2,7 @@ import { Directive } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
+import { auditTime } from 'rxjs';
 
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
@@ -259,7 +260,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         noneOptionLabel,
         filterFn
     }: RepositoryFilterConfig<OV, V>): void {
-        repo.getViewModelListObservable().subscribe(viewModels => {
+        repo.getViewModelListObservable().pipe(auditTime(5)).subscribe(viewModels => {
             if (viewModels && viewModels.length) {
                 const filterProperties: (OsFilterOption | string)[] = viewModels
                     .filter(filterFn ?? (() => true))
