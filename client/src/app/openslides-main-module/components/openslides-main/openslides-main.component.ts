@@ -1,13 +1,16 @@
 import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { first, firstValueFrom, tap } from 'rxjs';
+import { StorageService } from 'src/app/gateways/storage.service';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
+
+const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
 @Component({
     selector: `os-root`,
@@ -27,7 +30,8 @@ export class OpenSlidesMainComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         private openslidesStatus: OpenSlidesStatusService,
         private matIconRegistry: MatIconRegistry,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private storageService: StorageService
     ) {
         overloadJsFunctions();
         this.waitForAppLoaded();
@@ -44,6 +48,18 @@ export class OpenSlidesMainComponent implements OnInit {
         const browserLang = this.translate.getBrowserLang() as string;
         // try to use the browser language if it is available. If not, uses english.
         this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
+
+        // get language set in local storage
+        this.storageService.get(CURRENT_LANGUAGE_STORAGE_KEY).then(lang => {
+            if (lang && this.translate.getLangs().includes(lang as string)) {
+                this.translate.use(lang as string);
+            }
+        });
+
+        // listen for language changes and update local storage on change
+        this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
+            this.storageService.set(CURRENT_LANGUAGE_STORAGE_KEY, event.lang);
+        });
     }
 
     private async waitForAppLoaded(): Promise<void> {
