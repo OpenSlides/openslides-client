@@ -10,10 +10,7 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 export class AccountFilterService extends BaseFilterListService<ViewUser> {
     protected storageKey = `MemberList`;
 
-    public constructor(
-        store: ActiveFiltersService,
-        private translate: TranslateService
-    ) {
+    public constructor(store: ActiveFiltersService, private translate: TranslateService) {
         super(store);
     }
 
@@ -42,7 +39,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
                     { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
                 ]
-            },
+            }
         ];
         return staticFilterDefinitions;
     }
