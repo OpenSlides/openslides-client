@@ -1,8 +1,8 @@
 import { Directive } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
+import { auditTime } from 'rxjs';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
-import { auditTime } from 'rxjs';
 
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
@@ -260,35 +260,37 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         noneOptionLabel,
         filterFn
     }: RepositoryFilterConfig<OV, V>): void {
-        repo.getViewModelListObservable().pipe(auditTime(5)).subscribe(viewModels => {
-            if (viewModels && viewModels.length) {
-                const filterProperties: (OsFilterOption | string)[] = viewModels
-                    .filter(filterFn ?? (() => true))
-                    .map((model: any) => ({
-                        condition: model.id,
-                        label: model.getTitle(),
-                        isChild: !!model.parent,
-                        children:
-                            model.children && model.children.length
-                                ? model.children.map((child: any) => ({
-                                      label: child.getTitle(),
-                                      condition: child.id
-                                  }))
-                                : undefined
-                    }));
+        repo.getViewModelListObservable()
+            .pipe(auditTime(5))
+            .subscribe(viewModels => {
+                if (viewModels && viewModels.length) {
+                    const filterProperties: (OsFilterOption | string)[] = viewModels
+                        .filter(filterFn ?? (() => true))
+                        .map((model: any) => ({
+                            condition: model.id,
+                            label: model.getTitle(),
+                            isChild: !!model.parent,
+                            children:
+                                model.children && model.children.length
+                                    ? model.children.map((child: any) => ({
+                                          label: child.getTitle(),
+                                          condition: child.id
+                                      }))
+                                    : undefined
+                        }));
 
-                if (noneOptionLabel) {
-                    filterProperties.push(`-`);
-                    filterProperties.push({
-                        condition: null,
-                        label: noneOptionLabel
-                    });
+                    if (noneOptionLabel) {
+                        filterProperties.push(`-`);
+                        filterProperties.push({
+                            condition: null,
+                            label: noneOptionLabel
+                        });
+                    }
+
+                    filter.options = filterProperties;
+                    this.updateFilterDefinitions();
                 }
-
-                filter.options = filterProperties;
-                this.updateFilterDefinitions();
-            }
-        });
+            });
     }
 
     /**
