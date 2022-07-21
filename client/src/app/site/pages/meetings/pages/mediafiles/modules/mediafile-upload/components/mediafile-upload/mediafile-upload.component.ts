@@ -23,16 +23,12 @@ export class MediafileUploadComponent implements OnInit {
 
     public directoryId: number | null = null;
 
-    public get directoriesObservable(): Observable<ViewMediafile[]> {
-        return this.repo.getDirectoryListObservable();
-    }
+    public directoriesObservable: Observable<ViewMediafile[]> | null = null;
+
+    public availableGroups: Observable<ViewGroup[]> | null = null;
 
     public get uploadFn(): (file: any) => Promise<Identifiable> {
         return file => this.repo.createFile(file);
-    }
-
-    public get availableGroups(): Observable<ViewGroup[]> {
-        return this.groupsRepo.getViewModelListObservable();
     }
 
     public constructor(
@@ -44,6 +40,8 @@ export class MediafileUploadComponent implements OnInit {
     ) {}
 
     public ngOnInit(): void {
+        this.directoriesObservable = this.repo.getDirectoryListObservable();
+        this.availableGroups = this.groupsRepo.getViewModelListObservable();
         this.directoryId = this.route.snapshot.url.length > 0 ? +this.route.snapshot.url[0].path : null;
     }
 
