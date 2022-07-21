@@ -13,7 +13,8 @@ const routes: Routes = [
             {
                 path: ``,
                 loadChildren: () => import(`./pages/home/home.module`).then(m => m.HomeModule),
-                data: { meetingPermissions: [Permission.meetingCanSeeFrontpage] }
+                data: { meetingPermissions: [Permission.meetingCanSeeFrontpage] },
+                canLoad: [PermissionGuard]
             },
             {
                 path: `agenda`,

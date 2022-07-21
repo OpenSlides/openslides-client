@@ -72,7 +72,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             if (this._cannotAccessReason === CannotAccessReason.NO_MEANING) {
                 this.reroute.forwardToOnlyMeeting(state.url === `/info` ? [`info`] : []);
             } else {
-                this.reroute.handleForbiddenRoute(route.data, route.url);
+                this.reroute.handleForbiddenRoute(route.data, route.url, state.url);
             }
         }
         return false;

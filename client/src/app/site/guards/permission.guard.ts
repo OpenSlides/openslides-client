@@ -17,23 +17,25 @@ export class PermissionGuard implements CanLoad {
     ) {}
 
     public async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean> {
-        if (this.osRouter.isOrganizationUrl(this.getCurrentNavigationUrl())) {
+        const url = this.getCurrentNavigationUrl();
+        if (this.osRouter.isOrganizationUrl(url)) {
             if (!(await this.authCheck.isAuthorizedToSeeOrganization())) {
-                this.reroute.forwardToOnlyMeeting(this.getCurrentNavigationUrl() === `/info` ? [`info`] : []);
+                this.reroute.forwardToOnlyMeeting(url === `/info` ? [`info`] : []);
                 return false;
             }
-        } else if (!(await this.authCheck.hasAccessToMeeting(this.getCurrentNavigationUrl()))) {
-            this.reroute.handleForbiddenRoute(route.data, segments);
+        } else if (!(await this.authCheck.hasAccessToMeeting(url))) {
+            this.reroute.handleForbiddenRoute(route.data, segments, url);
         }
         if (!(await this.authCheck.isAuthenticated())) {
             this.reroute.toLogin();
             return false;
         }
         if (route.data && !(await this.authCheck.isAuthorized(route.data))) {
-            this.reroute.handleForbiddenRoute(route.data, segments);
+            console.log(`LOG: 5`);
+            this.reroute.handleForbiddenRoute(route.data, segments, url);
             return false;
         }
-        this.authCheck.lastSuccessfulUrl = this.getCurrentNavigationUrl();
+        this.authCheck.lastSuccessfulUrl = url;
         return true;
     }
 

@@ -23,12 +23,15 @@ export class RerouteService {
      * or it wasn't the start page in the first place, the operator will be redirected
      * to an error page.
      */
-    public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[]): Promise<void> {
+    public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<void> {
         if (segments.length === 0) {
+            const fallbackMeetingId = Number.isNaN(this.osRouter.getMeetingId(url))
+                ? null
+                : this.osRouter.getMeetingId(url);
             // start page
             const fallbackRoute = this.fallbackRoutesService.getFallbackRoute();
-            if (fallbackRoute && this.operator.user) {
-                this.router.navigate([this.operator.user.meeting_ids[0], fallbackRoute]);
+            if (fallbackRoute && (this.operator.user || fallbackMeetingId)) {
+                this.router.navigate([fallbackMeetingId ?? this.operator.user.meeting_ids[0], fallbackRoute]);
                 return;
             }
         }
