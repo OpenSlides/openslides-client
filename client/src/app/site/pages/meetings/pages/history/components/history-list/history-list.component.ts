@@ -82,7 +82,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         this.motions = this.motionRepo.getViewModelListObservable();
 
         this.motionSelectForm.controls[`motion`].valueChanges.subscribe((id: number) => {
-            console.log(`id`, id);
             if (!id || (Array.isArray(id) && !id.length)) {
                 return;
             }
@@ -103,6 +102,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      */
     public ngOnInit(): void {
         super.setTitle(`History`);
+        window[`translate`] = this.translate;
 
         this.dataSource.filterPredicate = (position: HistoryPosition, filter: string) => {
             filter = filter ? filter.toLowerCase() : ``;
@@ -121,7 +121,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                 }
             }
 
-            return this.parseInformation(position).toLowerCase().indexOf(filter) >= 0;
+            return this.parseInformation(position).join(`\n`).toLowerCase().indexOf(filter) >= 0;
         };
 
         // If an element id is given, validate it and update the view.
@@ -209,10 +209,18 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     /**
      * Returns a translated history information string which contains optional (translated) arguments.
      */
-    public parseInformation(position: HistoryPosition): string {
-        return Object.keys(position.information)
-            .map(key => `${key}: ${position.information[key].join(`, `)}`)
-            .join(`; `);
+    public parseInformation(position: HistoryPosition): string[] {
+        const informations = [...position.information];
+        const result = [];
+        while (informations.length) {
+            let baseString = this.translate.instant(informations.shift());
+            if (baseString.includes(`{}`)) {
+                const argumentString = this.translate.instant(informations.shift());
+                baseString = baseString.replace(`{}`, argumentString);
+            }
+            result.push(baseString);
+        }
+        return result;
     }
 
     /**

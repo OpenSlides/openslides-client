@@ -727,6 +727,15 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
+msgid "Category changed"
+msgstr ""
+
+msgid "Category removed"
+msgstr ""
+
+msgid "Category set to {{arg1}}"
+msgstr ""
+
 msgid "Center"
 msgstr ""
 
@@ -832,10 +841,25 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
+msgid "Comment created"
+msgstr ""
+
+msgid "Comment deleted"
+msgstr ""
+
 msgid "Comment fields"
 msgstr ""
 
-msgid "Comment {arg1} updated"
+msgid "Comment updated"
+msgstr ""
+
+msgid "Comment {{arg1}} created"
+msgstr ""
+
+msgid "Comment {{arg1}} deleted"
+msgstr ""
+
+msgid "Comment {{arg1}} updated"
 msgstr ""
 
 msgid "Comments"
@@ -1432,6 +1456,9 @@ msgstr ""
 msgid "Forwarding"
 msgstr ""
 
+msgid "Forwarding created"
+msgstr ""
+
 msgid "Forwardings"
 msgstr ""
 
@@ -1881,7 +1908,13 @@ msgstr ""
 msgid "Motion block"
 msgstr ""
 
-msgid "Motion block set to"
+msgid "Motion block changed"
+msgstr ""
+
+msgid "Motion block removed"
+msgstr ""
+
+msgid "Motion block set to {{arg1}}"
 msgstr ""
 
 msgid "Motion blocks"
@@ -2580,10 +2613,16 @@ msgstr ""
 msgid "Recommendation"
 msgstr ""
 
+msgid "Recommendation changed"
+msgstr ""
+
 msgid "Recommendation label"
 msgstr ""
 
-msgid "Recommendation set to {arg1}"
+msgid "Recommendation reset"
+msgstr ""
+
+msgid "Recommendation set to {{arg1}}"
 msgstr ""
 
 msgid "Reenter to conference room"
@@ -3052,7 +3091,10 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-msgid "State set to {arg1}"
+msgid "State changed"
+msgstr ""
+
+msgid "State set to {{arg1}}"
 msgstr ""
 
 msgid "Statistics"
@@ -3434,15 +3476,6 @@ msgstr ""
 msgid "Vote"
 msgstr ""
 
-msgid "Vote created"
-msgstr ""
-
-msgid "Vote deleted"
-msgstr ""
-
-msgid "Vote updated"
-msgstr ""
-
 msgid "Vote weight"
 msgstr ""
 
@@ -3456,6 +3489,9 @@ msgid "Voting"
 msgstr ""
 
 msgid "Voting and ballot papers"
+msgstr ""
+
+msgid "Voting anonymized"
 msgstr ""
 
 msgid "Voting duration"
@@ -3475,6 +3511,12 @@ msgstr ""
 msgid "Voting opened"
 msgstr ""
 
+msgid "Voting published"
+msgstr ""
+
+msgid "Voting reset"
+msgstr ""
+
 msgid "Voting result"
 msgstr ""
 
@@ -3485,6 +3527,12 @@ msgid "Voting right for"
 msgstr ""
 
 msgid "Voting right received from (principals)"
+msgstr ""
+
+msgid "Voting started"
+msgstr ""
+
+msgid "Voting stopped"
 msgstr ""
 
 msgid "Voting successful."
