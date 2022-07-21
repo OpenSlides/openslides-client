@@ -76,10 +76,4 @@
     .mat-cell > * {
         z-index: 2;
     }
-
-    // important is necessary, since the "sticky" attribute does not alter the real `.mat-table-sticky-class`
-    // but rather "patches" the DOM tree.
-    .mat-table-sticky {
-        z-index: 3 !important;
-    }
 }

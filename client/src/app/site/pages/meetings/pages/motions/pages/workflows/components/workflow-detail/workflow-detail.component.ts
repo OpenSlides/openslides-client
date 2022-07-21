@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -67,8 +67,7 @@ interface RestrictionShape {
 @Component({
     selector: `os-workflow-detail`,
     templateUrl: `./workflow-detail.component.html`,
-    styleUrls: [`./workflow-detail.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`./workflow-detail.component.scss`]
 })
 export class WorkflowDetailComponent extends BaseMeetingComponent {
     public readonly COLLECTION = ViewMotionWorkflow.COLLECTION;
@@ -122,7 +121,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
     private set workflow(workflow: ViewMotionWorkflow) {
         this._workflow = workflow;
         this.updateRowDef();
-        this.updateView();
+        this.cd.markForCheck();
     }
 
     private _workflow!: ViewMotionWorkflow;
@@ -309,7 +308,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      */
     public getRestrictionLabel(restriction: string): string {
         const entry = this.restrictions.find(r => r.key === restriction);
-        return entry ? entry.label : ``;
+        return entry?.label ?? ``;
     }
 
     /**
@@ -370,8 +369,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      */
     public getTableDataSource(): MatTableDataSource<StatePerm> {
         return new MatTableDataSource<StatePerm>(this._statePermissionsList);
-        // dataSource.data = this._statePermissionsList;
-        // return dataSource;
     }
 
     /**
@@ -390,10 +387,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         // reset the rowDef list first
         this.headerRowDef = [`perm`];
         if (this.workflow) {
-            /**
-             * FIXME:
-             * relations work. Why is states of length 0?
-             */
             this.workflowStates.forEach(state => {
                 this.headerRowDef.push(this.getColumnDef(state));
             });
@@ -429,11 +422,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
     }
 
     private handleRequest(request: Promise<any>): void {
-        request.then(() => this.updateView(), this.raiseError);
-    }
-
-    private updateView(): void {
-        this.cd.detectChanges();
+        request.catch(this.raiseError);
     }
 
     private loadWorkflow(): void {
@@ -441,7 +430,11 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
             this.workflowRepo.getViewModelObservable(this._workflowId).subscribe(newWorkflow => {
                 if (newWorkflow) {
                     this.workflow = newWorkflow;
-                    this.cd.markForCheck();
+                }
+            }),
+            this.stateRepo.getViewModelListObservable().subscribe(states => {
+                if (states) {
+                    this.updateRowDef();
                 }
             })
         );
