@@ -159,8 +159,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     public inputValue: string = ``;
 
     public get currentOffset(): number {
-        return 0;
-        // return this.ngrid.viewport.measureScrollOffset();
+        return this._viewListComponent.scrollViewport.measureScrollOffset(`top`);
     }
 
     /**
@@ -239,7 +238,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public scrollTo(offset: number): void {
-        // this.ngrid.viewport.scrollToOffset(offset);
+        this._viewListComponent.scrollViewport.scrollTo({ top: offset });
     }
 
     public selectAll(): void {
