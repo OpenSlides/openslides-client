@@ -13,8 +13,8 @@
                     formControlName="directoryId"
                     [multiple]="false"
                     [includeNone]="true"
-                    [noneTitle]="'Base folder'"
-                    placeholder="{{ 'Parent directory' | translate }}"
+                    noneTitle="{{ 'Base folder' | translate }}"
+                    placeholder="{{ 'Upload to' | translate }}"
                     [inputListValues]="directories"
                 ></os-list-search-selector>
             </mat-form-field>

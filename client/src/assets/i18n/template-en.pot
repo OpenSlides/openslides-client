@@ -265,6 +265,12 @@ msgstr ""
 msgid "Amendments to"
 msgstr ""
 
+msgid "Amount of accounts"
+msgstr ""
+
+msgid "Amount of meetings"
+msgstr ""
+
 msgid "Amount of votes"
 msgstr ""
 
@@ -533,6 +539,9 @@ msgid "Ballot papers"
 msgstr ""
 
 msgid "Ballots"
+msgstr ""
+
+msgid "Base folder"
 msgstr ""
 
 msgid "Begin speech"
@@ -963,9 +972,10 @@ msgid ""
 "\n"
 "this is your personal OpenSlides login:\n"
 "\n"
-"    {url}\n"
-"    username: {username}\n"
-"    password: {password}\n"
+"{url}\n"
+"Username: {username}\n"
+"Password: {password}\n"
+"\n"
 "\n"
 "This email was generated automatically."
 msgstr ""
@@ -2078,9 +2088,6 @@ msgstr ""
 msgid "No comment"
 msgstr ""
 
-msgid "No committee"
-msgstr ""
-
 msgid "No concernment"
 msgstr ""
 
@@ -2106,9 +2113,6 @@ msgid "No groups selected"
 msgstr ""
 
 msgid "No items selected"
-msgstr ""
-
-msgid "No meeting"
 msgstr ""
 
 msgid "No meeting selected"
@@ -2372,9 +2376,6 @@ msgid "Parallel upload"
 msgstr ""
 
 msgid "Parent agenda item"
-msgstr ""
-
-msgid "Parent directory"
 msgstr ""
 
 msgid "Participant"
@@ -3033,6 +3034,9 @@ msgstr ""
 msgid "Speakers"
 msgstr ""
 
+msgid "Speaking time"
+msgstr ""
+
 msgid "Staff"
 msgstr ""
 
@@ -3380,9 +3384,7 @@ msgstr ""
 msgid "Upload files"
 msgstr ""
 
-msgid ""
-"Use <strong>admin</strong> and <strong>admin</strong> for your first "
-"login.<br>Please change your password to hide this message!"
+msgid "Upload to"
 msgstr ""
 
 msgid "Use the following custom number"
@@ -3448,6 +3450,9 @@ msgid "Voted"
 msgstr ""
 
 msgid "Votes"
+msgstr ""
+
+msgid "Voting"
 msgstr ""
 
 msgid "Voting and ballot papers"

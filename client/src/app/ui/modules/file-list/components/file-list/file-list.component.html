@@ -196,8 +196,8 @@
             <os-list-search-selector
                 formControlName="directory_id"
                 [includeNone]="true"
-                [noneTitle]="'Base folder'"
-                placeholder="{{ 'Parent directory' | translate }}"
+                noneTitle="{{ 'Base folder' | translate }}"
+                placeholder="{{ 'Upload to' | translate }}"
                 [inputListValues]="filteredDirectoryBehaviorSubject"
             ></os-list-search-selector>
         </mat-form-field>

@@ -19,7 +19,7 @@
 >
     <ng-template osImportListStatusTemplate let-row="row">
         <div *ngIf="row.status === 'merge'">
-            <mat-icon matTooltip="{{ ('Participant' | translate) + ('will be referenced' | translate) }}">
+            <mat-icon matTooltip="{{ ('Participant' | translate) + ' ' + ('will be referenced' | translate) }}">
                 merge_type
             </mat-icon>
         </div>
