@@ -295,7 +295,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public setPresent(viewUser: ViewUser): void {
         const isAllowed =
-            this.operator.hasPerms(Permission.userCanManage) ||
+            this.operator.hasPerms(Permission.userCanManage, Permission.userCanManagePresence) ||
             (this._allowSelfSetPresent && this.operator.operatorId === viewUser.id);
         if (isAllowed) {
             this.repo.setPresent(!this.isUserPresent(viewUser), viewUser).resolve();
