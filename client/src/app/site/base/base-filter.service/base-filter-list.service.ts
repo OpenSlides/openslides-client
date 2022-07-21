@@ -144,7 +144,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         const storedFilter: OsFilter<V>[] | null = await this.activeFiltersStore.load<V>(this.storageKey);
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
-            this.filterDefinitions = storedFilter;
+            this.filterDefinitions = this.parseFilters(storedFilter);
             this.activeFiltersToStack();
         } else {
             this.filterDefinitions = this.getFilterDefinitions();
@@ -381,6 +381,28 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Enforce children implement a method that returns actual filter definitions
      */
     protected abstract getFilterDefinitions(): OsFilter<V>[];
+
+    private parseFilters(oldFilters: OsFilter<V>[]): OsFilter<V>[] {
+        const newFilterDefs = this.getFilterDefinitions();
+        newFilterDefs.forEach(definition => {
+            const oldDefinition = oldFilters.filter(old => old.property === definition.property);
+            if (!oldDefinition.length) {
+                return;
+            }
+            oldDefinition[0].options.forEach(option => {
+                if (typeof option === `string`) {
+                    return;
+                }
+                const newOption = (
+                    definition.options.filter(newOpt => typeof newOpt !== `string`) as OsFilterOption[]
+                ).filter(newOpt => newOpt.label === option.label);
+                if (newOption.length) {
+                    newOption[0].isActive = option.isActive;
+                }
+            });
+        });
+        return newFilterDefs;
+    }
 
     /**
      * Recreates the filter stack out of active filter definitions
