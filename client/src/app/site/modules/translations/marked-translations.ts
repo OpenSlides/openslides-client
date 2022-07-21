@@ -201,10 +201,7 @@ _(`Can manage participants`);
 // users config
 _(`Email body`);
 _(
-    `Dear {name},\n\nthis is your personal OpenSlides login:\n\n    {url}\n    username: {username}\n    password: {password}\n\nThis email was generated automatically.`
-);
-_(
-    `Use <strong>admin</strong> and <strong>admin</strong> for your first login.<br>Please change your password to hide this message!`
+    `Dear {name},\n\nthis is your personal OpenSlides login:\n\n{url}\nUsername: {username}\nPassword: {password}\n\n\nThis email was generated automatically.`
 );
 
 // users misc
@@ -267,6 +264,8 @@ _(`Show password`);
 _(`Hide password`);
 _(`result`);
 _(`results`);
+_(`Voting`);
+_(`Speaking time`);
 
 // organization strings
 _(`Administrator`);
@@ -274,3 +273,5 @@ _(`Account management`);
 _(`Default committee`);
 _(`Default meeting`);
 _(`Assigned accounts`);
+_(`Amount of meetings`);
+_(`Amount of accounts`);

@@ -290,6 +290,12 @@ msgstr "Änderungsanträge können mehrere Absätze ändern"
 msgid "Amendments to"
 msgstr "Änderungsanträge zu"
 
+msgid "Amount of accounts"
+msgstr "Anzahl der Accounts"
+
+msgid "Amount of meetings"
+msgstr "Anzahl der Veranstaltungen"
+
 msgid "Amount of votes"
 msgstr "Anzahl der Stimmen"
 
@@ -581,6 +587,9 @@ msgstr "Stimmzettel"
 
 msgid "Ballots"
 msgstr "Wahlgänge"
+
+msgid "Base folder"
+msgstr "Basisverzeichnis"
 
 msgid "Begin speech"
 msgstr "Rede beginnen"
@@ -1011,9 +1020,10 @@ msgid ""
 "\n"
 "this is your personal OpenSlides login:\n"
 "\n"
-"    {url}\n"
-"    username: {username}\n"
-"    password: {password}\n"
+"{url}\n"
+"Username: {username}\n"
+"Password: {password}\n"
+"\n"
 "\n"
 "This email was generated automatically."
 msgstr ""
@@ -1021,9 +1031,10 @@ msgstr ""
 "\n"
 "hier ist Ihr persönlicher OpenSlides-Zugang:\n"
 "\n"
-"    {url}\n"
-"    Benutzername: {username}\n"
-"    Passwort: {password}\n"
+"{url}\n"
+"Benutzername: {username}\n"
+"Passwort: {password}\n"
+"\n"
 "\n"
 "Diese E-Mail wurde automatisch erstellt."
 
@@ -2171,9 +2182,6 @@ msgstr "Keine Chat-Gruppen vorhanden."
 msgid "No comment"
 msgstr "Kein Kommentar"
 
-msgid "No committee"
-msgstr "Kein Gremium"
-
 msgid "No concernment"
 msgstr "Nichtbefassung"
 
@@ -2200,9 +2208,6 @@ msgstr "Keine Gruppen ausgewählt"
 
 msgid "No items selected"
 msgstr "Keine Einträge ausgewählte"
-
-msgid "No meeting"
-msgstr "Keine Veranstaltung"
 
 msgid "No meeting selected"
 msgstr "Keine Veranstaltung ausgewählt"
@@ -2474,9 +2479,6 @@ msgstr "Parallel hochladen"
 
 msgid "Parent agenda item"
 msgstr "Elternelement in der Tagesordnung"
-
-msgid "Parent directory"
-msgstr "Elternverzeichnis"
 
 msgid "Participant"
 msgstr "Teilnehmer*in"
@@ -3159,6 +3161,9 @@ msgstr "Namen der Teilnehmenden sortieren nach"
 msgid "Speakers"
 msgstr "Redner*innen"
 
+msgid "Speaking time"
+msgstr "Redezeit"
+
 msgid "Staff"
 msgstr "Mitarbeitende"
 
@@ -3537,13 +3542,8 @@ msgstr "Hochladen"
 msgid "Upload files"
 msgstr "Dateien hochladen"
 
-msgid ""
-"Use <strong>admin</strong> and <strong>admin</strong> for your first "
-"login.<br>Please change your password to hide this message!"
-msgstr ""
-"Verwenden Sie <strong>admin</strong> und <strong>admin</strong> für die "
-"erste Anmeldung.<br>Bitte ändern Sie Ihr Passwort, um diese Nachricht "
-"auszublenden!"
+msgid "Upload to"
+msgstr "Hochladen in"
 
 msgid "Use the following custom number"
 msgstr "Verwende die folgende benutzerdefinierte Anzahl"
@@ -3616,6 +3616,9 @@ msgstr "Stimme abgegeben"
 
 msgid "Votes"
 msgstr "Stimmen"
+
+msgid "Voting"
+msgstr "Stimmabgabe"
 
 msgid "Voting and ballot papers"
 msgstr "Abstimmung und Stimmzettel"
