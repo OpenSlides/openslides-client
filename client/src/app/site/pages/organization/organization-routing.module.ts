@@ -14,11 +14,13 @@ const routes: Routes = [
             {
                 path: ``,
                 pathMatch: `full`,
-                loadChildren: () => import(`./pages/dashboard/dashboard.module`).then(m => m.DashboardModule)
+                loadChildren: () => import(`./pages/dashboard/dashboard.module`).then(m => m.DashboardModule),
+                canLoad: [PermissionGuard]
             },
             {
                 path: `committees`,
-                loadChildren: () => import(`./pages/committees/committees.module`).then(m => m.CommitteesModule)
+                loadChildren: () => import(`./pages/committees/committees.module`).then(m => m.CommitteesModule),
+                canLoad: [PermissionGuard]
             },
             {
                 path: `accounts`,
@@ -48,7 +50,8 @@ const routes: Routes = [
             {
                 path: `info`,
                 loadChildren: () =>
-                    import(`./pages/organization-info/organization-info.module`).then(m => m.OrganizationInfoModule)
+                    import(`./pages/organization-info/organization-info.module`).then(m => m.OrganizationInfoModule),
+                canLoad: [PermissionGuard]
             }
         ],
         canActivateChild: [AuthGuard]

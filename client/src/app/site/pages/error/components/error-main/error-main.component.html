@@ -1,6 +1,11 @@
 <div class="background-default error-page full-height flex-center">
     <h2>{{ 'You are not supposed to be here...' | translate }}</h2>
-    <div>
-        <button mat-raised-button (click)="goToLogin()">{{ 'Login' | translate }}</button>
+    <h3 *ngIf="error">{{ error | translate }}</h3>
+    <p *ngIf="error === 'Authorization Error' && msg.length">{{ 'Required permissions to view this page:' | translate }}</p>
+    <ng-container *ngFor="let message of msg">
+        <span class="message">{{ message | translate }}</span>
+    </ng-container>
+    <div class="go-back-button">
+        <button mat-raised-button (click)="leaveErrorPage()">{{ 'Back to OpenSlides' | translate }}</button>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './guards/auth.guard';
+import { PermissionGuard } from './guards/permission.guard';
 import { SiteWrapperComponent } from './modules/site-wrapper/components/site-wrapper/site-wrapper.component';
 
 const routes: Routes = [
@@ -26,7 +27,8 @@ const routes: Routes = [
                 path: `:meetingId`,
                 loadChildren: () => import(`./pages/meetings/meetings.module`).then(m => m.MeetingsModule),
                 canActivate: [AuthGuard],
-                canActivateChild: [AuthGuard]
+                canActivateChild: [AuthGuard],
+                canLoad: [PermissionGuard]
             }
         ]
     },

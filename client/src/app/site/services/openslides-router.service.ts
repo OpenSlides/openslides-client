@@ -67,6 +67,25 @@ export class OpenSlidesRouterService {
         }
     }
 
+    /**
+     * Returns true if an url is not meeting-specific
+     */
+    public isOrganizationUrl(url: string): boolean {
+        const urlSegments = url.slice(1).split(`/`);
+        return !urlSegments[0] || Number.isNaN(Number(urlSegments[0]));
+    }
+
+    /**
+     * Checks if the operator is in a specified meeting
+     * @param info a string containing the meetingId of the meeting that is to be checked, or a full url (from which a meetingId can be extracted)
+     * @returns the meetingId from the url or (if info is not a url) Number(info), NaN if no number can be extracted
+     */
+    public getMeetingId(info: string): number {
+        const segments = info.split(`/`);
+        const meetingIdString = segments.length > 1 ? segments[1] : segments[0];
+        return Number(meetingIdString);
+    }
+
     private buildParamMap(rootSnapshot: ActivatedRouteSnapshot): { [paramName: string]: any } {
         const paramMap: { [paramName: string]: any } = {};
         this._toParamMap(rootSnapshot, paramMap);
