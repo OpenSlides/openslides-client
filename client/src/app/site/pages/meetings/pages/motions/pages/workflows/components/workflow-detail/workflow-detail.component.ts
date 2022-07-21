@@ -120,7 +120,6 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
 
     private set workflow(workflow: ViewMotionWorkflow) {
         this._workflow = workflow;
-        console.log(`Workflow set:`, workflow);
         this.updateRowDef();
         this.cd.markForCheck();
     }
