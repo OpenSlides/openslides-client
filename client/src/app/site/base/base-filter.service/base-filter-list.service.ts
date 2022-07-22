@@ -141,10 +141,10 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param inputData Observable array with ViewModels
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
-        const storedFilter: OsFilter<V>[] | null = await this.activeFiltersStore.load<V>(this.storageKey);
+        const storedFilter = await this.loadFilters();
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
-            this.filterDefinitions = this.parseFilters(storedFilter);
+            this.filterDefinitions = storedFilter;
             this.activeFiltersToStack();
         } else {
             this.filterDefinitions = this.getFilterDefinitions();
@@ -176,7 +176,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         const nextDefinitions = this.getFilterDefinitions();
 
-        let storedFilters: OsFilter<V>[] = (await this.activeFiltersStore.load<V>(this.storageKey)) ?? [];
+        let storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
 
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
             return;
@@ -381,6 +381,10 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Enforce children implement a method that returns actual filter definitions
      */
     protected abstract getFilterDefinitions(): OsFilter<V>[];
+
+    private async loadFilters(): Promise<OsFilter<V>[] | null> {
+        return this.parseFilters(await this.activeFiltersStore.load<V>(this.storageKey));
+    }
 
     private parseFilters(oldFilters: OsFilter<V>[]): OsFilter<V>[] {
         const newFilterDefs = this.getFilterDefinitions();
