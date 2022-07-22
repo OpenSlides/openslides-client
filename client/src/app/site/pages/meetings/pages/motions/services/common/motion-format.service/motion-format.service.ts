@@ -99,8 +99,7 @@ export class MotionFormatService {
 
     public getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
         const changeRecommendation = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
-        const amendeds = this.amendmentController
-            .getViewModelListFor(motion)
+        const amendeds = this.amendmentController.getViewModelListFor(motion);
 
         const sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
             lineLength,
