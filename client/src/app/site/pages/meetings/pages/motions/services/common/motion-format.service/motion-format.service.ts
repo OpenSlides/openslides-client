@@ -99,19 +99,13 @@ export class MotionFormatService {
 
     public getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
         const changeRecommendation = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
-        const amendedParagraphs = this.amendmentController
+        const amendeds = this.amendmentController
             .getViewModelListFor(motion)
-            .flatMap((amendment: ViewMotion) => {
-                const changeRecos = this.changeRecoRepo
-                    .getChangeRecoOfMotion(amendment.id)
-                    .filter(reco => reco.showInFinalView());
-                return this.motionLineNumbering.getAmendmentAmendedParagraphs(amendment, lineLength, changeRecos);
-            });
 
         const sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
             lineLength,
             changeRecommendation,
-            amendedParagraphs.map(amendment => amendment.amendment)
+            amendeds
         );
 
         return sortedChangingObjects;
