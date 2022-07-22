@@ -164,7 +164,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
                 .pipe(map(categories => categories?.length > 0))
                 .subscribe(isAvailable => {
                     this._hasCategories = isAvailable;
-                    this.setupTileView(isAvailable);
+                    this.setupListView();
                 }),
             this.motionBlockController.getViewModelListObservable().subscribe(motionBlocks => {
                 this._hasMotionBlocks = motionBlocks.filter(motionBlock => !motionBlock.internal).length > 0;
@@ -366,11 +366,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         return !!this.amendmentController.getViewModelList().length;
     }
 
-    private setupTileView(isAvailable: boolean): void {
-        if (isAvailable) {
-            this.storage.get<MotionListviewType>(`motionListView`).then(type => (this.selectedView = type || `tiles`));
-        } else {
-            this.selectedView = `list`;
-        }
+    private setupListView(): void {
+        this.storage.get<MotionListviewType>(`motionListView`).then(type => (this.selectedView = type || `list`));
     }
 }
