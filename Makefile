@@ -1,3 +1,5 @@
+docker-run=docker run -ti -v `pwd`/client/src:/app/src -p 127.0.0.1:9001:9001/tcp openslides-client-dev
+
 build-dev:
 	docker build -t openslides-client-dev -f Dockerfile.dev .
 
@@ -5,13 +7,16 @@ build-prod:
 	docker build -t openslides-client -f Dockerfile .
 
 run-dev: | build-dev
-	docker run -ti -v `pwd`/client:/app -p 127.0.0.1:9001:9001/tcp openslides-client-dev
+	$(docker-run)
 
 run-dev-interactive: | build-dev
-	docker run -ti -v `pwd`/client:/app -p 127.0.0.1:9001:9001/tcp openslides-client-dev sh
+	$(docker-run) sh
 
-run-cleanup: | build-dev
-	docker run -t -v `pwd`/client:/app openslides-client-dev npm run cleanup
+run-cleanup-standalone: | build-dev
+	$(docker-run) npm run cleanup
+
+run-cleanup:
+	docker exec -it $$(docker ps -a -q  --filter ancestor=openslides-client-dev) npm run cleanup
 
 run-tests: | build-dev
 	docker run -t openslides-client-dev npm run lint
