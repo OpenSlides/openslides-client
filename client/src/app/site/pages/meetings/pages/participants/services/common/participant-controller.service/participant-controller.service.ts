@@ -15,6 +15,7 @@ import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { UserDeleteDialogService } from 'src/app/site/modules/user-components';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -44,6 +45,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
+        public meetingController: MeetingControllerService,
         private userController: UserControllerService,
         private userDeleteDialog: UserDeleteDialogService,
         private presenter: GetUserScopePresenterService,
@@ -51,8 +53,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         private actions: ActionService
     ) {
         super(controllerServiceCollector, User, repo);
-        repo.getViewModelListObservable().subscribe(users => {
-            const meetingUsers = users.filter(user => user.group_ids(this.activeMeetingId).length);
+        this.activeMeetingService.meetingObservable.subscribe(meeting => {
+            const meetingUsers = meeting.user_ids
+                ? repo.getViewModelList().filter(user => meeting.user_ids.includes(user.id))
+                : [];
             this._participantListSubject.next(meetingUsers);
         });
     }
