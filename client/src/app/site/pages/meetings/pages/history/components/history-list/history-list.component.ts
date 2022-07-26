@@ -102,7 +102,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      */
     public ngOnInit(): void {
         super.setTitle(`History`);
-        window[`translate`] = this.translate;
 
         this.dataSource.filterPredicate = (position: HistoryPosition, filter: string) => {
             filter = filter ? filter.toLowerCase() : ``;

@@ -733,7 +733,7 @@ msgstr ""
 msgid "Category removed"
 msgstr ""
 
-msgid "Category set to {{arg1}}"
+msgid "Category set to {}"
 msgstr ""
 
 msgid "Center"
@@ -853,13 +853,13 @@ msgstr ""
 msgid "Comment updated"
 msgstr ""
 
-msgid "Comment {{arg1}} created"
+msgid "Comment {} created"
 msgstr ""
 
-msgid "Comment {{arg1}} deleted"
+msgid "Comment {} deleted"
 msgstr ""
 
-msgid "Comment {{arg1}} updated"
+msgid "Comment {} updated"
 msgstr ""
 
 msgid "Comments"
@@ -1914,7 +1914,7 @@ msgstr ""
 msgid "Motion block removed"
 msgstr ""
 
-msgid "Motion block set to {{arg1}}"
+msgid "Motion block set to {}"
 msgstr ""
 
 msgid "Motion blocks"
@@ -2622,7 +2622,7 @@ msgstr ""
 msgid "Recommendation reset"
 msgstr ""
 
-msgid "Recommendation set to {{arg1}}"
+msgid "Recommendation set to {}"
 msgstr ""
 
 msgid "Reenter to conference room"
@@ -3094,7 +3094,7 @@ msgstr ""
 msgid "State changed"
 msgstr ""
 
-msgid "State set to {{arg1}}"
+msgid "State set to {}"
 msgstr ""
 
 msgid "Statistics"
