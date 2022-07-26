@@ -389,19 +389,19 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     private parseFilters(oldFilters: OsFilter<V>[]): OsFilter<V>[] {
         const newFilterDefs = this.getFilterDefinitions();
         newFilterDefs.forEach(definition => {
-            const oldDefinition = oldFilters.filter(old => old.property === definition.property);
-            if (!oldDefinition.length) {
+            const oldDefinition = oldFilters.find(old => old.property === definition.property);
+            if (!oldDefinition) {
                 return;
             }
-            oldDefinition[0].options.forEach(option => {
+            oldDefinition.options.forEach(option => {
                 if (typeof option === `string`) {
                     return;
                 }
                 const newOption = (
                     definition.options.filter(newOpt => typeof newOpt !== `string`) as OsFilterOption[]
-                ).filter(newOpt => newOpt.label === option.label);
-                if (newOption.length) {
-                    newOption[0].isActive = option.isActive;
+                ).find(newOpt => newOpt.label === option.label);
+                if (newOption) {
+                    newOption.isActive = option.isActive;
                 }
             });
         });
