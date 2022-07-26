@@ -64,6 +64,7 @@ interface EditNotification {
 interface EditObject {
     editMode: boolean;
     model: BaseModel;
+    listen: boolean;
 }
 
 @Directive({
@@ -74,10 +75,12 @@ export class ListenEditingDirective extends BaseUiComponent implements OnDestroy
     public set osListenEditing(editObject: EditObject) {
         this.isEditing = editObject.editMode;
         this.baseModel = editObject.model;
-        if (this.isEditing && this.baseModel) {
-            this.enterEditMode();
-        } else {
-            this.leaveEditMode();
+        if (editObject.listen) {
+            if (this.isEditing && this.baseModel) {
+                this.enterEditMode();
+            } else {
+                this.leaveEditMode();
+            }
         }
     }
 
