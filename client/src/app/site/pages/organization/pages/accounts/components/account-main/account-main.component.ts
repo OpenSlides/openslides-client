@@ -25,6 +25,14 @@ let uniqueSubscriptionNumber = 0;
     styleUrls: [`./account-main.component.scss`]
 })
 export class AccountMainComponent extends BaseModelRequestHandlerComponent {
+    private get accountIds(): Ids {
+        return this._accountIds;
+    }
+
+    private set accountIds(ids: Ids) {
+        this._accountIds = ids.sort();
+    }
+
     private _accountIds: Ids = [];
 
     public constructor(
@@ -38,15 +46,15 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
-        this._accountIds = await this.controller.fetchAccountIds();
+        this.accountIds = await this.controller.fetchAccountIds();
         this.subscriptions.push(
             this.userController.getViewModelListObservable().subscribe(async users => {
                 const userIds = users.map(user => user.id);
                 if (
-                    userIds.length !== this._accountIds.length ||
-                    !(userIds.sort().join(`,`) === this._accountIds.sort().join(`,`))
+                    userIds.length !== this.accountIds.length ||
+                    !userIds.sort().every((userId, idx) => userId === this._accountIds[idx])
                 ) {
-                    this._accountIds = await this.controller.fetchAccountIds();
+                    this.accountIds = await this.controller.fetchAccountIds();
                     this.update();
                 }
             })
@@ -58,7 +66,7 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
             {
                 modelRequest: {
                     viewModelCtor: ViewUser,
-                    ids: this._accountIds,
+                    ids: this.accountIds,
                     fieldset: `accountList`
                 },
                 subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
