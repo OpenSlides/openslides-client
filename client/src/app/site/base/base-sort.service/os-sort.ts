@@ -4,7 +4,7 @@ export type SortDefinition<T> = keyof T | OsSortingDefinition<T>;
  * Describes the sorting columns of an associated ListView, and their state.
  */
 export interface OsSortingDefinition<T> {
-    sortProperty: keyof T;
+    sortProperty: OsSortProperty<T>;
     sortAscending: boolean;
 }
 

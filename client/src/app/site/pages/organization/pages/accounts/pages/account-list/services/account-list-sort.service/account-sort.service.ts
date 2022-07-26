@@ -15,7 +15,7 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
     private staticSortOptions: OsSortingOption<ViewUser>[] = [
         { property: `full_name`, label: `Full name` },
         { property: [`first_name`, `last_name`], label: `Given name` },
-        { property: [`last_name`, `last_name`], label: `Surname` },
+        { property: [`last_name`, `first_name`], label: `Surname` },
         { property: `is_active`, label: `Is active` },
         { property: `default_number`, label: `Participant number` },
         { property: `default_structure_level`, label: `Structure level` },
@@ -32,7 +32,7 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
     }
     protected async getDefaultDefinition(): Promise<OsSortingDefinition<ViewUser>> {
         return {
-            sortProperty: `first_name`,
+            sortProperty: [`first_name`, `last_name`],
             sortAscending: true
         };
     }

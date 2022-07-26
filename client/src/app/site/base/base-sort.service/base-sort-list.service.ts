@@ -6,7 +6,7 @@ import { SortListService } from 'src/app/ui/modules/list/definitions/sort-servic
 import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';
 import { BaseSortService } from './base-sort.service';
-import { OsSortingDefinition, OsSortingOption } from './os-sort';
+import { OsSortingDefinition, OsSortingOption, OsSortProperty } from './os-sort';
 
 /**
  * Base class for generic sorting purposes
@@ -73,7 +73,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      *
      * @param property a part of a view model
      */
-    public set sortProperty(property: keyof V) {
+    public set sortProperty(property: OsSortProperty<V>) {
         if (this.sortDefinition!.sortProperty === property) {
             this.ascending = !this.ascending;
         } else {
@@ -86,7 +86,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     /**
      * @returns the current sorting property
      */
-    public get sortProperty(): keyof V {
+    public get sortProperty(): OsSortProperty<V> {
         return this.sortDefinition!.sortProperty;
     }
 

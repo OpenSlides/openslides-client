@@ -21,7 +21,7 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
     private userSortOptions: OsSortingOption<ViewUser>[] = [
         { property: `full_name`, label: `Full name` },
         { property: [`first_name`, `last_name`], label: `Given name` },
-        { property: [`last_name`, `last_name`], label: `Surname` },
+        { property: [`last_name`, `first_name`], label: `Surname` },
         { property: `is_present_in_meeting_ids`, label: `Presence` },
         { property: `is_active`, label: `Is active` },
         { property: `is_physical_person`, label: `Is a natural person` },
@@ -50,7 +50,7 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
      */
     public async getDefaultDefinition(): Promise<OsSortingDefinition<ViewUser>> {
         return {
-            sortProperty: `first_name`,
+            sortProperty: [`first_name`, `last_name`],
             sortAscending: true
         };
     }
