@@ -10,6 +10,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/config/model-subscription';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { getCommitteeListSubscriptionConfig } from '../../../committees/config/model-subscription';
 import { AccountCommonService } from '../../services/account-common.service/account-common.service';
@@ -30,16 +31,29 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         modelRequestService: ModelRequestService,
         router: Router,
         openslidesRouter: OpenSlidesRouterService,
-        private controller: AccountCommonService
+        private controller: AccountCommonService,
+        private userController: UserControllerService
     ) {
         super(modelRequestService, router, openslidesRouter);
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
         this._accountIds = await this.controller.fetchAccountIds();
+        this.subscriptions.push(
+            this.userController.getViewModelListObservable().subscribe(async users => {
+                const userIds = users.map(user => user.id);
+                if (
+                    userIds.length !== this._accountIds.length ||
+                    !(userIds.sort().join(`,`) === this._accountIds.sort().join(`,`))
+                ) {
+                    this._accountIds = await this.controller.fetchAccountIds();
+                    this.update();
+                }
+            })
+        );
     }
 
-    protected override onCreateModelRequests(): void | ModelRequestConfig[] {
+    protected override onCreateModelRequests(): ModelRequestConfig[] {
         return [
             {
                 modelRequest: {
@@ -53,5 +67,9 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
             getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable()),
             getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())
         ];
+    }
+
+    private update(): void {
+        this.updateSubscribeTo(...this.onCreateModelRequests());
     }
 }

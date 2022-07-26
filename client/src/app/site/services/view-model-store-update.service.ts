@@ -58,24 +58,38 @@ export class ViewModelStoreUpdateService {
         }
 
         for (const collection of Object.keys(patch)) {
-            _changedModels[collection] = this.createCollectionUpdate(collection, patch);
+            const { update, toDelete } = this.createCollectionUpdate(collection, patch);
+            _changedModels[collection] = update;
+            _deletedModels[collection] = (_deletedModels[collection] || []).concat(toDelete);
         }
 
         await this.doCollectionUpdates(_changedModels, _deletedModels);
     }
 
-    private createCollectionUpdate(collection: Collection, modelData: ModelPatch): BaseModel<any>[] {
+    private createCollectionUpdate(
+        collection: Collection,
+        modelData: ModelPatch
+    ): { update: BaseModel<any>[]; toDelete: number[] } {
         const update: BaseModel<any>[] = [];
+        const toDelete: number[] = [];
         for (const id of Object.keys(modelData[collection])) {
             const model = modelData[collection][+id];
-            // Important: our model system needs to have an id in the model, even if it is partial
-            model[`id`] = +id;
-            const basemodel = this.mapObjectToBaseModel(collection, model);
-            if (basemodel) {
-                update.push(basemodel);
+            if (this.isEmpty(model)) {
+                toDelete.push(+id);
+            } else {
+                // Important: our model system needs to have an id in the model, even if it is partial
+                model[`id`] = +id;
+                const basemodel = this.mapObjectToBaseModel(collection, model);
+                if (basemodel) {
+                    update.push(basemodel);
+                }
             }
         }
-        return update;
+        return { update, toDelete };
+    }
+
+    private isEmpty(model: BaseModelTemplate): boolean {
+        return Object.values(model).filter(value => !!value).length === 0;
     }
 
     private async doCollectionUpdates(changedModels: ChangedModels, deletedModels: DeletedModels): Promise<void> {
