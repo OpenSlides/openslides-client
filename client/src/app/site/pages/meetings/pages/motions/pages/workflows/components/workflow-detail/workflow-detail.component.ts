@@ -292,7 +292,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * @param state the state to change
      */
     public onSetRestriction(restriction: Restriction, state: ViewMotionState): void {
-        const restrictions = state.restrictions.map(r => r);
+        const restrictions = [...(state.restrictions ?? [])];
         const restrictionIndex = restrictions.findIndex(r => r === restriction);
 
         if (restrictionIndex < 0) {
