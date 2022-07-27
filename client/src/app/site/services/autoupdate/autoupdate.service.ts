@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {auditTime, Subject} from 'rxjs';
+import { auditTime, Subject } from 'rxjs';
 
 import { Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService, HttpStreamService } from '../../../gateways/http-stream';
@@ -183,7 +183,7 @@ export class AutoupdateService {
                 let streamId = this._activeRequestObjects[id].autoupdateStreamId;
                 const sId = this._activeStreams[streamId].subscriptions.indexOf(id);
                 if (sId !== -1) {
-                    this._activeStreams[streamId].subscriptions.splice(sId, 1)
+                    this._activeStreams[streamId].subscriptions.splice(sId, 1);
 
                     if (!this._activeStreams[streamId].subscriptions.length) {
                         this._activeStreams[streamId].close();
@@ -208,8 +208,8 @@ export class AutoupdateService {
                     },
                     {
                         onMessage: (data, stream) =>
-                            this.handleAutoupdate({ autoupdateData: data, id: stream.id, description: 'collection' }),
-                        description: 'collection',
+                            this.handleAutoupdate({ autoupdateData: data, id: stream.id, description: `collection` }),
+                        description: `collection`,
                         id: streamId
                     },
                     { bodyFn: () => pendingRequests.map(req => req.request) }
