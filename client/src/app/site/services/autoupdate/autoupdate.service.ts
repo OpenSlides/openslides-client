@@ -216,6 +216,7 @@ export class AutoupdateService {
         }
 
         this._pendingRequests = [];
+        let description = pendingRequests.map(req => req.description).join(`\n`);
 
         const buildStreamFn = (streamId: number) =>
             this.httpStreamService.create<AutoupdateModelData>(
@@ -225,8 +226,8 @@ export class AutoupdateService {
                 },
                 {
                     onMessage: (data, stream) =>
-                        this.handleAutoupdate({ autoupdateData: data, id: stream.id, description: `collection` }),
-                    description: `collection`,
+                        this.handleAutoupdate({ autoupdateData: data, id: stream.id, description }),
+                    description,
                     id: streamId
                 },
                 { bodyFn: () => pendingRequests.map(req => req.request) }
