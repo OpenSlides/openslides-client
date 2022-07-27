@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {auditTime, Observable, Subject} from 'rxjs';
 
 import { Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService, HttpStreamService } from '../../../gateways/http-stream';
@@ -41,7 +42,15 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
+    streamId?: Id;
     close: () => void;
+}
+
+export interface PendingModelSubscription {
+    id: number;
+    request: ModelRequest;
+    description: string;
+    streamId?: Id;
 }
 
 const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
@@ -59,6 +68,13 @@ interface AutoupdateConnectConfig {
      * Determines if the autoupdate service should compress the data, defaults to 1 (=true)
      */
     compress?: number;
+}
+
+interface AutoupdateStreamMap {
+    [id: number]: {
+        subscriptions: number[];
+        close: () => void;
+    };
 }
 
 interface AutoupdateSubscriptionMap {
@@ -88,9 +104,12 @@ const FIELD_INDEX = 2;
     providedIn: `root`
 })
 export class AutoupdateService {
+    private _activeStreams: AutoupdateStreamMap = {};
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
+    private _pendingRequestsSubject: Subject<PendingModelSubscription>;
+    private _pendingRequests: PendingModelSubscription[];
 
     public constructor(
         private communicationManager: CommunicationManagerService,
@@ -103,6 +122,11 @@ export class AutoupdateService {
             AUTOUPDATE_DEFAULT_ENDPOINT,
             new AutoupdateEndpoint(`/system/autoupdate`)
         );
+
+        this._pendingRequests = [];
+        this._pendingRequestsSubject = new Subject<PendingModelSubscription>();
+        this._pendingRequestsSubject.subscribe(request => this._pendingRequests.push(request));
+        this._pendingRequestsSubject.pipe(auditTime(5)).subscribe(this.startStream());
     }
 
     public reconnect(config?: AutoupdateConnectConfig): void {
@@ -143,27 +167,52 @@ export class AutoupdateService {
     }
 
     private request(request: ModelRequest, description: string, streamId?: Id): ModelSubscription {
-        const buildStreamFn = (streamId: number) =>
-            this.httpStreamService.create<AutoupdateModelData>(
-                {
-                    endpointIndex: AUTOUPDATE_DEFAULT_ENDPOINT,
-                    customUrlFn: endpointUrl => `${endpointUrl}${formatQueryParams(this._currentQueryParams)}`
-                },
-                {
-                    onMessage: (data, stream) =>
-                        this.handleAutoupdate({ autoupdateData: data, id: stream.id, description }),
-                    description,
-                    id: streamId
-                },
-                { bodyFn: () => [request] }
-            );
-        const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, streamId);
+        const id = streamId || Math.floor(Math.random() * (900000 - 1) + 100000);
+        const pendingRequest: PendingModelSubscription = {
+            id,
+            request,
+            description,
+            streamId
+        };
+
+        this._pendingRequestsSubject.next(pendingRequest);
+
         return {
             id,
             close: () => {
-                closeFn();
+                // closeFn();
                 delete this._activeRequestObjects[id];
             }
+        };
+    }
+
+    private startStream() {
+        return () => {
+            const pendingRequests = this._pendingRequests;
+            this._pendingRequests = [];
+
+            const buildStreamFn = (streamId: number) =>
+                this.httpStreamService.create<AutoupdateModelData>(
+                    {
+                        endpointIndex: AUTOUPDATE_DEFAULT_ENDPOINT,
+                        customUrlFn: endpointUrl => `${endpointUrl}${formatQueryParams(this._currentQueryParams)}`
+                    },
+                    {
+                        onMessage: (data, stream) =>
+                            this.handleAutoupdate({ autoupdateData: data, id: stream.id, description: 'collection' }),
+                        description: 'collection',
+                        id: streamId
+                    },
+                    { bodyFn: () => pendingRequests.map(req => req.request) }
+                );
+
+            const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, 0);
+            this._activeStreams[id] = {
+                subscriptions: pendingRequests.map(req => req.id),
+                close: () => {
+                    closeFn();
+                }
+            };
         };
     }
 
@@ -174,13 +223,21 @@ export class AutoupdateService {
         for (const key of Object.keys(autoupdateData)) {
             const data = key.split(`/`);
             const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
-            const { modelRequest } = this._activeRequestObjects[id];
-            if (!modelRequest) {
-                continue;
-            }
-            if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
-                fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
-                    autoupdateData[key];
+            const roIds = this._activeStreams[id].subscriptions;
+            for (const roId of roIds) {
+                if (!this._activeRequestObjects[roId]) {
+                    continue;
+                }
+
+                const { modelRequest } = this._activeRequestObjects[roId];
+                if (!modelRequest) {
+                    continue;
+                }
+
+                if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
+                    fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
+                        autoupdateData[key];
+                }
             }
         }
         await this.prepareCollectionUpdates(modelData, fullListUpdateCollections);
