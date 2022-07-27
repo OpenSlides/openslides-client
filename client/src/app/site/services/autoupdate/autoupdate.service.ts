@@ -220,6 +220,7 @@ export class AutoupdateService {
                 subscriptions: pendingRequests.map(req => req.id),
                 close: () => {
                     closeFn();
+                    delete this._activeStreams[id];
                 }
             };
 
