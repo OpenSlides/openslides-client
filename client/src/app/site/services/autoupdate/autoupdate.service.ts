@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {auditTime, Observable, Subject} from 'rxjs';
+import {auditTime, Subject} from 'rxjs';
 
 import { Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService, HttpStreamService } from '../../../gateways/http-stream';
@@ -42,7 +42,6 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
-    streamId?: Id;
     close: () => void;
 }
 
@@ -79,6 +78,7 @@ interface AutoupdateStreamMap {
 
 interface AutoupdateSubscriptionMap {
     [id: number]: {
+        autoupdateStreamId?: Id;
         modelRequest: ModelRequestObject;
         modelSubscription: ModelSubscription;
         description: string;
@@ -180,7 +180,16 @@ export class AutoupdateService {
         return {
             id,
             close: () => {
-                // closeFn();
+                let streamId = this._activeRequestObjects[id].autoupdateStreamId;
+                const sId = this._activeStreams[streamId].subscriptions.indexOf(id);
+                if (sId !== -1) {
+                    this._activeStreams[streamId].subscriptions.splice(sId, 1)
+
+                    if (!this._activeStreams[streamId].subscriptions.length) {
+                        this._activeStreams[streamId].close();
+                    }
+                }
+
                 delete this._activeRequestObjects[id];
             }
         };
@@ -213,6 +222,10 @@ export class AutoupdateService {
                     closeFn();
                 }
             };
+
+            for (let req of pendingRequests) {
+                this._activeRequestObjects[req.id].autoupdateStreamId = id;
+            }
         };
     }
 
