@@ -108,7 +108,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
-    private _pendingRequestsSubject: Subject<PendingModelSubscription>;
+    private _pendingRequestsSubject: Subject<number>;
     private _pendingRequests: PendingModelSubscription[];
 
     public constructor(
@@ -124,8 +124,7 @@ export class AutoupdateService {
         );
 
         this._pendingRequests = [];
-        this._pendingRequestsSubject = new Subject<PendingModelSubscription>();
-        this._pendingRequestsSubject.subscribe(request => this._pendingRequests.push(request));
+        this._pendingRequestsSubject = new Subject<number>();
         this._pendingRequestsSubject.pipe(auditTime(5)).subscribe(() => this.startStream());
     }
 
@@ -168,11 +167,16 @@ export class AutoupdateService {
      * @param description A simple description for developing. It helps tracking streams:
      * Which component opens which stream?
      */
-    public subscribe(modelRequest: ModelRequestObject, description: string): ModelSubscription {
+    public subscribe(modelRequest: ModelRequestObject, description: string, immediately?: boolean): ModelSubscription {
         const request = modelRequest.getModelRequest();
         console.log(`autoupdate: new request:`, description, modelRequest, request);
         const modelSubscription = this.request(request, description);
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
+        this._pendingRequestsSubject.next(modelSubscription.id);
+        if (immediately) {
+            this.startStream();
+        }
+
         return modelSubscription;
     }
 
@@ -185,7 +189,7 @@ export class AutoupdateService {
             streamId
         };
 
-        this._pendingRequestsSubject.next(pendingRequest);
+        this._pendingRequests.push(pendingRequest);
 
         return {
             id,
