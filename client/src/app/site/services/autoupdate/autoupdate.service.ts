@@ -126,22 +126,32 @@ export class AutoupdateService {
         this._pendingRequests = [];
         this._pendingRequestsSubject = new Subject<PendingModelSubscription>();
         this._pendingRequestsSubject.subscribe(request => this._pendingRequests.push(request));
-        this._pendingRequestsSubject.pipe(auditTime(5)).subscribe(this.startStream());
+        this._pendingRequestsSubject.pipe(auditTime(5)).subscribe(() => this.startStream());
     }
 
     public reconnect(config?: AutoupdateConnectConfig): void {
         this.setAutoupdateConfig(config || null);
-        for (const id of Object.keys(this._activeRequestObjects)) {
-            const streamId = Number(id);
-            const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
-            modelSubscription.close();
-            const nextModelSubscription = this.request(modelRequest.getModelRequest(), description, streamId);
-            this._activeRequestObjects[streamId] = {
-                modelSubscription: nextModelSubscription,
-                modelRequest,
-                description
-            };
+        for (let sId of Object.keys(this._activeStreams)) {
+            const subscriptions = this._activeStreams[sId].subscriptions;
+            for (const id of subscriptions) {
+                const streamId = Number(id);
+                const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
+                modelSubscription.close();
+
+                const nextModelSubscription = this.request(modelRequest.getModelRequest(), description, streamId);
+                this._activeRequestObjects[streamId] = {
+                    modelSubscription: nextModelSubscription,
+                    modelRequest,
+                    description
+                };
+            }
+
+            if (this._activeStreams[sId]) {
+                this._activeStreams[sId].close();
+            }
         }
+
+        this.startStream();
     }
 
     public setAutoupdateConfig(config: AutoupdateConnectConfig | null): void {
@@ -180,6 +190,10 @@ export class AutoupdateService {
         return {
             id,
             close: () => {
+                if (!this._activeRequestObjects[id]) {
+                    return;
+                }
+
                 let streamId = this._activeRequestObjects[id].autoupdateStreamId;
                 const sId = this._activeStreams[streamId].subscriptions.indexOf(id);
                 if (sId !== -1) {
@@ -196,38 +210,44 @@ export class AutoupdateService {
     }
 
     private startStream() {
-        return () => {
-            const pendingRequests = this._pendingRequests;
-            this._pendingRequests = [];
+        const pendingRequests = this._pendingRequests;
+        if (!pendingRequests.length) {
+            return;
+        }
 
-            const buildStreamFn = (streamId: number) =>
-                this.httpStreamService.create<AutoupdateModelData>(
-                    {
-                        endpointIndex: AUTOUPDATE_DEFAULT_ENDPOINT,
-                        customUrlFn: endpointUrl => `${endpointUrl}${formatQueryParams(this._currentQueryParams)}`
-                    },
-                    {
-                        onMessage: (data, stream) =>
-                            this.handleAutoupdate({ autoupdateData: data, id: stream.id, description: `collection` }),
-                        description: `collection`,
-                        id: streamId
-                    },
-                    { bodyFn: () => pendingRequests.map(req => req.request) }
-                );
+        this._pendingRequests = [];
 
-            const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, 0);
-            this._activeStreams[id] = {
-                subscriptions: pendingRequests.map(req => req.id),
-                close: () => {
-                    closeFn();
-                    delete this._activeStreams[id];
+        const buildStreamFn = (streamId: number) =>
+            this.httpStreamService.create<AutoupdateModelData>(
+                {
+                    endpointIndex: AUTOUPDATE_DEFAULT_ENDPOINT,
+                    customUrlFn: endpointUrl => `${endpointUrl}${formatQueryParams(this._currentQueryParams)}`
+                },
+                {
+                    onMessage: (data, stream) =>
+                        this.handleAutoupdate({ autoupdateData: data, id: stream.id, description: `collection` }),
+                    description: `collection`,
+                    id: streamId
+                },
+                { bodyFn: () => pendingRequests.map(req => req.request) }
+            );
+
+        const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, 0);
+        this._activeStreams[id] = {
+            subscriptions: pendingRequests.map(req => req.id),
+            close: () => {
+                for (const roId of this._activeStreams[id].subscriptions) {
+                    delete this._activeRequestObjects[roId];
                 }
-            };
 
-            for (let req of pendingRequests) {
-                this._activeRequestObjects[req.id].autoupdateStreamId = id;
+                closeFn();
+                delete this._activeStreams[id];
             }
         };
+
+        for (let req of pendingRequests) {
+            this._activeRequestObjects[req.id].autoupdateStreamId = id;
+        }
     }
 
     private async handleAutoupdate({ autoupdateData, id, description }: AutoupdateIncomingMessage): Promise<void> {
@@ -254,6 +274,7 @@ export class AutoupdateService {
                 }
             }
         }
+
         await this.prepareCollectionUpdates(modelData, fullListUpdateCollections);
     }
 
