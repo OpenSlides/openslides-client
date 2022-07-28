@@ -197,7 +197,8 @@
         [newMotion]="newMotion"
         [osListenEditing]="{
             editMode: editMotion,
-            model: motion
+            model: motion,
+            listen: !newMotion
         }"
         (save)="saveMotion($event)"
         (formChanged)="temporaryMotion = $event"
