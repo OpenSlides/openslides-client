@@ -274,7 +274,11 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     private processPayload(contentFormData: any): any {
         if (Object.keys(contentFormData).includes(`projectiondefault_ids`)) {
             const projectiondefaults = contentFormData[`projectiondefault_ids`];
-            contentFormData.projectiondefault_ids = this.getProjectionDefaultsPayload(projectiondefaults);
+            if (Array.isArray(contentFormData[`projectiondefault_ids`])) {
+                contentFormData.projectiondefault_ids = this.getProjectionDefaultsPayload(projectiondefaults);
+            } else {
+                contentFormData.projectiondefault_ids = projectiondefaults;
+            }
         }
         const aspectRatio = (contentFormData.aspectRatio! as string).split(`:`);
         contentFormData.aspect_ratio_numerator = parseInt(aspectRatio[0], 10);
