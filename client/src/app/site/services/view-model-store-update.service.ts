@@ -74,7 +74,7 @@ export class ViewModelStoreUpdateService {
         const toDelete: number[] = [];
         for (const id of Object.keys(modelData[collection])) {
             const model = modelData[collection][+id];
-            if (this.isEmpty(model)) {
+            if (!model[`id`]) {
                 toDelete.push(+id);
             } else {
                 // Important: our model system needs to have an id in the model, even if it is partial
@@ -86,10 +86,6 @@ export class ViewModelStoreUpdateService {
             }
         }
         return { update, toDelete };
-    }
-
-    private isEmpty(model: BaseModelTemplate): boolean {
-        return Object.values(model).filter(value => !!value).length === 0;
     }
 
     private async doCollectionUpdates(changedModels: ChangedModels, deletedModels: DeletedModels): Promise<void> {
