@@ -172,9 +172,10 @@ export class AutoupdateService {
         console.log(`autoupdate: new request:`, description, modelRequest, request);
         const modelSubscription = this.request(request, description);
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
-        this._pendingRequestsSubject.next(modelSubscription.id);
         if (immediately) {
             this.startStream();
+        } else {
+            this._pendingRequestsSubject.next(modelSubscription.id);
         }
 
         return modelSubscription;
@@ -194,13 +195,9 @@ export class AutoupdateService {
         return {
             id,
             close: () => {
-                if (!this._activeRequestObjects[id]) {
-                    return;
-                }
-
-                let streamId = this._activeRequestObjects[id].autoupdateStreamId;
-                const sId = this._activeStreams[streamId].subscriptions.indexOf(id);
-                if (sId !== -1) {
+                const streamId = this._activeRequestObjects[id]?.autoupdateStreamId;
+                const sId = this._activeStreams[streamId]?.subscriptions.indexOf(id);
+                if (sId !== -1 && sId !== undefined) {
                     this._activeStreams[streamId].subscriptions.splice(sId, 1);
 
                     if (!this._activeStreams[streamId].subscriptions.length) {
@@ -215,10 +212,6 @@ export class AutoupdateService {
 
     private startStream() {
         const pendingRequests = this._pendingRequests;
-        if (!pendingRequests.length) {
-            return;
-        }
-
         this._pendingRequests = [];
         let description = pendingRequests.map(req => req.description).join(`\n`);
 
