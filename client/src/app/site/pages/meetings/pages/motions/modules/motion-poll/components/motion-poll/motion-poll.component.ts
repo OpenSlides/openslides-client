@@ -42,11 +42,10 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public get canSeeVotes(): boolean {
+        const option = this.poll.options[0];
         return (
             (this.poll.hasVotes && this.poll.stateHasVotes) ||
-            this.poll.options.some(option =>
-                [option.yes, option.no, option.abstain].some(value => value === VOTE_MAJORITY)
-            )
+            [option.yes, option.no, option.abstain].some(value => value === VOTE_MAJORITY)
         );
     }
 
