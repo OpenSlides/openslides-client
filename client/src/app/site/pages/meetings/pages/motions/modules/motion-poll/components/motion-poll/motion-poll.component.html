@@ -67,6 +67,7 @@
     </span>
 
     <!-- Results -->
+    <!--<ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">--> <!-- TODO: Not showing anything for empty e-voting polls-->
     <ng-container *ngIf="poll && !poll.stateHasVotes && poll.type !== 'analog'; else votingResult">
         <os-poll-progress *ngIf="poll && poll.isStarted" [poll]="poll"></os-poll-progress>
         <os-motion-poll-vote [poll]="poll" *ngIf="poll.canBeVotedFor()"></os-motion-poll-vote>
@@ -105,6 +106,9 @@
             {{ 'Edit to enter votes.' | translate }}
         </div>
     </span>
+    <p *ngIf="poll.type !== 'analog'">
+        <i *osPerms="permission.motionCanManagePolls; or: isPublished">{{ 'No one has voted for this poll' | translate }}</i>
+    </p>
 </ng-template>
 
 <!-- More Menu -->
