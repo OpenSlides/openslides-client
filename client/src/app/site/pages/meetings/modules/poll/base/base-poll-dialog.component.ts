@@ -85,7 +85,12 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     }
 
     public get formsValid(): boolean {
-        if (!this.pollForm) {
+        const pollForm = this.pollForm?.getValues();
+        if (
+            !this.pollForm ||
+            this.getOptions(this.dialogVoteForm.value.options)?.length <
+                pollForm.min_votes_amount / pollForm.max_votes_per_option
+        ) {
             return false;
         }
         return this.pollForm.contentForm.valid && this.dialogVoteForm?.valid;
