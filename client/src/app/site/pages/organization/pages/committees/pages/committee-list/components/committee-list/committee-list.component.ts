@@ -16,6 +16,8 @@ import { CommitteeSortService } from '../../services/committee-list-sort.service
 
 export const NAVIGATION_FROM_LIST = `list`;
 
+const COMMITTEE_LIST_STORAGE_INDEX = `committee_list`;
+
 @Component({
     selector: `os-committee-list`,
     templateUrl: `./committee-list.component.html`,
@@ -37,6 +39,7 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         super(componentServiceCollector, translate);
         super.setTitle(`Committees`);
         this.canMultiSelect = true;
+        this.listStorageIndex = COMMITTEE_LIST_STORAGE_INDEX;
     }
 
     public editSingle(committee: ViewCommittee): void {
