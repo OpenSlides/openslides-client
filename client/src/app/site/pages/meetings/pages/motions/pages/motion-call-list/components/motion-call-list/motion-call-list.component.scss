@@ -1,25 +1,39 @@
 // TODO: partial duplicate of sorting-list
 .line {
-    display: table;
+    display: flex;
     width: 100%;
     font-size: 14px;
     min-height: 50px;
-    margin-bottom: 5px;
+    align-items: center;
 
     .left {
-        display: table-cell;
         vertical-align: middle;
         max-width: 100%;
+        flex-grow: 1;
     }
 
     .right {
-        display: table-cell;
         padding-right: 10px;
         vertical-align: middle;
         width: auto;
-        white-space: nowrap;
+        span.tag {
+            display: inline-flex;
+            padding: 5px;
+            mat-icon {
+                flex-shrink: 0;
+                margin-right: 2px;
+            }
+        }
     }
 }
 .margin-right-5 {
     margin-right: 5px !important;
+}
+
+.filter-count {
+    display: flex;
+    min-width: fit-content;
+    font-style: italic;
+    margin-left: 24px;
+    margin-right: 1em;
 }
