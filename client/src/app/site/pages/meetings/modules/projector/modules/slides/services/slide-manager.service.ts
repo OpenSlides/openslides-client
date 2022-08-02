@@ -8,10 +8,7 @@ import { SlidesModule } from '../slides.module';
 export class SlideManagerService {
     private loadedSlides: { [name: string]: SlideManifest } = {};
 
-    public constructor(
-        @Inject(SLIDE_MANIFESTS) private manifests: SlideManifest[],
-        private injector: Injector
-    ) {
+    public constructor(@Inject(SLIDE_MANIFESTS) private manifests: SlideManifest[], private injector: Injector) {
         this.manifests.forEach(slideManifest => {
             this.loadedSlides[slideManifest.path] = slideManifest;
         });
