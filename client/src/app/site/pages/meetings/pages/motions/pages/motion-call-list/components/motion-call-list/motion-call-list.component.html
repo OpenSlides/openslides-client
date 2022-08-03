@@ -92,7 +92,7 @@
                     {{ item.getTitle() }}
                 </div>
                 <div class="right">
-                    <span *ngFor="let tag of getTags(item)">
+                    <span *ngFor="let tag of getTags(item)" class="tag">
                         <mat-icon inline>local_offer</mat-icon>
                         {{ tag.getTitle() }}
                     </span>
