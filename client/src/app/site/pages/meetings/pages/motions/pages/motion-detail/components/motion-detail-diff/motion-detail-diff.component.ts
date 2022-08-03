@@ -117,7 +117,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             to: change2 ? change2.getLineFrom() - 1 : this.motion.firstLine - 1 // TODO: It has to be investigated whether "0" is valid here!
         };
 
-        if (lineRange.from >= lineRange.to) {
+        if (lineRange.from >= lineRange.to && lineRange.from !== this.motion.firstLine) {
             // Empty space between two amendments, or between colliding amendments
             return ``;
         }
@@ -268,6 +268,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public getAllTextChangingObjects(): ViewUnifiedChange[] {
+        console.info(this.changes);
         return this.changes.filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
     }
 
