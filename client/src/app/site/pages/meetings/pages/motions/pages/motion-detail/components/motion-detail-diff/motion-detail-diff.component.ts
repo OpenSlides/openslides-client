@@ -268,7 +268,6 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public getAllTextChangingObjects(): ViewUnifiedChange[] {
-        console.info(this.changes);
         return this.changes.filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
     }
 
