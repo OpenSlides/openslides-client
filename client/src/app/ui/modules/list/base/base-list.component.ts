@@ -159,6 +159,10 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     public inputValue: string = ``;
 
     public get currentOffset(): number {
+        if (!this._viewListComponent.scrollViewport) {
+            return 0;
+        }
+
         return this._viewListComponent.scrollViewport.measureScrollOffset(`top`);
     }
 
@@ -238,7 +242,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public scrollTo(offset: number): void {
-        this._viewListComponent.scrollViewport.scrollTo({ top: offset });
+        this._viewListComponent.scrollTo(offset);
     }
 
     public selectAll(): void {

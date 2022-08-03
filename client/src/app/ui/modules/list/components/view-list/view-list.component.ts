@@ -9,7 +9,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { delay, find, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
@@ -135,7 +135,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
 
     @Output() public searchFilterUpdated = new EventEmitter<string>();
 
-    public get scrollViewport(): CdkVirtualScrollViewport {
+    public get scrollViewport(): CdkVirtualScrollViewport | undefined {
         return this._scrollingTableComponent.scrollViewport;
     }
 
@@ -188,5 +188,20 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
             }
             this.dataListObservable = dataListObservable;
         }
+    }
+
+    public scrollTo(offset: number): void {
+        if (!this._scrollingTableComponent.scrollViewport) {
+            this._scrollingTableComponent.hasDataObservable
+                .pipe(find(hasData => hasData))
+                .pipe(delay(10))
+                .subscribe(_ => {
+                    this.scrollTo(offset);
+                });
+
+            return;
+        }
+
+        this._scrollingTableComponent.scrollViewport.scrollTo({ top: offset });
     }
 }
