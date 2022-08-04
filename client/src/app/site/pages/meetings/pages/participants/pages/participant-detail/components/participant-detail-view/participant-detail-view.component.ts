@@ -332,6 +332,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private goToAllUsers(): void {
-        this.router.navigate([this.activeMeetingId, `users`]);
+        this.router.navigate([this.activeMeetingId, `participants`]);
     }
 }
