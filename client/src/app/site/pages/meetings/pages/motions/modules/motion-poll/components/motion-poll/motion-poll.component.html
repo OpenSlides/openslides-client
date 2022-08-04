@@ -105,6 +105,9 @@
             {{ 'Edit to enter votes.' | translate }}
         </div>
     </span>
+    <p *ngIf="poll.type !== 'analog'">
+        <i *osPerms="permission.motionCanManagePolls; or: isPublished">{{ 'No one has voted for this poll' | translate }}</i>
+    </p>
 </ng-template>
 
 <!-- More Menu -->

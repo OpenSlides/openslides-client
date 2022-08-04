@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { PollState, VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -41,11 +42,19 @@ export class MotionPollComponent extends BasePollComponent {
     }
 
     public get canSeeVotes(): boolean {
-        return this.poll.hasVotes && this.poll.stateHasVotes;
+        const option = this.poll.options[0];
+        return (
+            (this.poll.hasVotes && this.poll.stateHasVotes) ||
+            [option.yes, option.no, option.abstain].some(value => value === VOTE_MAJORITY)
+        );
     }
 
     public get isEVotingEnabled(): boolean {
         return this.pollService.isElectronicVotingEnabled;
+    }
+
+    public get isPublished(): boolean {
+        return this.poll.state === PollState.Published;
     }
 
     public constructor(
