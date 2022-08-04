@@ -102,7 +102,7 @@ export abstract class BaseListViewComponent<V extends BaseViewModel> extends Bas
 
     private saveScrollOffset(): void {
         if (this.listStorageIndex) {
-            this.storage.set(createStorageOffsetIndex(this.listStorageIndex), this.listComponent!.currentOffset);
+            this.storage.set(createStorageOffsetIndex(this.listStorageIndex), this.listComponent?.currentOffset);
         }
     }
 

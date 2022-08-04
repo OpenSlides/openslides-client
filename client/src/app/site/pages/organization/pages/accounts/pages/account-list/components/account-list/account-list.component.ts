@@ -17,6 +17,8 @@ import { AccountControllerService } from '../../../../services/common/account-co
 import { AccountFilterService } from '../../../../services/common/account-filter.service';
 import { AccountSortService } from '../../services/account-list-sort.service/account-sort.service';
 
+const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
+
 @Component({
     selector: `os-account-list`,
     templateUrl: `./account-list.component.html`,
@@ -39,6 +41,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         super(componentServiceCollector, translate);
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
+        this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
     }
 
     public createNewMember(): void {

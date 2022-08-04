@@ -464,11 +464,11 @@ export class MotionPdfService {
                     );
                 } else {
                     // line numbers column
-                    let line;
-                    if (change.getLineFrom() >= change.getLineTo() - 1) {
-                        line = change.getLineFrom();
+                    let line: string;
+                    if (change.getLineFrom() === change.getLineTo()) {
+                        line = change.getLineFrom().toString();
                     } else {
-                        line = change.getLineFrom() + ` - ` + (change.getLineTo() - 1);
+                        line = change.getLineFrom() + ` - ` + change.getLineTo();
                     }
 
                     // change type column
