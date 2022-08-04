@@ -394,11 +394,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 return;
             }
             oldDefinition.options.forEach(option => {
-                if (typeof option === `string`) {
+                if (!option || typeof option === `string`) {
                     return;
                 }
                 const newOption = (
-                    definition.options.filter(newOpt => typeof newOpt !== `string`) as OsFilterOption[]
+                    definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
                 ).find(newOpt => newOpt.label === option.label);
                 if (newOption) {
                     newOption.isActive = option.isActive;
