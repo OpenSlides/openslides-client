@@ -74,6 +74,11 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
         return !!viewPoll.state; // no state means, its under creation
     }
 
+    public override get formsValid(): boolean {
+        this.submitOptionData();
+        return super.formsValid;
+    }
+
     constructor(
         formBuilder: UntypedFormBuilder,
         dialogRef: MatDialogRef<BasePollDialogComponent>,

@@ -78,6 +78,16 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async create(poll: any): Promise<Identifiable> {
+        if (
+            Array.isArray(poll.options) &&
+            typeof poll.min_votes_amount === `number` &&
+            typeof poll.max_votes_per_option === `number` &&
+            poll.options?.length < poll.min_votes_amount / poll.max_votes_per_option
+        ) {
+            throw new Error(
+                `Poll creation aborted because the minimum amount of votes was set higher than the number of available options`
+            );
+        }
         if (poll.type === PollType.Analog) {
             return this.createAnalogPoll(poll);
         } else {
