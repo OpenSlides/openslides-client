@@ -2,6 +2,8 @@ import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { SortService } from 'src/app/ui/modules/list/definitions/sort-service';
+
+import { OsSortProperty } from './os-sort';
 /**
  * Base sorting service with main functionality for sorting.
  *
@@ -43,7 +45,17 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
      * Recreates the sorting function. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
-    protected sortItems(itemA: T, itemB: T, sortProperty: keyof T, ascending: boolean = true): number {
+    protected sortItems(itemA: T, itemB: T, sortProperty: OsSortProperty<T>, ascending: boolean = true): number {
+        const sortPropertyArray = Array.isArray(sortProperty) ? sortProperty : [sortProperty];
+        const primaryProperty = sortPropertyArray[0];
+        const result = this.sortItemsHelper(itemA, itemB, primaryProperty, ascending);
+        return result === 0 && sortPropertyArray.length > 1
+            ? this.sortItems(itemA, itemB, sortPropertyArray.slice(1), ascending)
+            : result;
+    }
+
+    private sortItemsHelper(itemA: T, itemB: T, sortProperty: keyof T, ascending: boolean = true): number {
+        const sortPropertyArray = Array.isArray(sortProperty) ? sortProperty : [sortProperty];
         // always sort falsy values to the bottom
         const property = sortProperty;
         if (this.isFalsy(itemA[property]) && this.isFalsy(itemB[property])) {
