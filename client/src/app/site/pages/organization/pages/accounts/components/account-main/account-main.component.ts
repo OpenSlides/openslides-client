@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
@@ -40,13 +41,15 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         router: Router,
         openslidesRouter: OpenSlidesRouterService,
         private controller: AccountCommonService,
-        private userController: UserControllerService
+        private userController: UserControllerService,
+        private userRepo: UserRepositoryService
     ) {
         super(modelRequestService, router, openslidesRouter);
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
         this.accountIds = await this.controller.fetchAccountIds();
+        this.deleteOldModels();
         this.subscriptions.push(
             this.userController.getViewModelListObservable().subscribe(async users => {
                 const userIds = users.map(user => user.id);
@@ -59,6 +62,14 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                 }
             })
         );
+    }
+
+    private deleteOldModels(): void {
+        const oldModelIds = this.userController
+            .getViewModelList()
+            .map(user => user.id)
+            .filter(id => !this.accountIds.includes(id));
+        this.userRepo.deleteModels(oldModelIds);
     }
 
     protected override onCreateModelRequests(): ModelRequestConfig[] {

@@ -74,7 +74,7 @@ export class ViewModelStoreUpdateService {
         const toDelete: number[] = [];
         for (const id of Object.keys(modelData[collection])) {
             const model = modelData[collection][+id];
-            if (!model[`id`]) {
+            if (Object.keys(model).includes(`id`) && !model[`id`]) {
                 toDelete.push(+id);
             } else {
                 // Important: our model system needs to have an id in the model, even if it is partial
