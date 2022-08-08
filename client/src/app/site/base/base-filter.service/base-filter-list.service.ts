@@ -389,7 +389,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     private parseFilters(oldFilters: OsFilter<V>[]): OsFilter<V>[] {
         const newFilterDefs = this.getFilterDefinitions();
         newFilterDefs.forEach(definition => {
-            const oldDefinition = oldFilters ? oldFilters.find(old => old.property === definition.property) : null;
+            const oldDefinition = oldFilters?.find(old => old.property === definition.property);
             if (!oldDefinition) {
                 return;
             }
