@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
@@ -14,7 +13,6 @@ import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { getCommitteeListSubscriptionConfig } from '../../../committees/config/model-subscription';
-import { AccountCommonService } from '../../services/account-common.service/account-common.service';
 
 const ACCOUNT_LIST_SUBSCRIPTION = `account_list`;
 
@@ -40,36 +38,25 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         modelRequestService: ModelRequestService,
         router: Router,
         openslidesRouter: OpenSlidesRouterService,
-        private controller: AccountCommonService,
-        private userController: UserControllerService,
-        private userRepo: UserRepositoryService
+        private controller: UserControllerService
     ) {
         super(modelRequestService, router, openslidesRouter);
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
-        this.accountIds = await this.controller.fetchAccountIds();
-        this.deleteOldModels();
+        this.accountIds = await this.controller.fetchAccountIds({ cleanOldModels: true });
         this.subscriptions.push(
-            this.userController.getViewModelListObservable().subscribe(async users => {
+            this.controller.getViewModelListObservable().subscribe(async users => {
                 const userIds = users.map(user => user.id);
                 if (
                     userIds.length !== this.accountIds.length ||
                     !userIds.sort().every((userId, idx) => userId === this._accountIds[idx])
                 ) {
-                    this.accountIds = await this.controller.fetchAccountIds();
+                    this.accountIds = await this.controller.fetchAccountIds({});
                     this.update();
                 }
             })
         );
-    }
-
-    private deleteOldModels(): void {
-        const oldModelIds = this.userController
-            .getViewModelList()
-            .map(user => user.id)
-            .filter(id => !this.accountIds.includes(id));
-        this.userRepo.deleteModels(oldModelIds);
     }
 
     protected override onCreateModelRequests(): ModelRequestConfig[] {

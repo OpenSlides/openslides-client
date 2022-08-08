@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
-import { GetActiveUsersAmountPresenterService } from 'src/app/gateways/presenter';
+import { GetActiveUsersAmountPresenterService, GetUsersPresenterService } from 'src/app/gateways/presenter';
 import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
@@ -27,6 +27,12 @@ import { ControllerServiceCollectorService } from './controller-service-collecto
  */
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
 
+interface FetchUserIdsData {
+    start_index?: number;
+    entries?: number;
+    cleanOldModels?: boolean;
+}
+
 @Injectable({
     providedIn: `root`
 })
@@ -35,6 +41,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         controllerServiceCollector: ControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         private presenter: GetActiveUsersAmountPresenterService,
+        private userIdsPresenter: GetUsersPresenterService,
         private operator: OperatorService
     ) {
         super(controllerServiceCollector, User, repo);
@@ -205,6 +212,30 @@ export class UserControllerService extends BaseController<ViewUser, User> {
             return -1;
         }
         return await this.presenter.call();
+    }
+
+    /**
+     * Fetches the ids of the users that are currently stored in the backend. May be used to clean up the client's internal datastore.
+     * Will not do anything and return an empty array if the operator doesn't have the can_manage_users OML permission.
+     * @param data contains the information on the interval of positions that should be read from the backend and on whether the client should delete relics from its internal datastore.
+     * @returns an array with the requested user ids
+     */
+    public async fetchAccountIds({
+        start_index = 0,
+        entries = 1000,
+        cleanOldModels = false
+    }: FetchUserIdsData): Promise<Id[]> {
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            return [];
+        }
+        const userIds = await this.userIdsPresenter.call({ start_index, entries });
+        if (cleanOldModels) {
+            const oldModelIds = this.getViewModelList()
+                .map(user => user.id)
+                .filter(id => !userIds.includes(id));
+            this.repo.deleteModels(oldModelIds);
+        }
+        return userIds;
     }
 
     public async sendInvitationEmails(users: Identifiable[], meetingId?: Id): Promise<string> {
