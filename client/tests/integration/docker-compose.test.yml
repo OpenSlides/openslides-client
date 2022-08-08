@@ -8,5 +8,4 @@ services:
         volumes:
             - ./results/videos :/app/cypress/videos
             - ./results/screenshots :/app/cypress/screenshots
-        extra_hosts:
-            host.docker.internal: host-gateway
+        network_mode: host

@@ -46,13 +46,13 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
             password
         }
     })
-        .as('loginResponse')
-        .then(response => {
-            Cypress.env('authToken', response.headers.authentication);
-            return response;
-        })
-        .its('status')
-        .should('eq', 200);
+    .as('loginResponse')
+    .then(response => {
+        Cypress.env('authToken', response.headers.authentication);
+        return response;
+    })
+    .its('status')
+    .should('eq', 200);
 });
 
 Cypress.Commands.add(`logout`, () => {
@@ -61,13 +61,13 @@ Cypress.Commands.add(`logout`, () => {
         url: '/system/auth/secure/logout',
         body: {}
     })
-        .as('logoutResponse')
-        .then(response => {
-            Cypress.env('authToken', null);
-            return response;
-        })
-        .its('status')
-        .should('eq', 200);
+    .as('logoutResponse')
+    .then(response => {
+        Cypress.env('authToken', null);
+        return response;
+    })
+    .its('status')
+    .should('eq', 200);
 });
 
 /**

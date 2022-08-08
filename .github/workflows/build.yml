@@ -23,6 +23,9 @@ jobs:
       - name: Checkout latest commits
         run: ./dev-commands/submodules-do.sh 'git checkout main && git pull origin main'
 
+      - name: Delete the client folder
+        run: rm -r openslides-client
+
       - name: Clone openslides-client
         uses: actions/checkout@v2
         with:
@@ -32,7 +35,7 @@ jobs:
         run: make run-dev ARGS="-d"
 
       - name: Start tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           working-directory: "./openslides-client/client/tests/integration"
           wait-on: "https://localhost:8000"
