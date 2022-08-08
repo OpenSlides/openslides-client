@@ -41,40 +41,33 @@ export class TreeService {
      * @param weightKey a key of the type of the items to sort the items by that key
      * @param parentKey a key that indicate the id of the parent of an item
      */
-    public injectFlatNodeInformation<T extends Identifiable & { children: T[]; level?: number; tree_weight?: number }>(
+    public injectFlatNodeInformation<T extends Identifiable & { level?: number; tree_weight?: number }>(
         items: T[],
         weightKey: keyof T,
         parentKey: keyof T
     ): void {
-        const map: any = {};
-        const roots = [];
-        let i = 0;
-        let node: any;
+        const children: any = {};
 
-        for (i = 0; i < items.length; ++i) {
-            map[items[i].id] = i;
-            items[i].children = [];
-        }
-
-        for (i = 0; i < items.length; ++i) {
-            node = items[i];
-            if (!!node[parentKey]) {
-                items[map[node[parentKey]]].children.push(node);
-            } else {
-                roots.push(node);
+        for (const item of items) {
+            const parent_id = item[parentKey] ?? 0; // use 0 as id for the root level
+            if (!children[parent_id]) {
+                children[parent_id] = [];
             }
+            children[parent_id].push(item);
         }
 
-        roots.sort((nodeA, nodeB) => nodeA[weightKey] - nodeB[weightKey]);
-        const nodes = [];
-        let tree_weight = 0;
-        const toNodes = (root: T, level: number = 0) => {
-            root.tree_weight = tree_weight++;
-            root.level = level;
-            nodes.push(root);
-            root.children.forEach(child => toNodes(child, level + 1));
+        let tree_weight = 1;
+        const inject = (nodes: T[], level: number = 0) => {
+            nodes.sort((nodeA, nodeB) => (nodeA[weightKey] as any) - (nodeB[weightKey] as any));
+            for (const node of nodes) {
+                node.tree_weight = tree_weight++;
+                node.level = level;
+                if (children[node.id]) {
+                    inject(children[node.id], level + 1);
+                }
+            }
         };
-        roots.forEach(root => toNodes(root));
+        inject(children[0] || []);
     }
 
     /**

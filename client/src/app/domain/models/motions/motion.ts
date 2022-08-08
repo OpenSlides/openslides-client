@@ -43,6 +43,11 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public state_extension!: string;
     public recommendation_extension!: string;
     public sort_weight!: number;
+    /**
+     * Client-calculated field: The tree_weight indicates the position of a motion in a list of
+     * motions in regard to the call list.
+     */
+    public tree_weight!: number;
     public created!: number;
     public forwarded!: number; // It's a timestamp
     public last_modified!: number;
