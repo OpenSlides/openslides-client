@@ -27,6 +27,8 @@ import { ControllerServiceCollectorService } from './controller-service-collecto
  */
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
 
+const STOP_CLEANING_THRESHOLD = 10000;
+
 interface FetchUserIdsData {
     start_index?: number;
     entries?: number;
@@ -228,14 +230,10 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
             return [];
         }
-        const userIds = await this.userIdsPresenter.call({ start_index, entries });
         if (cleanOldModels) {
-            const oldModelIds = this.getViewModelList()
-                .map(user => user.id)
-                .filter(id => !userIds.includes(id));
-            this.repo.deleteModels(oldModelIds);
+            await this.cleanOldModels();
         }
-        return userIds;
+        return await this.userIdsPresenter.call({ start_index, entries });
     }
 
     public async sendInvitationEmails(users: Identifiable[], meetingId?: Id): Promise<string> {
@@ -282,5 +280,25 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         }
 
         return responseMessage;
+    }
+
+    /**
+     * Finds users, that don't exist in the backend but still linger in the internal store, and deletes them.
+     */
+    private async cleanOldModels(): Promise<void> {
+        let iterations = 0;
+        const entries = 1000;
+        let userIds: number[] = [];
+        while (userIds.length >= iterations * entries) {
+            if (iterations * entries > STOP_CLEANING_THRESHOLD) {
+                break;
+            }
+            userIds = userIds.concat(await this.userIdsPresenter.call({ start_index: iterations * entries, entries }));
+            iterations++;
+        }
+        const oldModelIds = this.getViewModelList()
+            .map(user => user.id)
+            .filter(id => !userIds.includes(id));
+        this.repo.deleteModels(oldModelIds);
     }
 }
