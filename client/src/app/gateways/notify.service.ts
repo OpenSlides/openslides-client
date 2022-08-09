@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpService } from 'src/app/gateways/http.service';
 import { HttpStreamEndpointService, HttpStreamService } from 'src/app/gateways/http-stream';
-import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 import { CommunicationManagerService } from 'src/app/site/services/communication-manager.service';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ActiveMeetingIdService } from '../site/pages/meetings/services/active-meeting-id.service';
+import { BaseICCGatewayService, ICC_PATH,ICCRequest, ICCSendOptions } from './base-icc-gateway.service';
 
 /**
  * Encapslates the name and content of every message regardless of being a request or response.
@@ -29,7 +28,7 @@ interface NotifyBase<T> {
  * one can give an array of user ids (or the value `true` for all users) and an array of
  * channel names.
  */
-export interface NotifyRequest<T> extends NotifyBase<T> {
+export interface NotifyRequest<T> extends NotifyBase<T>, ICCRequest<T> {
     channel_id: string;
     to_all?: boolean;
 
@@ -81,7 +80,7 @@ interface ChannelIdResponse {
  * @param users Either an array of IDs or `true` meaning of sending this message to all online users clients.
  * @param channels An array of channels to send this message to.
  */
-interface NotifySendOptions<T> {
+interface NotifySendOptions<T> extends ICCSendOptions<T> {
     name: string;
     message: T;
     toAll?: boolean;
@@ -89,17 +88,17 @@ interface NotifySendOptions<T> {
     channels?: string[];
 }
 
-const ICC_ENDPOINT = `icc`;
-
-const ICC_PATH = `/system/icc`;
-const NOTIFY_PATH = `${ICC_PATH}/notify`;
-const PUBLISH_PATH = `${NOTIFY_PATH}/publish`;
-const ICC_HEALTH_PATH = `${ICC_PATH}/health`;
-
 @Injectable({
     providedIn: `root`
 })
-export class NotifyService {
+export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | NotifyResponse<any>> {
+
+    protected serviceDescription = `NotifyService`;
+
+    protected readonly healthPath = `${ICC_PATH}/health`;
+    protected readonly receivePath = `${ICC_PATH}/notify`;
+    protected readonly sendPath = `${this.receivePath}/publish`;
+
     /**
      * A general subject for all messages.
      */
@@ -113,20 +112,20 @@ export class NotifyService {
     } = {};
 
     private channelId: string = ``;
-    private connectionClosingFn: (() => void) | undefined;
 
     /**
      * Constructor to create the NotifyService.
      */
     public constructor(
-        private httpService: HttpService,
-        private httpStreamService: HttpStreamService,
+        httpService: HttpService,
+        httpStreamService: HttpStreamService,
         private operator: OperatorService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private lifecycleService: LifecycleService,
-        private communicationManager: CommunicationManagerService,
-        private httpEndpointService: HttpStreamEndpointService
+        communicationManager: CommunicationManagerService,
+        httpEndpointService: HttpStreamEndpointService
     ) {
+        super(httpService, httpStreamService, communicationManager, httpEndpointService);
+
         /**
          * watch for both the meeting ID and lifecycle
          * enables logging out to be anonymous ICC and
@@ -194,41 +193,32 @@ export class NotifyService {
         await this.send({ name, message: content, channels });
     }
 
-    public async connect(meetingId: number): Promise<void> {
-        console.log(`Connect to ICC service with: meeting_id=${meetingId}`);
-        if (!meetingId) {
-            throw new Error(`Cannot connect to ICC, no meeting ID was provided`);
+    protected onMessage(response: ChannelIdResponse | NotifyResponse<any>): void {
+        console.log(`onMessage`, response);
+        if ((response as ChannelIdResponse).channel_id) {
+            this.handleChannelIdResponse(response as ChannelIdResponse);
+        } else {
+            this.handleNotifyResponse(response as NotifyResponse<any>);
         }
-
-        this.disconnect();
-
-        const iccMeeting = `${NOTIFY_PATH}?meeting_id=${meetingId}`;
-        this.httpEndpointService.registerEndpoint(ICC_ENDPOINT, iccMeeting, ICC_HEALTH_PATH, HttpMethod.GET);
-        const buildStreamFn = () =>
-            this.httpStreamService.create<NotifyResponse<any> | ChannelIdResponse>(ICC_ENDPOINT, {
-                onMessage: (notify: NotifyResponse<any> | ChannelIdResponse) => {
-                    console.log(`onMessage`, notify);
-                    if ((notify as ChannelIdResponse).channel_id) {
-                        this.handleChannelIdResponse(notify as ChannelIdResponse);
-                    } else {
-                        this.handleNotifyResponse(notify as NotifyResponse<any>);
-                    }
-                },
-                description: `NotifyService`
-            });
-        const { closeFn } = this.communicationManager.registerStreamBuildFn(buildStreamFn);
-        this.connectionClosingFn = closeFn;
     }
 
-    public disconnect(): void {
-        if (this.connectionClosingFn) {
-            try {
-                this.connectionClosingFn();
-            } catch (e) {
-                console.warn(`Was not able to properly close previous ICC connection: `, e);
-            }
-            this.connectionClosingFn = undefined;
+    protected buildRequest<T>(data: NotifySendOptions<T>): NotifyRequest<T> {
+        const notify: NotifyRequest<T> = {
+            name: data.name,
+            message: data.message,
+            channel_id: this.channelId ?? this.activeMeetingIdService.meetingId?.toString(),
+            to_meeting: this.activeMeetingIdService.meetingId!
+        };
+        if (data.toAll === true) {
+            notify.to_all = true;
         }
+        if (data.users) {
+            notify.to_users = data.users;
+        }
+        if (data.channels) {
+            notify.to_channels = data.channels;
+        }
+        return notify;
     }
 
     private handleChannelIdResponse(response: ChannelIdResponse): void {
@@ -248,23 +238,23 @@ export class NotifyService {
     /**
      * General send function for notify messages.
      */
-    private async send<T>({ name, message, toAll, users, channels }: NotifySendOptions<T>): Promise<void> {
-        const notify: NotifyRequest<T> = {
-            name,
-            message,
-            channel_id: this.channelId ?? this.activeMeetingIdService.meetingId?.toString(),
-            to_meeting: this.activeMeetingIdService.meetingId!
-        };
-        if (toAll === true) {
-            notify.to_all = true;
-        }
-        if (users) {
-            notify.to_users = users;
-        }
-        if (channels) {
-            notify.to_channels = channels;
-        }
-        console.debug(`Send following data over ICC:`, PUBLISH_PATH, notify);
-        await this.httpService.post<unknown>(PUBLISH_PATH, notify);
-    }
+    // private async send<T>({ name, message, toAll, users, channels }: NotifySendOptions<T>): Promise<void> {
+    //     const notify: NotifyRequest<T> = {
+    //         name,
+    //         message,
+    //         channel_id: this.channelId ?? this.activeMeetingIdService.meetingId?.toString(),
+    //         to_meeting: this.activeMeetingIdService.meetingId!
+    //     };
+    //     if (toAll === true) {
+    //         notify.to_all = true;
+    //     }
+    //     if (users) {
+    //         notify.to_users = users;
+    //     }
+    //     if (channels) {
+    //         notify.to_channels = channels;
+    //     }
+    //     console.debug(`Send following data over ICC:`, PUBLISH_PATH, notify);
+    //     await this.httpService.post<unknown>(PUBLISH_PATH, notify);
+    // }
 }
