@@ -65,12 +65,12 @@
 
 <ng-template #canNotManageUsersTemplate>
     <div class="fake-button-no-touch" matTooltip="{{ 'Participants' | translate }}">
-        <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">group</mat-icon>
+        <mat-icon [class.smaller-badge-text]="shouldUseSmallerBadgeText" [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">group</mat-icon>
     </div>
 </ng-template>
 <ng-template #canManageUsersTemplate>
     <button mat-icon-button matTooltip="{{ 'Participants' | translate }}" (click)="changeToMeetingUsers()">
-        <mat-icon [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">group</mat-icon>
+        <mat-icon [class.smaller-badge-text]="shouldUseSmallerBadgeText" [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">group</mat-icon>
     </button>
 </ng-template>
 
