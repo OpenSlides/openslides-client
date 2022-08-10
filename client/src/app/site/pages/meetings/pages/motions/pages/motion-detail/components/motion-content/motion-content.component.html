@@ -159,7 +159,7 @@
     </div>
 
     <!-- Category form -->
-    <div class="content-field" *osPerms="permission.motionCanManage; and: newMotion && hasCategories">
+    <div class="content-field" *ngIf="newMotion && hasCategories">
         <mat-form-field>
             <os-repo-search-selector
                 formControlName="category_id"
