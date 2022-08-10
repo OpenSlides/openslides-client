@@ -114,10 +114,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         // @TODO Highlighting
         const lineRange: LineRange = {
             from: change1 ? change1.getLineTo() + 1 : this.motion.firstLine,
-            to: change2 ? change2.getLineFrom() - 1 : this.motion.firstLine - 1 // TODO: It has to be investigated whether "0" is valid here!
+            to: change2 ? change2.getLineFrom() - 1 : null
         };
 
-        if (lineRange.from >= lineRange.to && lineRange.from !== this.motion.firstLine) {
+        if (lineRange.from >= lineRange.to && change1 && change2) {
             // Empty space between two amendments, or between colliding amendments
             return ``;
         }
