@@ -1796,20 +1796,6 @@ export class MotionDiffService {
             return cached;
         }
 
-        // TODO: This is a workaround to make sure the first element of a amendment
-        //       has a line number for correct display of amendments in front of list
-        //       or block elements
-        const htmlNewEl = document.createElement('template');
-        htmlNewEl.innerHTML = htmlNew;
-        if (htmlNewEl.content.children[0] && !htmlNewEl.content.children[0].querySelector('.os-line-number')) {
-            if (htmlNewEl.content.querySelector('.os-line-number')) {
-                const ln = htmlNewEl.content.querySelector('.os-line-number');
-                const lnCln = ln.cloneNode(true);
-                htmlNewEl.content.children[0].childNodes[0].before(lnCln);
-            }
-        }
-        htmlNew = htmlNewEl.innerHTML;
-
         // This fixes a really strange artefact with the diff that occures under the following conditions:
         // - The first tag of the two texts is identical, e.g. <p>
         // - A change happens in the next tag, e.g. inserted text
