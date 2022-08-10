@@ -18,6 +18,10 @@
                         }}"
                     >
                         {{ meeting.name }}
+                        <span *ngIf="getMeeting(meeting)">
+                            &nbsp;&middot;&nbsp;
+                            <os-meeting-time [meeting]="getMeeting(meeting)"></os-meeting-time>
+                        </span>
                     </os-icon-container>
                 </mat-checkbox>
             </div>
