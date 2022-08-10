@@ -1445,7 +1445,7 @@ export class MotionDiffService {
      */
     public formatDiff(diff: ExtractedContent): string {
         return (
-            diff.outerContextStart + diff.innerContextStart + diff.html + diff.innerContextEnd + diff.outerContextEnd
+            diff.previousHtml + diff.outerContextStart + diff.innerContextStart + diff.html + diff.innerContextEnd + diff.outerContextEnd + diff.followingHtml
         );
     }
 
@@ -1604,6 +1604,19 @@ export class MotionDiffService {
             from: parseInt(lastLineNumberBefore!.getAttribute(`data-line-number`) as string, 10),
             to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10) - 1
         };
+
+        if (range.from === 0) {
+            const lineNumberRegex = /data-line-number="(\d+)"/g;
+            const lineNumbers = diffHtml.matchAll(lineNumberRegex);
+            let ln = lineNumbers.next();
+            if (ln) {
+                range.from = +ln.value[1];
+                while(!ln.done) {
+                    range.to = +ln.value[1];
+                    ln = lineNumbers.next();
+                }
+            }
+        }
 
         this.diffCache.put(cacheKey, range);
         return range;
@@ -1795,6 +1808,21 @@ export class MotionDiffService {
         if (cached) {
             return cached;
         }
+
+        /*
+        // TODO: This is a workaround to make sure the first element of a amendment
+        //       has a line number for correct display of amendments in front of list
+        //       or block elements
+        const htmlNewEl = document.createElement('template');
+        htmlNewEl.innerHTML = htmlNew;
+        if (htmlNewEl.content.children[0] && !htmlNewEl.content.children[0].querySelector('.os-line-number')) {
+            if (htmlNewEl.content.querySelector('.os-line-number')) {
+                const ln = htmlNewEl.content.querySelector('.os-line-number');
+                htmlNewEl.content.children[0].childNodes[0].before(ln);
+            }
+        }
+        htmlNew = htmlNewEl.innerHTML;
+        */
 
         // This fixes a really strange artefact with the diff that occures under the following conditions:
         // - The first tag of the two texts is identical, e.g. <p>
@@ -2197,6 +2225,10 @@ export class MotionDiffService {
             lineLength,
             affected_lines.from
         );
+
+        console.debug(this.extractRangeByLineNumbers(diff, affected_lines.from, affected_lines.to));
+        console.debug(diff, `\n\n`, origText, `\n\n`, newText, affected_lines, `\n\n`, text);
+        console.debug(textPre, textPost);
 
         return {
             paragraphNo,
