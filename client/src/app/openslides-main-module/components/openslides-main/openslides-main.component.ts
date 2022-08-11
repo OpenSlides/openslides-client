@@ -46,13 +46,14 @@ export class OpenSlidesMainComponent implements OnInit {
         this.translate.setDefaultLang(`en`);
         // get the browsers default language
         const browserLang = this.translate.getBrowserLang() as string;
-        // try to use the browser language if it is available. If not, uses english.
-        this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
 
         // get language set in local storage
         this.storageService.get(CURRENT_LANGUAGE_STORAGE_KEY).then(lang => {
             if (lang && this.translate.getLangs().includes(lang as string)) {
                 this.translate.use(lang as string);
+            } else {
+                // try to use the browser language if it is available. If not, uses english.
+                this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
             }
         });
 
