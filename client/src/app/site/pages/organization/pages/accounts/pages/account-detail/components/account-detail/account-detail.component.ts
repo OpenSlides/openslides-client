@@ -191,6 +191,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private async createUser(): Promise<void> {
         const payload = this.getPartialUserPayload();
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
+            payload[`committee_$_management_level`] = { [CML.can_manage]: [] };
+        }
         const identifiable = (await this.userController.create(payload))[0];
         this.router.navigate([`..`, identifiable.id], { relativeTo: this.route });
     }
