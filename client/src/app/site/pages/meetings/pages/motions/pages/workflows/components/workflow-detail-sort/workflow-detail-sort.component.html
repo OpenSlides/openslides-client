@@ -1,0 +1,16 @@
+<os-head-bar [goBack]="true" [nav]="false">
+    <div class="title-slot">
+        <h2>{{ 'Sort workflow states' | translate }}</h2>
+    </div>
+</os-head-bar>
+
+<mat-card class="os-card">
+    <os-sorting-list [input]="workflowStatesObservable" (sortEvent)="onSorting($event)">
+        <ng-template let-state let-index="index">
+            <div class="action-title">
+                <div>{{ state.name | translate }}</div>
+                <div *ngIf="index === 0">{{ 'First state' | translate }}</div>
+            </div>
+        </ng-template>
+    </os-sorting-list>
+</mat-card>
