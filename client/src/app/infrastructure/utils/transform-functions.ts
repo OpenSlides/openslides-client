@@ -3,8 +3,6 @@ import { Collection, Field, Fqfield, Fqid, Id } from '../../domain/definitions/k
 const KEYSEPERATOR = `/`;
 const TEMPLATE_FIELD_INDICATOR = `$`;
 
-export const DECIMAL_RADIX = 10;
-
 export function copy<T>(model: T, modelHeaders: (keyof T)[] = []): T {
     if (!modelHeaders.length) {
         modelHeaders = Object.keys(model) as (keyof T)[];

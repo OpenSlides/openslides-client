@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
-import { MotionStateRepositoryService, MotionWorkflowRepositoryService } from 'src/app/gateways/repositories/motions';
-import { DECIMAL_RADIX } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
+import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { ViewMotionState, ViewMotionWorkflow } from '../../../../modules';
+import { MotionStateControllerService } from '../../../../modules/states/services';
+import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
 
 const WORKFLOW_DETAIL_SORT_SUBSCRIPTION_NAME = `workflow_detail_sort`;
 
@@ -18,21 +19,43 @@ const WORKFLOW_DETAIL_SORT_SUBSCRIPTION_NAME = `workflow_detail_sort`;
     templateUrl: `./workflow-detail-sort.component.html`,
     styleUrls: [`./workflow-detail-sort.component.scss`]
 })
-export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponent implements OnInit {
+export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponent {
+    public readonly COLLECTION = ViewMotionWorkflow.COLLECTION;
+
+    /**
+     * The Sort Component
+     */
+    @ViewChild(`sorter`, { static: true })
+    public sortingList!: SortingListComponent;
+
     public get workflowStatesObservable(): Observable<ViewMotionState[]> {
         return this._workflowStatesSubject.asObservable();
+    }
+
+    public get hasChanges(): boolean {
+        return this._hasChanges;
+    }
+
+    private get previousStates(): MotionState[] {
+        return this._previousStates;
     }
 
     private _workflowStatesSubject = new BehaviorSubject<ViewMotionState[]>([]);
     private _workflowStatesSubscription: Subscription | null = null;
     private _previousStates: MotionState[] = [];
+    private _hasChanges = false;
+
+    private set previousStates(newStates: MotionState[]) {
+        this._previousStates = newStates;
+        this.compareStates();
+    }
 
     private _workflowId: Id | null = null;
 
     public constructor(
         private route: ActivatedRoute,
-        private workflowRepo: MotionWorkflowRepositoryService,
-        private stateRepo: MotionStateRepositoryService,
+        private workflowRepo: MotionWorkflowControllerService,
+        private stateRepo: MotionStateControllerService,
         modelRequestService: ModelRequestService,
         router: Router,
         openslidesRouter: OpenSlidesRouterService
@@ -40,19 +63,31 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
         super(modelRequestService, router, openslidesRouter);
     }
 
-    public override ngOnInit(): void {
-        super.ngOnInit();
-        this.route.params.subscribe(params => {
-            if (params[`id`]) {
-                this._workflowId = parseInt(params[`id`], DECIMAL_RADIX);
-                this.initWorkflowSubscription();
-                this.initStatesSubscription();
-            }
-        });
+    public onIdFound(id: Id | null): void {
+        if (id) {
+            this._workflowId = id;
+            this.initWorkflowSubscription();
+            this.initStatesSubscription();
+        }
     }
 
     public onSorting(nextStates: MotionState[]): void {
-        this._previousStates = nextStates;
+        this.previousStates = nextStates;
+    }
+
+    public async save(): Promise<void> {
+        await this.stateRepo.sort(this._workflowId, this.previousStates);
+        this.updatePreviousStates(this._previousStates);
+    }
+
+    public onCancel(): void {
+        this.sortingList.restore();
+    }
+
+    private compareStates(): void {
+        this._hasChanges = !!this.previousStates.filter(
+            (state, index) => state.id !== this._workflowStatesSubject.value[index]?.id
+        ).length;
     }
 
     private initWorkflowSubscription(): void {
@@ -84,7 +119,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     }
 
     private updatePreviousStates(states: MotionState[]): void {
-        const previousStateIds = this._previousStates.map(state => state.id);
+        const previousStateIds = this.previousStates.map(state => state.id);
         const addedIds = states.map(state => state.id).difference(previousStateIds);
         const removedIds = previousStateIds.difference(states.map(_state => _state.id));
         const previousStatesSet = new Set(previousStateIds);
@@ -93,8 +128,10 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
         }
         const nextStates = Array.from(previousStatesSet)
             .map(stateId => this.stateRepo.getViewModel(stateId))
-            .concat(addedIds.map(id => this.stateRepo.getViewModel(id)));
-        this._previousStates = nextStates;
+            .concat(addedIds.map(id => this.stateRepo.getViewModel(id)))
+            .sort((a, b) => a.weight - b.weight);
+        this.previousStates = nextStates;
         this._workflowStatesSubject.next(nextStates.map(state => this.stateRepo.getViewModel(state.id)));
+        this.compareStates();
     }
 }

@@ -67,4 +67,11 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
     public async delete(viewModel: Identifiable): Promise<void> {
         return this.actions.sendRequest(MotionStateAction.DELETE, { id: viewModel.id });
     }
+
+    public async sort(workflowId: number, viewModels: Identifiable[]): Promise<void> {
+        return this.actions.sendRequest(MotionStateAction.SORT, {
+            workflow_id: workflowId,
+            motion_state_ids: viewModels.map(state => state.id)
+        });
+    }
 }
