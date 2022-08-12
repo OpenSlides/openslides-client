@@ -1,14 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ViewListComponent } from './view-list.component';
-
 xdescribe(`ViewListComponent`, () => {
     // let component: ViewListComponent;
     // let fixture: ComponentFixture<ViewListComponent>;
 
     beforeEach(async () => {
         // await TestBed.configureTestingModule({
-            // declarations: [ViewListComponent]
+        // declarations: [ViewListComponent]
         // }).compileComponents();
     });
 

@@ -1,5 +1,3 @@
-import { MeetingSettingDirective } from './meeting-setting.directive';
-
 xdescribe(`MeetingSettingDirective`, () => {
     it(`should create an instance`, () => {
         // const directive = new MeetingSettingDirective();

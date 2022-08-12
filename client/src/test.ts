@@ -7,8 +7,9 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
-import { E2EImportsModule } from './e2e-imports.module';
+
 import {overloadJsFunctions} from './app/infrastructure/utils/overload-js-functions';
+import { E2EImportsModule } from './e2e-imports.module';
 
 declare const require: {
   context(path: string, deep?: boolean, filter?: RegExp): {

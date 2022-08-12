@@ -6,8 +6,7 @@ xdescribe(`SortBottomSheetComponent`, () => {
     let fixture: ComponentFixture<SortBottomSheetComponent<any>>;
 
     beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-        }).compileComponents();
+        TestBed.configureTestingModule({}).compileComponents();
     }));
 
     beforeEach(() => {

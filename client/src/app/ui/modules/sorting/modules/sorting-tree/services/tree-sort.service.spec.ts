@@ -1,7 +1,3 @@
-import { TestBed } from '@angular/core/testing';
-
-import { TreeSortService } from './tree-sort.service';
-
 xdescribe(`TreeSortService`, () => {
     // let service: TreeSortService;
 

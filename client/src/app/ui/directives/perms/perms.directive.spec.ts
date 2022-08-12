@@ -1,5 +1,3 @@
-import { PermsDirective } from './perms.directive';
-
 xdescribe(`PermsDirective`, () => {
     it(`should create an instance`, () => {
         // const directive = new PermsDirective();

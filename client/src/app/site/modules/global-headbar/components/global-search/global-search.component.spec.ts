@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {GlobalHeadbarModule} from '../../global-headbar.module';
 
+import { GlobalHeadbarModule } from '../../global-headbar.module';
 import { GlobalSearchComponent } from './global-search.component';
 
 xdescribe(`GlobalSearchComponent`, () => {

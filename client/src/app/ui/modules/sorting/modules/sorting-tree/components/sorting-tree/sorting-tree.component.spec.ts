@@ -1,14 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SortingTreeComponent } from './sorting-tree.component';
-
 xdescribe(`SortingTreeComponent`, () => {
     // let component: SortingTreeComponent;
     // let fixture: ComponentFixture<SortingTreeComponent>;
 
     beforeEach(async () => {
         // await TestBed.configureTestingModule({
-            // declarations: [SortingTreeComponent]
+        // declarations: [SortingTreeComponent]
         // }).compileComponents();
     });
 

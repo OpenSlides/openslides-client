@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {E2EImportsModule} from 'src/e2e-imports.module';
+import { E2EImportsModule } from 'src/e2e-imports.module';
 
 import { AuthAdapterService } from './auth-adapter.service';
 
