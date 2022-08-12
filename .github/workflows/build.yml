@@ -57,6 +57,9 @@ jobs:
       - name: Check prettifying
         run: make run-check-prettifying
 
+      - name: Run karma tests
+        run: make run-karma-tests
+
   build-and-test-prod-image:
     runs-on: ubuntu-latest
     steps:
