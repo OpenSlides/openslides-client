@@ -59,7 +59,13 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         );
     }
 
-    protected override onCreateModelRequests(): ModelRequestConfig[] {
+    protected override onCreateModelRequests(firstCreation = true): ModelRequestConfig[] {
+        const additionalRequests = firstCreation
+            ? [
+                  getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable()),
+                  getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())
+              ]
+            : [];
         return [
             {
                 modelRequest: {
@@ -70,12 +76,11 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                 subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
                 hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))
             },
-            getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable()),
-            getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())
+            ...additionalRequests
         ];
     }
 
-    private update(): void {
-        this.updateSubscribeTo(...this.onCreateModelRequests());
+    private update(firstCreation = false): void {
+        this.updateSubscribeTo(...this.onCreateModelRequests(firstCreation));
     }
 }

@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
-import { GetActiveUsersAmountPresenterService, GetUsersPresenterService, SearchUsersByNameOrEmailPresenterScope, SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter';
+import {
+    GetActiveUsersAmountPresenterService,
+    GetUsersPresenterService,
+    SearchUsersByNameOrEmailPresenterScope,
+    SearchUsersByNameOrEmailPresenterService
+} from 'src/app/gateways/presenter';
 import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
@@ -288,29 +293,24 @@ export class UserControllerService extends BaseController<ViewUser, User> {
      * Finds users, that don't exist in the backend but still linger in the internal store, and deletes them.
      */
     private async cleanOldModels(): Promise<void> {
-        const oldUserModels = this.getViewModelList();
-        if (this.getViewModelList().length === 0) {
+        const savedUserModels = this.getViewModelList();
+        if (savedUserModels.length === 0) {
             return;
         }
         const searchResult = await this.searchUsersPresenter.call({
             permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION,
             permissionRelatedId: ORGANIZATION_ID,
-            searchCriteria: oldUserModels.map(user => ({ username: user.username }))
+            searchCriteria: savedUserModels.map(user => ({ username: user.username }))
         });
-        console.log(`CLEAN OLD MODELS: `, oldUserModels, searchResult, oldUserModels.map(user => [user.id, searchResult[`${user.username}/`][0].id]));
-        let iterations = 0;
-        const entries = 1000;
-        let userIds: number[] = [];
-        while (userIds.length >= iterations * entries) {
-            if (iterations * entries > STOP_CLEANING_THRESHOLD) {
-                break;
+        const oldModelIds: number[] = [];
+        savedUserModels.forEach(user => {
+            if (
+                !searchResult[`${user.username}/`] ||
+                !searchResult[`${user.username}/`].map(date => date.id).includes(user.id)
+            ) {
+                oldModelIds.push(user.id);
             }
-            userIds = userIds.concat(await this.userIdsPresenter.call({ start_index: iterations * entries, entries }));
-            iterations++;
-        }
-        const oldModelIds = this.getViewModelList()
-            .map(user => user.id)
-            .filter(id => !userIds.includes(id));
+        });
         this.repo.deleteModels(oldModelIds);
     }
 }
