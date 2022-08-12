@@ -49,13 +49,9 @@ declare global {
 }
 
 export function overloadJsFunctions(): void {
-    try {
-        overloadArrayFunctions();
-        overloadSetFunctions();
-        overloadModulo();
-    } catch (e) {
-        console.error(e);
-    }
+    overloadArrayFunctions();
+    overloadSetFunctions();
+    overloadModulo();
 }
 
 function overloadArrayFunctions(): void {
