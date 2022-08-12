@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
-import { GetActiveUsersAmountPresenterService, GetUsersPresenterService } from 'src/app/gateways/presenter';
+import { GetActiveUsersAmountPresenterService, GetUsersPresenterService, SearchUsersByNameOrEmailPresenterScope, SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter';
 import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
@@ -19,6 +19,7 @@ import { User } from '../../domain/models/users/user';
 import { Action } from '../../gateways/actions';
 import { BaseController } from '../base/base-controller';
 import { ViewUser } from '../pages/meetings/view-models/view-user';
+import { ORGANIZATION_ID } from '../pages/organization/services/organization.service';
 import { ControllerServiceCollectorService } from './controller-service-collector.service';
 
 /**
@@ -44,6 +45,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         protected override repo: UserRepositoryService,
         private presenter: GetActiveUsersAmountPresenterService,
         private userIdsPresenter: GetUsersPresenterService,
+        private searchUsersPresenter: SearchUsersByNameOrEmailPresenterService,
         private operator: OperatorService
     ) {
         super(controllerServiceCollector, User, repo);
@@ -286,6 +288,16 @@ export class UserControllerService extends BaseController<ViewUser, User> {
      * Finds users, that don't exist in the backend but still linger in the internal store, and deletes them.
      */
     private async cleanOldModels(): Promise<void> {
+        const oldUserModels = this.getViewModelList();
+        if (this.getViewModelList().length === 0) {
+            return;
+        }
+        const searchResult = await this.searchUsersPresenter.call({
+            permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION,
+            permissionRelatedId: ORGANIZATION_ID,
+            searchCriteria: oldUserModels.map(user => ({ username: user.username }))
+        });
+        console.log(`CLEAN OLD MODELS: `, oldUserModels, searchResult, oldUserModels.map(user => [user.id, searchResult[`${user.username}/`][0].id]));
         let iterations = 0;
         const entries = 1000;
         let userIds: number[] = [];
