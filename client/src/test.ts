@@ -19,6 +19,14 @@ declare const require: {
 
 overloadJsFunctions();
 
+if (!window.requestAnimationFrame) {
+  window.requestAnimationFrame = function (callback) {
+    return window.setTimeout(function () {
+      callback(Date.now());
+    }, 1000 / 60);
+  };
+}
+
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
