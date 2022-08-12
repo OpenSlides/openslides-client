@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CollectionMapperService } from './collection-mapper.service';
 
-describe(`CollectionMapperService`, () => {
+xdescribe(`CollectionMapperService`, () => {
     let service: CollectionMapperService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionParagraphbasedAmendmentComponent } from './motion-paragraphbased-amendment.component';
 
-describe(`MotionParagraphbasedAmendmentComponent`, () => {
+xdescribe(`MotionParagraphbasedAmendmentComponent`, () => {
     let component: MotionParagraphbasedAmendmentComponent;
     let fixture: ComponentFixture<MotionParagraphbasedAmendmentComponent>;
 

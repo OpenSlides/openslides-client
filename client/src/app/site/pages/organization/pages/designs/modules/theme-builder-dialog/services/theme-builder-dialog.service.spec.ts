@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ThemeBuilderDialogService } from './theme-builder-dialog.service';
 
-describe(`ThemeBuilderDialogService`, () => {
+xdescribe(`ThemeBuilderDialogService`, () => {
     let service: ThemeBuilderDialogService;
 
     beforeEach(() => {

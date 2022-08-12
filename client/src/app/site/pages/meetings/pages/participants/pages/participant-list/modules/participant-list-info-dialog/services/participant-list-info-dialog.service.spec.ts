@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantListInfoDialogService } from './participant-list-info-dialog.service';
 
-describe(`ParticipantListInfoDialogService`, () => {
+xdescribe(`ParticipantListInfoDialogService`, () => {
     let service: ParticipantListInfoDialogService;
 
     beforeEach(() => {

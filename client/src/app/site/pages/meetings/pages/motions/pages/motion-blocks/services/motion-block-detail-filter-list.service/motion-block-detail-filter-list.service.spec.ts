@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionBlockDetailFilterListService } from './motion-block-detail-filter-list.service';
 
-describe(`MotionBlockDetailFilterListService`, () => {
+xdescribe(`MotionBlockDetailFilterListService`, () => {
     let service: MotionBlockDetailFilterListService;
 
     beforeEach(() => {

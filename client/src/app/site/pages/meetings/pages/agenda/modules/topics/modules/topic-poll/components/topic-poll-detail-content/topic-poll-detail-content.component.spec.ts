@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopicPollDetailContentComponent } from './topic-poll-detail-content.component';
 
-describe(`TopicPollDetailContentComponent`, () => {
+xdescribe(`TopicPollDetailContentComponent`, () => {
     let component: TopicPollDetailContentComponent;
     let fixture: ComponentFixture<TopicPollDetailContentComponent>;
 

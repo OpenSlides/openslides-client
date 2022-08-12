@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionDiffService } from './motion-diff.service';
 
-describe(`MotionDiffService`, () => {
+xdescribe(`MotionDiffService`, () => {
     let service: MotionDiffService;
 
     beforeEach(() => {

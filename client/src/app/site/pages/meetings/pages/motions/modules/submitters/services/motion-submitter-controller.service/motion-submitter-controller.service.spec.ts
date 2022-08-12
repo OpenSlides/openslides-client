@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionSubmitterControllerService } from './motion-submitter-controller.service';
 
-describe(`MotionSubmitterControllerService`, () => {
+xdescribe(`MotionSubmitterControllerService`, () => {
     let service: MotionSubmitterControllerService;
 
     beforeEach(() => {

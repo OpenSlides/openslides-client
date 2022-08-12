@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ServerTimePresenterService } from './server-time-presenter.service';
 
-describe(`ServerTimePresenterService`, () => {
+xdescribe(`ServerTimePresenterService`, () => {
     let service: ServerTimePresenterService;
 
     beforeEach(() => {

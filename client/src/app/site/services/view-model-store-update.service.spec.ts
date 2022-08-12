@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ViewModelStoreUpdateService } from './view-model-store-update.service';
 
-describe(`ViewModelStoreUdpateService`, () => {
+xdescribe(`ViewModelStoreUdpateService`, () => {
     let service: ViewModelStoreUpdateService;
 
     beforeEach(() => {

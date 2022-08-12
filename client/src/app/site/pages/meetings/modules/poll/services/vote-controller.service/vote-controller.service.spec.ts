@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { VoteControllerService } from './vote-controller.service';
 
-describe(`VoteControllerService`, () => {
+xdescribe(`VoteControllerService`, () => {
     let service: VoteControllerService;
 
     beforeEach(() => {

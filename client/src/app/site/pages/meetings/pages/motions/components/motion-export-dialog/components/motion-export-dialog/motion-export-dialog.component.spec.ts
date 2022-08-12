@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionExportDialogComponent } from './motion-export-dialog.component';
 
-describe(`MotionExportDialogComponent`, () => {
+xdescribe(`MotionExportDialogComponent`, () => {
     let component: MotionExportDialogComponent;
     let fixture: ComponentFixture<MotionExportDialogComponent>;
 

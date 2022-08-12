@@ -1,7 +1,7 @@
 // import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 // import { FilterMenuComponent } from './filter-menu.component';
 
-describe(`FilterMenuComponent`, () => {
+xdescribe(`FilterMenuComponent`, () => {
     // TODO test won't work without a BaseViewModel
     // let component: FilterMenuComponent<V>;
     // let fixture: ComponentFixture<FilterMenuComponent<V>>;

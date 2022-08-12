@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectionDialogService } from './projection-dialog.service';
 
-describe(`ProjectionDialogService`, () => {
+xdescribe(`ProjectionDialogService`, () => {
     let service: ProjectionDialogService;
 
     beforeEach(() => {

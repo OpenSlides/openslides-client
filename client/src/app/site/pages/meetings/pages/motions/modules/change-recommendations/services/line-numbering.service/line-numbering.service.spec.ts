@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { LineNumberingService } from './line-numbering.service';
 
-describe(`LineNumberingService`, () => {
+xdescribe(`LineNumberingService`, () => {
     let service: LineNumberingService;
 
     beforeEach(() => {

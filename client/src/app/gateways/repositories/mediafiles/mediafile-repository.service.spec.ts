@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MediafileRepositoryService } from './mediafile-repository.service';
 
-describe(`MediafileRepositoryService`, () => {
+xdescribe(`MediafileRepositoryService`, () => {
     let service: MediafileRepositoryService;
 
     beforeEach(() => {

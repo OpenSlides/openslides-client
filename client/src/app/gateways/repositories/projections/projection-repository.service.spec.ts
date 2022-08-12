@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectionRepositoryService } from './projection-repository.service';
 
-describe(`ProjectionRepositoryService`, () => {
+xdescribe(`ProjectionRepositoryService`, () => {
     let service: ProjectionRepositoryService;
 
     beforeEach(() => {

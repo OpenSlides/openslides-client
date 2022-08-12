@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CheckInputComponent } from './check-input.component';
 
-describe(`CheckInputComponent`, () => {
+xdescribe(`CheckInputComponent`, () => {
     let component: CheckInputComponent;
     let fixture: ComponentFixture<CheckInputComponent>;
 

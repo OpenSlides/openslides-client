@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommitteeExportService } from './committee-export.service';
 
-describe(`CommitteeExportService`, () => {
+xdescribe(`CommitteeExportService`, () => {
     let service: CommitteeExportService;
 
     beforeEach(() => {

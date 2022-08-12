@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HistoryService } from './history.service';
 
-describe(`HistoryService`, () => {
+xdescribe(`HistoryService`, () => {
     let service: HistoryService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaSortComponent } from './agenda-sort.component';
 
-describe(`AgendaSortComponent`, () => {
+xdescribe(`AgendaSortComponent`, () => {
     let component: AgendaSortComponent;
     let fixture: ComponentFixture<AgendaSortComponent>;
 

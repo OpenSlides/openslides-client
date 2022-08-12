@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProgressSnackBarService } from './progress-snack-bar.service';
 
-describe(`ProgressSnackBarService`, () => {
+xdescribe(`ProgressSnackBarService`, () => {
     let service: ProgressSnackBarService;
 
     beforeEach(() => {

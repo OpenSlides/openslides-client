@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantControllerService } from './participant-controller.service';
 
-describe(`ParticipantControllerService`, () => {
+xdescribe(`ParticipantControllerService`, () => {
     let service: ParticipantControllerService;
 
     beforeEach(() => {

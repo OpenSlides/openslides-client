@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VotingPrivacyWarningDialogComponent } from './voting-privacy-warning-dialog.component';
 
-describe(`VotingPrivacyWarningDialogComponent`, () => {
+xdescribe(`VotingPrivacyWarningDialogComponent`, () => {
     let component: VotingPrivacyWarningDialogComponent;
     let fixture: ComponentFixture<VotingPrivacyWarningDialogComponent>;
 

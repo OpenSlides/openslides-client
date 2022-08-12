@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CallRestrictionService } from './call-restriction.service';
 
-describe(`CallRestrictionService`, () => {
+xdescribe(`CallRestrictionService`, () => {
     let service: CallRestrictionService;
 
     beforeEach(() => {

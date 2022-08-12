@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EntitledUsersTableComponent } from './entitled-users-table.component';
 
-describe(`EntitledUsersTableComponent`, () => {
+xdescribe(`EntitledUsersTableComponent`, () => {
     let component: EntitledUsersTableComponent;
     let fixture: ComponentFixture<EntitledUsersTableComponent>;
 
