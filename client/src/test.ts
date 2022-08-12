@@ -8,8 +8,7 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 
-import {overloadJsFunctions} from './app/infrastructure/utils/overload-js-functions';
-import { E2EImportsModule } from './e2e-imports.module';
+import { overloadJsFunctions } from './app/infrastructure/utils/overload-js-functions';
 
 declare const require: {
   context(path: string, deep?: boolean, filter?: RegExp): {
@@ -21,10 +20,8 @@ declare const require: {
 overloadJsFunctions();
 
 // First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment([
-    BrowserDynamicTestingModule,
-    E2EImportsModule
-  ],
+getTestBed().initTestEnvironment(
+  BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(),
 );
 
