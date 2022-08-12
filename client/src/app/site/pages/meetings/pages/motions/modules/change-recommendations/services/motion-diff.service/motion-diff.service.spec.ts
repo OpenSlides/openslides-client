@@ -1204,6 +1204,7 @@ describe(`MotionDiffService`, () => {
             expect(diffNormalized).toBe(expectedNormalized);
         }));
 
+        // TODO: fix issue with this test and reactivate
         xit(`detects broken HTML and lowercases class names`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {

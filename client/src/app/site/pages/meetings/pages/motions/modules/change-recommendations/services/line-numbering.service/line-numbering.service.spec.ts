@@ -817,6 +817,7 @@ describe(`LineNumberingService`, () => {
     });
 
     describe(`document structure parsing`, () => {
+        // TODO: fix issue with this test and reactivate
         xit(`detects the line numbers of headings`, inject([LineNumberingService], (service: LineNumberingService) => {
             let inHtml =
                 `<p>Line 1</p>` +
