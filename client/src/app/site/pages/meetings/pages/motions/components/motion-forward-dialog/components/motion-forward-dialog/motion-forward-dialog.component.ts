@@ -10,7 +10,6 @@ import {
 } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 @Component({
     selector: `os-motion-forward-dialog`,
@@ -59,10 +58,6 @@ export class MotionForwardDialogComponent implements OnInit {
 
     public isActiveMeeting(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
         return +meeting.id === this.activeMeeting.meetingId;
-    }
-
-    public getMeeting(meeting: GetForwardingMeetingsPresenterMeeting): ViewMeeting | null {
-        return this.meetingController.getViewModel(+meeting.id) ?? null;
     }
 
     private initStateMap(): void {

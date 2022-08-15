@@ -18,7 +18,7 @@
                         }}"
                     >
                         {{ meeting.name }}
-                        <span *ngIf="meeting.start_time && meeting.end_time">
+                        <span *ngIf="meeting.start_time || meeting.end_time">
                             &nbsp;&middot;&nbsp;
                             <os-meeting-time [startTime]="meeting.start_time" [endTime]="meeting.end_time"></os-meeting-time>
                         </span>
