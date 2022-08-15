@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewMotion, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
@@ -19,7 +18,6 @@ export class ViewMotionWorkflow extends BaseViewModel<MotionWorkflow> {
 }
 interface IWorkflowRelations {
     states: ViewMotionState[];
-    states_as_observable: Observable<ViewMotionState[]>;
     first_state: ViewMotionState;
     motions: ViewMotion[];
     default_workflow_meeting?: ViewMeeting;

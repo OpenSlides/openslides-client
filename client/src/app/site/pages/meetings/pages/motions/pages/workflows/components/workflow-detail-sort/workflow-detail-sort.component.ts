@@ -81,7 +81,10 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     }
 
     public async save(): Promise<void> {
-        await this.stateRepo.sort(this._workflowId, this.previousStates);
+        await Promise.all([
+            this.stateRepo.sort(this._workflowId, this.previousStates),
+            this.workflowRepo.update({ first_state_id: this.previousStates[0].id }, { id: this._workflowId })
+        ]);
         this.updatePreviousStates(this._previousStates);
     }
 
