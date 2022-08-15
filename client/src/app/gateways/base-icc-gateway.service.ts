@@ -25,7 +25,7 @@ export abstract class BaseICCGatewayService<ICCResponseType> {
     protected abstract readonly receivePath: string;
 
     /**
-     * Path ending for ssending messages, will automatically be appended to '/system/icc' before usage.
+     * Path ending for sending messages, will automatically be appended to '/system/icc' before usage.
      */
     protected abstract readonly sendPath: string;
 

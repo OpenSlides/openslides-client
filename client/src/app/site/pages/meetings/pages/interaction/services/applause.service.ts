@@ -35,7 +35,7 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         );
     }
 
-    protected readonly serviceDescription = `ApplauseServiceService`;
+    protected readonly serviceDescription = `ApplauseService`;
 
     protected readonly receivePath = `/applause`;
     protected get sendPath(): string {
