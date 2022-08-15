@@ -70,8 +70,8 @@
         </div>
         <div>
             <p class="toggle-group-head">{{ 'PDF options' | translate }}</p>
-            <mat-button-toggle-group class="smaller-buttons" multiple formControlName="pdfOptions">
-                <mat-button-toggle value="toc" #toc>
+            <mat-button-toggle-group class="smaller-buttons" multiple formControlName="pdfOptions" (change)="onChange($event)">
+                <mat-button-toggle value="toc" #toc [disabled]="continuousTextButton?.checked">
                     <span>{{ 'Table of contents' | translate }}</span>
                 </mat-button-toggle>
                 <mat-button-toggle value="header" #header>
@@ -86,10 +86,10 @@
                 <mat-button-toggle value="attachments">
                     <span>{{ 'Attachments' | translate }}</span>
                 </mat-button-toggle>
-                <mat-button-toggle value="addBreaks" #addBreaks>
+                <mat-button-toggle value="addBreaks" #addBreaks [disabled]="continuousTextButton?.checked">
                     <span>{{ 'Enforce page breaks' | translate }}</span>
                 </mat-button-toggle>
-                <mat-button-toggle value="continuousText">
+                <mat-button-toggle value="continuousText" #continuousText>
                     <span>{{ 'Continuous text' | translate }}</span>
                 </mat-button-toggle>
             </mat-button-toggle-group>
