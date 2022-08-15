@@ -181,12 +181,12 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         }
     }
 
+    /**
+     * Determines if the given properties are either the same property or both arrays of the same
+     * properties.
+     */
     private getPropertiesEqual(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
-        if (Array.isArray(a) && Array.isArray(b)) {
-            return a.every((val, idx) => val === b[idx]);
-        } else {
-            return !Array.isArray(a) && !Array.isArray(b) && a === b;
-        }
+        return Array.isArray(a) && Array.isArray(b) ? a.equals(b) : a === b;
     }
 
     /**
