@@ -47,7 +47,6 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
             first_state_id: update.first_state_id
         };
         return this.createAction(MotionWorkflowAction.UPDATE, payload);
-        // return this.sendActionToBackend(MotionWorkflowAction.UPDATE, payload);
     }
 
     public delete(viewModel: Identifiable): Promise<void> {
