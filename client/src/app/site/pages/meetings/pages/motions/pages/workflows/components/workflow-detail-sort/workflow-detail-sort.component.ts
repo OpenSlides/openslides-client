@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
@@ -57,9 +57,8 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     private _workflowId: Id | null = null;
 
     public constructor(
-        private route: ActivatedRoute,
-        private workflowRepo: MotionWorkflowControllerService,
-        private stateRepo: MotionStateControllerService,
+        private workflowController: MotionWorkflowControllerService,
+        private stateController: MotionStateControllerService,
         modelRequestService: ModelRequestService,
         router: Router,
         openslidesRouter: OpenSlidesRouterService,
@@ -83,8 +82,8 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
 
     public async save(): Promise<void> {
         await Action.from(
-            this.stateRepo.sort(this._workflowId, this.previousStates),
-            this.workflowRepo.update({ first_state_id: this.previousStates[0].id }, { id: this._workflowId })
+            this.stateController.sort(this._workflowId, this.previousStates),
+            this.workflowController.update({ first_state_id: this.previousStates[0].id }, { id: this._workflowId })
         ).resolve();
         this.updatePreviousStates(this._previousStates);
     }
@@ -130,7 +129,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
             this._workflowStatesSubscription.unsubscribe();
             this._workflowStatesSubscription = null;
         }
-        this._workflowStatesSubscription = this.workflowRepo
+        this._workflowStatesSubscription = this.workflowController
             .getViewModelObservable(this._workflowId)
             .pipe(map(workflow => workflow?.states || []))
             .subscribe(states => this.updatePreviousStates(states));
@@ -145,11 +144,11 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
             previousStatesSet.delete(id);
         }
         const nextStates = Array.from(previousStatesSet)
-            .map(stateId => this.stateRepo.getViewModel(stateId))
-            .concat(addedIds.map(id => this.stateRepo.getViewModel(id)))
+            .map(stateId => this.stateController.getViewModel(stateId))
+            .concat(addedIds.map(id => this.stateController.getViewModel(id)))
             .sort((a, b) => a.weight - b.weight);
         this.previousStates = nextStates;
-        this._workflowStatesSubject.next(nextStates.map(state => this.stateRepo.getViewModel(state.id)));
+        this._workflowStatesSubject.next(nextStates.map(state => this.stateController.getViewModel(state.id)));
         this.compareStates();
     }
 }
