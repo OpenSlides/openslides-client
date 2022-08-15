@@ -37,7 +37,6 @@ export class MotionForwardDialogComponent implements OnInit {
     public async ngOnInit(): Promise<void> {
         const result = await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! });
         this.committeesSubject.next(result);
-        console.log(`COMMITTEES: `, result);
         this.selectedMeetings = new Set(this.getDefaultMeetingsIds());
         this.initStateMap();
     }
@@ -64,11 +63,6 @@ export class MotionForwardDialogComponent implements OnInit {
 
     public getMeeting(meeting: GetForwardingMeetingsPresenterMeeting): ViewMeeting | null {
         return this.meetingController.getViewModel(+meeting.id) ?? null;
-    }
-
-    public getConvertedTime(timestamp: number): string {
-        console.log(`TIMESTAMP: `, timestamp.toLocaleString().split(` `)[0]);
-        return timestamp.toLocaleString().split(` `)[0];
     }
 
     private initStateMap(): void {

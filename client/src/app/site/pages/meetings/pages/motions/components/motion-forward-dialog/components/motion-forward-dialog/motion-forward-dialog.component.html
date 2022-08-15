@@ -18,10 +18,10 @@
                         }}"
                     >
                         {{ meeting.name }}
+                        <span *ngIf="meeting.start_time && meeting.end_time">
                             &nbsp;&middot;&nbsp;
-                            {{ meeting.start_time | localizedDate: 'll' }}
-                            &nbsp;-&nbsp;
-                            {{ meeting.end_time | localizedDate: 'll' }}
+                            <os-meeting-time [startTime]="meeting.start_time" [endTime]="meeting.end_time"></os-meeting-time>
+                        </span>
                     </os-icon-container>
                 </mat-checkbox>
             </div>

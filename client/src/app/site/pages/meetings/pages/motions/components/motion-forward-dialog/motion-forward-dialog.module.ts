@@ -6,7 +6,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
-import { PipesModule } from 'src/app/ui/pipes';
+import { MeetingTimeModule } from 'src/app/ui/modules/meeting-time/meeting-time.module';
 
 import { MotionForwardDialogComponent } from './components/motion-forward-dialog/motion-forward-dialog.component';
 
@@ -19,7 +19,7 @@ import { MotionForwardDialogComponent } from './components/motion-forward-dialog
         MatButtonModule,
         FormsModule,
         IconContainerModule,
-        PipesModule,
+        MeetingTimeModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })
