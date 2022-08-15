@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
+import { Action } from 'src/app/gateways/actions';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
@@ -81,10 +82,10 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     }
 
     public async save(): Promise<void> {
-        await Promise.all([
+        await Action.from(
             this.stateRepo.sort(this._workflowId, this.previousStates),
             this.workflowRepo.update({ first_state_id: this.previousStates[0].id }, { id: this._workflowId })
-        ]);
+        ).resolve();
         this.updatePreviousStates(this._previousStates);
     }
 

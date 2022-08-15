@@ -219,7 +219,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
     public onEditWorkflowButton(): void {
         this.openEditDialog(this.workflow.name, `Edit name`, `Please enter a new workflow name:`).subscribe(result => {
             if (result && result.action === `update`) {
-                this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow));
+                this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow).resolve());
             }
         });
     }
