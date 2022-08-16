@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { TopicImportService } from './topic-import.service';
 
-describe(`TopicImportService`, () => {
+xdescribe(`TopicImportService`, () => {
     let service: TopicImportService;
 
     beforeEach(() => {

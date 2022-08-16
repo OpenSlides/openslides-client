@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GetForwardingMeetingsPresenterService } from './get-forwarding-meetings-presenter.service';
 
-describe(`GetForwardingMeetingsPresenterService`, () => {
+xdescribe(`GetForwardingMeetingsPresenterService`, () => {
     let service: GetForwardingMeetingsPresenterService;
 
     beforeEach(() => {

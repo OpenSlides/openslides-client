@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaMainComponent } from './agenda-main.component';
 
-describe(`AgendaMainComponent`, () => {
+xdescribe(`AgendaMainComponent`, () => {
     let component: AgendaMainComponent;
     let fixture: ComponentFixture<AgendaMainComponent>;
 

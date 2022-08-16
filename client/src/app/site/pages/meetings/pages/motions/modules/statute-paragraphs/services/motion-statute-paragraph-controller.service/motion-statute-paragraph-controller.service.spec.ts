@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionStatuteParagraphControllerService } from './motion-statute-paragraph-controller.service';
 
-describe(`MotionStatuteParagraphControllerService`, () => {
+xdescribe(`MotionStatuteParagraphControllerService`, () => {
     let service: MotionStatuteParagraphControllerService;
 
     beforeEach(() => {

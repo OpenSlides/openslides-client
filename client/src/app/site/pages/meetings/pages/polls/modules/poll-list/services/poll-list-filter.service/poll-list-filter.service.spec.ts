@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PollListFilterService } from './poll-list-filter.service';
 
-describe(`PollListFilterService`, () => {
+xdescribe(`PollListFilterService`, () => {
     let service: PollListFilterService;
 
     beforeEach(() => {

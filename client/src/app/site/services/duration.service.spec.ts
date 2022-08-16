@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { DurationService } from './duration.service';
 
-describe(`DurationService`, () => {
+xdescribe(`DurationService`, () => {
     let service: DurationService;
 
     beforeEach(() => {

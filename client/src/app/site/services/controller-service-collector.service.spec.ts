@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ControllerServiceCollectorService } from './controller-service-collector.service';
 
-describe(`ControllerServiceCollectorService`, () => {
+xdescribe(`ControllerServiceCollectorService`, () => {
     let service: ControllerServiceCollectorService;
 
     beforeEach(() => {

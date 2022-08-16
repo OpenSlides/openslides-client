@@ -89,7 +89,7 @@ export class User extends BaseDecimalModel<User> {
     }
 
     public vote_weight(meetingId: Id): number {
-        return ((this as any)[`vote_weight_$${meetingId}`] as number) || this.default_vote_weight;
+        return ((this as any)[`vote_weight_$${meetingId}`] as number) ?? this.default_vote_weight;
     }
 
     public structure_level(meetingId: Id): string {

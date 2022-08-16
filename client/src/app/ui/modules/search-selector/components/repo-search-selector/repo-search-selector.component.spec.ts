@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RepoSearchSelectorComponent } from './repo-search-selector.component';
 
-describe(`RepoSearchSelectorComponent`, () => {
+xdescribe(`RepoSearchSelectorComponent`, () => {
     let component: RepoSearchSelectorComponent;
     let fixture: ComponentFixture<RepoSearchSelectorComponent>;
 

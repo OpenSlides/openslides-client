@@ -1,9 +1,11 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { NotifyService } from 'src/app/gateways/notify.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
@@ -105,12 +107,27 @@ export class ListenEditingDirective extends BaseUiComponent implements OnDestroy
 
     private isEditing = false;
 
+    private get matSnackBar(): MatSnackBar {
+        return this.componentServiceCollector.matSnackBar;
+    }
+
     public constructor(
+        private componentServiceCollector: ComponentServiceCollectorService,
         private translate: TranslateService,
         private notifyService: NotifyService,
         private operator: OperatorService
     ) {
         super();
+
+        this.raiseWarning = (warn: string) => {
+            this.matSnackBar.open(warn, this.translate.instant(`OK`), {
+                duration: 0
+            });
+        };
+
+        this.closeSnackbar = (): void => {
+            this.matSnackBar.dismiss();
+        };
     }
 
     public override ngOnDestroy(): void {

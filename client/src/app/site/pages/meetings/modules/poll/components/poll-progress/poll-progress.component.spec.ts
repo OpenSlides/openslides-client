@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PollProgressComponent } from './poll-progress.component';
 
-describe(`PollProgressComponent`, () => {
+xdescribe(`PollProgressComponent`, () => {
     let component: PollProgressComponent;
     let fixture: ComponentFixture<PollProgressComponent>;
 

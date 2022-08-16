@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommitteeDetailComponent } from './committee-detail.component';
 
-describe(`CommitteeDetailComponent`, () => {
+xdescribe(`CommitteeDetailComponent`, () => {
     let component: CommitteeDetailComponent;
     let fixture: ComponentFixture<CommitteeDetailComponent>;
 

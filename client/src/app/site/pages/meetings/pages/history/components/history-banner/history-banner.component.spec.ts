@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryBannerComponent } from './history-banner.component';
 
-describe(`HistoryBannerComponent`, () => {
+xdescribe(`HistoryBannerComponent`, () => {
     let component: HistoryBannerComponent;
     let fixture: ComponentFixture<HistoryBannerComponent>;
 

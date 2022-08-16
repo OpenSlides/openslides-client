@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { VotingPrivacyWarningDialogService } from './voting-privacy-warning-dialog.service';
 
-describe(`VotingPrivacyWarningDialogService`, () => {
+xdescribe(`VotingPrivacyWarningDialogService`, () => {
     let service: VotingPrivacyWarningDialogService;
 
     beforeEach(() => {

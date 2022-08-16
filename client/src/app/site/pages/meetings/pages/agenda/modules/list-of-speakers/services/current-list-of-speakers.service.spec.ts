@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CurrentListOfSpeakersService } from './current-list-of-speakers.service';
 
-describe(`CurrentListOfSpeakersService`, () => {
+xdescribe(`CurrentListOfSpeakersService`, () => {
     let service: CurrentListOfSpeakersService;
 
     beforeEach(() => {

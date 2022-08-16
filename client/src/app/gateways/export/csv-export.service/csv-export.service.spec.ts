@@ -1,12 +1,16 @@
 import { TestBed } from '@angular/core/testing';
+import { E2EImportsModule } from 'src/e2e-imports.module';
 
+import { ExportServiceModule } from '../export-service.module';
 import { CsvExportService } from './csv-export.service';
 
-describe(`CsvExportService`, () => {
+xdescribe(`CsvExportService`, () => {
     let service: CsvExportService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [E2EImportsModule, ExportServiceModule]
+        });
         service = TestBed.inject(CsvExportService);
     });
 

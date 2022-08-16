@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionListInfoDialogService } from './motion-list-info-dialog.service';
 
-describe(`MotionListInfoDialogService`, () => {
+xdescribe(`MotionListInfoDialogService`, () => {
     let service: MotionListInfoDialogService;
 
     beforeEach(() => {

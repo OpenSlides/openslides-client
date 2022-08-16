@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantPdfService } from './participant-pdf.service';
 
-describe(`ParticipantPdfService`, () => {
+xdescribe(`ParticipantPdfService`, () => {
     let service: ParticipantPdfService;
 
     beforeEach(() => {

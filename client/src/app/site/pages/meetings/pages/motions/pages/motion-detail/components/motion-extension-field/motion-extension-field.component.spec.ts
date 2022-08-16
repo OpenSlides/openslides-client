@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionExtensionFieldComponent } from './motion-extension-field.component';
 
-describe(`MotionExtensionFieldComponent`, () => {
+xdescribe(`MotionExtensionFieldComponent`, () => {
     let component: MotionExtensionFieldComponent;
     let fixture: ComponentFixture<MotionExtensionFieldComponent>;
 

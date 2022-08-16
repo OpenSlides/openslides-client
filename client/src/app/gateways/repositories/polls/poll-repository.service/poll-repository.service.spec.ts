@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PollRepositoryService } from './poll-repository.service';
 
-describe(`PollRepositoryService`, () => {
+xdescribe(`PollRepositoryService`, () => {
     let service: PollRepositoryService;
 
     beforeEach(() => {

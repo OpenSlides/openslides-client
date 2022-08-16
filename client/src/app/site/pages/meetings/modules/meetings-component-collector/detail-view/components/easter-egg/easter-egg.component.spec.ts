@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EasterEggComponent } from './easter-egg.component';
 
-describe(`EasterEggComponent`, () => {
+xdescribe(`EasterEggComponent`, () => {
     let component: EasterEggComponent;
     let fixture: ComponentFixture<EasterEggComponent>;
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionPollService } from './motion-poll.service';
 
-describe(`MotionPollService`, () => {
+xdescribe(`MotionPollService`, () => {
     let service: MotionPollService;
 
     beforeEach(() => {
