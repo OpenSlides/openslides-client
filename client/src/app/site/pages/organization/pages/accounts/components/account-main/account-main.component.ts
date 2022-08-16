@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { USER_IDS_OBSERVABLE } from 'src/app/domain/models/users/user';
 import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
@@ -29,7 +30,7 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
     }
 
     private set accountIds(ids: Ids) {
-        this._accountIds = ids.sort();
+        this._accountIds = Array.from(new Set(this.accountIds.concat(ids)));
     }
 
     private _accountIds: Ids = [];
@@ -41,22 +42,16 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         private controller: UserControllerService
     ) {
         super(modelRequestService, router, openslidesRouter);
+        this.subscriptions.push(
+            USER_IDS_OBSERVABLE.subscribe(ids => {
+                this.accountIds = ids;
+                this.update();
+            })
+        );
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
         this.accountIds = await this.controller.fetchAccountIds({ cleanOldModels: true });
-        this.subscriptions.push(
-            this.controller.getViewModelListObservable().subscribe(async users => {
-                const userIds = users.map(user => user.id);
-                if (
-                    userIds.length !== this.accountIds.length ||
-                    !userIds.sort().every((userId, idx) => userId === this._accountIds[idx])
-                ) {
-                    this.accountIds = await this.controller.fetchAccountIds({});
-                    this.update();
-                }
-            })
-        );
     }
 
     protected override onCreateModelRequests(firstCreation = true): ModelRequestConfig[] {
@@ -80,7 +75,8 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         ];
     }
 
-    private update(firstCreation = false): void {
+    private async update(firstCreation = false): Promise<void> {
+        this.accountIds = await this.controller.fetchAccountIds({ cleanOldModels: true });
         this.updateSubscribeTo(...this.onCreateModelRequests(firstCreation));
     }
 }
