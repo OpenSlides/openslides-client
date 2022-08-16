@@ -738,17 +738,6 @@ export const meetingSettings: SettingsGroup[] = [
                         key: `users_enable_vote_weight`,
                         label: _(`Activate vote weight`),
                         type: `boolean`
-                    },
-                    {
-                        key: `users_sort_by`,
-                        label: _(`Sort name of participants by`),
-                        type: `choice`,
-                        choices: {
-                            // matches UserSortProperty
-                            first_name: _(`Given name`),
-                            last_name: _(`Surname`),
-                            number: _(`Participant number`)
-                        }
                     }
                 ]
             },

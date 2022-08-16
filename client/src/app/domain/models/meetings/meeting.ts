@@ -4,7 +4,6 @@ import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { ChangeRecoMode, LineNumberingMode } from '../motions/motions.constants';
 import { PollBackendDurationType, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
-import { UserSortProperty } from '../users/user';
 import { ApplauseType } from './applause';
 
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
@@ -145,7 +144,6 @@ export class Settings {
     public motion_poll_default_backend!: PollBackendDurationType;
 
     // Users
-    public users_sort_by!: UserSortProperty;
     public users_enable_presence_view!: boolean;
     public users_enable_vote_weight!: boolean;
     public users_allow_self_set_present!: boolean;
