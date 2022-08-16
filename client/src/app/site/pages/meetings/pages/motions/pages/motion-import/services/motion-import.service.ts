@@ -101,7 +101,7 @@ export class MotionImportService extends BaseImportService<Motion> {
     }
 
     protected override pipeParseValue(value: string, header: keyof Motion): any {
-        if (header === TEXT_PROPERTY) {
+        if (header === TEXT_PROPERTY && value) {
             const isSurroundedByHTMLTags = /^<\w+[^>]*>[\w\W]*?<\/\w>$/.test(value);
 
             if (!isSurroundedByHTMLTags) {
