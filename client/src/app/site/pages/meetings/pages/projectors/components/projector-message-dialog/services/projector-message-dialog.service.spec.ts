@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectorMessageDialogService } from './projector-message-dialog.service';
 
-describe(`ProjectorMessageDialogService`, () => {
+xdescribe(`ProjectorMessageDialogService`, () => {
     let service: ProjectorMessageDialogService;
 
     beforeEach(() => {

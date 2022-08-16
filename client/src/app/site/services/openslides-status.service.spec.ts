@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OpenSlidesStatusService } from './openslides-status.service';
 
-describe(`OpenSlidesStatusService`, () => {
+xdescribe(`OpenSlidesStatusService`, () => {
     let service: OpenSlidesStatusService;
 
     beforeEach(() => {

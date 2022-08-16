@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantImportService } from './participant-import.service';
 
-describe(`ParticipantImportService`, () => {
+xdescribe(`ParticipantImportService`, () => {
     let service: ParticipantImportService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ViewPortService } from './view-port.service';
 
-describe(`ViewPortService`, () => {
+xdescribe(`ViewPortService`, () => {
     let service: ViewPortService;
 
     beforeEach(() => {

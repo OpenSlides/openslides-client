@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionHtmlToPdfService } from './motion-html-to-pdf.service';
 
-describe(`MotionHtmlToPdfService`, () => {
+xdescribe(`MotionHtmlToPdfService`, () => {
     let service: MotionHtmlToPdfService;
 
     beforeEach(() => {

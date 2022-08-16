@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ParticipantPdfExportService } from './participant-pdf-export.service';
 
-describe(`ParticipantPdfExportService`, () => {
+xdescribe(`ParticipantPdfExportService`, () => {
     let service: ParticipantPdfExportService;
 
     beforeEach(() => {

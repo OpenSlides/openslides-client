@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionBlockEditDialogComponent } from './motion-block-edit-dialog.component';
 
-describe(`MotionBlockEditDialogComponent`, () => {
+xdescribe(`MotionBlockEditDialogComponent`, () => {
     let component: MotionBlockEditDialogComponent;
     let fixture: ComponentFixture<MotionBlockEditDialogComponent>;
 

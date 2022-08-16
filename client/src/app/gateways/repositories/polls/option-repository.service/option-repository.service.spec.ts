@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OptionRepositoryService } from './option-repository.service';
 
-describe(`OptionRepositoryService`, () => {
+xdescribe(`OptionRepositoryService`, () => {
     let service: OptionRepositoryService;
 
     beforeEach(() => {

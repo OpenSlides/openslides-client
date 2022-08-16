@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VerticalTabGroupComponent } from './vertical-tab-group.component';
 
-describe(`VerticalTabGroupComponent`, () => {
+xdescribe(`VerticalTabGroupComponent`, () => {
     let component: VerticalTabGroupComponent;
     let fixture: ComponentFixture<VerticalTabGroupComponent>;
 

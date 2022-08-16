@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AmendmentCreateWizardComponent } from './amendment-create-wizard.component';
 
-describe(`AmendmentCreateWizardComponent`, () => {
+xdescribe(`AmendmentCreateWizardComponent`, () => {
     let component: AmendmentCreateWizardComponent;
     let fixture: ComponentFixture<AmendmentCreateWizardComponent>;
 

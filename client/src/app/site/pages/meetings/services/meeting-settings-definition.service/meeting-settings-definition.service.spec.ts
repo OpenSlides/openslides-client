@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service';
 
-describe(`MeetingSettingsDefinitionService`, () => {
+xdescribe(`MeetingSettingsDefinitionService`, () => {
     let service: MeetingSettingsDefinitionService;
 
     beforeEach(() => {

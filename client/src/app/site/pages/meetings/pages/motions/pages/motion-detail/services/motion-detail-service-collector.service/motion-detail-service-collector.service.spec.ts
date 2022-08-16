@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionDetailServiceCollectorService } from './motion-detail-service-collector.service';
 
-describe(`MotionDetailServiceCollectorService`, () => {
+xdescribe(`MotionDetailServiceCollectorService`, () => {
     let service: MotionDetailServiceCollectorService;
 
     beforeEach(() => {

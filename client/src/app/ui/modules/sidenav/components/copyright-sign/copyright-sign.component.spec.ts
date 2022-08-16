@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CopyrightSignComponent } from './copyright-sign.component';
 
-describe(`CopyrightSignComponent`, () => {
+xdescribe(`CopyrightSignComponent`, () => {
     let component: CopyrightSignComponent;
     let fixture: ComponentFixture<CopyrightSignComponent>;
 

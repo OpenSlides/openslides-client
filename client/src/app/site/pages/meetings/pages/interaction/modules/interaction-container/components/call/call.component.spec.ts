@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CallComponent } from './call.component';
 
-describe(`CallComponent`, () => {
+xdescribe(`CallComponent`, () => {
     let component: CallComponent;
     let fixture: ComponentFixture<CallComponent>;
 

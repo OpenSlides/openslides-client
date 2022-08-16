@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeadBarComponent } from './head-bar.component';
 
-describe(`HeadBarComponent`, () => {
+xdescribe(`HeadBarComponent`, () => {
     let component: HeadBarComponent;
     let fixture: ComponentFixture<HeadBarComponent>;
 

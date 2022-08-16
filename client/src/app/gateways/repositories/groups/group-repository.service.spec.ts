@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GroupRepositoryService } from './group-repository.service';
 
-describe(`GroupRepositoryService`, () => {
+xdescribe(`GroupRepositoryService`, () => {
     let service: GroupRepositoryService;
 
     beforeEach(() => {

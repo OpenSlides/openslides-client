@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationNavigationWrapperComponent } from './organization-navigation-wrapper.component';
 
-describe(`OrganizationNavigationWrapperComponent`, () => {
+xdescribe(`OrganizationNavigationWrapperComponent`, () => {
     let component: OrganizationNavigationWrapperComponent;
     let fixture: ComponentFixture<OrganizationNavigationWrapperComponent>;
 

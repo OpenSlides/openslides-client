@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MeetingActiveFiltersService } from './meeting-active-filters.service';
 
-describe(`MeetingActiveFiltersService`, () => {
+xdescribe(`MeetingActiveFiltersService`, () => {
     let service: MeetingActiveFiltersService;
 
     beforeEach(() => {

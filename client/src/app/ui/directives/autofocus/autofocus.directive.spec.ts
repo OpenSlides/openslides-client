@@ -1,8 +1,17 @@
+import { TestBed } from '@angular/core/testing';
+
 import { AutofocusDirective } from './autofocus.directive';
 
-describe(`AutofocusDirective`, () => {
+xdescribe(`AutofocusDirective`, () => {
+    let directive: AutofocusDirective;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({}).compileComponents();
+
+        directive = TestBed.inject(AutofocusDirective);
+    });
+
     it(`should create an instance`, () => {
-        const directive = new AutofocusDirective();
         expect(directive).toBeTruthy();
     });
 });

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatGroupDetailMessageFormComponent } from './chat-group-detail-message-form.component';
 
-describe(`ChatGroupDetailMessageFormComponent`, () => {
+xdescribe(`ChatGroupDetailMessageFormComponent`, () => {
     let component: ChatGroupDetailMessageFormComponent;
     let fixture: ComponentFixture<ChatGroupDetailMessageFormComponent>;
 

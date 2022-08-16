@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DetailViewNotFoundComponent } from './detail-view-not-found.component';
 
-describe(`DetailViewNotFoundComponent`, () => {
+xdescribe(`DetailViewNotFoundComponent`, () => {
     let component: DetailViewNotFoundComponent;
     let fixture: ComponentFixture<DetailViewNotFoundComponent>;
 

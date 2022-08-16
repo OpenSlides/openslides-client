@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PresentationControlsComponent } from './presentation-controls.component';
 
-describe(`PresentationControlsComponent`, () => {
+xdescribe(`PresentationControlsComponent`, () => {
     let component: PresentationControlsComponent;
     let fixture: ComponentFixture<PresentationControlsComponent>;
 

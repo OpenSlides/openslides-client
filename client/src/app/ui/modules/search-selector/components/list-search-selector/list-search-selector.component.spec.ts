@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListSearchSelectorComponent } from './list-search-selector.component';
 
-describe(`ListSearchSelectorComponent`, () => {
+xdescribe(`ListSearchSelectorComponent`, () => {
     let component: ListSearchSelectorComponent;
     let fixture: ComponentFixture<ListSearchSelectorComponent>;
 

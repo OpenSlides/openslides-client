@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AssignmentPollPdfService } from './assignment-poll-pdf.service';
 
-describe(`AssignmentPollPdfService`, () => {
+xdescribe(`AssignmentPollPdfService`, () => {
     let service: AssignmentPollPdfService;
 
     beforeEach(() => {

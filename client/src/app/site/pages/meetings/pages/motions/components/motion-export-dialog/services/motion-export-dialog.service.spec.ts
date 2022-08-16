@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionExportDialogService } from './motion-export-dialog.service';
 
-describe(`MotionExportDialogService`, () => {
+xdescribe(`MotionExportDialogService`, () => {
     let service: MotionExportDialogService;
 
     beforeEach(() => {

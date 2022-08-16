@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationTagMainComponent } from './organization-tag-main.component';
 
-describe(`OrganizationTagMainComponent`, () => {
+xdescribe(`OrganizationTagMainComponent`, () => {
     let component: OrganizationTagMainComponent;
     let fixture: ComponentFixture<OrganizationTagMainComponent>;
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionStatuteParagraphRepositoryService } from './motion-statute-paragraph-repository.service';
 
-describe(`MotionStatuteParagraphRepositoryService`, () => {
+xdescribe(`MotionStatuteParagraphRepositoryService`, () => {
     let service: MotionStatuteParagraphRepositoryService;
 
     beforeEach(() => {

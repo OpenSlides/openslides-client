@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ModelRequestBuilderService } from './model-request-builder.service';
 
-describe(`ModelRequestBuilderService`, () => {
+xdescribe(`ModelRequestBuilderService`, () => {
     let service: ModelRequestBuilderService;
 
     beforeEach(() => {

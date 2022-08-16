@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { UserControllerService } from './user-controller.service';
 
-describe(`UserControllerService`, () => {
+xdescribe(`UserControllerService`, () => {
     let service: UserControllerService;
 
     beforeEach(() => {
