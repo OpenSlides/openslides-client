@@ -21,6 +21,7 @@ import { MotionsImportServiceModule } from './motions-import-service.module';
 const CATEGORY_PROPERTY = `category`;
 const MOTION_BLOCK_PROPERTY = `motion_block`;
 const TAG_PROPERTY = `tags`;
+const TEXT_PROPERTY = `text`;
 const SUBMITTER_PROPERTY = `submitters`;
 const SUPPORTER_PROPERTY = `supporters`;
 
@@ -97,5 +98,15 @@ export class MotionImportService extends BaseImportService<Motion> {
                 importedAs: SUPPORTER_PROPERTY
             })
         };
+    }
+
+    protected override pipeParseValue(value: string, header: keyof Motion): any {
+        if (header === TEXT_PROPERTY) {
+            const isSurroundedByHTMLTags = /^<\w+[^>]*>[\w\W]*?<\/\w>$/.test(value);
+
+            if (!isSurroundedByHTMLTags) {
+                return `<p>${value.replace(/\n([ \t]*\n)+/g, `</p><p>`).replace(/\n/g, `<br />`)}</p>`;
+            }
+        }
     }
 }
