@@ -1817,14 +1817,15 @@ export class MotionDiffService {
         htmlNewEl.innerHTML = htmlNew;
         htmlOldEl.innerHTML = htmlOld;
         if (htmlNewEl.content.children[0] && !htmlNewEl.content.children[0].querySelector('.os-line-number')) {
-            if (htmlNewEl.content.querySelector('.os-line-number')) {
+            if (htmlNewEl.content.querySelector('.os-line-number') && htmlOldEl.content.querySelector('.os-line-number')) {
                 const ln = htmlNewEl.content.querySelector('.os-line-number');
                 htmlNewEl.content.children[0].childNodes[0].before(ln);
                 htmlOldEl.content.children[0].querySelector('.os-line-number').remove();
+
+                htmlNew = htmlNewEl.innerHTML;
+                htmlOld = htmlOldEl.innerHTML;
             }
         }
-        htmlNew = htmlNewEl.innerHTML;
-        htmlOld = htmlOldEl.innerHTML;
 
         // This fixes a really strange artefact with the diff that occures under the following conditions:
         // - The first tag of the two texts is identical, e.g. <p>
