@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SortBottomSheetComponent } from './sort-bottom-sheet.component';
 
 xdescribe(`SortBottomSheetComponent`, () => {
+    let component: SortBottomSheetComponent<any>;
     let fixture: ComponentFixture<SortBottomSheetComponent<any>>;
 
     beforeEach(waitForAsync(() => {
@@ -11,11 +12,11 @@ xdescribe(`SortBottomSheetComponent`, () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SortBottomSheetComponent);
-        // component = fixture.componentInstance;
+        component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    // it('should create', () => {
-    //    expect(component).toBeTruthy();
-    // });
+    it(`should create`, () => {
+        expect(component).toBeTruthy();
+    });
 });

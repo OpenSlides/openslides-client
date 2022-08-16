@@ -3,12 +3,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {OpenSlidesMainModule} from './app/openslides-main-module/openslides-main.module';
-import {OpenSlidesMainRoutingModule} from './app/openslides-main-module/openslides-main-routing.module';
-// import { AppRoutingModule } from './app/app-routing.module';
-// import { SharedModule } from './app/shared/shared.module';
-// import { LoginModule } from './app/site/login/login.module';
-import {OpenSlidesTranslationModule} from './app/site/modules/translations';
+import { OpenSlidesMainModule } from './app/openslides-main-module/openslides-main.module';
+import { OpenSlidesMainRoutingModule } from './app/openslides-main-module/openslides-main-routing.module';
+import { OpenSlidesTranslationModule } from './app/site/modules/translations';
 
 /**
  * Share Module for all "dumb" components and pipes.
@@ -23,23 +20,17 @@ import {OpenSlidesTranslationModule} from './app/site/modules/translations';
 @NgModule({
     imports: [
         OpenSlidesMainModule,
-        // AppModule,
         CommonModule,
-        // SharedModule,
         HttpClientModule,
         OpenSlidesTranslationModule.forRoot(),
-        // LoginModule,
         BrowserAnimationsModule,
         OpenSlidesMainRoutingModule
-        // AppRoutingModule
     ],
     exports: [
         CommonModule,
-        // SharedModule,
         HttpClientModule,
         OpenSlidesTranslationModule,
         OpenSlidesMainRoutingModule
-        // AppRoutingModule
     ],
     providers: [{ provide: APP_BASE_HREF, useValue: `/` }]
 })

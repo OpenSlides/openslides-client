@@ -1,10 +1,13 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ProjectableListComponent } from './projectable-list.component';
 
 xdescribe(`ProjectableListComponent`, () => {
-    // let component: ProjectableListComponent;
-    // let fixture: ComponentFixture<ProjectableListComponent>;
+    class TestViewModel extends BaseViewModel {}
+
+    let component: ProjectableListComponent<TestViewModel>;
+    let fixture: ComponentFixture<ProjectableListComponent<TestViewModel>>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -13,12 +16,12 @@ xdescribe(`ProjectableListComponent`, () => {
     });
 
     beforeEach(() => {
-        // fixture = TestBed.createComponent(ProjectableListComponent);
-        // component = fixture.componentInstance;
-        // fixture.detectChanges();
+        fixture = TestBed.createComponent(ProjectableListComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
 
     it(`should create`, () => {
-        // expect(component).toBeTruthy();
+        expect(component).toBeTruthy();
     });
 });
