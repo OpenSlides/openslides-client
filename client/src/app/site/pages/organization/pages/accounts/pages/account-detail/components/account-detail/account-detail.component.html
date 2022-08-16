@@ -119,7 +119,7 @@
             <span>{{ user.default_number }}</span>
         </div>
 
-        <div *ngIf="user.default_vote_weight">
+        <div *ngIf="user.default_vote_weight || user.default_vote_weight === 0">
             <h4>{{ 'Default vote weight' | translate }}</h4>
             <span>{{ user.default_vote_weight }}</span>
         </div>
