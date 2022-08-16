@@ -70,7 +70,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const start = this.meetingForm?.get(`start_time`).value;
         const end = this.meetingForm?.get(`end_time`).value;
         if (!!start && (!!end || end === 0)) {
-            return start < end;
+            return start <= end;
         }
         return true;
     }
