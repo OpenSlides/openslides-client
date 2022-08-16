@@ -2229,10 +2229,6 @@ export class MotionDiffService {
             affected_lines.from
         );
 
-        console.debug(this.extractRangeByLineNumbers(diff, affected_lines.from, affected_lines.to));
-        console.debug(diff, `\n\n`, origText, `\n\n`, newText, affected_lines, `\n\n`, text);
-        console.debug(textPre, textPost);
-
         return {
             paragraphNo,
             paragraphLineFrom: paragraph_line_range.from,
