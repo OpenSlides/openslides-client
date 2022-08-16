@@ -1611,7 +1611,7 @@ export class MotionDiffService {
             let ln = lineNumbers.next();
             if (ln) {
                 range.from = +ln.value[1];
-                while(!ln.done) {
+                while (!ln.done) {
                     range.to = +ln.value[1];
                     ln = lineNumbers.next();
                 }
@@ -1812,15 +1812,18 @@ export class MotionDiffService {
         // TODO: This is a workaround to make sure the first element of a amendment
         //       has a line number for correct display of amendments in front of list
         //       or block elements
-        const htmlOldEl = document.createElement('template');
-        const htmlNewEl = document.createElement('template');
+        const htmlOldEl = document.createElement(`template`);
+        const htmlNewEl = document.createElement(`template`);
         htmlNewEl.innerHTML = htmlNew;
         htmlOldEl.innerHTML = htmlOld;
-        if (htmlNewEl.content.children[0] && !htmlNewEl.content.children[0].querySelector('.os-line-number')) {
-            if (htmlNewEl.content.querySelector('.os-line-number') && htmlOldEl.content.querySelector('.os-line-number')) {
-                const ln = htmlNewEl.content.querySelector('.os-line-number');
+        if (htmlNewEl.content.children[0] && !htmlNewEl.content.children[0].querySelector(`.os-line-number`)) {
+            if (
+                htmlNewEl.content.querySelector(`.os-line-number`) &&
+                htmlOldEl.content.querySelector(`.os-line-number`)
+            ) {
+                const ln = htmlNewEl.content.querySelector(`.os-line-number`);
                 htmlNewEl.content.children[0].childNodes[0].before(ln);
-                htmlOldEl.content.children[0].querySelector('.os-line-number').remove();
+                htmlOldEl.content.children[0].querySelector(`.os-line-number`).remove();
 
                 htmlNew = htmlNewEl.innerHTML;
                 htmlOld = htmlOldEl.innerHTML;
