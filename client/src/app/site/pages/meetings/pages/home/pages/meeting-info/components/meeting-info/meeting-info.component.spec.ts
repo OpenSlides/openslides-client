@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingInfoComponent } from './meeting-info.component';
 
-describe(`MeetingInfoComponent`, () => {
+xdescribe(`MeetingInfoComponent`, () => {
     let component: MeetingInfoComponent;
     let fixture: ComponentFixture<MeetingInfoComponent>;
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ConnectionStatusService } from './connection-status.service';
 
-describe(`ConnectionStatusService`, () => {
+xdescribe(`ConnectionStatusService`, () => {
     let service: ConnectionStatusService;
 
     beforeEach(() => {

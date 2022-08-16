@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { SpinnerService } from './spinner.service';
 
-describe(`SpinnerService`, () => {
+xdescribe(`SpinnerService`, () => {
     let service: SpinnerService;
 
     beforeEach(() => {

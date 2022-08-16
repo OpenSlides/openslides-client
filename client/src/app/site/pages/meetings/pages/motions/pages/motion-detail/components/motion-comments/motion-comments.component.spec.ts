@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionCommentsComponent } from './motion-comments.component';
 
-describe(`MotionCommentsComponent`, () => {
+xdescribe(`MotionCommentsComponent`, () => {
     let component: MotionCommentsComponent;
     let fixture: ComponentFixture<MotionCommentsComponent>;
 

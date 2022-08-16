@@ -195,7 +195,7 @@
             *ngFor="let restriction of restrictions"
             (click)="onSetRestriction(restriction.key, state)"
         >
-            <mat-icon *ngIf="state.restrictions.includes(restriction.key)">check</mat-icon>
+            <mat-icon *ngIf="state.restrictions?.includes(restriction.key)">check</mat-icon>
             <span>{{ restriction.label | translate }}</span>
         </button>
     </ng-template>

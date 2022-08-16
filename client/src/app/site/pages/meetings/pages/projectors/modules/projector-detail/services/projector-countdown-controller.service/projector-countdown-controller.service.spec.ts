@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectorCountdownControllerService } from './projector-countdown-controller.service';
 
-describe(`ProjectorCountdownControllerService`, () => {
+xdescribe(`ProjectorCountdownControllerService`, () => {
     let service: ProjectorCountdownControllerService;
 
     beforeEach(() => {

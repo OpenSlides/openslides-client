@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommunicationManagerService } from './communication-manager.service';
 
-describe(`CommunicationManagerService`, () => {
+xdescribe(`CommunicationManagerService`, () => {
     let service: CommunicationManagerService;
 
     beforeEach(() => {

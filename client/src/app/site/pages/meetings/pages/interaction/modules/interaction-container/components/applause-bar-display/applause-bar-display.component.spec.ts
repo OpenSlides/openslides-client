@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApplauseBarDisplayComponent } from './applause-bar-display.component';
 
-describe(`ApplauseBarDisplayComponent`, () => {
+xdescribe(`ApplauseBarDisplayComponent`, () => {
     let component: ApplauseBarDisplayComponent;
     let fixture: ComponentFixture<ApplauseBarDisplayComponent>;
 

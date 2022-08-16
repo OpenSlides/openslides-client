@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ExportMeetingPresenterService } from './export-meeting-presenter.service';
 
-describe(`ExportMeetingPresenterService`, () => {
+xdescribe(`ExportMeetingPresenterService`, () => {
     let service: ExportMeetingPresenterService;
 
     beforeEach(() => {

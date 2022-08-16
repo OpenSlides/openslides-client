@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionBlockRepositoryService } from './motion-block-repository.service';
 
-describe(`MotionBlockRepositoryService`, () => {
+xdescribe(`MotionBlockRepositoryService`, () => {
     let service: MotionBlockRepositoryService;
 
     beforeEach(() => {

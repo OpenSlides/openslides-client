@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomTranslationComponent } from './custom-translation.component';
 
-describe(`CustomTranslationComponent`, () => {
+xdescribe(`CustomTranslationComponent`, () => {
     let component: CustomTranslationComponent;
     let fixture: ComponentFixture<CustomTranslationComponent>;
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { RoutingStateService } from './routing-state.service';
 
-describe(`RoutingStateService`, () => {
+xdescribe(`RoutingStateService`, () => {
     let service: RoutingStateService;
 
     beforeEach(() => {

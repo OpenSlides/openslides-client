@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingSettingsGroupDetailFieldComponent } from './meeting-settings-group-detail-field.component';
 
-describe(`MeetingSettingsGroupDetailFieldComponent`, () => {
+xdescribe(`MeetingSettingsGroupDetailFieldComponent`, () => {
     let component: MeetingSettingsGroupDetailFieldComponent;
     let fixture: ComponentFixture<MeetingSettingsGroupDetailFieldComponent>;
 

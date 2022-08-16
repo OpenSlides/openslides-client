@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { StorageService } from 'src/app/gateways/storage.service';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 
 @Injectable({
@@ -39,6 +40,8 @@ export class LifecycleService {
 
     private _booted = new Deferred();
 
+    public constructor(private storageService: StorageService) {}
+
     public bootup(): void {
         this._isBooted = true;
         this._booted.resolve();
@@ -61,6 +64,15 @@ export class LifecycleService {
      */
     public reboot(): void {
         this.shutdown();
+        this.bootup();
+    }
+
+    /**
+     * Reboot while clearing the cache.
+     */
+    public async reset(): Promise<void> {
+        this.shutdown();
+        await this.storageService.clear();
         this.bootup();
     }
 }

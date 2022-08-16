@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectableListService } from './projectable-list.service';
 
-describe(`ProjectableListService`, () => {
+xdescribe(`ProjectableListService`, () => {
     let service: ProjectableListService;
 
     beforeEach(() => {

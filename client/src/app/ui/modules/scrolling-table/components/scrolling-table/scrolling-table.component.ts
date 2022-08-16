@@ -39,6 +39,9 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     extends BaseUiComponent
     implements AfterViewInit, OnDestroy, OnInit
 {
+    @ViewChild(CdkVirtualScrollViewport)
+    public scrollViewport: CdkVirtualScrollViewport | undefined;
+
     @Input()
     public rowHeight = 70;
 
@@ -83,9 +86,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     @Output()
     public selectionChanged = new EventEmitter<ScrollingTableSelectionChangeEvent<T>>();
-
-    @ViewChild(CdkVirtualScrollViewport)
-    public scrollViewport: CdkVirtualScrollViewport;
 
     public get hasDataObservable(): Observable<boolean> {
         return this.dataSource.pipe(map(items => !!items.length));

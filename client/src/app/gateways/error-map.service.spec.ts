@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
+import { E2EImportsModule } from 'src/e2e-imports.module';
 
 import { ErrorMapService } from './error-map.service';
 
-describe(`ErrorMapService`, () => {
+xdescribe(`ErrorMapService`, () => {
     let service: ErrorMapService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [E2EImportsModule]
+        });
         service = TestBed.inject(ErrorMapService);
     });
 

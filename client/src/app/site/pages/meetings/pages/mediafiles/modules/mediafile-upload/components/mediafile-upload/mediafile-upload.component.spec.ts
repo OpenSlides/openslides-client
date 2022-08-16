@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediafileUploadComponent } from './mediafile-upload.component';
 
-describe(`MediafileUploadComponent`, () => {
+xdescribe(`MediafileUploadComponent`, () => {
     let component: MediafileUploadComponent;
     let fixture: ComponentFixture<MediafileUploadComponent>;
 

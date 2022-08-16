@@ -78,6 +78,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public personalInfoFormValue: any = {};
     public formErrors: { [name: string]: boolean } | null = null;
+    public groupsObservable: Observable<ViewGroup[]> | null = null;
 
     public get currentStepIndexObservable(): Observable<number> {
         return this._currentStepIndexSubject.asObservable();
@@ -89,10 +90,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public get isOwnPage(): boolean {
         return this._isOwnPage;
-    }
-
-    public get groupsObservable(): Observable<ViewGroup[]> {
-        return this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
     }
 
     public get showVoteWeight(): boolean {
@@ -143,6 +140,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public ngOnInit(): void {
+        this.groupsObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
+
         this.subscriptions.push(
             this.createUserForm.valueChanges.subscribe(() => (this._hasFormChanged = true)),
             this.organizationSettingsService

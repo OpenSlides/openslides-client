@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionManageTitleComponent } from './motion-manage-title.component';
 
-describe(`MotionManageTitleComponent`, () => {
+xdescribe(`MotionManageTitleComponent`, () => {
     let component: MotionManageTitleComponent;
     let fixture: ComponentFixture<MotionManageTitleComponent>;
 

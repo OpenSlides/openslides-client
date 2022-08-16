@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionContentComponent } from './motion-content.component';
 
-describe(`MotionContentComponent`, () => {
+xdescribe(`MotionContentComponent`, () => {
     let component: MotionContentComponent;
     let fixture: ComponentFixture<MotionContentComponent>;
 

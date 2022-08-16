@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParagraphBasedAmendmentComponent } from './paragraph-based-amendment.component';
 
-describe(`ParagraphBasedAmendmentComponent`, () => {
+xdescribe(`ParagraphBasedAmendmentComponent`, () => {
     let component: ParagraphBasedAmendmentComponent;
     let fixture: ComponentFixture<ParagraphBasedAmendmentComponent>;
 

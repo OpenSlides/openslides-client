@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorClockComponent } from './projector-clock.component';
 
-describe(`ProjectorClockComponent`, () => {
+xdescribe(`ProjectorClockComponent`, () => {
     let component: ProjectorClockComponent;
     let fixture: ComponentFixture<ProjectorClockComponent>;
 

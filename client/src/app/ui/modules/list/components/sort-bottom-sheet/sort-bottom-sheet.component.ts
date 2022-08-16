@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { OsSortProperty } from 'src/app/site/base/base-sort.service';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 /**
@@ -41,7 +42,7 @@ export class SortBottomSheetComponent<V> implements OnInit {
      * Logic for a toggle of options. Either reverses sorting, or
      * sorts after a new property.
      */
-    public clickedOption(item: string | number | symbol): void {
+    public clickedOption(item: string | number | symbol | OsSortProperty<V>): void {
         this.sheetRef.dismiss(item);
     }
 }

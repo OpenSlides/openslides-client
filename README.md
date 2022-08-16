@@ -137,6 +137,8 @@ See https://editorconfig.org/ for details.
 
 Code can be cleaned and aligned automatically using `npm run cleanup`.
 This will take care of code alignment, import sorting and quotation marks.
+To execute this inside the docker container, you can either use `make run-cleanup` while the client
+container is already running or `make run-cleanup-standalone` if it's not.
 
 ## Translation
 

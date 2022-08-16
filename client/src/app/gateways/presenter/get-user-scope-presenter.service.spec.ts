@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GetUserScopePresenterService } from './get-user-scope-presenter.service';
 
-describe(`GetUserScopePresenterService`, () => {
+xdescribe(`GetUserScopePresenterService`, () => {
     let service: GetUserScopePresenterService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AssignmentControllerService } from './assignment-controller.service';
 
-describe(`AssignmentControllerService`, () => {
+xdescribe(`AssignmentControllerService`, () => {
     let service: AssignmentControllerService;
 
     beforeEach(() => {

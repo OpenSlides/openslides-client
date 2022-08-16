@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatGroupListComponent } from './chat-group-list.component';
 
-describe(`ChatGroupListComponent`, () => {
+xdescribe(`ChatGroupListComponent`, () => {
     let component: ChatGroupListComponent;
     let fixture: ComponentFixture<ChatGroupListComponent>;
 

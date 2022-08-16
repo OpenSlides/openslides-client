@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionDetailOriginalChangeRecommendationsComponent } from './motion-detail-original-change-recommendations.component';
 
-describe(`MotionDetailOriginalChangeRecommendationsComponent`, () => {
+xdescribe(`MotionDetailOriginalChangeRecommendationsComponent`, () => {
     let component: MotionDetailOriginalChangeRecommendationsComponent;
     let fixture: ComponentFixture<MotionDetailOriginalChangeRecommendationsComponent>;
 

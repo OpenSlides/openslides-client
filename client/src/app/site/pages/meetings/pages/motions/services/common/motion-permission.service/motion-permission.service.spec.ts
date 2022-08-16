@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionPermissionService } from './motion-permission.service';
 
-describe(`MotionPermissionService`, () => {
+xdescribe(`MotionPermissionService`, () => {
     let service: MotionPermissionService;
 
     beforeEach(() => {
