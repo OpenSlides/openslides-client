@@ -1,7 +1,7 @@
 <os-head-bar
     [nav]="false"
     [editMode]="true"
-    [isSaveButtonEnabled]="meetingForm?.valid"
+    [isSaveButtonEnabled]="isValid"
     [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
 >
@@ -57,6 +57,17 @@
             <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
+
+        <div class="potential-warning">
+            <ng-container *ngIf="!isTimeValid">
+                <mat-icon inline color="warn">
+                    warning
+                </mat-icon>
+                <i class="foreground-warn">
+                    {{ timeWarning | translate }}
+                </i>
+            </ng-container>
+        </div>
 
         <mat-form-field>
             <mat-label>{{ 'Participants' | translate }}</mat-label>

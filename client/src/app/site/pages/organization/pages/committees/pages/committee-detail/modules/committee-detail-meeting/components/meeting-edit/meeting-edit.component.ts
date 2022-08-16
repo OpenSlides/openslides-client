@@ -60,6 +60,21 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
+    public readonly timeWarning: string = _(`The end date needs to be later than the start date.`);
+
+    public get isValid(): boolean {
+        return this.meetingForm?.valid && this.isTimeValid;
+    }
+
+    public get isTimeValid(): boolean {
+        const start = this.meetingForm?.get(`start_time`).value;
+        const end = this.meetingForm?.get(`end_time`).value;
+        if (!!start && (!!end || end === 0)) {
+            return start < end;
+        }
+        return true;
+    }
+
     private get isJitsiManipulationAllowed(): boolean {
         return !this.isCreateView && this.operator.isSuperAdmin;
     }
