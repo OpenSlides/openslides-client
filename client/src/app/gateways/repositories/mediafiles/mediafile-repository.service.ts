@@ -34,22 +34,27 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     public override getFieldsets(): Fieldsets<Mediafile> {
         const fileSelectionFields: TypedFieldset<Mediafile> = [`title`, `is_directory`];
         const fileCreationFields: TypedFieldset<Mediafile> = fileSelectionFields.concat([`parent_id`, `child_ids`]);
-        const listFields: TypedFieldset<Mediafile> = fileCreationFields.concat([
+        const baseListFields: TypedFieldset<Mediafile> = fileCreationFields.concat([
             `owner_id`,
             `mimetype`,
             `filesize`,
             `create_timestamp`,
-            `has_inherited_access_groups`,
             `pdf_information`,
+        ]);const listFields: TypedFieldset<Mediafile> = baseListFields.concat([
+            `has_inherited_access_groups`,
             `access_group_ids`,
             `inherited_access_group_ids`,
             { templateField: `used_as_logo_$_in_meeting_id` },
             { templateField: `used_as_font_$_in_meeting_id` }
         ]);
+        const organizationListFields: TypedFieldset<Mediafile> = baseListFields.concat([
+            `token`
+        ])
         return {
             [DEFAULT_FIELDSET]: listFields,
             fileSelection: fileSelectionFields,
-            fileCreation: fileCreationFields
+            fileCreation: fileCreationFields,
+            organizationDetail: organizationListFields
         };
     }
 
@@ -57,14 +62,14 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         const payload = {
             ids: mediafiles.map(mediafile => mediafile.id),
             parent_id: directoryId,
-            owner_id: `meeting/${this.activeMeetingId}`
+            owner_id: this.getOwnerId()
         };
         return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
 
     public async uploadFile(partialMediafile: any): Promise<Identifiable> {
         const payload = {
-            owner_id: `meeting/${this.activeMeetingId}`,
+            owner_id: this.getOwnerId(),
             file: partialMediafile.file,
             filename: partialMediafile.filename,
             title: partialMediafile.title,
@@ -76,7 +81,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
         const payload = {
-            owner_id: `meeting/${this.activeMeetingId}`,
+            owner_id: this.getOwnerId(),
             title: partialMediafile.title,
             access_group_ids: partialMediafile.access_group_ids || [],
             parent_id: partialMediafile.parent_id
@@ -97,5 +102,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     public async delete(...viewMediafiles: Identifiable[]): Promise<void> {
         const payload: Identifiable[] = viewMediafiles.map(file => ({ id: file.id }));
         return this.sendBulkActionToBackend(MediafileAction.DELETE, payload);
+    }
+
+    private getOwnerId(): string {
+        return this.activeMeetingId ? `meeting/${this.activeMeetingId}` : `organization/0`;
     }
 }

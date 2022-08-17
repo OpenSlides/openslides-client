@@ -38,7 +38,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `users_email_sender`,
             `users_email_subject`
         );
-        const detailFieldset: (keyof Organization)[] = coreFieldset.concat(`committee_ids`, `organization_tag_ids`);
+        const detailFieldset: (keyof Organization)[] = coreFieldset.concat(`committee_ids`, `organization_tag_ids`, `mediafile_ids`);
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
             title: coreFieldset,

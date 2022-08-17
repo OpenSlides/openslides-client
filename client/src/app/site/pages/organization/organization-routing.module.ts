@@ -42,6 +42,13 @@ const routes: Routes = [
                 canLoad: [PermissionGuard]
             },
             {
+                path: `mediafiles`,
+                loadChildren: () =>
+                    import(`./pages/mediafiles/mediafiles.module`).then(m => m.MediafilesModule),
+                data: { omlPermissions: [OML.can_manage_organization] },
+                canLoad: [PermissionGuard]
+            },
+            {
                 path: `settings`,
                 loadChildren: () => import(`./pages/settings/settings.module`).then(m => m.SettingsModule),
                 data: { omlPermissions: [OML.can_manage_organization] },
