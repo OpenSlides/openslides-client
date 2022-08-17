@@ -100,7 +100,7 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public async toggleTemplateMeeting(): Promise<void> {
-        const content = this.title;
+        let content = this.title;
 
         if (this.isTemplateMeeting) {
             const title = this.translate.instant(
@@ -112,9 +112,10 @@ export class CommitteeMeetingPreviewComponent {
                 await this.meetingRepo.update({ set_as_template: false }, { meeting: this.meeting });
             }
         } else {
-            const title = this.translate.instant(
-                `Should this meeting really be made available as a public template? Meeting templates and the data they contain are publicly viewable by all committee administrators.`
-            );
+            const title = this.translate.instant(`Should this meeting really be made available as a public template? `);
+            content =
+                `Meeting templates and the data they contain are publicly viewable by all committee administrators.<br><br>` +
+                content;
 
             const confirmed = await this.promptService.open(title, content);
             if (confirmed) {
