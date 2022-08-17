@@ -17,7 +17,7 @@ export abstract class BaseUserImportService extends BaseImportService<User> {
             return this.toBoolean(value);
         }
 
-        if (header === 'first_name' || header === 'last_name' || header === 'username') {
+        if (header === `first_name` || header === `last_name` || header === `username`) {
             return value.trim();
         }
     }
