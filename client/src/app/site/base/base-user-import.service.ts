@@ -16,6 +16,10 @@ export abstract class BaseUserImportService extends BaseImportService<User> {
         if (header === `is_active` || header === `is_physical_person`) {
             return this.toBoolean(value);
         }
+
+        if (header === 'first_name' || header === 'last_name' || header === 'username') {
+            return value.trim();
+        }
     }
 
     /**
