@@ -1,5 +1,12 @@
 import { Directive, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    UntypedFormBuilder,
+    UntypedFormControl,
+    UntypedFormGroup,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, startWith } from 'rxjs';
 import {
@@ -62,6 +69,9 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     @Input()
     public data: Partial<ViewPoll>;
+
+    @Input()
+    public pollOptionAmount: number;
 
     @Input()
     public pollService!: PollService;
@@ -369,6 +379,22 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         }
     }
 
+    private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
+        return (formControl: AbstractControl): { [key: string]: any } | null => {
+            if (!this.pollOptionAmount) {
+                return null;
+            }
+
+            const min = formControl.get(minCtrlName)!.value;
+            const votesPerOption = formControl.get(perOptionCtrlNam)!.value || 1;
+            if (this.pollOptionAmount * votesPerOption < min) {
+                return { notEnoughOptionsError: true };
+            }
+
+            return null;
+        };
+    }
+
     private initContentForm(): void {
         this.contentForm = this.fb.group({
             title: [``, Validators.required],
@@ -381,7 +407,12 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                     min_votes_amount: [1, [Validators.required, Validators.min(1)]],
                     max_votes_per_option: [1, [Validators.required, Validators.min(1)]]
                 },
-                { validators: isNumberRange(`min_votes_amount`, `max_votes_amount`) }
+                {
+                    validators: [
+                        isNumberRange(`min_votes_amount`, `max_votes_amount`),
+                        this.enoughPollOptionsAvailable(`min_votes_amount`, `max_votes_per_option`)
+                    ]
+                }
             ),
             entitled_group_ids: [],
             backend: [],
