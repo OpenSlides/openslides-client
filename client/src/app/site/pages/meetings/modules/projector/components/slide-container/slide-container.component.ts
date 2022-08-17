@@ -186,9 +186,9 @@ export class SlideContainerComponent {
         const options = this.slideManager.getSlideConfiguration(slideName);
         this.slideOptions.scaleable = options.scaleable;
         this.slideOptions.scrollable = options.scrollable;
-        this.slideManager.getSlideFactory(slideName).then(slideFactory => {
+        this.slideManager.getSlideType(slideName).then(type => {
             this.slide!.clear();
-            this.slideRef = this.slide!.createComponent(slideFactory);
+            this.slideRef = this.slide!.createComponent(type);
             this.setDataForComponent();
             this.setProjectorForComponent();
             this.updateScale();
