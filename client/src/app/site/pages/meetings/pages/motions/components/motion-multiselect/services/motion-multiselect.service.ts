@@ -88,7 +88,6 @@ export class MotionMultiselectService {
             const snackBar = OpenSlidesInjector.get(MatSnackBar);
             snackBar.open(this.translate.instant(errorMsg), `Ok`);
             return;
-            // throw new Error(errorMsg);
         }
         const title = this.translate.instant(`This will set the following state for all selected motions:`);
         const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
