@@ -14,7 +14,7 @@ import { InteractionServiceModule } from './interaction-service.module';
 
 export interface Applause {
     level: number;
-    presentUsers: number;
+    present_users: number;
 }
 
 @Injectable({
@@ -42,7 +42,7 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         return `${this.receivePath}/send?meeting_id=${this.activeMeetingId}`;
     }
 
-    private applauseMessageSubject = new BehaviorSubject<Applause>({ level: 0, presentUsers: 1 });
+    private applauseMessageSubject = new BehaviorSubject<Applause>({ level: 0, present_users: 1 });
 
     private minApplauseLevel!: number;
     private maxApplauseLevel!: number;
@@ -106,12 +106,13 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
                 filter(curr => curr.level === 0 || curr.level >= this.minApplauseLevel)
             )
             .subscribe(applause => {
-                this.presentApplauseUsers = applause.presentUsers;
+                this.presentApplauseUsers = applause.present_users;
                 this.applauseLevelSubject.next(applause.level);
             });
     }
 
     protected onMessage(message: Applause): void {
+        console.log(`Applause: `, message);
         this.applauseMessageSubject.next(message);
     }
 
@@ -128,7 +129,7 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         if (!applauseLevel) {
             return 0;
         }
-        const quote = applauseLevel / this.maxApplause || 0;
+        const quote = applauseLevel / (this.maxApplause ? this.maxApplause : this.presentApplauseUsers ?? 0) || 0;
         return quote > 1 ? 1 : quote;
     }
 }
