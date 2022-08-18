@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -34,13 +35,11 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
 
     public newDirectoryForm: UntypedFormGroup;
 
-    // public groupsBehaviorSubject: Observable<ViewGroup[]>;
-
     /**
      * @return true if the user can manage media files
      */
     public get canEdit(): boolean {
-        return true; //TODO: Rewrite
+        return this.operator.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
     public get shouldShowFileMenuFn(): (file: ViewMediafile) => boolean {
@@ -51,10 +50,7 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
      * Determine if the file menu should generally be accessible, according to the users permission
      */
     public get canAccessFileMenu(): boolean {
-        return (
-            // TODO: Do we need some other perms?
-            this.canEdit
-        );
+        return this.canEdit;
     }
 
     /**
@@ -83,7 +79,6 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
         private operator: OperatorService,
         private dialog: MatDialog,
         private formBuilder: UntypedFormBuilder,
-        // private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef
     ) {
         super(componentServiceCollector, translate);
@@ -92,7 +87,6 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
         this.newDirectoryForm = this.formBuilder.group({
             title: [``, Validators.required]
         });
-        // this.groupsBehaviorSubject = this.groupRepo.getViewModelListObservable();
         this.directoryObservable = this.directorySubject.asObservable();
     }
 
@@ -135,22 +129,8 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
      * @returns wether the extra menu should be accessible
      */
     public showFileMenu(file: ViewMediafile): boolean {
-        return (
-            // TODO: Check relevant OML-Perms?
-            this.canEdit
-        );
+        return this.canEdit;
     }
-
-    // public isMediafileUsed(file: ViewMediafile, place: string): boolean {
-    //     const mediafile = this.repo.getViewModel(file.id)!;
-    //     if (mediafile.isFont()) {
-    //         return mediafile.used_as_font_in_meeting_id(place) === this.activeMeetingId;
-    //     }
-    //     if (mediafile.isImage()) {
-    //         return mediafile.used_as_logo_in_meeting_id(place) === this.activeMeetingId;
-    //     }
-    //     return false;
-    // }
 
     public changeDirectory(directoryId: number | null): void {
         this.clearSubscriptions();
@@ -179,7 +159,7 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
     }
 
     public onMainEvent(): void {
-        const navigationCommands: any[] = [`/mediafiles`, `upload`];
+        const navigationCommands: any[] = [`/`, `mediafiles`, `upload`];
         if (this.directory) {
             navigationCommands.push(this.directory.id);
         }
@@ -234,38 +214,6 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
         }
     }
 
-    // /**
-    //  * Returns a formated string for the tooltip containing all the action names.
-    //  *
-    //  * @param file the target file where the tooltip should be shown
-    //  * @returns getNameOfAction with formated strings.
-    //  */
-    // public formatIndicatorTooltip(file: ViewMediafile): string {
-    //     const settings = this.mediaManage.getPlacesDisplayNames(file);
-    //     const optionNames = settings.map(displayName => this.translate.instant(displayName));
-    //     return optionNames.join(`\n`);
-    // }
-
-    // public getDisplayNameForPlace(place: FontPlace | LogoPlace): string {
-    //     if (this.logoDisplayNames[place as LogoPlace]) {
-    //         return this.logoDisplayNames[place as LogoPlace];
-    //     } else {
-    //         return this.fontDisplayNames[place as FontPlace];
-    //     }
-    // }
-
-    // public async toggleMediafileUsage(event: Event, file: ViewMediafile, place: FontPlace | LogoPlace): Promise<void> {
-    //     // prohibits automatic closing
-    //     event.stopPropagation();
-    //     if (file.isFont()) {
-    //         await this.toggleFontUsage(file, place as FontPlace);
-    //     }
-    //     if (file.isImage()) {
-    //         await this.toggleLogoUsage(file, place as LogoPlace);
-    //     }
-    //     this.cd.markForCheck();
-    // }
-
     public createNewFolder(templateRef: TemplateRef<string>): void {
         this.newDirectoryForm.reset();
         const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
@@ -282,12 +230,7 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
         });
     }
 
-    public downloadMultiple(mediafiles: ViewMediafile[] = this.listComponent.source): void {
-        // const eventName = this.meetingSettingsService.instant(`name`);
-        // const dirName = this.directory?.title ?? this.translate.instant(`Files`);
-        // const archiveName = `${eventName} - ${dirName}`.trim();
-        // this.exporter.downloadArchive(archiveName, mediafiles);
-        // const eventName = this.meetingSettingsService.instant(`name`);
+    public downloadMultiple(mediafiles: ViewMediafile[] = this.directorySubject.value): void {
         const dirName = this.directory?.title ?? this.translate.instant(`Files`);
         const archiveName = `${dirName}`.trim();
         this.exporter.downloadArchive(archiveName, mediafiles);

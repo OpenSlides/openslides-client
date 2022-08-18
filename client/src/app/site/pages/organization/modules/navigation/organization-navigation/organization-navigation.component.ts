@@ -44,7 +44,6 @@ export class OrganizationNavigationComponent {
             route: `/mediafiles`,
             displayName: `Files`,
             icon: `attach_file`,
-            permission: OML.can_manage_organization,
             weight: 250
         },
         {

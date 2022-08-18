@@ -5,10 +5,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MediafileListServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-service.module';
 import { MediafileCommonServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common-service.module';
+import { DirectivesModule } from 'src/app/ui/directives';
 import { FileListModule } from 'src/app/ui/modules/file-list/file-list.module';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
@@ -33,10 +35,12 @@ import { OrganizationMediafileListRoutingModule } from './organization-mediafile
         ReactiveFormsModule,
         MatFormFieldModule,
         MatDialogModule,
+        MatInputModule,
         OrganizationMediafileListRoutingModule,
         MediafileCommonServiceModule,
         MediafileListServiceModule,
-        PromptDialogModule
+        PromptDialogModule,
+        DirectivesModule
     ]
 })
 export class OrganizationMediafileListModule { }

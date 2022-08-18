@@ -305,7 +305,8 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         });
     }
 
-    public downloadMultiple(mediafiles: ViewMediafile[] = this.listComponent.source): void {
+    public downloadMultiple(mediafiles: ViewMediafile[] = this.directorySubject.value): void {
+        console.log(`LOG: DOWNLOAD: `, mediafiles);
         const eventName = this.meetingSettingsService.instant(`name`);
         const dirName = this.directory?.title ?? this.translate.instant(`Files`);
         const archiveName = `${eventName} - ${dirName}`.trim();
