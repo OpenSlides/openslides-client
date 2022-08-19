@@ -1,30 +1,39 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListSortService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-sort.service';
+import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
-  selector: `os-organization-mediafile-list`,
-  templateUrl: `./organization-mediafile-list.component.html`,
-  styleUrls: [`./organization-mediafile-list.component.scss`],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: `os-organization-mediafile-list`,
+    templateUrl: `./organization-mediafile-list.component.html`,
+    styleUrls: [`./organization-mediafile-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationMediafileListComponent extends BaseListViewComponent<ViewMediafile> {
+export class OrganizationMediafileListComponent
+    extends BaseListViewComponent<ViewMediafile>
+    implements OnInit, OnDestroy
+{
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
 
@@ -72,14 +81,12 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
         private exporter: MediafileListExportService,
-        // private mediaManage: MediaManageService,
-        private promptService: PromptService,
         public vp: ViewPortService,
         public sortService: MediafileListSortService,
         private operator: OperatorService,
-        private dialog: MatDialog,
         private formBuilder: UntypedFormBuilder,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private commonService: MediafileCommonService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
@@ -142,28 +149,24 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
         if (directoryId) {
             this.directorySubscription = this.repo.getViewModelObservable(directoryId).subscribe(newDirectory => {
                 this.directory = newDirectory;
-                if (newDirectory) {
-                    this.directoryChain = newDirectory.getDirectoryChain();
-                    // Update the URL.
-                    this.router.navigate([`mediafiles`, newDirectory.id]);
-                } else {
-                    this.directoryChain = [];
-                    this.router.navigate([`mediafiles`]);
-                }
+                this.commonService.navigateToDirectoryPage(this.directory, directoryChain => {
+                    this.directoryChain = directoryChain;
+                });
             });
         } else {
             this.directory = null;
-            this.directoryChain = [];
-            this.router.navigate([`/mediafiles`]);
+            this.commonService.navigateToDirectoryPage(
+                this.directory,
+                directoryChain => {
+                    this.directoryChain = directoryChain;
+                },
+                true
+            );
         }
     }
 
     public onMainEvent(): void {
-        const navigationCommands: any[] = [`/`, `mediafiles`, `upload`];
-        if (this.directory) {
-            navigationCommands.push(this.directory.id);
-        }
-        this.router.navigate(navigationCommands);
+        this.commonService.navigateToUploadPage(this.directory?.id);
     }
 
     /**
@@ -196,38 +199,17 @@ export class OrganizationMediafileListComponent extends BaseListViewComponent<Vi
      * @param file the file to delete
      */
     public async onDeleteFile(file: ViewMediafile): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this file?`);
-        const content = file.getTitle();
-        if (await this.promptService.open(title, content)) {
-            await this.repo.delete(file);
-            if (file.is_directory) {
-                this.changeDirectory(file.parent_id);
-            }
-        }
+        await this.commonService.handleDeleteFile(file, id => this.changeDirectory(id));
     }
 
     public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected files and folders?`);
-        if (await this.promptService.open(title)) {
-            await this.repo.delete(...this.selectedRows);
-            this.deselectAll();
-        }
+        await this.commonService.handleDeleteSelected(this.selectedRows, () => this.deselectAll());
     }
 
     public createNewFolder(templateRef: TemplateRef<string>): void {
-        this.newDirectoryForm.reset();
-        const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
-
-        dialogRef.afterClosed().subscribe((result: any) => {
-            if (result) {
-                const mediafile = {
-                    ...this.newDirectoryForm.value,
-                    parent_id: this.directory ? this.directory.id : null,
-                    is_directory: true
-                };
-                this.repo.createDirectory(mediafile).catch(this.raiseError);
-            }
-        });
+        this.commonService
+            .handleCreateNewFolder(this.newDirectoryForm, this.directory, templateRef)
+            .catch(this.raiseError);
     }
 
     public downloadMultiple(mediafiles: ViewMediafile[] = this.directorySubject.value): void {

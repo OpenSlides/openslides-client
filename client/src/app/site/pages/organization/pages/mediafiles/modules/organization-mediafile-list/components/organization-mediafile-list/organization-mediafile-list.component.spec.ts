@@ -2,22 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationMediafileListComponent } from './organization-mediafile-list.component';
 
-describe('OrganizationMediafileListComponent', () => {
-  let component: OrganizationMediafileListComponent;
-  let fixture: ComponentFixture<OrganizationMediafileListComponent>;
+describe(`OrganizationMediafileListComponent`, () => {
+    let component: OrganizationMediafileListComponent;
+    let fixture: ComponentFixture<OrganizationMediafileListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ OrganizationMediafileListComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [OrganizationMediafileListComponent]
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(OrganizationMediafileListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(OrganizationMediafileListComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it(`should create`, () => {
+        expect(component).toBeTruthy();
+    });
 });

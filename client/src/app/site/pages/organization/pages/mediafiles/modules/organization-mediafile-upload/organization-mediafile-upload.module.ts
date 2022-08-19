@@ -11,8 +11,6 @@ import { MediaUploadContentModule } from 'src/app/ui/modules/media-upload-conten
 import { OrganizationMediafileUploadComponent } from './components/organization-mediafile-upload/organization-mediafile-upload.component';
 import { OrganizationMediafileUploadRoutingModule } from './organization-mediafile-upload-routing.module';
 
-
-
 @NgModule({
     declarations: [OrganizationMediafileUploadComponent],
     imports: [
@@ -27,4 +25,4 @@ import { OrganizationMediafileUploadRoutingModule } from './organization-mediafi
         MediafileCommonServiceModule
     ]
 })
-export class OrganizationMediafileUploadModule { }
+export class OrganizationMediafileUploadModule {}

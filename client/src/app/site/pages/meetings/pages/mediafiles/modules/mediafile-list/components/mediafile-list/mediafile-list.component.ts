@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -12,7 +11,6 @@ import {
     LogoDisplayNames,
     LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
@@ -21,9 +19,9 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
+import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
 import { MediafileListSortService } from '../../services/mediafile-list-sort.service';
@@ -93,14 +91,13 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         public repo: MediafileControllerService,
         private exporter: MediafileListExportService,
         private mediaManage: MediaManageService,
-        private promptService: PromptService,
         public vp: ViewPortService,
         public sortService: MediafileListSortService,
         private operator: OperatorService,
-        private dialog: MatDialog,
         private formBuilder: UntypedFormBuilder,
         private groupRepo: MediafileListGroupService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private commonService: MediafileCommonService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
@@ -184,28 +181,24 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         if (directoryId) {
             this.directorySubscription = this.repo.getViewModelObservable(directoryId).subscribe(newDirectory => {
                 this.directory = newDirectory;
-                if (newDirectory) {
-                    this.directoryChain = newDirectory.getDirectoryChain();
-                    // Update the URL.
-                    this.router.navigate([this.activeMeetingId, `mediafiles`, newDirectory.id]);
-                } else {
-                    this.directoryChain = [];
-                    this.router.navigate([this.activeMeetingId, `mediafiles`]);
-                }
+                this.commonService.navigateToDirectoryPage(this.directory, directoryChain => {
+                    this.directoryChain = directoryChain;
+                });
             });
         } else {
             this.directory = null;
-            this.directoryChain = [];
-            this.router.navigate([`/${this.activeMeetingId}`, `mediafiles`]);
+            this.commonService.navigateToDirectoryPage(
+                this.directory,
+                directoryChain => {
+                    this.directoryChain = directoryChain;
+                },
+                true
+            );
         }
     }
 
     public onMainEvent(): void {
-        const navigationCommands = [`/`, this.activeMeetingId, `mediafiles`, `upload`];
-        if (this.directory) {
-            navigationCommands.push(this.directory.id);
-        }
-        this.router.navigate(navigationCommands);
+        this.commonService.navigateToUploadPage(this.directory?.id);
     }
 
     /**
@@ -239,22 +232,11 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * @param file the file to delete
      */
     public async onDeleteFile(file: ViewMediafile): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this file?`);
-        const content = file.getTitle();
-        if (await this.promptService.open(title, content)) {
-            await this.repo.delete(file);
-            if (file.is_directory) {
-                this.changeDirectory(file.parent_id);
-            }
-        }
+        await this.commonService.handleDeleteFile(file, id => this.changeDirectory(id));
     }
 
     public async deleteSelected(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete all selected files and folders?`);
-        if (await this.promptService.open(title)) {
-            await this.repo.delete(...this.selectedRows);
-            this.deselectAll();
-        }
+        await this.commonService.handleDeleteSelected(this.selectedRows, () => this.deselectAll());
     }
 
     /**
@@ -290,23 +272,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public createNewFolder(templateRef: TemplateRef<string>): void {
-        this.newDirectoryForm.reset();
-        const dialogRef = this.dialog.open(templateRef, infoDialogSettings);
-
-        dialogRef.afterClosed().subscribe((result: any) => {
-            if (result) {
-                const mediafile = {
-                    ...this.newDirectoryForm.value,
-                    parent_id: this.directory ? this.directory.id : null,
-                    is_directory: true
-                };
-                this.repo.createDirectory(mediafile).catch(this.raiseError);
-            }
-        });
+        this.commonService
+            .handleCreateNewFolder(this.newDirectoryForm, this.directory, templateRef)
+            .catch(this.raiseError);
     }
 
     public downloadMultiple(mediafiles: ViewMediafile[] = this.directorySubject.value): void {
-        console.log(`LOG: DOWNLOAD: `, mediafiles);
         const eventName = this.meetingSettingsService.instant(`name`);
         const dirName = this.directory?.title ?? this.translate.instant(`Files`);
         const archiveName = `${eventName} - ${dirName}`.trim();

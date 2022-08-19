@@ -43,8 +43,7 @@ const routes: Routes = [
             },
             {
                 path: `mediafiles`,
-                loadChildren: () =>
-                    import(`./pages/mediafiles/mediafiles.module`).then(m => m.MediafilesModule),
+                loadChildren: () => import(`./pages/mediafiles/mediafiles.module`).then(m => m.MediafilesModule),
                 canLoad: [PermissionGuard]
             },
             {

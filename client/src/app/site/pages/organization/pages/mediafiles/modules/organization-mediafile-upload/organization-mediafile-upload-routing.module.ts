@@ -1,8 +1,7 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import { OrganizationMediafileUploadComponent } from "./components/organization-mediafile-upload/organization-mediafile-upload.component";
-
+import { OrganizationMediafileUploadComponent } from './components/organization-mediafile-upload/organization-mediafile-upload.component';
 
 const routes: Routes = [
     {

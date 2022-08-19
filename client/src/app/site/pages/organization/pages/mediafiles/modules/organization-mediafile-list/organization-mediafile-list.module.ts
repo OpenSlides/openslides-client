@@ -18,12 +18,8 @@ import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 import { OrganizationMediafileListComponent } from './components/organization-mediafile-list/organization-mediafile-list.component';
 import { OrganizationMediafileListRoutingModule } from './organization-mediafile-list-routing.module';
 
-
-
 @NgModule({
-    declarations: [
-        OrganizationMediafileListComponent
-    ],
+    declarations: [OrganizationMediafileListComponent],
     imports: [
         CommonModule,
         HeadBarModule,
@@ -43,4 +39,4 @@ import { OrganizationMediafileListRoutingModule } from './organization-mediafile
         DirectivesModule
     ]
 })
-export class OrganizationMediafileListModule { }
+export class OrganizationMediafileListModule {}

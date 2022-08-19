@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { UploadSuccessEvent } from 'src/app/ui/modules/media-upload-content/components/media-upload-content/media-upload-content.component';
 
 @Component({
-  selector: `os-organization-mediafile-upload`,
-  templateUrl: `./organization-mediafile-upload.component.html`,
-  styleUrls: [`./organization-mediafile-upload.component.scss`],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: `os-organization-mediafile-upload`,
+    templateUrl: `./organization-mediafile-upload.component.html`,
+    styleUrls: [`./organization-mediafile-upload.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationMediafileUploadComponent implements OnInit {
     /**
@@ -28,9 +29,9 @@ export class OrganizationMediafileUploadComponent implements OnInit {
     }
 
     public constructor(
-        private router: Router,
         private route: ActivatedRoute,
-        private repo: MediafileControllerService
+        private repo: MediafileControllerService,
+        private commonService: MediafileCommonService
     ) {}
 
     public ngOnInit(): void {
@@ -42,11 +43,12 @@ export class OrganizationMediafileUploadComponent implements OnInit {
      * Handler for successful uploads
      */
     public uploadSuccess(event: UploadSuccessEvent): void {
-        const parts: any[] = [`mediafiles`];
-        if (event.parentId) {
-            parts.push(event.parentId);
-        }
-        this.router.navigate(parts);
+        this.commonService.navigateToDirectoryPage(this.repo.getViewModel(event.parentId));
+        // const parts: any[] = [`mediafiles`];
+        // if (event.parentId) {
+        //     parts.push(event.parentId);
+        // }
+        // this.router.navigate(parts);
     }
 
     /**

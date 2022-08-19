@@ -40,17 +40,16 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             `mimetype`,
             `filesize`,
             `create_timestamp`,
-            `pdf_information`,
-        ]);const listFields: TypedFieldset<Mediafile> = baseListFields.concat([
+            `pdf_information`
+        ]);
+        const listFields: TypedFieldset<Mediafile> = baseListFields.concat([
             `has_inherited_access_groups`,
             `access_group_ids`,
             `inherited_access_group_ids`,
             { templateField: `used_as_logo_$_in_meeting_id` },
             { templateField: `used_as_font_$_in_meeting_id` }
         ]);
-        const organizationListFields: TypedFieldset<Mediafile> = baseListFields.concat([
-            `token`
-        ])
+        const organizationListFields: TypedFieldset<Mediafile> = baseListFields.concat([`token`]);
         return {
             [DEFAULT_FIELDSET]: listFields,
             fileSelection: fileSelectionFields,
@@ -70,7 +69,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     public async uploadFile(partialMediafile: any): Promise<Identifiable> {
         // TODO: The token part is a workaround for the current problems with uploading an undefined token
-        const variables: {[key: string]: any} = this.activeMeetingId ? { access_group_ids: partialMediafile.access_group_ids } : { token: partialMediafile.token ?? partialMediafile.filename?.split(`.`)[0] };
+        const variables: { [key: string]: any } = this.activeMeetingId
+            ? { access_group_ids: partialMediafile.access_group_ids }
+            : { token: partialMediafile.token };
         const payload = {
             owner_id: this.getOwnerId(),
             file: partialMediafile.file,
@@ -78,12 +79,14 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             title: partialMediafile.title,
             parent_id: partialMediafile.parent_id || null,
             ...variables
-        }
+        };
         return this.sendActionToBackend(MediafileAction.CREATE_FILE, payload);
     }
 
     public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
-        const variables: {[key: string]: any} = this.activeMeetingId ? { access_group_ids: partialMediafile.access_group_ids || [] } : { };
+        const variables: { [key: string]: any } = this.activeMeetingId
+            ? { access_group_ids: partialMediafile.access_group_ids || [] }
+            : {};
         const payload = {
             owner_id: this.getOwnerId(),
             title: partialMediafile.title,
@@ -94,7 +97,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     }
 
     public async update(update: any, viewMediafile: Identifiable): Promise<void> {
-        const variables: {[key: string]: any} = this.activeMeetingId ? { access_group_ids: update.access_group_ids } : { token: update.token };
+        const variables: { [key: string]: any } = this.activeMeetingId
+            ? { access_group_ids: update.access_group_ids }
+            : { token: update.token };
         const payload = {
             id: viewMediafile.id,
             title: update.title,
