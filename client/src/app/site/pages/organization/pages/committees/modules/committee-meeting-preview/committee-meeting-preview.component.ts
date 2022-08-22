@@ -48,7 +48,7 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public get showUserAmount(): boolean {
-        return (this.userAmount > 0 && this.userAmount < 10000) || false;
+        return (this.userAmount > 0 && this.userAmount < 100000) || false;
     }
 
     public get isTemplateMeeting(): boolean {
