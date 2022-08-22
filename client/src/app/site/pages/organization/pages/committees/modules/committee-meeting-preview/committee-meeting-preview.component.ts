@@ -36,11 +36,15 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public get shouldUseSmallerBadgeText(): boolean {
-        return this.userAmount > 999;
+        return this.userAmount > 9999;
     }
 
     public get userAmount(): number {
         return this.meeting?.user_ids?.length || 0;
+    }
+
+    public get formattedUserAmount(): string {
+        return this.userAmount < 1000 ? `${this.userAmount}` : `>${Math.floor(this.userAmount / 1000)}k`;
     }
 
     public get showUserAmount(): boolean {

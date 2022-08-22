@@ -64,13 +64,13 @@
 </mat-card>
 
 <ng-template #canNotManageUsersTemplate>
-    <div class="fake-button-no-touch" matTooltip="{{ 'Participants' | translate }}">
-        <mat-icon [class.smaller-badge-text]="shouldUseSmallerBadgeText" [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">group</mat-icon>
+    <div class="fake-button-no-touch" matTooltip="{{ userAmount }} {{ 'participants' | translate }}">
+        <mat-icon [class.smaller-badge-text]="shouldUseSmallerBadgeText" [matBadgeHidden]="!showUserAmount" [matBadge]="formattedUserAmount" [matBadgeColor]="'accent'">group</mat-icon>
     </div>
 </ng-template>
 <ng-template #canManageUsersTemplate>
-    <button mat-icon-button matTooltip="{{ 'Participants' | translate }}" (click)="changeToMeetingUsers()">
-        <mat-icon [class.smaller-badge-text]="shouldUseSmallerBadgeText" [matBadgeHidden]="!showUserAmount" [matBadge]="userAmount" [matBadgeColor]="'accent'">group</mat-icon>
+    <button mat-icon-button matTooltip="{{ userAmount }} {{ 'participants' | translate }}" (click)="changeToMeetingUsers()">
+        <mat-icon [class.smaller-badge-text]="shouldUseSmallerBadgeText" [matBadgeHidden]="!showUserAmount" [matBadge]="formattedUserAmount" [matBadgeColor]="'accent'">group</mat-icon>
     </button>
 </ng-template>
 
