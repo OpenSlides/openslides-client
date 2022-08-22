@@ -38,7 +38,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             repo: groupRepo,
             filter: this.userGroupFilterOptions
         });
-        this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => this._voteWeightEnabled = value);;
+        this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
     }
 
     /**
@@ -113,10 +113,9 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             {
                 property: `isVoteWeightOne`,
                 shouldHideFn: () => {
-                    console.log(`LOG: `, this._voteWeightEnabled)
-                    return !this._voteWeightEnabled
+                    return !this._voteWeightEnabled;
                 }
             }
-        ]
+        ];
     }
 }

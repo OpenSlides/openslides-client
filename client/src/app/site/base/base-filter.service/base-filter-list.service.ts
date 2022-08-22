@@ -32,9 +32,12 @@ interface RepositoryFilterConfig<OV extends BaseViewModel, V> {
 @Directive()
 export abstract class BaseFilterListService<V extends BaseViewModel> implements FilterListService<V> {
     public get filterDefinitionsObservable(): Observable<OsFilter<V>[]> {
-        return this._filterDefinitionsSubject.pipe(distinctUntilChanged(), map(definitions => {
-            return definitions.filter(definition => !this.shouldHideOption(definition))
-        }));
+        return this._filterDefinitionsSubject.pipe(
+            distinctUntilChanged(),
+            map(definitions => {
+                return definitions.filter(definition => !this.shouldHideOption(definition));
+            })
+        );
     }
 
     /**
@@ -391,9 +394,14 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         return [];
     }
 
-    private shouldHideOption(option: OsFilter<V> | OsFilterIndicator<V>): boolean {
+    private shouldHideOption(option: OsFilter<V> | OsFilterIndicator<V>, update = true): boolean {
         const setting = this.getHideFilterSettings().find(setting => setting.property === option.property);
-        return setting ? setting.shouldHideFn() : false;
+        const settingHidden = setting ? setting.shouldHideFn() : false;
+        if (setting && settingHidden !== setting.currentlyHidden && update) {
+            setting.currentlyHidden = settingHidden;
+            this.updateFilteredData();
+        }
+        return settingHidden;
     }
 
     private async loadFilters(): Promise<OsFilter<V>[] | null> {
@@ -562,7 +570,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             } else {
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
                 filteredData = this._inputData.filter(item =>
-                    activeFilters.every(filter => this.isPassingFilter(item, filter) && !this.shouldHideOption(filter))
+                    activeFilters.every(
+                        filter => this.isPassingFilter(item, filter) && !this.shouldHideOption(filter, false)
+                    )
                 );
             }
         }
