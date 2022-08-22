@@ -36,7 +36,7 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
-        this._accountIds = await this.controller.fetchAccountIds();
+        this._accountIds = await this.controller.fetchAccountIds(0, 10000);
     }
 
     protected override onCreateModelRequests(): void | ModelRequestConfig[] {
