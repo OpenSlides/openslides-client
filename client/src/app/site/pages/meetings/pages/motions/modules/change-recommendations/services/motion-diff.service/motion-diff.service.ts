@@ -266,7 +266,7 @@ export class MotionDiffService {
             return;
         }
         const lineNumbers = fragment.querySelectorAll(`span.os-line-number`);
-        let lineMarker;
+        let lineMarker: Element;
         let maxLineNumber = 0;
 
         lineNumbers.forEach((insertBefore: Node) => {
@@ -509,16 +509,10 @@ export class MotionDiffService {
             return ModificationType.TYPE_REPLACEMENT;
         }
 
-        let i;
-        let foundDiff;
-        for (i = 0, foundDiff = false; i < htmlOld.length && i < htmlNew.length && foundDiff === false; i++) {
-            if (htmlOld[i] !== htmlNew[i]) {
-                foundDiff = true;
-            }
-        }
+        let firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
 
-        const remainderOld = htmlOld.substr(i - 1);
-        const remainderNew = htmlNew.substr(i - 1);
+        const remainderOld = htmlOld.substr(firstDiffIndex);
+        const remainderNew = htmlNew.substr(firstDiffIndex);
         let type = ModificationType.TYPE_REPLACEMENT;
 
         if (remainderOld.length > remainderNew.length) {
@@ -569,6 +563,7 @@ export class MotionDiffService {
     /**
      * Adapted from http://ejohn.org/projects/javascript-diff-algorithm/
      * by John Resig, MIT License
+     *
      * @param {array} oldArr
      * @param {array} newArr
      * @returns {object}
@@ -576,30 +571,29 @@ export class MotionDiffService {
     private diffArrays(oldArr: any, newArr: any): any {
         const ns: any = {};
         const os: any = {};
-        let i;
 
-        for (i = 0; i < newArr.length; i++) {
+        for (let i = 0; i < newArr.length; i++) {
             if (ns[newArr[i]] === undefined) {
                 ns[newArr[i]] = { rows: [], o: null };
             }
             ns[newArr[i]].rows.push(i);
         }
 
-        for (i = 0; i < oldArr.length; i++) {
+        for (let i = 0; i < oldArr.length; i++) {
             if (os[oldArr[i]] === undefined) {
                 os[oldArr[i]] = { rows: [], n: null };
             }
             os[oldArr[i]].rows.push(i);
         }
 
-        for (i in ns) {
+        for (let i in ns) {
             if (ns[i].rows.length === 1 && typeof os[i] !== `undefined` && os[i].rows.length === 1) {
                 newArr[ns[i].rows[0]] = { text: newArr[ns[i].rows[0]], row: os[i].rows[0] };
                 oldArr[os[i].rows[0]] = { text: oldArr[os[i].rows[0]], row: ns[i].rows[0] };
             }
         }
 
-        for (i = 0; i < newArr.length - 1; i++) {
+        for (let i = 0; i < newArr.length - 1; i++) {
             if (
                 newArr[i].text !== null &&
                 newArr[i + 1].text === undefined &&
@@ -612,7 +606,7 @@ export class MotionDiffService {
             }
         }
 
-        for (i = newArr.length - 1; i > 0; i--) {
+        for (let i = newArr.length - 1; i > 0; i--) {
             if (
                 newArr[i].text !== null &&
                 newArr[i - 1].text === undefined &&
@@ -649,16 +643,15 @@ export class MotionDiffService {
                 if (parts.length === 1) {
                     newArr.push(strings[i]);
                 } else {
-                    let j;
                     if (prepend) {
                         if (parts[0] !== ``) {
                             newArr.push(parts[0]);
                         }
-                        for (j = 1; j < parts.length; j++) {
+                        for (let j = 1; j < parts.length; j++) {
                             newArr.push(by + parts[j]);
                         }
                     } else {
-                        for (j = 0; j < parts.length - 1; j++) {
+                        for (let j = 0; j < parts.length - 1; j++) {
                             newArr.push(parts[j] + by);
                         }
                         if (parts[parts.length - 1] !== ``) {
@@ -732,10 +725,8 @@ export class MotionDiffService {
         }
 
         let str = ``;
-        let i;
-
         if (out.n.length === 0) {
-            for (i = 0; i < out.o.length; i++) {
+            for (let i = 0; i < out.o.length; i++) {
                 str += `<del>` + out.o[i] + `</del>`;
             }
         } else {
@@ -746,7 +737,7 @@ export class MotionDiffService {
             }
 
             let currOldRow = 0;
-            for (i = 0; i < out.n.length; i++) {
+            for (let i = 0; i < out.n.length; i++) {
                 if (out.n[i].text === undefined) {
                     if (out.n[i] !== ``) {
                         str += `<ins>` + out.n[i] + `</ins>`;
@@ -829,8 +820,8 @@ export class MotionDiffService {
         // The "!!(found=...)"-construction is only used to make jshint happy :)
         const findDel = /<del>([\s\S]*?)<\/del>/gi;
         const findIns = /<ins>([\s\S]*?)<\/ins>/gi;
-        let found;
-        let inner;
+        let found: RegExpExecArray;
+        let inner: string;
         while (!!(found = findDel.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
             if (!this.isValidInlineHtml(inner)) {
@@ -960,7 +951,7 @@ export class MotionDiffService {
         }
 
         const findDelGroupFinder = /(?:<del>.*?<\/del>)+/gi;
-        let found;
+        let found: RegExpExecArray;
         let returnStr = diffStr;
 
         while (!!(found = findDelGroupFinder.exec(diffStr))) {
@@ -1244,8 +1235,8 @@ export class MotionDiffService {
         let innerContextEnd = ``;
         let previousHtmlEndSnippet = ``;
         let followingHtmlStartSnippet = ``;
-        let fakeOl;
-        let offset;
+        let fakeOl: Element;
+        let offset: number;
 
         fromChildTraceAbs.shift();
         const previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
@@ -1699,7 +1690,7 @@ export class MotionDiffService {
         }
 
         const mergedFragment = document.createDocumentFragment();
-        let el;
+        let el: ChildNode;
         while (oldTextWithBreaks.firstChild) {
             el = oldTextWithBreaks.firstChild;
             oldTextWithBreaks.removeChild(el);
@@ -2172,8 +2163,8 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        let data;
-        let oldText;
+        let data: ExtractedContent;
+        let oldText: string;
 
         try {
             data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
@@ -2252,7 +2243,7 @@ export class MotionDiffService {
             return motionHtml;
         }
 
-        let data;
+        let data: ExtractedContent;
 
         try {
             data = this.extractRangeByLineNumbers(motionHtml, maxLine + 1, null);
@@ -2270,7 +2261,7 @@ export class MotionDiffService {
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
-        let html;
+        let html: string;
         if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
