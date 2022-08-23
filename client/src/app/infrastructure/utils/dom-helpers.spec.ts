@@ -1,4 +1,4 @@
-import { addCSSClassToFirstTag } from "./dom-helpers";
+import { addCSSClassToFirstTag } from './dom-helpers';
 
 describe(`utils: dom helpers`, () => {
     describe(`addCSSClassToFirstTag function`, () => {
@@ -15,4 +15,3 @@ describe(`utils: dom helpers`, () => {
         });
     });
 });
-

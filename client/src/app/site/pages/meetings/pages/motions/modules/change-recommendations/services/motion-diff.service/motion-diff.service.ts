@@ -1008,7 +1008,9 @@ export class MotionDiffService {
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<number>DomHelpers.getNthOfListItem(parentElement, toLineNumberNode as Element) + offset).toString()
+                    (
+                        <number>DomHelpers.getNthOfListItem(parentElement, toLineNumberNode as Element) + offset
+                    ).toString()
                 );
                 followingHtmlStartSnippet = this.serializeTag(fakeOl) + followingHtmlStartSnippet;
             } else {
@@ -1034,7 +1036,9 @@ export class MotionDiffService {
                         : 0;
                     fakeOl.setAttribute(
                         `start`,
-                        (offset + <number>DomHelpers.getNthOfListItem(element, fromLineNumberNode as Element)).toString()
+                        (
+                            offset + <number>DomHelpers.getNthOfListItem(element, fromLineNumberNode as Element)
+                        ).toString()
                     );
                     innerContextStart += this.serializeTag(fakeOl);
                 } else {
@@ -1943,7 +1947,8 @@ export class MotionDiffService {
         const origBeginning = data.outerContextStart + data.innerContextStart;
         if (diff.toLowerCase().indexOf(origBeginning.toLowerCase()) === 0) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
-            diff = DomHelpers.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
+            diff =
+                DomHelpers.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
         }
 
         return diff;
