@@ -10,19 +10,11 @@
                     [(ngModel)]="checkboxStateMap[meeting.id]"
                     (change)="onChangeCheckbox($event)"
                 >
-                    <os-icon-container
-                        [swap]="true"
-                        [icon]="isDefaultMeetingFor(meeting, committee) ? 'star' : 'star_outline'"
-                        iconTooltip="{{
-                            (isDefaultMeetingFor(meeting, committee) ? 'Default meeting' : '') | translate
-                        }}"
-                    >
-                        {{ meeting.name }}
-                        <span *ngIf="meeting.start_time || meeting.end_time">
-                            &nbsp;&middot;&nbsp;
-                            <os-meeting-time [startTime]="meeting.start_time" [endTime]="meeting.end_time"></os-meeting-time>
-                        </span>
-                    </os-icon-container>
+                    {{ meeting.name }}
+                    <span *ngIf="meeting.start_time || meeting.end_time">
+                        &nbsp;&middot;&nbsp;
+                        <os-meeting-time [startTime]="meeting.start_time" [endTime]="meeting.end_time"></os-meeting-time>
+                    </span>
                 </mat-checkbox>
             </div>
         </div>

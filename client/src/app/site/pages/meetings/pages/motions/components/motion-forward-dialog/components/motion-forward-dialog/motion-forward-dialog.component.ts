@@ -49,13 +49,6 @@ export class MotionForwardDialogComponent implements OnInit {
         this.selectedMeetings[fn](+source.value);
     }
 
-    public isDefaultMeetingFor(
-        meeting: GetForwardingMeetingsPresenterMeeting,
-        committee: GetForwardingMeetingsPresenter
-    ): boolean {
-        return +meeting.id === committee.default_meeting_id;
-    }
-
     public isActiveMeeting(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
         return +meeting.id === this.activeMeeting.meetingId;
     }
