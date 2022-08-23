@@ -149,7 +149,7 @@ interface ExtractedContent {
  *     '<p>A line</p><p>Another line</p><ul><li>A list item</li><li>Yet another item</li></ul>',
  *     lineLength
  *   );
- * const merged = this.diffService.replaceLines(lineNumberedText, '<p>Replaced paragraph</p>', 1, 2);
+ * const merged = this.diffService.replaceLines(lineNumberedText, '<p>Replaced paragraph</p>', 1, 1);
  * ```
  */
 @Injectable({
@@ -1165,8 +1165,6 @@ export class MotionDiffService {
      * Returns the HTML snippet between two given line numbers.
      * extractRangeByLineNumbers
      * Hint:
-     * - The last line (toLine) is not included anymore, as the number refers to the line breaking element at the end
-     *   of the line
      * - if toLine === null, then everything from fromLine to the end of the fragment is returned
      *
      * In addition to the HTML snippet, additional information is provided regarding the most specific DOM element
@@ -1182,9 +1180,9 @@ export class MotionDiffService {
      *                      If a tag is split, the first one receives "os-split-after", and the second
      *                      one "os-split-before".
      * For example, for the following string <p>Line 1<br>Line 2<br>Line 3</p>:
-     * - extracting line 1 to 2 results in <p class="os-split-after">Line 1</p>
-     * - extracting line 2 to 3 results in <p class="os-split-after os-split-before">Line 2</p>
-     * - extracting line 3 to null/4 results in <p class="os-split-before">Line 3</p>
+     * - extracting line 1 to 1 results in <p class="os-split-after">Line 1</p>
+     * - extracting line 2 to 2 results in <p class="os-split-after os-split-before">Line 2</p>
+     * - extracting line 3 to null/3 results in <p class="os-split-before">Line 3</p>
      *
      * @param {LineNumberedString} html
      * @param {number} fromLine
