@@ -544,13 +544,8 @@ export class MotionDiffService {
         if (node.nodeType !== ELEMENT_NODE) {
             return;
         }
-        const element = <Element>node;
-        const classesStr = element.getAttribute(`class`);
-        const classes = classesStr ? classesStr.split(` `) : [];
-        if (classes.indexOf(className) === -1) {
-            classes.push(className);
-        }
-        element.setAttribute(`class`, classes.join(` `));
+        const element = <HTMLElement>node;
+        element.classList.add(className);
     }
 
     /**
@@ -563,19 +558,12 @@ export class MotionDiffService {
         if (node.nodeType !== ELEMENT_NODE) {
             return;
         }
-        const element = <Element>node;
+        const element = <HTMLElement>node;
+        element.classList.remove(className);
+
         const classesStr = element.getAttribute(`class`);
-        const newClasses = [];
-        const classes = classesStr ? classesStr.split(` `) : [];
-        for (let i = 0; i < classes.length; i++) {
-            if (classes[i] !== className) {
-                newClasses.push(classes[i]);
-            }
-        }
-        if (newClasses.length === 0) {
+        if (!classesStr) {
             element.removeAttribute(`class`);
-        } else {
-            element.setAttribute(`class`, newClasses.join(` `));
         }
     }
 
@@ -892,17 +880,12 @@ export class MotionDiffService {
     public addClassToLastNode(html: string, className: string): string {
         const node = document.createElement(`div`);
         node.innerHTML = html;
-        let foundLast = false;
-        for (let i = node.childNodes.length - 1; i >= 0 && !foundLast; i--) {
+        for (let i = node.childNodes.length - 1; i >= 0; i--) {
             if (node.childNodes[i].nodeType === ELEMENT_NODE) {
-                const childElement = <Element>node.childNodes[i];
-                let classes: any[] = [];
-                if (childElement.getAttribute(`class`)) {
-                    classes = childElement.getAttribute(`class`)!.split(` `);
-                }
-                classes.push(className);
-                childElement.setAttribute(`class`, classes.sort().join(` `).replace(/^\s+/, ``).replace(/\s+$/, ``));
-                foundLast = true;
+                const childElement = <HTMLElement>node.childNodes[i];
+                childElement.classList.add(className);
+
+                return node.innerHTML;
             }
         }
         return node.innerHTML;
