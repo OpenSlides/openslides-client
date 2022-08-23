@@ -9,6 +9,7 @@ import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
+import { locale } from 'moment';
 
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
@@ -55,11 +56,17 @@ export class OpenSlidesMainComponent implements OnInit {
                 // try to use the browser language if it is available. If not, uses english.
                 this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
             }
+
+            // set moment locale
+            locale(this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang);
         });
 
-        // listen for language changes and update local storage on change
+        // listen for language changes
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
             this.storageService.set(CURRENT_LANGUAGE_STORAGE_KEY, event.lang);
+
+            // update moment locale
+            locale(event.lang);
         });
     }
 
