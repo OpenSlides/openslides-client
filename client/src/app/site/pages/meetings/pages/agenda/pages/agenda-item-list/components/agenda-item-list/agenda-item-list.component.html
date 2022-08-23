@@ -222,6 +222,17 @@
 
             <mat-divider></mat-divider>
 
+            <button
+                *ngIf="tags.length"
+                mat-menu-item
+                [disabled]="!selectedRows.length"
+                (click)="changeSelectedTags()"
+            >
+                <mat-icon>bookmarks</mat-icon>
+                <!-- TODO: icon -->
+                <span>{{ 'Add/remove tags' | translate }}</span>
+            </button>
+
             <!-- Set multiple to public -->
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="setAgendaType(AGENDA_TYPE_PUBLIC)">
                 <mat-icon>public</mat-icon>
