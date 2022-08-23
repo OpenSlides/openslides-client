@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
@@ -444,41 +445,6 @@ export class MotionDiffService {
             }
         );
 
-        const entities: any = {
-            '&nbsp;': ` `,
-            '&ndash;': `-`,
-            '&auml;': `ä`,
-            '&ouml;': `ö`,
-            '&uuml;': `ü`,
-            '&Auml;': `Ä`,
-            '&Ouml;': `Ö`,
-            '&Uuml;': `Ü`,
-            '&szlig;': `ß`,
-            '&bdquo;': `„`,
-            '&ldquo;': `“`,
-            '&bull;': `•`,
-            '&sect;': `§`,
-            '&eacute;': `é`,
-            '&rsquo;': `’`,
-            '&euro;': `€`,
-            '&reg;': `®`,
-            '&trade;': `™`,
-            '&raquo;': `»`,
-            '&laquo;': `«`,
-            '&Acirc;': `Â`,
-            '&acirc;': `â`,
-            '&Ccedil;': `Ç`,
-            '&ccedil;': `ç`,
-            '&Egrave;': `È`,
-            '&egrave;': `è`,
-            '&Ntilde;': `Ñ`,
-            '&ntilde;': `ñ`,
-            '&Euml;': `Ë`,
-            '&euml;': `ë`,
-            '&Prime;': `″`,
-            '&rdquo;': `”`
-        };
-
         html = html
             .replace(/\s+<\/P>/gi, `</P>`)
             .replace(/\s+<\/DIV>/gi, `</DIV>`)
@@ -486,9 +452,7 @@ export class MotionDiffService {
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
         html = html.replace(/\u00A0/g, ` `);
         html = html.replace(/\u2013/g, `-`);
-        Object.keys(entities).forEach(ent => {
-            html = html.replace(new RegExp(ent, `g`), entities[ent]);
-        });
+        html = replaceHtmlEntities(html);
 
         // Newline characters: after closing block-level-elements, but not after BR (which is inline)
         html = html.replace(/(<br *\/?>)\n/gi, `$1`);
