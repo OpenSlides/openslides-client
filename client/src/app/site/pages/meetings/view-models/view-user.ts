@@ -1,3 +1,4 @@
+import { CML } from 'src/app/domain/definitions/organization-permission';
 import { User } from 'src/app/domain/models/users/user';
 
 import { Id } from '../../../../domain/definitions/key-types';
@@ -246,9 +247,9 @@ type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
-    // committee_management_levels: (cml: CML) => ViewCommittee[]; // Not working yet!
-    meetings: ViewMeeting[];
-    groups: UserManyStructuredRelation<ViewGroup>;
+    committee_management_levels: (arg?: CML) => ViewCommittee[]; // TODO: Probably the wrong forman
+    meetings: ViewMeeting[]; //
+    groups: UserManyStructuredRelation<ViewGroup>; // <-- Should probably be more like this
     speakers: UserManyStructuredRelation<ViewSpeaker>;
     personal_notes: UserManyStructuredRelation<ViewPersonalNote>;
     supported_motions: UserManyStructuredRelation<ViewMotion>;
