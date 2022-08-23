@@ -1,5 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { htmlToFragment } from 'src/app/infrastructure/utils/dom-helpers';
 import { E2EImportsModule } from 'src/e2e-imports.module';
 
 import { LineNumberingService } from '../line-numbering.service';
@@ -167,8 +168,8 @@ describe(`MotionDiffService`, () => {
         });
 
         service = TestBed.inject(MotionDiffService);
-        baseHtmlDom1 = service.htmlToFragment(baseHtml1);
-        baseHtmlDom2 = service.htmlToFragment(baseHtml2);
+        baseHtmlDom1 = htmlToFragment(baseHtml1);
+        baseHtmlDom2 = htmlToFragment(baseHtml2);
         service.insertInternalLineMarkers(baseHtmlDom1);
         service.insertInternalLineMarkers(baseHtmlDom2);
     });
@@ -1269,20 +1270,6 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
-    });
-
-    describe(`addCSSClassToFirstTag function`, () => {
-        it(`works with plain tags`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const strIn = `<ol start='2'><li>`,
-                inserted = service.addCSSClassToFirstTag(strIn, `newClass`);
-            expect(inserted).toBe(`<ol start='2' class="newClass"><li>`);
-        }));
-
-        it(`works with tags already having classes`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const strIn = `<ol start='2' class='my-old-class'><li>`,
-                inserted = service.addCSSClassToFirstTag(strIn, `newClass`);
-            expect(inserted).toBe(`<ol start='2' class="my-old-class newClass"><li>`);
-        }));
     });
 
     describe(`removeDuplicateClassesInsertedByCkeditor`, () => {

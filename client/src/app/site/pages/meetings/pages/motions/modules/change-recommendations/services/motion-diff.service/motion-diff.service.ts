@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
+import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
 
-const ELEMENT_NODE = 1;
-const TEXT_NODE = 3;
-const DOCUMENT_FRAGMENT_NODE = 11;
+const ELEMENT_NODE = Node.ELEMENT_NODE;
+const TEXT_NODE = Node.TEXT_NODE;
+const DOCUMENT_FRAGMENT_NODE = Node.DOCUMENT_FRAGMENT_NODE;
 
 /**
  * This data structure is used when determining the most specific common ancestor of two HTML node
@@ -181,19 +181,7 @@ export class MotionDiffService {
      * @returns {Element}
      */
     private getFirstLineNumberNode(node: Node): Element | null {
-        if (node.nodeType === TEXT_NODE) {
-            return null;
-        }
-        const element = <Element>node;
-        if (element.nodeName === `OS-LINEBREAK`) {
-            return element;
-        }
-        const found = element.querySelectorAll(`OS-LINEBREAK`);
-        if (found.length > 0) {
-            return found.item(0);
-        } else {
-            return null;
-        }
+        return DomHelpers.getNodeByName(node, `OS-LINEBREAK`);
     }
 
     /**
@@ -204,54 +192,7 @@ export class MotionDiffService {
      * @returns {Element}
      */
     private getLastLineNumberNode(node: Node): Element | null {
-        if (node.nodeType === TEXT_NODE) {
-            return null;
-        }
-        const element = <Element>node;
-        if (element.nodeName === `OS-LINEBREAK`) {
-            return element;
-        }
-        const found = element.querySelectorAll(`OS-LINEBREAK`);
-        if (found.length > 0) {
-            return found.item(found.length - 1);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Given a node, this method returns an array containing all parent elements of this node, recursively.
-     *
-     * @param {Node} node
-     * @returns {Node[]}
-     */
-    private getNodeContextTrace(node: Node): Node[] {
-        const context = [];
-        let currNode: Node | null = node;
-        while (currNode) {
-            context.unshift(currNode);
-            currNode = currNode.parentNode;
-        }
-        return context;
-    }
-
-    /**
-     * This method checks if the given `child`-Node is the first non-empty child element of the given parent Node
-     * called `node`. Hence the name of this method.
-     *
-     * @param node
-     * @param child
-     */
-    private isFirstNonemptyChild(node: Node, child: Node): boolean {
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i] === child) {
-                return true;
-            }
-            if (node.childNodes[i].nodeType !== TEXT_NODE || node.childNodes[i].nodeValue?.match(/\S/)) {
-                return false;
-            }
-        }
-        return false;
+        return DomHelpers.getNodeByName(node, `OS-LINEBREAK`, true);
     }
 
     /**
@@ -273,7 +214,7 @@ export class MotionDiffService {
             const lineNumberElement = <Element>insertBefore;
             while (
                 insertBefore.parentNode?.nodeType !== DOCUMENT_FRAGMENT_NODE &&
-                this.isFirstNonemptyChild(insertBefore.parentNode!, insertBefore)
+                DomHelpers.isFirstNonemptyChild(insertBefore.parentNode!, insertBefore)
             ) {
                 insertBefore = insertBefore.parentNode!;
             }
@@ -297,34 +238,6 @@ export class MotionDiffService {
     }
 
     /**
-     * An OL element has a number of child LI nodes. Given a `descendantNode` that might be anywhere within
-     * the hierarchy of this OL element, this method returns the index (starting with 1) of the LI element
-     * that contains this node.
-     *
-     * @param olNode
-     * @param descendantNode
-     */
-    private getNthLIOfOL(olNode: Element, descendantNode: Node): number | null {
-        let nthLIOfOL = null;
-        while (descendantNode.parentNode) {
-            if (descendantNode.parentNode === olNode) {
-                let lisBeforeOl = 0;
-                let foundMe = false;
-                for (let i = 0; i < olNode.childNodes.length && !foundMe; i++) {
-                    if (olNode.childNodes[i] === descendantNode) {
-                        foundMe = true;
-                    } else if (olNode.childNodes[i].nodeName === `LI`) {
-                        lisBeforeOl++;
-                    }
-                }
-                nthLIOfOL = lisBeforeOl + 1;
-            }
-            descendantNode = descendantNode.parentNode;
-        }
-        return nthLIOfOL;
-    }
-
-    /**
      * Returns information about the common ancestors of two given nodes.
      *
      * @param {Node} node1
@@ -332,8 +245,8 @@ export class MotionDiffService {
      * @returns {CommonAncestorData}
      */
     public getCommonAncestor(node1: Node, node2: Node): CommonAncestorData {
-        const trace1 = this.getNodeContextTrace(node1);
-        const trace2 = this.getNodeContextTrace(node2);
+        const trace1 = DomHelpers.getNodeContextTrace(node1);
+        const trace2 = DomHelpers.getNodeContextTrace(node2);
         const childTrace1 = [];
         const childTrace2 = [];
         let commonAncestor: Node | null = null;
@@ -380,18 +293,6 @@ export class MotionDiffService {
         }
         html += `>`;
         return html;
-    }
-
-    /**
-     * This converts the given HTML string into a DOM tree contained by a DocumentFragment, which is reqturned.
-     *
-     * @param {string} html
-     * @return {DocumentFragment}
-     */
-    public htmlToFragment(html: string): DocumentFragment {
-        const template = document.createElement(`template`);
-        template.innerHTML = html;
-        return template.content;
     }
 
     /**
@@ -452,7 +353,7 @@ export class MotionDiffService {
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
         html = html.replace(/\u00A0/g, ` `);
         html = html.replace(/\u2013/g, `-`);
-        html = replaceHtmlEntities(html);
+        html = DomHelpers.replaceHtmlEntities(html);
 
         // Newline characters: after closing block-level-elements, but not after BR (which is inline)
         html = html.replace(/(<br *\/?>)\n/gi, `$1`);
@@ -460,37 +361,6 @@ export class MotionDiffService {
         html = html.replace(/(<\/(div|p|ul|li|blockquote>)>) /gi, `$1\n`);
 
         return html;
-    }
-
-    /**
-     * Get all the siblings of the given node _after_ this node, in the order as they appear in the DOM tree.
-     *
-     * @param {Node} node
-     * @returns {Node[]}
-     */
-    private getAllNextSiblings(node: Node): Node[] {
-        const nodes: Node[] = [];
-        while (node.nextSibling) {
-            nodes.push(node.nextSibling);
-            node = node.nextSibling;
-        }
-        return nodes;
-    }
-
-    /**
-     * Get all the siblings of the given node _before_ this node,
-     * with the one closest to the given node first (=> reversed order in regard to the DOM tree order)
-     *
-     * @param {Node} node
-     * @returns {Node[]}
-     */
-    private getAllPrevSiblingsReversed(node: Node): Node[] {
-        const nodes = [];
-        while (node.previousSibling) {
-            nodes.push(node.previousSibling);
-            node = node.previousSibling;
-        }
-        return nodes;
     }
 
     /**
@@ -526,38 +396,6 @@ export class MotionDiffService {
         }
 
         return type;
-    }
-
-    /**
-     * This method adds a CSS class name to a given node.
-     *
-     * @param {Node} node
-     * @param {string} className
-     */
-    public addCSSClass(node: Node, className: string): void {
-        if (node.nodeType !== ELEMENT_NODE) {
-            return;
-        }
-        const element = <HTMLElement>node;
-        element.classList.add(className);
-    }
-
-    /**
-     * This method removes a CSS class name from a given node.
-     *
-     * @param {Node} node
-     * @param {string} className
-     */
-    public removeCSSClass(node: Node, className: string): void {
-        if (node.nodeType !== ELEMENT_NODE) {
-            return;
-        }
-        const element = <HTMLElement>node;
-        element.classList.remove(className);
-
-        if (!element.getAttribute(`class`)) {
-            element.removeAttribute(`class`);
-        }
     }
 
     /**
@@ -771,43 +609,6 @@ export class MotionDiffService {
     }
 
     /**
-     * This checks if this string is valid inline HTML.
-     * It does so by leveraging the browser's auto-correction mechanism and coun the number of "<"s (opening and closing
-     * HTML tags) of the original and the cleaned-up string.
-     * This is mainly helpful to decide if a given string can be put into <del>...</del> or <ins>...</ins>-Tags without
-     * producing broken HTML.
-     *
-     * @param {string} html
-     * @return {boolean}
-     * @private
-     */
-    private isValidInlineHtml(html: string): boolean {
-        // If there are no HTML tags, we assume it's valid and skip further checks
-        if (!html.match(/<[^>]*>/)) {
-            return true;
-        }
-
-        // We check if this is a valid HTML that closes all its tags again using the innerHTML-Hack to correct
-        // the string and check if the number of HTML tags changes by this
-        const doc = document.createElement(`div`);
-        doc.innerHTML = html;
-        const tagsBefore = (html.match(/</g) || []).length;
-        const tagsCorrected = (doc.innerHTML.match(/</g) || []).length;
-        if (tagsBefore !== tagsCorrected) {
-            // The HTML has changed => it was not valid
-            return false;
-        }
-
-        // If there is any block element inside, we consider it as broken, as this string will be displayed
-        // inside of <ins>/<del> tags
-        if (html.match(/<(div|p|ul|li|blockquote)\W/i)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * This detects if a given string contains broken HTML. This can happen when the Diff accidentally produces
      * wrongly nested HTML tags.
      *
@@ -824,61 +625,19 @@ export class MotionDiffService {
         let inner: string;
         while (!!(found = findDel.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
-            if (!this.isValidInlineHtml(inner)) {
+            if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
             }
         }
         while (!!(found = findIns.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
-            if (!this.isValidInlineHtml(inner)) {
+            if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
             }
         }
 
         // If non of the conditions up to now is met, we consider the diff as being sane
         return false;
-    }
-
-    /**
-     * Adds a CSS class to the first opening HTML tag within the given string.
-     *
-     * @param {string} html
-     * @param {string} className
-     * @returns {string}
-     */
-    public addCSSClassToFirstTag(html: string, className: string): string {
-        return html.replace(/<[a-z][^>]*>/i, (match: string): string => {
-            if (match.match(/class=["'][a-z0-9 _-]*["']/i)) {
-                return match.replace(
-                    /class=["']([a-z0-9 _-]*)["']/i,
-                    (match2: string, previousClasses: string): string =>
-                        `class="` + previousClasses + ` ` + className + `"`
-                );
-            } else {
-                return match.substring(0, match.length - 1) + ` class="` + className + `">`;
-            }
-        });
-    }
-
-    /**
-     * Adds a CSS class to the last opening HTML tag within the given string.
-     *
-     * @param {string} html
-     * @param {string} className
-     * @returns {string}
-     */
-    public addClassToLastNode(html: string, className: string): string {
-        const node = document.createElement(`div`);
-        node.innerHTML = html;
-        for (let i = node.childNodes.length - 1; i >= 0; i--) {
-            if (node.childNodes[i].nodeType === ELEMENT_NODE) {
-                const childElement = <HTMLElement>node.childNodes[i];
-                childElement.classList.add(className);
-
-                return node.innerHTML;
-            }
-        }
-        return node.innerHTML;
     }
 
     /**
@@ -911,31 +670,6 @@ export class MotionDiffService {
                 this.removeColorStyles(<Element>node.childNodes[i]);
             }
         }
-    }
-
-    /**
-     * Add the CSS-class to the existing "class"-attribute, or add one.
-     * Works on strings, not nodes
-     *
-     * @param {string} tagStr
-     * @param {string} className
-     * @returns {string}
-     */
-    private addClassToHtmlTag(tagStr: string, className: string): string {
-        return tagStr.replace(/<(\w+)( [^>]*)?>/gi, (whole: string, tag: string, tagArguments: string): string => {
-            tagArguments = tagArguments ? tagArguments : ``;
-            if (tagArguments.match(/class="/gi)) {
-                // class="someclass" => class="someclass insert"
-                tagArguments = tagArguments.replace(
-                    /(class\s*=\s*)(["'])([^\2]*)\2/gi,
-                    (classWhole: string, attr: string, para: string, content: string): string =>
-                        attr + para + content + ` ` + className + para
-                );
-            } else {
-                tagArguments += ` class="` + className + `"`;
-            }
-            return `<` + tag + tagArguments + `>`;
-        });
     }
 
     /**
@@ -1045,11 +779,11 @@ export class MotionDiffService {
      * @returns {string}
      */
     public removeDuplicateClassesInsertedByCkeditor(html: string): string {
-        const fragment = this.htmlToFragment(html);
+        const fragment = DomHelpers.htmlToFragment(html);
         const items = fragment.querySelectorAll(`li.os-split-before`);
         for (let i = 0; i < items.length; i++) {
-            if (!this.isFirstNonemptyChild(items[i].parentNode!, items[i])) {
-                this.removeCSSClass(items[i], `os-split-before`);
+            if (!DomHelpers.isFirstNonemptyChild(items[i].parentNode!, items[i])) {
+                DomHelpers.removeCSSClass(items[i], `os-split-before`);
             }
         }
         return this.serializeDom(fragment, false);
@@ -1205,7 +939,7 @@ export class MotionDiffService {
             return cached;
         }
 
-        const fragment = this.htmlToFragment(html);
+        const fragment = DomHelpers.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
 
         let toLineNumber: number;
@@ -1222,9 +956,9 @@ export class MotionDiffService {
         const ancestorData = this.getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
         const fromChildTraceRel = ancestorData.trace1;
-        const fromChildTraceAbs = this.getNodeContextTrace(fromLineNumberNode as Element);
+        const fromChildTraceAbs = DomHelpers.getNodeContextTrace(fromLineNumberNode as Element);
         const toChildTraceRel = ancestorData.trace2;
-        const toChildTraceAbs = this.getNodeContextTrace(toLineNumberNode as Element);
+        const toChildTraceAbs = DomHelpers.getNodeContextTrace(toLineNumberNode as Element);
         const ancestor = ancestorData.commonAncestor;
         let htmlOut = ``;
         let outerContextStart = ``;
@@ -1245,11 +979,11 @@ export class MotionDiffService {
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
         while (currNode.parentNode) {
-            if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
+            if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
             if (isSplit) {
-                this.addCSSClass(currNode.parentNode, `os-split-before`);
+                DomHelpers.addCSSClass(currNode.parentNode, `os-split-before`);
             }
             if (currNode.nodeName !== `OS-LINEBREAK`) {
                 previousHtmlEndSnippet += `</` + currNode.nodeName + `>`;
@@ -1260,11 +994,11 @@ export class MotionDiffService {
         currNode = toLineNumberNode as Element;
         isSplit = false;
         while (currNode.parentNode) {
-            if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
+            if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
             if (isSplit) {
-                this.addCSSClass(currNode.parentNode, `os-split-after`);
+                DomHelpers.addCSSClass(currNode.parentNode, `os-split-after`);
             }
             if (currNode.parentNode.nodeName === `OL`) {
                 const parentElement = <Element>currNode.parentNode;
@@ -1274,7 +1008,7 @@ export class MotionDiffService {
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<number>this.getNthLIOfOL(parentElement, toLineNumberNode as Element) + offset).toString()
+                    (<number>DomHelpers.getNthOfListItem(parentElement, toLineNumberNode as Element) + offset).toString()
                 );
                 followingHtmlStartSnippet = this.serializeTag(fakeOl) + followingHtmlStartSnippet;
             } else {
@@ -1289,7 +1023,7 @@ export class MotionDiffService {
             if (fromChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
                 found = true;
             } else {
-                if (!this.isFirstNonemptyChild(fromChildTraceRel[i], fromChildTraceRel[i + 1])) {
+                if (!DomHelpers.isFirstNonemptyChild(fromChildTraceRel[i], fromChildTraceRel[i + 1])) {
                     isSplit = true;
                 }
                 if (fromChildTraceRel[i].nodeName === `OL`) {
@@ -1300,12 +1034,12 @@ export class MotionDiffService {
                         : 0;
                     fakeOl.setAttribute(
                         `start`,
-                        (offset + <number>this.getNthLIOfOL(element, fromLineNumberNode as Element)).toString()
+                        (offset + <number>DomHelpers.getNthOfListItem(element, fromLineNumberNode as Element)).toString()
                     );
                     innerContextStart += this.serializeTag(fakeOl);
                 } else {
                     if (i < fromChildTraceRel.length - 1 && isSplit) {
-                        this.addCSSClass(fromChildTraceRel[i], `os-split-before`);
+                        DomHelpers.addCSSClass(fromChildTraceRel[i], `os-split-before`);
                     }
                     innerContextStart += this.serializeTag(fromChildTraceRel[i]);
                 }
@@ -1345,7 +1079,7 @@ export class MotionDiffService {
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<any>this.getNthLIOfOL(currElement, fromLineNumberNode as Element) + offset).toString()
+                    (<any>DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) + offset).toString()
                 );
                 outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
             } else {
@@ -1504,7 +1238,7 @@ export class MotionDiffService {
             return cached;
         }
 
-        const fragment = this.htmlToFragment(diffHtml);
+        const fragment = DomHelpers.htmlToFragment(diffHtml);
 
         this.insertInternalLineMarkers(fragment);
 
@@ -1517,19 +1251,19 @@ export class MotionDiffService {
             return null;
         }
 
-        const firstTrace = this.getNodeContextTrace(firstChange);
+        const firstTrace = DomHelpers.getNodeContextTrace(firstChange);
         let lastLineNumberBefore = null;
         for (let j = firstTrace.length - 1; j >= 0 && lastLineNumberBefore === null; j--) {
-            const prevSiblings = this.getAllPrevSiblingsReversed(firstTrace[j]);
+            const prevSiblings = DomHelpers.getAllPrevSiblingsReversed(firstTrace[j]);
             for (let i = 0; i < prevSiblings.length && lastLineNumberBefore === null; i++) {
                 lastLineNumberBefore = this.getLastLineNumberNode(prevSiblings[i]);
             }
         }
 
-        const lastTrace = this.getNodeContextTrace(lastChange);
+        const lastTrace = DomHelpers.getNodeContextTrace(lastChange);
         let firstLineNumberAfter = null;
         for (let j = lastTrace.length - 1; j >= 0 && firstLineNumberAfter === null; j--) {
-            const nextSiblings = this.getAllNextSiblings(lastTrace[j]);
+            const nextSiblings = DomHelpers.getAllNextSiblings(lastTrace[j]);
             for (let i = 0; i < nextSiblings.length && firstLineNumberAfter === null; i++) {
                 firstLineNumberAfter = this.getFirstLineNumberNode(nextSiblings[i]);
             }
@@ -1552,7 +1286,7 @@ export class MotionDiffService {
      * @returns {string}
      */
     public diffHtmlToFinalText(html: string): string {
-        const fragment = this.htmlToFragment(html);
+        const fragment = DomHelpers.htmlToFragment(html);
 
         const delNodes = fragment.querySelectorAll(`.delete, del`);
         for (let i = 0; i < delNodes.length; i++) {
@@ -1572,7 +1306,7 @@ export class MotionDiffService {
 
         const insertNodes = fragment.querySelectorAll(`.insert`);
         for (let i = 0; i < insertNodes.length; i++) {
-            this.removeCSSClass(insertNodes[i], `insert`);
+            DomHelpers.removeCSSClass(insertNodes[i], `insert`);
         }
 
         return this.serializeDom(fragment, false);
@@ -1594,10 +1328,10 @@ export class MotionDiffService {
     public replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
         const data = this.extractRangeByLineNumbers(oldHtml, fromLine, toLine);
         const previousHtml = data.previousHtml + `<TEMPLATE></TEMPLATE>` + data.previousHtmlEndSnippet;
-        const previousFragment = this.htmlToFragment(previousHtml);
+        const previousFragment = DomHelpers.htmlToFragment(previousHtml);
         const followingHtml = data.followingHtmlStartSnippet + `<TEMPLATE></TEMPLATE>` + data.followingHtml;
-        const followingFragment = this.htmlToFragment(followingHtml);
-        const newFragment = this.htmlToFragment(newHTML);
+        const followingFragment = DomHelpers.htmlToFragment(followingHtml);
+        const newFragment = DomHelpers.htmlToFragment(newHTML);
 
         if (data.html.length > 0 && data.html.substr(-1) === ` `) {
             this.insertDanglingSpace(newFragment);
@@ -1622,8 +1356,8 @@ export class MotionDiffService {
 
         const forgottenSplitClasses = mergedFragment.querySelectorAll(`.os-split-before, .os-split-after`);
         for (let i = 0; i < forgottenSplitClasses.length; i++) {
-            this.removeCSSClass(forgottenSplitClasses[i], `os-split-before`);
-            this.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
+            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-before`);
+            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
         }
 
         const replacedHtml = this.serializeDom(mergedFragment, true);
@@ -1670,7 +1404,7 @@ export class MotionDiffService {
                 oldTextWithBreaks.removeChild(currChild);
                 wrapDel.appendChild(currChild);
             } else {
-                this.addCSSClass(currChild, `delete`);
+                DomHelpers.addCSSClass(currChild, `delete`);
                 this.removeColorStyles(currChild);
             }
         }
@@ -1682,7 +1416,7 @@ export class MotionDiffService {
                 newTextWithBreaks.removeChild(currChild);
                 wrapIns.appendChild(currChild);
             } else {
-                this.addCSSClass(currChild, `insert`);
+                DomHelpers.addCSSClass(currChild, `insert`);
                 this.removeColorStyles(currChild);
             }
         }
@@ -1899,7 +1633,7 @@ export class MotionDiffService {
                 return whole.replace(
                     /(<(p|div|blockquote|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
                     (whole2: string, opening: string, blockTag: string, content: string, closing: string): string => {
-                        const modifiedTag = this.addClassToHtmlTag(opening, modificationClass);
+                        const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
                         return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
                     }
                 );
@@ -1925,7 +1659,7 @@ export class MotionDiffService {
                 blockAttrs: string,
                 content2: string
             ): string => {
-                if (this.isValidInlineHtml(content1) && this.isValidInlineHtml(content2)) {
+                if (DomHelpers.isValidInlineHtml(content1) && DomHelpers.isValidInlineHtml(content2)) {
                     return (
                         `<` +
                         insDel +
@@ -2027,10 +1761,10 @@ export class MotionDiffService {
         }
 
         if (oldIsSplitAfter || newIsSplitAfter) {
-            diff = this.addClassToLastNode(diff, `os-split-after`);
+            diff = DomHelpers.addClassToLastNode(diff, `os-split-after`);
         }
         if (oldIsSplitBefore || newIsSplitBefore) {
-            diff = this.addClassToLastNode(diff, `os-split-before`);
+            diff = DomHelpers.addClassToLastNode(diff, `os-split-before`);
         }
 
         this.diffCache.put(cacheKey, diff);
@@ -2209,7 +1943,7 @@ export class MotionDiffService {
         const origBeginning = data.outerContextStart + data.innerContextStart;
         if (diff.toLowerCase().indexOf(origBeginning.toLowerCase()) === 0) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
-            diff = this.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
+            diff = DomHelpers.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
         }
 
         return diff;
@@ -2263,7 +1997,7 @@ export class MotionDiffService {
         if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
-                this.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
+                DomHelpers.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
