@@ -561,8 +561,7 @@ export class MotionDiffService {
         const element = <HTMLElement>node;
         element.classList.remove(className);
 
-        const classesStr = element.getAttribute(`class`);
-        if (!classesStr) {
+        if (!element.getAttribute(`class`)) {
             element.removeAttribute(`class`);
         }
     }
