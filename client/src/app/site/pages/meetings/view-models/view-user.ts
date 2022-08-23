@@ -247,9 +247,9 @@ type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
-    committee_management_levels: (arg?: CML) => ViewCommittee[]; // TODO: Probably the wrong forman
-    meetings: ViewMeeting[]; //
-    groups: UserManyStructuredRelation<ViewGroup>; // <-- Should probably be more like this
+    meetings: ViewMeeting[];
+    committee_management_levels: (arg?: CML) => ViewCommittee[];
+    groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;
     personal_notes: UserManyStructuredRelation<ViewPersonalNote>;
     supported_motions: UserManyStructuredRelation<ViewMotion>;
