@@ -33,6 +33,7 @@
 
     .player-container {
         width: 100%;
+        color: green;
 
         .video-js {
             margin: auto;
@@ -52,12 +53,12 @@
             }
         }
 
-        .youtube-player {
+        .iframe-player {
             height: 100%;
             width: 100%;
             display: flex;
 
-            .youtube-iFrame {
+            .player {
                 width: 100%;
                 height: 280px;
             }
