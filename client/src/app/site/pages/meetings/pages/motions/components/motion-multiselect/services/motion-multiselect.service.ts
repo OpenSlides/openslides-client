@@ -8,7 +8,6 @@ import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Action } from 'src/app/gateways/actions';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { OpenSlidesInjector } from 'src/app/infrastructure/utils/di/openslides-injector';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
@@ -85,8 +84,7 @@ export class MotionMultiselectService {
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
         if (motions.some(motion => motion.state!.workflow_id !== motions[0].state!.workflow_id)) {
             const errorMsg = `You cannot change the state of motions in different workflows!`;
-            const snackBar = OpenSlidesInjector.get(MatSnackBar);
-            snackBar.open(this.translate.instant(errorMsg), `Ok`);
+            this.snackbar.open(this.translate.instant(errorMsg), `Ok`);
             return;
         }
         const title = this.translate.instant(`This will set the following state for all selected motions:`);
