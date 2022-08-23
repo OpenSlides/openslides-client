@@ -129,7 +129,7 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         if (!applauseLevel) {
             return 0;
         }
-        const quote = applauseLevel / (this.maxApplause ? this.maxApplause : this.presentApplauseUsers ?? 0) || 0;
+        const quote = applauseLevel / (this.maxApplause ?? this.presentApplauseUsers) || 0;
         return quote > 1 ? 1 : quote;
     }
 }
