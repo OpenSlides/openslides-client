@@ -60,10 +60,17 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
-    public readonly timeWarning: string = _(`The end date needs to be later than the start date.`);
+    public get timeMessage(): string {
+        if (this._lastDateSet === `start`) {
+            return _(`Due to inverted date settings, the start date's value will be used for both dates.`);
+        } else if (this._lastDateSet === `end`) {
+            return _(`Due to inverted date settings, the end date's value will be used for both dates.`);
+        }
+        return _(`The end date needs to be later than the start date.`);
+    }
 
     public get isValid(): boolean {
-        return this.meetingForm?.valid && this.isTimeValid;
+        return this.meetingForm?.valid;
     }
 
     public get isTimeValid(): boolean {
@@ -109,6 +116,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      */
     private operatingUser: ViewUser | null = null;
 
+    // private _timeEditingTimeoutId: NodeJS.Timeout;
+
+    private _lastDateSet: `start` | `end`;
+
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -142,7 +153,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
                 this.operatingUser = user;
                 this.onAfterCreateForm();
-            })
+            }),
+            this.meetingForm.controls[`start_time`].valueChanges.subscribe(start_time => (this._lastDateSet = `start`)),
+            this.meetingForm.controls[`end_time`].valueChanges.subscribe(end_time => (this._lastDateSet = `end`))
         );
 
         this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
@@ -164,6 +177,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public async onSubmit(): Promise<void> {
+        this.makeDatesValid();
         if (this.isCreateView) {
             await this.doCreateMeeting();
         } else {
@@ -353,5 +367,16 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private goBack(): void {
         this.router.navigate([`committees`, this.committeeId]);
+    }
+
+    private makeDatesValid(): void {
+        if (!this.isTimeValid) {
+            if (this._lastDateSet === `end`) {
+                this.meetingForm.controls[`start_time`].setValue(this.meetingForm.get(`end_time`).value);
+            } else {
+                this.meetingForm.controls[`end_time`].setValue(this.meetingForm.get(`start_time`).value);
+            }
+        }
+        this._lastDateSet = null;
     }
 }

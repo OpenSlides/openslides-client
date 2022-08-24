@@ -60,11 +60,8 @@
 
         <div class="potential-warning">
             <ng-container *ngIf="!isTimeValid">
-                <mat-icon inline color="warn">
-                    warning
-                </mat-icon>
-                <i class="foreground-warn">
-                    {{ timeWarning | translate }}
+                <i>
+                    {{ timeMessage | translate }}
                 </i>
             </ng-container>
         </div>
