@@ -343,12 +343,14 @@ export class MotionDiffService {
             }
         );
 
+        // remove whitespaces infront of closing tags
         html = html
             .replace(/\s+<\/P>/gi, `</P>`)
             .replace(/\s+<\/DIV>/gi, `</DIV>`)
             .replace(/\s+<\/LI>/gi, `</LI>`);
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
-        html = html.replace(/\u00A0/g, ` `);
+
+        html = html.replace(/\u00A0/g, ` `); // replace no break space
         html = html.replace(/\u2013/g, `-`);
         html = DomHelpers.replaceHtmlEntities(html);
 
@@ -363,6 +365,7 @@ export class MotionDiffService {
     /**
      * Given two strings, this method tries to guess if `htmlNew` can be produced from `htmlOld` by inserting
      * or deleting text, or if both is necessary (replace)
+     * Returns replace if strings are equal
      *
      * @param {string} htmlOld
      * @param {string} htmlNew
