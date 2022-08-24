@@ -283,16 +283,8 @@ export class MotionDiffService {
             // Fragments are only placeholders and do not have an HTML representation
             return ``;
         }
-        const element = <Element>node;
-        let html = `<` + element.nodeName;
-        for (let i = 0; i < element.attributes.length; i++) {
-            const attr = element.attributes[i];
-            if (attr.name !== `os-li-number`) {
-                html += ` ` + attr.name + `="` + attr.value + `"`;
-            }
-        }
-        html += `>`;
-        return html;
+
+        return DomHelpers.serializeTag(node);
     }
 
     /**
@@ -365,7 +357,7 @@ export class MotionDiffService {
 
     /**
      * Given two strings, this method tries to guess if `htmlNew` can be produced from `htmlOld` by inserting
-     * or deleting text, or if both is necessary (replac)
+     * or deleting text, or if both is necessary (replace)
      *
      * @param {string} htmlOld
      * @param {string} htmlNew
@@ -755,11 +747,7 @@ export class MotionDiffService {
                     .nodeValue!.replace(/&/g, `&amp;`)
                     .replace(/</g, `&lt;`)
                     .replace(/>/g, `&gt;`);
-            } else if (
-                !stripLineNumbers ||
-                (!this.lineNumberingService.isOsLineNumberNode(node.childNodes[i]) &&
-                    !this.lineNumberingService.isOsLineBreakNode(node.childNodes[i]))
-            ) {
+            } else {
                 html += this.serializeDom(node.childNodes[i], stripLineNumbers);
             }
         }

@@ -316,3 +316,25 @@ export function addClassToHtmlTag(tagStr: string, className: string): string {
         return `<` + tag + tagArguments + `>`;
     });
 }
+
+/**
+ * This converts a HTML Node element into a rendered HTML string.
+ *
+ * @param {Node} node
+ * @returns {string}
+ * @throws {Error}
+ */
+export function serializeTag(node: Node): string {
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+        throw Error(`Invalid node type`);
+    }
+
+    const element = <Element>node;
+    let html = `<` + element.nodeName;
+    for (let i = 0; i < element.attributes.length; i++) {
+        const attr = element.attributes[i];
+        html += ` ` + attr.name + `="` + attr.value + `"`;
+    }
+    html += `>`;
+    return html;
+}
