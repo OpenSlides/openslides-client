@@ -83,7 +83,9 @@ export class MotionMultiselectService {
      */
     public async setStateOfMultiple(motions: ViewMotion[]): Promise<void> {
         if (motions.some(motion => motion.state!.workflow_id !== motions[0].state!.workflow_id)) {
-            throw new Error(this.translate.instant(`You cannot change the state of motions in different workflows!`));
+            const errorMsg = `You cannot change the state of motions in different workflows!`;
+            this.snackbar.open(this.translate.instant(errorMsg), `Ok`);
+            return;
         }
         const title = this.translate.instant(`This will set the following state for all selected motions:`);
         const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
