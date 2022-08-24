@@ -425,6 +425,14 @@ export class MotionDiffService {
             if (ns[i].rows.length === 1 && typeof os[i] !== `undefined` && os[i].rows.length === 1) {
                 newArr[ns[i].rows[0]] = { text: newArr[ns[i].rows[0]], row: os[i].rows[0] };
                 oldArr[os[i].rows[0]] = { text: oldArr[os[i].rows[0]], row: ns[i].rows[0] };
+            } else if (
+                ns[i].rows.length >= 1 &&
+                ns[i].rows.indexOf(0) !== -1 &&
+                os[i] !== undefined &&
+                os[i].rows.indexOf(0) !== -1
+            ) {
+                newArr[0] = { text: newArr[0], row: 0 };
+                oldArr[0] = { text: oldArr[0], row: 0 };
             }
         }
 
@@ -1462,16 +1470,6 @@ export class MotionDiffService {
             return cached;
         }
 
-        // This fixes a really strange artefact with the diff that occures under the following conditions:
-        // - The first tag of the two texts is identical, e.g. <p>
-        // - A change happens in the next tag, e.g. inserted text
-        // - The first tag occures a second time in the text, e.g. another <p>
-        // In this condition, the first tag is deleted first and inserted afterwards again
-        // Test case: "does not break when an insertion followes a beginning tag occuring twice"
-        // The work around inserts to tags at the beginning and removes them afterwards again,
-        // to make sure this situation does not happen (and uses invisible pseudo-tags in case something goes wrong)
-        const workaroundPrepend = `<DUMMY><PREPEND>`;
-
         // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
@@ -1510,7 +1508,7 @@ export class MotionDiffService {
         );
 
         // Performing the actual diff
-        const str = this.diffString(workaroundPrepend + htmlOld, workaroundPrepend + htmlNew);
+        const str = this.diffString(htmlOld, htmlNew);
         let diffUnnormalized = str.replace(/^\s+/g, ``).replace(/\s+$/g, ``).replace(/ {2,}/g, ` `);
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
@@ -1738,10 +1736,6 @@ export class MotionDiffService {
             (whole: string, ending: string, blockTag: string, space: string, insdel: string): string =>
                 `</` + insdel + `>` + ending + space
         );
-
-        if (diffUnnormalized.substr(0, workaroundPrepend.length) === workaroundPrepend) {
-            diffUnnormalized = diffUnnormalized.substring(workaroundPrepend.length);
-        }
 
         let diff: string;
         if (this.diffDetectBrokenDiffHtml(diffUnnormalized)) {
