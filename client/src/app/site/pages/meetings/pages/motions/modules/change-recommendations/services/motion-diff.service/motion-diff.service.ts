@@ -454,6 +454,18 @@ export class MotionDiffService {
             }
         }
 
+        // This fixes the problem tested by "does not lose words when changes are moved X-wise"
+        let lastRow = 0;
+        for (let z = 0; z < newArr.length; z++) {
+            if (newArr[z].row && newArr[z].row > lastRow) {
+                lastRow = newArr[z].row;
+            }
+            if (newArr[z].row && newArr[z].row < lastRow) {
+                oldArr[newArr[z].row] = oldArr[newArr[z].row].text;
+                newArr[z] = newArr[z].text;
+            }
+        }
+
         return { o: oldArr, n: newArr };
     }
 
@@ -546,18 +558,6 @@ export class MotionDiffService {
         newStr = this.normalizeHtmlForDiff(newStr.replace(/\s+$/, ``).replace(/^\s+/, ``));
 
         const out = this.diffArrays(this.tokenizeHtml(oldStr), this.tokenizeHtml(newStr));
-
-        // This fixes the problem tested by "does not lose words when changes are moved X-wise"
-        let lastRow = 0;
-        for (let z = 0; z < out.n.length; z++) {
-            if (out.n[z].row && out.n[z].row > lastRow) {
-                lastRow = out.n[z].row;
-            }
-            if (out.n[z].row && out.n[z].row < lastRow) {
-                out.o[out.n[z].row] = out.o[out.n[z].row].text;
-                out.n[z] = out.n[z].text;
-            }
-        }
 
         let str = ``;
         if (out.n.length === 0) {
