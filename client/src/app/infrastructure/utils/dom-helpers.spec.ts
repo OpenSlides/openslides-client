@@ -1,6 +1,20 @@
-import { addCSSClassToFirstTag } from './dom-helpers';
+import { addCSSClassToFirstTag, replaceHtmlEntities } from './dom-helpers';
 
 describe(`utils: dom helpers`, () => {
+    describe(`replaceHtmlEntities function`, () => {
+        it(`check some entities`, () => {
+            const res = replaceHtmlEntities(`&uuml;&#177;`);
+
+            expect(res).toBe(`ü±`);
+        });
+
+        it(`check lt and gt entities`, () => {
+            const res = replaceHtmlEntities(`<&lt;Test&gt;>`);
+
+            expect(res).toBe(`<&lt;Test&gt;>`);
+        });
+    });
+
     describe(`addCSSClassToFirstTag function`, () => {
         it(`works with plain tags`, () => {
             const strIn = `<ol start='2'><li>`,
