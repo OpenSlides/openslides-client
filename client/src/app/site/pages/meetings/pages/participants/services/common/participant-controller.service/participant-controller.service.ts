@@ -84,8 +84,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.repo.updateSelf(patch, participant);
     }
 
-    public delete(...participants: Identifiable[]): Action<void> {
-        return this.repo.delete(...participants) as Action<void>;
+    public delete(participants: Identifiable[], handle_separately = false): Action<void> {
+        return this.repo.delete(participants, handle_separately) as Action<void>;
     }
 
     public bulkGenerateNewPasswords(...users: ViewUser[]): Promise<void> {
@@ -162,7 +162,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const answer = await firstValueFrom(prompt.afterClosed());
         if (answer) {
             const patch = { group_$_ids: { [this.activeMeetingId!]: [] } };
-            await this.delete(...toDeleteUsers)
+            await this.delete(toDeleteUsers, true)
                 .concat(this.update(patch, ...toRemoveUsers))
                 .resolve();
         }
