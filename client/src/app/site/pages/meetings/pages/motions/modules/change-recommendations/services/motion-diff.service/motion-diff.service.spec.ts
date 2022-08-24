@@ -529,6 +529,12 @@ describe(`MotionDiffService`, () => {
     });
 
     describe(`detecting the type of change`, () => {
+        it(`detects no change as replacement`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const html = `<p>Test 1</p>`;
+            const calculatedType = service.detectReplacementType(html, html);
+            expect(calculatedType).toBe(ModificationType.TYPE_REPLACEMENT);
+        }));
+
         it(`detects a simple insertion`, inject([MotionDiffService], (service: MotionDiffService) => {
             const htmlBefore = `<p>Test 1</p>`,
                 htmlAfter = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`;
