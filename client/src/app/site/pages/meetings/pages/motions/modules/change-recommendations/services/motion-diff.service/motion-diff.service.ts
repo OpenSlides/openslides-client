@@ -383,19 +383,18 @@ export class MotionDiffService {
 
         const remainderOld = htmlOld.substr(firstDiffIndex);
         const remainderNew = htmlNew.substr(firstDiffIndex);
-        let type = ModificationType.TYPE_REPLACEMENT;
 
         if (remainderOld.length > remainderNew.length) {
             if (remainderOld.substr(remainderOld.length - remainderNew.length) === remainderNew) {
-                type = ModificationType.TYPE_DELETION;
+                return ModificationType.TYPE_DELETION;
             }
         } else if (remainderOld.length < remainderNew.length) {
             if (remainderNew.substr(remainderNew.length - remainderOld.length) === remainderOld) {
-                type = ModificationType.TYPE_INSERTION;
+                return ModificationType.TYPE_INSERTION;
             }
         }
 
-        return type;
+        return ModificationType.TYPE_REPLACEMENT;
     }
 
     /**
