@@ -291,8 +291,6 @@ export class MotionDiffService {
      * This performs HTML normalization to prevent the Diff-Algorithm from detecting changes when there are actually
      * none. Common problems covered by this method are differently ordered Attributes of HTML elements or HTML-encoded
      * special characters.
-     * Unfortunately, the conversion of HTML-encoded characters to the actual characters is done by a lookup-table for
-     * now, as we haven't figured out a way to decode them automatically.
      *
      * @param {string} html
      * @returns {string}
