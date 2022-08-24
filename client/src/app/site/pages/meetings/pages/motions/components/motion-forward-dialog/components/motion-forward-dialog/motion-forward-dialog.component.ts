@@ -9,6 +9,7 @@ import {
     GetForwardingMeetingsPresenterService
 } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 
 @Component({
     selector: `os-motion-forward-dialog`,
@@ -28,7 +29,8 @@ export class MotionForwardDialogComponent implements OnInit {
     public constructor(
         private dialogRef: MatDialogRef<MotionForwardDialogComponent, Id[]>,
         private presenter: GetForwardingMeetingsPresenterService,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        private meetingController: MeetingControllerService
     ) {}
 
     public async ngOnInit(): Promise<void> {
@@ -45,13 +47,6 @@ export class MotionForwardDialogComponent implements OnInit {
     public onChangeCheckbox({ source, checked }: MatCheckboxChange): void {
         const fn = checked ? `add` : `delete`;
         this.selectedMeetings[fn](+source.value);
-    }
-
-    public isDefaultMeetingFor(
-        meeting: GetForwardingMeetingsPresenterMeeting,
-        committee: GetForwardingMeetingsPresenter
-    ): boolean {
-        return +meeting.id === committee.default_meeting_id;
     }
 
     public isActiveMeeting(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
