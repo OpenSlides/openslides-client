@@ -42,6 +42,12 @@
         right: 0.5em;
         bottom: 0;
     }
+
+    .smaller-badge-text {
+        .mat-badge-content {
+            font-size: 9px;
+        }
+    }
 }
 
 .prev-content {
