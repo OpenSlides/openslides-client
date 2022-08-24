@@ -196,6 +196,18 @@ export class MotionDiffService {
     }
 
     /**
+     * Returns a os linebreak element
+     * Example: <OS-LINEBREAK class="os-line-number line-number-23" data-line-number="23"/>
+     */
+    private getLineMarker(lineNumber: number, classes?: string): Node {
+        const lineMarker = document.createElement(`OS-LINEBREAK`);
+        lineMarker.setAttribute(`data-line-number`, lineNumber.toString(10));
+        lineMarker.setAttribute(`class`, classes ?? `os-line-number line-number-` + lineNumber.toString(10));
+
+        return lineMarker;
+    }
+
+    /**
      * Adds elements like <OS-LINEBREAK class="os-line-number line-number-23" data-line-number="23"/>
      * to a given fragment
      *
@@ -207,7 +219,6 @@ export class MotionDiffService {
             return;
         }
         const lineNumbers = fragment.querySelectorAll(`span.os-line-number`);
-        let lineMarker: Element;
         let maxLineNumber = 0;
 
         lineNumbers.forEach((insertBefore: Node) => {
@@ -218,23 +229,19 @@ export class MotionDiffService {
             ) {
                 insertBefore = insertBefore.parentNode!;
             }
-            lineMarker = document.createElement(`OS-LINEBREAK`);
-            lineMarker.setAttribute(`data-line-number`, lineNumberElement.getAttribute(`data-line-number`) as string);
-            lineMarker.setAttribute(`class`, lineNumberElement.getAttribute(`class`) as string);
-            insertBefore.parentNode?.insertBefore(lineMarker, insertBefore);
+            insertBefore.parentNode?.insertBefore(
+                this.getLineMarker(
+                    parseInt(lineNumberElement.getAttribute(`data-line-number`)),
+                    lineNumberElement.getAttribute(`class`)
+                ),
+                insertBefore
+            );
             maxLineNumber = parseInt(lineNumberElement.getAttribute(`data-line-number`) as string, 10);
         });
 
         // Add one more "fake" line number at the end and beginning, so we can select the last line as well
-        lineMarker = document.createElement(`OS-LINEBREAK`);
-        lineMarker.setAttribute(`data-line-number`, (maxLineNumber + 1).toString(10));
-        lineMarker.setAttribute(`class`, `os-line-number line-number-` + (maxLineNumber + 1).toString(10));
-        fragment.appendChild(lineMarker);
-
-        lineMarker = document.createElement(`OS-LINEBREAK`);
-        lineMarker.setAttribute(`data-line-number`, `0`);
-        lineMarker.setAttribute(`class`, `os-line-number line-number-0`);
-        fragment.insertBefore(lineMarker, fragment.firstChild);
+        fragment.appendChild(this.getLineMarker(maxLineNumber + 1));
+        fragment.insertBefore(this.getLineMarker(0), fragment.firstChild);
     }
 
     /**
