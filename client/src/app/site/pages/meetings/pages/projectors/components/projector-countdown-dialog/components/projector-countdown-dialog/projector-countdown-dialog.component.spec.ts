@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorCountdownDialogComponent } from './projector-countdown-dialog.component';
 
-describe(`ProjectorCountdownDialogComponent`, () => {
+xdescribe(`ProjectorCountdownDialogComponent`, () => {
     let component: ProjectorCountdownDialogComponent;
     let fixture: ComponentFixture<ProjectorCountdownDialogComponent>;
 

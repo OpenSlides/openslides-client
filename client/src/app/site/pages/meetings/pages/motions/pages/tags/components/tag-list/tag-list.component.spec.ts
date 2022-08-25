@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TagListComponent } from './tag-list.component';
 
-describe(`TagListComponent`, () => {
+xdescribe(`TagListComponent`, () => {
     let component: TagListComponent;
     let fixture: ComponentFixture<TagListComponent>;
 

@@ -189,10 +189,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
      * @param name The input of a single csv entry
      */
     private parseName(name: string): string[] {
-        const names = name
-            .split(this._nameDelimiter)
-            .map(n => n.trim())
-            .filter(n => !!n);
+        const names = this.filterValidNames(name.split(this._nameDelimiter).map(n => n.trim()));
         if (names.some(n => n.length > 256)) {
             throw new Error(`Name exceeds 256 characters`);
         }
@@ -232,5 +229,13 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
             return item ?? [];
         }
         return item || null;
+    }
+
+    /**
+     * Can be used to filter out empty strings after splitting up an input
+     * @returns A string with the valid names
+     */
+    protected filterValidNames(names: string[]): string[] {
+        return names.filter(name => !!name.trim());
     }
 }

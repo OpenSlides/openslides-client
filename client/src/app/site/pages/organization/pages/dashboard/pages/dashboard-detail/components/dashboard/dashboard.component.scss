@@ -130,6 +130,10 @@ os-dashboard {
         }
     }
 
+    .meeting-box-left {
+        width: calc(95% - 50px);
+    }
+
     #active-meetings {
         .meeting-list {
             height: fit-content;

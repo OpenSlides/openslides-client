@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MeetingMediaAdapterService } from './meeting-media-adapter.service';
 
-describe(`MeetingMediaAdapterService`, () => {
+xdescribe(`MeetingMediaAdapterService`, () => {
     let service: MeetingMediaAdapterService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ActiveFiltersService } from './active-filters.service';
 
-describe(`ActiveFiltersService`, () => {
+xdescribe(`ActiveFiltersService`, () => {
     let service: ActiveFiltersService;
 
     beforeEach(() => {

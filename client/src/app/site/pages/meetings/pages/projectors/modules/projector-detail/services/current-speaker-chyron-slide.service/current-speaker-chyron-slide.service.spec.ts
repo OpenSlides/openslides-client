@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CurrentSpeakerChyronSlideService } from './current-speaker-chyron-slide.service';
 
-describe(`CurrentSpeakerChyronSlideService`, () => {
+xdescribe(`CurrentSpeakerChyronSlideService`, () => {
     let service: CurrentSpeakerChyronSlideService;
 
     beforeEach(() => {

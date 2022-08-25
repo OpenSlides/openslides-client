@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionBlockSortService } from './motion-block-sort.service';
 
-describe(`MotionBlockSortService`, () => {
+xdescribe(`MotionBlockSortService`, () => {
     let service: MotionBlockSortService;
 
     beforeEach(() => {

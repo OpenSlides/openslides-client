@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ApplauseBarDisplayService } from './applause-bar-display.service';
 
-describe(`ApplauseBarDisplayService`, () => {
+xdescribe(`ApplauseBarDisplayService`, () => {
     let service: ApplauseBarDisplayService;
 
     beforeEach(() => {

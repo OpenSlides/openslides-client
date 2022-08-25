@@ -130,6 +130,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private _additionalFormControls: any = {};
     private _formValueChangeSubscription: Subscription | null = null;
 
+    private _checkIfDeletedProperties = [`pronoun`, `default_password`];
+
     public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
         super();
     }
@@ -278,9 +280,21 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private propagateValues(): void {
         setTimeout(() => {
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
-            this.changeEvent.emit(this.personalInfoForm.value);
+            this.changeEvent.emit(this.getChangedValues(this.personalInfoForm.value));
             this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser || this._hasChanges));
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
+    }
+
+    private getChangedValues(data: { [key: string]: any }): { [key: string]: any } {
+        const newData = {};
+        if (this.user) {
+            Object.keys(data).forEach(key => {
+                newData[key] =
+                    this._checkIfDeletedProperties.includes(key) && !data[key] && !!this.user[key] ? null : data[key];
+            });
+            return newData;
+        }
+        return data;
     }
 }

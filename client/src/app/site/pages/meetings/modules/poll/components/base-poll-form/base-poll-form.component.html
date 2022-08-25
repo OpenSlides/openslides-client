@@ -69,6 +69,9 @@
                             required
                             [errorStateMatcher]="parentErrorStateMatcher"
                         />
+                        <mat-error *ngIf="contentForm.controls['votes_amount'].hasError('notEnoughOptionsError')">
+                            {{ 'There are not enough options.' | translate }}
+                        </mat-error>
                         <mat-error *ngIf="contentForm.controls['votes_amount'].hasError('rangeError')">
                             {{ 'Min votes cannot be greater than max votes.' | translate }}
                         </mat-error>

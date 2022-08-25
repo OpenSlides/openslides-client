@@ -35,12 +35,20 @@ export class CommitteeMeetingPreviewComponent {
         return this.meeting?.description || ``;
     }
 
+    public get shouldUseSmallerBadgeText(): boolean {
+        return this.userAmount > 9999;
+    }
+
     public get userAmount(): number {
         return this.meeting?.user_ids?.length || 0;
     }
 
+    public get formattedUserAmount(): string {
+        return this.userAmount < 1000 ? `${this.userAmount}` : `>${Math.floor(this.userAmount / 1000)}k`;
+    }
+
     public get showUserAmount(): boolean {
-        return (this.userAmount > 0 && this.userAmount < 1000) || false;
+        return (this.userAmount > 0 && this.userAmount < 100000) || false;
     }
 
     public get isTemplateMeeting(): boolean {

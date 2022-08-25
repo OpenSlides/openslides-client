@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AmendmentControllerService } from './amendment-controller.service';
 
-describe(`AmendmentControllerService`, () => {
+xdescribe(`AmendmentControllerService`, () => {
     let service: AmendmentControllerService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WorkflowDetailComponent } from './workflow-detail.component';
 
-describe(`WorkflowDetailComponent`, () => {
+xdescribe(`WorkflowDetailComponent`, () => {
     let component: WorkflowDetailComponent;
     let fixture: ComponentFixture<WorkflowDetailComponent>;
 

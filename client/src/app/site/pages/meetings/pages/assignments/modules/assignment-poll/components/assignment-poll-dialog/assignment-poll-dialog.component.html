@@ -1,6 +1,7 @@
 <os-assignment-poll-form
     [pollClassType]="pollClassType.Assignment"
     [data]="pollData"
+    [pollOptionAmount]="getOptionAmount()"
     [pollService]="assignmentPollService"
     [pollMethods]="AssignmentPollMethodVerbose"
     [percentBases]="AssignmentPollPercentBaseVerbose"

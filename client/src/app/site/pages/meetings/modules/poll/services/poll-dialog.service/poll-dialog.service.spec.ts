@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PollDialogService } from './poll-dialog.service';
 
-describe(`PollDialogService`, () => {
+xdescribe(`PollDialogService`, () => {
     let service: PollDialogService;
 
     beforeEach(() => {

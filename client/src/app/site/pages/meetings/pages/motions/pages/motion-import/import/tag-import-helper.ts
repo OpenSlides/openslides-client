@@ -21,7 +21,7 @@ export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
             return result;
         }
 
-        const tagArray = name.split(`,`);
+        const tagArray = this.filterValidNames(name.split(`,`));
         for (let tag of tagArray) {
             tag = tag.trim();
             const existingTag = this.repo.getViewModelList().find(tagInRepo => tagInRepo.name === tag);

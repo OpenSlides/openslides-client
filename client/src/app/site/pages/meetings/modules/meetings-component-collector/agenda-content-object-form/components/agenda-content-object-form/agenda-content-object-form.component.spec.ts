@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaContentObjectFormComponent } from './agenda-content-object-form.component';
 
-describe(`AgendaContentObjectFormComponent`, () => {
+xdescribe(`AgendaContentObjectFormComponent`, () => {
     let component: AgendaContentObjectFormComponent;
     let fixture: ComponentFixture<AgendaContentObjectFormComponent>;
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AuthTokenInterceptor } from './auth-token.interceptor';
 
-describe(`AuthTokenInterceptor`, () => {
+xdescribe(`AuthTokenInterceptor`, () => {
     beforeEach(() =>
         TestBed.configureTestingModule({
             providers: [AuthTokenInterceptor]

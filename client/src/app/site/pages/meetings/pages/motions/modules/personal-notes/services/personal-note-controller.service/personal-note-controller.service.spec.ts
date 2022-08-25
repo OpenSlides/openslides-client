@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PersonalNoteControllerService } from './personal-note-controller.service';
 
-describe(`PersonalNoteControllerService`, () => {
+xdescribe(`PersonalNoteControllerService`, () => {
     let service: PersonalNoteControllerService;
 
     beforeEach(() => {

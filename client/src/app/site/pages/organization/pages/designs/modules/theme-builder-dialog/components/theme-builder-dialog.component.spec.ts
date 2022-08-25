@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ThemeBuilderDialogComponent } from './theme-builder-dialog.component';
 
-describe(`ThemeBuilderDialogComponent`, () => {
+xdescribe(`ThemeBuilderDialogComponent`, () => {
     let component: ThemeBuilderDialogComponent;
     let fixture: ComponentFixture<ThemeBuilderDialogComponent>;
 

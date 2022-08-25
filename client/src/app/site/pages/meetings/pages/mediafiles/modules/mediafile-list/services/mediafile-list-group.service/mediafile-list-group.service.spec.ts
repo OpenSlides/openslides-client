@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MediafileListGroupService } from './mediafile-list-group.service';
 
-describe(`MediafileListGroupService`, () => {
+xdescribe(`MediafileListGroupService`, () => {
     let service: MediafileListGroupService;
 
     beforeEach(() => {
