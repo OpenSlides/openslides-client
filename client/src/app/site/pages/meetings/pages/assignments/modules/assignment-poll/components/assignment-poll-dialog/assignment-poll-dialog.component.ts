@@ -60,6 +60,10 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         );
     }
 
+    public getOptionAmount(): number {
+        return this.getContentObjectsForOptions()?.length;
+    }
+
     protected getContentObjectsForOptions(): BaseModel[] {
         if (!this.pollData) {
             return [];

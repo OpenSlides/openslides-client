@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatButtonToggle } from '@angular/material/button-toggle';
+import { MatButtonToggle, MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialogRef } from '@angular/material/dialog';
 import { auditTime, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -112,6 +112,9 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
     @ViewChild(MOTION_PDF_OPTIONS.AddBreaks)
     public addBreaksButton!: MatButtonToggle;
 
+    @ViewChild(MOTION_PDF_OPTIONS.ContinuousText)
+    public continuousTextButton!: MatButtonToggle;
+
     /**
      * Constructor
      * Sets the default values for the lineNumberingMode and changeRecoMode and creates the form.
@@ -151,10 +154,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
 
             this.exportForm
                 .get(`format`)!
-                .valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value)),
-            this.exportForm
-                .get(`pdfOptions`)!
-                .valueChanges.subscribe((value: string[]) => this.onPdfOptionsChange(value))
+                .valueChanges.subscribe((value: ExportFileFormat) => this.onFormatChange(value))
         );
     }
 
@@ -194,19 +194,10 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
         }
     }
 
-    /**
-     * React to changes on the content selection
-     * @param pdfOptions
-     */
-    private onPdfOptionsChange(pdfOptions: string[]): void {
-        if (pdfOptions && pdfOptions.includes(MOTION_PDF_OPTIONS.ContinuousText)) {
+    public onChange(event: MatButtonToggleChange): void {
+        if (event.value.includes(MOTION_PDF_OPTIONS.ContinuousText)) {
             this.tocButton.checked = false;
-            this.tocButton.disabled = true;
             this.addBreaksButton.checked = false;
-            this.addBreaksButton.disabled = true;
-        } else {
-            this.addBreaksButton.disabled = false;
-            this.tocButton.disabled = false;
         }
     }
 

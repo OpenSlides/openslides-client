@@ -45,7 +45,8 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                 modelRequest: {
                     viewModelCtor: ViewUser,
                     ids: this._accountIds,
-                    fieldset: `accountList`
+                    fieldset: `accountList`,
+                    additionalFields: [{ templateField: `group_$_ids` }]
                 },
                 subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
                 hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))

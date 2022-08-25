@@ -28,7 +28,14 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         const patchFn = (user: ViewUser) => {
             return {
                 id: user.id,
-                group_$_ids: meetings.mapToObject(meeting => ({ [meeting.id]: [meeting.default_group_id] }))
+                group_$_ids: meetings.mapToObject(meeting => {
+                    const groupIds: number[] = user.group_ids(meeting.id);
+                    return {
+                        [meeting.id]: groupIds.includes(meeting.default_group_id)
+                            ? groupIds
+                            : groupIds.concat(meeting.default_group_id)
+                    };
+                })
             };
         };
         return this.repo.update(patchFn, ...users);

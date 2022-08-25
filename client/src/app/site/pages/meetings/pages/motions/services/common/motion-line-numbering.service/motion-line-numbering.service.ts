@@ -227,7 +227,7 @@ export class MotionLineNumberingService {
 
             changes.forEach((change: ViewMotionChangeRecommendation) => {
                 // Hint: this assumes that change recommendations only affect one specific paragraph, not multiple
-                if (change.line_from >= affected.from! && change.line_from < affected.to!) {
+                if (change.line_from >= affected.from! && change.line_from <= affected.to!) {
                     paragraph = this.diffService.replaceLines(paragraph, change.text, change.line_from, change.line_to);
 
                     // Reapply relative line numbers
