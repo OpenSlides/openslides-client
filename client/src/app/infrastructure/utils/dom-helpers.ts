@@ -298,7 +298,7 @@ export function addClassToHtmlTag(tagStr: string, className: string): string {
  */
 export function serializeTag(node: Node): string {
     if (node.nodeType !== Node.ELEMENT_NODE) {
-        throw Error(`Invalid node type`);
+        throw new Error(`Invalid node type`);
     }
 
     const element = <Element>node;
