@@ -861,6 +861,16 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         }));
 
+        it(`handles insterted paragraphs infront of list`, inject([MotionDiffService], (service: MotionDiffService) => {
+            // Hint: line number should be moved into first element
+            const before = `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
+                after = `<p>Add before UL</p><ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
+                expected = `<p class="insert"><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Add before UL</p><ul><li>Lorem ipsum</li></ul>`;
+
+            const diff = service.diff(before, after);
+            expect(diff).toBe(expected);
+        }));
+
         it(`handles completely deleted paragraphs`, inject([MotionDiffService], (service: MotionDiffService) => {
             const before = `<P>Ihr könnt ohne Sorge fortgehen.'Da meckerte die Alte und machte sich getrost auf den Weg.</P>`,
                 after = ``;
