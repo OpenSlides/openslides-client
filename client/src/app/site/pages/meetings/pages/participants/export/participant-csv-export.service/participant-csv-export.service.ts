@@ -45,7 +45,8 @@ export class ParticipantCsvExportService {
                 { property: `email` },
                 { property: `username` },
                 { property: `gender` },
-                { property: `vote_weight`, label: `Vote weight` }
+                { property: `vote_weight`, label: `Vote weight` },
+                { property: `pronoun`, label: `Pronoun` }
             ],
             this.translate.instant(`Participants`) + `.csv`
         );
