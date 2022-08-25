@@ -176,6 +176,16 @@ describe(`MotionDiffService`, () => {
     });
 
     describe(`extraction of lines`, () => {
+        it(`try insert internal line markers twice`, inject([MotionDiffService], (service: MotionDiffService) => {
+            let fragment = htmlToFragment(baseHtml1);
+            service.insertInternalLineMarkers(fragment);
+            service.insertInternalLineMarkers(fragment);
+
+            expect(fragment).toEqual(baseHtmlDom1);
+        }));
+    });
+
+    describe(`extraction of lines`, () => {
         it(`locates line number nodes`, inject([MotionDiffService], (service: MotionDiffService) => {
             let lineNumberNode = service.getLineNumberNode(baseHtmlDom1, 4);
             expect(lineNumberNode.parentNode.nodeName).toBe(`STRONG`);
