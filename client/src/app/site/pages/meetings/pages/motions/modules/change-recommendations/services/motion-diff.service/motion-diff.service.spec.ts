@@ -1432,4 +1432,153 @@ describe(`MotionDiffService`, () => {
             }
         ));
     });
+
+    describe(`getAmendmentParagraphsLines`, () => {
+        it(`test identical inputs`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`;
+            const outHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`;
+
+            expect(service.getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toBe(null);
+        }));
+
+        it(`test without change recos`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const outHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2x</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+
+            expect(service.getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toEqual({
+                diffLineFrom: 2,
+                diffLineTo: 2,
+                paragraphLineFrom: 1,
+                paragraphLineTo: 4,
+                paragraphNo: 2,
+                text: `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`,
+                textPost: `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`,
+                textPre: `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`
+            });
+        }));
+
+        // TODO: test with change recos
+    });
+
+    describe(`getChangeDiff`, () => {
+        it(`test with simple change`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p>Test 2x</p>`
+                    }),
+                    20
+                )
+            ).toBe(
+                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`
+            );
+        }));
+
+        // TODO: Check what should happen when highlighted is set
+        it(`test with simple change highlighted`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p>Test 2x</p>`
+                    }),
+                    20,
+                    1
+                )
+            ).toBe(
+                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`
+            );
+        }));
+    });
+
+    describe(`getTextRemainderAfterLastChange`, () => {
+        it(`test with simple change`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getTextRemainderAfterLastChange(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 2,
+                            line_to: 2,
+                            text: `<p>Test 2x</p>`
+                        })
+                    ],
+                    20
+                )
+            ).toBe(
+                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+            );
+        }));
+
+        it(`test no remainder after last change`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getTextRemainderAfterLastChange(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 3,
+                            line_to: 3,
+                            text: `<p>Test 3x</p>`
+                        })
+                    ],
+                    20
+                )
+            ).toBe(``);
+        }));
+
+        it(`test with no changes`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(service.getTextRemainderAfterLastChange(inHtml, [], 20)).toBe(inHtml);
+        }));
+    });
+
+    describe(`extractMotionLineRange`, () => {
+        it(`test with no line numbers in result`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+
+            expect(
+                service.extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    false,
+                    20
+                )
+            ).toBe(`<P>Test 2</P><P>Test 3</P>`);
+        }));
+
+        it(`test with line numbers in result`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+
+            expect(
+                service.extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+            );
+        }));
+    });
 });
