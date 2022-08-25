@@ -2,6 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { htmlToFragment } from 'src/app/infrastructure/utils/dom-helpers';
 import { E2EImportsModule } from 'src/e2e-imports.module';
+import { TestChangeRecommendation } from 'src/testing/models/test-change-recommendation';
 
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from './motion-diff.service';
@@ -1359,5 +1360,66 @@ describe(`MotionDiffService`, () => {
             const stripped = service.diffHtmlToFinalText(inHtml);
             expect(stripped).toBe(`<P>Test <STRONG>1</STRONG></P><P class="anotherclass">Test <STRONG>2</STRONG></P>`);
         }));
+    });
+
+    describe(`apply unified changes to text: getTextWithChanges`, () => {
+        it(`test with no changes`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService, lineNumberingService: LineNumberingService) => {
+                const inHtml = `<p>Test 1</p><p>Test 2</p>`;
+                const out = service.getTextWithChanges(inHtml, [], 20);
+                expect(out).toBe(
+                    lineNumberingService.insertLineNumbers({
+                        html: inHtml,
+                        lineLength: 20,
+                        firstLine: 1
+                    })
+                );
+            }
+        ));
+
+        it(`test changes in random order`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService, lineNumberingService: LineNumberingService) => {
+                const inHtml = `<p>Test 1</p><p>Test 2</p><p>Test 3</p><p>Test 4</p>`;
+
+                const out = service.getTextWithChanges(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 3,
+                            line_to: 3,
+                            text: `<p>Test 3x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 2,
+                            line_to: 2,
+                            text: `<p>Test 2x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 1,
+                            line_to: 1,
+                            text: `<p>Test 1x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 4,
+                            line_to: 4,
+                            text: `<p>Test 4x</p>`
+                        })
+                    ],
+                    20
+                );
+
+                expect(out).toBe(
+                    lineNumberingService
+                        .insertLineNumbers({
+                            html: inHtml,
+                            lineLength: 20,
+                            firstLine: 1
+                        })
+                        .replace(/Test ([1-4])/g, `Test $1x`)
+                );
+            }
+        ));
     });
 });
