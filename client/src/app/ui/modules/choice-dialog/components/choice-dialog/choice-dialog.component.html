@@ -6,9 +6,19 @@
     <!-- Content -->
     <div mat-dialog-content *ngIf="data?.choices">
         <os-list-search-selector
+            *ngIf="!data.sortFn"
             ngDefaultControl
             formControlName="select"
             [multiple]="data.multiSelect!"
+            [inputListValues]="data.choices!"
+            (selectionChanged)="onSelectionChanged($event)"
+        ></os-list-search-selector>
+        <os-list-search-selector
+            *ngIf="data.sortFn"
+            ngDefaultControl
+            formControlName="select"
+            [multiple]="data.multiSelect!"
+            [sortFn]="data.sortFn"
             [inputListValues]="data.choices!"
             (selectionChanged)="onSelectionChanged($event)"
         ></os-list-search-selector>
