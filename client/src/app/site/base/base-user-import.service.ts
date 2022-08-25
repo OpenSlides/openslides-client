@@ -8,7 +8,9 @@ import { BaseImportService } from './base-import.service';
 export abstract class BaseUserImportService extends BaseImportService<User> {
     public override requiredHeaderLength = 3;
 
-    private readonly currentLangGenders = GENDERS.map(gender => this.translate.instant(gender));
+    private get currentLangGenders(): string[] {
+        return GENDERS.map(gender => this.translate.instant(gender));
+    }
 
     public constructor(importServiceCollector: ImportServiceCollectorService) {
         super(importServiceCollector);
