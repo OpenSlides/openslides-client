@@ -1,7 +1,7 @@
 <os-head-bar
     [nav]="false"
     [editMode]="true"
-    [isSaveButtonEnabled]="meetingForm?.valid"
+    [isSaveButtonEnabled]="isValid"
     [saveAction]="getSaveAction()"
     (cancelEditEvent)="onCancel()"
 >
@@ -46,14 +46,14 @@
 
         <mat-form-field>
             <mat-label>{{ 'Start date' | translate }}</mat-label>
-            <input matInput [matDatepicker]="startDatePicker" formControlName="start_time" />
+            <input matInput [matDatepicker]="startDatePicker" formControlName="start_time" (click)="startDatePicker.open()" readonly />
             <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #startDatePicker></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>{{ 'End date' | translate }}</mat-label>
-            <input matInput [matDatepicker]="endDatePicker" formControlName="end_time" />
+            <input matInput [matDatepicker]="endDatePicker" formControlName="end_time" (click)="endDatePicker.open()" readonly />
             <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
