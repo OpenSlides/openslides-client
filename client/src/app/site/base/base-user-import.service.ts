@@ -1,12 +1,16 @@
 import { Directive } from '@angular/core';
 
-import { User } from '../../domain/models/users/user';
+import { GENDERS, User } from '../../domain/models/users/user';
 import { ImportServiceCollectorService } from '../services/import-service-collector.service';
 import { BaseImportService } from './base-import.service';
 
 @Directive()
 export abstract class BaseUserImportService extends BaseImportService<User> {
     public override requiredHeaderLength = 3;
+
+    private get currentLangGenders(): string[] {
+        return GENDERS.map(gender => this.translate.instant(gender));
+    }
 
     public constructor(importServiceCollector: ImportServiceCollectorService) {
         super(importServiceCollector);
@@ -15,6 +19,14 @@ export abstract class BaseUserImportService extends BaseImportService<User> {
     protected override pipeParseValue(value: string, header: keyof User): any {
         if (header === `is_active` || header === `is_physical_person`) {
             return this.toBoolean(value);
+        }
+
+        if (header === `gender`) {
+            return this.getGenderInEnglish(value);
+        }
+
+        if (header === `first_name` || header === `last_name` || header === `username`) {
+            return value.trim();
         }
     }
 
@@ -32,5 +44,19 @@ export abstract class BaseUserImportService extends BaseImportService<User> {
         } else {
             throw new TypeError(`Value cannot be translated into boolean: ` + data);
         }
+    }
+
+    /**
+     * translates gender string to the english version if necessary
+     *
+     * @param data
+     * @returns a boolean from the string
+     */
+    private getGenderInEnglish(data: string): string {
+        const location = this.currentLangGenders.findIndex(gender => gender === data);
+        if (location !== -1) {
+            return GENDERS[location];
+        }
+        return data;
     }
 }

@@ -2,6 +2,7 @@ import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/co
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { locale } from 'moment';
 import { first, firstValueFrom, tap } from 'rxjs';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
@@ -55,11 +56,17 @@ export class OpenSlidesMainComponent implements OnInit {
                 // try to use the browser language if it is available. If not, uses english.
                 this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
             }
+
+            // set moment locale
+            locale(this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang);
         });
 
-        // listen for language changes and update local storage on change
+        // listen for language changes
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
             this.storageService.set(CURRENT_LANGUAGE_STORAGE_KEY, event.lang);
+
+            // update moment locale
+            locale(event.lang);
         });
     }
 

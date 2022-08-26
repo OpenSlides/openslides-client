@@ -166,7 +166,7 @@
                 <os-editor formControlName="about_me"></os-editor>
             </div>
 
-            <div *ngIf="isAllowed('seeExtra')">
+            <div *ngIf="isAllowed('manage')">
                 <!-- Comment -->
                 <mat-form-field>
                     <input matInput placeholder="{{ 'Comment' | translate }}" formControlName="comment" />
@@ -239,7 +239,7 @@
             </div>
         </div>
 
-        <div *ngIf="isAllowed('seeExtra')">
+        <div *ngIf="isAllowed('manage')">
             <!-- Comment -->
             <div *ngIf="user?.comment()">
                 <h4>{{ 'Comment' | translate }}</h4>

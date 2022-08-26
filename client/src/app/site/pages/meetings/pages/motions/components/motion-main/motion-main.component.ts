@@ -17,7 +17,7 @@ import {
 export class MotionMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(
+            this.updateSubscribeTo(
                 getMotionListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
                 getMotionBlockSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
                 getMotionWorkflowSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),

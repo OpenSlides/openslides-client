@@ -51,7 +51,7 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
-        this.accountIds = await this.controller.fetchAccountIds({ cleanOldModels: true });
+        this.accountIds = await this.controller.fetchAccountIds({ cleanOldModels: true, start_index: 0, entries: 10000 });
     }
 
     protected override onCreateModelRequests(firstCreation = true): ModelRequestConfig[] {
@@ -65,8 +65,9 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
             {
                 modelRequest: {
                     viewModelCtor: ViewUser,
-                    ids: this.accountIds,
-                    fieldset: `accountList`
+                    ids: this._accountIds,
+                    fieldset: `accountList`,
+                    additionalFields: [{ templateField: `group_$_ids` }]
                 },
                 subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
                 hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))

@@ -113,7 +113,9 @@
             </mat-icon>
 
             <!-- Has comment indicator -->
-            <mat-icon inline *ngIf="!!user.comment()" matTooltip="{{ user.comment() }}">comment</mat-icon>
+            <div *osPerms="permission.userCanManage">
+                <mat-icon inline *ngIf="!!user.comment()" matTooltip="{{ user.comment() }}">comment</mat-icon>
+            </div>
 
             <!--<os-icon-container *ngIf="user.isSamlUser" icon="device_hub"
                 ><span>{{ 'Is SAML user' | translate }}</span></os-icon-container

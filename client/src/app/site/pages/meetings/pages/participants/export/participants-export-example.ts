@@ -10,6 +10,7 @@ export const participantsExportExample: any = [
         default_password: `initialPassword`,
         username: `mmustermann`,
         gender: `male`,
+        pronoun: `Er`,
         default_number: 1234567890,
         default_structure_level: `Berlin`,
         default_vote_weight: 1.0,
