@@ -51,7 +51,11 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
     }
 
     protected override async onBeforeModelRequests(): Promise<void> {
-        this.accountIds = await this.controller.fetchAccountIds({ cleanOldModels: true, start_index: 0, entries: 10000 });
+        this.accountIds = await this.controller.fetchAccountIds({
+            cleanOldModels: true,
+            start_index: 0,
+            entries: 10000
+        });
     }
 
     protected override onCreateModelRequests(firstCreation = true): ModelRequestConfig[] {
