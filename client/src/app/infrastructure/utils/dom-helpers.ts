@@ -122,6 +122,23 @@ export function htmlToFragment(html: string): DocumentFragment {
 }
 
 /**
+ * Converts a HTML Document Fragment into HTML string, using the browser's internal mechanisms.
+ * HINT: special characters might get escaped / html-encoded in the process of this.
+ *
+ * @param {DocumentFragment} fragment
+ * @returns string
+ */
+export function fragmentToHtml(fragment: DocumentFragment): string {
+    const div: Element = document.createElement(`DIV`);
+    while (fragment.firstChild) {
+        const child = fragment.firstChild;
+        fragment.removeChild(child);
+        div.appendChild(child);
+    }
+    return div.innerHTML;
+}
+
+/**
  * Get all the siblings of the given node _after_ this node, in the order as they appear in the DOM tree.
  *
  * @param {Node} node
@@ -150,6 +167,22 @@ export function getAllPrevSiblingsReversed(node: Node): Node[] {
         node = node.previousSibling;
     }
     return nodes;
+}
+
+/**
+ * Traverses up the DOM tree until it finds a node with a nextSibling, then returns that sibling
+ *
+ * @param {Node} node
+ * @returns {Node}
+ */
+export function findNextAuntNode(node: Node): Node | null {
+    if (node.nextSibling) {
+        return node.nextSibling;
+    } else if (node.parentNode) {
+        return findNextAuntNode(node.parentNode);
+    }
+
+    return null;
 }
 
 /**
@@ -365,4 +398,36 @@ export function htmlToUppercase(html: string): string {
 
         return `<` + tag.toUpperCase() + attributes + `>`;
     });
+}
+
+/**
+ * Returns true, if the provided element is an inline element (hard-coded list of known elements).
+ *
+ * @param {Element} element
+ * @returns {boolean}
+ */
+export function isInlineElement(element: Element): boolean {
+    const inlineElements = [
+        `SPAN`,
+        `A`,
+        `EM`,
+        `S`,
+        `B`,
+        `I`,
+        `STRONG`,
+        `U`,
+        `BIG`,
+        `SMALL`,
+        `SUB`,
+        `SUP`,
+        `TT`,
+        `INS`,
+        `DEL`,
+        `STRIKE`
+    ];
+    if (element) {
+        return inlineElements.indexOf(element.nodeName) > -1;
+    }
+
+    return false;
 }
