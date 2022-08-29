@@ -1356,13 +1356,11 @@ export class MotionDiffService {
 
         const mergedFragment = document.createDocumentFragment();
         let el: ChildNode;
-        while (oldTextWithBreaks.firstChild) {
-            el = oldTextWithBreaks.firstChild;
+        while ((el = oldTextWithBreaks.firstChild)) {
             oldTextWithBreaks.removeChild(el);
             mergedFragment.appendChild(el);
         }
-        while (newTextWithBreaks.firstChild) {
-            el = newTextWithBreaks.firstChild;
+        while ((el = newTextWithBreaks.firstChild)) {
             newTextWithBreaks.removeChild(el);
             mergedFragment.appendChild(el);
         }
@@ -1423,35 +1421,33 @@ export class MotionDiffService {
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
         // information would get lost by this that we will need to recursively merge it again later on.
-        let oldIsSplitAfter = false;
-        let newIsSplitAfter = false;
-        let oldIsSplitBefore = false;
-        let newIsSplitBefore = false;
+        let isSplitAfter = false;
+        let isSplitBefore = false;
         htmlOld = htmlOld.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-            (match: string, beginning: string): string => {
-                oldIsSplitAfter = true;
+            (_match: string, beginning: string): string => {
+                isSplitAfter = true;
                 return beginning;
             }
         );
         htmlNew = htmlNew.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-            (match: string, beginning: string): string => {
-                newIsSplitAfter = true;
+            (_match: string, beginning: string): string => {
+                isSplitAfter = true;
                 return beginning;
             }
         );
         htmlOld = htmlOld.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-            (match: string, beginning: string): string => {
-                oldIsSplitBefore = true;
+            (_match: string, beginning: string): string => {
+                isSplitBefore = true;
                 return beginning;
             }
         );
         htmlNew = htmlNew.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-            (match: string, beginning: string): string => {
-                newIsSplitBefore = true;
+            (_match: string, beginning: string): string => {
+                isSplitBefore = true;
                 return beginning;
             }
         );
@@ -1466,7 +1462,7 @@ export class MotionDiffService {
         // We need to do this before removing </del><del> as done in one of the next statements
         diffUnnormalized = diffUnnormalized.replace(
             /<del>(((<BR CLASS="os-line-break">)<\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)<\/del>/gi,
-            (found: string, tag: string, brWithDel: string, plainBr: string, span: string): string =>
+            (_found: string, _tag: string, _brWithDel: string, plainBr: string, span: string): string =>
                 (plainBr !== undefined ? plainBr : ``) + span + ` </span>`
         );
 
@@ -1481,14 +1477,14 @@ export class MotionDiffService {
         // Hint: if there is no deletion before the line break, we have the same issue, but cannot solve this here.
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/del>)(<BR CLASS="os-line-break"><span[^>]+os-line-number[^>]+?>\s*<\/span>)(<ins>[\s\S]*?<\/ins>)/gi,
-            (found: string, del: string, br: string, ins: string): string => del + ins + br
+            (_found: string, del: string, br: string, ins: string): string => del + ins + br
         );
 
         // If only a few characters of a word have changed, don't display this as a replacement of the whole word,
         // but only of these specific characters
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([a-z0-9,_-]* ?)<\/del><ins>([a-z0-9,_-]* ?)<\/ins>/gi,
-            (found: string, oldText: string, newText: string): string => {
+            (_found: string, oldText: string, newText: string): string => {
                 let foundDiff = false;
                 let commonStart = ``;
                 let commonEnd = ``;
@@ -1539,7 +1535,7 @@ export class MotionDiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<(p|div|blockquote|li)([^>]*)><(ins|del)>([\s\S]*?)<\/\1>(\s*)<(p|div|blockquote|li)([^>]*)><\/\3>/gi,
             (
-                whole: string,
+                _whole: string,
                 block1: string,
                 att1: string,
                 insDel: string,
@@ -1576,7 +1572,7 @@ export class MotionDiffService {
                 const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
                 return whole.replace(
                     /(<(p|div|blockquote|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
-                    (whole2: string, opening: string, blockTag: string, content: string, closing: string): string => {
+                    (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
                         const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
                         return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
                     }
@@ -1587,7 +1583,7 @@ export class MotionDiffService {
         // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted tet</del><ins>inserted.</ins></P>
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
-            (whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
+            (_whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
                 `<del>` + deleted + `</del><ins>` + inserted + `</ins></` + tag + `>` + white
         );
 
@@ -1635,20 +1631,20 @@ export class MotionDiffService {
         // around block tags. It should be safe to remove them and just leave the whitespaces.
         diffUnnormalized = diffUnnormalized.replace(
             /<(ins|del)>(\s*)<\/\1>/gi,
-            (whole: string, insDel: string, space: string): string => space
+            (_whole: string, _insDel: string, space: string): string => space
         );
 
         // <del></p><ins> Added text</p></ins> -> <ins> Added text</ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /<del><\/(p|div|blockquote|li)><\/del><ins>([\s\S]*?)<\/\1>(\s*)<\/ins>/gi,
-            (whole: string, blockTag: string, content: string, space: string): string =>
+            (_whole: string, blockTag: string, content: string, space: string): string =>
                 `<ins>` + content + `</ins></` + blockTag + `>` + space
         );
 
         // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
-            (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+            (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del>` +
                 content +
                 `</del>` +
@@ -1665,7 +1661,7 @@ export class MotionDiffService {
         // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<del><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
-            (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+            (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del><` +
                 inlineTag +
                 (tagAttributes ? tagAttributes : ``) +
@@ -1682,7 +1678,7 @@ export class MotionDiffService {
         // </p> </ins> -> </ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
-            (whole: string, ending: string, blockTag: string, space: string, insdel: string): string =>
+            (_whole: string, ending: string, _blockTag: string, space: string, insdel: string): string =>
                 `</` + insdel + `>` + ending + space
         );
 
@@ -1700,10 +1696,10 @@ export class MotionDiffService {
             }
         }
 
-        if (oldIsSplitAfter || newIsSplitAfter) {
+        if (isSplitAfter) {
             diff = DomHelpers.addClassToLastNode(diff, `os-split-after`);
         }
-        if (oldIsSplitBefore || newIsSplitBefore) {
+        if (isSplitBefore) {
             diff = DomHelpers.addClassToLastNode(diff, `os-split-before`);
         }
 
