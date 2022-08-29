@@ -1379,13 +1379,7 @@ export class MotionDiffService {
         lineLength: number | null = null,
         firstLineNumber: number | null = null
     ): string {
-        const cacheKey =
-            lineLength +
-            ` ` +
-            firstLineNumber +
-            ` ` +
-            djb2hash(htmlOld) +
-            djb2hash(htmlNew);
+        const cacheKey = lineLength + ` ` + firstLineNumber + ` ` + djb2hash(htmlOld) + djb2hash(htmlNew);
         const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;

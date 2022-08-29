@@ -3,6 +3,17 @@ import { inject, TestBed } from '@angular/core/testing';
 import { LineNumberingService } from './line-numbering.service';
 
 describe(`LineNumberingService`, () => {
+    /**
+     * This converts an array of HTML elements into a string
+     */
+    function nodesToHtml(nodes: Element[]): string {
+        const root = document.createElement(`div`);
+        nodes.forEach(node => {
+            root.appendChild(node);
+        });
+        return root.innerHTML;
+    }
+
     const brMarkup = (no: number): string => {
             return (
                 `<br class="os-line-break">` +
@@ -93,7 +104,7 @@ describe(`LineNumberingService`, () => {
             const textNode = document.createTextNode(`0123`);
             service.setInlineOffsetLineNumberForTests(0, 1);
             const out = service.textNodeToLines(textNode, 5);
-            const outHtml = service.nodesToHtml(out);
+            const outHtml = nodesToHtml(out);
             expect(outHtml).toBe(`0123`);
             expect(service.getInlineOffsetForTests()).toBe(4);
         }));
@@ -102,7 +113,7 @@ describe(`LineNumberingService`, () => {
             const textNode = document.createTextNode(`012345678901234567`);
             service.setInlineOffsetLineNumberForTests(0, 1);
             const out = service.textNodeToLines(textNode, 5);
-            const outHtml = service.nodesToHtml(out);
+            const outHtml = nodesToHtml(out);
             expect(outHtml).toBe(`01234` + brMarkup(1) + `56789` + brMarkup(2) + `01234` + brMarkup(3) + `567`);
             expect(service.getInlineOffsetForTests()).toBe(3);
         }));
@@ -111,7 +122,7 @@ describe(`LineNumberingService`, () => {
             const textNode = document.createTextNode(`012345678901234567`);
             service.setInlineOffsetLineNumberForTests(2, 1);
             const out = service.textNodeToLines(textNode, 5);
-            const outHtml = service.nodesToHtml(out);
+            const outHtml = nodesToHtml(out);
             expect(outHtml).toBe(`012` + brMarkup(1) + `34567` + brMarkup(2) + `89012` + brMarkup(3) + `34567`);
             expect(service.getInlineOffsetForTests()).toBe(5);
         }));
@@ -122,7 +133,7 @@ describe(`LineNumberingService`, () => {
                 const textNode = document.createTextNode(`012345678901234567`);
                 service.setInlineOffsetLineNumberForTests(5, 1);
                 const out = service.textNodeToLines(textNode, 5);
-                const outHtml = service.nodesToHtml(out);
+                const outHtml = nodesToHtml(out);
                 expect(outHtml).toBe(
                     brMarkup(1) + `01234` + brMarkup(2) + `56789` + brMarkup(3) + `01234` + brMarkup(4) + `567`
                 );
@@ -134,7 +145,7 @@ describe(`LineNumberingService`, () => {
             const textNode = document.createTextNode(`0123 45 67 89012 34 567`);
             service.setInlineOffsetLineNumberForTests(0, 1);
             const out = service.textNodeToLines(textNode, 5);
-            const outHtml = service.nodesToHtml(out);
+            const outHtml = nodesToHtml(out);
             expect(outHtml).toBe(
                 `0123 ` + brMarkup(1) + `45 67 ` + brMarkup(2) + `89012 ` + brMarkup(3) + `34 ` + brMarkup(4) + `567`
             );
@@ -145,7 +156,7 @@ describe(`LineNumberingService`, () => {
             const textNode = document.createTextNode(`0123 45 67 89012tes 344 `);
             service.setInlineOffsetLineNumberForTests(0, 1);
             const out = service.textNodeToLines(textNode, 5);
-            const outHtml = service.nodesToHtml(out);
+            const outHtml = nodesToHtml(out);
             expect(outHtml).toBe(
                 `0123 ` + brMarkup(1) + `45 67 ` + brMarkup(2) + `89012` + brMarkup(3) + `tes ` + brMarkup(4) + `344 `
             );
@@ -156,7 +167,7 @@ describe(`LineNumberingService`, () => {
             const textNode = document.createTextNode(`I'm a Demo-Text`);
             service.setInlineOffsetLineNumberForTests(0, 1);
             const out = service.textNodeToLines(textNode, 5);
-            const outHtml = service.nodesToHtml(out);
+            const outHtml = nodesToHtml(out);
             expect(outHtml).toBe(`I'm a ` + brMarkup(1) + `Demo-` + brMarkup(2) + `Text`);
             expect(service.getInlineOffsetForTests()).toBe(4);
         }));
@@ -165,7 +176,7 @@ describe(`LineNumberingService`, () => {
             const textNode = document.createTextNode(`I'm a LongDemo-Text`);
             service.setInlineOffsetLineNumberForTests(0, 1);
             const out = service.textNodeToLines(textNode, 5);
-            const outHtml = service.nodesToHtml(out);
+            const outHtml = nodesToHtml(out);
             expect(outHtml).toBe(`I'm a ` + brMarkup(1) + `LongD` + brMarkup(2) + `emo-` + brMarkup(3) + `Text`);
             expect(service.getInlineOffsetForTests()).toBe(4);
         }));
