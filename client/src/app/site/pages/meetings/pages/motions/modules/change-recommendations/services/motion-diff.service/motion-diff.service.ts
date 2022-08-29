@@ -1096,7 +1096,7 @@ export class MotionDiffService {
     }
 
     /**
-     * This functions merges to arrays of nodes. The last element of nodes1 and the first element of nodes2
+     * This functions merges two arrays of nodes. The last element of nodes1 and the first element of nodes2
      * are merged, if they are of the same type.
      *
      * This is done recursively until a TEMPLATE-Tag is is found, which was inserted in this.replaceLines.
@@ -1159,6 +1159,8 @@ export class MotionDiffService {
      * As in extractRangeByLineNumbers(), "to" refers to the line breaking element at the end, i.e. the start of the
      * following line.
      *
+     * TODO: This should be possible without converting the HTML to a fragment by using a regex
+     *
      * @param {string} diffHtml
      * @returns {LineRange}
      */
@@ -1204,19 +1206,6 @@ export class MotionDiffService {
             from: parseInt(lastLineNumberBefore!.getAttribute(`data-line-number`) as string, 10),
             to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10) - 1
         };
-
-        if (range.from === 0) {
-            const lineNumberRegex = /data-line-number="(\d+)"/g;
-            const lineNumbers = diffHtml.matchAll(lineNumberRegex);
-            let ln = lineNumbers.next();
-            if (ln) {
-                range.from = +ln.value[1];
-                while (!ln.done) {
-                    range.to = +ln.value[1];
-                    ln = lineNumbers.next();
-                }
-            }
-        }
 
         this.diffCache.put(cacheKey, range);
         return range;
