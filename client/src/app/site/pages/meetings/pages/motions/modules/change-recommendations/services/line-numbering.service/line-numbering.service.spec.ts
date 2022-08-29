@@ -473,12 +473,46 @@ describe(`LineNumberingService`, () => {
             }
         ));
 
-        it(`indents Ps with 30px-padding by 6 characters`, inject(
+        it(`shortens the line for H3-elements by 0.85`, inject(
+            [LineNumberingService],
+            (service: LineNumberingService) => {
+                const inHtml = `<h3>` + longstr(80) + `</h3>`;
+                const expected =
+                    `<h3>` +
+                    noMarkup(1) +
+                    `ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOP` +
+                    brMarkup(2) +
+                    `QRSTUVWXYZAB</h3>`;
+                const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });
+                expect(outHtml).toBe(expected);
+                expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
+                expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
+            }
+        ));
+
+        it(`indents Ps with 30px-padding-left by 6 characters`, inject(
             [LineNumberingService],
             (service: LineNumberingService) => {
                 const inHtml = `<div style="padding-left: 30px;">` + longstr(80) + `</div>`;
                 const expected =
                     `<div style="padding-left: 30px;">` +
+                    noMarkup(1) +
+                    `ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUV` +
+                    brMarkup(2) +
+                    `WXYZAB</div>`;
+                const outHtml = service.insertLineNumbers({ html: inHtml, lineLength: 80, firstLine: 1 });
+                expect(outHtml).toBe(expected);
+                expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
+                expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
+            }
+        ));
+
+        it(`indents Ps with 30px-padding-right by 6 characters`, inject(
+            [LineNumberingService],
+            (service: LineNumberingService) => {
+                const inHtml = `<div style="padding-right: 30px;">` + longstr(80) + `</div>`;
+                const expected =
+                    `<div style="padding-right: 30px;">` +
                     noMarkup(1) +
                     `ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUV` +
                     brMarkup(2) +
@@ -536,6 +570,33 @@ describe(`LineNumberingService`, () => {
             );
             expect(service.stripLineNumbers(outHtml)).toBe(inHtml);
             expect(service.insertLineBreaksWithoutNumbers(outHtml, 80)).toBe(outHtml);
+        }));
+    });
+
+    describe(`get headings with line numbers`, () => {
+        it(`does not count within INS nodes`, inject([LineNumberingService], (service: LineNumberingService) => {
+            const inHtml = service.insertLineNumbers({
+                html: `<p>Test</p><h2>Heading 1</h2><h4>Heading 2</h4><p>Text</p><h1>Last Heading</h1>`,
+                lineLength: 20,
+                firstLine: 1
+            });
+            expect(service.getHeadingsWithLineNumbers(inHtml)).toEqual([
+                {
+                    lineNumber: 2,
+                    level: 2,
+                    text: `Heading 1`
+                },
+                {
+                    lineNumber: 3,
+                    level: 4,
+                    text: `Heading 2`
+                },
+                {
+                    lineNumber: 5,
+                    level: 1,
+                    text: `Last Heading`
+                }
+            ]);
         }));
     });
 
