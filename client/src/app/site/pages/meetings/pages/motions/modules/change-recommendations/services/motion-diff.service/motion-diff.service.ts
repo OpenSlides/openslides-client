@@ -894,13 +894,11 @@ export class MotionDiffService {
         let innerContextEnd = ``;
         let previousHtmlEndSnippet = ``;
         let followingHtmlStartSnippet = ``;
-        let fakeOl: Element;
-        let offset: number;
 
         fromChildTraceAbs.shift();
         const previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
-        toChildTraceAbs.shift();
 
+        toChildTraceAbs.shift();
         const followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
 
         let currNode: Node = fromLineNumberNode as Element;
@@ -929,8 +927,8 @@ export class MotionDiffService {
             }
             if (currNode.parentNode.nodeName === `OL`) {
                 const parentElement = <Element>currNode.parentNode;
-                fakeOl = parentElement.cloneNode(false) as any;
-                offset = parentElement.getAttribute(`start`)
+                const fakeOl = parentElement.cloneNode(false) as any;
+                const offset = parentElement.getAttribute(`start`)
                     ? parseInt(parentElement.getAttribute(`start`) as string, 10) - 1
                     : 0;
                 fakeOl.setAttribute(
@@ -946,9 +944,8 @@ export class MotionDiffService {
             currNode = currNode.parentNode;
         }
 
-        let found = false;
         isSplit = false;
-        for (let i = 0; i < fromChildTraceRel.length && !found; i++) {
+        for (let i = 0, found = false; i < fromChildTraceRel.length && !found; i++) {
             if (fromChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
                 found = true;
             } else {
@@ -957,8 +954,8 @@ export class MotionDiffService {
                 }
                 if (fromChildTraceRel[i].nodeName === `OL`) {
                     const element = <Element>fromChildTraceRel[i];
-                    fakeOl = element.cloneNode(false) as any;
-                    offset = element.getAttribute(`start`)
+                    const fakeOl = element.cloneNode(false) as any;
+                    const offset = element.getAttribute(`start`)
                         ? parseInt(element.getAttribute(`start`) as string, 10) - 1
                         : 0;
                     fakeOl.setAttribute(
@@ -976,8 +973,7 @@ export class MotionDiffService {
                 }
             }
         }
-        found = false;
-        for (let i = 0; i < toChildTraceRel.length && !found; i++) {
+        for (let i = 0, found = false; i < toChildTraceRel.length && !found; i++) {
             if (toChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
                 found = true;
             } else {
@@ -985,8 +981,7 @@ export class MotionDiffService {
             }
         }
 
-        found = false;
-        for (let i = 0; i < ancestor.childNodes.length; i++) {
+        for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
             if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
                 found = true;
                 fromChildTraceRel.shift();
@@ -1004,8 +999,8 @@ export class MotionDiffService {
         while (currNode.parentNode) {
             if (currNode.nodeName === `OL`) {
                 const currElement = <Element>currNode;
-                fakeOl = currElement.cloneNode(false) as any;
-                offset = currElement.getAttribute(`start`)
+                const fakeOl = currElement.cloneNode(false) as any;
+                const offset = currElement.getAttribute(`start`)
                     ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
                     : 0;
                 fakeOl.setAttribute(
