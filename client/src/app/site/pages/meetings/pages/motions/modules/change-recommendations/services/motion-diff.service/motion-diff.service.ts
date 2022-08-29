@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { splitStringKeepSeperator } from 'src/app/infrastructure/utils';
+import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
@@ -859,7 +859,7 @@ export class MotionDiffService {
             throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
         }
 
-        const cacheKey = fromLine + `-` + toLine + `-` + this.lineNumberingService.djb2hash(html);
+        const cacheKey = fromLine + `-` + toLine + `-` + djb2hash(html);
         const cached = this.diffCache.get(cacheKey);
 
         if (cached) {
@@ -1160,7 +1160,7 @@ export class MotionDiffService {
      * @returns {LineRange}
      */
     public detectAffectedLineRange(diffHtml: string): LineRange | null {
-        const cacheKey = this.lineNumberingService.djb2hash(diffHtml);
+        const cacheKey = djb2hash(diffHtml);
         const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;
@@ -1384,8 +1384,8 @@ export class MotionDiffService {
             ` ` +
             firstLineNumber +
             ` ` +
-            this.lineNumberingService.djb2hash(htmlOld) +
-            this.lineNumberingService.djb2hash(htmlNew);
+            djb2hash(htmlOld) +
+            djb2hash(htmlNew);
         const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { djb2hash } from 'src/app/infrastructure/utils';
 
 import { DiffCache } from '../../../../definitions';
 
@@ -145,23 +146,6 @@ export class LineNumberingService {
     // .setAttribute and .innerHTML seem to be really slow, so we try to avoid them for static attributes / content
     // by creating a static template, cloning it and only set the dynamic attributes each time
     private lineNumberToClone: Element | null = null;
-
-    /**
-     * Creates a hash of a given string. This is not meant to be specifically secure, but rather as quick as possible.
-     *
-     * @param {string} str
-     * @returns {string}
-     */
-    public djb2hash(str: string): string {
-        let hash = 5381;
-        let char: number;
-        for (let i = 0; i < str.length; i++) {
-            char = str.charCodeAt(i);
-            // tslint:disable-next-line:no-bitwise
-            hash = (hash << 5) + hash + char;
-        }
-        return hash.toString();
-    }
 
     /**
      * Returns true, if the provided element is an inline element (hard-coded list of known elements).
@@ -482,7 +466,7 @@ export class LineNumberingService {
      * @return {string[]}
      */
     public splitToParagraphs(html: string): string[] {
-        const cacheKey = this.djb2hash(html);
+        const cacheKey = djb2hash(html);
         let cachedParagraphs = this.lineNumberCache.get(cacheKey);
         if (!cachedParagraphs) {
             const fragment = this.htmlToFragment(html);
@@ -920,7 +904,7 @@ export class LineNumberingService {
             newHtml = newRoot.innerHTML;
         } else {
             const firstLineStr = !firstLine ? `` : firstLine.toString();
-            const cacheKey = this.djb2hash(firstLineStr + `-` + lineLength.toString() + html);
+            const cacheKey = djb2hash(firstLineStr + `-` + lineLength.toString() + html);
             newHtml = this.lineNumberCache.get(cacheKey);
 
             if (!newHtml) {
