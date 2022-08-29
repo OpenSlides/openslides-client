@@ -421,6 +421,10 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
         }
     }
 
+    public isTrue(value: any) {
+        return [`true`, 1, true].includes(value);
+    }
+
     private createColumns(): ImportListHeaderDefinition[] {
         const getHeaderProp = (prop: string) => {
             return prop.startsWith(`newEntry.`) ? prop.slice(`newEntry.`.length) : prop;

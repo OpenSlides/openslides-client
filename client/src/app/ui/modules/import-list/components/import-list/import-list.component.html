@@ -194,8 +194,8 @@
     <mat-icon class="newBadge" color="accent" inline *ngIf="model.willBeCreated">add</mat-icon>
 </ng-template>
 
-<ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row">
-    <div *ngIf="entry[def]" class="flex-vertical-center">
+<ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
+    <div *ngIf="entry[def] && type !== 'boolean'" class="flex-vertical-center">
         <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
             warning
         </mat-icon>
@@ -216,6 +216,12 @@
             </ng-container>
             &nbsp;
         </ng-container>
+    </div>
+    <div *ngIf="type === 'boolean'" class="flex-vertical-center">
+        <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
+            warning
+        </mat-icon>
+        <mat-checkbox [checked]="isTrue(entry[def])" disabled></mat-checkbox>
     </div>
 </ng-template>
 
@@ -278,7 +284,7 @@
                 <div *osScrollingTableCellLabel>{{ column.label | translate }}</div>
                 <!-- row is `ImportModel`, entry is the csv data as object, def is the "property" -->
                 <ng-container
-                    *ngTemplateOutlet="entryTemplate; context: { entry: row.model, def: def, row: row }"
+                    *ngTemplateOutlet="entryTemplate; context: { entry: row.model, def: def, row: row, type: column.type }"
                 ></ng-container>
             </div>
         </ng-container>
