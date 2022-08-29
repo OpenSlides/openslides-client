@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
@@ -451,72 +452,31 @@ export class MotionDiffService {
      * @returns {string[]}
      */
     private tokenizeHtml(str: string): string[] {
-        const splitArrayEntriesEmbedSeparator = (strings: string[], by: string, prepend: boolean): string[] => {
+        let res = [str];
+        for (let splitConf of [
+            { by: `<`, type: `prepend` },
+            { by: `>`, type: `append` },
+            { by: ` ` },
+            { by: `.` },
+            { by: `,` },
+            { by: `!` },
+            { by: `-` },
+            { by: `\n`, type: `append` }
+        ]) {
             const newArr = [];
-            for (let i = 0; i < strings.length; i++) {
-                if (strings[i][0] === `<` && (by === ` ` || by === `\n`)) {
-                    // Don't split HTML tags
-                    newArr.push(strings[i]);
+            for (let i = 0; i < res.length; i++) {
+                // Don't split HTML tags
+                if (res[i][0] === `<` && splitConf.by !== `<` && splitConf.by !== `>`) {
+                    newArr.push(res[i]);
                     continue;
                 }
 
-                const parts = strings[i].split(by);
-                if (parts.length === 1) {
-                    newArr.push(strings[i]);
-                } else {
-                    if (prepend) {
-                        if (parts[0] !== ``) {
-                            newArr.push(parts[0]);
-                        }
-                        for (let j = 1; j < parts.length; j++) {
-                            newArr.push(by + parts[j]);
-                        }
-                    } else {
-                        for (let j = 0; j < parts.length - 1; j++) {
-                            newArr.push(parts[j] + by);
-                        }
-                        if (parts[parts.length - 1] !== ``) {
-                            newArr.push(parts[parts.length - 1]);
-                        }
-                    }
-                }
+                newArr.push(...splitStringKeepSeperator(res[i], splitConf.by, splitConf.type));
             }
-            return newArr;
-        };
-        const splitArrayEntriesSplitSeparator = (strings: string[], by: string): string[] => {
-            const newArr = [];
-            for (let i = 0; i < strings.length; i++) {
-                if (strings[i][0] === `<`) {
-                    newArr.push(strings[i]);
-                    continue;
-                }
-                const parts = strings[i].split(by);
-                for (let j = 0; j < parts.length; j++) {
-                    if (j > 0) {
-                        newArr.push(by);
-                    }
-                    newArr.push(parts[j]);
-                }
-            }
-            return newArr;
-        };
-        let arr = splitArrayEntriesEmbedSeparator([str], `<`, true);
-        arr = splitArrayEntriesEmbedSeparator(arr, `>`, false);
-        arr = splitArrayEntriesSplitSeparator(arr, ` `);
-        arr = splitArrayEntriesSplitSeparator(arr, `.`);
-        arr = splitArrayEntriesSplitSeparator(arr, `,`);
-        arr = splitArrayEntriesSplitSeparator(arr, `!`);
-        arr = splitArrayEntriesSplitSeparator(arr, `-`);
-        arr = splitArrayEntriesEmbedSeparator(arr, `\n`, false);
-
-        const arrWithoutEmpties = [];
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i] !== ``) {
-                arrWithoutEmpties.push(arr[i]);
-            }
+            res = newArr;
         }
 
-        return arrWithoutEmpties;
+        return res.filter(el => el !== ``);
     }
 
     /**
