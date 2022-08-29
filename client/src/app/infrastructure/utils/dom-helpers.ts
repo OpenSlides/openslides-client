@@ -310,3 +310,59 @@ export function serializeTag(node: Node): string {
     html += `>`;
     return html;
 }
+
+/**
+ * Sorts element attributes and CSS class names of a given html string
+ * alphabetically
+ */
+export function sortHtmlAttributes(html: string): string {
+    return html.replace(/<(\/?[a-z]*)( [^>]*)?>/gi, (_fullHtml: string, tag: string, attributes: string): string => {
+        if (attributes === undefined) {
+            attributes = ``;
+        }
+
+        const attributesList = [];
+        const attributesMatcher = /( [^"'=]*)(= *((["'])(.*?)\4))?/gi;
+        let match = attributesMatcher.exec(attributes);
+        while (match) {
+            let attr = match[1];
+            let attrValue = match[5];
+            if (match[2] !== undefined) {
+                if (match[1].toUpperCase() === ` CLASS`) {
+                    attrValue = attrValue.split(` `).sort().join(` `);
+                }
+                attr += `=` + match[4] + attrValue + match[4];
+            }
+
+            if (attrValue !== ``) {
+                attributesList.push(attr);
+            }
+
+            match = attributesMatcher.exec(attributes);
+        }
+
+        attributes = attributesList.sort().join(``);
+        return `<` + tag + attributes + `>`;
+    });
+}
+
+/**
+ * Convert all HTML tags and attribute names to uppercase,
+ * but leave the values of attributes unchanged
+ */
+export function htmlToUppercase(html: string): string {
+    return html.replace(/<(\/?[a-z]*)( [^>]*)?>/gi, (_fullHtml: string, tag: string, attributes: string): string => {
+        if (attributes === undefined) {
+            attributes = ``;
+        }
+
+        attributes = attributes.replace(
+            /( [^"'=]*)(= *(["']).*?\3)?/gi,
+            (_fullHtml: string, attr: string, content: string, _quotes: string) => {
+                return attr.toUpperCase() + content;
+            }
+        );
+
+        return `<` + tag.toUpperCase() + attributes + `>`;
+    });
+}

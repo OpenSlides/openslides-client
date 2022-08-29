@@ -304,44 +304,8 @@ export class MotionDiffService {
      * @private
      */
     public normalizeHtmlForDiff(html: string): string {
-        // Convert all HTML tags to uppercase, but leave the values of attributes unchanged
-        // All attributes and CSS class names  are sorted alphabetically
-        // If an attribute is empty, it is removed
-        html = html.replace(
-            /<(\/?[a-z]*)( [^>]*)?>/gi,
-            (_fullHtml: string, tag: string, attributes: string): string => {
-                const tagNormalized = tag.toUpperCase();
-                if (attributes === undefined) {
-                    attributes = ``;
-                }
-                const attributesList = [];
-                const attributesMatcher = /( [^"'=]*)(= *((["'])(.*?)\4))?/gi;
-                let match;
-                do {
-                    match = attributesMatcher.exec(attributes);
-                    if (match) {
-                        let attrNormalized = match[1].toUpperCase();
-                        let attrValue = match[5];
-                        if (match[2] !== undefined) {
-                            if (attrNormalized === ` CLASS`) {
-                                attrValue = attrValue
-                                    .split(` `)
-                                    .sort()
-                                    .join(` `)
-                                    .replace(/^\s+/, ``)
-                                    .replace(/\s+$/, ``);
-                            }
-                            attrNormalized += `=` + match[4] + attrValue + match[4];
-                        }
-                        if (attrValue !== ``) {
-                            attributesList.push(attrNormalized);
-                        }
-                    }
-                } while (match);
-                attributes = attributesList.sort().join(``);
-                return `<` + tagNormalized + attributes + `>`;
-            }
-        );
+        html = DomHelpers.sortHtmlAttributes(html);
+        html = DomHelpers.htmlToUppercase(html);
 
         // remove whitespaces infront of closing tags
         html = html
