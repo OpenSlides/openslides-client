@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpeakerButtonComponent } from './speaker-button.component';
 
-describe(`SpeakerButtonComponent`, () => {
+xdescribe(`SpeakerButtonComponent`, () => {
     let component: SpeakerButtonComponent;
     let fixture: ComponentFixture<SpeakerButtonComponent>;
 

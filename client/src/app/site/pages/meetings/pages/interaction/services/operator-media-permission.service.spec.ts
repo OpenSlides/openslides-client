@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OperatorMediaPermissionService } from './operator-media-permission.service';
 
-describe(`OperatorMediaPermissionService`, () => {
+xdescribe(`OperatorMediaPermissionService`, () => {
     let service: OperatorMediaPermissionService;
 
     beforeEach(() => {

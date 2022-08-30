@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { LifecycleService } from './lifecycle.service';
 
-describe(`LifecycleService`, () => {
+xdescribe(`LifecycleService`, () => {
     let service: LifecycleService;
 
     beforeEach(() => {

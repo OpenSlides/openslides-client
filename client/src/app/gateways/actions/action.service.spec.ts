@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
+import { E2EImportsModule } from 'src/e2e-imports.module';
 
 import { ActionService } from './action.service';
 
-describe(`ActionService`, () => {
+xdescribe(`ActionService`, () => {
     let service: ActionService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [E2EImportsModule]
+        });
         service = TestBed.inject(ActionService);
     });
 

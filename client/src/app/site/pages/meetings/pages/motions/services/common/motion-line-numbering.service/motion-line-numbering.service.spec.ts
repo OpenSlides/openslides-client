@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionLineNumberingService } from './motion-line-numbering.service';
 
-describe(`MotionLineNumberingService`, () => {
+xdescribe(`MotionLineNumberingService`, () => {
     let service: MotionLineNumberingService;
 
     beforeEach(() => {

@@ -9,5 +9,6 @@ export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     default_password: `Initial password`,
     email: `Email`,
     username: `Username`,
-    gender: `Gender`
+    gender: `Gender`,
+    pronoun: `Pronoun`
 };

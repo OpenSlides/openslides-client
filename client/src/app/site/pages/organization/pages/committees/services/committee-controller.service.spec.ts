@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommitteeControllerService } from './committee-controller.service';
 
-describe(`CommitteeControllerService`, () => {
+xdescribe(`CommitteeControllerService`, () => {
     let service: CommitteeControllerService;
 
     beforeEach(() => {

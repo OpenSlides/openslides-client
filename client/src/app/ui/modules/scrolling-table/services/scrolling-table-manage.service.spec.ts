@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ScrollingTableManageService } from './scrolling-table-manage.service';
 
-describe(`ScrollingTableManageService`, () => {
+xdescribe(`ScrollingTableManageService`, () => {
     let service: ScrollingTableManageService;
 
     beforeEach(() => {

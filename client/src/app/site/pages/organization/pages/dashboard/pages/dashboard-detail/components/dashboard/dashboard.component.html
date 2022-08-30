@@ -126,7 +126,7 @@
 
 <ng-template let-meeting="meeting" let-context="context" #meetingTemplate>
     <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
-        <a [routerLink]="meeting.id" [ngClass]="context?.cssClass" class="full-width flex-vertical-center" matRipple>
+        <a [routerLink]="meeting.id" [ngClass]="context?.cssClass" class="meeting-box-left flex-vertical-center" matRipple>
             <div class="one-line">
                 <div class="meeting-box--mid one-line">
                     {{ meeting.name }}

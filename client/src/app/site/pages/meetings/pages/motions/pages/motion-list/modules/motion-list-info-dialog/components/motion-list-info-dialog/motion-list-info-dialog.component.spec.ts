@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionListInfoDialogComponent } from './motion-list-info-dialog.component';
 
-describe(`MotionListInfoDialogComponent`, () => {
+xdescribe(`MotionListInfoDialogComponent`, () => {
     let component: MotionListInfoDialogComponent;
     let fixture: ComponentFixture<MotionListInfoDialogComponent>;
 

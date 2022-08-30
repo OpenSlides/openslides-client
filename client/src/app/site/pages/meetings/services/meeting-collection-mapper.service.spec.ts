@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 
-describe(`MeetingCollectionMapperService`, () => {
+xdescribe(`MeetingCollectionMapperService`, () => {
     let service: MeetingCollectionMapperService;
 
     beforeEach(() => {

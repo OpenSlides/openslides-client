@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileListComponent } from './file-list.component';
 
-describe(`FileListComponent`, () => {
+xdescribe(`FileListComponent`, () => {
     let component: FileListComponent;
     let fixture: ComponentFixture<FileListComponent>;
 

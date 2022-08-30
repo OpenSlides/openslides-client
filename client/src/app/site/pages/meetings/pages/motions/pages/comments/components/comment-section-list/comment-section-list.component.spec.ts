@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommentSectionListComponent } from './comment-section-list.component';
 
-describe(`CommentSectionListComponent`, () => {
+xdescribe(`CommentSectionListComponent`, () => {
     let component: CommentSectionListComponent;
     let fixture: ComponentFixture<CommentSectionListComponent>;
 

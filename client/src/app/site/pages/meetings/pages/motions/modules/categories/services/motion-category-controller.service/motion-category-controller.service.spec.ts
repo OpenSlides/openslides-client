@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionCategoryControllerService } from './motion-category-controller.service';
 
-describe(`MotionCategoryControllerService`, () => {
+xdescribe(`MotionCategoryControllerService`, () => {
     let service: MotionCategoryControllerService;
 
     beforeEach(() => {

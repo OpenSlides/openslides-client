@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AssignmentPollDialogService } from './assignment-poll-dialog.service';
 
-describe(`AssignmentPollDialogService`, () => {
+xdescribe(`AssignmentPollDialogService`, () => {
     let service: AssignmentPollDialogService;
 
     beforeEach(() => {

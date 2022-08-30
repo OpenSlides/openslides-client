@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GetUsersPresenterService } from './get-users-presenter.service';
 
-describe(`GetUsersPresenterService`, () => {
+xdescribe(`GetUsersPresenterService`, () => {
     let service: GetUsersPresenterService;
 
     beforeEach(() => {

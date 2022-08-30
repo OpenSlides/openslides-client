@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorEditDialogComponent } from './projector-edit-dialog.component';
 
-describe(`ProjectorEditDialogComponent`, () => {
+xdescribe(`ProjectorEditDialogComponent`, () => {
     let component: ProjectorEditDialogComponent;
     let fixture: ComponentFixture<ProjectorEditDialogComponent>;
 

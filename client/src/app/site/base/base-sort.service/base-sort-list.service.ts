@@ -74,7 +74,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param property a part of a view model
      */
     public set sortProperty(property: OsSortProperty<V>) {
-        if (this.sortDefinition!.sortProperty === property) {
+        if (this.getPropertiesEqual(this.sortDefinition!.sortProperty, property)) {
             this.ascending = !this.ascending;
         } else {
             this.sortDefinition!.sortProperty = property;
@@ -172,13 +172,21 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      */
     public getSortIcon(option: OsSortingOption<V>): string | null {
         if (this.sortDefinition) {
-            if (this.sortProperty && this.sortProperty !== option.property) {
+            if (!this.sortProperty || !this.getPropertiesEqual(this.sortProperty, option.property)) {
                 return ``;
             }
             return this.ascending ? `arrow_upward` : `arrow_downward`;
         } else {
             return null;
         }
+    }
+
+    /**
+     * Determines if the given properties are either the same property or both arrays of the same
+     * properties.
+     */
+    private getPropertiesEqual(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
+        return Array.isArray(a) && Array.isArray(b) ? a.equals(b) : a === b;
     }
 
     /**

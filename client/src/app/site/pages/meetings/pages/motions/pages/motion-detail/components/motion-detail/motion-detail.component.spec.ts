@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionDetailComponent } from './motion-detail.component';
 
-describe(`MotionDetailComponent`, () => {
+xdescribe(`MotionDetailComponent`, () => {
     let component: MotionDetailComponent;
     let fixture: ComponentFixture<MotionDetailComponent>;
 

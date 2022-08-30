@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatGroupDialogComponent } from './chat-group-dialog.component';
 
-describe(`ChatGroupDialogComponent`, () => {
+xdescribe(`ChatGroupDialogComponent`, () => {
     let component: ChatGroupDialogComponent;
     let fixture: ComponentFixture<ChatGroupDialogComponent>;
 

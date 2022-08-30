@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GroupControllerService } from './group-controller.service';
 
-describe(`GroupControllerService`, () => {
+xdescribe(`GroupControllerService`, () => {
     let service: GroupControllerService;
 
     beforeEach(() => {

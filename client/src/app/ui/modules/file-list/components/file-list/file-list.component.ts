@@ -78,6 +78,17 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     @Input()
     public canAccessFileMenu = false;
 
+    private _hiddenInMobile: string[] = [`indicator`];
+
+    public get hiddenInMobile(): string[] {
+        return this._hiddenInMobile;
+    }
+
+    @Input()
+    public set hiddenInMobile(cols: string[]) {
+        this._hiddenInMobile = [`indicator`, ...cols];
+    }
+
     /**
      * Determine generally hidden columns
      */

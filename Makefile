@@ -21,9 +21,11 @@ run-cleanup:
 run-tests: | build-dev
 	docker run -t openslides-client-dev npm run lint
 	docker run -t openslides-client-dev npm run prettify-check
-	# TODO: Get the karma tests up and running
-	# docker run -t openslides-client-dev npm run test-silently
+	docker run -t openslides-client-dev npm run test-silently
 	docker run -t openslides-client-dev npm run build-debug
+
+run-karma-tests:
+	docker run -t openslides-client-dev npm run test-silently
 
 run-check-linting:
 	docker run -t openslides-client-dev npm run lint

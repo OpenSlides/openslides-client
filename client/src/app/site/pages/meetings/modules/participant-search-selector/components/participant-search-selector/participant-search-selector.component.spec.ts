@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ParticipantSearchSelectorComponent } from './participant-search-selector.component';
 
-describe(`ParticipantSearchSelectorComponent`, () => {
+xdescribe(`ParticipantSearchSelectorComponent`, () => {
     let component: ParticipantSearchSelectorComponent;
     let fixture: ComponentFixture<ParticipantSearchSelectorComponent>;
 

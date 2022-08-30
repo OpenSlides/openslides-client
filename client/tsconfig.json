@@ -5,7 +5,6 @@
         "baseUrl": "./",
         "declaration": false,
         "downlevelIteration": true,
-        "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
         "importHelpers": true,

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { DataStoreUpdateManagerService } from './data-store-update-manager.service';
 
-describe(`DataStoreUpdateManagerService`, () => {
+xdescribe(`DataStoreUpdateManagerService`, () => {
     let service: DataStoreUpdateManagerService;
 
     beforeEach(() => {

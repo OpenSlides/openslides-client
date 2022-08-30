@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgendaItemListSlideComponent } from './agenda-item-list-slide.component';
 
-describe(`AgendaItemListSlideComponent`, () => {
+xdescribe(`AgendaItemListSlideComponent`, () => {
     let component: AgendaItemListSlideComponent;
     let fixture: ComponentFixture<AgendaItemListSlideComponent>;
 

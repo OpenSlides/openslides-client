@@ -21,7 +21,7 @@ export const getMotionBlockSubscriptionConfig = (id: Id, hasMeetingIdChangedObse
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`motion_block_ids`]
+        follow: [{ idField: `motion_block_ids`, follow: [`list_of_speakers_id`] }]
     },
     subscriptionName: MOTION_BLOCK_SUBSCRIPTION,
     hideWhen: hasMeetingIdChangedObservable()

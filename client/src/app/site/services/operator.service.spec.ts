@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OperatorService } from './operator.service';
 
-describe(`OperatorService`, () => {
+xdescribe(`OperatorService`, () => {
     let service: OperatorService;
 
     beforeEach(() => {

@@ -77,9 +77,9 @@ const AMOUNT_DECIMAL_PLACES = 6;
  *
  * @returns A string containing the floating point representation of the given number.
  */
-export function toDecimal(input: string | number | undefined): Decimal | undefined {
+export function toDecimal(input: string | number | undefined): Decimal | null {
     if ((typeof input !== `string` || !input?.length) && typeof input !== `number`) {
-        return undefined;
+        return null;
     }
     if (typeof input === `number`) {
         return input.toFixed(AMOUNT_DECIMAL_PLACES);
