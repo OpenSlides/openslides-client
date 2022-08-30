@@ -41,6 +41,7 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
+    receivedData: boolean;
     close: () => void;
 }
 
@@ -160,6 +161,7 @@ export class AutoupdateService {
         const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, streamId);
         return {
             id,
+            receivedData: false,
             close: () => {
                 closeFn();
                 delete this._activeRequestObjects[id];
@@ -183,20 +185,25 @@ export class AutoupdateService {
                     autoupdateData[key];
             }
         }
-        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections);
+        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, id);
     }
 
     private async prepareCollectionUpdates(
         modelData: ModelData,
-        fullListUpdateCollections: { [collection: string]: Id[] }
+        fullListUpdateCollections: { [collection: string]: Id[] },
+        requestId: number
     ): Promise<void> {
         const unlock = await this._mutex.lock();
 
-        this.viewmodelStoreUpdate.triggerUpdate({
-            patch: modelData,
-            changedModels: fullListUpdateCollections,
-            deletedModels: {}
-        });
+        this.viewmodelStoreUpdate
+            .triggerUpdate({
+                patch: modelData,
+                changedModels: fullListUpdateCollections,
+                deletedModels: {}
+            })
+            .then(() => {
+                this._activeRequestObjects[requestId].modelSubscription.receivedData = true;
+            });
 
         unlock();
     }

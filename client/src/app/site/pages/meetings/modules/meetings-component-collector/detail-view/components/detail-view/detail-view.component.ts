@@ -38,7 +38,12 @@ export class DetailViewComponent implements OnInit {
         return this._shouldShowContent;
     }
 
+    public get loading(): boolean {
+        return this._loading;
+    }
+
     private _shouldShowContent = false;
+    private _loading = true;
     private _id!: Id;
 
     private _subscriptionMap: { [name: string]: Subscription } = {};
@@ -66,6 +71,7 @@ export class DetailViewComponent implements OnInit {
         if (!sequentialNumber && params.id === undefined) {
             // it must be another subroute, like creating a new one
             this._shouldShowContent = true;
+            this._loading = false;
             this.idFound.next(null);
         }
         const config = {
@@ -73,21 +79,20 @@ export class DetailViewComponent implements OnInit {
             sequentialNumber,
             meetingId: this.activeMeetingIdService.meetingId!
         };
-        const subscription = this.sequentialNumberMappingService
-            .getIdObservableBySequentialNumber(config)
-            .subscribe(id => {
-                if (id) {
-                    if (this._id !== id) {
-                        this._id = id;
-                        this._shouldShowContent = true;
-                        this.idFound.next(id);
-                        this.cd.markForCheck();
-                    }
-                } else {
-                    this._shouldShowContent = false;
+
+        this.sequentialNumberMappingService.getIdBySequentialNumber(config).then(id => {
+            this._loading = false;
+            if (id) {
+                if (this._id !== id) {
+                    this._id = id;
+                    this._shouldShowContent = true;
+                    this.idFound.next(id);
+                    this.cd.markForCheck();
                 }
-            });
-        this.updateSubscription(SEQUENTIAL_NUMBER_SUBSCRIPTION_NAME, subscription);
+            } else {
+                this._shouldShowContent = false;
+            }
+        });
     }
 
     private getCollectionVerboseName(): string {

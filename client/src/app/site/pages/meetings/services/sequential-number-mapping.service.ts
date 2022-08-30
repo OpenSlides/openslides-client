@@ -68,6 +68,32 @@ export class SequentialNumberMappingService {
         });
     }
 
+    /**
+     * Waits until an id should be available.
+     *
+     * @returns null if not found otherwise the id
+     */
+    public async getIdBySequentialNumber({
+        collection,
+        meetingId,
+        sequentialNumber
+    }: SequentialNumberMappingConfig): Promise<number | null> {
+        if (!collection || !meetingId || !sequentialNumber) {
+            return null;
+        }
+
+        await new Promise<void>(resolve =>
+            setTimeout(() => {
+                if (this._modelRequestSubscription.receivedData === true) {
+                    resolve();
+                }
+            })
+        );
+
+        const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
+        return this.getBehaviorSubject(collection, meetingIdSequentialNumber).getValue();
+    }
+
     public getIdObservableBySequentialNumber({
         collection,
         meetingId,
