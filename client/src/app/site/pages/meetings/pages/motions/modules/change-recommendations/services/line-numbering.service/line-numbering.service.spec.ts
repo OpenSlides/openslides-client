@@ -574,7 +574,7 @@ describe(`LineNumberingService`, () => {
     });
 
     describe(`get headings with line numbers`, () => {
-        it(`does not count within INS nodes`, inject([LineNumberingService], (service: LineNumberingService) => {
+        it(`line numbers and levels correct`, inject([LineNumberingService], (service: LineNumberingService) => {
             const inHtml = service.insertLineNumbers({
                 html: `<p>Test</p><h2>Heading 1</h2><h4>Heading 2</h4><p>Text</p><h1>Last Heading</h1>`,
                 lineLength: 20,

@@ -325,7 +325,7 @@ export class LineNumberingService {
                 headings.push({
                     lineNumber: number,
                     level: parseInt(heading.nodeName.substr(1), 10),
-                    text: heading.innerText.replace(/^\s/, ``).replace(/\s$/, ``)
+                    text: (heading.innerText ?? heading.textContent).replace(/^\s/, ``).replace(/\s$/, ``)
                 });
             }
         }
