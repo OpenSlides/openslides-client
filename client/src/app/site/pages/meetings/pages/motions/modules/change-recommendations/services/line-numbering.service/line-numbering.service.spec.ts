@@ -791,22 +791,6 @@ describe(`LineNumberingService`, () => {
         it(`highlights a simple line with formattings`, inject(
             [LineNumberingService],
             (service: LineNumberingService) => {
-                const inHtml = service.insertLineNumbers({
-                    html: `<span>Lorem ipsum <strong>dolorsit amet Lorem</strong><em> ipsum dolorsit amet</em> Lorem ipsum dolorsit amet</span>`,
-                    lineLength: 20,
-                    firstLine: 1
-                });
-                expect(inHtml).toBe(
-                    noMarkup(1) +
-                        `<span>Lorem ipsum <strong>dolorsit ` +
-                        brMarkup(2) +
-                        `amet Lorem</strong><em> ipsum ` +
-                        brMarkup(3) +
-                        `dolorsit amet</em> Lorem ` +
-                        brMarkup(4) +
-                        `ipsum dolorsit amet</span>`
-                );
-
                 const highlighted = service.insertLineNumbers({
                     html: `<span>Lorem ipsum <strong>dolorsit amet Lorem</strong><em> ipsum dolorsit amet</em> Lorem ipsum dolorsit amet</span>`,
                     lineLength: 20,
