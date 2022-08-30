@@ -51,7 +51,10 @@ export class HttpService {
         const options: HttpOptions = {
             observe: `response`,
             body: data,
-            headers: customHeader,
+            // ngsw-bypass tells the angular service worker to ignore this request.
+            // Since any call made from inside the angular code should never be cached anyway, we
+            // set it here as the default.
+            headers: { 'ngsw-bypass': `true`, ...customHeader },
             responseType
         };
 
