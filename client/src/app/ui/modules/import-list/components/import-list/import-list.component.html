@@ -195,7 +195,7 @@
 </ng-template>
 
 <ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
-    <div *ngIf="entry[def] && type !== 'boolean'" class="flex-vertical-center">
+    <div *ngIf="entry[def] || type === 'boolean'" class="flex-vertical-center">
         <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
             warning
         </mat-icon>
@@ -210,18 +210,13 @@
             </ng-container>
         </ng-container>
         <ng-container *ngIf="!isArray(entry[def])">
-            <ng-container *ngIf="!isObject(entry[def])">{{ entry[def] | translate }}</ng-container>
+            <ng-container *ngIf="!isObject(entry[def]) && type !== 'boolean'">{{ entry[def] | translate }}</ng-container>
+            <mat-checkbox *ngIf="type === 'boolean'" [checked]="isTrue(entry[def])" disabled></mat-checkbox>
             <ng-container *ngIf="isObject(entry[def])">
                 <ng-container *ngTemplateOutlet="modelNameTemplate; context: { model: entry[def] }"></ng-container>
             </ng-container>
             &nbsp;
         </ng-container>
-    </div>
-    <div *ngIf="type === 'boolean'" class="flex-vertical-center">
-        <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
-            warning
-        </mat-icon>
-        <mat-checkbox [checked]="isTrue(entry[def])" disabled></mat-checkbox>
     </div>
 </ng-template>
 
