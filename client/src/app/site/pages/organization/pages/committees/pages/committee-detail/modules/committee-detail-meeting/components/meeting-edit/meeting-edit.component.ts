@@ -60,6 +60,19 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
+    public get isValid(): boolean {
+        return this.meetingForm?.valid;
+    }
+
+    public get isTimeValid(): boolean {
+        const start = this.meetingForm?.get(`start_time`).value;
+        const end = this.meetingForm?.get(`end_time`).value;
+        if (!!start && (!!end || end === 0)) {
+            return start <= end;
+        }
+        return true;
+    }
+
     private get isJitsiManipulationAllowed(): boolean {
         return !this.isCreateView && this.operator.isSuperAdmin;
     }
@@ -127,7 +140,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
                 this.operatingUser = user;
                 this.onAfterCreateForm();
-            })
+            }),
+            this.meetingForm.controls[`start_time`].valueChanges.subscribe(start_time => this.makeDatesValid(false)),
+            this.meetingForm.controls[`end_time`].valueChanges.subscribe(end_time => this.makeDatesValid(true))
         );
 
         this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
@@ -338,5 +353,15 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private goBack(): void {
         this.router.navigate([`committees`, this.committeeId]);
+    }
+
+    private makeDatesValid(endDateChanged: boolean): void {
+        if (!this.isTimeValid) {
+            if (endDateChanged) {
+                this.meetingForm.controls[`start_time`].setValue(this.meetingForm.get(`end_time`).value);
+            } else {
+                this.meetingForm.controls[`end_time`].setValue(this.meetingForm.get(`start_time`).value);
+            }
+        }
     }
 }

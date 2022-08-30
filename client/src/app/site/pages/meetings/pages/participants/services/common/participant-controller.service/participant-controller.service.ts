@@ -243,6 +243,9 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             },
             vote_delegations_$_from_ids: participant.vote_delegations_$_from_ids || {
                 [this.activeMeetingId!]: participant.vote_delegations_from_ids
+            },
+            comment_$: participant.comment_$ || {
+                [this.activeMeetingId!]: participant.comment
             }
         };
     }
