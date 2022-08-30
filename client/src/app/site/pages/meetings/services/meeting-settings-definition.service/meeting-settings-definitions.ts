@@ -77,16 +77,6 @@ export const meetingSettings: SettingsGroup[] = [
         icon: `home`,
         subgroups: [
             {
-                label: _(`System`),
-                settings: [
-                    {
-                        key: `enable_anonymous`,
-                        label: _(`Allow access for anonymous guest users`),
-                        type: `boolean`
-                    }
-                ]
-            },
-            {
                 label: _(`CSV export options`),
                 settings: [
                     {
