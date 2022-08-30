@@ -807,7 +807,12 @@ describe(`LineNumberingService`, () => {
                         `ipsum dolorsit amet</span>`
                 );
 
-                const highlighted = service.highlightLine(inHtml, 2);
+                const highlighted = service.insertLineNumbers({
+                    html: `<span>Lorem ipsum <strong>dolorsit amet Lorem</strong><em> ipsum dolorsit amet</em> Lorem ipsum dolorsit amet</span>`,
+                    lineLength: 20,
+                    firstLine: 1,
+                    highlight: 2
+                });
                 expect(highlighted).toBe(
                     noMarkup(1) +
                         `<span>Lorem ipsum <strong>dolorsit ` +
