@@ -38,12 +38,44 @@ export class Mediafile extends BaseModel<Mediafile> {
         super(Mediafile.COLLECTION, input);
     }
 
-    public used_as_logo_in_meeting_id(place: string): Id | null {
+    /**
+     * Check if the image is used at the given place. If place is empty, checks
+     * if the image is used in any place and returns the first meeting id found.
+     *
+     * @param place The places the image can be used
+     * @returns the meeting id or `null` if the image is not used.
+     */
+    public used_as_logo_in_meeting_id(place?: string): Id | null {
+        if (!place) {
+            for (let i = 0; i < this.used_as_logo_$_in_meeting_id.length; i++) {
+                const path = `used_as_logo_$${this.used_as_logo_$_in_meeting_id[i]}_in_meeting_id` as keyof Mediafile;
+                if (path in this) {
+                    return this[path] as Id;
+                }
+            }
+            return null
+        }
         const path = `used_as_logo_$${place}_in_meeting_id` as keyof Mediafile;
         return (this[path] as Id) || null;
     }
 
-    public used_as_font_in_meeting_id(place: string): Id | null {
+    /**
+     * Check if the font is used at the given place. If place is empty, checks
+     * if the font is used in any place and returns the first meeting id found.
+     *
+     * @param place The text parts the font can be used
+     * @returns the meeting id or `null` if the font is not used.
+     */
+    public used_as_font_in_meeting_id(place?: string): Id | null {
+        if (!place) {
+            for (let i = 0; i < this.used_as_font_$_in_meeting_id.length; i++) {
+                const path = `used_as_font_$${this.used_as_font_$_in_meeting_id[i]}_in_meeting_id` as keyof Mediafile;
+                if (path in this) {
+                    return this[path] as Id;
+                }
+            }
+            return null
+        }
         const path = `used_as_font_$${place}_in_meeting_id` as keyof Mediafile;
         return (this[path] as Id) || null;
     }
