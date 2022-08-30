@@ -820,20 +820,18 @@ export class LineNumberingService {
         let newHtml: string;
         let newRoot: Element;
 
-        if (<number>highlight > 0) {
-            // Caching versions with highlighted line numbers is probably not worth it
-            newRoot = this.insertLineNumbersNode(html, lineLength, highlight as number, firstLine);
-            newHtml = newRoot.innerHTML;
-        } else {
-            const firstLineStr = !firstLine ? `` : firstLine.toString();
-            const cacheKey = djb2hash(firstLineStr + `-` + lineLength.toString() + html);
-            newHtml = this.lineNumberCache.get(cacheKey);
+        const firstLineStr = !firstLine ? `` : firstLine.toString();
+        const cacheKey = djb2hash(firstLineStr + `-` + lineLength.toString() + html);
+        newHtml = this.lineNumberCache.get(cacheKey);
 
-            if (!newHtml) {
-                newRoot = this.insertLineNumbersNode(html, lineLength, null, firstLine);
-                newHtml = newRoot.innerHTML;
-                this.lineNumberCache.put(cacheKey, newHtml);
-            }
+        if (!newHtml) {
+            newRoot = this.insertLineNumbersNode(html, lineLength, null, firstLine);
+            newHtml = newRoot.innerHTML;
+            this.lineNumberCache.put(cacheKey, newHtml);
+        }
+
+        if (<number>highlight > 0) {
+            newHtml = this.highlightLine(newHtml, highlight);
         }
 
         return newHtml;
