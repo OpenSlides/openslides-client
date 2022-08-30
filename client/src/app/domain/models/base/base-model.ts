@@ -45,7 +45,7 @@ export abstract class BaseModel<T = any> implements Identifiable, Deserializable
         const updateCopy = { ...update }; // To not modifying the original update
         for (const key of Object.keys(update)) {
             const value = update[key as keyof T] as unknown;
-            if (isTemplateField(key) && Array.isArray(value) && value.length >= 0) {
+            if (isTemplateField(key) && Array.isArray(value)) {
                 this.handleRemovedTemplateFields({ origin, update: updateCopy, key: key as keyof T });
             }
         }
