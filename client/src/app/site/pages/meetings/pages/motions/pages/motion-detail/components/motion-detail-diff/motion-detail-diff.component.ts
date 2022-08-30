@@ -117,7 +117,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             to: change2 ? change2.getLineFrom() - 1 : null
         };
 
-        if (lineRange.from >= lineRange.to && change1 && change2) {
+        if (lineRange.from > lineRange.to && change1 && change2) {
             // Empty space between two amendments, or between colliding amendments
             return ``;
         }
