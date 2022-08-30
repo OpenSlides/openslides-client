@@ -815,7 +815,6 @@ export class LineNumberingService {
         html,
         lineLength,
         highlight,
-        callback,
         firstLine = 1
     }: InsertLineNumbersConfig): LineNumberedString {
         let newHtml: string;
@@ -835,10 +834,6 @@ export class LineNumberingService {
                 newHtml = newRoot.innerHTML;
                 this.lineNumberCache.put(cacheKey, newHtml);
             }
-        }
-
-        if (callback !== undefined && callback !== null) {
-            callback();
         }
 
         return newHtml;
