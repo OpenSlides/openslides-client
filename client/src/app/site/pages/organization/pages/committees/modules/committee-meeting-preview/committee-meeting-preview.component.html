@@ -9,6 +9,10 @@
         <span class="align-right align-center">
             <mat-label class="archived-label" *ngIf="meeting.isArchived">{{ 'Archived' | translate }}</mat-label>
             <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
+                <div *ngIf="isTemplateMeeting" class="template-indicator">
+                    <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
+                </div>
+
                 <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
