@@ -7,8 +7,9 @@
 
 <mat-card class="os-card">
     <os-file-upload [uploadFileFn]="getUploadFileFn()" (uploadSucceeded)="onUploadSucceeded()">
-        <div *osScrollingTableCell="'title'">
+        <div *osScrollingTableCell="'title'; row as file">
             <div *osScrollingTableCellLabel>{{ 'Title' | translate }}</div>
+            {{ file?.title }}
         </div>
     </os-file-upload>
 </mat-card>
