@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
 import { Action, ActionService } from 'src/app/gateways/actions';
@@ -15,6 +15,7 @@ import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { UserDeleteDialogService } from 'src/app/site/modules/user-components';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -41,9 +42,12 @@ export const MEETING_RELATED_FORM_CONTROLS = [
 export class ParticipantControllerService extends BaseMeetingControllerService<ViewUser, User> {
     private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);
 
+    private _participantListUpdateSubscription: Subscription;
+
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
+        public meetingController: MeetingControllerService,
         private userController: UserControllerService,
         private userDeleteDialog: UserDeleteDialogService,
         private presenter: GetUserScopePresenterService,
@@ -51,9 +55,20 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         private actions: ActionService
     ) {
         super(controllerServiceCollector, User, repo);
-        repo.getViewModelListObservable().subscribe(users => {
-            const meetingUsers = users.filter(user => user.group_ids(this.activeMeetingId).length);
-            this._participantListSubject.next(meetingUsers);
+        // this.activeMeeting.users_as_observable.subscribe(users => this._participantListSubject.next(users))
+        this.activeMeetingIdService.meetingIdObservable.subscribe(newId => {
+            if (this._participantListUpdateSubscription) {
+                this._participantListUpdateSubscription.unsubscribe();
+            }
+            if (newId) {
+                this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
+                    const meetingUsers =
+                        meeting && meeting.user_ids
+                            ? repo.getViewModelList().filter(user => meeting.user_ids.includes(user.id))
+                            : [];
+                    this._participantListSubject.next(meetingUsers);
+                });
+            }
         });
     }
 
