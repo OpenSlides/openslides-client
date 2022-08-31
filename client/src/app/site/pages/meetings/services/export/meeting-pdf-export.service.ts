@@ -74,7 +74,13 @@ export class MeetingPdfExportService {
     }
 
     public downloadWaitableDoc(filename: string, buildDocFn: () => Promise<object>): void {
-        this.pdfExportService.downloadWaitableDoc(filename, buildDocFn, async () => this.getFonts());
+        const config = this.createDownloadConfig();
+        this.pdfExportService.downloadWaitableDoc(
+            filename,
+            buildDocFn,
+            async () => config.loadFonts(),
+            async () => config.createVfs()
+        );
     }
 
     public getPageBreak(): any {

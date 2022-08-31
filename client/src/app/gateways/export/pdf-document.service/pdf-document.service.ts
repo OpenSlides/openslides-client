@@ -429,7 +429,8 @@ export class PdfDocumentService {
     public downloadWaitableDoc(
         filetitle: string,
         buildDocFn: () => Promise<object>,
-        loadFonts: () => Promise<PdfFontDescription>
+        loadFonts: () => Promise<PdfFontDescription>,
+        createVfs: () => Promise<PdfVirtualFileSystem>
     ): void {
         this.showProgress();
         buildDocFn().then(document =>
@@ -437,6 +438,7 @@ export class PdfDocumentService {
                 document,
                 filename: `${filetitle}.pdf`,
                 loadFonts,
+                createVfs: createVfs,
                 loadImages: () => this.loadImages(),
                 progressService: this.progressService,
                 progressSnackBarService: this.progressSnackBarService
