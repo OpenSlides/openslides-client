@@ -422,7 +422,7 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     }
 
     public isTrue(value: any) {
-        return [`true`, 1, true].includes(value);
+        return [`true`, 1, true, `1`].includes(value);
     }
 
     private createColumns(): ImportListHeaderDefinition[] {
