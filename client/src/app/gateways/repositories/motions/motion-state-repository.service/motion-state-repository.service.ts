@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
+import { Action } from 'src/app/gateways/actions';
 import { ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
@@ -66,5 +67,17 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
 
     public async delete(viewModel: Identifiable): Promise<void> {
         return this.actions.sendRequest(MotionStateAction.DELETE, { id: viewModel.id });
+    }
+
+    public sort(workflowId: number, viewModels: Identifiable[]): Action<void> {
+        return this.actions.create({
+            action: MotionStateAction.SORT,
+            data: [
+                {
+                    workflow_id: workflowId,
+                    motion_state_ids: viewModels.map(state => state.id)
+                }
+            ]
+        });
     }
 }

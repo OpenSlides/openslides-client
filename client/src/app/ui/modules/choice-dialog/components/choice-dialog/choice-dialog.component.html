@@ -9,6 +9,7 @@
             ngDefaultControl
             formControlName="select"
             [multiple]="data.multiSelect!"
+            [sortFn]="data.sortFn"
             [inputListValues]="data.choices!"
             (selectionChanged)="onSelectionChanged($event)"
         ></os-list-search-selector>
