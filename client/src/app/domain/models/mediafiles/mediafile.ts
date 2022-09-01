@@ -46,7 +46,7 @@ export class Mediafile extends BaseModel<Mediafile> {
      * @returns the meeting id or `null` if the image is not used.
      */
     public used_as_logo_in_meeting_id(place?: string): Id | null {
-        return this.used_in_meeting('logo', place);
+        return this.used_in_meeting(`logo`, place);
     }
 
     /**
@@ -57,7 +57,7 @@ export class Mediafile extends BaseModel<Mediafile> {
      * @returns the meeting id or `null` if the font is not used.
      */
     public used_as_font_in_meeting_id(place?: string): Id | null {
-        return this.used_in_meeting('font', place);
+        return this.used_in_meeting(`font`, place);
     }
 
     private used_in_meeting(type: string, place?: string): Id | null {
