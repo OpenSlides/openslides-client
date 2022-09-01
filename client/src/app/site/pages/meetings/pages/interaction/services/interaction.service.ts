@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
 import {
     BehaviorSubject,
     combineLatest,
@@ -78,9 +76,7 @@ export class InteractionService {
         private notifyService: NotifyService,
         private operator: OperatorService,
         private promptService: PromptService,
-        private broadcast: BroadcastService,
-        private snackBar: MatSnackBar,
-        private translate: TranslateService
+        private broadcast: BroadcastService
     ) {
         combineLatest([
             this.showLiveConfObservable,
@@ -159,10 +155,6 @@ export class InteractionService {
     private async onKickMessage(message: NotifyResponse<kickMessage>): Promise<void> {
         if (await firstValueFrom(this.rtcService.isJitsiActiveObservable)) {
             this.rtcService.stopJitsi();
-            const snackBarMessage = `${this.translate.instant(
-                _(`Kicked out of conference call for the following reason`)
-            )}: ${this.translate.instant(message.message.reason)}.`;
-            this.snackBar.open(snackBarMessage, `Ok`);
         }
     }
 
