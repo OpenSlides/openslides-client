@@ -90,6 +90,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public user: ViewUser | null = null;
 
     public get usersGroups(): ViewGroup[] {
+        if (!this.activeMeetingId) {
+            return [];
+        }
         return this.user?.groups() || [];
     }
 

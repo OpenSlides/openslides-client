@@ -206,7 +206,7 @@
             </span>
         </div>
 
-        <div *ngIf="!user?.groups || user?.groups?.length === 0">
+        <div *ngIf="!usersGroups || usersGroups?.length === 0">
             <h4>{{ 'Groups' | translate }}</h4>
             <span>{{ 'Default group' | translate }}</span>
         </div>
