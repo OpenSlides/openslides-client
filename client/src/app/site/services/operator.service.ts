@@ -137,6 +137,10 @@ export class OperatorService {
         return this._operatorReadySubject.asObservable();
     }
 
+    public get permissionsObservable(): Observable<Permission[] | undefined> {
+        return this._permissionsSubject.asObservable();
+    }
+
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
     }
@@ -181,7 +185,15 @@ export class OperatorService {
     // permissions and groupIds are bound to the active meeting.
     // If there is no active meeting, both will be undefined.
     // If groupIds is undefined or [], the default group must be used (given, there is an active meeting).
-    private _permissions: Permission[] | undefined = undefined;
+    private set _permissions(perms: Permission[] | undefined) {
+        this._permissionsSubject.next(perms);
+    }
+    private get _permissions(): Permission[] | undefined {
+        return this._permissionsSubject.value;
+    }
+
+    private _permissionsSubject: BehaviorSubject<Permission[] | undefined> = new BehaviorSubject(undefined);
+
     private _groupIds: Id[] | undefined = undefined;
     private _meetingIds: Id[] | undefined = undefined;
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
@@ -258,6 +270,7 @@ export class OperatorService {
             }
         });
         this.groupRepo.getGeneralViewModelObservable().subscribe(group => {
+            console.log(`Groups UPDATED!!!`);
             if (!this.activeMeetingId || !group) {
                 return;
             }
