@@ -139,6 +139,17 @@ export function fragmentToHtml(fragment: DocumentFragment): string {
 }
 
 /**
+ * This converts an array of HTML elements into a string
+ */
+export function nodesToHtml(nodes: Element[]): string {
+    const root = document.createElement(`div`);
+    nodes.forEach(node => {
+        root.appendChild(node);
+    });
+    return root.innerHTML;
+}
+
+/**
  * Get all the siblings of the given node _after_ this node, in the order as they appear in the DOM tree.
  *
  * @param {Node} node

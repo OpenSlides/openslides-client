@@ -1,6 +1,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { htmlToFragment } from 'src/app/infrastructure/utils/dom-helpers';
+import { htmlToFragment, nodesToHtml } from 'src/app/infrastructure/utils/dom-helpers';
 import { E2EImportsModule } from 'src/e2e-imports.module';
 import { TestChangeRecommendation } from 'src/testing/models/test-change-recommendation';
 
@@ -9,17 +9,6 @@ import { MotionDiffService } from './motion-diff.service';
 
 describe(`MotionDiffService`, () => {
     let service: MotionDiffService;
-
-    /**
-     * This converts an array of HTML elements into a string
-     */
-    function nodesToHtml(nodes: Element[]): string {
-        const root = document.createElement(`div`);
-        nodes.forEach(node => {
-            root.appendChild(node);
-        });
-        return root.innerHTML;
-    }
 
     const brMarkup = (no: number): string => {
         return (

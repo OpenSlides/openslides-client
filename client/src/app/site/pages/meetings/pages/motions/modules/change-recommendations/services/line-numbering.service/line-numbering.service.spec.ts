@@ -1,19 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
+import { nodesToHtml } from 'src/app/infrastructure/utils/dom-helpers';
 
 import { LineNumberingService } from './line-numbering.service';
 
 describe(`LineNumberingService`, () => {
-    /**
-     * This converts an array of HTML elements into a string
-     */
-    function nodesToHtml(nodes: Element[]): string {
-        const root = document.createElement(`div`);
-        nodes.forEach(node => {
-            root.appendChild(node);
-        });
-        return root.innerHTML;
-    }
-
     const brMarkup = (no: number): string => {
             return (
                 `<br class="os-line-break">` +
