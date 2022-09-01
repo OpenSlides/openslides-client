@@ -160,10 +160,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
     }
 
-    public delete(...users: Identifiable[]): Action<void> {
+    public delete(users: Identifiable[], handle_separately = false): Action<void> {
         this.preventInDemo();
         const data: any[] = users.map(user => ({ id: user.id }));
-        return this.actions.create({ action: UserAction.DELETE, data });
+        return this.actions.createFromArray([{ action: UserAction.DELETE, data }], handle_separately);
     }
 
     public assignMeetings(user: Identifiable, data: AssignMeetingsPayload): Action<AssignMeetingsResult> {

@@ -6,6 +6,7 @@ import { ActionRequest, isActionError, isActionResponse } from './action-utils';
 
 type ActionFn = () => boolean;
 const ACTION_URL = `/system/action/handle_request`;
+const ACTION_SEPARATELY_URL = `/system/action/handle_separately`;
 
 let uniqueFnId = 0;
 
@@ -26,12 +27,12 @@ export class ActionService {
         delete this._beforeActionFnMap[index];
     }
 
-    public async sendRequests<T>(requests: ActionRequest[]): Promise<T[] | null> {
+    public async sendRequests<T>(requests: ActionRequest[], handle_separately = false): Promise<T[] | null> {
         if (!this.isAllowed()) {
             return null;
         }
         console.log(`send requests:`, requests);
-        const response = await this.http.post<T>(ACTION_URL, requests);
+        const response = await this.http.post<T>(handle_separately ? ACTION_SEPARATELY_URL : ACTION_URL, requests);
         if (isActionError(response)) {
             throw response.message;
         } else if (isActionResponse<T>(response)) {
@@ -49,8 +50,15 @@ export class ActionService {
         return null;
     }
 
+    /**
+     * @deprecated this does not offer the handle_separately route option, which is vital for certain types of bulk requests, it's better to use `createFromArray` instead.
+     */
     public create<T>(...requests: ActionRequest[]): Action<T> {
         return new Action<T>(r => this.sendRequests<T>(r) as any, ...requests);
+    }
+
+    public createFromArray<T>(requests: ActionRequest[], handle_separately = false): Action<T> {
+        return new Action<T>(r => this.sendRequests<T>(r, handle_separately) as any, ...requests);
     }
 
     private isAllowed(): boolean {
@@ -83,7 +91,7 @@ export class ActionService {
     }
 
     /**
-     * @deprecated This will be removed pretty soon, use `create` instead!
+     * @deprecated This will be removed pretty soon, use `createFromArray` instead!
      * @param action
      * @param data
      * @returns

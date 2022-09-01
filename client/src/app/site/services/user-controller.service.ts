@@ -72,7 +72,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     }
 
     public async delete(...userIds: Identifiable[]): Promise<void> {
-        await this.repo.delete(...userIds).resolve();
+        await this.repo.delete(userIds).resolve();
     }
 
     public setPassword(user: Identifiable, password: string, setAsDefault?: boolean): Promise<void> {
