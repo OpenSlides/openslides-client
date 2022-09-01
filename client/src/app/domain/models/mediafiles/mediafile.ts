@@ -63,7 +63,7 @@ export class Mediafile extends BaseModel<Mediafile> {
     private used_in_meeting(type: string, place?: string): Id | null {
         if (!place) {
             const list = this[`used_as_${type}_$_in_meeting_id`];
-            for (let i = 0; i < list.length; i++) {
+            for (let i = 0; i < list?.length; i++) {
                 const path = `used_as_${type}_$${list[i]}_in_meeting_id` as keyof Mediafile;
                 if (path in this) {
                     return this[path] as Id;
