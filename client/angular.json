@@ -29,6 +29,7 @@
                         "inlineStyleLanguage": "scss",
                         "assets": [
                             "src/assets",
+                            "src/worker",
                             "src/manifest.webmanifest",
                             {
                                 "glob": "**/*",
