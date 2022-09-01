@@ -19,7 +19,7 @@
         }
 
         .align-right {
-            min-width: 80px;
+            min-width: 40px;
         }
     }
 
@@ -58,4 +58,13 @@
     padding: 6px;
     border: 1px solid;
     border-radius: 4px;
+}
+
+.template-indicator {
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+    .mat-icon {
+        vertical-align: middle;
+    }
 }
