@@ -79,7 +79,7 @@ export class ApplauseParticleDisplayComponent extends BaseMeetingComponent {
         if (this.particleContainer) {
             const emitters = this.particleContainer.plugins.get(`emitters`) as any;
             if (emitters) {
-                emitters.array[0].emitterOptions.rate.quantity = level;
+                emitters.array[0].options.rate.quantity = level;
             }
         }
     }

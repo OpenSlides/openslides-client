@@ -36,19 +36,21 @@ export class ChoiceService {
         choices?: Observable<T[]> | T[],
         multiSelect?: boolean,
         actions?: string[],
-        clearChoiceOption?: string
+        clearChoiceOption?: string,
+        sortFn?: (a: T, b: T) => number
     ): Promise<ChoiceAnswer<T>>;
     public async open<T extends Selectable = Selectable>(
         titleOrConfig: string | ChoiceDialogConfig,
         choices?: Observable<T[]> | T[],
         multiSelect: boolean = false,
         actions?: string[],
-        clearChoiceOption?: string
+        clearChoiceOption?: string,
+        sortFn?: (a: T, b: T) => number
     ): Promise<ChoiceAnswer<T>> {
         const data =
             typeof titleOrConfig !== `string`
                 ? titleOrConfig
-                : { title: titleOrConfig, choices, multiSelect, actions, clearChoiceOption };
+                : { title: titleOrConfig, choices, multiSelect, actions, clearChoiceOption, sortFn };
         const dialogRef = this.dialog.open(ChoiceDialogComponent, {
             ...infoDialogSettings,
             data

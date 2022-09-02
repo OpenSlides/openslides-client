@@ -200,15 +200,43 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     private buildDataTable(): void {
-        for (const item of this._source) {
-            const index = item.id;
-            this._dataSourceMap[index] = {
-                index,
-                isSelected: this._dataSourceMap[index]?.isSelected || false,
-                row: item
-            };
+        const source = this._source.sort((a, b) => a.id - b.id);
+        const sourceMapKeys = Object.keys(this._dataSourceMap)
+            .map(key => Number(key))
+            .sort((a, b) => a - b);
+        let toDelete: number[] = [];
+        let currentId = 0;
+        for (let i = 0; i < source.length; i++) {
+            while (currentId < sourceMapKeys.length && source[i].id >= sourceMapKeys[currentId]) {
+                if (source[i].id > sourceMapKeys[currentId]) {
+                    toDelete.push(sourceMapKeys[currentId]);
+                }
+                currentId++;
+            }
+            this.addOrChangeItemInDataSourceMap(source[i]);
         }
+        if (currentId < sourceMapKeys.length) {
+            toDelete = toDelete.concat(sourceMapKeys.slice(currentId));
+        }
+        this.deleteFromDataSourceMap(toDelete);
         this.refresh();
+    }
+
+    private addOrChangeItemInDataSourceMap(item: T): void {
+        this._dataSourceMap[item.id] = {
+            index: item.id,
+            isSelected: this._dataSourceMap[item.id]?.isSelected || false,
+            row: item
+        };
+    }
+
+    private deleteFromDataSourceMap(toDeleteIds: number[]): void {
+        if (toDeleteIds.length) {
+            for (const index of toDeleteIds) {
+                delete this._dataSourceMap[index];
+            }
+            this.onAfterSelectionChanged(this._source);
+        }
     }
 
     private changeSelection(rows: T[], isChecked?: boolean): void {

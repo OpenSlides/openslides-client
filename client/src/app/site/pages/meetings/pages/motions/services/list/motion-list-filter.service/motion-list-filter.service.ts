@@ -286,7 +286,9 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
                         filter: []
                     });
 
-                    for (const state of workflow.states) {
+                    for (const state of workflow.states.sort((a, b) =>
+                        a.weight && b.weight ? a.weight - b.weight : 0
+                    )) {
                         // get the restriction array, but remove the is_submitter condition, if present
                         const restrictions = state.restrictions?.filter(
                             r => r !== Restriction.motionsIsSubmitter

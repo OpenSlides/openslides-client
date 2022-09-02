@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { of } from 'rxjs';
 import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
 import { PollState } from 'src/app/domain/models/poll/poll-constants';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
+import { UnknownUserLabel } from 'src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/services/assignment-poll.service';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 
@@ -117,10 +119,14 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         const getOptionTitle: () => OptionTitle = () => {
             if (data.text) {
                 return { title: data.text };
-            } else {
+            } else if (data.content_object) {
                 modifyAgendaItemNumber(data.content_object!);
                 const repo = this.collectionMapperService.getRepository(data.content_object!.collection);
                 return { title: repo!.getTitle(data.content_object as any) };
+            } else {
+                return this.pollContentObjectType === PollContentObjectType.Assignment
+                    ? { title: UnknownUserLabel, subtitle: `` }
+                    : { title: _(`No data`) };
             }
         };
         return {

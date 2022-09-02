@@ -95,8 +95,22 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     public tooltipFn: (value: Selectable, source: MatOption) => string = () => ``;
 
     @Input()
-    public sortFn: false | ((valueA: Selectable, valueB: Selectable) => number) = (a, b) =>
+    public set sortFn(fn: false | ((valueA: Selectable, valueB: Selectable) => number)) {
+        if (typeof fn === `function` || fn === false) {
+            this._sortFn = fn;
+        } else {
+            this._sortFn = this._defaultSortFn;
+        }
+    }
+
+    public get sortFn(): false | ((valueA: Selectable, valueB: Selectable) => number) {
+        return this._sortFn;
+    }
+
+    private _defaultSortFn = (a: Selectable, b: Selectable) =>
         a && typeof a.getTitle() === `string` ? a.getTitle().localeCompare(b.getTitle()) : 0;
+
+    private _sortFn: false | ((valueA: Selectable, valueB: Selectable) => number) = this._defaultSortFn;
 
     /**
      * Emits the currently searched string.

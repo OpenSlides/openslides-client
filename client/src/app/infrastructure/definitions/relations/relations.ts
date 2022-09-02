@@ -67,7 +67,8 @@ interface MakeStructuredUserRelationArguments<V extends BaseViewModel> {
 }
 function _makeStructuredUserRelation<V extends BaseViewModel>(
     args: MakeStructuredUserRelationArguments<V>,
-    many: boolean
+    many: boolean,
+    otherFieldStructured = false
 ): Relation[] {
     return [
         // structured -> other
@@ -89,7 +90,7 @@ function _makeStructuredUserRelation<V extends BaseViewModel>(
             ownIdField: args.otherViewModelIdField,
             many,
             generic: false,
-            structured: false
+            structured: otherFieldStructured
         }
     ];
 }
@@ -104,6 +105,12 @@ function makeManyStructuredUsers2MRelation<V extends BaseViewModel>(
     args: MakeStructuredUserRelationArguments<V>
 ): Relation[] {
     return _makeStructuredUserRelation(args, true);
+}
+
+function makeMany2WayStructuredUsers2MRelation<V extends BaseViewModel>(
+    args: MakeStructuredUserRelationArguments<V>
+): Relation[] {
+    return _makeStructuredUserRelation(args, true, true);
 }
 
 // Where to place relations (in this order):
@@ -238,18 +245,18 @@ export const RELATIONS: Relation[] = [
         otherViewModelField: `user`,
         otherViewModelIdField: `user_id`
     }),
-    // ...makeManyStructuredUsers2MRelation({
-    //     otherViewModel: ViewCommittee,
-    //     structuredField: `committee_management_levels`,
-    //     structuredIdField: `committee_$_management_level`,
-    //     otherViewModelField: `user_management_levels`,
-    //     otherViewModelIdField: `user_$_management_level`
-    // }),
+    ...makeMany2WayStructuredUsers2MRelation({
+        otherViewModel: ViewCommittee,
+        structuredField: `committee_management_levels`,
+        structuredIdField: `committee_$_management_level`,
+        otherViewModelField: `user_management_levels`,
+        otherViewModelIdField: `user_$_management_level`
+    }),
     // ...makeOneStructuredGenericUser2MRelation({
     //     otherViewModel: ViewOption,
-    //     structuredField: 'options',
-    //     structuredIdField: 'option_$_ids',
-    //     otherViewModelField: 'content_object'
+    //     structuredField: `options`,
+    //     structuredIdField: `option_$_ids`,
+    //     otherViewModelField: `content_object`
     // }),
     // Vote delegations
     // vote_delegated_$_to_id -> vote_delegations_$_from_ids

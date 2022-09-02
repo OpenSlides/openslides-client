@@ -107,6 +107,9 @@ export const particleConfig = {
 };
 
 export const particleOptions: any = {
+    fullScreen: {
+        enable: false
+    },
     fpsLimit: 30,
     particles: {
         number: particleConfig.noAutomaticParticles,

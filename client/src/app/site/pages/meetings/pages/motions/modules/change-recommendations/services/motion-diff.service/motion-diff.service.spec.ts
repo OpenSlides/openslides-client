@@ -1,12 +1,15 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { htmlToFragment, nodesToHtml } from 'src/app/infrastructure/utils/dom-helpers';
 import { E2EImportsModule } from 'src/e2e-imports.module';
+import { TestChangeRecommendation } from 'src/testing/models/test-change-recommendation';
 
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from './motion-diff.service';
 
 describe(`MotionDiffService`, () => {
     let service: MotionDiffService;
+
     const brMarkup = (no: number): string => {
         return (
             `<br class="os-line-break">` +
@@ -167,10 +170,20 @@ describe(`MotionDiffService`, () => {
         });
 
         service = TestBed.inject(MotionDiffService);
-        baseHtmlDom1 = service.htmlToFragment(baseHtml1);
-        baseHtmlDom2 = service.htmlToFragment(baseHtml2);
+        baseHtmlDom1 = htmlToFragment(baseHtml1);
+        baseHtmlDom2 = htmlToFragment(baseHtml2);
         service.insertInternalLineMarkers(baseHtmlDom1);
         service.insertInternalLineMarkers(baseHtmlDom2);
+    });
+
+    describe(`extraction of lines`, () => {
+        it(`try insert internal line markers twice`, inject([MotionDiffService], (service: MotionDiffService) => {
+            let fragment = htmlToFragment(baseHtml1);
+            service.insertInternalLineMarkers(fragment);
+            service.insertInternalLineMarkers(fragment);
+
+            expect(fragment).toEqual(baseHtmlDom1);
+        }));
     });
 
     describe(`extraction of lines`, () => {
@@ -464,7 +477,7 @@ describe(`MotionDiffService`, () => {
 <LI>Punkt 4.3</LI>\
 </OL></LI></OL>`;
                 const out = service.replaceLinesMergeNodeArrays([node1.childNodes[0]], [node2.childNodes[0]]);
-                const outHtml = lineNumbering.nodesToHtml([<Element>out[0]]);
+                const outHtml = nodesToHtml([<Element>out[0]]);
                 expect(outHtml).toBe(
                     `<ol><li><ol><li>Punkt 4.1</li><li>Punkt 4.2</li><li>Punkt 4.3</li></ol></li></ol>`
                 );
@@ -528,6 +541,12 @@ describe(`MotionDiffService`, () => {
     });
 
     describe(`detecting the type of change`, () => {
+        it(`detects no change as replacement`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const html = `<p>Test 1</p>`;
+            const calculatedType = service.detectReplacementType(html, html);
+            expect(calculatedType).toBe(ModificationType.TYPE_REPLACEMENT);
+        }));
+
         it(`detects a simple insertion`, inject([MotionDiffService], (service: MotionDiffService) => {
             const htmlBefore = `<p>Test 1</p>`,
                 htmlAfter = `<p>Test 1 Test 2</p>` + `\n` + `<p>Test 3</p>`;
@@ -838,6 +857,16 @@ describe(`MotionDiffService`, () => {
             const before = `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>`,
                 after = `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p>NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>`,
                 expected = `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>\n<p class="insert">NEUE ZEILE</p>\n<p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</p>\n<p>Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>`;
+
+            const diff = service.diff(before, after);
+            expect(diff).toBe(expected);
+        }));
+
+        it(`handles insterted paragraphs infront of list`, inject([MotionDiffService], (service: MotionDiffService) => {
+            // Hint: line number should be moved into first element
+            const before = `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
+                after = `<p>Add before UL</p><ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
+                expected = `<p class="insert"><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Add before UL</p><ul><li>Lorem ipsum</li></ul>`;
 
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
@@ -1204,16 +1233,15 @@ describe(`MotionDiffService`, () => {
             expect(diffNormalized).toBe(expectedNormalized);
         }));
 
-        // TODO: fix issue with this test and reactivate
-        xit(`detects broken HTML and lowercases class names`, inject(
+        it(`detects broken HTML and lowercases class names`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const before = `<p><span class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">&nbsp;</span>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: #000000;">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <br class="os-line-break"><span class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">&nbsp;</span>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <br class="os-line-break"><span class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">&nbsp;</span>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n<p><span class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">&nbsp;</span>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>`,
                     after = `<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: #000000;">Hello</span></p>\n\n<p><span style="color: #000000;">World</span></p>\n\n<p><span style="color: #000000;">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>`;
                 const diff = service.diff(before, after);
                 expect(diff).toBe(
-                    `<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false"> </SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>` +
-                        `<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false"> </SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false"> </SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false"> </SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>` +
+                    `<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">\u00A0</SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>` +
+                        `<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">\u00A0</SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">\u00A0</SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">\u00A0</SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">\u00A0</SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>` +
                         `<P class="insert">holen, da rief sie alle sieben herbei und sprach:</P><INS>\n\n</INS>` +
                         `<P class="insert"><SPAN>Hello</SPAN></P><INS>\n\n</INS>` +
                         `<P class="insert"><SPAN>World</SPAN></P><INS>\n\n</INS>` +
@@ -1269,20 +1297,6 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
-    });
-
-    describe(`addCSSClassToFirstTag function`, () => {
-        it(`works with plain tags`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const strIn = `<ol start='2'><li>`,
-                inserted = service.addCSSClassToFirstTag(strIn, `newClass`);
-            expect(inserted).toBe(`<ol start='2' class="newClass"><li>`);
-        }));
-
-        it(`works with tags already having classes`, inject([MotionDiffService], (service: MotionDiffService) => {
-            const strIn = `<ol start='2' class='my-old-class'><li>`,
-                inserted = service.addCSSClassToFirstTag(strIn, `newClass`);
-            expect(inserted).toBe(`<ol start='2' class="my-old-class newClass"><li>`);
-        }));
     });
 
     describe(`removeDuplicateClassesInsertedByCkeditor`, () => {
@@ -1366,6 +1380,216 @@ describe(`MotionDiffService`, () => {
             const inHtml = `<p class="insert">Test <strong>1</strong></p><p class="insert anotherclass">Test <strong>2</strong></p>`;
             const stripped = service.diffHtmlToFinalText(inHtml);
             expect(stripped).toBe(`<P>Test <STRONG>1</STRONG></P><P class="anotherclass">Test <STRONG>2</STRONG></P>`);
+        }));
+    });
+
+    describe(`apply unified changes to text: getTextWithChanges`, () => {
+        it(`test with no changes`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService, lineNumberingService: LineNumberingService) => {
+                const inHtml = `<p>Test 1</p><p>Test 2</p>`;
+                const out = service.getTextWithChanges(inHtml, [], 20);
+                expect(out).toBe(
+                    lineNumberingService.insertLineNumbers({
+                        html: inHtml,
+                        lineLength: 20,
+                        firstLine: 1
+                    })
+                );
+            }
+        ));
+
+        it(`test changes in random order`, inject(
+            [MotionDiffService, LineNumberingService],
+            (service: MotionDiffService, lineNumberingService: LineNumberingService) => {
+                const inHtml = `<p>Test 1</p><p>Test 2</p><p>Test 3</p><p>Test 4</p>`;
+
+                const out = service.getTextWithChanges(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 3,
+                            line_to: 3,
+                            text: `<p>Test 3x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 2,
+                            line_to: 2,
+                            text: `<p>Test 2x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 1,
+                            line_to: 1,
+                            text: `<p>Test 1x</p>`
+                        }),
+                        new TestChangeRecommendation({
+                            line_from: 4,
+                            line_to: 4,
+                            text: `<p>Test 4x</p>`
+                        })
+                    ],
+                    20
+                );
+
+                expect(out).toBe(
+                    lineNumberingService
+                        .insertLineNumbers({
+                            html: inHtml,
+                            lineLength: 20,
+                            firstLine: 1
+                        })
+                        .replace(/Test ([1-4])/g, `Test $1x`)
+                );
+            }
+        ));
+    });
+
+    describe(`getAmendmentParagraphsLines`, () => {
+        it(`test identical inputs`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`;
+            const outHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`;
+
+            expect(service.getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toBe(null);
+        }));
+
+        it(`test without change recos`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const outHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2x</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+
+            expect(service.getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toEqual({
+                diffLineFrom: 2,
+                diffLineTo: 2,
+                paragraphLineFrom: 1,
+                paragraphLineTo: 4,
+                paragraphNo: 2,
+                text: `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`,
+                textPost: `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`,
+                textPre: `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p>`
+            });
+        }));
+
+        // TODO: test with change recos
+    });
+
+    describe(`getChangeDiff`, () => {
+        it(`test with simple change`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p>Test 2x</p>`
+                    }),
+                    20
+                )
+            ).toBe(
+                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`
+            );
+        }));
+
+        // TODO: Check what should happen when highlighted is set
+        it(`test with simple change highlighted`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getChangeDiff(
+                    inHtml,
+                    new TestChangeRecommendation({
+                        line_from: 2,
+                        line_to: 2,
+                        text: `<p>Test 2x</p>`
+                    }),
+                    20,
+                    1
+                )
+            ).toBe(
+                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`
+            );
+        }));
+    });
+
+    describe(`getTextRemainderAfterLastChange`, () => {
+        it(`test with simple change`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getTextRemainderAfterLastChange(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 2,
+                            line_to: 2,
+                            text: `<p>Test 2x</p>`
+                        })
+                    ],
+                    20
+                )
+            ).toBe(
+                `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+            );
+        }));
+
+        it(`test no remainder after last change`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(
+                service.getTextRemainderAfterLastChange(
+                    inHtml,
+                    [
+                        new TestChangeRecommendation({
+                            line_from: 3,
+                            line_to: 3,
+                            text: `<p>Test 3x</p>`
+                        })
+                    ],
+                    20
+                )
+            ).toBe(``);
+        }));
+
+        it(`test with no changes`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+
+            expect(service.getTextRemainderAfterLastChange(inHtml, [], 20)).toBe(inHtml);
+        }));
+    });
+
+    describe(`extractMotionLineRange`, () => {
+        it(`test with no line numbers in result`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+
+            expect(
+                service.extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    false,
+                    20
+                )
+            ).toBe(`<P>Test 2</P><P>Test 3</P>`);
+        }));
+
+        it(`test with line numbers in result`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+
+            expect(
+                service.extractMotionLineRange(
+                    inHtml,
+                    {
+                        from: 2,
+                        to: 3
+                    },
+                    true,
+                    20
+                )
+            ).toBe(
+                `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
+            );
         }));
     });
 });

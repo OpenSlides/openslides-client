@@ -202,7 +202,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     private getPartialUserPayload(): any {
-        return this.personalInfoFormValue;
+        const payload = this.personalInfoFormValue;
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
+            payload[`committee_$_management_level`] = { [CML.can_manage]: [] };
+        }
+        return payload;
     }
 
     private checkFormForErrors(): void {

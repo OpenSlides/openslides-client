@@ -55,7 +55,7 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         const prompt = await this.userDeleteDialog.open({ toDelete, toRemove: [] });
         const answer = await firstValueFrom(prompt.afterClosed());
         if (answer) {
-            await this.repo.delete(...toDelete).resolve();
+            await this.repo.delete(toDelete).resolve();
         }
         return answer as boolean;
     }

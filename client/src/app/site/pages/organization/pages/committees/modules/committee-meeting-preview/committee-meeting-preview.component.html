@@ -9,13 +9,10 @@
         <span class="align-right align-center">
             <mat-label class="archived-label" *ngIf="meeting.isArchived">{{ 'Archived' | translate }}</mat-label>
             <ng-container *osCmlPerms="CML.can_manage; committeeId: committee.id; nonAdminCheck: true">
-                <button
-                    mat-icon-button
-                    (click)="toggleTemplateMeeting()"
-                    matTooltip="{{ (isTemplateMeeting ? 'Template meeting' : 'Set as template meeting') | translate }}"
-                >
-                    <mat-icon>{{ isTemplateMeeting ? 'star' : 'star_outline' }}</mat-icon>
-                </button>
+                <div *ngIf="isTemplateMeeting" class="template-indicator">
+                    <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
+                </div>
+
                 <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
@@ -80,6 +77,12 @@
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
+        <button mat-menu-item (click)="toggleTemplateMeeting()">
+            <mat-icon color="accent">
+                {{ isTemplateMeeting ? 'check_box' : 'check_box_outline_blank' }}
+            </mat-icon>
+            <span>{{ 'Public template' | translate }}</span>
+        </button>
         <button mat-menu-item (click)="onDuplicate()">
             <mat-icon>file_copy</mat-icon>
             <span>{{ 'Duplicate' | translate }}</span>

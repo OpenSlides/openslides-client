@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
+import { Action } from 'src/app/gateways/actions';
 import { MotionStateRepositoryService } from 'src/app/gateways/repositories/motions';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
@@ -28,5 +30,9 @@ export class MotionStateControllerService extends BaseMeetingControllerService<V
 
     public delete(state: Identifiable): Promise<void> {
         return this.repo.delete(state);
+    }
+
+    public sort(workflowId: Id, states: Identifiable[]): Action<void> {
+        return this.repo.sort(workflowId, states);
     }
 }

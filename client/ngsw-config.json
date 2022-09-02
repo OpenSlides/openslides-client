@@ -25,16 +25,5 @@
                 "files": ["/assets/**", "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
             }
         }
-    ],
-    "dataGroups": [
-        {
-            "name": "api",
-            "urls": ["/rest/*", "/apps/*", "/system/*", "/stats"],
-            "cacheConfig": {
-                "maxSize": 0,
-                "maxAge": "0u",
-                "strategy": "freshness"
-            }
-        }
     ]
 }

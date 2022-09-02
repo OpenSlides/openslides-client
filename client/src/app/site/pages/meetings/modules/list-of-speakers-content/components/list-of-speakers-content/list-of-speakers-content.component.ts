@@ -11,6 +11,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
@@ -207,6 +208,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);
             this.filterNonAvailableUsers();
+            this.interactionService.kickUsers([speaker.user], _(`Removed from the list of speakers`));
         }
     }
 

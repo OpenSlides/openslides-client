@@ -39,4 +39,5 @@ export class ChoiceDialogConfig<D extends Selectable = Selectable> {
     public readonly actions?: string[];
     public readonly clearChoiceOption?: string;
     public readonly multiSelect?: boolean;
+    public readonly sortFn?: (a: D, b: D) => number; //For cases when choices are given and the search selector should be sorted a certain way.
 }

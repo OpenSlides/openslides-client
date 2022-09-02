@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils';
+import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
 
-const ELEMENT_NODE = 1;
-const TEXT_NODE = 3;
-const DOCUMENT_FRAGMENT_NODE = 11;
+const ELEMENT_NODE = Node.ELEMENT_NODE;
+const TEXT_NODE = Node.TEXT_NODE;
+const DOCUMENT_FRAGMENT_NODE = Node.DOCUMENT_FRAGMENT_NODE;
 
 /**
  * This data structure is used when determining the most specific common ancestor of two HTML node
@@ -148,7 +150,7 @@ interface ExtractedContent {
  *     '<p>A line</p><p>Another line</p><ul><li>A list item</li><li>Yet another item</li></ul>',
  *     lineLength
  *   );
- * const merged = this.diffService.replaceLines(lineNumberedText, '<p>Replaced paragraph</p>', 1, 2);
+ * const merged = this.diffService.replaceLines(lineNumberedText, '<p>Replaced paragraph</p>', 1, 1);
  * ```
  */
 @Injectable({
@@ -180,19 +182,7 @@ export class MotionDiffService {
      * @returns {Element}
      */
     private getFirstLineNumberNode(node: Node): Element | null {
-        if (node.nodeType === TEXT_NODE) {
-            return null;
-        }
-        const element = <Element>node;
-        if (element.nodeName === `OS-LINEBREAK`) {
-            return element;
-        }
-        const found = element.querySelectorAll(`OS-LINEBREAK`);
-        if (found.length > 0) {
-            return found.item(0);
-        } else {
-            return null;
-        }
+        return DomHelpers.getNodeByName(node, `OS-LINEBREAK`);
     }
 
     /**
@@ -203,54 +193,19 @@ export class MotionDiffService {
      * @returns {Element}
      */
     private getLastLineNumberNode(node: Node): Element | null {
-        if (node.nodeType === TEXT_NODE) {
-            return null;
-        }
-        const element = <Element>node;
-        if (element.nodeName === `OS-LINEBREAK`) {
-            return element;
-        }
-        const found = element.querySelectorAll(`OS-LINEBREAK`);
-        if (found.length > 0) {
-            return found.item(found.length - 1);
-        } else {
-            return null;
-        }
+        return DomHelpers.getNodeByName(node, `OS-LINEBREAK`, true);
     }
 
     /**
-     * Given a node, this method returns an array containing all parent elements of this node, recursively.
-     *
-     * @param {Node} node
-     * @returns {Node[]}
+     * Returns a os linebreak element
+     * Example: <OS-LINEBREAK class="os-line-number line-number-23" data-line-number="23"/>
      */
-    private getNodeContextTrace(node: Node): Node[] {
-        const context = [];
-        let currNode: Node | null = node;
-        while (currNode) {
-            context.unshift(currNode);
-            currNode = currNode.parentNode;
-        }
-        return context;
-    }
+    private getLineMarker(lineNumber: number, classes?: string): Node {
+        const lineMarker = document.createElement(`OS-LINEBREAK`);
+        lineMarker.setAttribute(`data-line-number`, lineNumber.toString(10));
+        lineMarker.setAttribute(`class`, classes ?? `os-line-number line-number-` + lineNumber.toString(10));
 
-    /**
-     * This method checks if the given `child`-Node is the first non-empty child element of the given parent Node
-     * called `node`. Hence the name of this method.
-     *
-     * @param node
-     * @param child
-     */
-    private isFirstNonemptyChild(node: Node, child: Node): boolean {
-        for (let i = 0; i < node.childNodes.length; i++) {
-            if (node.childNodes[i] === child) {
-                return true;
-            }
-            if (node.childNodes[i].nodeType !== TEXT_NODE || node.childNodes[i].nodeValue?.match(/\S/)) {
-                return false;
-            }
-        }
-        return false;
+        return lineMarker;
     }
 
     /**
@@ -265,62 +220,29 @@ export class MotionDiffService {
             return;
         }
         const lineNumbers = fragment.querySelectorAll(`span.os-line-number`);
-        let lineMarker;
         let maxLineNumber = 0;
 
         lineNumbers.forEach((insertBefore: Node) => {
             const lineNumberElement = <Element>insertBefore;
             while (
                 insertBefore.parentNode?.nodeType !== DOCUMENT_FRAGMENT_NODE &&
-                this.isFirstNonemptyChild(insertBefore.parentNode!, insertBefore)
+                DomHelpers.isFirstNonemptyChild(insertBefore.parentNode!, insertBefore)
             ) {
                 insertBefore = insertBefore.parentNode!;
             }
-            lineMarker = document.createElement(`OS-LINEBREAK`);
-            lineMarker.setAttribute(`data-line-number`, lineNumberElement.getAttribute(`data-line-number`) as string);
-            lineMarker.setAttribute(`class`, lineNumberElement.getAttribute(`class`) as string);
-            insertBefore.parentNode?.insertBefore(lineMarker, insertBefore);
+            insertBefore.parentNode?.insertBefore(
+                this.getLineMarker(
+                    parseInt(lineNumberElement.getAttribute(`data-line-number`)),
+                    lineNumberElement.getAttribute(`class`)
+                ),
+                insertBefore
+            );
             maxLineNumber = parseInt(lineNumberElement.getAttribute(`data-line-number`) as string, 10);
         });
 
         // Add one more "fake" line number at the end and beginning, so we can select the last line as well
-        lineMarker = document.createElement(`OS-LINEBREAK`);
-        lineMarker.setAttribute(`data-line-number`, (maxLineNumber + 1).toString(10));
-        lineMarker.setAttribute(`class`, `os-line-number line-number-` + (maxLineNumber + 1).toString(10));
-        fragment.appendChild(lineMarker);
-
-        lineMarker = document.createElement(`OS-LINEBREAK`);
-        lineMarker.setAttribute(`data-line-number`, `0`);
-        lineMarker.setAttribute(`class`, `os-line-number line-number-0`);
-        fragment.insertBefore(lineMarker, fragment.firstChild);
-    }
-
-    /**
-     * An OL element has a number of child LI nodes. Given a `descendantNode` that might be anywhere within
-     * the hierarchy of this OL element, this method returns the index (starting with 1) of the LI element
-     * that contains this node.
-     *
-     * @param olNode
-     * @param descendantNode
-     */
-    private getNthLIOfOL(olNode: Element, descendantNode: Node): number | null {
-        let nthLIOfOL = null;
-        while (descendantNode.parentNode) {
-            if (descendantNode.parentNode === olNode) {
-                let lisBeforeOl = 0;
-                let foundMe = false;
-                for (let i = 0; i < olNode.childNodes.length && !foundMe; i++) {
-                    if (olNode.childNodes[i] === descendantNode) {
-                        foundMe = true;
-                    } else if (olNode.childNodes[i].nodeName === `LI`) {
-                        lisBeforeOl++;
-                    }
-                }
-                nthLIOfOL = lisBeforeOl + 1;
-            }
-            descendantNode = descendantNode.parentNode;
-        }
-        return nthLIOfOL;
+        fragment.appendChild(this.getLineMarker(maxLineNumber + 1));
+        fragment.insertBefore(this.getLineMarker(0), fragment.firstChild);
     }
 
     /**
@@ -331,8 +253,8 @@ export class MotionDiffService {
      * @returns {CommonAncestorData}
      */
     public getCommonAncestor(node1: Node, node2: Node): CommonAncestorData {
-        const trace1 = this.getNodeContextTrace(node1);
-        const trace2 = this.getNodeContextTrace(node2);
+        const trace1 = DomHelpers.getNodeContextTrace(node1);
+        const trace2 = DomHelpers.getNodeContextTrace(node2);
         const childTrace1 = [];
         const childTrace2 = [];
         let commonAncestor: Node | null = null;
@@ -369,126 +291,33 @@ export class MotionDiffService {
             // Fragments are only placeholders and do not have an HTML representation
             return ``;
         }
-        const element = <Element>node;
-        let html = `<` + element.nodeName;
-        for (let i = 0; i < element.attributes.length; i++) {
-            const attr = element.attributes[i];
-            if (attr.name !== `os-li-number`) {
-                html += ` ` + attr.name + `="` + attr.value + `"`;
-            }
-        }
-        html += `>`;
-        return html;
-    }
 
-    /**
-     * This converts the given HTML string into a DOM tree contained by a DocumentFragment, which is reqturned.
-     *
-     * @param {string} html
-     * @return {DocumentFragment}
-     */
-    public htmlToFragment(html: string): DocumentFragment {
-        const template = document.createElement(`template`);
-        template.innerHTML = html;
-        return template.content;
+        return DomHelpers.serializeTag(node);
     }
 
     /**
      * This performs HTML normalization to prevent the Diff-Algorithm from detecting changes when there are actually
      * none. Common problems covered by this method are differently ordered Attributes of HTML elements or HTML-encoded
      * special characters.
-     * Unfortunately, the conversion of HTML-encoded characters to the actual characters is done by a lookup-table for
-     * now, as we haven't figured out a way to decode them automatically.
      *
      * @param {string} html
      * @returns {string}
      * @private
      */
     public normalizeHtmlForDiff(html: string): string {
-        // Convert all HTML tags to uppercase, but leave the values of attributes unchanged
-        // All attributes and CSS class names  are sorted alphabetically
-        // If an attribute is empty, it is removed
-        html = html.replace(
-            /<(\/?[a-z]*)( [^>]*)?>/gi,
-            (_fullHtml: string, tag: string, attributes: string): string => {
-                const tagNormalized = tag.toUpperCase();
-                if (attributes === undefined) {
-                    attributes = ``;
-                }
-                const attributesList = [];
-                const attributesMatcher = /( [^"'=]*)(= *((["'])(.*?)\4))?/gi;
-                let match;
-                do {
-                    match = attributesMatcher.exec(attributes);
-                    if (match) {
-                        let attrNormalized = match[1].toUpperCase();
-                        let attrValue = match[5];
-                        if (match[2] !== undefined) {
-                            if (attrNormalized === ` CLASS`) {
-                                attrValue = attrValue
-                                    .split(` `)
-                                    .sort()
-                                    .join(` `)
-                                    .replace(/^\s+/, ``)
-                                    .replace(/\s+$/, ``);
-                            }
-                            attrNormalized += `=` + match[4] + attrValue + match[4];
-                        }
-                        if (attrValue !== ``) {
-                            attributesList.push(attrNormalized);
-                        }
-                    }
-                } while (match);
-                attributes = attributesList.sort().join(``);
-                return `<` + tagNormalized + attributes + `>`;
-            }
-        );
+        html = DomHelpers.sortHtmlAttributes(html);
+        html = DomHelpers.htmlToUppercase(html);
 
-        const entities: any = {
-            '&nbsp;': ` `,
-            '&ndash;': `-`,
-            '&auml;': `ä`,
-            '&ouml;': `ö`,
-            '&uuml;': `ü`,
-            '&Auml;': `Ä`,
-            '&Ouml;': `Ö`,
-            '&Uuml;': `Ü`,
-            '&szlig;': `ß`,
-            '&bdquo;': `„`,
-            '&ldquo;': `“`,
-            '&bull;': `•`,
-            '&sect;': `§`,
-            '&eacute;': `é`,
-            '&rsquo;': `’`,
-            '&euro;': `€`,
-            '&reg;': `®`,
-            '&trade;': `™`,
-            '&raquo;': `»`,
-            '&laquo;': `«`,
-            '&Acirc;': `Â`,
-            '&acirc;': `â`,
-            '&Ccedil;': `Ç`,
-            '&ccedil;': `ç`,
-            '&Egrave;': `È`,
-            '&egrave;': `è`,
-            '&Ntilde;': `Ñ`,
-            '&ntilde;': `ñ`,
-            '&Euml;': `Ë`,
-            '&euml;': `ë`,
-            '&Prime;': `″`,
-            '&rdquo;': `”`
-        };
-
+        // remove whitespaces infront of closing tags
         html = html
             .replace(/\s+<\/P>/gi, `</P>`)
             .replace(/\s+<\/DIV>/gi, `</DIV>`)
             .replace(/\s+<\/LI>/gi, `</LI>`);
         html = html.replace(/\s+<LI>/gi, `<LI>`).replace(/<\/LI>\s+/gi, `</LI>`);
-        html = html.replace(/\u00A0/g, ` `);
+
+        html = html.replace(/\u00A0/g, ` `); // replace no break space
         html = html.replace(/\u2013/g, `-`);
-        Object.keys(entities).forEach(ent => {
-            html = html.replace(new RegExp(ent, `g`), entities[ent]);
-        });
+        html = DomHelpers.replaceHtmlEntities(html);
 
         // Newline characters: after closing block-level-elements, but not after BR (which is inline)
         html = html.replace(/(<br *\/?>)\n/gi, `$1`);
@@ -499,39 +328,9 @@ export class MotionDiffService {
     }
 
     /**
-     * Get all the siblings of the given node _after_ this node, in the order as they appear in the DOM tree.
-     *
-     * @param {Node} node
-     * @returns {Node[]}
-     */
-    private getAllNextSiblings(node: Node): Node[] {
-        const nodes: Node[] = [];
-        while (node.nextSibling) {
-            nodes.push(node.nextSibling);
-            node = node.nextSibling;
-        }
-        return nodes;
-    }
-
-    /**
-     * Get all the siblings of the given node _before_ this node,
-     * with the one closest to the given node first (=> reversed order in regard to the DOM tree order)
-     *
-     * @param {Node} node
-     * @returns {Node[]}
-     */
-    private getAllPrevSiblingsReversed(node: Node): Node[] {
-        const nodes = [];
-        while (node.previousSibling) {
-            nodes.push(node.previousSibling);
-            node = node.previousSibling;
-        }
-        return nodes;
-    }
-
-    /**
      * Given two strings, this method tries to guess if `htmlNew` can be produced from `htmlOld` by inserting
-     * or deleting text, or if both is necessary (replac)
+     * or deleting text, or if both is necessary (replace)
+     * Returns replace if strings are equal
      *
      * @param {string} htmlOld
      * @param {string} htmlNew
@@ -545,79 +344,28 @@ export class MotionDiffService {
             return ModificationType.TYPE_REPLACEMENT;
         }
 
-        let i;
-        let foundDiff;
-        for (i = 0, foundDiff = false; i < htmlOld.length && i < htmlNew.length && foundDiff === false; i++) {
-            if (htmlOld[i] !== htmlNew[i]) {
-                foundDiff = true;
-            }
-        }
+        let firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
 
-        const remainderOld = htmlOld.substr(i - 1);
-        const remainderNew = htmlNew.substr(i - 1);
-        let type = ModificationType.TYPE_REPLACEMENT;
+        const remainderOld = htmlOld.substr(firstDiffIndex);
+        const remainderNew = htmlNew.substr(firstDiffIndex);
 
         if (remainderOld.length > remainderNew.length) {
             if (remainderOld.substr(remainderOld.length - remainderNew.length) === remainderNew) {
-                type = ModificationType.TYPE_DELETION;
+                return ModificationType.TYPE_DELETION;
             }
         } else if (remainderOld.length < remainderNew.length) {
             if (remainderNew.substr(remainderNew.length - remainderOld.length) === remainderOld) {
-                type = ModificationType.TYPE_INSERTION;
+                return ModificationType.TYPE_INSERTION;
             }
         }
 
-        return type;
-    }
-
-    /**
-     * This method adds a CSS class name to a given node.
-     *
-     * @param {Node} node
-     * @param {string} className
-     */
-    public addCSSClass(node: Node, className: string): void {
-        if (node.nodeType !== ELEMENT_NODE) {
-            return;
-        }
-        const element = <Element>node;
-        const classesStr = element.getAttribute(`class`);
-        const classes = classesStr ? classesStr.split(` `) : [];
-        if (classes.indexOf(className) === -1) {
-            classes.push(className);
-        }
-        element.setAttribute(`class`, classes.join(` `));
-    }
-
-    /**
-     * This method removes a CSS class name from a given node.
-     *
-     * @param {Node} node
-     * @param {string} className
-     */
-    public removeCSSClass(node: Node, className: string): void {
-        if (node.nodeType !== ELEMENT_NODE) {
-            return;
-        }
-        const element = <Element>node;
-        const classesStr = element.getAttribute(`class`);
-        const newClasses = [];
-        const classes = classesStr ? classesStr.split(` `) : [];
-        for (let i = 0; i < classes.length; i++) {
-            if (classes[i] !== className) {
-                newClasses.push(classes[i]);
-            }
-        }
-        if (newClasses.length === 0) {
-            element.removeAttribute(`class`);
-        } else {
-            element.setAttribute(`class`, newClasses.join(` `));
-        }
+        return ModificationType.TYPE_REPLACEMENT;
     }
 
     /**
      * Adapted from http://ejohn.org/projects/javascript-diff-algorithm/
      * by John Resig, MIT License
+     *
      * @param {array} oldArr
      * @param {array} newArr
      * @returns {object}
@@ -625,30 +373,37 @@ export class MotionDiffService {
     private diffArrays(oldArr: any, newArr: any): any {
         const ns: any = {};
         const os: any = {};
-        let i;
 
-        for (i = 0; i < newArr.length; i++) {
+        for (let i = 0; i < newArr.length; i++) {
             if (ns[newArr[i]] === undefined) {
                 ns[newArr[i]] = { rows: [], o: null };
             }
             ns[newArr[i]].rows.push(i);
         }
 
-        for (i = 0; i < oldArr.length; i++) {
+        for (let i = 0; i < oldArr.length; i++) {
             if (os[oldArr[i]] === undefined) {
                 os[oldArr[i]] = { rows: [], n: null };
             }
             os[oldArr[i]].rows.push(i);
         }
 
-        for (i in ns) {
+        for (let i in ns) {
             if (ns[i].rows.length === 1 && typeof os[i] !== `undefined` && os[i].rows.length === 1) {
                 newArr[ns[i].rows[0]] = { text: newArr[ns[i].rows[0]], row: os[i].rows[0] };
                 oldArr[os[i].rows[0]] = { text: oldArr[os[i].rows[0]], row: ns[i].rows[0] };
+            } else if (
+                ns[i].rows.length >= 1 &&
+                ns[i].rows.indexOf(0) !== -1 &&
+                os[i] !== undefined &&
+                os[i].rows.indexOf(0) !== -1
+            ) {
+                newArr[0] = { text: newArr[0], row: 0 };
+                oldArr[0] = { text: oldArr[0], row: 0 };
             }
         }
 
-        for (i = 0; i < newArr.length - 1; i++) {
+        for (let i = 0; i < newArr.length - 1; i++) {
             if (
                 newArr[i].text !== null &&
                 newArr[i + 1].text === undefined &&
@@ -661,7 +416,7 @@ export class MotionDiffService {
             }
         }
 
-        for (i = newArr.length - 1; i > 0; i--) {
+        for (let i = newArr.length - 1; i > 0; i--) {
             if (
                 newArr[i].text !== null &&
                 newArr[i - 1].text === undefined &&
@@ -671,6 +426,18 @@ export class MotionDiffService {
             ) {
                 newArr[i - 1] = { text: newArr[i - 1], row: newArr[i].row - 1 };
                 oldArr[newArr[i].row - 1] = { text: oldArr[newArr[i].row - 1], row: i - 1 };
+            }
+        }
+
+        // This fixes the problem tested by "does not lose words when changes are moved X-wise"
+        let lastRow = 0;
+        for (let z = 0; z < newArr.length; z++) {
+            if (newArr[z].row && newArr[z].row > lastRow) {
+                lastRow = newArr[z].row;
+            }
+            if (newArr[z].row && newArr[z].row < lastRow) {
+                oldArr[newArr[z].row] = oldArr[newArr[z].row].text;
+                newArr[z] = newArr[z].text;
             }
         }
 
@@ -685,73 +452,31 @@ export class MotionDiffService {
      * @returns {string[]}
      */
     private tokenizeHtml(str: string): string[] {
-        const splitArrayEntriesEmbedSeparator = (strings: string[], by: string, prepend: boolean): string[] => {
+        let res = [str];
+        for (let splitConf of [
+            { by: `<`, type: `prepend` },
+            { by: `>`, type: `append` },
+            { by: ` ` },
+            { by: `.` },
+            { by: `,` },
+            { by: `!` },
+            { by: `-` },
+            { by: `\n`, type: `append` }
+        ]) {
             const newArr = [];
-            for (let i = 0; i < strings.length; i++) {
-                if (strings[i][0] === `<` && (by === ` ` || by === `\n`)) {
-                    // Don't split HTML tags
-                    newArr.push(strings[i]);
+            for (let i = 0; i < res.length; i++) {
+                // Don't split HTML tags
+                if (res[i][0] === `<` && splitConf.by !== `<` && splitConf.by !== `>`) {
+                    newArr.push(res[i]);
                     continue;
                 }
 
-                const parts = strings[i].split(by);
-                if (parts.length === 1) {
-                    newArr.push(strings[i]);
-                } else {
-                    let j;
-                    if (prepend) {
-                        if (parts[0] !== ``) {
-                            newArr.push(parts[0]);
-                        }
-                        for (j = 1; j < parts.length; j++) {
-                            newArr.push(by + parts[j]);
-                        }
-                    } else {
-                        for (j = 0; j < parts.length - 1; j++) {
-                            newArr.push(parts[j] + by);
-                        }
-                        if (parts[parts.length - 1] !== ``) {
-                            newArr.push(parts[parts.length - 1]);
-                        }
-                    }
-                }
+                newArr.push(...splitStringKeepSeperator(res[i], splitConf.by, splitConf.type));
             }
-            return newArr;
-        };
-        const splitArrayEntriesSplitSeparator = (strings: string[], by: string): string[] => {
-            const newArr = [];
-            for (let i = 0; i < strings.length; i++) {
-                if (strings[i][0] === `<`) {
-                    newArr.push(strings[i]);
-                    continue;
-                }
-                const parts = strings[i].split(by);
-                for (let j = 0; j < parts.length; j++) {
-                    if (j > 0) {
-                        newArr.push(by);
-                    }
-                    newArr.push(parts[j]);
-                }
-            }
-            return newArr;
-        };
-        let arr = splitArrayEntriesEmbedSeparator([str], `<`, true);
-        arr = splitArrayEntriesEmbedSeparator(arr, `>`, false);
-        arr = splitArrayEntriesSplitSeparator(arr, ` `);
-        arr = splitArrayEntriesSplitSeparator(arr, `.`);
-        arr = splitArrayEntriesSplitSeparator(arr, `,`);
-        arr = splitArrayEntriesSplitSeparator(arr, `!`);
-        arr = splitArrayEntriesSplitSeparator(arr, `-`);
-        arr = splitArrayEntriesEmbedSeparator(arr, `\n`, false);
-
-        const arrWithoutEmpties = [];
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i] !== ``) {
-                arrWithoutEmpties.push(arr[i]);
-            }
+            res = newArr;
         }
 
-        return arrWithoutEmpties;
+        return res.filter(el => el !== ``);
     }
 
     /**
@@ -768,23 +493,9 @@ export class MotionDiffService {
 
         const out = this.diffArrays(this.tokenizeHtml(oldStr), this.tokenizeHtml(newStr));
 
-        // This fixes the problem tested by "does not lose words when changes are moved X-wise"
-        let lastRow = 0;
-        for (let z = 0; z < out.n.length; z++) {
-            if (out.n[z].row && out.n[z].row > lastRow) {
-                lastRow = out.n[z].row;
-            }
-            if (out.n[z].row && out.n[z].row < lastRow) {
-                out.o[out.n[z].row] = out.o[out.n[z].row].text;
-                out.n[z] = out.n[z].text;
-            }
-        }
-
         let str = ``;
-        let i;
-
         if (out.n.length === 0) {
-            for (i = 0; i < out.o.length; i++) {
+            for (let i = 0; i < out.o.length; i++) {
                 str += `<del>` + out.o[i] + `</del>`;
             }
         } else {
@@ -795,7 +506,7 @@ export class MotionDiffService {
             }
 
             let currOldRow = 0;
-            for (i = 0; i < out.n.length; i++) {
+            for (let i = 0; i < out.n.length; i++) {
                 if (out.n[i].text === undefined) {
                     if (out.n[i] !== ``) {
                         str += `<ins>` + out.n[i] + `</ins>`;
@@ -829,43 +540,6 @@ export class MotionDiffService {
     }
 
     /**
-     * This checks if this string is valid inline HTML.
-     * It does so by leveraging the browser's auto-correction mechanism and coun the number of "<"s (opening and closing
-     * HTML tags) of the original and the cleaned-up string.
-     * This is mainly helpful to decide if a given string can be put into <del>...</del> or <ins>...</ins>-Tags without
-     * producing broken HTML.
-     *
-     * @param {string} html
-     * @return {boolean}
-     * @private
-     */
-    private isValidInlineHtml(html: string): boolean {
-        // If there are no HTML tags, we assume it's valid and skip further checks
-        if (!html.match(/<[^>]*>/)) {
-            return true;
-        }
-
-        // We check if this is a valid HTML that closes all its tags again using the innerHTML-Hack to correct
-        // the string and check if the number of HTML tags changes by this
-        const doc = document.createElement(`div`);
-        doc.innerHTML = html;
-        const tagsBefore = (html.match(/</g) || []).length;
-        const tagsCorrected = (doc.innerHTML.match(/</g) || []).length;
-        if (tagsBefore !== tagsCorrected) {
-            // The HTML has changed => it was not valid
-            return false;
-        }
-
-        // If there is any block element inside, we consider it as broken, as this string will be displayed
-        // inside of <ins>/<del> tags
-        if (html.match(/<(div|p|ul|li|blockquote)\W/i)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * This detects if a given string contains broken HTML. This can happen when the Diff accidentally produces
      * wrongly nested HTML tags.
      *
@@ -878,70 +552,23 @@ export class MotionDiffService {
         // The "!!(found=...)"-construction is only used to make jshint happy :)
         const findDel = /<del>([\s\S]*?)<\/del>/gi;
         const findIns = /<ins>([\s\S]*?)<\/ins>/gi;
-        let found;
-        let inner;
+        let found: RegExpExecArray;
+        let inner: string;
         while (!!(found = findDel.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
-            if (!this.isValidInlineHtml(inner)) {
+            if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
             }
         }
         while (!!(found = findIns.exec(html))) {
             inner = found[1].replace(/<br[^>]*>/gi, ``);
-            if (!this.isValidInlineHtml(inner)) {
+            if (!DomHelpers.isValidInlineHtml(inner)) {
                 return true;
             }
         }
 
         // If non of the conditions up to now is met, we consider the diff as being sane
         return false;
-    }
-
-    /**
-     * Adds a CSS class to the first opening HTML tag within the given string.
-     *
-     * @param {string} html
-     * @param {string} className
-     * @returns {string}
-     */
-    public addCSSClassToFirstTag(html: string, className: string): string {
-        return html.replace(/<[a-z][^>]*>/i, (match: string): string => {
-            if (match.match(/class=["'][a-z0-9 _-]*["']/i)) {
-                return match.replace(
-                    /class=["']([a-z0-9 _-]*)["']/i,
-                    (match2: string, previousClasses: string): string =>
-                        `class="` + previousClasses + ` ` + className + `"`
-                );
-            } else {
-                return match.substring(0, match.length - 1) + ` class="` + className + `">`;
-            }
-        });
-    }
-
-    /**
-     * Adds a CSS class to the last opening HTML tag within the given string.
-     *
-     * @param {string} html
-     * @param {string} className
-     * @returns {string}
-     */
-    public addClassToLastNode(html: string, className: string): string {
-        const node = document.createElement(`div`);
-        node.innerHTML = html;
-        let foundLast = false;
-        for (let i = node.childNodes.length - 1; i >= 0 && !foundLast; i--) {
-            if (node.childNodes[i].nodeType === ELEMENT_NODE) {
-                const childElement = <Element>node.childNodes[i];
-                let classes: any[] = [];
-                if (childElement.getAttribute(`class`)) {
-                    classes = childElement.getAttribute(`class`)!.split(` `);
-                }
-                classes.push(className);
-                childElement.setAttribute(`class`, classes.sort().join(` `).replace(/^\s+/, ``).replace(/\s+$/, ``));
-                foundLast = true;
-            }
-        }
-        return node.innerHTML;
     }
 
     /**
@@ -977,31 +604,6 @@ export class MotionDiffService {
     }
 
     /**
-     * Add the CSS-class to the existing "class"-attribute, or add one.
-     * Works on strings, not nodes
-     *
-     * @param {string} tagStr
-     * @param {string} className
-     * @returns {string}
-     */
-    private addClassToHtmlTag(tagStr: string, className: string): string {
-        return tagStr.replace(/<(\w+)( [^>]*)?>/gi, (whole: string, tag: string, tagArguments: string): string => {
-            tagArguments = tagArguments ? tagArguments : ``;
-            if (tagArguments.match(/class="/gi)) {
-                // class="someclass" => class="someclass insert"
-                tagArguments = tagArguments.replace(
-                    /(class\s*=\s*)(["'])([^\2]*)\2/gi,
-                    (classWhole: string, attr: string, para: string, content: string): string =>
-                        attr + para + content + ` ` + className + para
-                );
-            } else {
-                tagArguments += ` class="` + className + `"`;
-            }
-            return `<` + tag + tagArguments + `>`;
-        });
-    }
-
-    /**
      * This fixes a very specific, really weird bug that is tested in the test case "does not a change in a very
      * specific case.
      *
@@ -1014,7 +616,7 @@ export class MotionDiffService {
         }
 
         const findDelGroupFinder = /(?:<del>.*?<\/del>)+/gi;
-        let found;
+        let found: RegExpExecArray;
         let returnStr = diffStr;
 
         while (!!(found = findDelGroupFinder.exec(diffStr))) {
@@ -1084,11 +686,7 @@ export class MotionDiffService {
                     .nodeValue!.replace(/&/g, `&amp;`)
                     .replace(/</g, `&lt;`)
                     .replace(/>/g, `&gt;`);
-            } else if (
-                !stripLineNumbers ||
-                (!this.lineNumberingService.isOsLineNumberNode(node.childNodes[i]) &&
-                    !this.lineNumberingService.isOsLineBreakNode(node.childNodes[i]))
-            ) {
+            } else {
                 html += this.serializeDom(node.childNodes[i], stripLineNumbers);
             }
         }
@@ -1108,11 +706,11 @@ export class MotionDiffService {
      * @returns {string}
      */
     public removeDuplicateClassesInsertedByCkeditor(html: string): string {
-        const fragment = this.htmlToFragment(html);
+        const fragment = DomHelpers.htmlToFragment(html);
         const items = fragment.querySelectorAll(`li.os-split-before`);
         for (let i = 0; i < items.length; i++) {
-            if (!this.isFirstNonemptyChild(items[i].parentNode!, items[i])) {
-                this.removeCSSClass(items[i], `os-split-before`);
+            if (!DomHelpers.isFirstNonemptyChild(items[i].parentNode!, items[i])) {
+                DomHelpers.removeCSSClass(items[i], `os-split-before`);
             }
         }
         return this.serializeDom(fragment, false);
@@ -1228,8 +826,6 @@ export class MotionDiffService {
      * Returns the HTML snippet between two given line numbers.
      * extractRangeByLineNumbers
      * Hint:
-     * - The last line (toLine) is not included anymore, as the number refers to the line breaking element at the end
-     *   of the line
      * - if toLine === null, then everything from fromLine to the end of the fragment is returned
      *
      * In addition to the HTML snippet, additional information is provided regarding the most specific DOM element
@@ -1245,9 +841,9 @@ export class MotionDiffService {
      *                      If a tag is split, the first one receives "os-split-after", and the second
      *                      one "os-split-before".
      * For example, for the following string <p>Line 1<br>Line 2<br>Line 3</p>:
-     * - extracting line 1 to 2 results in <p class="os-split-after">Line 1</p>
-     * - extracting line 2 to 3 results in <p class="os-split-after os-split-before">Line 2</p>
-     * - extracting line 3 to null/4 results in <p class="os-split-before">Line 3</p>
+     * - extracting line 1 to 1 results in <p class="os-split-after">Line 1</p>
+     * - extracting line 2 to 2 results in <p class="os-split-after os-split-before">Line 2</p>
+     * - extracting line 3 to null/3 results in <p class="os-split-before">Line 3</p>
      *
      * @param {LineNumberedString} html
      * @param {number} fromLine
@@ -1263,14 +859,14 @@ export class MotionDiffService {
             throw new Error(`Invalid call - extractRangeByLineNumbers expects a string as first argument`);
         }
 
-        const cacheKey = fromLine + `-` + toLine + `-` + this.lineNumberingService.djb2hash(html);
+        const cacheKey = fromLine + `-` + toLine + `-` + djb2hash(html);
         const cached = this.diffCache.get(cacheKey);
 
         if (cached) {
             return cached;
         }
 
-        const fragment = this.htmlToFragment(html);
+        const fragment = DomHelpers.htmlToFragment(html);
         this.insertInternalLineMarkers(fragment);
 
         let toLineNumber: number;
@@ -1287,9 +883,9 @@ export class MotionDiffService {
         const ancestorData = this.getCommonAncestor(fromLineNumberNode as Element, toLineNumberNode as Element);
 
         const fromChildTraceRel = ancestorData.trace1;
-        const fromChildTraceAbs = this.getNodeContextTrace(fromLineNumberNode as Element);
+        const fromChildTraceAbs = DomHelpers.getNodeContextTrace(fromLineNumberNode as Element);
         const toChildTraceRel = ancestorData.trace2;
-        const toChildTraceAbs = this.getNodeContextTrace(toLineNumberNode as Element);
+        const toChildTraceAbs = DomHelpers.getNodeContextTrace(toLineNumberNode as Element);
         const ancestor = ancestorData.commonAncestor;
         let htmlOut = ``;
         let outerContextStart = ``;
@@ -1298,23 +894,21 @@ export class MotionDiffService {
         let innerContextEnd = ``;
         let previousHtmlEndSnippet = ``;
         let followingHtmlStartSnippet = ``;
-        let fakeOl;
-        let offset;
 
         fromChildTraceAbs.shift();
         const previousHtml = this.serializePartialDomToChild(fragment, fromChildTraceAbs, false);
-        toChildTraceAbs.shift();
 
+        toChildTraceAbs.shift();
         const followingHtml = this.serializePartialDomFromChild(fragment, toChildTraceAbs, false);
 
         let currNode: Node = fromLineNumberNode as Element;
         let isSplit = false;
         while (currNode.parentNode) {
-            if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
+            if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
             if (isSplit) {
-                this.addCSSClass(currNode.parentNode, `os-split-before`);
+                DomHelpers.addCSSClass(currNode.parentNode, `os-split-before`);
             }
             if (currNode.nodeName !== `OS-LINEBREAK`) {
                 previousHtmlEndSnippet += `</` + currNode.nodeName + `>`;
@@ -1325,21 +919,23 @@ export class MotionDiffService {
         currNode = toLineNumberNode as Element;
         isSplit = false;
         while (currNode.parentNode) {
-            if (!this.isFirstNonemptyChild(currNode.parentNode, currNode)) {
+            if (!DomHelpers.isFirstNonemptyChild(currNode.parentNode, currNode)) {
                 isSplit = true;
             }
             if (isSplit) {
-                this.addCSSClass(currNode.parentNode, `os-split-after`);
+                DomHelpers.addCSSClass(currNode.parentNode, `os-split-after`);
             }
             if (currNode.parentNode.nodeName === `OL`) {
                 const parentElement = <Element>currNode.parentNode;
-                fakeOl = parentElement.cloneNode(false) as any;
-                offset = parentElement.getAttribute(`start`)
+                const fakeOl = parentElement.cloneNode(false) as any;
+                const offset = parentElement.getAttribute(`start`)
                     ? parseInt(parentElement.getAttribute(`start`) as string, 10) - 1
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<number>this.getNthLIOfOL(parentElement, toLineNumberNode as Element) + offset).toString()
+                    (
+                        <number>DomHelpers.getNthOfListItem(parentElement, toLineNumberNode as Element) + offset
+                    ).toString()
                 );
                 followingHtmlStartSnippet = this.serializeTag(fakeOl) + followingHtmlStartSnippet;
             } else {
@@ -1348,36 +944,36 @@ export class MotionDiffService {
             currNode = currNode.parentNode;
         }
 
-        let found = false;
         isSplit = false;
-        for (let i = 0; i < fromChildTraceRel.length && !found; i++) {
+        for (let i = 0, found = false; i < fromChildTraceRel.length && !found; i++) {
             if (fromChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
                 found = true;
             } else {
-                if (!this.isFirstNonemptyChild(fromChildTraceRel[i], fromChildTraceRel[i + 1])) {
+                if (!DomHelpers.isFirstNonemptyChild(fromChildTraceRel[i], fromChildTraceRel[i + 1])) {
                     isSplit = true;
                 }
                 if (fromChildTraceRel[i].nodeName === `OL`) {
                     const element = <Element>fromChildTraceRel[i];
-                    fakeOl = element.cloneNode(false) as any;
-                    offset = element.getAttribute(`start`)
+                    const fakeOl = element.cloneNode(false) as any;
+                    const offset = element.getAttribute(`start`)
                         ? parseInt(element.getAttribute(`start`) as string, 10) - 1
                         : 0;
                     fakeOl.setAttribute(
                         `start`,
-                        (offset + <number>this.getNthLIOfOL(element, fromLineNumberNode as Element)).toString()
+                        (
+                            offset + <number>DomHelpers.getNthOfListItem(element, fromLineNumberNode as Element)
+                        ).toString()
                     );
                     innerContextStart += this.serializeTag(fakeOl);
                 } else {
                     if (i < fromChildTraceRel.length - 1 && isSplit) {
-                        this.addCSSClass(fromChildTraceRel[i], `os-split-before`);
+                        DomHelpers.addCSSClass(fromChildTraceRel[i], `os-split-before`);
                     }
                     innerContextStart += this.serializeTag(fromChildTraceRel[i]);
                 }
             }
         }
-        found = false;
-        for (let i = 0; i < toChildTraceRel.length && !found; i++) {
+        for (let i = 0, found = false; i < toChildTraceRel.length && !found; i++) {
             if (toChildTraceRel[i].nodeName === `OS-LINEBREAK`) {
                 found = true;
             } else {
@@ -1385,8 +981,7 @@ export class MotionDiffService {
             }
         }
 
-        found = false;
-        for (let i = 0; i < ancestor.childNodes.length; i++) {
+        for (let i = 0, found = false; i < ancestor.childNodes.length; i++) {
             if (ancestor.childNodes[i] === fromChildTraceRel[0]) {
                 found = true;
                 fromChildTraceRel.shift();
@@ -1404,13 +999,13 @@ export class MotionDiffService {
         while (currNode.parentNode) {
             if (currNode.nodeName === `OL`) {
                 const currElement = <Element>currNode;
-                fakeOl = currElement.cloneNode(false) as any;
-                offset = currElement.getAttribute(`start`)
+                const fakeOl = currElement.cloneNode(false) as any;
+                const offset = currElement.getAttribute(`start`)
                     ? parseInt(currElement.getAttribute(`start`) as string, 10) - 1
                     : 0;
                 fakeOl.setAttribute(
                     `start`,
-                    (<any>this.getNthLIOfOL(currElement, fromLineNumberNode as Element) + offset).toString()
+                    (<any>DomHelpers.getNthOfListItem(currElement, fromLineNumberNode as Element) + offset).toString()
                 );
                 outerContextStart = this.serializeTag(fakeOl) + outerContextStart;
             } else {
@@ -1496,7 +1091,7 @@ export class MotionDiffService {
     }
 
     /**
-     * This functions merges to arrays of nodes. The last element of nodes1 and the first element of nodes2
+     * This functions merges two arrays of nodes. The last element of nodes1 and the first element of nodes2
      * are merged, if they are of the same type.
      *
      * This is done recursively until a TEMPLATE-Tag is is found, which was inserted in this.replaceLines.
@@ -1559,17 +1154,19 @@ export class MotionDiffService {
      * As in extractRangeByLineNumbers(), "to" refers to the line breaking element at the end, i.e. the start of the
      * following line.
      *
+     * TODO: This should be possible without converting the HTML to a fragment by using a regex
+     *
      * @param {string} diffHtml
      * @returns {LineRange}
      */
     public detectAffectedLineRange(diffHtml: string): LineRange | null {
-        const cacheKey = this.lineNumberingService.djb2hash(diffHtml);
+        const cacheKey = djb2hash(diffHtml);
         const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;
         }
 
-        const fragment = this.htmlToFragment(diffHtml);
+        const fragment = DomHelpers.htmlToFragment(diffHtml);
 
         this.insertInternalLineMarkers(fragment);
 
@@ -1582,19 +1179,19 @@ export class MotionDiffService {
             return null;
         }
 
-        const firstTrace = this.getNodeContextTrace(firstChange);
+        const firstTrace = DomHelpers.getNodeContextTrace(firstChange);
         let lastLineNumberBefore = null;
         for (let j = firstTrace.length - 1; j >= 0 && lastLineNumberBefore === null; j--) {
-            const prevSiblings = this.getAllPrevSiblingsReversed(firstTrace[j]);
+            const prevSiblings = DomHelpers.getAllPrevSiblingsReversed(firstTrace[j]);
             for (let i = 0; i < prevSiblings.length && lastLineNumberBefore === null; i++) {
                 lastLineNumberBefore = this.getLastLineNumberNode(prevSiblings[i]);
             }
         }
 
-        const lastTrace = this.getNodeContextTrace(lastChange);
+        const lastTrace = DomHelpers.getNodeContextTrace(lastChange);
         let firstLineNumberAfter = null;
         for (let j = lastTrace.length - 1; j >= 0 && firstLineNumberAfter === null; j--) {
-            const nextSiblings = this.getAllNextSiblings(lastTrace[j]);
+            const nextSiblings = DomHelpers.getAllNextSiblings(lastTrace[j]);
             for (let i = 0; i < nextSiblings.length && firstLineNumberAfter === null; i++) {
                 firstLineNumberAfter = this.getFirstLineNumberNode(nextSiblings[i]);
             }
@@ -1604,19 +1201,6 @@ export class MotionDiffService {
             from: parseInt(lastLineNumberBefore!.getAttribute(`data-line-number`) as string, 10),
             to: parseInt(firstLineNumberAfter!.getAttribute(`data-line-number`) as string, 10) - 1
         };
-
-        if (range.from === 0) {
-            const lineNumberRegex = /data-line-number="(\d+)"/g;
-            const lineNumbers = diffHtml.matchAll(lineNumberRegex);
-            let ln = lineNumbers.next();
-            if (ln) {
-                range.from = +ln.value[1];
-                while (!ln.done) {
-                    range.to = +ln.value[1];
-                    ln = lineNumbers.next();
-                }
-            }
-        }
 
         this.diffCache.put(cacheKey, range);
         return range;
@@ -1630,7 +1214,7 @@ export class MotionDiffService {
      * @returns {string}
      */
     public diffHtmlToFinalText(html: string): string {
-        const fragment = this.htmlToFragment(html);
+        const fragment = DomHelpers.htmlToFragment(html);
 
         const delNodes = fragment.querySelectorAll(`.delete, del`);
         for (let i = 0; i < delNodes.length; i++) {
@@ -1650,7 +1234,7 @@ export class MotionDiffService {
 
         const insertNodes = fragment.querySelectorAll(`.insert`);
         for (let i = 0; i < insertNodes.length; i++) {
-            this.removeCSSClass(insertNodes[i], `insert`);
+            DomHelpers.removeCSSClass(insertNodes[i], `insert`);
         }
 
         return this.serializeDom(fragment, false);
@@ -1672,10 +1256,10 @@ export class MotionDiffService {
     public replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
         const data = this.extractRangeByLineNumbers(oldHtml, fromLine, toLine);
         const previousHtml = data.previousHtml + `<TEMPLATE></TEMPLATE>` + data.previousHtmlEndSnippet;
-        const previousFragment = this.htmlToFragment(previousHtml);
+        const previousFragment = DomHelpers.htmlToFragment(previousHtml);
         const followingHtml = data.followingHtmlStartSnippet + `<TEMPLATE></TEMPLATE>` + data.followingHtml;
-        const followingFragment = this.htmlToFragment(followingHtml);
-        const newFragment = this.htmlToFragment(newHTML);
+        const followingFragment = DomHelpers.htmlToFragment(followingHtml);
+        const newFragment = DomHelpers.htmlToFragment(newHTML);
 
         if (data.html.length > 0 && data.html.substr(-1) === ` `) {
             this.insertDanglingSpace(newFragment);
@@ -1700,8 +1284,8 @@ export class MotionDiffService {
 
         const forgottenSplitClasses = mergedFragment.querySelectorAll(`.os-split-before, .os-split-after`);
         for (let i = 0; i < forgottenSplitClasses.length; i++) {
-            this.removeCSSClass(forgottenSplitClasses[i], `os-split-before`);
-            this.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
+            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-before`);
+            DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
         }
 
         const replacedHtml = this.serializeDom(mergedFragment, true);
@@ -1748,7 +1332,7 @@ export class MotionDiffService {
                 oldTextWithBreaks.removeChild(currChild);
                 wrapDel.appendChild(currChild);
             } else {
-                this.addCSSClass(currChild, `delete`);
+                DomHelpers.addCSSClass(currChild, `delete`);
                 this.removeColorStyles(currChild);
             }
         }
@@ -1760,20 +1344,18 @@ export class MotionDiffService {
                 newTextWithBreaks.removeChild(currChild);
                 wrapIns.appendChild(currChild);
             } else {
-                this.addCSSClass(currChild, `insert`);
+                DomHelpers.addCSSClass(currChild, `insert`);
                 this.removeColorStyles(currChild);
             }
         }
 
         const mergedFragment = document.createDocumentFragment();
-        let el;
-        while (oldTextWithBreaks.firstChild) {
-            el = oldTextWithBreaks.firstChild;
+        let el: ChildNode;
+        while ((el = oldTextWithBreaks.firstChild)) {
             oldTextWithBreaks.removeChild(el);
             mergedFragment.appendChild(el);
         }
-        while (newTextWithBreaks.firstChild) {
-            el = newTextWithBreaks.firstChild;
+        while ((el = newTextWithBreaks.firstChild)) {
             newTextWithBreaks.removeChild(el);
             mergedFragment.appendChild(el);
         }
@@ -1797,13 +1379,7 @@ export class MotionDiffService {
         lineLength: number | null = null,
         firstLineNumber: number | null = null
     ): string {
-        const cacheKey =
-            lineLength +
-            ` ` +
-            firstLineNumber +
-            ` ` +
-            this.lineNumberingService.djb2hash(htmlOld) +
-            this.lineNumberingService.djb2hash(htmlNew);
+        const cacheKey = lineLength + ` ` + firstLineNumber + ` ` + djb2hash(htmlOld) + djb2hash(htmlNew);
         const cached = this.diffCache.get(cacheKey);
         if (cached) {
             return cached;
@@ -1830,55 +1406,43 @@ export class MotionDiffService {
             }
         }
 
-        // This fixes a really strange artefact with the diff that occures under the following conditions:
-        // - The first tag of the two texts is identical, e.g. <p>
-        // - A change happens in the next tag, e.g. inserted text
-        // - The first tag occures a second time in the text, e.g. another <p>
-        // In this condition, the first tag is deleted first and inserted afterwards again
-        // Test case: "does not break when an insertion followes a beginning tag occuring twice"
-        // The work around inserts to tags at the beginning and removes them afterwards again,
-        // to make sure this situation does not happen (and uses invisible pseudo-tags in case something goes wrong)
-        const workaroundPrepend = `<DUMMY><PREPEND>`;
-
         // os-split-after should not be considered for detecting changes in paragraphs, so we strip it here
         // and add it afterwards.
         // We only do this for P for now, as for more complex types like UL/LI that tend to be nestend,
         // information would get lost by this that we will need to recursively merge it again later on.
-        let oldIsSplitAfter = false;
-        let newIsSplitAfter = false;
-        let oldIsSplitBefore = false;
-        let newIsSplitBefore = false;
+        let isSplitAfter = false;
+        let isSplitBefore = false;
         htmlOld = htmlOld.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-            (match: string, beginning: string): string => {
-                oldIsSplitAfter = true;
+            (_match: string, beginning: string): string => {
+                isSplitAfter = true;
                 return beginning;
             }
         );
         htmlNew = htmlNew.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-after */gi,
-            (match: string, beginning: string): string => {
-                newIsSplitAfter = true;
+            (_match: string, beginning: string): string => {
+                isSplitAfter = true;
                 return beginning;
             }
         );
         htmlOld = htmlOld.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-            (match: string, beginning: string): string => {
-                oldIsSplitBefore = true;
+            (_match: string, beginning: string): string => {
+                isSplitBefore = true;
                 return beginning;
             }
         );
         htmlNew = htmlNew.replace(
             /(\s*<(?:p|ul|ol|li|blockquote|div)[^>]+class\s*=\s*["'][^"']*)os-split-before */gi,
-            (match: string, beginning: string): string => {
-                newIsSplitBefore = true;
+            (_match: string, beginning: string): string => {
+                isSplitBefore = true;
                 return beginning;
             }
         );
 
         // Performing the actual diff
-        const str = this.diffString(workaroundPrepend + htmlOld, workaroundPrepend + htmlNew);
+        const str = this.diffString(htmlOld, htmlNew);
         let diffUnnormalized = str.replace(/^\s+/g, ``).replace(/\s+$/g, ``).replace(/ {2,}/g, ` `);
 
         diffUnnormalized = this.fixWrongChangeDetection(diffUnnormalized);
@@ -1887,7 +1451,7 @@ export class MotionDiffService {
         // We need to do this before removing </del><del> as done in one of the next statements
         diffUnnormalized = diffUnnormalized.replace(
             /<del>(((<BR CLASS="os-line-break">)<\/del><del>)?(<span[^>]+os-line-number[^>]+?>)(\s|<\/?del>)*<\/span>)<\/del>/gi,
-            (found: string, tag: string, brWithDel: string, plainBr: string, span: string): string =>
+            (_found: string, _tag: string, _brWithDel: string, plainBr: string, span: string): string =>
                 (plainBr !== undefined ? plainBr : ``) + span + ` </span>`
         );
 
@@ -1902,14 +1466,14 @@ export class MotionDiffService {
         // Hint: if there is no deletion before the line break, we have the same issue, but cannot solve this here.
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/del>)(<BR CLASS="os-line-break"><span[^>]+os-line-number[^>]+?>\s*<\/span>)(<ins>[\s\S]*?<\/ins>)/gi,
-            (found: string, del: string, br: string, ins: string): string => del + ins + br
+            (_found: string, del: string, br: string, ins: string): string => del + ins + br
         );
 
         // If only a few characters of a word have changed, don't display this as a replacement of the whole word,
         // but only of these specific characters
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([a-z0-9,_-]* ?)<\/del><ins>([a-z0-9,_-]* ?)<\/ins>/gi,
-            (found: string, oldText: string, newText: string): string => {
+            (_found: string, oldText: string, newText: string): string => {
                 let foundDiff = false;
                 let commonStart = ``;
                 let commonEnd = ``;
@@ -1960,7 +1524,7 @@ export class MotionDiffService {
         diffUnnormalized = diffUnnormalized.replace(
             /<(p|div|blockquote|li)([^>]*)><(ins|del)>([\s\S]*?)<\/\1>(\s*)<(p|div|blockquote|li)([^>]*)><\/\3>/gi,
             (
-                whole: string,
+                _whole: string,
                 block1: string,
                 att1: string,
                 insDel: string,
@@ -1997,8 +1561,8 @@ export class MotionDiffService {
                 const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
                 return whole.replace(
                     /(<(p|div|blockquote|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
-                    (whole2: string, opening: string, blockTag: string, content: string, closing: string): string => {
-                        const modifiedTag = this.addClassToHtmlTag(opening, modificationClass);
+                    (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
+                        const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
                         return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
                     }
                 );
@@ -2008,7 +1572,7 @@ export class MotionDiffService {
         // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted tet</del><ins>inserted.</ins></P>
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
-            (whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
+            (_whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
                 `<del>` + deleted + `</del><ins>` + inserted + `</ins></` + tag + `>` + white
         );
 
@@ -2024,7 +1588,7 @@ export class MotionDiffService {
                 blockAttrs: string,
                 content2: string
             ): string => {
-                if (this.isValidInlineHtml(content1) && this.isValidInlineHtml(content2)) {
+                if (DomHelpers.isValidInlineHtml(content1) && DomHelpers.isValidInlineHtml(content2)) {
                     return (
                         `<` +
                         insDel +
@@ -2056,20 +1620,20 @@ export class MotionDiffService {
         // around block tags. It should be safe to remove them and just leave the whitespaces.
         diffUnnormalized = diffUnnormalized.replace(
             /<(ins|del)>(\s*)<\/\1>/gi,
-            (whole: string, insDel: string, space: string): string => space
+            (_whole: string, _insDel: string, space: string): string => space
         );
 
         // <del></p><ins> Added text</p></ins> -> <ins> Added text</ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /<del><\/(p|div|blockquote|li)><\/del><ins>([\s\S]*?)<\/\1>(\s*)<\/ins>/gi,
-            (whole: string, blockTag: string, content: string, space: string): string =>
+            (_whole: string, blockTag: string, content: string, space: string): string =>
                 `<ins>` + content + `</ins></` + blockTag + `>` + space
         );
 
         // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<ins><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
-            (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+            (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del>` +
                 content +
                 `</del>` +
@@ -2086,7 +1650,7 @@ export class MotionDiffService {
         // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
         diffUnnormalized = diffUnnormalized.replace(
             /<del><(span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
-            (whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
+            (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
                 `<del><` +
                 inlineTag +
                 (tagAttributes ? tagAttributes : ``) +
@@ -2103,13 +1667,9 @@ export class MotionDiffService {
         // </p> </ins> -> </ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
-            (whole: string, ending: string, blockTag: string, space: string, insdel: string): string =>
+            (_whole: string, ending: string, _blockTag: string, space: string, insdel: string): string =>
                 `</` + insdel + `>` + ending + space
         );
-
-        if (diffUnnormalized.substr(0, workaroundPrepend.length) === workaroundPrepend) {
-            diffUnnormalized = diffUnnormalized.substring(workaroundPrepend.length);
-        }
 
         let diff: string;
         if (this.diffDetectBrokenDiffHtml(diffUnnormalized)) {
@@ -2125,11 +1685,11 @@ export class MotionDiffService {
             }
         }
 
-        if (oldIsSplitAfter || newIsSplitAfter) {
-            diff = this.addClassToLastNode(diff, `os-split-after`);
+        if (isSplitAfter) {
+            diff = DomHelpers.addClassToLastNode(diff, `os-split-after`);
         }
-        if (oldIsSplitBefore || newIsSplitBefore) {
-            diff = this.addClassToLastNode(diff, `os-split-before`);
+        if (isSplitBefore) {
+            diff = DomHelpers.addClassToLastNode(diff, `os-split-before`);
         }
 
         this.diffCache.put(cacheKey, diff);
@@ -2260,8 +1820,8 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        let data;
-        let oldText;
+        let data: ExtractedContent;
+        let oldText: string;
 
         try {
             data = this.extractRangeByLineNumbers(html, change.getLineFrom(), change.getLineTo());
@@ -2308,7 +1868,8 @@ export class MotionDiffService {
         const origBeginning = data.outerContextStart + data.innerContextStart;
         if (diff.toLowerCase().indexOf(origBeginning.toLowerCase()) === 0) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
-            diff = this.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
+            diff =
+                DomHelpers.addCSSClassToFirstTag(origBeginning, `merge-before`) + diff.substring(origBeginning.length);
         }
 
         return diff;
@@ -2340,7 +1901,7 @@ export class MotionDiffService {
             return motionHtml;
         }
 
-        let data;
+        let data: ExtractedContent;
 
         try {
             data = this.extractRangeByLineNumbers(motionHtml, maxLine + 1, null);
@@ -2358,11 +1919,11 @@ export class MotionDiffService {
             return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
         }
 
-        let html;
+        let html: string;
         if (data.html !== ``) {
             // Add "merge-before"-css-class if the first line begins in the middle of a paragraph. Used for PDF.
             html =
-                this.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
+                DomHelpers.addCSSClassToFirstTag(data.outerContextStart + data.innerContextStart, `merge-before`) +
                 data.html +
                 data.innerContextEnd +
                 data.outerContextEnd;
