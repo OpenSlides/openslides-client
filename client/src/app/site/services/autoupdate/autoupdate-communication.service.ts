@@ -16,15 +16,15 @@ const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
 })
 export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<any>;
-    private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>;
+    private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
 
     public constructor(
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
         private endpointService: HttpStreamEndpointService
     ) {
-        this.autoupdateDataObservable = new Observable((dataSubscription) => {
-            this.sharedWorker.listenTo(`autoupdate`).subscribe((data) => {
+        this.autoupdateDataObservable = new Observable(dataSubscription => {
+            this.sharedWorker.listenTo(`autoupdate`).subscribe(data => {
                 if (data?.action === `receive-data` && data.content !== undefined) {
                     dataSubscription.next(data.content);
                 } else if (data?.action === `set-streamid` && this.openResolvers.has(data?.content?.requestHash)) {
