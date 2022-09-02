@@ -57,13 +57,13 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
         })
     );
 
-    let currentData = null;
+    let currentData = {};
     openStreams[nextId] = {
         requestHash,
         request,
         abortCtrl: new AbortController(),
         resendLast: () => {
-            if (currentData) {
+            if (Object.keys(currentData).length > 0) {
                 send(
                     JSON.stringify({
                         sender: `autoupdate`,
@@ -111,14 +111,14 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
             for (let i = 0; i < val.length; i++) {
                 if (val[i] === 10) {
                     if (next === null) {
-                        currentData = decode(val.slice(lastSent, i));
+                        currentData = Object.assign(currentData, decode(val.slice(lastSent, i)));
                         openStreams[nextId].resendLast();
                     } else {
                         const nTmp = new Uint8Array(i - lastSent + 1 + next.length);
                         nTmp.set(next);
                         nTmp.set(val.slice(lastSent, i), next.length);
 
-                        currentData = decode(val.slice(lastSent, i));
+                        currentData = Object.assign(currentData, decode(val.slice(lastSent, i)));
                         openStreams[nextId].resendLast();
                     }
                     lastSent = i + 1;
