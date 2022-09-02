@@ -40,7 +40,9 @@ export class SharedWorkerService {
                 } else if (e?.data === `ready`) {
                     this.ready = true;
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error(e);
+            }
         });
     }
 

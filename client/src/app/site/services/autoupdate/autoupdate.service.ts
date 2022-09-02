@@ -104,7 +104,7 @@ export class AutoupdateService {
         );
 
         this.communication.listen().subscribe(data => {
-            this.handleAutoupdate({ autoupdateData: data.content, id: 1, description: `worker` });
+            this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: `worker` });
         });
     }
 
@@ -143,7 +143,6 @@ export class AutoupdateService {
         console.log(`autoupdate: new request:`, description, modelRequest, request);
         const modelSubscription = await this.request(request, description);
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
-        console.info(modelSubscription);
         return modelSubscription;
     }
 
@@ -153,7 +152,7 @@ export class AutoupdateService {
         return {
             id,
             close: () => {
-                this.communication.close(id, request);
+                this.communication.close(id);
                 delete this._activeRequestObjects[id];
             }
         };
