@@ -17,11 +17,11 @@ export class SharedWorkerService {
         });
 
         if (!environment.production) {
-            if (SharedWorker) {
+            try {
                 let worker = new SharedWorker(new URL(`./sw-dev.worker`, import.meta.url), { name: `sw-dev` });
                 worker.port.start();
                 this.conn = worker.port;
-            } else {
+            } catch (e) {
                 import(`./sw-dev.worker`);
                 this.conn = window;
             }
