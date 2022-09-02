@@ -33,7 +33,7 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule];
         HttpClientModule,
         OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
-        ServiceWorkerModule.register(`worker/sw-main.js`, {
+        ServiceWorkerModule.register(new URL(`./service-worker.worker`, import.meta.url).toString(), {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable
             // or after 30 seconds (whichever comes first).

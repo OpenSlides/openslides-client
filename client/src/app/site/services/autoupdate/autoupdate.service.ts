@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
 import { Id, Ids } from '../../../domain/definitions/key-types';
-import { HttpStreamEndpointService, HttpStreamService } from '../../../gateways/http-stream';
+import { HttpStreamEndpointService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
-import { formatQueryParams, HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
+import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
-import { CommunicationManagerService } from '../communication-manager.service';
 import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
+import { AutoupdateCommunicationService } from './autoupdate-communication.service';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
@@ -93,16 +93,19 @@ export class AutoupdateService {
     private _currentQueryParams: QueryParams | null = null;
 
     public constructor(
-        private communicationManager: CommunicationManagerService,
         private httpEndpointService: HttpStreamEndpointService,
-        private httpStreamService: HttpStreamService,
-        private viewmodelStoreUpdate: ViewModelStoreUpdateService
+        private viewmodelStoreUpdate: ViewModelStoreUpdateService,
+        private communication: AutoupdateCommunicationService
     ) {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
             AUTOUPDATE_DEFAULT_ENDPOINT,
             new AutoupdateEndpoint(`/system/autoupdate`)
         );
+
+        this.communication.listen().subscribe(data => {
+            this.handleAutoupdate({ autoupdateData: data.content, id: 1, description: `worker` });
+        });
     }
 
     public reconnect(config?: AutoupdateConnectConfig): void {
@@ -111,12 +114,13 @@ export class AutoupdateService {
             const streamId = Number(id);
             const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
             modelSubscription.close();
-            const nextModelSubscription = this.request(modelRequest.getModelRequest(), description, streamId);
-            this._activeRequestObjects[streamId] = {
-                modelSubscription: nextModelSubscription,
-                modelRequest,
-                description
-            };
+            this.request(modelRequest.getModelRequest(), description, streamId).then(nextModelSubscription => {
+                this._activeRequestObjects[streamId] = {
+                    modelSubscription: nextModelSubscription,
+                    modelRequest,
+                    description
+                };
+            });
         }
     }
 
@@ -134,34 +138,22 @@ export class AutoupdateService {
      * @param description A simple description for developing. It helps tracking streams:
      * Which component opens which stream?
      */
-    public subscribe(modelRequest: ModelRequestObject, description: string): ModelSubscription {
+    public async subscribe(modelRequest: ModelRequestObject, description: string): Promise<ModelSubscription> {
         const request = modelRequest.getModelRequest();
         console.log(`autoupdate: new request:`, description, modelRequest, request);
-        const modelSubscription = this.request(request, description);
+        const modelSubscription = await this.request(request, description);
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
+        console.info(modelSubscription);
         return modelSubscription;
     }
 
-    private request(request: ModelRequest, description: string, streamId?: Id): ModelSubscription {
-        const buildStreamFn = (streamId: number) =>
-            this.httpStreamService.create<AutoupdateModelData>(
-                {
-                    endpointIndex: AUTOUPDATE_DEFAULT_ENDPOINT,
-                    customUrlFn: endpointUrl => `${endpointUrl}${formatQueryParams(this._currentQueryParams)}`
-                },
-                {
-                    onMessage: (data, stream) =>
-                        this.handleAutoupdate({ autoupdateData: data, id: stream.id, description }),
-                    description,
-                    id: streamId
-                },
-                { bodyFn: () => [request] }
-            );
-        const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, streamId);
+    private async request(request: ModelRequest, _description: string, streamId?: Id): Promise<ModelSubscription> {
+        const id = await this.communication.open(streamId, request, this._currentQueryParams);
+
         return {
             id,
             close: () => {
-                closeFn();
+                this.communication.close(id, request);
                 delete this._activeRequestObjects[id];
             }
         };
