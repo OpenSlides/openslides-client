@@ -1,10 +1,15 @@
 import { addAutoupdateListener } from 'src/app/worker/sw-autoupdate';
 
-self.addEventListener(`connect`, (e: any) => {
-    const port = e.ports[0];
+if ((<any>self).Window && self instanceof (<any>self).Window) {
+    addAutoupdateListener(self);
+    self.postMessage(`ready`);
+} else {
+    (<any>self).addEventListener(`connect`, (e: any) => {
+        const port = e.ports[0];
 
-    addAutoupdateListener(port);
+        addAutoupdateListener(port);
 
-    port.start();
-    port.postMessage(`ready`);
-});
+        port.start();
+        port.postMessage(`ready`);
+    });
+}

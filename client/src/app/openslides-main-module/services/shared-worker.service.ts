@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
     providedIn: `root`
 })
 export class SharedWorkerService {
-    private conn: MessagePort | ServiceWorker;
+    private conn: MessagePort | ServiceWorker | Window;
     private subscriber: Subscriber<any>;
     public messages: Observable<any>;
     private ready = false;
@@ -17,9 +17,14 @@ export class SharedWorkerService {
         });
 
         if (!environment.production) {
-            let worker = new SharedWorker(new URL(`./sw-dev.worker`, import.meta.url), { name: `sw-dev` });
-            worker.port.start();
-            this.conn = worker.port;
+            if (SharedWorker) {
+                let worker = new SharedWorker(new URL(`./sw-dev.worker`, import.meta.url), { name: `sw-dev` });
+                worker.port.start();
+                this.conn = worker.port;
+            } else {
+                import(`./sw-dev.worker`);
+                this.conn = window;
+            }
         } else {
             navigator.serviceWorker.ready.then(registration => {
                 if (registration.active) {
