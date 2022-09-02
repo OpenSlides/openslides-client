@@ -96,6 +96,7 @@
                                 formControlName="date"
                                 [matDatepicker]="datepicker"
                                 (click)="datepicker.open()"
+                                readonly
                             />
                             <mat-hint *ngIf="setting.helpText">{{ setting.helpText | translate }}</mat-hint>
                             <div class="suffix-wrapper" matSuffix>

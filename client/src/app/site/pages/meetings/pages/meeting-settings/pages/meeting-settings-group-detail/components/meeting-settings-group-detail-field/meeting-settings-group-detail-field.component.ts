@@ -13,6 +13,7 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Moment, unix as moment } from 'moment';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
@@ -25,7 +26,7 @@ import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/vali
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 
 export interface SettingsFieldUpdate {
-    key: string;
+    key: keyof Settings;
     value: any;
 }
 
@@ -84,6 +85,16 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         return this._value;
     }
 
+    public get currentValue(): any {
+        const value = this.form.get(`value`);
+        if (this.setting.type === `datetime` || this.setting.type === `date`) {
+            const date = this.form.get(`date`)!.value;
+            const time = this.form.get(`time`)!.value;
+            return this.dateAndTimeToUnix(date, time);
+        }
+        return value;
+    }
+
     /**
      * The form for this configItem.
      */
@@ -104,6 +115,17 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
 
     /** used by the groups config type */
     public groupObservable: Observable<ViewGroup[]> | null = null;
+
+    public get watchProperties(): (keyof Settings)[] {
+        return this.setting.automaticChangesSetting?.watchProperties;
+    }
+
+    public get getChangeFn(): (currentValue: any, currentWatchPropertyValues: any[]) => any {
+        return (
+            this.setting.automaticChangesSetting?.getChangeFn ??
+            ((currentValue, currentWatchPropertyValues) => currentValue)
+        );
+    }
 
     /**
      * The current value of this setting. It is usually the first value, but this does not work for groups...
@@ -208,6 +230,16 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             value = value.toString() as any;
         }
         return value;
+    }
+
+    public updateValue(newValue: any): void {
+        if ((this.setting.type === `datetime` || this.setting.type === `date`) && newValue) {
+            const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(newValue as number));
+            this.form.patchValue(datetimeObj);
+        }
+        this.form.patchValue({
+            value: this.getRestrictedValue(newValue)
+        });
     }
 
     /**
