@@ -159,6 +159,10 @@ export class AutoupdateService {
     }
 
     private async handleAutoupdate({ autoupdateData, id, description }: AutoupdateIncomingMessage): Promise<void> {
+        if (!this._activeRequestObjects || !this._activeRequestObjects[id]) {
+            return;
+        }
+
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
         const fullListUpdateCollections: { [collection: string]: Ids } = {};

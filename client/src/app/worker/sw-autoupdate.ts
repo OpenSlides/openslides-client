@@ -1,14 +1,48 @@
 import * as fzstd from 'fzstd';
 
-let ctx: any;
-let openStreams: { abortCtrl: AbortController }[] = [];
-async function openConnection({ streamId, authToken, method, url, request, requestHash }) {
+let send: any;
+let openStreams: {
+    requestHash: string;
+    request: Object;
+    abortCtrl: AbortController;
+    resendLast: () => void;
+}[] = [];
+function searchRequest(requestHash: string, request: Object): null | number {
+    for (let i of Object.keys(openStreams)) {
+        const stream = openStreams[i];
+        if (stream.requestHash === requestHash && JSON.stringify(stream.request) === JSON.stringify(request)) {
+            return +i;
+        }
+    }
+
+    return null;
+}
+
+async function openConnection(ctx, { streamId, authToken, method, url, request, requestHash }) {
     const headers: any = {
         'Content-Type': `application/json`
     };
 
     if (authToken) {
         headers.authentication = authToken;
+    }
+
+    const existingRequest = searchRequest(requestHash, request);
+    if (existingRequest) {
+        ctx.postMessage(
+            JSON.stringify({
+                sender: `autoupdate`,
+                action: `set-streamid`,
+                content: {
+                    requestHash,
+                    existing: true,
+                    streamId: existingRequest
+                }
+            })
+        );
+
+        openStreams[existingRequest].resendLast();
+        return;
     }
 
     const nextId = streamId || Math.floor(Math.random() * (900000 - 1) + 100000);
@@ -23,8 +57,27 @@ async function openConnection({ streamId, authToken, method, url, request, reque
         })
     );
 
+    let currentData = null;
     openStreams[nextId] = {
-        abortCtrl: new AbortController()
+        requestHash,
+        request,
+        abortCtrl: new AbortController(),
+        resendLast: () => {
+            if (currentData) {
+                send(
+                    JSON.stringify({
+                        sender: `autoupdate`,
+                        action: `receive-data`,
+                        content: {
+                            streamId: nextId,
+                            data: currentData
+                        }
+                    })
+                );
+            } else {
+                setTimeout(() => openStreams[nextId].resendLast(), 10);
+            }
+        }
     };
 
     try {
@@ -58,31 +111,15 @@ async function openConnection({ streamId, authToken, method, url, request, reque
             for (let i = 0; i < val.length; i++) {
                 if (val[i] === 10) {
                     if (next === null) {
-                        ctx.postMessage(
-                            JSON.stringify({
-                                sender: `autoupdate`,
-                                action: `receive-data`,
-                                content: {
-                                    streamId: nextId,
-                                    data: decode(val.slice(lastSent, i))
-                                }
-                            })
-                        );
+                        currentData = decode(val.slice(lastSent, i));
+                        openStreams[nextId].resendLast();
                     } else {
                         const nTmp = new Uint8Array(i - lastSent + 1 + next.length);
                         nTmp.set(next);
                         nTmp.set(val.slice(lastSent, i), next.length);
 
-                        ctx.postMessage(
-                            JSON.stringify({
-                                sender: `autoupdate`,
-                                action: `receive-data`,
-                                content: {
-                                    streamId: nextId,
-                                    data: decode(val.slice(lastSent, i))
-                                }
-                            })
-                        );
+                        currentData = decode(val.slice(lastSent, i));
+                        openStreams[nextId].resendLast();
                     }
                     lastSent = i + 1;
                     next = null;
@@ -112,9 +149,9 @@ async function closeConnection({ streamId }) {
     }
 }
 
-export function addAutoupdateListener(context: any) {
-    ctx = context;
-    ctx.addEventListener(`message`, e => {
+export function addAutoupdateListener(context: any, sendFn: (m: any) => void) {
+    send = sendFn;
+    context.addEventListener(`message`, e => {
         try {
             const data = JSON.parse(e.data);
             if (data.receiver === `autoupdate`) {
@@ -122,7 +159,7 @@ export function addAutoupdateListener(context: any) {
                 const action = msg?.action;
                 const params = msg?.params;
                 if (action === `open`) {
-                    openConnection(params);
+                    openConnection(context, params);
                 } else if (action === `close`) {
                     closeConnection(params);
                 }
