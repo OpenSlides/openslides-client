@@ -182,6 +182,10 @@ export class HttpService {
      * @returns the modified headers
      */
     private injectBypassHeader(headers: HttpHeadersObj): HttpHeadersObj {
-        return { 'ngsw-bypass': `true`, ...headers };
+        if (headers instanceof HttpHeaders) {
+            return headers.set(`ngsw-bypass`, `true`);
+        } else {
+            return { 'ngsw-bypass': `true`, ...headers };
+        }
     }
 }
