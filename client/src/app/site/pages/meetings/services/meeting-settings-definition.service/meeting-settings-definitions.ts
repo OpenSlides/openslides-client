@@ -52,6 +52,7 @@ export interface SettingsItem<V = any> {
     choicesFunc?: ChoicesFunctionDefinition<V>;
     helpText?: string; // default: ""
     validators?: ValidatorFn[]; // default: []
+    automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
     /**
      * A function to restrict some values of a settings-item depending on used organization's settings
      *
@@ -60,6 +61,17 @@ export interface SettingsItem<V = any> {
      * @param value: The value used...
      */
     restrictionFn?: <T>(orgaSettings: OrganizationSettingsService, value: T) => any;
+}
+
+interface SettingsItemAutomaticChangeSetting<V> {
+    /**
+     * A list of properties that will be listened to, upon any changes, the value of the parent field should be set to value returned by getChangeFnn
+     */
+    watchProperties: (keyof Settings)[];
+    /**
+     * If called with the current values of the parent field and the watch properties, it will return the appropriate Value that the parent field should hold
+     */
+    getChangeFn: (currentValue: V, currentWatchPropertyValues: any[]) => V;
 }
 
 export interface SettingsGroup {
@@ -76,6 +88,56 @@ export const meetingSettings: SettingsGroup[] = [
         label: _(`General`),
         icon: `home`,
         subgroups: [
+            {
+                label: _(`Meta information`),
+                settings: [
+                    {
+                        key: `name`,
+                        label: _(`Title`),
+                        helpText: _(`The title of the meeting.`)
+                    },
+                    {
+                        key: `description`,
+                        label: _(`Description`),
+                        helpText: _(`The description of the meeting.`)
+                    },
+                    {
+                        key: `location`,
+                        label: _(`Event location`),
+                        helpText: _(`The location of the meeting.`)
+                    },
+                    {
+                        key: `start_time`,
+                        label: _(`Start date`),
+                        type: `date`,
+                        automaticChangesSetting: {
+                            watchProperties: [`end_time`],
+                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
+                                return currentValue &&
+                                    currentWatchPropertyValues.length &&
+                                    currentValue > currentWatchPropertyValues[0]
+                                    ? currentWatchPropertyValues[0]
+                                    : currentValue;
+                            }
+                        }
+                    },
+                    {
+                        key: `end_time`,
+                        label: _(`End date`),
+                        type: `date`,
+                        automaticChangesSetting: {
+                            watchProperties: [`start_time`],
+                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
+                                return currentValue &&
+                                    currentWatchPropertyValues.length &&
+                                    currentValue < currentWatchPropertyValues[0]
+                                    ? currentWatchPropertyValues[0]
+                                    : currentValue;
+                            }
+                        }
+                    }
+                ]
+            },
             {
                 label: _(`System`),
                 settings: [
