@@ -191,7 +191,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             email: partialUser.email,
             default_structure_level: partialUser.default_structure_level,
             default_number: partialUser.default_number,
-            default_vote_weight: toDecimal(partialUser.default_vote_weight) as any,
+            default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
             committee_$_management_level: partialUser.committee_$_management_level,
             group_$_ids: partialUser.group_$_ids,

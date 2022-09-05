@@ -251,7 +251,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             },
             number_$: participant.number_$ || { [this.activeMeetingId!]: participant.number },
             vote_weight_$: participant.vote_weight_$ || {
-                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any)
+                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any, false)
             },
             vote_delegated_$_to_id: participant.vote_delegated_$_to_id || {
                 [this.activeMeetingId!]: participant.vote_delegated_to_id
