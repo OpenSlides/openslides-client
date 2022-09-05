@@ -74,12 +74,13 @@ const AMOUNT_DECIMAL_PLACES = 6;
  * with exactly six digits after a comma and returns it as string.
  *
  * @param input The number to convert.
+ * @param returnNull If this is set to false, undefined will be returned instead of null.
  *
  * @returns A string containing the floating point representation of the given number.
  */
-export function toDecimal(input: string | number | undefined): Decimal | null {
+export function toDecimal(input: string | number | undefined, returnNull = true): Decimal | null {
     if ((typeof input !== `string` || !input?.length) && typeof input !== `number`) {
-        return null;
+        return returnNull ? null : undefined;
     }
     if (typeof input === `number`) {
         return input.toFixed(AMOUNT_DECIMAL_PLACES);
