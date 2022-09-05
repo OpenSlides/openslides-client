@@ -178,7 +178,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 searchCriteria: [{ username: _username, email }],
                 permissionRelatedId: this.activeMeetingId!
             });
-            this._suitableAccountList = Object.keys(result).flatMap(key => result[key]);
+            this._suitableAccountList = Object.values(result).flat();
             if (this._suitableAccountList.length === 0) {
                 this.goToStep(this.CREATE_PARTICIPANT_STEP);
             } else {
