@@ -12,7 +12,7 @@ import {
 } from '../infrastructure/definitions/http';
 import { ProcessError } from '../infrastructure/errors';
 import { toBase64 } from '../infrastructure/utils/functions';
-import { ErrorMapService } from './error-map.service';
+import { ErrorMapService } from './error-mapping/error-map.service';
 
 type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
 
@@ -66,7 +66,10 @@ export class HttpService {
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
                 if (!!error.error.message) {
-                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, error.url);
+                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
+                        data,
+                        url: error.url
+                    });
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
                     }
@@ -182,6 +185,10 @@ export class HttpService {
      * @returns the modified headers
      */
     private injectBypassHeader(headers: HttpHeadersObj): HttpHeadersObj {
-        return { 'ngsw-bypass': `true`, ...headers };
+        if (headers instanceof HttpHeaders) {
+            return headers.set(`ngsw-bypass`, `true`);
+        } else {
+            return { 'ngsw-bypass': `true`, ...headers };
+        }
     }
 }

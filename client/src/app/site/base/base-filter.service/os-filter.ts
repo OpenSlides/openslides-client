@@ -42,6 +42,12 @@ export interface OsFilterIndicator<V> {
     option: OsFilterOption;
 }
 
+export interface OsHideFilterSetting<V> {
+    property: keyof V;
+    shouldHideFn: () => boolean;
+    currentlyHidden?: boolean;
+}
+
 /**
  * Define the type of a filter condition
  */

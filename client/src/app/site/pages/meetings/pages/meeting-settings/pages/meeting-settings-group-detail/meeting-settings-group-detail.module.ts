@@ -15,6 +15,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { EditorModule } from 'src/app/ui/modules/editor';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { OpenSlidesDateAdapterModule } from 'src/app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
 
@@ -38,6 +39,7 @@ import { MeetingSettingsGroupDetailRoutingModule } from './meeting-settings-grou
         HeadBarModule,
         PipesModule,
         OpenSlidesTranslationModule.forChild(),
+        OpenSlidesDateAdapterModule,
         MeetingSettingsGroupDetailRoutingModule,
         MatCheckboxModule,
         MatFormFieldModule,

@@ -200,7 +200,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     private buildDataTable(): void {
-        const source = this._source.sort((a, b) => a.id - b.id);
+        const source = [...this._source].sort((a, b) => a.id - b.id);
         const sourceMapKeys = Object.keys(this._dataSourceMap)
             .map(key => Number(key))
             .sort((a, b) => a - b);
