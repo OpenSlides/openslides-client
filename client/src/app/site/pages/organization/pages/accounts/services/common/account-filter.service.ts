@@ -39,6 +39,42 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
                     { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
                 ]
+            },
+            {
+                property: `is_physical_person`,
+                label: this.translate.instant(`Natural person`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Is a natural person`) },
+                    { condition: [false, null], label: this.translate.instant(`Is no natural person`) }
+                ]
+            },
+            {
+                property: `hasEmail`,
+                label: this.translate.instant(`Email address known`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has an email address`) },
+                    { condition: [false, null], label: this.translate.instant(`Has no email address`) }
+                ]
+            },
+            {
+                property: `gender`,
+                label: this.translate.instant(`Gender`),
+                options: [
+                    { condition: `female`, label: this.translate.instant(`Female`) },
+                    { condition: `male`, label: this.translate.instant(`Male`) },
+                    { condition: `diverse`, label: this.translate.instant(`Diverse`) },
+                    { condition: null, label: this.translate.instant(`Unknown`) }
+                ]
+            },
+            {
+                property: `organization_management_level`,
+                label: this.translate.instant(`Organization management`),
+                options: [
+                    { condition: `superadmin`, label: this.translate.instant(`Superadmin`) },
+                    { condition: `can_manage_organization`, label: this.translate.instant(`Administrator`) },
+                    { condition: `can_manage_users`, label: this.translate.instant(`Account management`) },
+                    { condition: null, label: this.translate.instant(`No management permissions`) }
+                ]
             }
         ];
         return staticFilterDefinitions;
