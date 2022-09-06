@@ -55,6 +55,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         private actions: ActionService
     ) {
         super(controllerServiceCollector, User, repo);
+
+        let meetingUserIds = [];
         // this.activeMeeting.users_as_observable.subscribe(users => this._participantListSubject.next(users))
         this.activeMeetingIdService.meetingIdObservable.subscribe(newId => {
             if (this._participantListUpdateSubscription) {
@@ -62,6 +64,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             }
             if (newId) {
                 this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
+                    meetingUserIds = meeting.user_ids;
                     const meetingUsers =
                         meeting && meeting.user_ids
                             ? repo.getViewModelList().filter(user => meeting.user_ids.includes(user.id))
@@ -72,7 +75,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         });
 
         repo.getViewModelListObservable().subscribe(users => {
-            const meetingUsers = users.filter(user => user.group_ids(this.activeMeetingId).length);
+            const meetingUsers = users.filter(user => user.group_ids(this.activeMeetingId).length && meetingUserIds.includes(user.id));
             this._participantListSubject.next(meetingUsers);
         });
     }
