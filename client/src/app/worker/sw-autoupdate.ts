@@ -133,19 +133,19 @@ async function openConnection(ctx: MessagePort, { streamId, authToken, method, u
             let lastSent = 0;
             for (let i = 0; i < val.length; i++) {
                 if (val[i] === 10) {
-                    if (next === null) {
-                        const data = decode(val.slice(lastSent, i));
-                        currentData = Object.assign(currentData, data);
-                        sendAutoupdate(data);
-                    } else {
+                    let rawData = val.slice(lastSent, i);
+                    if (next !== null) {
                         const nTmp = new Uint8Array(i - lastSent + 1 + next.length);
                         nTmp.set(next);
-                        nTmp.set(val.slice(lastSent, i), next.length);
+                        nTmp.set(rawData, next.length);
 
-                        const data = decode(nTmp.slice(lastSent, i));
-                        currentData = Object.assign(currentData, data);
-                        sendAutoupdate(data);
+                        rawData = nTmp;
                     }
+
+                    const data = decode(rawData);
+                    currentData = Object.assign(currentData, data);
+                    sendAutoupdate(data);
+
                     lastSent = i + 1;
                     next = null;
                 } else if (i === val.length - 1) {
@@ -174,9 +174,9 @@ async function closeConnection(ctx: MessagePort, { streamId }) {
     }
 
     if (!openStreams[streamId].ports.length) {
-        console.log(`close ${streamId}`);
         // @ts-ignore
         openStreams[streamId].abortCtrl.abort();
+        delete openStreams[streamId];
     }
 }
 
