@@ -106,6 +106,14 @@ export class AutoupdateService {
         this.communication.listen().subscribe(data => {
             this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: `worker` });
         });
+
+        window.addEventListener(`beforeunload`, () => {
+            for (const id of Object.keys(this._activeRequestObjects)) {
+                const streamId = Number(id);
+                const { modelSubscription } = this._activeRequestObjects[streamId];
+                modelSubscription.close();
+            }
+        });
     }
 
     public reconnect(config?: AutoupdateConnectConfig): void {
