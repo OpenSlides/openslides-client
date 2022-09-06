@@ -33,7 +33,6 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule];
         HttpClientModule,
         OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
-        // @ts-ignore
         ServiceWorkerModule.register(`ngsw-worker.js`, {
             enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable
