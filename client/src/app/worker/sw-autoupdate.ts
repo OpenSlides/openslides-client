@@ -1,11 +1,12 @@
 import * as fzstd from 'fzstd';
 
-let send: any;
+// let send: any;
 let openStreams: {
     requestHash: string;
     request: Object;
     abortCtrl: AbortController;
-    resendLast: () => void;
+    ports: MessagePort[];
+    resendLast: (ctx?: MessagePort) => void;
 }[] = [];
 function searchRequest(requestHash: string, request: Object): null | number {
     for (let i of Object.keys(openStreams)) {
@@ -18,7 +19,13 @@ function searchRequest(requestHash: string, request: Object): null | number {
     return null;
 }
 
-async function openConnection(ctx, { streamId, authToken, method, url, request, requestHash }) {
+function sendToPorts(ports: MessagePort[], message: any) {
+    for (let port of ports) {
+        port.postMessage(message);
+    }
+}
+
+async function openConnection(ctx: MessagePort, { streamId, authToken, method, url, request, requestHash }) {
     const headers: any = {
         'Content-Type': `application/json`
     };
@@ -41,7 +48,8 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
             })
         );
 
-        openStreams[existingRequest].resendLast();
+        openStreams[existingRequest].ports.push(ctx);
+        openStreams[existingRequest].resendLast(ctx);
         return;
     }
 
@@ -62,9 +70,10 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
         requestHash,
         request,
         abortCtrl: new AbortController(),
-        resendLast: () => {
+        ports: [ctx],
+        resendLast: (ctx: MessagePort) => {
             if (Object.keys(currentData).length > 0) {
-                send(
+                ctx.postMessage(
                     JSON.stringify({
                         sender: `autoupdate`,
                         action: `receive-data`,
@@ -75,7 +84,7 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
                     })
                 );
             } else {
-                setTimeout(() => openStreams[nextId].resendLast(), 10);
+                setTimeout(() => openStreams[nextId].resendLast(ctx), 10);
             }
         }
     };
@@ -105,7 +114,8 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
         }
 
         function sendAutoupdate(data) {
-            send(
+            sendToPorts(
+                openStreams[nextId].ports,
                 JSON.stringify({
                     sender: `autoupdate`,
                     action: `receive-data`,
@@ -157,26 +167,31 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
     }
 }
 
-async function closeConnection({ streamId }) {
-    if (openStreams[streamId]) {
+async function closeConnection(ctx: MessagePort, { streamId }) {
+    let portIdx = openStreams[streamId].ports.indexOf(ctx);
+    if (portIdx !== -1) {
+        openStreams[streamId].ports.splice(portIdx);
+    }
+
+    if (!openStreams[streamId].ports.length) {
+        console.log(`close ${streamId}`);
         // @ts-ignore
         openStreams[streamId].abortCtrl.abort();
     }
 }
 
-export function addAutoupdateListener(context: any, sendFn: (m: any) => void) {
-    send = sendFn;
+export function addAutoupdateListener(context: any) {
     context.addEventListener(`message`, e => {
         try {
             const data = JSON.parse(e.data);
+            const msg = data.msg;
+            const action = msg?.action;
+            const params = msg?.params;
             if (data.receiver === `autoupdate`) {
-                const msg = data.msg;
-                const action = msg?.action;
-                const params = msg?.params;
                 if (action === `open`) {
                     openConnection(context, params);
                 } else if (action === `close`) {
-                    closeConnection(params);
+                    closeConnection(context, params);
                 }
             }
         } catch (e) {}
