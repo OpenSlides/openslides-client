@@ -104,6 +104,19 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
             }
         }
 
+        function sendAutoupdate(data) {
+            send(
+                JSON.stringify({
+                    sender: `autoupdate`,
+                    action: `receive-data`,
+                    content: {
+                        streamId: nextId,
+                        data: data
+                    }
+                })
+            );
+        }
+
         let result: ReadableStreamDefaultReadResult<Uint8Array>;
         while (!(result = await reader.read()).done) {
             const val = result.value;
@@ -111,15 +124,17 @@ async function openConnection(ctx, { streamId, authToken, method, url, request, 
             for (let i = 0; i < val.length; i++) {
                 if (val[i] === 10) {
                     if (next === null) {
-                        currentData = Object.assign(currentData, decode(val.slice(lastSent, i)));
-                        openStreams[nextId].resendLast();
+                        const data = decode(val.slice(lastSent, i));
+                        currentData = Object.assign(currentData, data);
+                        sendAutoupdate(data);
                     } else {
                         const nTmp = new Uint8Array(i - lastSent + 1 + next.length);
                         nTmp.set(next);
                         nTmp.set(val.slice(lastSent, i), next.length);
 
-                        currentData = Object.assign(currentData, decode(val.slice(lastSent, i)));
-                        openStreams[nextId].resendLast();
+                        const data = decode(nTmp.slice(lastSent, i));
+                        currentData = Object.assign(currentData, data);
+                        sendAutoupdate(data);
                     }
                     lastSent = i + 1;
                     next = null;
