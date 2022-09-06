@@ -104,7 +104,7 @@ export class AutoupdateService {
         );
 
         this.communication.listen().subscribe(data => {
-            this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: `worker` });
+            this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
         });
 
         window.addEventListener(`beforeunload`, () => {
@@ -154,8 +154,8 @@ export class AutoupdateService {
         return modelSubscription;
     }
 
-    private async request(request: ModelRequest, _description: string, streamId?: Id): Promise<ModelSubscription> {
-        const id = await this.communication.open(streamId, request, this._currentQueryParams);
+    private async request(request: ModelRequest, description: string, streamId?: Id): Promise<ModelSubscription> {
+        const id = await this.communication.open(streamId, description, request, this._currentQueryParams);
 
         return {
             id,

@@ -25,7 +25,21 @@ function sendToPorts(ports: MessagePort[], message: any) {
     }
 }
 
-async function openConnection(ctx: MessagePort, { streamId, authToken, method, url, request, requestHash }) {
+function decode(data: Uint8Array) {
+    try {
+        const content = new TextDecoder().decode(data);
+        const atobbed = Uint8Array.from(atob(content), c => c.charCodeAt(0));
+        const decompressedArray = fzstd.decompress(atobbed);
+        const decompressedString = new TextDecoder().decode(decompressedArray);
+
+        return JSON.parse(decompressedString);
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+}
+
+async function openConnection(ctx: MessagePort, { streamId, authToken, method, url, request, requestHash, description }) {
     const headers: any = {
         'Content-Type': `application/json`
     };
@@ -79,7 +93,8 @@ async function openConnection(ctx: MessagePort, { streamId, authToken, method, u
                         action: `receive-data`,
                         content: {
                             streamId: nextId,
-                            data: currentData
+                            data: currentData,
+                            description
                         }
                     })
                 );
@@ -99,19 +114,6 @@ async function openConnection(ctx: MessagePort, { streamId, authToken, method, u
 
         const reader = response.body.getReader();
         let next = null;
-        function decode(data: Uint8Array) {
-            try {
-                const content = new TextDecoder().decode(data);
-                const atobbed = Uint8Array.from(atob(content), c => c.charCodeAt(0));
-                const decompressedArray = fzstd.decompress(atobbed);
-                const decompressedString = new TextDecoder().decode(decompressedArray);
-
-                return JSON.parse(decompressedString);
-            } catch (e) {
-                console.error(e);
-                return null;
-            }
-        }
 
         function sendAutoupdate(data) {
             sendToPorts(
@@ -121,7 +123,8 @@ async function openConnection(ctx: MessagePort, { streamId, authToken, method, u
                     action: `receive-data`,
                     content: {
                         streamId: nextId,
-                        data: data
+                        data: data,
+                        description
                     }
                 })
             );
@@ -168,6 +171,10 @@ async function openConnection(ctx: MessagePort, { streamId, authToken, method, u
 }
 
 async function closeConnection(ctx: MessagePort, { streamId }) {
+    if (!openStreams[streamId]) {
+        return;
+    }
+
     let portIdx = openStreams[streamId].ports.indexOf(ctx);
     if (portIdx !== -1) {
         openStreams[streamId].ports.splice(portIdx);

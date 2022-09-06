@@ -35,7 +35,7 @@ export class AutoupdateCommunicationService {
         });
     }
 
-    public open(streamId: Id, request: ModelRequest, params = {}): Promise<Id> {
+    public open(streamId: Id, description: string, request: ModelRequest, params = {}): Promise<Id> {
         const configuration = this.endpointService.getEndpoint(AUTOUPDATE_DEFAULT_ENDPOINT);
 
         return new Promise(resolve => {
@@ -45,6 +45,7 @@ export class AutoupdateCommunicationService {
                 action: `open`,
                 params: {
                     streamId,
+                    description,
                     ...configuration,
                     url: configuration.url + formatQueryParams(params),
                     authToken: this.authTokenService.rawAccessToken,
