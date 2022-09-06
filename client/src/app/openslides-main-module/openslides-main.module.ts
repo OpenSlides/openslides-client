@@ -6,12 +6,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { environment } from 'src/environments/environment';
 
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
 import { OpenSlidesOverlayContainerComponent } from './components/openslides-overlay-container/openslides-overlay-container.component';
 import { httpInterceptorProviders } from './interceptors';
 import { OpenSlidesMainRoutingModule } from './openslides-main-routing.module';
-import { serviceWorkerConfig } from './service-worker-config';
 import { AppLoadService } from './services/app-load.service';
 
 /**
@@ -34,8 +34,8 @@ const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule];
         OpenSlidesTranslationModule.forRoot(),
         ...NOT_LAZY_LOADED_MODULES,
         // @ts-ignore
-        ServiceWorkerModule.register(serviceWorkerConfig.serviceWorkerUrl, {
-            enabled: serviceWorkerConfig.enabled,
+        ServiceWorkerModule.register(`ngsw-worker.js`, {
+            enabled: environment.production,
             // Register the ServiceWorker as soon as the application is stable
             // or after 30 seconds (whichever comes first).
             registrationStrategy: `registerWhenStable:30000`
