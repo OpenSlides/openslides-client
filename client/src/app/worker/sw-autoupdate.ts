@@ -3,6 +3,11 @@ import { environment } from 'src/environments/environment';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
+const endpoint = {
+    url: `/system/autoupdate`,
+    healthUrl: `/system/autoupdate/health`,
+    method: `post`
+};
 let subscriptions: { [key: number]: AutoupdateSubscription } = {};
 let streams: AutoupdateStream[] = [];
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
@@ -19,6 +24,7 @@ if (!environment.production) {
         console.log(`subscriptions\n`, subscriptions);
         console.log(`subscriptionQueue\n`, subscriptionQueues);
         console.log(`streams\n`, streams);
+        console.log(`endpoint\n`, endpoint);
     };
 }
 
@@ -55,16 +61,16 @@ function removeStream(streamSubscriptions: AutoupdateSubscription[], stream: Aut
 
 async function openConnection(
     ctx: MessagePort,
-    { streamId, authToken, method, url, request, requestHash, description }
+    { streamId, authToken, queryParams = ``, request, requestHash, description }
 ) {
-    const existingSubscription = searchRequest(url, request);
+    const existingSubscription = searchRequest(queryParams, request);
     if (existingSubscription) {
         subscriptions[existingSubscription].addPort(ctx);
         return;
     }
 
     const category = getRequestCategory(description, request);
-    const subscription = new AutoupdateSubscription(streamId, url, requestHash, request, description, [ctx]);
+    const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description, [ctx]);
     subscriptions[subscription.id] = subscription;
     subscriptionQueues[category].push(subscription);
 
@@ -74,19 +80,17 @@ async function openConnection(
         subscriptionQueues[category] = [];
         openTimeouts[category] = undefined;
 
-        const autoupdateStream = new AutoupdateStream(queue, url, method, authToken);
+        const autoupdateStream = new AutoupdateStream(
+            queue,
+            endpoint.url + queryParams,
+            endpoint.healthUrl,
+            endpoint.method,
+            authToken
+        );
         streams.push(autoupdateStream);
 
-        try {
-            await autoupdateStream.start();
-            removeStream(queue, autoupdateStream);
-        } catch (e) {
-            if (e.name !== `AbortError`) {
-                console.error(e);
-            } else {
-                removeStream(queue, autoupdateStream);
-            }
-        }
+        await autoupdateStream.start();
+        removeStream(queue, autoupdateStream);
     }, 5);
 }
 
@@ -96,6 +100,12 @@ async function closeConnection(ctx: MessagePort, { streamId }) {
     }
 
     subscriptions[streamId].closePort(ctx);
+}
+
+function setEndpoint(data: any) {
+    endpoint.method = data?.method;
+    endpoint.url = data?.url;
+    endpoint.healthUrl = data?.healthUrl;
 }
 
 export function addAutoupdateListener(context: any) {
@@ -113,6 +123,8 @@ export function addAutoupdateListener(context: any) {
                 openConnection(context, params);
             } else if (action === `close`) {
                 closeConnection(context, params);
+            } else if (action === `set-endpoint`) {
+                setEndpoint(params);
             }
         }
     });

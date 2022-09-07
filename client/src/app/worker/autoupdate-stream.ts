@@ -9,6 +9,7 @@ export class AutoupdateStream {
     constructor(
         private subscriptions: AutoupdateSubscription[],
         private url: string,
+        private healthUrl: string,
         private method: string,
         private authToken: string
     ) {}
@@ -27,11 +28,19 @@ export class AutoupdateStream {
      * Also this function registers this stream inside all subscriptions
      * handled by this stream.
      *
-     * resolves when fetch connection is closed by autoupdate
-     *
-     * @throws errors received by fetch
+     * resolves when fetch connection is closed
      */
     public async start() {
+        try {
+            await this.doRequest();
+        } catch (e) {
+            if (e.name !== `AbortError`) {
+                console.error(e);
+            }
+        }
+    }
+
+    private async doRequest() {
         if (this.abortCtrl !== undefined) {
             this.abort();
         }

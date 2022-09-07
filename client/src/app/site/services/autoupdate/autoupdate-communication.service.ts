@@ -35,6 +35,19 @@ export class AutoupdateCommunicationService {
         });
     }
 
+    public setEndpoint(name: string) {
+        const config = this.endpointService.getEndpoint(name);
+
+        this.sharedWorker.sendMessage(`autoupdate`, {
+            action: `set-endpoint`,
+            params: {
+                url: config.url,
+                healthUrl: config.healthUrl,
+                method: config.method
+            }
+        });
+    }
+
     /**
      * Tells the worker to open a new autoupdate subscription
      *
@@ -44,8 +57,6 @@ export class AutoupdateCommunicationService {
      * @param params Additional url params
      */
     public open(streamId: Id | null, description: string, request: ModelRequest, params = {}): Promise<Id> {
-        const configuration = this.endpointService.getEndpoint(AUTOUPDATE_DEFAULT_ENDPOINT);
-
         return new Promise(resolve => {
             const requestHash = djb2hash(JSON.stringify(request));
             this.openResolvers.set(requestHash, resolve);
@@ -54,8 +65,7 @@ export class AutoupdateCommunicationService {
                 params: {
                     streamId,
                     description,
-                    ...configuration,
-                    url: configuration.url + formatQueryParams(params),
+                    queryParams: formatQueryParams(params),
                     authToken: this.authTokenService.rawAccessToken,
                     requestHash: requestHash,
                     request

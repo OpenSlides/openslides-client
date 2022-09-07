@@ -103,6 +103,7 @@ export class AutoupdateService {
             new AutoupdateEndpoint(`/system/autoupdate`)
         );
 
+        this.communication.setEndpoint(AUTOUPDATE_DEFAULT_ENDPOINT);
         this.communication.listen().subscribe(data => {
             this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
         });
