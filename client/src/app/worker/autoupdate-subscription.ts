@@ -56,13 +56,14 @@ export class AutoupdateSubscription {
         this.ports.push(port);
         this.publishSubscriptionId(port);
         this.resendTo(port);
+
         this.stream?.notifySubscriptionUsed(this);
     }
 
     public closePort(port: MessagePort) {
         let portIdx = this.ports.indexOf(port);
         if (portIdx !== -1) {
-            this.ports.splice(portIdx);
+            this.ports.splice(portIdx, 1);
         }
 
         if (!this.ports.length) {

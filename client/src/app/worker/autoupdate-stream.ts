@@ -92,7 +92,7 @@ export class AutoupdateStream {
     public notifySubscriptionEmpty(subscription: AutoupdateSubscription) {
         const idx = this.activeSubscriptions.indexOf(subscription);
         if (idx !== -1) {
-            this.activeSubscriptions.splice(idx);
+            this.activeSubscriptions.splice(idx, 1);
         }
 
         if (!this.activeSubscriptions.length) {

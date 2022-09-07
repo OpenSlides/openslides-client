@@ -35,7 +35,7 @@ function removeStream(streamSubscriptions: AutoupdateSubscription[], stream: Aut
 
     const idx = streams.indexOf(stream);
     if (idx !== -1) {
-        streams.splice(idx);
+        streams.splice(idx, 1);
     }
 }
 
