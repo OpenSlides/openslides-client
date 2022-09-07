@@ -1,10 +1,11 @@
 # 
 # Translators:
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022
+# jsangmeister <joshua.sangmeister@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022\n"
+"Last-Translator: jsangmeister <joshua.sangmeister@gmail.com>, 2022\n"
 "Language-Team: German (https://www.transifex.com/openslides/teams/14270/de/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -774,6 +775,15 @@ msgstr "Sachgebiete"
 msgid "Category"
 msgstr "Sachgebiet"
 
+msgid "Category changed"
+msgstr "Sachgebiet aktualisiert"
+
+msgid "Category removed"
+msgstr "Sachgebiet entfernt"
+
+msgid "Category set to {}"
+msgstr "Sachgebiet gesetzt auf {}"
+
 msgid "Center"
 msgstr "Mittig"
 
@@ -880,11 +890,26 @@ msgstr "Spaltentrenner"
 msgid "Comment"
 msgstr "Kommentar"
 
+msgid "Comment created"
+msgstr "Kommentar erstellt"
+
+msgid "Comment deleted"
+msgstr "Kommentar gelöscht"
+
 msgid "Comment fields"
 msgstr "Kommentarfelder"
 
-msgid "Comment {arg1} updated"
-msgstr "Kommentar {arg1} aktualisiert"
+msgid "Comment updated"
+msgstr "Kommentar aktualisiert"
+
+msgid "Comment {} created"
+msgstr "Kommentar {} erstellt"
+
+msgid "Comment {} deleted"
+msgstr "Kommentar {} gelöscht"
+
+msgid "Comment {} updated"
+msgstr "Kommentar {} aktualisiert"
 
 msgid "Comments"
 msgstr "Kommentare"
@@ -1515,6 +1540,9 @@ msgstr "Anträge weiterleiten an"
 msgid "Forwarding"
 msgstr "Weiterleitung"
 
+msgid "Forwarding created"
+msgstr "Weiterleitung erstellt"
+
 msgid "Forwardings"
 msgstr "Weiterleitungen"
 
@@ -1975,8 +2003,14 @@ msgstr "Antrag"
 msgid "Motion block"
 msgstr "Antragsblock"
 
-msgid "Motion block set to"
-msgstr "Antragsblock gesetzt auf"
+msgid "Motion block changed"
+msgstr "Antragsblock geändert"
+
+msgid "Motion block removed"
+msgstr "Antragsblock entfernt"
+
+msgid "Motion block set to {}"
+msgstr "Antragsblock gesetzt auf {}"
 
 msgid "Motion blocks"
 msgstr "Antragsblöcke"
@@ -2689,11 +2723,17 @@ msgstr "Empfangene Stimmen"
 msgid "Recommendation"
 msgstr "Empfehlung"
 
+msgid "Recommendation changed"
+msgstr "Empfehlung geändert"
+
 msgid "Recommendation label"
 msgstr "Empfehlung"
 
-msgid "Recommendation set to {arg1}"
-msgstr "Empfehlung gesetzt auf {arg1}"
+msgid "Recommendation reset"
+msgstr "Empfehlung zurückgesetzt"
+
+msgid "Recommendation set to {}"
+msgstr "Empfehlung gesetzt auf {}"
 
 msgid "Reenter to conference room"
 msgstr "Konferenzraum erneut beitreten"
@@ -3181,8 +3221,11 @@ msgstr "Stimmabgabe starten"
 msgid "State"
 msgstr "Status"
 
-msgid "State set to {arg1}"
-msgstr "Status gesetzt auf {arg1}"
+msgid "State changed"
+msgstr "Status geändert"
+
+msgid "State set to {}"
+msgstr "Status gesetzt auf {}"
 
 msgid "Statistics"
 msgstr "Statistiken"
@@ -3601,15 +3644,6 @@ msgstr "Sichtbarkeit"
 msgid "Vote"
 msgstr "Abstimmung"
 
-msgid "Vote created"
-msgstr "Abstimmung erstellt"
-
-msgid "Vote deleted"
-msgstr "Abstimmung gelöscht"
-
-msgid "Vote updated"
-msgstr "Abstimmung aktualisiert"
-
 msgid "Vote weight"
 msgstr "Stimmgewicht"
 
@@ -3624,6 +3658,9 @@ msgstr "Stimmabgabe"
 
 msgid "Voting and ballot papers"
 msgstr "Abstimmung und Stimmzettel"
+
+msgid "Voting anonymized"
+msgstr "Abstimmung anonymisiert"
 
 msgid "Voting duration"
 msgstr "Dauer der Stimmabgabe"
@@ -3644,6 +3681,12 @@ msgstr "Wahlmethode"
 msgid "Voting opened"
 msgstr "Abstimmung eröffnet"
 
+msgid "Voting published"
+msgstr "Abstimmung veröffentlicht"
+
+msgid "Voting reset"
+msgstr "Abstimmung zurückgesetzt"
+
 msgid "Voting result"
 msgstr "Abstimmungsergebnis"
 
@@ -3655,6 +3698,12 @@ msgstr "Stimmrecht für"
 
 msgid "Voting right received from (principals)"
 msgstr "Stimmrecht erhalten von (Vollmachtgeber)"
+
+msgid "Voting started"
+msgstr "Abstimmung gestartet"
+
+msgid "Voting stopped"
+msgstr "Abstimmung gestoppt"
 
 msgid "Voting successful."
 msgstr "Stimmabgabe erfolgreich."
