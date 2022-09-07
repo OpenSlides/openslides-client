@@ -1,10 +1,19 @@
+import { environment } from 'src/environments/environment';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
-let subscriptions: AutoupdateSubscription[] = [];
+let subscriptions: { [key: number]: AutoupdateSubscription } = {};
 let subscriptionQueue: AutoupdateSubscription[] = [];
 let streams: AutoupdateStream[] = [];
 let openTimeout = undefined;
+
+if (!environment.production) {
+    (<any> self).printAutoupdateState = function () {
+        console.log(`subscriptions\n`, subscriptions);
+        console.log(`subscriptionQueue\n`, subscriptionQueue);
+        console.log(`streams\n`, streams);
+    }
+}
 
 function searchRequest(request: Object): null | number {
     for (let i of Object.keys(subscriptions)) {
@@ -14,6 +23,19 @@ function searchRequest(request: Object): null | number {
     }
 
     return null;
+}
+
+function removeStream(streamSubscriptions: AutoupdateSubscription[], stream: AutoupdateStream) {
+    for (let subscription of streamSubscriptions) {
+        if (subscriptions[subscription.id]) {
+            delete subscriptions[subscription.id];
+        }
+    }
+
+    const idx = streams.indexOf(stream);
+    if (idx !== -1) {
+        streams.splice(idx);
+    }
 }
 
 async function openConnection(
@@ -38,23 +60,15 @@ async function openConnection(
 
             const autoupdateStream = new AutoupdateStream(queue, url, method, authToken);
             streams.push(autoupdateStream);
+
             try {
                 await autoupdateStream.start();
+                removeStream(queue, autoupdateStream);
             } catch (e) {
                 if (e.name !== `AbortError`) {
                     console.error(e);
                 } else {
-                    for (let subscription of queue) {
-                        const idx = subscriptions.indexOf(subscription);
-                        if (idx !== -1) {
-                            streams.splice(idx);
-                        }
-                    }
-
-                    const idx = streams.indexOf(autoupdateStream);
-                    if (idx !== -1) {
-                        streams.splice(idx);
-                    }
+                    removeStream(queue, autoupdateStream);
                 }
             }
         }, 8);
