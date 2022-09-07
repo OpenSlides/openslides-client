@@ -52,27 +52,26 @@ async function openConnection(
     subscriptions[subscription.id] = subscription;
     subscriptionQueue.push(subscription);
 
-    if (!openTimeout) {
-        openTimeout = setTimeout(async () => {
-            const queue = subscriptionQueue;
-            subscriptionQueue = [];
-            openTimeout = undefined;
+    clearTimeout(openTimeout);
+    openTimeout = setTimeout(async () => {
+        const queue = subscriptionQueue;
+        subscriptionQueue = [];
+        openTimeout = undefined;
 
-            const autoupdateStream = new AutoupdateStream(queue, url, method, authToken);
-            streams.push(autoupdateStream);
+        const autoupdateStream = new AutoupdateStream(queue, url, method, authToken);
+        streams.push(autoupdateStream);
 
-            try {
-                await autoupdateStream.start();
+        try {
+            await autoupdateStream.start();
+            removeStream(queue, autoupdateStream);
+        } catch (e) {
+            if (e.name !== `AbortError`) {
+                console.error(e);
+            } else {
                 removeStream(queue, autoupdateStream);
-            } catch (e) {
-                if (e.name !== `AbortError`) {
-                    console.error(e);
-                } else {
-                    removeStream(queue, autoupdateStream);
-                }
             }
-        }, 8);
-    }
+        }
+    }, 5);
 }
 
 async function closeConnection(ctx: MessagePort, { streamId }) {
