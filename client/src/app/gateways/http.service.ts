@@ -28,7 +28,7 @@ export class HttpService {
      * Send the a http request the the given path.
      * Optionally accepts a request body.
      *
-     * @param path the target path, usually starting with /rest
+     * @param path the target path, usually starting with /system
      * @param method the required HTTP method (i.e get, post, put)
      * @param data optional, if sending a data body is required
      * @param queryParams optional queryparams to append to the path
