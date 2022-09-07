@@ -17,6 +17,7 @@ export class AutoupdateSubscription {
 
     constructor(
         public id: number,
+        public url: string,
         public requestHash: string,
         private _request: any,
         public description: string,
@@ -126,9 +127,10 @@ export class AutoupdateSubscription {
     /**
      * Checks if a model request can be fulfulled by this subscription
      *
+     * @param url The url for the request
      * @param request The request to be checked
      */
-    public fulfills(request: Object): boolean {
-        return JSON.stringify(this.request) === JSON.stringify(request);
+    public fulfills(url: string, request: Object): boolean {
+        return this.url === url && JSON.stringify(this.request) === JSON.stringify(request);
     }
 }

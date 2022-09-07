@@ -4,21 +4,35 @@ import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
 let subscriptions: { [key: number]: AutoupdateSubscription } = {};
-let subscriptionQueue: AutoupdateSubscription[] = [];
 let streams: AutoupdateStream[] = [];
-let openTimeout = undefined;
+let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
+    misc: [],
+    other: []
+};
+let openTimeouts = {
+    misc: null,
+    other: null
+};
 
 if (!environment.production) {
     (<any>self).printAutoupdateState = function () {
         console.log(`subscriptions\n`, subscriptions);
-        console.log(`subscriptionQueue\n`, subscriptionQueue);
+        console.log(`subscriptionQueue\n`, subscriptionQueues);
         console.log(`streams\n`, streams);
     };
 }
 
-function searchRequest(request: Object): null | number {
+function getRequestCategory(description: string, _request: Object): 'misc' | 'other' {
+    if ([`theme_list:subscription`, `operator:subscription`, `organization:subscription`].indexOf(description) !== -1) {
+        return `misc`;
+    }
+
+    return `other`;
+}
+
+function searchRequest(url: string, request: Object): null | number {
     for (let i of Object.keys(subscriptions)) {
-        if (subscriptions[i].fulfills(request)) {
+        if (subscriptions[i].fulfills(url, request)) {
             return +i;
         }
     }
@@ -43,21 +57,22 @@ async function openConnection(
     ctx: MessagePort,
     { streamId, authToken, method, url, request, requestHash, description }
 ) {
-    const existingSubscription = searchRequest(request);
+    const existingSubscription = searchRequest(url, request);
     if (existingSubscription) {
         subscriptions[existingSubscription].addPort(ctx);
         return;
     }
 
-    const subscription = new AutoupdateSubscription(streamId, requestHash, request, description, [ctx]);
+    const category = getRequestCategory(description, request);
+    const subscription = new AutoupdateSubscription(streamId, url, requestHash, request, description, [ctx]);
     subscriptions[subscription.id] = subscription;
-    subscriptionQueue.push(subscription);
+    subscriptionQueues[category].push(subscription);
 
-    clearTimeout(openTimeout);
-    openTimeout = setTimeout(async () => {
-        const queue = subscriptionQueue;
-        subscriptionQueue = [];
-        openTimeout = undefined;
+    clearTimeout(openTimeouts[category]);
+    openTimeouts[category] = setTimeout(async () => {
+        const queue = subscriptionQueues[category];
+        subscriptionQueues[category] = [];
+        openTimeouts[category] = undefined;
 
         const autoupdateStream = new AutoupdateStream(queue, url, method, authToken);
         streams.push(autoupdateStream);
