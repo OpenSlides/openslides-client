@@ -19,16 +19,14 @@ export class AutoupdateSubscription {
     }
 
     public publishSubscriptionId(port: MessagePort) {
-        port.postMessage(
-            JSON.stringify({
-                sender: `autoupdate`,
-                action: `set-streamid`,
-                content: {
-                    requestHash: this.requestHash,
-                    streamId: this.id
-                }
-            })
-        );
+        port.postMessage({
+            sender: `autoupdate`,
+            action: `set-streamid`,
+            content: {
+                requestHash: this.requestHash,
+                streamId: this.id
+            }
+        });
     }
 
     public updateData(data: Object) {
@@ -39,17 +37,15 @@ export class AutoupdateSubscription {
         }
 
         for (let port of this.ports) {
-            port.postMessage(
-                JSON.stringify({
-                    sender: `autoupdate`,
-                    action: `receive-data`,
-                    content: {
-                        streamId: this.id,
-                        data: data,
-                        description: this.description
-                    }
-                })
-            );
+            port.postMessage({
+                sender: `autoupdate`,
+                action: `receive-data`,
+                content: {
+                    streamId: this.id,
+                    data: data,
+                    description: this.description
+                }
+            });
         }
     }
 
@@ -74,17 +70,15 @@ export class AutoupdateSubscription {
 
     public resendTo(port: MessagePort) {
         if (this.currentData !== null) {
-            port.postMessage(
-                JSON.stringify({
-                    sender: `autoupdate`,
-                    action: `receive-data`,
-                    content: {
-                        streamId: this.id,
-                        data: this.currentData,
-                        description: this.description
-                    }
-                })
-            );
+            port.postMessage({
+                sender: `autoupdate`,
+                action: `receive-data`,
+                content: {
+                    streamId: this.id,
+                    data: this.currentData,
+                    description: this.description
+                }
+            });
         }
     }
 

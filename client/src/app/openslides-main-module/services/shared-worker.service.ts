@@ -31,16 +31,10 @@ export class SharedWorkerService {
 
     private registerMessageListener() {
         this.conn.addEventListener(`message`, (e: any) => {
-            try {
-                if (this.ready) {
-                    this.subscriber.next(JSON.parse(e?.data));
-                } else if (e?.data === `ready`) {
-                    this.ready = true;
-                }
-            } catch (e) {
-                if (!(e instanceof SyntaxError)) {
-                    console.error(e);
-                }
+            if (this.ready && e?.data?.sender) {
+                this.subscriber.next(e?.data);
+            } else if (e?.data === `ready`) {
+                this.ready = true;
             }
         });
     }
@@ -58,7 +52,7 @@ export class SharedWorkerService {
     }
 
     public sendMessage(receiver: string, msg: any) {
-        this.sendRawMessage(JSON.stringify({ receiver, msg }));
+        this.sendRawMessage({ receiver, msg });
     }
 
     private sendRawMessage(message: any) {

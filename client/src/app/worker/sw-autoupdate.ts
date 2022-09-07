@@ -85,18 +85,20 @@ async function closeConnection(ctx: MessagePort, { streamId }) {
 
 export function addAutoupdateListener(context: any) {
     context.addEventListener(`message`, e => {
-        try {
-            const data = JSON.parse(e.data);
-            const msg = data.msg;
-            const action = msg?.action;
-            const params = msg?.params;
-            if (data.receiver === `autoupdate`) {
-                if (action === `open`) {
-                    openConnection(context, params);
-                } else if (action === `close`) {
-                    closeConnection(context, params);
-                }
+        const receiver = e.data?.receiver;
+        if (!receiver) {
+            return;
+        }
+
+        const msg = e.data?.msg;
+        const action = msg?.action;
+        const params = msg?.params;
+        if (receiver === `autoupdate`) {
+            if (action === `open`) {
+                openConnection(context, params);
+            } else if (action === `close`) {
+                closeConnection(context, params);
             }
-        } catch (e) {}
+        }
     });
 }
