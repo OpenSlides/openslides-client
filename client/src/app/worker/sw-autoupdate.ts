@@ -43,6 +43,18 @@ async function openConnection(
             } catch (e) {
                 if (e.name !== `AbortError`) {
                     console.error(e);
+                } else {
+                    for (let subscription of queue) {
+                        const idx = subscriptions.indexOf(subscription);
+                        if (idx !== -1) {
+                            streams.splice(idx);
+                        }
+                    }
+
+                    const idx = streams.indexOf(autoupdateStream);
+                    if (idx !== -1) {
+                        streams.splice(idx);
+                    }
                 }
             }
         }, 8);
@@ -55,10 +67,6 @@ async function closeConnection(ctx: MessagePort, { streamId }) {
     }
 
     subscriptions[streamId].closePort(ctx);
-
-    if (!subscriptions[streamId].ports.length) {
-        delete subscriptions[streamId];
-    }
 }
 
 export function addAutoupdateListener(context: any) {

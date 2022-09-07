@@ -56,6 +56,7 @@ export class AutoupdateSubscription {
         this.ports.push(port);
         this.publishSubscriptionId(port);
         this.resendTo(port);
+        this.stream?.notifySubscriptionUsed(this);
     }
 
     public closePort(port: MessagePort) {

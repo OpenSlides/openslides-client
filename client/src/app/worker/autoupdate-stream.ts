@@ -82,7 +82,14 @@ export class AutoupdateStream {
         }
     }
 
-    public notifySubscriptionEmpty(subscription) {
+    public notifySubscriptionUsed(subscription: AutoupdateSubscription) {
+        const idx = this.activeSubscriptions.indexOf(subscription);
+        if (idx === -1) {
+            this.activeSubscriptions.push(subscription);
+        }
+    }
+
+    public notifySubscriptionEmpty(subscription: AutoupdateSubscription) {
         const idx = this.activeSubscriptions.indexOf(subscription);
         if (idx !== -1) {
             this.activeSubscriptions.splice(idx);
