@@ -11,7 +11,8 @@ export class AutoupdateSubscription {
         public description: string,
         public ports: MessagePort[]
     ) {
-        this.id = Math.floor(Math.random() * (900000 - 1) + 100000);
+        this.id = this.id || Math.floor(Math.random() * (900000 - 1) + 100000);
+
         for (let port of ports) {
             this.publishSubscriptionId(port);
         }
