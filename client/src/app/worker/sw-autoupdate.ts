@@ -2,6 +2,9 @@ import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
 let subscriptions: AutoupdateSubscription[] = [];
+let subscriptionQueue: AutoupdateSubscription[] = [];
+let streams: AutoupdateStream[] = [];
+let openTimeout = undefined;
 
 function searchRequest(request: Object): null | number {
     for (let i of Object.keys(subscriptions)) {
@@ -25,14 +28,24 @@ async function openConnection(
 
     const subscription = new AutoupdateSubscription(streamId, requestHash, request, description, [ctx]);
     subscriptions[subscription.id] = subscription;
+    subscriptionQueue.push(subscription);
 
-    const autoupdateStream = new AutoupdateStream([subscription], [request], url, method, authToken);
-    try {
-        await autoupdateStream.start();
-    } catch (e) {
-        if (e.name !== `AbortError`) {
-            console.error(e);
-        }
+    if (!openTimeout) {
+        openTimeout = setTimeout(async () => {
+            const queue = subscriptionQueue;
+            subscriptionQueue = [];
+            openTimeout = undefined;
+
+            const autoupdateStream = new AutoupdateStream(queue, url, method, authToken);
+            streams.push(autoupdateStream);
+            try {
+                await autoupdateStream.start();
+            } catch (e) {
+                if (e.name !== `AbortError`) {
+                    console.error(e);
+                }
+            }
+        }, 8);
     }
 }
 

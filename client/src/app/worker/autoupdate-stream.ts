@@ -8,7 +8,6 @@ export class AutoupdateStream {
 
     constructor(
         private subscriptions: AutoupdateSubscription[],
-        private modelRequests: Object[],
         private url: string,
         private method: string,
         private authToken: string
@@ -43,7 +42,7 @@ export class AutoupdateStream {
             signal: this.abortCtrl.signal,
             method: this.method,
             headers,
-            body: JSON.stringify(this.modelRequests)
+            body: JSON.stringify(this.subscriptions.map(s => s.request))
         });
 
         const reader = response.body.getReader();
