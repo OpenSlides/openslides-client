@@ -75,10 +75,11 @@ export class AutoupdateStream {
                         rawData = nTmp;
                     }
 
+                    const data = this.decode(rawData);
                     for (let subscription of this.subscriptions) {
                         // TODO: It might be possible to only send data to
                         // the subscriptions that actually need it
-                        subscription.updateData(this.decode(rawData));
+                        subscription.updateData(data);
                     }
 
                     lastSent = i + 1;
