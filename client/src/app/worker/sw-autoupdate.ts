@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
@@ -8,11 +9,11 @@ let streams: AutoupdateStream[] = [];
 let openTimeout = undefined;
 
 if (!environment.production) {
-    (<any> self).printAutoupdateState = function () {
+    (<any>self).printAutoupdateState = function () {
         console.log(`subscriptions\n`, subscriptions);
         console.log(`subscriptionQueue\n`, subscriptionQueue);
         console.log(`streams\n`, streams);
-    }
+    };
 }
 
 function searchRequest(request: Object): null | number {
