@@ -1,7 +1,14 @@
 import { AutoupdateStream } from './autoupdate-stream';
 
 export class AutoupdateSubscription {
+    /**
+     * Full data object received by autoupdate
+     */
     public currentData: Object | null = null;
+
+    /**
+     * The stream handling this subscription
+     */
     public stream: AutoupdateStream;
 
     constructor(
@@ -18,6 +25,11 @@ export class AutoupdateSubscription {
         }
     }
 
+    /**
+     * Sends the id of the subscription to the given MessagePort
+     *
+     * @param port The MessagePort the id should be send to
+     */
     public publishSubscriptionId(port: MessagePort) {
         port.postMessage({
             sender: `autoupdate`,
@@ -29,6 +41,12 @@ export class AutoupdateSubscription {
         });
     }
 
+    /**
+     * Updates the internal data state and sends the given data
+     * to all registered MessagePorts
+     *
+     * @param data The data to be processed
+     */
     public updateData(data: Object) {
         if (this.currentData === null) {
             this.currentData = data;
@@ -49,6 +67,12 @@ export class AutoupdateSubscription {
         }
     }
 
+    /**
+     * Adds a MessagePort to the subscription and sends
+     * the latest internal data to it
+     *
+     * @param port The port to be registered
+     */
     public addPort(port: MessagePort) {
         this.ports.push(port);
         this.publishSubscriptionId(port);
@@ -57,6 +81,13 @@ export class AutoupdateSubscription {
         this.stream?.notifySubscriptionUsed(this);
     }
 
+    /**
+     * Removes a MessagePort from the subscription and
+     * notifies the stream if no more MessagePorts remaining
+     * in this subscription
+     *
+     * @param port The port to be removed
+     */
     public closePort(port: MessagePort) {
         let portIdx = this.ports.indexOf(port);
         if (portIdx !== -1) {
@@ -68,6 +99,12 @@ export class AutoupdateSubscription {
         }
     }
 
+    /**
+     * Sends the latest data of the subscription to the
+     * given MessagePort
+     *
+     * @param port The MessagePort the data should be send to
+     */
     public resendTo(port: MessagePort) {
         if (this.currentData !== null) {
             port.postMessage({
@@ -82,6 +119,11 @@ export class AutoupdateSubscription {
         }
     }
 
+    /**
+     * Checks if a model request can be fulfulled by this subscription
+     *
+     * @param request The request to be checked
+     */
     public fulfills(request: Object): boolean {
         return JSON.stringify(this.request) === JSON.stringify(request);
     }

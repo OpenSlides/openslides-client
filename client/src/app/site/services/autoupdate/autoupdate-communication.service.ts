@@ -18,7 +18,7 @@ export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<any>;
     private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
 
-    public constructor(
+    constructor(
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
         private endpointService: HttpStreamEndpointService
@@ -35,7 +35,15 @@ export class AutoupdateCommunicationService {
         });
     }
 
-    public open(streamId: Id, description: string, request: ModelRequest, params = {}): Promise<Id> {
+    /**
+     * Tells the worker to open a new autoupdate subscription
+     *
+     * @param streamId The desired stream id (might be changed by worker)
+     * @param description A description of the request
+     * @param request The request data
+     * @param params Additional url params
+     */
+    public open(streamId: Id | null, description: string, request: ModelRequest, params = {}): Promise<Id> {
         const configuration = this.endpointService.getEndpoint(AUTOUPDATE_DEFAULT_ENDPOINT);
 
         return new Promise(resolve => {
@@ -56,6 +64,11 @@ export class AutoupdateCommunicationService {
         });
     }
 
+    /**
+     * Tells the worker the subscription is not needed anymore
+     *
+     * @param streamId Id of the stream
+     */
     public close(streamId: Id) {
         this.sharedWorker.sendMessage(`autoupdate`, {
             action: `close`,
@@ -65,6 +78,9 @@ export class AutoupdateCommunicationService {
         });
     }
 
+    /**
+     * @returns Observable containing messages from autoupdate
+     */
     public listen(): Observable<any> {
         return this.autoupdateDataObservable;
     }

@@ -6,15 +6,10 @@ import { filter, Observable, Subscriber } from 'rxjs';
 })
 export class SharedWorkerService {
     private conn: MessagePort | Window;
-    private subscriber: Subscriber<any>;
     public messages: Observable<any>;
     private ready = false;
 
     constructor() {
-        this.messages = new Observable<any>(subscriber => {
-            this.subscriber = subscriber;
-        });
-
         try {
             let worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
                 name: `openslides-shared-worker`
@@ -26,19 +21,26 @@ export class SharedWorkerService {
             this.conn = window;
         }
 
-        this.registerMessageListener();
+        this.messages = new Observable<any>(subscriber => {
+            this.registerMessageListener(subscriber);
+        });
     }
 
-    private registerMessageListener() {
+    private registerMessageListener(subscriber: Subscriber<any>) {
         this.conn.addEventListener(`message`, (e: any) => {
             if (this.ready && e?.data?.sender) {
-                this.subscriber.next(e?.data);
+                subscriber.next(e?.data);
             } else if (e?.data === `ready`) {
                 this.ready = true;
             }
         });
     }
 
+    /**
+     * Listen to messages from the worker of a specific sender
+     *
+     * @param sender Name of the sender
+     */
     public listenTo(sender: string) {
         return this.messages.pipe(
             filter(data => {
@@ -51,6 +53,12 @@ export class SharedWorkerService {
         );
     }
 
+    /**
+     * Sends a message to the worker
+     *
+     * @param receiver Name of the receiver
+     * @param msg Content of the message
+     */
     public sendMessage(receiver: string, msg: any) {
         this.sendRawMessage({ receiver, msg });
     }

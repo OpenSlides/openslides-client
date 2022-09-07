@@ -13,11 +13,24 @@ export class AutoupdateStream {
         private authToken: string
     ) {}
 
+    /**
+     * Closes the stream
+     */
     public abort() {
         // @ts-ignore
         this.abortCtrl.abort();
     }
 
+    /**
+     * Closes current stream if already running and opens a new
+     * connection to autoupdate.
+     * Also this function registers this stream inside all subscriptions
+     * handled by this stream.
+     *
+     * resolves when fetch connection is closed by autoupdate
+     *
+     * @throws errors received by fetch
+     */
     public async start() {
         if (this.abortCtrl !== undefined) {
             this.abort();
@@ -63,6 +76,8 @@ export class AutoupdateStream {
                     }
 
                     for (let subscription of this.subscriptions) {
+                        // TODO: It might be possible to only send data to
+                        // the subscriptions that actually need it
                         subscription.updateData(this.decode(rawData));
                     }
 
@@ -82,6 +97,11 @@ export class AutoupdateStream {
         }
     }
 
+    /**
+     * Marks a subscription as active
+     *
+     * @param subscription The subscription that should be marked active
+     */
     public notifySubscriptionUsed(subscription: AutoupdateSubscription) {
         const idx = this.activeSubscriptions.indexOf(subscription);
         if (idx === -1) {
@@ -89,6 +109,11 @@ export class AutoupdateStream {
         }
     }
 
+    /**
+     * Marks a subscription as inactive
+     *
+     * @param subscription The subscription that should be marked inactive
+     */
     public notifySubscriptionEmpty(subscription: AutoupdateSubscription) {
         const idx = this.activeSubscriptions.indexOf(subscription);
         if (idx !== -1) {
