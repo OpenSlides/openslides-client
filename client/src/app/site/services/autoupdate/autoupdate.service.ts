@@ -123,7 +123,7 @@ export class AutoupdateService {
             const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
             modelSubscription.close();
             this.request(modelRequest.getModelRequest(), description, streamId).then(nextModelSubscription => {
-                this._activeRequestObjects[streamId] = {
+                this._activeRequestObjects[nextModelSubscription.id] = {
                     modelSubscription: nextModelSubscription,
                     modelRequest,
                     description
