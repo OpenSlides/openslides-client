@@ -11,10 +11,14 @@ export class AutoupdateSubscription {
      */
     public stream: AutoupdateStream;
 
+    public get request(): Object {
+        return this._request;
+    }
+
     constructor(
         public id: number,
         public requestHash: string,
-        public request: Object,
+        private _request: any,
         public description: string,
         public ports: MessagePort[]
     ) {
@@ -43,7 +47,7 @@ export class AutoupdateSubscription {
 
     /**
      * Updates the internal data state and sends the given data
-     * to all registered MessagePorts
+     * to all registered MessagePorts.
      *
      * @param data The data to be processed
      */
