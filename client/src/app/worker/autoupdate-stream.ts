@@ -104,23 +104,24 @@ export class AutoupdateStream {
                         rawData = nTmp;
                     }
 
+                    lastSent = i + 1;
+                    next = null;
+
+                    console.debug(`received data`, rawData);
                     const data = this.decode(rawData);
                     for (let subscription of this.subscriptions) {
                         // TODO: It might be possible to only send data to
                         // the subscriptions that actually need it
                         subscription.updateData(data);
                     }
-
-                    lastSent = i + 1;
-                    next = null;
                 } else if (i === val.length - 1) {
                     if (next) {
                         const nTmp = new Uint8Array(i - lastSent + 1 + next.length);
                         nTmp.set(next);
-                        nTmp.set(val.slice(lastSent, i), next.length);
+                        nTmp.set(val.slice(lastSent, i + 1), next.length);
                         next = nTmp;
                     } else {
-                        next = val.slice(lastSent, i);
+                        next = val.slice(lastSent, i + 1);
                     }
                 }
             }
