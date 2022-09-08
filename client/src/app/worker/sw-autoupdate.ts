@@ -59,10 +59,48 @@ function removeStream(stream: AutoupdateStream) {
     }
 }
 
+let healthCheck: Promise<void>;
+function healthCheckAndStart(stream: AutoupdateStream) {
+    if (!healthCheck) {
+        healthCheck = new Promise((resolve, reject) => {
+            fetch(endpoint.healthUrl)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+
+                    return { healthy: false };
+                })
+                .then(data => {
+                    if (data.healthy) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                })
+                .finally(() => {
+                    healthCheck = null;
+                });
+        });
+    }
+
+    healthCheck
+        .then(() => {
+            stream.start().then(handleStreamResolve(stream));
+        })
+        .catch(() => {
+            setTimeout(() => {
+                healthCheckAndStart(stream);
+            }, 1000);
+        });
+}
+
 function handleStreamResolve(stream: AutoupdateStream): (result: any) => void {
     return ({ stopReason }) => {
-        if (stopReason === `unused` || stopReason === `resolved`) {
+        if (stopReason === `unused`) {
             removeStream(stream);
+        } else if (stopReason === `error` || stopReason === `resolved`) {
+            healthCheckAndStart(stream);
         }
     };
 }
