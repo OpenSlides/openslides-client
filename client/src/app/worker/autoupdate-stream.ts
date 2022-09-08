@@ -4,12 +4,16 @@ import { AutoupdateSubscription } from './autoupdate-subscription';
 
 export class AutoupdateStream {
     private abortCtrl: AbortController = undefined;
-    private activeSubscriptions: AutoupdateSubscription[] = [];
+    private activeSubscriptions: AutoupdateSubscription[] = null;
+    private active: boolean = false;
+
+    public get subscriptions() {
+        return this._subscriptions;
+    }
 
     constructor(
-        private subscriptions: AutoupdateSubscription[],
+        private _subscriptions: AutoupdateSubscription[],
         private url: string,
-        private healthUrl: string,
         private method: string,
         private authToken: string
     ) {}
@@ -18,36 +22,52 @@ export class AutoupdateStream {
      * Closes the stream
      */
     public abort() {
-        // @ts-ignore
-        this.abortCtrl.abort();
+        if (this.abortCtrl !== undefined) {
+            // @ts-ignore
+            this.abortCtrl.abort();
+        }
     }
 
     /**
-     * Closes current stream if already running and opens a new
-     * connection to autoupdate.
+     * Opens a new connection to autoupdate.
      * Also this function registers this stream inside all subscriptions
      * handled by this stream.
      *
      * resolves when fetch connection is closed
      */
-    public async start() {
+    public async start(
+        force?: boolean
+    ): Promise<{ stopReason: 'error' | 'aborted' | 'unused' | 'resolved' | 'in-use' }> {
+        if (this.active && !force) {
+            return { stopReason: `in-use` };
+        }
+
         try {
             await this.doRequest();
+            this.active = false;
         } catch (e) {
+            this.active = false;
             if (e.name !== `AbortError`) {
                 console.error(e);
+
+                return { stopReason: `error` };
             }
+
+            return { stopReason: this.activeSubscriptions?.length ? `aborted` : `unused` };
         }
+
+        return { stopReason: `resolved` };
     }
 
     private async doRequest() {
-        if (this.abortCtrl !== undefined) {
-            this.abort();
-        }
+        this.active = true;
 
-        for (let subscription of this.subscriptions) {
-            subscription.stream = this;
-            this.activeSubscriptions.push(subscription);
+        if (this.activeSubscriptions === null) {
+            this.activeSubscriptions = [];
+            for (let subscription of this.subscriptions) {
+                this.activeSubscriptions.push(subscription);
+                subscription.stream = this;
+            }
         }
 
         const headers: any = {

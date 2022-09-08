@@ -46,8 +46,8 @@ function searchRequest(url: string, request: Object): null | number {
     return null;
 }
 
-function removeStream(streamSubscriptions: AutoupdateSubscription[], stream: AutoupdateStream) {
-    for (let subscription of streamSubscriptions) {
+function removeStream(stream: AutoupdateStream) {
+    for (let subscription of stream.subscriptions) {
         if (subscriptions[subscription.id]) {
             delete subscriptions[subscription.id];
         }
@@ -57,6 +57,14 @@ function removeStream(streamSubscriptions: AutoupdateSubscription[], stream: Aut
     if (idx !== -1) {
         streams.splice(idx, 1);
     }
+}
+
+function handleStreamResolve(stream: AutoupdateStream): (result: any) => void {
+    return ({ stopReason }) => {
+        if (stopReason === `unused` || stopReason === `resolved`) {
+            removeStream(stream);
+        }
+    };
 }
 
 async function openConnection(
@@ -80,17 +88,10 @@ async function openConnection(
         subscriptionQueues[category] = [];
         openTimeouts[category] = undefined;
 
-        const autoupdateStream = new AutoupdateStream(
-            queue,
-            endpoint.url + queryParams,
-            endpoint.healthUrl,
-            endpoint.method,
-            authToken
-        );
+        const autoupdateStream = new AutoupdateStream(queue, endpoint.url + queryParams, endpoint.method, authToken);
         streams.push(autoupdateStream);
 
-        await autoupdateStream.start();
-        removeStream(queue, autoupdateStream);
+        autoupdateStream.start().then(handleStreamResolve(autoupdateStream));
     }, 5);
 }
 
@@ -106,6 +107,28 @@ function setEndpoint(data: any) {
     endpoint.method = data?.method;
     endpoint.url = data?.url;
     endpoint.healthUrl = data?.healthUrl;
+}
+
+let currentlyOnline = navigator.onLine;
+let abortStreamStopTimeout = null;
+function updateOnlineStatus() {
+    if (currentlyOnline === navigator.onLine) {
+        return;
+    }
+    currentlyOnline = navigator.onLine;
+
+    if (navigator.onLine) {
+        clearTimeout(abortStreamStopTimeout);
+        for (let stream of streams) {
+            stream.start().then(handleStreamResolve(stream));
+        }
+    } else {
+        abortStreamStopTimeout = setTimeout(() => {
+            for (let stream of streams) {
+                stream.abort();
+            }
+        }, 10000);
+    }
 }
 
 export function addAutoupdateListener(context: any) {
@@ -125,6 +148,8 @@ export function addAutoupdateListener(context: any) {
                 closeConnection(context, params);
             } else if (action === `set-endpoint`) {
                 setEndpoint(params);
+            } else if (action === `set-connection-status`) {
+                updateOnlineStatus();
             }
         }
     });

@@ -9,8 +9,6 @@ import { SharedWorkerService } from 'src/app/openslides-main-module/services/sha
 import { AuthTokenService } from '../auth-token.service';
 import { ModelRequest } from './autoupdate.service';
 
-const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
-
 @Injectable({
     providedIn: `root`
 })
@@ -31,6 +29,20 @@ export class AutoupdateCommunicationService {
                     this.openResolvers.get(data?.content?.requestHash)(data?.content?.streamId);
                     this.openResolvers.delete(data?.content?.requestHash);
                 }
+            });
+        });
+
+        addEventListener(`offline`, () => {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `set-connection-status`,
+                params: { status: `offline` }
+            });
+        });
+
+        addEventListener(`online`, () => {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `set-connection-status`,
+                params: { status: `online` }
             });
         });
     }
