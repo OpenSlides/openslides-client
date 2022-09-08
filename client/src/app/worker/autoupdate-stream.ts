@@ -97,7 +97,7 @@ export class AutoupdateStream {
                 if (val[i] === 10) {
                     let rawData = val.slice(lastSent, i);
                     if (next !== null) {
-                        const nTmp = new Uint8Array(i - lastSent + 1 + next.length);
+                        const nTmp = new Uint8Array(i - lastSent + next.length);
                         nTmp.set(next);
                         nTmp.set(rawData, next.length);
 
@@ -116,7 +116,7 @@ export class AutoupdateStream {
                     }
                 } else if (i === val.length - 1) {
                     if (next) {
-                        const nTmp = new Uint8Array(i - lastSent + 1 + next.length);
+                        const nTmp = new Uint8Array(i - lastSent + next.length);
                         nTmp.set(next);
                         nTmp.set(val.slice(lastSent, i + 1), next.length);
                         next = nTmp;
@@ -157,8 +157,8 @@ export class AutoupdateStream {
     }
 
     private decode(data: Uint8Array) {
+        const content = new TextDecoder().decode(data);
         try {
-            const content = new TextDecoder().decode(data);
             const atobbed = Uint8Array.from(atob(content), c => c.charCodeAt(0));
             const decompressedArray = fzstd.decompress(atobbed);
             const decompressedString = new TextDecoder().decode(decompressedArray);
@@ -166,6 +166,7 @@ export class AutoupdateStream {
             return JSON.parse(decompressedString);
         } catch (e) {
             console.error(e);
+            console.log(`received`, content);
             return null;
         }
     }
