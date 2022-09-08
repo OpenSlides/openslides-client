@@ -31,6 +31,18 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
         return !!this.user.last_email_send;
     }
 
+    public get hasEmail(): boolean {
+        return !!this.email;
+    }
+
+    public get isCommitteeManager(): boolean {
+        return !!this.committee_management_levels().length;
+    }
+
+    public get numberOfMeetings(): number {
+        return this.meeting_ids.length;
+    }
+
     public get name(): string {
         if (this.user && this.getName) {
             return this.getName();

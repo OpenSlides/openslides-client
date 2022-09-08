@@ -20,7 +20,10 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: `default_number`, label: `Participant number` },
         { property: `default_structure_level`, label: `Structure level` },
         { property: `default_vote_weight`, label: `Vote weight` },
-        { property: `gender`, label: `Gender` }
+        { property: `gender`, label: `Gender` },
+        { property: `id`, label: `Sequential number` },
+        { property: `numberOfMeetings`, label: `Number of Meetings` },
+        { property: `last_email_send`, label: `Date of last sent email` }
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {

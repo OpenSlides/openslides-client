@@ -43,8 +43,8 @@
             <mat-header-cell *matHeaderCellDef>{{ 'Comment' | translate }}</mat-header-cell>
             <mat-cell *matCellDef="let position">
                 <div>
-                    <div *ngFor="let description of position.getPositionDescriptions()">
-                        {{ description | translate }}
+                    <div *ngFor="let information of parseInformation(position)">
+                        {{ information }}
                     </div>
                 </div>
             </mat-cell>
