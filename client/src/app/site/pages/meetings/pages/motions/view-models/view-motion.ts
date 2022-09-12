@@ -35,6 +35,13 @@ export interface HasReferencedMotionsInRecommendationExtension extends HasRefere
     referenced_in_motion_recommendation_extension: ViewMotion[];
 }
 
+export enum ForwardingStatus {
+    none,
+    isDerived,
+    wasForwarded,
+    both
+}
+
 /**
  * Motion class for the View
  *
@@ -333,6 +340,17 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         } else {
             return Projectiondefault.motion;
         }
+    }
+
+    public get forwardingStatus(): ForwardingStatus {
+        let status = ForwardingStatus.none;
+        if (!!this.all_origins.length) {
+            status = ForwardingStatus.isDerived;
+        }
+        if (!!this.derived_motions.length) {
+            return status === ForwardingStatus.none ? ForwardingStatus.wasForwarded : ForwardingStatus.both;
+        }
+        return status;
     }
 }
 

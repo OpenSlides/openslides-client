@@ -16,7 +16,7 @@ import { MotionCommentSectionControllerService } from '../../../modules/comments
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { TagControllerService } from '../../../modules/tags/services';
 import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
-import { ViewMotion } from '../../../view-models';
+import { ForwardingStatus, ViewMotion } from '../../../view-models';
 import { MotionsListServiceModule } from '../motions-list-service.module';
 
 /**
@@ -151,6 +151,27 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         }
     ];
 
+    private forwardingFilterOptions: OsFilter<ViewMotion>[] = [
+        {
+            property: `forwardingStatus`,
+            label: this.translate.instant(`Forwarding`),
+            options: [
+                {
+                    condition: [ForwardingStatus.wasForwarded, ForwardingStatus.both],
+                    label: this.translate.instant(`Has forwardings`)
+                },
+                {
+                    condition: [ForwardingStatus.isDerived, ForwardingStatus.both],
+                    label: this.translate.instant(`Was forwarded to this meeting`)
+                },
+                {
+                    condition: ForwardingStatus.none,
+                    label: this.translate.instant(`Neither`)
+                }
+            ]
+        }
+    ];
+
     public constructor(
         store: MeetingActiveFiltersService,
         categoryRepo: MotionCategoryControllerService,
@@ -240,7 +261,8 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
             this.motionBlockFilterOptions,
             this.recommendationFilterOptions,
             this.motionCommentFilterOptions,
-            this.tagFilterOptions
+            this.tagFilterOptions,
+            ...this.forwardingFilterOptions
         ];
 
         // only add the filter if the user has the correct permission
