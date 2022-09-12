@@ -270,7 +270,6 @@ export class OperatorService {
             }
         });
         this.groupRepo.getGeneralViewModelObservable().subscribe(group => {
-            console.log(`Groups UPDATED!!!`);
             if (!this.activeMeetingId || !group) {
                 return;
             }
