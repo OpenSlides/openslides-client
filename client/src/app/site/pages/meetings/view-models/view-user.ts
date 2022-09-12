@@ -36,7 +36,7 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get isCommitteeManager(): boolean {
-        return !!this.committee_management_levels().length;
+        return !!this.committee_management_levels(CML.can_manage).length;
     }
 
     public get numberOfMeetings(): number {
