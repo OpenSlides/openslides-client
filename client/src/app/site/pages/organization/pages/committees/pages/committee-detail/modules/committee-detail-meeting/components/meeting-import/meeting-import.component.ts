@@ -1,10 +1,12 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
+import { WRONG_JSON_IMPORT_FORMAT_ERROR_MSG } from 'src/app/site/pages/meetings/pages/motions/pages/workflows/components/workflow-import/workflow-import.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
@@ -23,7 +25,8 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
         protected override translate: TranslateService,
         private repo: MeetingControllerService,
         private osRouter: OpenSlidesRouterService,
-        private location: Location
+        private location: Location,
+        private snackbar: MatSnackBar
     ) {
         super(componentServiceCollector, translate);
     }
@@ -47,7 +50,18 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
             const meeting = await new Promise<ImportMeeting>(resolve => {
                 const reader = new FileReader();
                 reader.addEventListener(`load`, progress => {
-                    const result = JSON.parse(progress.target.result as string);
+                    let result;
+                    try {
+                        result = JSON.parse(progress.target.result as string);
+                    } catch (e) {
+                        this.snackbar.open(
+                            `${this.translate.instant(`Error`)}: ${this.translate.instant(
+                                WRONG_JSON_IMPORT_FORMAT_ERROR_MSG
+                            )}`,
+                            `OK`
+                        );
+                        throw new Error(WRONG_JSON_IMPORT_FORMAT_ERROR_MSG);
+                    }
                     resolve(result);
                 });
                 reader.readAsText(file.mediafile);
