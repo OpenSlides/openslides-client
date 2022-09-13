@@ -8,5 +8,6 @@ export enum Presenter {
     SEARCH_USERS_BY_NAME_OR_EMAIL = `search_users_by_name_or_email`,
     GET_HISTORY_INFORMATION = `get_history_information`,
     EXPORT_MEETING = `export_meeting`,
-    CHECK_DATABASE = `check_database`
+    CHECK_DATABASE = `check_database`,
+    CHECK_DATABASE_ALL = `check_database_all`
 }
