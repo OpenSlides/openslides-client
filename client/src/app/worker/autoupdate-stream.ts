@@ -164,11 +164,13 @@ export class AutoupdateStream {
 
             return JSON.parse(decompressedString);
         } catch (e) {
-            console.error(e);
             // Try to parse content without decompression
             try {
                 return JSON.parse(content);
-            } catch (e) {}
+            } catch (e) {
+                console.error(e);
+            }
+            console.error(e);
 
             return null;
         }
