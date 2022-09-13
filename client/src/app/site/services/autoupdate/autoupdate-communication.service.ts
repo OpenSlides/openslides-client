@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
@@ -15,21 +17,53 @@ import { ModelRequest } from './autoupdate.service';
 export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<any>;
     private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
+    private endpointName: string;
 
     constructor(
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
-        private endpointService: HttpStreamEndpointService
+        private endpointService: HttpStreamEndpointService,
+        private matSnackBar: MatSnackBar,
+        private translate: TranslateService
     ) {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(data => {
                 if (data?.action === `receive-data` && data.content !== undefined) {
                     dataSubscription.next(data.content);
+                } else if (data?.action === `receive-error`) {
+                    if (data?.content?.data?.terminate) {
+                        // TODO: Open error dialog with manual reconnect button
+                        this.matSnackBar
+                            .open(
+                                this.translate.instant(`Error talking to autoupdate service`),
+                                this.translate.instant(`Try reconnect`),
+                                {
+                                    duration: 0
+                                }
+                            )
+                            .onAction()
+                            .subscribe(() => {
+                                this.sharedWorker.sendMessage(`autoupdate`, {
+                                    action: `reconnect-inactive`
+                                });
+                            });
+                    } else if (data?.content?.data?.reason === `HTTP error`) {
+                        console.error(data);
+                        if (data?.content?.data?.error.code === 403) {
+                            this.setEndpoint();
+                        }
+                    }
                 } else if (data?.action === `set-streamid` && this.openResolvers.has(data?.content?.requestHash)) {
                     this.openResolvers.get(data?.content?.requestHash)(data?.content?.streamId);
                     this.openResolvers.delete(data?.content?.requestHash);
                 }
             });
+        });
+
+        this.authTokenService.accessTokenObservable.subscribe(() => {
+            if (this.endpointName) {
+                this.setEndpoint();
+            }
         });
 
         addEventListener(`offline`, () => {
@@ -47,12 +81,14 @@ export class AutoupdateCommunicationService {
         });
     }
 
-    public setEndpoint(name: string) {
-        const config = this.endpointService.getEndpoint(name);
+    public setEndpoint(name?: string) {
+        this.endpointName = name || this.endpointName;
+        const config = this.endpointService.getEndpoint(this.endpointName);
 
         this.sharedWorker.sendMessage(`autoupdate`, {
             action: `set-endpoint`,
             params: {
+                authToken: this.authTokenService.rawAccessToken,
                 url: config.url,
                 healthUrl: config.healthUrl,
                 method: config.method
@@ -78,7 +114,6 @@ export class AutoupdateCommunicationService {
                     streamId,
                     description,
                     queryParams: formatQueryParams(params),
-                    authToken: this.authTokenService.rawAccessToken,
                     requestHash: requestHash,
                     request
                 }

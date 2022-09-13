@@ -73,6 +73,25 @@ export class AutoupdateSubscription {
     }
 
     /**
+     * Informs the subscribers that a error occured in stream
+     *
+     * @param data The error data
+     */
+    public sendError(data: Object) {
+        for (let port of this.ports) {
+            port.postMessage({
+                sender: `autoupdate`,
+                action: `receive-error`,
+                content: {
+                    streamId: this.id,
+                    data: data,
+                    description: this.description
+                }
+            });
+        }
+    }
+
+    /**
      * Adds a MessagePort to the subscription and sends
      * the latest internal data to it
      *
