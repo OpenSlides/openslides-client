@@ -5,7 +5,8 @@
 </os-head-bar>
 
 <os-legal-notice-content [isEditable]="true" (update)="updateLegalNotice($event)"></os-legal-notice-content>
-<os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>
+
+<os-info-actions></os-info-actions>
 
 <mat-card class="os-card" *ngIf="canSeeStatistics">
     <h2>{{ 'Statistics' | translate }}</h2>
@@ -17,3 +18,5 @@
         </div>
     </ng-container>
 </mat-card>
+
+<os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>

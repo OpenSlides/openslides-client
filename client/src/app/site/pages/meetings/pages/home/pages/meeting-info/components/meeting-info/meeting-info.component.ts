@@ -8,7 +8,6 @@ import { BaseComponent } from 'src/app/site/base/base.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
     selector: `os-meeting-info`,
@@ -31,8 +30,7 @@ export class MeetingInfoComponent extends BaseComponent implements OnInit {
         private operator: OperatorService,
         private lifecycleService: LifecycleService,
         private presenter: CheckDatabasePresenterService,
-        private snackbar: MatSnackBar,
-        private promptService: PromptService
+        private snackbar: MatSnackBar
     ) {
         super(componentServiceCollector, translate);
     }
@@ -50,20 +48,6 @@ export class MeetingInfoComponent extends BaseComponent implements OnInit {
     public async updatePrivacyPolicy(text: string | null): Promise<void> {
         if (text) {
             await this.orgaRepo.update({ privacy_policy: text });
-        }
-    }
-
-    public resetCache(): void {
-        this.lifecycleService.reset();
-    }
-
-    public async checkDatastore(all: boolean = false): Promise<void> {
-        const response = await this.presenter.call(all);
-        if (response.ok) {
-            this.snackbar.open(this.translate.instant(`Datastore is ok!`), `Ok`);
-        } else {
-            this.snackbar.open(this.translate.instant(`Datastore is corrupt! See the console for errors.`), `Ok`);
-            console.log(response.errors);
         }
     }
 }
