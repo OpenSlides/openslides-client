@@ -60,20 +60,20 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
             },
             {
                 property: `organization_management_level`,
-                label: this.translate.instant(`Organization management`),
+                label: this.translate.instant(`Administration roles`),
                 options: [
                     { condition: `superadmin`, label: this.translate.instant(`Superadmin`) },
-                    { condition: `can_manage_organization`, label: this.translate.instant(`Administrator`) },
-                    { condition: `can_manage_users`, label: this.translate.instant(`Account management`) },
-                    { condition: null, label: this.translate.instant(`No management permissions`) }
+                    { condition: `can_manage_organization`, label: this.translate.instant(`Organization admin`) },
+                    { condition: `can_manage_users`, label: this.translate.instant(`Account admin`) },
+                    { condition: null, label: this.translate.instant(`No admin role`) }
                 ]
             },
             {
                 property: `isCommitteeManager`,
-                label: this.translate.instant(`Committee management`),
+                label: this.translate.instant(`Committee admin`),
                 options: [
-                    { condition: true, label: this.translate.instant(`Is committee manager`) },
-                    { condition: [false, null], label: this.translate.instant(`Not a manager`) }
+                    { condition: true, label: this.translate.instant(`Is committee admin`) },
+                    { condition: [false, null], label: this.translate.instant(`No committee admin`) }
                 ]
             },
             {

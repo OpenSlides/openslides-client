@@ -89,22 +89,19 @@ export const meetingSettings: SettingsGroup[] = [
         icon: `home`,
         subgroups: [
             {
-                label: _(`Meta information`),
+                label: _(`Meeting information`),
                 settings: [
                     {
                         key: `name`,
-                        label: _(`Title`),
-                        helpText: _(`The title of the meeting.`)
+                        label: _(`Meeting titel`)
                     },
                     {
                         key: `description`,
-                        label: _(`Description`),
-                        helpText: _(`The description of the meeting.`)
+                        label: _(`Description`)
                     },
                     {
                         key: `location`,
-                        label: _(`Event location`),
-                        helpText: _(`The location of the meeting.`)
+                        label: _(`Event location`)
                     },
                     {
                         key: `start_time`,
