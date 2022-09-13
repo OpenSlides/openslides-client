@@ -40,7 +40,7 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
         {
             property: `manager_ids`,
             width: 250,
-            label: _(`Committee management`),
+            label: _(`Committee admin`),
             isTableColumn: true
         },
         {

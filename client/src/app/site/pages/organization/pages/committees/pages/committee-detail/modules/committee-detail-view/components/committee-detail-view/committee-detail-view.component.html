@@ -70,7 +70,7 @@
             {{ getMemberAmount(committee) }}
         </os-committee-meta-info>
 
-        <os-committee-meta-info icon="engineering" title="Committee management" *ngIf="canManageCommittee">
+        <os-committee-meta-info icon="engineering" title="Committee admin" *ngIf="canManageCommittee">
             <ng-container *ngIf="committee.getManagers() as managers">
                 <span *ngFor="let manager of managers; let last = last">
                     <ng-container *osOmlPerms="OML.can_manage_users">

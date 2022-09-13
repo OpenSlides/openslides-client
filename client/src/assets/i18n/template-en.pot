@@ -75,6 +75,9 @@ msgstr ""
 msgid "Access-data"
 msgstr ""
 
+msgid "Account admin"
+msgstr ""
+
 msgid "Account management"
 msgstr ""
 
@@ -164,6 +167,9 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
+msgid "Administration roles"
+msgstr ""
+
 msgid "Administrator"
 msgstr ""
 
@@ -174,6 +180,9 @@ msgid "After verifiy the preview click on \"import\" please (see top right)."
 msgstr ""
 
 msgid "Agenda"
+msgstr ""
+
+msgid "Agenda items are in process. Please wait ..."
 msgstr ""
 
 msgid "Agenda visibility"
@@ -526,6 +535,9 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+msgid "Back to OpenSlides"
+msgstr ""
+
 msgid "Back to login"
 msgstr ""
 
@@ -778,6 +790,9 @@ msgstr ""
 msgid "Chat groups"
 msgstr ""
 
+msgid "Check datastore"
+msgstr ""
+
 msgid "Check in or check out participants based on their participant numbers:"
 msgstr ""
 
@@ -866,6 +881,9 @@ msgid "Comments"
 msgstr ""
 
 msgid "Committee"
+msgstr ""
+
+msgid "Committee admin"
 msgstr ""
 
 msgid "Committee management"
@@ -989,6 +1007,12 @@ msgid "Customize design"
 msgstr ""
 
 msgid "Dark mode"
+msgstr ""
+
+msgid "Datastore is corrupt! See the console for errors."
+msgstr ""
+
+msgid "Datastore is ok!"
 msgstr ""
 
 msgid ""
@@ -1129,6 +1153,9 @@ msgstr ""
 msgid "Divergent:"
 msgstr ""
 
+msgid "Diverse"
+msgstr ""
+
 msgid "Do not concern"
 msgstr ""
 
@@ -1138,13 +1165,22 @@ msgstr ""
 msgid "Do not forget to save your changes!"
 msgstr ""
 
+msgid "Do you really want to discard all your changes?"
+msgstr ""
+
 msgid "Do you really want to exit this page?"
 msgstr ""
 
 msgid "Do you really want to go ahead?"
 msgstr ""
 
+msgid "Do you really want to make available this meeting as a public template?"
+msgstr ""
+
 msgid "Do you really want to save your changes?"
+msgstr ""
+
+msgid "Do you really want to stop sharing this meeting as a public template?"
 msgstr ""
 
 msgid "Does not have notes"
@@ -1240,6 +1276,9 @@ msgid "Electronic voting is disabled. Only analog polls are allowed"
 msgstr ""
 
 msgid "Email"
+msgstr ""
+
+msgid "Email address"
 msgstr ""
 
 msgid "Email body"
@@ -1396,6 +1435,9 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
+msgid "Female"
+msgstr ""
+
 msgid "Filename"
 msgstr ""
 
@@ -1531,7 +1573,13 @@ msgstr ""
 msgid "Has amendments"
 msgstr ""
 
+msgid "Has an email address"
+msgstr ""
+
 msgid "Has changed vote weight"
+msgstr ""
+
+msgid "Has no email address"
 msgstr ""
 
 msgid "Has no speakers"
@@ -1680,6 +1728,9 @@ msgstr ""
 msgid "Is a committee"
 msgstr ""
 
+msgid "Is a natural person"
+msgstr ""
+
 msgid "Is active"
 msgstr ""
 
@@ -1690,6 +1741,9 @@ msgid "Is amendment"
 msgstr ""
 
 msgid "Is candidate"
+msgstr ""
+
+msgid "Is committee admin"
 msgstr ""
 
 msgid "Is favorite"
@@ -1845,6 +1899,9 @@ msgstr ""
 msgid "Lowest applause amount"
 msgstr ""
 
+msgid "Male"
+msgstr ""
+
 msgid "Mark as personal favorite"
 msgstr ""
 
@@ -1866,10 +1923,21 @@ msgstr ""
 msgid "Meeting administrator"
 msgstr ""
 
+msgid "Meeting information"
+msgstr ""
+
 msgid "Meeting specific information"
 msgstr ""
 
 msgid "Meeting template"
+msgstr ""
+
+msgid ""
+"Meeting templates and the data they contain are publicly viewable by all "
+"committee administrators."
+msgstr ""
+
+msgid "Meeting titel"
 msgstr ""
 
 msgid "Meetings"
@@ -2103,6 +2171,9 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No admin role"
+msgstr ""
+
 msgid "No category"
 msgstr ""
 
@@ -2119,6 +2190,9 @@ msgid "No chat groups available"
 msgstr ""
 
 msgid "No comment"
+msgstr ""
+
+msgid "No committee admin"
 msgstr ""
 
 msgid "No concernment"
@@ -2158,6 +2232,9 @@ msgid "No meetings have been selected."
 msgstr ""
 
 msgid "No motion block set"
+msgstr ""
+
+msgid "No one has voted for this poll"
 msgstr ""
 
 msgid "No options found"
@@ -2331,6 +2408,9 @@ msgid "Options"
 msgstr ""
 
 msgid "Organization"
+msgstr ""
+
+msgid "Organization admin"
 msgstr ""
 
 msgid "Organization specific information"
@@ -2580,6 +2660,9 @@ msgstr ""
 msgid "Public item"
 msgstr ""
 
+msgid "Public template"
+msgstr ""
+
 msgid "Publish"
 msgstr ""
 
@@ -2716,7 +2799,13 @@ msgid ""
 "in the first row:"
 msgstr ""
 
+msgid "Required permissions to view this page:"
+msgstr ""
+
 msgid "Reset"
+msgstr ""
+
+msgid "Reset cache"
 msgstr ""
 
 msgid "Reset password"
@@ -2849,9 +2938,6 @@ msgid "Set as parent"
 msgstr ""
 
 msgid "Set as reference projector"
-msgstr ""
-
-msgid "Set as template meeting"
 msgstr ""
 
 msgid "Set category"
@@ -3067,7 +3153,7 @@ msgstr ""
 msgid "Sort motions by"
 msgstr ""
 
-msgid "Sort name of participants by"
+msgid "Sort workflow"
 msgstr ""
 
 msgid "Speakers"
@@ -3163,6 +3249,9 @@ msgstr ""
 msgid "Summary of changes:"
 msgstr ""
 
+msgid "Superadmin"
+msgstr ""
+
 msgid "Superadmin settings"
 msgstr ""
 
@@ -3188,9 +3277,6 @@ msgid "Tag"
 msgstr ""
 
 msgid "Tags"
-msgstr ""
-
-msgid "Template meeting"
 msgstr ""
 
 msgid "Text"
@@ -3272,6 +3358,9 @@ msgstr ""
 msgid "The title is required"
 msgstr ""
 
+msgid "There are not enough options."
+msgstr ""
+
 msgid "There are some columns that do not match the template"
 msgstr ""
 
@@ -3335,6 +3424,9 @@ msgid "This will add or remove the following groups for all selected participant
 msgstr ""
 
 msgid "This will add or remove the following submitters for all selected motions:"
+msgstr ""
+
+msgid "This will add or remove the following tags for all selected agenda items:"
 msgstr ""
 
 msgid "This will add or remove the following tags for all selected motions:"
@@ -3417,6 +3509,12 @@ msgstr ""
 msgid "Unique speakers"
 msgstr ""
 
+msgid "Unknown"
+msgstr ""
+
+msgid "Unsaved changes will not be applied."
+msgstr ""
+
 msgid "Unsupport"
 msgstr ""
 
@@ -3444,9 +3542,6 @@ msgid "Used for invitation emails and QRCode in PDF of access data."
 msgstr ""
 
 msgid "User not found."
-msgstr ""
-
-msgid "User permission"
 msgstr ""
 
 msgid "Username"
@@ -3669,9 +3764,6 @@ msgid "You can't delete the last projector."
 msgstr ""
 
 msgid "You cannot change the recommendation of motions in different workflows!"
-msgstr ""
-
-msgid "You cannot change the state of motions in different workflows!"
 msgstr ""
 
 msgid ""
@@ -3962,6 +4054,9 @@ msgid "or"
 msgstr ""
 
 msgid "outside"
+msgstr ""
+
+msgid "participants"
 msgstr ""
 
 msgid "participants-example"
