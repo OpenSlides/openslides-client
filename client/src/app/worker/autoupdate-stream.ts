@@ -107,7 +107,6 @@ export class AutoupdateStream {
                     lastSent = i + 1;
                     next = null;
 
-                    console.debug(`received data`, rawData);
                     const data = this.decode(rawData);
                     for (let subscription of this.subscriptions) {
                         // TODO: It might be possible to only send data to
@@ -166,7 +165,11 @@ export class AutoupdateStream {
             return JSON.parse(decompressedString);
         } catch (e) {
             console.error(e);
-            console.log(`received`, content);
+            // Try to parse content without decompression
+            try {
+                return JSON.parse(content);
+            } catch (e) {}
+
             return null;
         }
     }
