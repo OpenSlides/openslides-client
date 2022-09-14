@@ -36,10 +36,10 @@ export interface HasReferencedMotionsInRecommendationExtension extends HasRefere
 }
 
 export enum ForwardingStatus {
-    none,
-    isDerived,
-    wasForwarded,
-    both
+    none = `none`,
+    isDerived = `isDerived`,
+    wasForwarded = `wasForwarded`,
+    both = `both`
 }
 
 /**
@@ -220,6 +220,17 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         }
     }
 
+    public get forwardingStatus(): ForwardingStatus {
+        let status = ForwardingStatus.none;
+        if (!!this.all_origin_ids?.length) {
+            status = ForwardingStatus.isDerived;
+        }
+        if (!!this.derived_motion_ids?.length) {
+            return status === ForwardingStatus.none ? ForwardingStatus.wasForwarded : ForwardingStatus.both;
+        }
+        return status;
+    }
+
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
 
@@ -340,17 +351,6 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         } else {
             return Projectiondefault.motion;
         }
-    }
-
-    public get forwardingStatus(): ForwardingStatus {
-        let status = ForwardingStatus.none;
-        if (!!this.all_origins.length) {
-            status = ForwardingStatus.isDerived;
-        }
-        if (!!this.derived_motions.length) {
-            return status === ForwardingStatus.none ? ForwardingStatus.wasForwarded : ForwardingStatus.both;
-        }
-        return status;
     }
 }
 
