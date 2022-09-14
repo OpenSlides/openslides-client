@@ -33,7 +33,7 @@ export class SharedWorkerService {
      * @param sender Name of the sender
      */
     public listenTo(sender: string): Observable<any> {
-        return this.messages.pipe(filter(data =>  data?.sender === sender));
+        return this.messages.pipe(filter(data => data?.sender === sender));
     }
 
     /**

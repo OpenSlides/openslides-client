@@ -6,6 +6,7 @@ import {
     isCommunicationError,
     isCommunicationErrorWrapper
 } from '../gateways/http-stream/stream-utils';
+import { joinTypedArrays, splitTypedArray } from '../infrastructure/utils/functions';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
 export class AutoupdateStream {
@@ -159,37 +160,28 @@ export class AutoupdateStream {
             body: JSON.stringify(this.subscriptions.map(s => s.request))
         });
 
+        const LINE_BREAK = `\n`.charCodeAt(0);
         const reader = response.body.getReader();
-        let next = null;
+        let next: Uint8Array = null;
         let result: ReadableStreamDefaultReadResult<Uint8Array>;
         while (!(result = await reader.read()).done) {
-            const val = result.value;
-            let lastSent = 0;
-            for (let i = 0; i < val.length; i++) {
-                if (val[i] === 10) {
-                    let rawData = val.slice(lastSent, i);
+            const lines = splitTypedArray(LINE_BREAK, result.value);
+            for (let line of lines) {
+                if (line[line.length - 1] === LINE_BREAK) {
                     if (next !== null) {
-                        const nTmp = new Uint8Array(i - lastSent + next.length);
-                        nTmp.set(next);
-                        nTmp.set(rawData, next.length);
-
-                        rawData = nTmp;
+                        line = joinTypedArrays(Uint8Array, next, line);
                     }
 
-                    lastSent = i + 1;
                     next = null;
 
-                    const data = this.decode(rawData);
+                    const data = this.decode(line);
                     const parsedData = this.parse(data);
                     this.handleContent(parsedData);
-                } else if (i === val.length - 1) {
+                } else {
                     if (next) {
-                        const nTmp = new Uint8Array(i - lastSent + next.length);
-                        nTmp.set(next);
-                        nTmp.set(val.slice(lastSent, i + 1), next.length);
-                        next = nTmp;
+                        next = joinTypedArrays(Uint8Array, next, line);
                     } else {
-                        next = val.slice(lastSent, i + 1);
+                        next = line;
                     }
                 }
             }
