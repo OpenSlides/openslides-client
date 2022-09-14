@@ -9,6 +9,7 @@ import { djb2hash } from 'src/app/infrastructure/utils';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthTokenService } from '../auth-token.service';
+import { ConnectionStatusService } from '../connection-status.service';
 import { ModelRequest } from './autoupdate.service';
 
 @Injectable({
@@ -18,13 +19,15 @@ export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<any>;
     private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
     private endpointName: string;
+    private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
 
     constructor(
         private authTokenService: AuthTokenService,
         private sharedWorker: SharedWorkerService,
         private endpointService: HttpStreamEndpointService,
         private matSnackBar: MatSnackBar,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private connectionStatusService: ConnectionStatusService
     ) {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(data => {
@@ -55,6 +58,17 @@ export class AutoupdateCommunicationService {
                 } else if (data?.action === `set-streamid` && this.openResolvers.has(data?.content?.requestHash)) {
                     this.openResolvers.get(data?.content?.requestHash)(data?.content?.streamId);
                     this.openResolvers.delete(data?.content?.requestHash);
+                } else if (data?.action === `status` && this.autoupdateEndpointStatus !== data?.content.status) {
+                    this.autoupdateEndpointStatus = data?.content.status;
+
+                    if (this.autoupdateEndpointStatus === `unhealthy`) {
+                        this.connectionStatusService.goOffline({
+                            reason: `Autoupdate unhealthy`,
+                            isOnlineFn: () => {
+                                return this.autoupdateEndpointStatus === `healthy`;
+                            }
+                        });
+                    }
                 }
             });
         });

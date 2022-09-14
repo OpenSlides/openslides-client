@@ -156,8 +156,35 @@ export class AutoupdateStreamPool {
         return !!data?.healthy;
     }
 
+    private sendToAll(action: string, content?: any) {
+        const ports: MessagePort[] = [];
+        for (const stream of this.streams) {
+            for (const subscription of stream.subscriptions) {
+                for (const port of subscription.ports) {
+                    if (ports.indexOf(port) === -1) {
+                        ports.push(port);
+                    }
+                }
+            }
+        }
+
+        for (const port of ports) {
+            port.postMessage({
+                sender: `autoupdate`,
+                action,
+                content
+            });
+        }
+    }
+
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
     private waitUntilEndpointHealthy(): Promise<void> {
+        if (!this._waitEndpointHealthyPromise) {
+            this.sendToAll(`status`, {
+                status: `unhealthy`
+            });
+        }
+
         if (!this._waitEndpointHealthyPromise) {
             this._waitEndpointHealthyPromise = (async () => {
                 let timeout = 0;
@@ -167,6 +194,10 @@ export class AutoupdateStreamPool {
                 }
 
                 this._waitEndpointHealthyPromise = null;
+
+                this.sendToAll(`status`, {
+                    status: `healthy`
+                });
             })();
         }
 
