@@ -30,6 +30,11 @@ export class AutoupdateStream {
         private endpoint: { url: string; method: string; authToken: string }
     ) {}
 
+    /**
+     * Clones this stream with the specified subscriptions
+     *
+     * @param subscriptions The subscriptions handled by the created stream
+     */
     public cloneWithSubscriptions(subscriptions: AutoupdateSubscription[]): AutoupdateStream {
         return new AutoupdateStream(subscriptions, this.queryParams, this.endpoint);
     }
@@ -193,6 +198,12 @@ export class AutoupdateStream {
         }
     }
 
+    /**
+     * Sets the endpoint and restarts the connection with
+     * the new configuration
+     *
+     * @param endpoint configuration of the endpoint
+     */
     public updateEndpoint(endpoint: any) {
         this.endpoint = endpoint;
         this.restart = true;

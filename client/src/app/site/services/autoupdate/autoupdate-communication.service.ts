@@ -65,21 +65,16 @@ export class AutoupdateCommunicationService {
             }
         });
 
-        addEventListener(`offline`, () => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `set-connection-status`,
-                params: { status: `offline` }
-            });
-        });
-
-        addEventListener(`online`, () => {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `set-connection-status`,
-                params: { status: `online` }
-            });
-        });
+        this.registerConnectionStatusListener();
     }
 
+    /**
+     * Updates the endpoint used by the worker.
+     * If no name is specified the last name this method was
+     * called with will be used.
+     *
+     * @param name Name of the endpoint inside endpointService
+     */
     public setEndpoint(name?: string) {
         this.endpointName = name || this.endpointName;
         const config = this.endpointService.getEndpoint(this.endpointName);
@@ -139,5 +134,21 @@ export class AutoupdateCommunicationService {
      */
     public listen(): Observable<any> {
         return this.autoupdateDataObservable;
+    }
+
+    private registerConnectionStatusListener() {
+        addEventListener(`offline`, () => {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `set-connection-status`,
+                params: { status: `offline` }
+            });
+        });
+
+        addEventListener(`online`, () => {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `set-connection-status`,
+                params: { status: `online` }
+            });
+        });
     }
 }

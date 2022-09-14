@@ -26,6 +26,12 @@ export class AutoupdateStreamPool {
         }
     ) {}
 
+    /**
+     * Opens a new stream with the specified subscriptions and params
+     *
+     * @param subscriptions
+     * @param queryParams
+     */
     public openNewStream(subscriptions: AutoupdateSubscription[], queryParams: string): AutoupdateStream {
         for (let subscription of subscriptions) {
             this.subscriptions[subscription.id] = subscription;
@@ -48,6 +54,12 @@ export class AutoupdateStreamPool {
         }
     }
 
+    /**
+     * Closes streams when set offline after a certain time
+     * and reopens them if set online
+     *
+     * @param online True for online, false for offline
+     */
     public updateOnlineStatus(online: boolean) {
         if (online) {
             clearTimeout(this.onlineStatusStopTimeout);
@@ -61,6 +73,11 @@ export class AutoupdateStreamPool {
         }
     }
 
+    /**
+     * Removes a stream and its subscriptions from the pool
+     *
+     * @param stream The stream to be removed
+     */
     public removeStream(stream: AutoupdateStream) {
         for (let subscription of stream.subscriptions) {
             if (this.subscriptions[subscription.id]) {
@@ -74,6 +91,11 @@ export class AutoupdateStreamPool {
         }
     }
 
+    /**
+     * Updates the given endpoint for all managed streams
+     *
+     * @param endpoint The new endpoint configuration
+     */
     public setEndpoint(endpoint: { url?: string; healthUrl?: string; method?: string; authToken?: string }) {
         this.endpoint = Object.assign(this.endpoint, endpoint);
 
@@ -82,10 +104,22 @@ export class AutoupdateStreamPool {
         }
     }
 
+    /**
+     * @param subscriptionId Id of the subscription
+     *
+     * @returns subscription with given id or null
+     */
     public getSubscriptionById(subscriptionId: number): AutoupdateSubscription | null {
         return this.subscriptions[subscriptionId] || null;
     }
 
+    /**
+     * Searches a subscription that fulfills the given queryParams
+     * and modelRequest
+     *
+     * @param queryParams
+     * @param modelRequest
+     */
     public getMatchingSubscription(queryParams: string, modelRequest: Object): AutoupdateSubscription | null {
         for (let stream of this.streams) {
             for (let subscription of stream.subscriptions) {
