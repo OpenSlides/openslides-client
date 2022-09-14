@@ -32,7 +32,7 @@ export class InfoActionsComponent extends BaseComponent {
             this.snackbar.open(this.translate.instant(`Datastore is ok!`), `Ok`);
         } else {
             this.snackbar.open(this.translate.instant(`Datastore is corrupt! See the console for errors.`), `Ok`);
-            console.log(response.errors);
+            console.warn(response.errors);
         }
     }
 }
