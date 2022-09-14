@@ -1,4 +1,9 @@
-import { ErrorDescription, ErrorType, isCommunicationError, isCommunicationErrorWrapper } from '../gateways/http-stream/stream-utils';
+import {
+    ErrorDescription,
+    ErrorType,
+    isCommunicationError,
+    isCommunicationErrorWrapper
+} from '../gateways/http-stream/stream-utils';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
@@ -119,14 +124,13 @@ export class AutoupdateStreamPool {
 
     private async waitUntilEndpointHealthy(): Promise<void> {
         // TODO: collect waits and do only one health check
-        while(!(await this.isEndpointHealthy())) {
+        while (!(await this.isEndpointHealthy())) {
             await new Promise(f => setTimeout(f, 3000));
         }
     }
 
     private async handleError(stream: AutoupdateStream, error: any): Promise<void> {
         await this.waitUntilEndpointHealthy();
-
 
         if (stream.failedConnects <= 3 && error?.reason !== ErrorType.CLIENT) {
             await this.connectStream(stream);
