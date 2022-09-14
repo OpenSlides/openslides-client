@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
+import { Committee } from 'src/app/domain/models/comittees/committee';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -30,6 +31,9 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     public committeeId: Id | null = null;
 
     public currentCommitteeObservable: Observable<ViewCommittee | null> | null = null;
+
+    public receiveExpanded: boolean = false;
+    public forwardingExpanded: boolean = false;
 
     public get canManageMeetingsInCommittee(): boolean {
         return this.operator.hasCommitteePermissionsNonAdminCheck(this.committeeId, CML.can_manage);
@@ -77,11 +81,26 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         }
     }
 
+    public canAccessCommittee(committee: Committee): boolean {
+        return (
+            this.operator.hasCommitteePermissions(committee.id, CML.can_manage) ||
+            this.operator.isInCommittees(committee)
+        );
+    }
+
     public getMemberAmount(committee: ViewCommittee): number {
         return committee.user_ids?.length || 0;
     }
 
     public getMeetingsSorted(committee: ViewCommittee): ViewMeeting[] {
         return committee.meetings.sort((a, b) => b.end_time - a.end_time);
+    }
+
+    public toggleForwardingList(): void {
+        this.forwardingExpanded = !this.forwardingExpanded;
+    }
+
+    public toggleReceiveList(): void {
+        this.receiveExpanded = !this.receiveExpanded;
     }
 }
