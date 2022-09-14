@@ -166,7 +166,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
                 },
                 {
                     condition: ForwardingStatus.none,
-                    label: this.translate.instant(`Neither`)
+                    label: this.translate.instant(`No forwardings`)
                 }
             ]
         }

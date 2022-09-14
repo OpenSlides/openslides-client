@@ -81,7 +81,7 @@
         <div [formGroup]="form">
             <div *osOmlPerms="OML.can_manage_users">
                 <mat-form-field>
-                    <mat-label>{{ 'Administration roles' | translate }}</mat-label>
+                    <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
                         <mat-option [value]="null">-</mat-option>
                         <mat-option *ngFor="let level of organizationManagementLevels" [value]="level">
@@ -126,7 +126,7 @@
 
         <!-- Organization management level -->
         <div *ngIf="user.organization_management_level">
-            <h4>{{ 'Administration roles' | translate }}</h4>
+            <h4>{{ 'Administration roles (at organization level)' | translate }}</h4>
             <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
         </div>
 

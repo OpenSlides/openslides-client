@@ -215,6 +215,7 @@ _(`You can not delete yourself.`);
 _(`You can not deactivate yourself.`);
 _(`Natural person`);
 _(`No.`);
+_(`Full name`);
 
 // default groups
 _(`Default`);
@@ -247,6 +248,7 @@ _(`Voting anonymized`);
 _(`Voting started`);
 _(`Voting stopped`);
 _(`Voting published`);
+_(`Voting stopped/published`);
 _(`Voting reset`);
 _(`Number set`);
 _(`OpenSlides is temporarily reset to following timestamp`);
@@ -287,7 +289,6 @@ _(`Speaking time`);
 
 // organization strings
 _(`Administrator`);
-_(`Account management`);
 _(`Default committee`);
 _(`Default meeting`);
 _(`Assigned accounts`);

@@ -96,9 +96,6 @@ msgstr "Zugangsdaten"
 msgid "Account admin"
 msgstr "Accountadmin"
 
-msgid "Account management"
-msgstr "Accountverwaltung"
-
 msgid "Account successfully assigned"
 msgstr "Account erfolgreich zugewiesen"
 
@@ -190,6 +187,9 @@ msgstr "Admin"
 
 msgid "Administration roles"
 msgstr "Administrationsrollen"
+
+msgid "Administration roles (at organization level)"
+msgstr "Administrationsrollen (auf Organisationsebene)"
 
 msgid "Administrator"
 msgstr "Administrator"
@@ -1218,9 +1218,6 @@ msgstr "Anzeigeformat"
 msgid "Divergent:"
 msgstr "abweichend:"
 
-msgid "Diverse"
-msgstr "Divers"
-
 msgid "Do not concern"
 msgstr "Nicht befassen"
 
@@ -1524,9 +1521,6 @@ msgstr "Erweiterung"
 msgid "Favorites"
 msgstr "Favoriten"
 
-msgid "Female"
-msgstr "Weiblich"
-
 msgid "Filename"
 msgstr "Dateiname"
 
@@ -1599,6 +1593,9 @@ msgstr "Text der Startseite"
 msgid "Front page title"
 msgstr "Titel der Startseite"
 
+msgid "Full name"
+msgstr "Vollständiger Name"
+
 msgid "Fullscreen"
 msgstr "Vollbild"
 
@@ -1670,8 +1667,11 @@ msgstr "Hat eine E-Mail-Adresse"
 msgid "Has changed vote weight"
 msgstr "Stimmgewicht verändert"
 
+msgid "Has forwardings"
+msgstr "Hat Weiterleitungen"
+
 msgid "Has no email address"
-msgstr "Heit keine E-Mail-Adresse"
+msgstr "Hat keine E-Mail-Adresse"
 
 msgid "Has no speakers"
 msgstr "Keine Wortmeldungen vorhanden"
@@ -1896,9 +1896,6 @@ msgstr "Verwenden Sie eine Zeile pro Eintrag."
 msgid "Label color"
 msgstr "Beschriftungsfarbe"
 
-msgid "Last email send"
-msgstr "Letzte gesendet E-Mail"
-
 msgid "Last email sent"
 msgstr "Letzte gesendete E-Mail"
 
@@ -1996,9 +1993,6 @@ msgstr "Abmelden"
 
 msgid "Lowest applause amount"
 msgstr "Niedrigster Applauswert"
-
-msgid "Male"
-msgstr "Männlich"
 
 msgid "Mark as personal favorite"
 msgstr "Als persönlichen Favorit markieren"
@@ -2314,6 +2308,9 @@ msgstr "Keine E-Mail gesendet"
 
 msgid "No encryption"
 msgstr "Keine Verschlüsselung"
+
+msgid "No forwardings"
+msgstr "Keine Weiterleitungen"
 
 msgid "No group name has been entered."
 msgstr "Es wurde noch kein Gruppenname eingegeben."
@@ -3680,9 +3677,6 @@ msgstr "unerledigt"
 msgid "Unique speakers"
 msgstr "Eindeutige Redner*innen"
 
-msgid "Unknown"
-msgstr "Unbekannt"
-
 msgid "Unsaved changes will not be applied."
 msgstr "Nicht gespeicherte Änderungen werden nicht übernommen."
 
@@ -3810,6 +3804,9 @@ msgstr "Abstimmung gestartet"
 msgid "Voting stopped"
 msgstr "Abstimmung gestoppt"
 
+msgid "Voting stopped/published"
+msgstr "Abstimmung gestoppt/veröffentlicht"
+
 msgid "Voting successful."
 msgstr "Stimmabgabe erfolgreich."
 
@@ -3840,6 +3837,9 @@ msgstr ""
 "Textes wird sich wahrscheinlich negativ auf diese auswirken. Insbesondere "
 "können Änderungsanträge unbrauchbar werden, wenn der Absatz, auf den sie "
 "referenzieren, gelöscht wird."
+
+msgid "Was forwarded to this meeting"
+msgstr "Wurde in diese Veranstaltung weitergeleitet"
 
 msgid "Web interface header logo"
 msgstr "Web-Interface-Kopfzeilen-Logo"
@@ -4333,6 +4333,9 @@ msgstr "heute"
 
 msgid "undocumented"
 msgstr "nicht erfasst"
+
+msgid "unknown"
+msgstr "unbekannt"
 
 msgid "version"
 msgstr "Version"
