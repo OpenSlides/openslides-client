@@ -177,12 +177,10 @@ export class AutoupdateStream {
                     const data = this.decode(line);
                     const parsedData = this.parse(data);
                     this.handleContent(parsedData);
+                } else if (next) {
+                    next = joinTypedArrays(Uint8Array, next, line);
                 } else {
-                    if (next) {
-                        next = joinTypedArrays(Uint8Array, next, line);
-                    } else {
-                        next = line;
-                    }
+                    next = line;
                 }
             }
         }
