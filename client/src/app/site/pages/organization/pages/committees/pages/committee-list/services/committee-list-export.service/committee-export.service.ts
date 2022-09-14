@@ -34,7 +34,7 @@ export class CommitteeExportService {
                 map: model => model.forward_to_committees.map(committee => committee.name).join(`, `)
             },
             {
-                label: `Committee management`,
+                label: `Committee admin`,
                 map: model =>
                     model
                         .getManagers()

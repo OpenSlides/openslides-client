@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -19,7 +19,7 @@ import { AssignmentPollService } from '../../services/assignment-poll.service';
     templateUrl: `./assignment-poll-detail-content.component.html`,
     styleUrls: [`./assignment-poll-detail-content.component.scss`]
 })
-export class AssignmentPollDetailContentComponent {
+export class AssignmentPollDetailContentComponent implements OnInit {
     private _poll: PollData;
 
     private _tableData: PollTableData[] = [];
@@ -115,6 +115,10 @@ export class AssignmentPollDetailContentComponent {
         private cd: ChangeDetectorRef,
         private operator: OperatorService
     ) {}
+
+    public ngOnInit(): void {
+        this.poll.options_as_observable.subscribe(options => this.setupTableData());
+    }
 
     private setupTableData(): void {
         this._tableData = this.pollService.generateTableData(this.poll);

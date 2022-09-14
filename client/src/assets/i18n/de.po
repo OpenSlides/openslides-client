@@ -1,11 +1,11 @@
 # 
 # Translators:
-# Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022
 # jsangmeister <joshua.sangmeister@gmail.com>, 2022
+# Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022
 # 
 msgid ""
 msgstr ""
-"Last-Translator: jsangmeister <joshua.sangmeister@gmail.com>, 2022\n"
+"Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022\n"
 "Language-Team: German (https://www.transifex.com/openslides/teams/14270/de/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -92,6 +92,9 @@ msgstr "Zugriffsgruppen"
 
 msgid "Access-data"
 msgstr "Zugangsdaten"
+
+msgid "Account admin"
+msgstr "Accountadmin"
 
 msgid "Account management"
 msgstr "Accountverwaltung"
@@ -185,6 +188,9 @@ msgstr "Vertagung"
 msgid "Admin"
 msgstr "Admin"
 
+msgid "Administration roles"
+msgstr "Administrationsrollen"
+
 msgid "Administrator"
 msgstr "Administrator"
 
@@ -198,6 +204,9 @@ msgstr ""
 
 msgid "Agenda"
 msgstr "Tagesordnung"
+
+msgid "Agenda items are in process. Please wait ..."
+msgstr "Tagesordnungspunkte werden bearbeitet. Bitte warten ..."
 
 msgid "Agenda visibility"
 msgstr "Sichtbarkeit in der Tagesordnung"
@@ -574,6 +583,9 @@ msgstr "Verfügbare Stimmen"
 msgid "Back"
 msgstr "Zurück"
 
+msgid "Back to OpenSlides"
+msgstr "Zurück zu OpenSlides"
+
 msgid "Back to login"
 msgstr "Zurück zur Anmeldung"
 
@@ -826,6 +838,9 @@ msgstr "Chat"
 msgid "Chat groups"
 msgstr "Chatgruppen"
 
+msgid "Check datastore"
+msgstr "Datastore überprüfen"
+
 msgid "Check in or check out participants based on their participant numbers:"
 msgstr ""
 "An- oder Abmeldung von Teilnehmenden basierend auf ihren Teilnehmernummern:"
@@ -916,6 +931,9 @@ msgstr "Kommentare"
 
 msgid "Committee"
 msgstr "Gremium"
+
+msgid "Committee admin"
+msgstr "Gremienadmin"
 
 msgid "Committee management"
 msgstr "Gremienverwaltung"
@@ -1039,6 +1057,12 @@ msgstr "Design anpassen"
 
 msgid "Dark mode"
 msgstr "Dunkler Modus"
+
+msgid "Datastore is corrupt! See the console for errors."
+msgstr "Der Datastore ist beschädigt! Mehr Details in der Konsole."
+
+msgid "Datastore is ok!"
+msgstr "Der Datastore ist ok!"
 
 msgid ""
 "Dear {name},\n"
@@ -1194,6 +1218,9 @@ msgstr "Anzeigeformat"
 msgid "Divergent:"
 msgstr "abweichend:"
 
+msgid "Diverse"
+msgstr "Divers"
+
 msgid "Do not concern"
 msgstr "Nicht befassen"
 
@@ -1203,14 +1230,28 @@ msgstr "Nicht entscheiden"
 msgid "Do not forget to save your changes!"
 msgstr "Vergessen Sie nicht Ihre Änderungen zu speichern!"
 
+msgid "Do you really want to discard all your changes?"
+msgstr "Wollen Sie wirklich alle Änderungen verwerfen?"
+
 msgid "Do you really want to exit this page?"
 msgstr "Wollen Sie diese Seite wirklich verlassen?"
 
 msgid "Do you really want to go ahead?"
 msgstr "Wollen Sie die Aktion wirklich fortsetzen?"
 
+msgid ""
+"Do you really want to make available this meeting as a public template?"
+msgstr ""
+"Wollen Sie wirklich diese Veranstaltung als öffentliche Vorlage verfügbar "
+"machen?"
+
 msgid "Do you really want to save your changes?"
 msgstr "Wollen Sie wirklich Ihre Änderungen speichern?"
+
+msgid "Do you really want to stop sharing this meeting as a public template?"
+msgstr ""
+"Wollen Sie wirklich aufhören diese Veranstaltung als öffentliche Vorlage zu "
+"nutzen?"
 
 msgid "Does not have notes"
 msgstr "Hat keine Notizen"
@@ -1315,6 +1356,9 @@ msgstr ""
 
 msgid "Email"
 msgstr "E-Mail"
+
+msgid "Email address"
+msgstr "E-Mail-Adresse"
 
 msgid "Email body"
 msgstr "Nachrichtentext"
@@ -1480,6 +1524,9 @@ msgstr "Erweiterung"
 msgid "Favorites"
 msgstr "Favoriten"
 
+msgid "Female"
+msgstr "Weiblich"
+
 msgid "Filename"
 msgstr "Dateiname"
 
@@ -1617,8 +1664,14 @@ msgstr "Gast"
 msgid "Has amendments"
 msgstr "Hat Änderungsanträge"
 
+msgid "Has an email address"
+msgstr "Hat eine E-Mail-Adresse"
+
 msgid "Has changed vote weight"
 msgstr "Stimmgewicht verändert"
+
+msgid "Has no email address"
+msgstr "Heit keine E-Mail-Adresse"
 
 msgid "Has no speakers"
 msgstr "Keine Wortmeldungen vorhanden"
@@ -1768,6 +1821,9 @@ msgstr "In den Konferenzraum einladen"
 msgid "Is a committee"
 msgstr "Ist ein Gremium"
 
+msgid "Is a natural person"
+msgstr "Ist eine natürliche Person"
+
 msgid "Is active"
 msgstr "Ist aktiv"
 
@@ -1779,6 +1835,9 @@ msgstr "Ist ein Änderungsantrag"
 
 msgid "Is candidate"
 msgstr "ist Kandidat*in"
+
+msgid "Is committee admin"
+msgstr "Ist Gremienadmin"
 
 msgid "Is favorite"
 msgstr "Ist Favorit"
@@ -1938,6 +1997,9 @@ msgstr "Abmelden"
 msgid "Lowest applause amount"
 msgstr "Niedrigster Applauswert"
 
+msgid "Male"
+msgstr "Männlich"
+
 msgid "Mark as personal favorite"
 msgstr "Als persönlichen Favorit markieren"
 
@@ -1959,11 +2021,24 @@ msgstr "Veranstaltung"
 msgid "Meeting administrator"
 msgstr "Veranstaltungsadministrator"
 
+msgid "Meeting information"
+msgstr "Veranstaltungsinformationen"
+
 msgid "Meeting specific information"
 msgstr "Veranstaltungsspezifische Informationen"
 
 msgid "Meeting template"
 msgstr "Veranstaltungsvorlage"
+
+msgid ""
+"Meeting templates and the data they contain are publicly viewable by all "
+"committee administrators."
+msgstr ""
+"Veranstaltungsvorlagen und die darin enthaltenen Daten sind für alle "
+"Gremienadmins öffentlich einsehbar."
+
+msgid "Meeting titel"
+msgstr "Veranstaltungstitel"
 
 msgid "Meetings"
 msgstr "Veranstaltungen"
@@ -2198,6 +2273,9 @@ msgstr "Nächste Zustände"
 msgid "No"
 msgstr "Nein"
 
+msgid "No admin role"
+msgstr "Keine Adminrolle"
+
 msgid "No category"
 msgstr "Kein Sachgebiet"
 
@@ -2215,6 +2293,9 @@ msgstr "Keine Chat-Gruppen vorhanden."
 
 msgid "No comment"
 msgstr "Kein Kommentar"
+
+msgid "No committee admin"
+msgstr "Kein Gremienadmin"
 
 msgid "No concernment"
 msgstr "Nichtbefassung"
@@ -2254,6 +2335,9 @@ msgstr "Es wurde noch keine Veranstaltung ausgewählt."
 
 msgid "No motion block set"
 msgstr "kein Antragsblock gesetzt"
+
+msgid "No one has voted for this poll"
+msgstr "Niemand hat für diese Abstimmung gestimmt."
 
 msgid "No options found"
 msgstr "Keine Optionen gefunden"
@@ -2435,6 +2519,9 @@ msgstr "Optionen"
 
 msgid "Organization"
 msgstr "Organisation"
+
+msgid "Organization admin"
+msgstr "Organisationsadmin"
 
 msgid "Organization specific information"
 msgstr "Organisationsspezifische Informationen"
@@ -2690,6 +2777,9 @@ msgstr "Öffentlich"
 msgid "Public item"
 msgstr "Öffentlicher Eintrag"
 
+msgid "Public template"
+msgstr "Öffentliche Vorlage"
+
 msgid "Publish"
 msgstr "Veröffentlichen"
 
@@ -2835,8 +2925,14 @@ msgstr ""
 "Erforderliche Komma- oder Semikolon-separierte Werte mit diesen Spaltennamen"
 " in der ersten Zeile:"
 
+msgid "Required permissions to view this page:"
+msgstr "Erforderliches Recht um diese Seite zu sehen:"
+
 msgid "Reset"
 msgstr "Zurücksetzen"
+
+msgid "Reset cache"
+msgstr "Cache leeren"
 
 msgid "Reset password"
 msgstr "Passwort zurücksetzen"
@@ -2970,9 +3066,6 @@ msgstr "Als Eltern setzen"
 
 msgid "Set as reference projector"
 msgstr "Als Referenzprojektor setzen"
-
-msgid "Set as template meeting"
-msgstr "Als Veranstaltungsvorlage markieren"
 
 msgid "Set category"
 msgstr "Sachgebiet setzen"
@@ -3197,8 +3290,8 @@ msgstr "Anträge sortieren"
 msgid "Sort motions by"
 msgstr "Anträge sortieren nach"
 
-msgid "Sort name of participants by"
-msgstr "Namen der Teilnehmenden sortieren nach"
+msgid "Sort workflow"
+msgstr "Arbeitsablauf sortieren"
 
 msgid "Speakers"
 msgstr "Redner*innen"
@@ -3293,6 +3386,9 @@ msgstr "Zusammenfassung der Änderungen"
 msgid "Summary of changes:"
 msgstr "Zusammenfassung der Änderungen:"
 
+msgid "Superadmin"
+msgstr "Superadmin"
+
 msgid "Superadmin settings"
 msgstr "Superadmin-Einstellungen"
 
@@ -3319,9 +3415,6 @@ msgstr "Schlagwort"
 
 msgid "Tags"
 msgstr "Schlagwörter"
-
-msgid "Template meeting"
-msgstr "Veranstaltungsvorlage"
 
 msgid "Text"
 msgstr "Text"
@@ -3411,6 +3504,9 @@ msgstr "Der Antragstext darf nicht leer sein."
 msgid "The title is required"
 msgstr "Ein Titel ist erforderlich"
 
+msgid "There are not enough options."
+msgstr "Es gibt nicht genug Optionen."
+
 msgid "There are some columns that do not match the template"
 msgstr "Es gibt einige Spalten, die nicht mit der Vorlage übereinstimmen"
 
@@ -3486,6 +3582,12 @@ msgid ""
 "This will add or remove the following submitters for all selected motions:"
 msgstr ""
 "Folgende Antragsteller werden für die ausgewählten Anträge hinzugefügt oder "
+"entfernt:"
+
+msgid ""
+"This will add or remove the following tags for all selected agenda items:"
+msgstr ""
+"Folgende Schlagwörter werden für die ausgewählten Einträge hinzugefügt oder "
 "entfernt:"
 
 msgid "This will add or remove the following tags for all selected motions:"
@@ -3578,6 +3680,12 @@ msgstr "unerledigt"
 msgid "Unique speakers"
 msgstr "Eindeutige Redner*innen"
 
+msgid "Unknown"
+msgstr "Unbekannt"
+
+msgid "Unsaved changes will not be applied."
+msgstr "Nicht gespeicherte Änderungen werden nicht übernommen."
+
 msgid "Unsupport"
 msgstr "Unterstützung zurückziehen"
 
@@ -3610,9 +3718,6 @@ msgstr ""
 
 msgid "User not found."
 msgstr "Benutzer nicht gefunden."
-
-msgid "User permission"
-msgstr "Benutzerberechtigung"
 
 msgid "Username"
 msgstr "Benutzername"
@@ -3855,11 +3960,6 @@ msgid ""
 "You cannot change the recommendation of motions in different workflows!"
 msgstr ""
 "Das Ändern der Empfehlung von Anträgen in verschiedenen Arbeitsabläufen ist "
-"nicht möglich."
-
-msgid "You cannot change the state of motions in different workflows!"
-msgstr ""
-"Das Ändern des Status von Anträgen in verschiedenen Arbeitsabläufen ist "
 "nicht möglich."
 
 msgid ""
@@ -4164,6 +4264,9 @@ msgstr "oder"
 
 msgid "outside"
 msgstr "außerhalb"
+
+msgid "participants"
+msgstr "Teilnehmende"
 
 msgid "participants-example"
 msgstr "Teilnehmende-Beispiel"

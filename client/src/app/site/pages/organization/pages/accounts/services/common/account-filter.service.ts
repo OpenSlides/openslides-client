@@ -25,35 +25,11 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
-                property: `isLastEmailSend`,
-                label: this.translate.instant(`Last email send`),
-                options: [
-                    { condition: true, label: this.translate.instant(`Got an email`) },
-                    { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
-                ]
-            },
-            {
-                property: `isVoteWeightOne`,
-                label: this.translate.instant(`Vote weight`),
-                options: [
-                    { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
-                    { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
-                ]
-            },
-            {
                 property: `is_physical_person`,
                 label: this.translate.instant(`Natural person`),
                 options: [
                     { condition: true, label: this.translate.instant(`Is a natural person`) },
                     { condition: [false, null], label: this.translate.instant(`Is no natural person`) }
-                ]
-            },
-            {
-                property: `hasEmail`,
-                label: this.translate.instant(`Email address known`),
-                options: [
-                    { condition: true, label: this.translate.instant(`Has an email address`) },
-                    { condition: [false, null], label: this.translate.instant(`Has no email address`) }
                 ]
             },
             {
@@ -67,13 +43,45 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
+                property: `hasEmail`,
+                label: this.translate.instant(`Email address`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has an email address`) },
+                    { condition: [false, null], label: this.translate.instant(`Has no email address`) }
+                ]
+            },
+            {
+                property: `isLastEmailSend`,
+                label: this.translate.instant(`Last email send`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Got an email`) },
+                    { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
+                ]
+            },
+            {
                 property: `organization_management_level`,
-                label: this.translate.instant(`Organization management`),
+                label: this.translate.instant(`Administration roles`),
                 options: [
                     { condition: `superadmin`, label: this.translate.instant(`Superadmin`) },
-                    { condition: `can_manage_organization`, label: this.translate.instant(`Administrator`) },
-                    { condition: `can_manage_users`, label: this.translate.instant(`Account management`) },
-                    { condition: null, label: this.translate.instant(`No management permissions`) }
+                    { condition: `can_manage_organization`, label: this.translate.instant(`Organization admin`) },
+                    { condition: `can_manage_users`, label: this.translate.instant(`Account admin`) },
+                    { condition: null, label: this.translate.instant(`No admin role`) }
+                ]
+            },
+            {
+                property: `isCommitteeManager`,
+                label: this.translate.instant(`Committee admin`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Is committee admin`) },
+                    { condition: [false, null], label: this.translate.instant(`No committee admin`) }
+                ]
+            },
+            {
+                property: `isVoteWeightOne`,
+                label: this.translate.instant(`Vote weight`),
+                options: [
+                    { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
+                    { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
                 ]
             }
         ];

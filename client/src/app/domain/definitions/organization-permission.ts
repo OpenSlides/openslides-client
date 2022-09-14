@@ -34,8 +34,8 @@ export const cmlVerbose = {
 
 export const omlVerbose = {
     superadmin: `Superadmin`,
-    can_manage_organization: `Administrator`,
-    can_manage_users: `Account management`
+    can_manage_organization: `Organization admin`,
+    can_manage_users: `Account admin`
 };
 
 export function getOmlVerboseName(omlKey: keyof OMLMapping): string {

@@ -120,7 +120,9 @@ export class CommitteeMeetingPreviewComponent {
                 await this.meetingRepo.update({ set_as_template: false }, { meeting: this.meeting });
             }
         } else {
-            const title = this.translate.instant(`Should this meeting really be made available as a public template?`);
+            const title = this.translate.instant(
+                `Do you really want to make available this meeting as a public template?`
+            );
             content =
                 this.translate.instant(
                     `Meeting templates and the data they contain are publicly viewable by all committee administrators.`

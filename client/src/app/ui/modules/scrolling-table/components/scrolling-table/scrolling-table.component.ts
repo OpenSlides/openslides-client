@@ -77,9 +77,13 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         if (value instanceof Observable) {
             this.updateSubscription(
                 SELECTION_MODE_SUBSCRIPTION,
-                value.subscribe(is => (this._isSelectionMode = is))
+                value.subscribe(is => {
+                    this._currentSelection = {};
+                    return (this._isSelectionMode = is);
+                })
             );
         } else {
+            this._currentSelection = {};
             this._isSelectionMode = value;
         }
     }
@@ -123,6 +127,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     private _firstRowClicked: T | null = null;
     private _isHoldingShiftKey = false;
     private _isSelectionMode = false;
+    private _currentSelection: Mapable<T> = {};
     private _source: T[] = [];
     private _dataSource = new BehaviorSubject<T[]>([]);
     private _dataSourceMap: Mapable<DataSourceProvider<T>> = {};
@@ -196,7 +201,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     public isSelected(row: T): boolean {
-        return this._dataSourceMap[row.id].isSelected;
+        return this._currentSelection[row.id] !== undefined;
     }
 
     private buildDataTable(): void {
@@ -228,6 +233,10 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             isSelected: this._dataSourceMap[item.id]?.isSelected || false,
             row: item
         };
+
+        if (this._currentSelection[item.id]) {
+            this._currentSelection[item.id] = item;
+        }
     }
 
     private deleteFromDataSourceMap(toDeleteIds: number[]): void {
@@ -248,14 +257,21 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         for (const row of rows) {
             const index = row.id;
             this._dataSourceMap[index].isSelected = isChecked ?? !this._dataSourceMap[index].isSelected;
+            if (this._dataSourceMap[index].isSelected) {
+                this._currentSelection[index] = row;
+            } else {
+                delete this._currentSelection[index];
+            }
         }
     }
 
     private onAfterSelectionChanged(affectedRows: T[]): void {
-        const rows = Object.values(this._dataSourceMap)
-            .filter(provider => provider.isSelected)
-            .map(provider => provider.row);
-        this.selectionChanged.emit({ affectedRows, selected: rows.length, selectedRows: rows });
+        const rows = Object.values(this._currentSelection);
+        this.selectionChanged.emit({
+            affectedRows,
+            selected: rows.length,
+            selectedRows: rows
+        });
     }
 
     private refresh(): void {
