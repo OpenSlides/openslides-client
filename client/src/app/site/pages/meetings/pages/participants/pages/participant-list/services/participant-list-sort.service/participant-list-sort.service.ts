@@ -33,7 +33,7 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         { property: `is_physical_person`, label: `Is a natural person` },
         { property: `number`, label: `Participant number` },
         { property: `structure_level`, label: `Structure level` },
-        { property: `vote_weight`, label: `Vote weight` },
+        { property: `voteWeight`, label: `Vote weight` },
         { property: `comment` }
         // TODO email send?
     ];

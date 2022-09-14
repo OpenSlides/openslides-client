@@ -224,11 +224,15 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get isVoteWeightOne(): boolean {
-        return this.default_vote_weight === 1;
+        return (!this.getEnsuredActiveMeetingId() ? this.default_vote_weight : this.vote_weight()) === 1;
     }
 
     public get isVoteRightDelegated(): boolean {
         return !!this.vote_delegated_to_id(this.getEnsuredActiveMeetingId());
+    }
+
+    public get voteWeight(): number {
+        return this.vote_weight() ?? this.default_vote_weight;
     }
 
     public get isVoteCountable(): boolean {
