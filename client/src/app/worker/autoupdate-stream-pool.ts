@@ -156,11 +156,21 @@ export class AutoupdateStreamPool {
         return !!data?.healthy;
     }
 
-    private async waitUntilEndpointHealthy(): Promise<void> {
-        // TODO: collect waits and do only one health check
-        while (!(await this.isEndpointHealthy())) {
-            await new Promise(f => setTimeout(f, 3000));
+    private _waitEndpointHealthyPromise: Promise<void> | null = null;
+    private waitUntilEndpointHealthy(): Promise<void> {
+        if (!this._waitEndpointHealthyPromise) {
+            this._waitEndpointHealthyPromise = (async () => {
+                let timeout = 0;
+                while (!(await this.isEndpointHealthy())) {
+                    timeout = Math.min(timeout + 1000, 10000);
+                    await new Promise(f => setTimeout(f, timeout));
+                }
+
+                this._waitEndpointHealthyPromise = null;
+            })();
         }
+
+        return this._waitEndpointHealthyPromise;
     }
 
     private async handleError(stream: AutoupdateStream, error: any): Promise<void> {
