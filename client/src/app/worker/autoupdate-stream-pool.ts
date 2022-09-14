@@ -17,6 +17,8 @@ export class AutoupdateStreamPool {
     private streams: AutoupdateStream[] = [];
     private subscriptions: { [key: number]: AutoupdateSubscription } = {};
 
+    private _waitEndpointHealthyPromise: Promise<void> | null = null;
+
     constructor(
         private endpoint: {
             url: string;
@@ -47,7 +49,7 @@ export class AutoupdateStreamPool {
     /**
      * Resets fail counts and reconnects all streams
      */
-    public reconnectAll(onlyInactive?: boolean) {
+    public reconnectAll(onlyInactive?: boolean): void {
         for (let stream of this.streams) {
             stream.failedCounter = 0;
             this.connectStream(stream, !onlyInactive);
@@ -60,7 +62,7 @@ export class AutoupdateStreamPool {
      *
      * @param online True for online, false for offline
      */
-    public updateOnlineStatus(online: boolean) {
+    public updateOnlineStatus(online: boolean): void {
         if (online) {
             clearTimeout(this.onlineStatusStopTimeout);
             this.reconnectAll(true);
@@ -78,7 +80,7 @@ export class AutoupdateStreamPool {
      *
      * @param stream The stream to be removed
      */
-    public removeStream(stream: AutoupdateStream) {
+    public removeStream(stream: AutoupdateStream): void {
         for (let subscription of stream.subscriptions) {
             if (this.subscriptions[subscription.id]) {
                 delete this.subscriptions[subscription.id];
@@ -96,7 +98,7 @@ export class AutoupdateStreamPool {
      *
      * @param endpoint The new endpoint configuration
      */
-    public setEndpoint(endpoint: { url?: string; healthUrl?: string; method?: string; authToken?: string }) {
+    public setEndpoint(endpoint: { url?: string; healthUrl?: string; method?: string; authToken?: string }): void {
         this.endpoint = Object.assign(this.endpoint, endpoint);
 
         for (let stream of this.streams) {
@@ -156,7 +158,7 @@ export class AutoupdateStreamPool {
         return !!data?.healthy;
     }
 
-    private sendToAll(action: string, content?: any) {
+    private sendToAll(action: string, content?: any): void {
         const ports: MessagePort[] = [];
         for (const stream of this.streams) {
             for (const subscription of stream.subscriptions) {
@@ -177,7 +179,6 @@ export class AutoupdateStreamPool {
         }
     }
 
-    private _waitEndpointHealthyPromise: Promise<void> | null = null;
     private waitUntilEndpointHealthy(): Promise<void> {
         if (!this._waitEndpointHealthyPromise) {
             this.sendToAll(`status`, {
@@ -226,7 +227,7 @@ export class AutoupdateStreamPool {
         }
     }
 
-    private splitStream(stream: AutoupdateStream) {
+    private splitStream(stream: AutoupdateStream): void {
         stream.abort();
         const idx = this.streams.indexOf(stream);
         if (idx !== -1) {

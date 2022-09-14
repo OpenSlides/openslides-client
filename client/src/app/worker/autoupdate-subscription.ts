@@ -35,7 +35,7 @@ export class AutoupdateSubscription {
      *
      * @param port The MessagePort the id should be send to
      */
-    public publishSubscriptionId(port: MessagePort) {
+    public publishSubscriptionId(port: MessagePort): void {
         port.postMessage({
             sender: `autoupdate`,
             action: `set-streamid`,
@@ -52,7 +52,7 @@ export class AutoupdateSubscription {
      *
      * @param data The data to be processed
      */
-    public updateData(data: Object) {
+    public updateData(data: Object): void {
         if (this.currentData === null) {
             this.currentData = data;
         } else {
@@ -77,7 +77,7 @@ export class AutoupdateSubscription {
      *
      * @param data The error data
      */
-    public sendError(data: Object) {
+    public sendError(data: Object): void {
         for (let port of this.ports) {
             port.postMessage({
                 sender: `autoupdate`,
@@ -97,7 +97,7 @@ export class AutoupdateSubscription {
      *
      * @param port The port to be registered
      */
-    public addPort(port: MessagePort) {
+    public addPort(port: MessagePort): void {
         this.ports.push(port);
         this.publishSubscriptionId(port);
         this.resendTo(port);
@@ -112,7 +112,7 @@ export class AutoupdateSubscription {
      *
      * @param port The port to be removed
      */
-    public closePort(port: MessagePort) {
+    public closePort(port: MessagePort): void {
         let portIdx = this.ports.indexOf(port);
         if (portIdx !== -1) {
             this.ports.splice(portIdx, 1);
@@ -129,7 +129,7 @@ export class AutoupdateSubscription {
      *
      * @param port The MessagePort the data should be send to
      */
-    public resendTo(port: MessagePort) {
+    public resendTo(port: MessagePort): void {
         if (this.currentData !== null) {
             port.postMessage({
                 sender: `autoupdate`,

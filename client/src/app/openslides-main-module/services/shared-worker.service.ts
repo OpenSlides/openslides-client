@@ -5,8 +5,9 @@ import { filter, Observable, Subscriber } from 'rxjs';
     providedIn: `root`
 })
 export class SharedWorkerService {
-    private conn: MessagePort | Window;
     public messages: Observable<any>;
+
+    private conn: MessagePort | Window;
     private ready = false;
 
     constructor() {
@@ -26,7 +27,26 @@ export class SharedWorkerService {
         });
     }
 
-    private registerMessageListener(subscriber: Subscriber<any>) {
+    /**
+     * Listen to messages from the worker of a specific sender
+     *
+     * @param sender Name of the sender
+     */
+    public listenTo(sender: string): Observable<any> {
+        return this.messages.pipe(filter(data =>  data?.sender === sender));
+    }
+
+    /**
+     * Sends a message to the worker
+     *
+     * @param receiver Name of the receiver
+     * @param msg Content of the message
+     */
+    public sendMessage(receiver: string, msg: any): void {
+        this.sendRawMessage({ receiver, msg });
+    }
+
+    private registerMessageListener(subscriber: Subscriber<any>): void {
         this.conn.addEventListener(`message`, (e: any) => {
             if (this.ready && e?.data?.sender) {
                 subscriber.next(e?.data);
@@ -36,34 +56,7 @@ export class SharedWorkerService {
         });
     }
 
-    /**
-     * Listen to messages from the worker of a specific sender
-     *
-     * @param sender Name of the sender
-     */
-    public listenTo(sender: string) {
-        return this.messages.pipe(
-            filter(data => {
-                try {
-                    return data.sender === sender;
-                } catch (e) {
-                    return false;
-                }
-            })
-        );
-    }
-
-    /**
-     * Sends a message to the worker
-     *
-     * @param receiver Name of the receiver
-     * @param msg Content of the message
-     */
-    public sendMessage(receiver: string, msg: any) {
-        this.sendRawMessage({ receiver, msg });
-    }
-
-    private sendRawMessage(message: any) {
+    private sendRawMessage(message: any): void {
         if (this.ready) {
             this.conn.postMessage(message);
         } else {

@@ -26,7 +26,7 @@ if (!environment.production) {
     };
 }
 
-function openConnection(ctx: MessagePort, { streamId, queryParams = ``, request, requestHash, description }) {
+function openConnection(ctx: MessagePort, { streamId, queryParams = ``, request, requestHash, description }): void {
     function getRequestCategory(description: string, _request: Object): 'required' | 'other' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
@@ -56,7 +56,7 @@ function openConnection(ctx: MessagePort, { streamId, queryParams = ``, request,
     }, 5);
 }
 
-function closeConnection(ctx: MessagePort, { streamId }) {
+function closeConnection(ctx: MessagePort, { streamId }): void {
     const subscription = autoupdatePool.getSubscriptionById(streamId);
     if (!subscription) {
         return;
@@ -66,7 +66,7 @@ function closeConnection(ctx: MessagePort, { streamId }) {
 }
 
 let currentlyOnline = navigator.onLine;
-function updateOnlineStatus() {
+function updateOnlineStatus(): void {
     if (currentlyOnline === navigator.onLine) {
         return;
     }
@@ -75,7 +75,7 @@ function updateOnlineStatus() {
     autoupdatePool.updateOnlineStatus(currentlyOnline);
 }
 
-export function addAutoupdateListener(context: any) {
+export function addAutoupdateListener(context: any): void {
     context.addEventListener(`message`, e => {
         const receiver = e.data?.receiver;
         if (!receiver) {

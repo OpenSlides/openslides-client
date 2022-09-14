@@ -89,7 +89,7 @@ export class AutoupdateCommunicationService {
      *
      * @param name Name of the endpoint inside endpointService
      */
-    public setEndpoint(name?: string) {
+    public setEndpoint(name?: string): void {
         this.endpointName = name || this.endpointName;
         const config = this.endpointService.getEndpoint(this.endpointName);
 
@@ -134,7 +134,7 @@ export class AutoupdateCommunicationService {
      *
      * @param streamId Id of the stream
      */
-    public close(streamId: Id) {
+    public close(streamId: Id): void {
         this.sharedWorker.sendMessage(`autoupdate`, {
             action: `close`,
             params: {
@@ -150,7 +150,7 @@ export class AutoupdateCommunicationService {
         return this.autoupdateDataObservable;
     }
 
-    private registerConnectionStatusListener() {
+    private registerConnectionStatusListener(): void {
         addEventListener(`offline`, () => {
             this.sharedWorker.sendMessage(`autoupdate`, {
                 action: `set-connection-status`,

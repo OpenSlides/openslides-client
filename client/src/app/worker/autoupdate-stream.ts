@@ -9,14 +9,15 @@ import {
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
 export class AutoupdateStream {
+    public failedCounter: number = 0;
+
     private abortCtrl: AbortController = undefined;
     private activeSubscriptions: AutoupdateSubscription[] = null;
     private active: boolean = false;
     private error: any | ErrorDescription = null;
-    public failedCounter: number = 0;
     private restart: boolean = false;
 
-    public get subscriptions() {
+    public get subscriptions(): AutoupdateSubscription[] {
         return this._subscriptions;
     }
 
@@ -42,7 +43,7 @@ export class AutoupdateStream {
     /**
      * Closes the stream
      */
-    public abort() {
+    public abort(): void {
         if (this.abortCtrl !== undefined) {
             // @ts-ignore
             this.abortCtrl.abort();
@@ -90,7 +91,47 @@ export class AutoupdateStream {
         return { stopReason: `resolved` };
     }
 
-    private async doRequest() {
+    /**
+     * Marks a subscription as active
+     *
+     * @param subscription The subscription that should be marked active
+     */
+    public notifySubscriptionUsed(subscription: AutoupdateSubscription): void {
+        const idx = this.activeSubscriptions.indexOf(subscription);
+        if (idx === -1) {
+            this.activeSubscriptions.push(subscription);
+        }
+    }
+
+    /**
+     * Marks a subscription as inactive
+     *
+     * @param subscription The subscription that should be marked inactive
+     */
+    public notifySubscriptionEmpty(subscription: AutoupdateSubscription): void {
+        const idx = this.activeSubscriptions.indexOf(subscription);
+        if (idx !== -1) {
+            this.activeSubscriptions.splice(idx, 1);
+        }
+
+        if (!this.activeSubscriptions.length) {
+            this.abort();
+        }
+    }
+
+    /**
+     * Sets the endpoint and restarts the connection with
+     * the new configuration
+     *
+     * @param endpoint configuration of the endpoint
+     */
+    public updateEndpoint(endpoint: any): void {
+        this.endpoint = endpoint;
+        this.restart = true;
+        this.abort();
+    }
+
+    private async doRequest(): Promise<void> {
         this.active = true;
 
         if (this.activeSubscriptions === null) {
@@ -170,47 +211,7 @@ export class AutoupdateStream {
         }
     }
 
-    /**
-     * Marks a subscription as active
-     *
-     * @param subscription The subscription that should be marked active
-     */
-    public notifySubscriptionUsed(subscription: AutoupdateSubscription) {
-        const idx = this.activeSubscriptions.indexOf(subscription);
-        if (idx === -1) {
-            this.activeSubscriptions.push(subscription);
-        }
-    }
-
-    /**
-     * Marks a subscription as inactive
-     *
-     * @param subscription The subscription that should be marked inactive
-     */
-    public notifySubscriptionEmpty(subscription: AutoupdateSubscription) {
-        const idx = this.activeSubscriptions.indexOf(subscription);
-        if (idx !== -1) {
-            this.activeSubscriptions.splice(idx, 1);
-        }
-
-        if (!this.activeSubscriptions.length) {
-            this.abort();
-        }
-    }
-
-    /**
-     * Sets the endpoint and restarts the connection with
-     * the new configuration
-     *
-     * @param endpoint configuration of the endpoint
-     */
-    public updateEndpoint(endpoint: any) {
-        this.endpoint = endpoint;
-        this.restart = true;
-        this.abort();
-    }
-
-    private handleContent(data: any) {
+    private handleContent(data: any): void {
         if (data instanceof ErrorDescription || isCommunicationError(data) || isCommunicationErrorWrapper(data)) {
             this.error = data;
             this.sendErrorToSubscriptions(data);
@@ -220,7 +221,7 @@ export class AutoupdateStream {
         }
     }
 
-    private sendToSubscriptions(data: any) {
+    private sendToSubscriptions(data: any): void {
         for (let subscription of this.subscriptions) {
             // TODO: It might be possible to only send data to
             // the subscriptions that actually need it
@@ -228,7 +229,7 @@ export class AutoupdateStream {
         }
     }
 
-    private sendErrorToSubscriptions(data: any) {
+    private sendErrorToSubscriptions(data: any): void {
         for (let subscription of this.subscriptions) {
             subscription.sendError(data);
         }
@@ -242,7 +243,7 @@ export class AutoupdateStream {
         }
     }
 
-    private decode(data: Uint8Array) {
+    private decode(data: Uint8Array): string {
         const content = new TextDecoder().decode(data);
         try {
             const atobbed = Uint8Array.from(atob(content), c => c.charCodeAt(0));
