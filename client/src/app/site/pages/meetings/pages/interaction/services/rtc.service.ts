@@ -257,8 +257,6 @@ export class RtcService {
         }
         this.api = new JitsiMeetExternalAPI(this.jitsiConfig?.JITSI_DOMAIN, this.options);
         this.isJitsiActiveSubject.next(true);
-        const jitsiName = this.operator.user.getName();
-        this.api.executeCommand(`displayName`, jitsiName);
         this.loadApiCallbacks();
     }
 
@@ -379,11 +377,15 @@ export class RtcService {
 
     private setOptions(): void {
         this.setJitsiMeetUrl();
+        const jitsiName = this.operator.user.getName();
         this.options = {
             roomName: this.actualRoomName,
             parentNode: this.jitsiNode.nativeElement,
             configOverwrite,
-            interfaceConfigOverwrite
+            interfaceConfigOverwrite,
+            userInfo: {
+                displayName: jitsiName
+            }
         };
     }
 
