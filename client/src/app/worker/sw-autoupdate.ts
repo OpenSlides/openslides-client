@@ -1,7 +1,5 @@
 import { environment } from 'src/environments/environment';
 
-import { ErrorDescription } from '../gateways/http-stream/stream-utils';
-import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateStreamPool } from './autoupdate-stream-pool';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
@@ -13,11 +11,11 @@ const autoupdatePool = new AutoupdateStreamPool({
 });
 
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
-    misc: [],
+    required: [],
     other: []
 };
 let openTimeouts = {
-    misc: null,
+    required: null,
     other: null
 };
 
@@ -28,83 +26,11 @@ if (!environment.production) {
     };
 }
 
-let healthCheckInterval = 0;
-let healthCheck: Promise<void>;
-function handleError(stream: AutoupdateStream, error: any | ErrorDescription) {
-    /*
-    if (!healthCheck) {
-        healthCheck = new Promise((resolve, reject) => {
-            fetch(endpoint.healthUrl)
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-
-                    return { healthy: false };
-                })
-                .then(data => {
-                    if (data.healthy) {
-                        resolve();
-                    } else {
-                        reject();
-                    }
-                })
-                .finally(() => {
-                    healthCheck = null;
-                });
-        });
-    }
-
-    healthCheck
-        .then(() => {
-            healthCheckInterval = 0;
-            if (stream.failedConnects <= 3 && error?.reason !== ErrorType.CLIENT) {
-                stream.start().then(handleStreamResolve(stream));
-            } else if (
-                stream.failedConnects === 4 &&
-                !(error instanceof ErrorDescription) &&
-                (isCommunicationError(error) || isCommunicationErrorWrapper(error)) &&
-                stream.subscriptions.length > 1
-            ) {
-                splitStream(stream);
-            } else {
-                for (let subscription of stream.subscriptions) {
-                    subscription.sendError({
-                        reason: `Repeated failure or client error`,
-                        terminate: true
-                    });
-                }
-            }
-        })
-        .catch(() => {
-            // increase healthCheckInterval up to 10 seconds on repeated failure
-            healthCheckInterval = Math.min(healthCheckInterval + 1000, 10000);
-            setTimeout(() => {
-                handleError(stream, error);
-            }, healthCheckInterval);
-        });
-        */
-}
-
-function handleStreamResolve(stream: AutoupdateStream): (result: any) => void {
-    return ({ stopReason, error }) => {
-        if (stopReason === `unused`) {
-            // removeStream(stream);
-        } else if (stopReason === `error`) {
-            handleError(stream, error);
-        } else if (stopReason === `resolved`) {
-            handleError(stream, undefined);
-        }
-    };
-}
-
 function openConnection(ctx: MessagePort, { streamId, queryParams = ``, request, requestHash, description }) {
-    function getRequestCategory(description: string, _request: Object): 'misc' | 'other' {
-        if (
-            [`theme_list:subscription`, `operator:subscription`, `organization:subscription`].indexOf(description) !==
-            -1
-        ) {
-            return `misc`;
+    function getRequestCategory(description: string, _request: Object): 'required' | 'other' {
+        const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
+        if (required.indexOf(description) !== -1) {
+            return `required`;
         }
 
         return `other`;

@@ -1,3 +1,4 @@
+import { ErrorDescription, ErrorType, isCommunicationError, isCommunicationErrorWrapper } from '../gateways/http-stream/stream-utils';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 
@@ -92,12 +93,58 @@ export class AutoupdateStreamPool {
         return null;
     }
 
-    private async connectStream(stream: AutoupdateStream, force?: boolean) {
-        try {
-            await stream.start(force);
-        } catch (e) {}
+    private async connectStream(stream: AutoupdateStream, force?: boolean): Promise<void> {
+        const { stopReason, error } = await stream.start(force);
 
-        // TODO: Reconnect if not aborted
+        if (stopReason === `unused`) {
+            this.removeStream(stream);
+        } else if (stopReason === `error`) {
+            await this.handleError(stream, error);
+        } else if (stopReason === `resolved`) {
+            await this.handleError(stream, undefined);
+        }
+    }
+
+    private async isEndpointHealthy(): Promise<boolean> {
+        const data = await fetch(this.endpoint.healthUrl).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+
+            return { healthy: false };
+        });
+
+        return !!data?.healthy;
+    }
+
+    private async waitUntilEndpointHealthy(): Promise<void> {
+        // TODO: collect waits and do only one health check
+        while(!(await this.isEndpointHealthy())) {
+            await new Promise(f => setTimeout(f, 3000));
+        }
+    }
+
+    private async handleError(stream: AutoupdateStream, error: any): Promise<void> {
+        await this.waitUntilEndpointHealthy();
+
+
+        if (stream.failedConnects <= 3 && error?.reason !== ErrorType.CLIENT) {
+            await this.connectStream(stream);
+        } else if (
+            stream.failedConnects === 4 &&
+            !(error instanceof ErrorDescription) &&
+            (isCommunicationError(error) || isCommunicationErrorWrapper(error)) &&
+            stream.subscriptions.length > 1
+        ) {
+            this.splitStream(stream);
+        } else {
+            for (let subscription of stream.subscriptions) {
+                subscription.sendError({
+                    reason: `Repeated failure or client error`,
+                    terminate: true
+                });
+            }
+        }
     }
 
     private splitStream(stream: AutoupdateStream) {
@@ -109,7 +156,7 @@ export class AutoupdateStreamPool {
 
         for (let subscription of stream.subscriptions) {
             const newStream = stream.cloneWithSubscriptions([subscription]);
-            newStream.failedCounter = 3;
+            newStream.failedCounter = POOL_CONFIG.RETRY_AMOUNT;
             this.streams.push(newStream);
             this.connectStream(newStream);
         }
