@@ -32,7 +32,6 @@ export class AutoupdateCommunicationService {
                     dataSubscription.next(data.content);
                 } else if (data?.action === `receive-error`) {
                     if (data?.content?.data?.terminate) {
-                        // TODO: Open error dialog with manual reconnect button
                         this.matSnackBar
                             .open(
                                 this.translate.instant(`Error talking to autoupdate service`),
