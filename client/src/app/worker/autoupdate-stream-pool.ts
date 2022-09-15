@@ -167,6 +167,10 @@ export class AutoupdateStreamPool {
     }
 
     private sendToAll(action: string, content?: any): void {
+        // TODO: This in inefficient, but as long as this is only used by
+        // waitUntilEndpointHealthy this should not be a problem.
+        // If we need this for other things that happen more frequently
+        // we need to implement a management mechanism for MessagePorts
         this.updateMessagePorts();
 
         for (const port of this.messagePorts) {
