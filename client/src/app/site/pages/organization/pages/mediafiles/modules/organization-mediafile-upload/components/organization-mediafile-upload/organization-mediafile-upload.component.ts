@@ -44,11 +44,6 @@ export class OrganizationMediafileUploadComponent implements OnInit {
      */
     public uploadSuccess(event: UploadSuccessEvent): void {
         this.commonService.navigateToDirectoryPage(this.repo.getViewModel(event.parentId));
-        // const parts: any[] = [`mediafiles`];
-        // if (event.parentId) {
-        //     parts.push(event.parentId);
-        // }
-        // this.router.navigate(parts);
     }
 
     /**
@@ -57,15 +52,6 @@ export class OrganizationMediafileUploadComponent implements OnInit {
      * @param error
      */
     public showError(error: string): void {
-        // this.raiseError(error);
-    }
-
-    /**
-     * Changes the upload strategy between synchronous and parallel
-     *
-     * @param isParallel true or false, whether parallel upload is required or not
-     */
-    public setUploadStrategy(isParallel: boolean): void {
-        this.parallel = isParallel;
+        throw new Error(error);
     }
 }

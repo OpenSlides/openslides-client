@@ -39,7 +39,7 @@ export class MediafileCommonService {
     ): void {
         let navCmds: any[] = [...(this.activeMeetingId ? [this.activeMeetingId] : []), `mediafiles`];
         if (prefix) {
-            navCmds = [`/${navCmds[0]}`, ...navCmds.filter((date, index) => index > 0)];
+            navCmds = [`/`].concat(navCmds);
         }
         if (directory) {
             navCmds.push(directory.id);
