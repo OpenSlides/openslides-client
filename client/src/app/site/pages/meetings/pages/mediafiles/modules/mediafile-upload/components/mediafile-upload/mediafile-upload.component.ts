@@ -16,10 +16,6 @@ import { MediafileCommonService } from '../../../../services/mediafile-common.se
 export class MediafileUploadComponent extends OrganizationMediafileUploadComponent implements OnInit {
     public availableGroups: Observable<ViewGroup[]> | null = null;
 
-    // public get uploadFn(): (file: any) => Promise<Identifiable> {
-    //     return file => this.repo.createFile(file);
-    // }
-
     public constructor(
         route: ActivatedRoute,
         repo: MediafileControllerService,
@@ -33,33 +29,4 @@ export class MediafileUploadComponent extends OrganizationMediafileUploadCompone
         super.ngOnInit();
         this.availableGroups = this.groupsRepo.getViewModelListObservable();
     }
-
-    // /**
-    //  * Handler for successful uploads
-    //  */
-    // public uploadSuccess(event: UploadSuccessEvent): void {
-    //     const parts = [this.activeMeetingIdService.meetingId, `mediafiles`];
-    //     if (event.parentId) {
-    //         parts.push(event.parentId);
-    //     }
-    //     this.router.navigate(parts);
-    // }
-
-    // /**
-    //  * Handler for upload errors
-    //  *
-    //  * @param error
-    //  */
-    // public showError(error: string): void {
-    //     // this.raiseError(error);
-    // }
-
-    // /**
-    //  * Changes the upload strategy between synchronous and parallel
-    //  *
-    //  * @param isParallel true or false, whether parallel upload is required or not
-    //  */
-    // public setUploadStrategy(isParallel: boolean): void {
-    //     this.parallel = isParallel;
-    // }
 }

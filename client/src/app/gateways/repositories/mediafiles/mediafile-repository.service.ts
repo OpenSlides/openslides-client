@@ -68,7 +68,6 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     }
 
     public async uploadFile(partialMediafile: any): Promise<Identifiable> {
-        // TODO: The token part is a workaround for the current problems with uploading an undefined token
         const variables: { [key: string]: any } = this.activeMeetingId
             ? { access_group_ids: partialMediafile.access_group_ids }
             : { token: partialMediafile.token };
