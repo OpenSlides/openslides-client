@@ -1,4 +1,5 @@
 import { AutoupdateStream } from './autoupdate-stream';
+import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from './interfaces-autoupdate';
 
 export class AutoupdateSubscription {
     /**
@@ -43,7 +44,7 @@ export class AutoupdateSubscription {
                 requestHash: this.requestHash,
                 streamId: this.id
             }
-        });
+        } as AutoupdateSetStreamId);
     }
 
     /**
@@ -68,7 +69,7 @@ export class AutoupdateSubscription {
                     data: data,
                     description: this.description
                 }
-            });
+            } as AutoupdateReceiveData);
         }
     }
 
@@ -87,7 +88,7 @@ export class AutoupdateSubscription {
                     data: data,
                     description: this.description
                 }
-            });
+            } as AutoupdateReceiveError);
         }
     }
 
@@ -139,7 +140,7 @@ export class AutoupdateSubscription {
                     data: this.currentData,
                     description: this.description
                 }
-            });
+            } as AutoupdateReceiveData);
         }
     }
 

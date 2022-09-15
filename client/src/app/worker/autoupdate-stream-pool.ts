@@ -6,6 +6,7 @@ import {
 } from '../gateways/http-stream/stream-utils';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
+import { AutoupdateSetEndpointParams, AutoupdateStatusContent } from './interfaces-autoupdate';
 
 const POOL_CONFIG = {
     RETRY_AMOUNT: 3,
@@ -20,14 +21,7 @@ export class AutoupdateStreamPool {
 
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
 
-    constructor(
-        private endpoint: {
-            url: string;
-            healthUrl: string;
-            method: string;
-            authToken: string;
-        }
-    ) {}
+    constructor(private endpoint: AutoupdateSetEndpointParams) {}
 
     /**
      * Opens a new stream with the specified subscriptions and params
@@ -99,7 +93,7 @@ export class AutoupdateStreamPool {
      *
      * @param endpoint The new endpoint configuration
      */
-    public setEndpoint(endpoint: { url?: string; healthUrl?: string; method?: string; authToken?: string }): void {
+    public setEndpoint(endpoint: AutoupdateSetEndpointParams): void {
         this.endpoint = Object.assign(this.endpoint, endpoint);
 
         for (let stream of this.streams) {
@@ -188,7 +182,7 @@ export class AutoupdateStreamPool {
         if (!this._waitEndpointHealthyPromise) {
             this.sendToAll(`status`, {
                 status: `unhealthy`
-            });
+            } as AutoupdateStatusContent);
         }
 
         if (!this._waitEndpointHealthyPromise) {
@@ -203,7 +197,7 @@ export class AutoupdateStreamPool {
 
                 this.sendToAll(`status`, {
                     status: `healthy`
-                });
+                } as AutoupdateStatusContent);
             })();
         }
 

@@ -7,6 +7,17 @@ import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
 import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
 import { djb2hash } from 'src/app/infrastructure/utils';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
+import {
+    AutoupdateCloseStream,
+    AutoupdateOpenStream,
+    AutoupdateReceiveData,
+    AutoupdateReceiveError,
+    AutoupdateReconnectInactive,
+    AutoupdateSetConnectionStatus,
+    AutoupdateSetEndpoint,
+    AutoupdateSetStreamId,
+    AutoupdateStatus
+} from 'src/app/worker/interfaces-autoupdate';
 
 import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
@@ -30,11 +41,13 @@ export class AutoupdateCommunicationService {
         private connectionStatusService: ConnectionStatusService
     ) {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
-            this.sharedWorker.listenTo(`autoupdate`).subscribe(data => {
-                if (data?.action === `receive-data` && data.content !== undefined) {
+            this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
+                if (msg?.action === `receive-data` && msg.content !== undefined) {
+                    const data = <AutoupdateReceiveData>msg;
                     dataSubscription.next(data.content);
-                } else if (data?.action === `receive-error`) {
-                    if (data?.content?.data?.terminate) {
+                } else if (msg?.action === `receive-error`) {
+                    const data = <AutoupdateReceiveError>msg;
+                    if (data.content.data?.terminate) {
                         this.matSnackBar
                             .open(
                                 this.translate.instant(`Error talking to autoupdate service`),
@@ -47,19 +60,21 @@ export class AutoupdateCommunicationService {
                             .subscribe(() => {
                                 this.sharedWorker.sendMessage(`autoupdate`, {
                                     action: `reconnect-inactive`
-                                });
+                                } as AutoupdateReconnectInactive);
                             });
-                    } else if (data?.content?.data?.reason === `HTTP error`) {
+                    } else if (data.content.data?.reason === `HTTP error`) {
                         console.error(data);
-                        if (data?.content?.data?.error.code === 403) {
+                        if (data.content?.data?.error.code === 403) {
                             this.setEndpoint();
                         }
                     }
-                } else if (data?.action === `set-streamid` && this.openResolvers.has(data?.content?.requestHash)) {
-                    this.openResolvers.get(data?.content?.requestHash)(data?.content?.streamId);
-                    this.openResolvers.delete(data?.content?.requestHash);
-                } else if (data?.action === `status` && this.autoupdateEndpointStatus !== data?.content.status) {
-                    this.autoupdateEndpointStatus = data?.content.status;
+                } else if (msg?.action === `set-streamid` && this.openResolvers.has(msg?.content?.requestHash)) {
+                    const data = <AutoupdateSetStreamId>msg;
+                    this.openResolvers.get(data.content.requestHash)(data.content?.streamId);
+                    this.openResolvers.delete(data.content.requestHash);
+                } else if (msg?.action === `status` && this.autoupdateEndpointStatus !== msg?.content.status) {
+                    const data = <AutoupdateStatus>msg;
+                    this.autoupdateEndpointStatus = data.content.status;
 
                     if (this.autoupdateEndpointStatus === `unhealthy`) {
                         this.connectionStatusService.goOffline({
@@ -101,7 +116,7 @@ export class AutoupdateCommunicationService {
                 healthUrl: config.healthUrl,
                 method: config.method
             }
-        });
+        } as AutoupdateSetEndpoint);
     }
 
     /**
@@ -125,7 +140,7 @@ export class AutoupdateCommunicationService {
                     requestHash: requestHash,
                     request
                 }
-            });
+            } as AutoupdateOpenStream);
         });
     }
 
@@ -140,7 +155,7 @@ export class AutoupdateCommunicationService {
             params: {
                 streamId
             }
-        });
+        } as AutoupdateCloseStream);
     }
 
     /**
@@ -155,14 +170,14 @@ export class AutoupdateCommunicationService {
             this.sharedWorker.sendMessage(`autoupdate`, {
                 action: `set-connection-status`,
                 params: { status: `offline` }
-            });
+            } as AutoupdateSetConnectionStatus);
         });
 
         addEventListener(`online`, () => {
             this.sharedWorker.sendMessage(`autoupdate`, {
                 action: `set-connection-status`,
                 params: { status: `online` }
-            });
+            } as AutoupdateSetConnectionStatus);
         });
     }
 }

@@ -2,13 +2,18 @@ import { environment } from 'src/environments/environment';
 
 import { AutoupdateStreamPool } from './autoupdate-stream-pool';
 import { AutoupdateSubscription } from './autoupdate-subscription';
+import {
+    AutoupdateCloseStreamParams,
+    AutoupdateOpenStreamParams,
+    AutoupdateSetEndpointParams
+} from './interfaces-autoupdate';
 
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,
     healthUrl: `/system/autoupdate/health`,
     method: `post`,
     authToken: null
-});
+} as AutoupdateSetEndpointParams);
 
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
@@ -26,7 +31,10 @@ if (!environment.production) {
     };
 }
 
-function openConnection(ctx: MessagePort, { streamId, queryParams = ``, request, requestHash, description }): void {
+function openConnection(
+    ctx: MessagePort,
+    { streamId, queryParams = ``, request, requestHash, description }: AutoupdateOpenStreamParams
+): void {
     function getRequestCategory(description: string, _request: Object): 'required' | 'other' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
@@ -56,8 +64,8 @@ function openConnection(ctx: MessagePort, { streamId, queryParams = ``, request,
     }, 5);
 }
 
-function closeConnection(ctx: MessagePort, { streamId }): void {
-    const subscription = autoupdatePool.getSubscriptionById(streamId);
+function closeConnection(ctx: MessagePort, params: AutoupdateCloseStreamParams): void {
+    const subscription = autoupdatePool.getSubscriptionById(params.streamId);
     if (!subscription) {
         return;
     }

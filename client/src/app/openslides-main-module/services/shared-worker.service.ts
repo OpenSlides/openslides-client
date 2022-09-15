@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { filter, Observable, Subscriber } from 'rxjs';
+import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
 
 @Injectable({
     providedIn: `root`
 })
 export class SharedWorkerService {
-    public messages: Observable<any>;
+    public messages: Observable<WorkerResponse>;
 
     private conn: MessagePort | Window;
     private ready = false;
@@ -22,7 +23,7 @@ export class SharedWorkerService {
             this.conn = window;
         }
 
-        this.messages = new Observable<any>(subscriber => {
+        this.messages = new Observable<WorkerResponse>(subscriber => {
             this.registerMessageListener(subscriber);
         });
     }
@@ -32,7 +33,7 @@ export class SharedWorkerService {
      *
      * @param sender Name of the sender
      */
-    public listenTo(sender: string): Observable<any> {
+    public listenTo(sender: string): Observable<WorkerResponse> {
         return this.messages.pipe(filter(data => data?.sender === sender));
     }
 
@@ -42,11 +43,11 @@ export class SharedWorkerService {
      * @param receiver Name of the receiver
      * @param msg Content of the message
      */
-    public sendMessage(receiver: string, msg: any): void {
-        this.sendRawMessage({ receiver, msg });
+    public sendMessage<T extends WorkerMessageContent>(receiver: string, msg: T): void {
+        this.sendRawMessage({ receiver, msg } as WorkerMessage);
     }
 
-    private registerMessageListener(subscriber: Subscriber<any>): void {
+    private registerMessageListener(subscriber: Subscriber<WorkerResponse>): void {
         this.conn.addEventListener(`message`, (e: any) => {
             if (this.ready && e?.data?.sender) {
                 subscriber.next(e?.data);

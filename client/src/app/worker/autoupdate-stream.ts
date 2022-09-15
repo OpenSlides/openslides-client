@@ -8,6 +8,7 @@ import {
 } from '../gateways/http-stream/stream-utils';
 import { joinTypedArrays, splitTypedArray } from '../infrastructure/utils/functions';
 import { AutoupdateSubscription } from './autoupdate-subscription';
+import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
 export class AutoupdateStream {
     public failedCounter: number = 0;
@@ -29,7 +30,7 @@ export class AutoupdateStream {
     constructor(
         private _subscriptions: AutoupdateSubscription[],
         public queryParams: string,
-        private endpoint: { url: string; method: string; authToken: string }
+        private endpoint: AutoupdateSetEndpointParams
     ) {}
 
     /**
@@ -126,7 +127,7 @@ export class AutoupdateStream {
      *
      * @param endpoint configuration of the endpoint
      */
-    public updateEndpoint(endpoint: any): void {
+    public updateEndpoint(endpoint: AutoupdateSetEndpointParams): void {
         this.endpoint = endpoint;
         this.restart = true;
         this.abort();
