@@ -15,7 +15,8 @@ const POOL_CONFIG = {
 export class AutoupdateStreamPool {
     private onlineStatusStopTimeout: any;
     private streams: AutoupdateStream[] = [];
-    private subscriptions: { [key: number]: AutoupdateSubscription } = {};
+    private subscriptions: Map<number, AutoupdateSubscription> = new Map<number, AutoupdateSubscription>();
+    private messagePorts: Set<MessagePort> = new Set<MessagePort>();
 
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
 
@@ -83,7 +84,7 @@ export class AutoupdateStreamPool {
     public removeStream(stream: AutoupdateStream): void {
         for (let subscription of stream.subscriptions) {
             if (this.subscriptions[subscription.id]) {
-                delete this.subscriptions[subscription.id];
+                this.subscriptions.delete(subscription.id);
             }
         }
 
@@ -158,19 +159,23 @@ export class AutoupdateStreamPool {
         return !!data?.healthy;
     }
 
-    private sendToAll(action: string, content?: any): void {
-        const ports: MessagePort[] = [];
+    private updateMessagePorts(): void {
+        const updatedPorts = new Set<MessagePort>();
         for (const stream of this.streams) {
             for (const subscription of stream.subscriptions) {
                 for (const port of subscription.ports) {
-                    if (ports.indexOf(port) === -1) {
-                        ports.push(port);
-                    }
+                    updatedPorts.add(port);
                 }
             }
         }
 
-        for (const port of ports) {
+        this.messagePorts = updatedPorts;
+    }
+
+    private sendToAll(action: string, content?: any): void {
+        this.updateMessagePorts();
+
+        for (const port of this.messagePorts) {
             port.postMessage({
                 sender: `autoupdate`,
                 action,
