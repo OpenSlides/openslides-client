@@ -151,26 +151,24 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         }
     ];
 
-    private forwardingFilterOptions: OsFilter<ViewMotion>[] = [
-        {
-            property: `forwardingStatus`,
-            label: this.translate.instant(`Forwarding`),
-            options: [
-                {
-                    condition: [ForwardingStatus.wasForwarded, ForwardingStatus.both],
-                    label: this.translate.instant(`Has forwardings`)
-                },
-                {
-                    condition: [ForwardingStatus.isDerived, ForwardingStatus.both],
-                    label: this.translate.instant(`Was forwarded to this meeting`)
-                },
-                {
-                    condition: ForwardingStatus.none,
-                    label: this.translate.instant(`No forwardings`)
-                }
-            ]
-        }
-    ];
+    private forwardingFilterOptions: OsFilter<ViewMotion> = {
+        property: `forwardingStatus`,
+        label: this.translate.instant(`Forwarding`),
+        options: [
+            {
+                condition: [ForwardingStatus.wasForwarded, ForwardingStatus.both],
+                label: this.translate.instant(`Has forwardings`)
+            },
+            {
+                condition: [ForwardingStatus.isDerived, ForwardingStatus.both],
+                label: this.translate.instant(`Was forwarded to this meeting`)
+            },
+            {
+                condition: ForwardingStatus.none,
+                label: this.translate.instant(`No forwardings`)
+            }
+        ]
+    };
 
     public constructor(
         store: MeetingActiveFiltersService,
@@ -262,7 +260,7 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
             this.recommendationFilterOptions,
             this.motionCommentFilterOptions,
             this.tagFilterOptions,
-            ...this.forwardingFilterOptions
+            this.forwardingFilterOptions
         ];
 
         // only add the filter if the user has the correct permission
