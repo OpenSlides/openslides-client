@@ -57,7 +57,6 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         super(controllerServiceCollector, User, repo);
 
         let meetingUserIds = [];
-        // this.activeMeeting.users_as_observable.subscribe(users => this._participantListSubject.next(users))
         this.activeMeetingIdService.meetingIdObservable.subscribe(newId => {
             if (this._participantListUpdateSubscription) {
                 this._participantListUpdateSubscription.unsubscribe();

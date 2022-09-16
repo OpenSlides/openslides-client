@@ -1,5 +1,4 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { filter, interval, map } from 'rxjs';
 
 import { Id } from '../../definitions/key-types';
 import { CML, OMLMapping } from '../../definitions/organization-permission';
@@ -14,23 +13,6 @@ export type UserSortProperty = 'first_name' | 'last_name' | 'number';
  * Iterable pre selection of genders (sexes)
  */
 export const GENDERS = [_(`female`), _(`male`), _(`diverse`)];
-
-/**
- * Workaround that exists to ensure that the account list always gets updates for the users, that are already known to the client.
- * TODO: Remove this when we have a more proper way to update the account list.
- */
-export const USER_IDS_OBSERVABLE = interval(1000).pipe(
-    map(number => Array.from(USER_IDS_SET.values())),
-    filter(userIds => {
-        if (userIdsChanged) {
-            userIdsChanged = false;
-            return true;
-        }
-        return false;
-    })
-);
-const USER_IDS_SET = new Set<number>();
-var userIdsChanged = false;
 
 /**
  * Representation of a user in contrast to the operator.
@@ -79,6 +61,7 @@ export class User extends BaseDecimalModel<User> {
     public vote_delegated_$_to_id!: string[]; // user/vote_delegated_$<meeting_id>_from_ids;
     public vote_delegations_$_from_ids!: string[]; // user/vote_delegated_$<meeting_id>_to_id;
     public chat_message_$_ids!: Id[]; // (chat_message/user_id)[];
+    public organization_id!: Id; // organization/committee_ids;
 
     public projection_$_ids!: any[];
     public current_projector_$_ids!: any[];
@@ -88,13 +71,6 @@ export class User extends BaseDecimalModel<User> {
 
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);
-
-        // Workaround that exists to ensure that the account list always gets updates for the users, that are already known to the client.
-        // TODO: Remove this when we have a more proper way to update the account list.
-        if (this.id && !USER_IDS_SET.has(this.id)) {
-            USER_IDS_SET.add(this.id);
-            userIdsChanged = true;
-        }
     }
 
     public hasVoteRightFromOthers(meetingId: Id): boolean {
