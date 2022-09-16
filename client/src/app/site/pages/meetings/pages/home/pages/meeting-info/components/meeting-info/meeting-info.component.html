@@ -5,20 +5,8 @@
 </os-head-bar>
 
 <os-legal-notice-content [isEditable]="true" (update)="updateLegalNotice($event)"></os-legal-notice-content>
-<os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>
 
-<mat-card class="os-card">
-    <div>
-        <button type="button" mat-stroked-button (click)="resetCache()">
-            {{ 'Reset cache' | translate }}
-        </button>
-    </div>
-    <div *osOmlPerms="OML.superadmin" class="superadmin-button">
-        <button type="button" mat-stroked-button (click)="checkDatastore()">
-            {{ 'Check datastore' | translate }}
-        </button>
-    </div>
-</mat-card>
+<os-info-actions></os-info-actions>
 
 <mat-card class="os-card" *ngIf="canSeeStatistics">
     <h2>{{ 'Statistics' | translate }}</h2>
@@ -34,3 +22,5 @@
         </div>
     </ng-container>
 </mat-card>
+
+<os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>
