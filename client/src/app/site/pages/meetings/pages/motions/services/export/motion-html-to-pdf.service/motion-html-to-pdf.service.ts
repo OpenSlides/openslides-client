@@ -668,13 +668,16 @@ export class MotionHtmlToPdfService {
                             break;
                         }
                         case `text-decoration`: {
+                            if (!styleObject.decoration) {
+                                styleObject.decoration = [];
+                            }
                             switch (value) {
                                 case `underline`: {
-                                    styleObject.decoration = `underline`;
+                                    styleObject.decoration.push(`underline`);
                                     break;
                                 }
                                 case `line-through`: {
-                                    styleObject.decoration = `lineThrough`;
+                                    styleObject.decoration.push(`lineThrough`);
                                     break;
                                 }
                             }
