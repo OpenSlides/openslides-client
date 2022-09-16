@@ -15,6 +15,7 @@ import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 import { AccountFilterService } from '../../../../services/common/account-filter.service';
+import { AccountListSearchService } from '../../services/account-list-search/account-list-search.service';
 import { AccountSortService } from '../../services/account-list-sort.service/account-sort.service';
 
 const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
@@ -36,7 +37,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private exporter: AccountExportService,
         private meetingRepo: MeetingControllerService,
         private choiceService: ChoiceService,
-        private userController: UserControllerService
+        private userController: UserControllerService,
+        public searchService: AccountListSearchService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Accounts`);

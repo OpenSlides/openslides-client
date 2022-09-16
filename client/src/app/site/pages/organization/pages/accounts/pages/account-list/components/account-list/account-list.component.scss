@@ -1,0 +1,25 @@
+.nameCell {
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+}
+
+.meta-info {
+    font-size: 12px;
+}
+
+.icon-group {
+    margin-left: 1em;
+    z-index: 3;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-row: auto auto;
+    .box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
