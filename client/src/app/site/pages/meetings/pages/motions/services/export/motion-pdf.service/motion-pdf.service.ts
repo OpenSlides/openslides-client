@@ -519,7 +519,7 @@ export class MotionPdfService {
         }
 
         // Checkboxes for resolution
-        if (optionToFollowRecommendation) {
+        if (optionToFollowRecommendation && !motion.state.isFinalState) {
             metaTableBody.push([
                 {
                     text: `${this.translate.instant(`Decision`)}:`,
