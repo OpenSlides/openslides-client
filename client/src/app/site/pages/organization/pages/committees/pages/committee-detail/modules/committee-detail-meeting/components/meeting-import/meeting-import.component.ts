@@ -1,9 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
+import { getUploadFileJson } from 'src/app/infrastructure/utils/import/json-import-file-utils';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -23,7 +25,8 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
         protected override translate: TranslateService,
         private repo: MeetingControllerService,
         private osRouter: OpenSlidesRouterService,
-        private location: Location
+        private location: Location,
+        private snackbar: MatSnackBar
     ) {
         super(componentServiceCollector, translate);
     }
@@ -44,14 +47,7 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
 
     public getUploadFileFn(): (file: FileData) => Promise<Identifiable> {
         return async file => {
-            const meeting = await new Promise<ImportMeeting>(resolve => {
-                const reader = new FileReader();
-                reader.addEventListener(`load`, progress => {
-                    const result = JSON.parse(progress.target.result as string);
-                    resolve(result);
-                });
-                reader.readAsText(file.mediafile);
-            });
+            const meeting = await getUploadFileJson<ImportMeeting>(file, this.snackbar);
             return this.repo.import(this._committeeId, meeting);
         };
     }

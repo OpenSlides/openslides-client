@@ -86,18 +86,6 @@ export class User extends BaseDecimalModel<User> {
     public organization_management_level!: keyof OMLMapping;
     public committee_$_management_level!: CML[];
 
-    public get isVoteWeightOne(): boolean {
-        throw new Error(`TODO`);
-        // TODO: this is meeting dependend (check for vote_weight_$!) -> must be answered in the view-user
-        // return this.default_vote_weight === 1;
-    }
-
-    public get isVoteRightDelegated(): boolean {
-        throw new Error(`TODO`);
-        // TODO: this is meeting dependend -> must be answered in the view-user
-        // return !!this.vote_delegated_to_id(this.meeting_id);
-    }
-
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);
 

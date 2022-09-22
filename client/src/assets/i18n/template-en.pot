@@ -78,9 +78,6 @@ msgstr ""
 msgid "Account admin"
 msgstr ""
 
-msgid "Account management"
-msgstr ""
-
 msgid "Account successfully assigned"
 msgstr ""
 
@@ -168,6 +165,9 @@ msgid "Admin"
 msgstr ""
 
 msgid "Administration roles"
+msgstr ""
+
+msgid "Administration roles (at organization level)"
 msgstr ""
 
 msgid "Administrator"
@@ -1153,9 +1153,6 @@ msgstr ""
 msgid "Divergent:"
 msgstr ""
 
-msgid "Diverse"
-msgstr ""
-
 msgid "Do not concern"
 msgstr ""
 
@@ -1435,9 +1432,6 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
-msgid "Female"
-msgstr ""
-
 msgid "Filename"
 msgstr ""
 
@@ -1510,6 +1504,9 @@ msgstr ""
 msgid "Front page title"
 msgstr ""
 
+msgid "Full name"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr ""
 
@@ -1577,6 +1574,9 @@ msgid "Has an email address"
 msgstr ""
 
 msgid "Has changed vote weight"
+msgstr ""
+
+msgid "Has forwardings"
 msgstr ""
 
 msgid "Has no email address"
@@ -1800,9 +1800,6 @@ msgstr ""
 msgid "Label color"
 msgstr ""
 
-msgid "Last email send"
-msgstr ""
-
 msgid "Last email sent"
 msgstr ""
 
@@ -1897,9 +1894,6 @@ msgid "Logout"
 msgstr ""
 
 msgid "Lowest applause amount"
-msgstr ""
-
-msgid "Male"
 msgstr ""
 
 msgid "Mark as personal favorite"
@@ -2211,6 +2205,9 @@ msgid "No email sent"
 msgstr ""
 
 msgid "No encryption"
+msgstr ""
+
+msgid "No forwardings"
 msgstr ""
 
 msgid "No group name has been entered."
@@ -3509,9 +3506,6 @@ msgstr ""
 msgid "Unique speakers"
 msgstr ""
 
-msgid "Unknown"
-msgstr ""
-
 msgid "Unsaved changes will not be applied."
 msgstr ""
 
@@ -3630,6 +3624,9 @@ msgstr ""
 msgid "Voting stopped"
 msgstr ""
 
+msgid "Voting stopped/published"
+msgstr ""
+
 msgid "Voting successful."
 msgstr ""
 
@@ -3655,6 +3652,9 @@ msgid ""
 "Warning: Amendments exist for this motion. Editing this text will likely "
 "impact them negatively. Particularily, amendments might become unusable if "
 "the paragraph they affect is deleted."
+msgstr ""
+
+msgid "Was forwarded to this meeting"
 msgstr ""
 
 msgid "Web interface header logo"
@@ -4123,6 +4123,9 @@ msgid "today"
 msgstr ""
 
 msgid "undocumented"
+msgstr ""
+
+msgid "unknown"
 msgstr ""
 
 msgid "version"
