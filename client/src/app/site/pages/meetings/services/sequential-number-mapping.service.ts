@@ -82,13 +82,7 @@ export class SequentialNumberMappingService {
             return null;
         }
 
-        await new Promise<void>(resolve =>
-            setTimeout(() => {
-                if (this._modelRequestSubscription.receivedData === true) {
-                    resolve();
-                }
-            })
-        );
+        await this._modelRequestSubscription.receivedData;
 
         const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
         return this.getBehaviorSubject(collection, meetingIdSequentialNumber).getValue();

@@ -41,7 +41,7 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
-    receivedData: boolean;
+    receivedData: Promise<void>;
     close: () => void;
 }
 
@@ -92,6 +92,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
+    private _resolveDataReceived: any[] = [];
 
     public constructor(
         private communicationManager: CommunicationManagerService,
@@ -161,7 +162,7 @@ export class AutoupdateService {
         const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, streamId);
         return {
             id,
-            receivedData: false,
+            receivedData: new Promise((resolve) => { this._resolveDataReceived[id] = resolve }),
             close: () => {
                 closeFn();
                 delete this._activeRequestObjects[id];
@@ -202,7 +203,9 @@ export class AutoupdateService {
                 deletedModels: {}
             })
             .then(() => {
-                this._activeRequestObjects[requestId].modelSubscription.receivedData = true;
+                if (this._resolveDataReceived[requestId]()) {
+                    this._resolveDataReceived[requestId]();
+                }
             });
 
         unlock();
