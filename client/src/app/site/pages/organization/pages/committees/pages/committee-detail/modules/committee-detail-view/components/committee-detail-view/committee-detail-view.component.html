@@ -41,7 +41,7 @@
             [title]="forwardLabel"
             *ngIf="committee.forward_to_committees.length > 0"
         >
-            <ul class="content-list expandable-list" [ngClass]="forwardingExpanded ? 'expanded' : ''">
+            <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
                 <li *ngFor="let forwarding of committee.forward_to_committees">
                     <a *ngIf="canAccessCommittee(forwarding)" [routerLink]="['/', 'committees', forwarding.id]">
                         {{ forwarding.name }}
@@ -61,7 +61,7 @@
             [title]="receiveLabel"
             *ngIf="committee.receive_forwardings_from_committees.length > 0"
         >
-            <ul class="content-list expandable-list" [ngClass]="receiveExpanded ? 'expanded' : ''">
+            <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
                 <li *ngFor="let receive of committee.receive_forwardings_from_committees">
                     <a *ngIf="canAccessCommittee(receive)" [routerLink]="['/', 'committees', receive.id]">
                         {{ receive.name }}
