@@ -86,25 +86,29 @@ function updateOnlineStatus(): void {
 export function addAutoupdateListener(context: any): void {
     context.addEventListener(`message`, e => {
         const receiver = e.data?.receiver;
-        if (!receiver) {
+        if (!receiver || receiver !== `autoupdate`) {
             return;
         }
 
         const msg = e.data?.msg;
-        const action = msg?.action;
         const params = msg?.params;
-        if (receiver === `autoupdate`) {
-            if (action === `open`) {
+        const action = msg?.action;
+        switch (action) {
+            case `open`:
                 openConnection(context, params);
-            } else if (action === `close`) {
+                break;
+            case `close`:
                 closeConnection(context, params);
-            } else if (action === `set-endpoint`) {
+                break;
+            case `set-endpoint`:
                 autoupdatePool.setEndpoint(params);
-            } else if (action === `set-connection-status`) {
+                break;
+            case `set-connection-status`:
                 updateOnlineStatus();
-            } else if (action === `reconnect-inactive`) {
+                break;
+            case `reconnect-inactive`:
                 autoupdatePool.reconnectAll(true);
-            }
+                break;
         }
     });
 }
