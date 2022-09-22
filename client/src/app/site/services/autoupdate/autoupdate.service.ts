@@ -160,12 +160,21 @@ export class AutoupdateService {
                 { bodyFn: () => [request] }
             );
         const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, streamId);
+
+        let rejectReceivedData: any;
+        const receivedData = new Promise<void>((resolve, reject) => {
+            this._resolveDataReceived[id] = resolve;
+            rejectReceivedData = reject;
+        });
         return {
             id,
-            receivedData: new Promise((resolve) => { this._resolveDataReceived[id] = resolve }),
+            receivedData,
             close: () => {
                 closeFn();
                 delete this._activeRequestObjects[id];
+                if (this._resolveDataReceived[id]()) {
+                    rejectReceivedData();
+                }
             }
         };
     }
@@ -205,6 +214,7 @@ export class AutoupdateService {
             .then(() => {
                 if (this._resolveDataReceived[requestId]()) {
                     this._resolveDataReceived[requestId]();
+                    delete this._resolveDataReceived[requestId];
                 }
             });
 
