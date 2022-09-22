@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
 import { getMotionListSubscriptionConfig } from '../../../motions/config/model-subscription';
@@ -9,11 +10,9 @@ import { getMotionListSubscriptionConfig } from '../../../motions/config/model-s
     styleUrls: [`./history-main.component.scss`]
 })
 export class HistoryMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onParamsChanged(params: any): void {
-        if (params[`meetingId`]) {
-            this.subscribeTo(
-                getMotionListSubscriptionConfig(+params[`meetingId`], () => this.hasMeetingIdChangedObservable())
-            );
+    protected override onNextMeetingId(id: Id | null): void {
+        if (id) {
+            this.subscribeTo(getMotionListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
         }
     }
 }

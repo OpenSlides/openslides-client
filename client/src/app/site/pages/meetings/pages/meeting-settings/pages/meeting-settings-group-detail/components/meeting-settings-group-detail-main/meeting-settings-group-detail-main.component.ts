@@ -11,8 +11,12 @@ const MOTIONS_SETTINGS_GROUP = `motions`;
     styleUrls: [`./meeting-settings-group-detail-main.component.scss`]
 })
 export class MeetingSettingsGroupDetailMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onParamsChanged(params: any): void {
-        if (params[`group`] && params[`group`] === MOTIONS_SETTINGS_GROUP) {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (
+            params[`group`] &&
+            params[`group`] === MOTIONS_SETTINGS_GROUP &&
+            params[`meetingId`] !== oldParams[`meetingId`]
+        ) {
             this.subscribeTo(
                 getMotionWorkflowSubscriptionConfig(+params[`meetingId`], () => this.hasMeetingIdChangedObservable())
             );

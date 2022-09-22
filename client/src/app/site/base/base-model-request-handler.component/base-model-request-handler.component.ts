@@ -35,7 +35,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     private _destroyed = new EventEmitter<boolean>();
     private _openedSubscriptions: string[] = [];
     private _currentMeetingId: Id | null | undefined = undefined; //This is to ensure that the if-check in ngOnInit also fires if the application isn't in a meeting
-    private _currentParams: string | undefined = undefined;
+    private _currentParams: any = {};
 
     public constructor(
         protected modelRequestService: ModelRequestService,
@@ -55,9 +55,10 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
                 }
 
                 const eventJson = JSON.stringify(event);
-                if (this._currentParams !== eventJson) {
-                    this._currentParams = eventJson;
-                    this.onParamsChanged(event);
+                const paramsJson = JSON.stringify(this._currentParams);
+                if (paramsJson !== eventJson) {
+                    this.onParamsChanged(event, this._currentParams);
+                    this._currentParams = event;
                 }
             })
         );
@@ -72,7 +73,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     protected onBeforeModelRequests(): void | Promise<void> {}
     protected onCreateModelRequests(): ModelRequestConfig[] | void {}
     protected onNextMeetingId(id: Id | null): void {}
-    protected onParamsChanged(params: any): void {}
+    protected onParamsChanged(params: any, oldParams?: any): void {}
 
     protected async subscribeTo(...configs: ModelRequestConfig[]): Promise<void> {
         for (const { modelRequest, subscriptionName, ...config } of configs) {

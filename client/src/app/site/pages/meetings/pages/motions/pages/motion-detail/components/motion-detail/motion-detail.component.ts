@@ -33,8 +33,8 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
         super(modelRequestService, router, openslidesRouter);
     }
 
-    protected override onParamsChanged(params: any): void {
-        if (params[`id`]) {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
             this.updateSubscription(
                 MOTION_DETAIL_SEQUENTIAL_NUMBER_MAPPING,
                 this.sequentialNumberMapping
