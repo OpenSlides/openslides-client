@@ -99,7 +99,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         const poll: PollData = {
             getContentObjectTitle,
             pollmethod: data.pollmethod,
-            pollClassType: <PollClassType>data.content_object_id.split(`/`)[0],
+            pollClassType: <PollClassType>collectionFromFqid(data.content_object_id),
             state: data.state,
             onehundred_percent_base: data.onehundred_percent_base,
             votesvalid: data.votesvalid,
