@@ -37,6 +37,7 @@ jobs:
       - name: Start tests
         uses: cypress-io/github-action@v4
         with:
+          video: false
           working-directory: "./openslides-client/client/tests/integration"
           wait-on: "https://localhost:8000"
           wait-on-timeout: 300
