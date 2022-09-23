@@ -31,12 +31,12 @@ export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerCom
     protected override onParamsChanged(params: any): void {
         if (params[`id`]) {
             this.sequentialNumberMapping
-                .getIdObservableBySequentialNumber({
+                .getIdBySequentialNumber({
                     collection: Projector.COLLECTION,
                     meetingId: +params[`meetingId`],
                     sequentialNumber: +params[`id`]
                 })
-                .subscribe(id => {
+                .then(id => {
                     if (id && this._projectorId !== id) {
                         this._projectorId = id;
                         this.doFullscreenProjectorSubscription();

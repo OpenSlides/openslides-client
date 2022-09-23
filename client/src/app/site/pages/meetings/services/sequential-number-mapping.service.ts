@@ -88,14 +88,17 @@ export class SequentialNumberMappingService {
         return this.getBehaviorSubject(collection, meetingIdSequentialNumber).getValue();
     }
 
-    public getIdObservableBySequentialNumber({
+    public async getIdObservableBySequentialNumber({
         collection,
         meetingId,
         sequentialNumber
-    }: SequentialNumberMappingConfig): Observable<Id | null> {
+    }: SequentialNumberMappingConfig): Promise<Observable<Id | null>> {
         if (!collection || !meetingId || !sequentialNumber) {
             return of();
         }
+
+        await this._modelRequestSubscription.receivedData;
+
         const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
         return this.getBehaviorSubject(collection, meetingIdSequentialNumber);
     }

@@ -80,18 +80,23 @@ export class DetailViewComponent implements OnInit {
             meetingId: this.activeMeetingIdService.meetingId!
         };
 
-        this.sequentialNumberMappingService.getIdBySequentialNumber(config).then(id => {
+        this.sequentialNumberMappingService.getIdObservableBySequentialNumber(config).then(observable => {
             this._loading = false;
-            if (id) {
-                if (this._id !== id) {
-                    this._id = id;
-                    this._shouldShowContent = true;
-                    this.idFound.next(id);
-                    this.cd.markForCheck();
-                }
-            } else {
-                this._shouldShowContent = false;
-            }
+            this.updateSubscription(
+                SEQUENTIAL_NUMBER_SUBSCRIPTION_NAME,
+                observable.subscribe(id => {
+                    if (id) {
+                        if (this._id !== id) {
+                            this._id = id;
+                            this._shouldShowContent = true;
+                            this.idFound.next(id);
+                            this.cd.markForCheck();
+                        }
+                    } else {
+                        this._shouldShowContent = false;
+                    }
+                })
+            );
         });
     }
 
