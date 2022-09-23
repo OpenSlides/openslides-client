@@ -32,6 +32,8 @@ export class SingleOptionChartTableComponent {
     @Input()
     public set pollService(pollService: PollService) {
         this._pollService = pollService;
+        this.setChartData();
+        this.cd.markForCheck();
     }
 
     @Input()
