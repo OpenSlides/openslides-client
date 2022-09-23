@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { of } from 'rxjs';
 import { OptionData, OptionTitle, PollData } from 'src/app/domain/models/poll/generic-poll';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
+import { PollClassType, PollState } from 'src/app/domain/models/poll/poll-constants';
 import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { UnknownUserLabel } from 'src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/services/assignment-poll.service';
@@ -99,6 +99,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         const poll: PollData = {
             getContentObjectTitle,
             pollmethod: data.pollmethod,
+            pollClassType: <PollClassType>data.content_object_id.split(`/`)[0],
             state: data.state,
             onehundred_percent_base: data.onehundred_percent_base,
             votesvalid: data.votesvalid,
