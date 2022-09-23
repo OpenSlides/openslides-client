@@ -6,7 +6,7 @@ import { SortListService } from 'src/app/ui/modules/list/definitions/sort-servic
 import { StorageService } from '../../../gateways/storage.service';
 import { BaseViewModel } from '../base-view-model';
 import { BaseSortService } from './base-sort.service';
-import { OsSortingDefinition, OsSortingOption, OsSortProperty } from './os-sort';
+import { OsHideSortingOptionSetting, OsSortingDefinition, OsSortingOption, OsSortProperty } from './os-sort';
 
 /**
  * Base class for generic sorting purposes
@@ -74,7 +74,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param property a part of a view model
      */
     public set sortProperty(property: OsSortProperty<V>) {
-        if (this.sortDefinition!.sortProperty === property) {
+        if (this.getPropertiesEqual(this.sortDefinition!.sortProperty, property)) {
             this.ascending = !this.ascending;
         } else {
             this.sortDefinition!.sortProperty = property;
@@ -100,7 +100,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     public get sortOptions(): OsSortingOption<V>[] {
         const sortOptions = this.getSortOptions();
         if (sortOptions && sortOptions.length) {
-            return sortOptions;
+            return sortOptions.filter(option => !this.shouldHideOption(option));
         }
         return [];
     }
@@ -113,6 +113,28 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * Enforce children to implement a function that returns their sorting options
      */
     protected abstract getSortOptions(): OsSortingOption<V>[];
+
+    protected getHideSortingOptionSettings(): OsHideSortingOptionSetting<V>[] {
+        return [];
+    }
+
+    private shouldHideOption(option: OsSortingOption<V> | OsSortingDefinition<V>, update = true): boolean {
+        let property = (option[`property`] ? option[`property`] : option[`sortProperty`]) as OsSortProperty<V>;
+        if (!Array.isArray(property)) {
+            property = [property];
+        }
+        let shouldHide = false;
+        property.forEach(prop => {
+            const setting = this.getHideSortingOptionSettings().find(setting => setting.property === prop);
+            const settingHidden = setting ? setting.shouldHideFn() : false;
+            shouldHide = shouldHide || settingHidden;
+            if (setting && settingHidden !== setting.currentlyHidden && update) {
+                setting.currentlyHidden = settingHidden;
+                this.updateSortedData();
+            }
+        });
+        return shouldHide;
+    }
 
     /**
      * Enforce children to implement a method that returns the fault sorting
@@ -172,13 +194,21 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      */
     public getSortIcon(option: OsSortingOption<V>): string | null {
         if (this.sortDefinition) {
-            if (this.sortProperty && this.sortProperty !== option.property) {
+            if (!this.sortProperty || !this.getPropertiesEqual(this.sortProperty, option.property)) {
                 return ``;
             }
             return this.ascending ? `arrow_upward` : `arrow_downward`;
         } else {
             return null;
         }
+    }
+
+    /**
+     * Determines if the given properties are either the same property or both arrays of the same
+     * properties.
+     */
+    private getPropertiesEqual(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
+        return Array.isArray(a) && Array.isArray(b) ? a.equals(b) : a === b;
     }
 
     /**
@@ -207,9 +237,19 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * Recreates the sorting function. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
-    protected updateSortedData(): void {
+    protected async updateSortedData(): Promise<void> {
+        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
         if (this.inputData) {
-            this.inputData.sort((itemA, itemB) => this.sortItems(itemA, itemB, this.sortProperty, this.ascending));
+            this.inputData.sort((itemA, itemB) =>
+                this.sortItems(
+                    itemA,
+                    itemB,
+                    this.shouldHideOption({ property: this.sortProperty }, false)
+                        ? alternativeProperty
+                        : this.sortProperty,
+                    this.ascending
+                )
+            );
             this.outputSubject.next(this.inputData);
         }
     }

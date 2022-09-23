@@ -4,7 +4,7 @@ import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider'
 import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 
 import { BaseViewModel } from '../base-view-model';
-import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition } from './os-filter';
+import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition, OsHideFilterSetting } from './os-filter';
 
 interface RepositoryFilterConfig<OV extends BaseViewModel, V> {
     /**
@@ -32,7 +32,12 @@ interface RepositoryFilterConfig<OV extends BaseViewModel, V> {
 @Directive()
 export abstract class BaseFilterListService<V extends BaseViewModel> implements FilterListService<V> {
     public get filterDefinitionsObservable(): Observable<OsFilter<V>[]> {
-        return this._filterDefinitionsSubject.pipe(distinctUntilChanged());
+        return this._filterDefinitionsSubject.pipe(
+            distinctUntilChanged(),
+            map(definitions => {
+                return definitions.filter(definition => !this.shouldHideOption(definition));
+            })
+        );
     }
 
     /**
@@ -68,7 +73,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * get stacked filters
      */
     public get filterStack(): OsFilterIndicator<V>[] {
-        return this._filterStack;
+        return this._filterStack.filter(definition => !this.shouldHideOption(definition));
     }
 
     public get unfilteredCountObservable(): Observable<number> {
@@ -141,7 +146,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param inputData Observable array with ViewModels
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
-        const storedFilter: OsFilter<V>[] | null = await this.activeFiltersStore.load<V>(this.storageKey);
+        const storedFilter = await this.loadFilters();
 
         if (storedFilter && this.isOsFilter(storedFilter)) {
             this.filterDefinitions = storedFilter;
@@ -176,7 +181,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         const nextDefinitions = this.getFilterDefinitions();
 
-        let storedFilters: OsFilter<V>[] = (await this.activeFiltersStore.load<V>(this.storageKey)) ?? [];
+        let storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
 
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
             return;
@@ -383,6 +388,49 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     protected abstract getFilterDefinitions(): OsFilter<V>[];
 
     /**
+     * Overriding this method allows a subclass to provide functions which define when a filter should neither be shown nor applied.
+     */
+    protected getHideFilterSettings(): OsHideFilterSetting<V>[] {
+        return [];
+    }
+
+    private shouldHideOption(option: OsFilter<V> | OsFilterIndicator<V>, update = true): boolean {
+        const setting = this.getHideFilterSettings().find(setting => setting.property === option.property);
+        const settingHidden = setting ? setting.shouldHideFn() : false;
+        if (setting && settingHidden !== setting.currentlyHidden && update) {
+            setting.currentlyHidden = settingHidden;
+            this.updateFilteredData();
+        }
+        return settingHidden;
+    }
+
+    private async loadFilters(): Promise<OsFilter<V>[] | null> {
+        return this.parseFilters(await this.activeFiltersStore.load<V>(this.storageKey));
+    }
+
+    private parseFilters(oldFilters: OsFilter<V>[]): OsFilter<V>[] {
+        const newFilterDefs = this.getFilterDefinitions();
+        newFilterDefs.forEach(definition => {
+            const oldDefinition = oldFilters?.find(old => old.property === definition.property);
+            if (!oldDefinition) {
+                return;
+            }
+            oldDefinition.options.forEach(option => {
+                if (!option || typeof option === `string`) {
+                    return;
+                }
+                const newOption = (
+                    definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
+                ).find(newOpt => newOpt.label === option.label);
+                if (newOption) {
+                    newOption.isActive = option.isActive;
+                }
+            });
+        });
+        return newFilterDefs;
+    }
+
+    /**
      * Recreates the filter stack out of active filter definitions
      */
     private activeFiltersToStack(): void {
@@ -522,7 +570,9 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             } else {
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
                 filteredData = this._inputData.filter(item =>
-                    activeFilters.every(filter => this.isPassingFilter(item, filter))
+                    activeFilters.every(
+                        filter => this.isPassingFilter(item, filter) && !this.shouldHideOption(filter, false)
+                    )
                 );
             }
         }

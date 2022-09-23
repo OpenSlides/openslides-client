@@ -21,6 +21,12 @@ declare global {
          */
         difference(other: T[], symmetric?: boolean): T[];
         /**
+         * Compares two arrays element-wise for object equality to determine if the arrays contain
+         * the same items. Same functionality as `difference(other, true).length > 0`, but
+         * potentially faster for large arrays.
+         */
+        equals(other: T[]): boolean;
+        /**
          * A function to "tap" a whole array and take it to manipulate it or anything else.
          *
          * @param callbackFn A function that receives the whole array and has to return nothing.
@@ -28,7 +34,7 @@ declare global {
         tap(callbackFn: (self: T[]) => void): T[];
         mapToObject(f: (item: T, index: number) => { [key: string]: any }): { [key: string]: any };
         /**
-         * TODO: Remove this, when ES 2019 (or in whatever spec `at` is defined) is the target for our tsconfig
+         * TODO: Remove this, when ES2022 is the target for our tsconfig
          *
          * @param index The index of an element in the array one expects
          */
@@ -100,6 +106,13 @@ function overloadArrayFunctions(): void {
                 }
             }
             return Array.from(difference);
+        },
+        enumerable: false
+    });
+
+    Object.defineProperty(Array.prototype, `equals`, {
+        value<T>(other: T[]): boolean {
+            return this.length == other.length && this.every((val, idx) => val === other[idx]);
         },
         enumerable: false
     });

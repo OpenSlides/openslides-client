@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
-import { GetActiveUsersAmountPresenterService } from 'src/app/gateways/presenter';
+import {
+    GetActiveUsersAmountPresenterService,
+    GetUsersPresenterService,
+    SearchUsersByNameOrEmailPresenterScope,
+    SearchUsersByNameOrEmailPresenterService
+} from 'src/app/gateways/presenter';
 import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
@@ -19,6 +24,7 @@ import { User } from '../../domain/models/users/user';
 import { Action } from '../../gateways/actions';
 import { BaseController } from '../base/base-controller';
 import { ViewUser } from '../pages/meetings/view-models/view-user';
+import { ORGANIZATION_ID } from '../pages/organization/services/organization.service';
 import { ControllerServiceCollectorService } from './controller-service-collector.service';
 
 /**
@@ -26,6 +32,14 @@ import { ControllerServiceCollectorService } from './controller-service-collecto
  * See {@link parseUserString} for implementations
  */
 type StringNamingSchema = 'lastCommaFirst' | 'firstSpaceLast';
+
+const STOP_CLEANING_THRESHOLD = 10000;
+
+interface FetchUserIdsData {
+    start_index?: number;
+    entries?: number;
+    cleanOldModels?: boolean;
+}
 
 @Injectable({
     providedIn: `root`
@@ -35,6 +49,8 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         controllerServiceCollector: ControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         private presenter: GetActiveUsersAmountPresenterService,
+        private userIdsPresenter: GetUsersPresenterService,
+        private searchUsersPresenter: SearchUsersByNameOrEmailPresenterService,
         private operator: OperatorService
     ) {
         super(controllerServiceCollector, User, repo);
@@ -56,7 +72,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     }
 
     public async delete(...userIds: Identifiable[]): Promise<void> {
-        await this.repo.delete(...userIds).resolve();
+        await this.repo.delete(userIds).resolve();
     }
 
     public setPassword(user: Identifiable, password: string, setAsDefault?: boolean): Promise<void> {
@@ -207,6 +223,26 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         return await this.presenter.call();
     }
 
+    /**
+     * Fetches the ids of the users that are currently stored in the backend. May be used to clean up the client's internal datastore.
+     * Will not do anything and return an empty array if the operator doesn't have the can_manage_users OML permission.
+     * @param data contains the information on the interval of positions that should be read from the backend and on whether the client should delete relics from its internal datastore.
+     * @returns an array with the requested user ids
+     */
+    public async fetchAccountIds({
+        start_index = 0,
+        entries = 1000,
+        cleanOldModels = false
+    }: FetchUserIdsData): Promise<Id[]> {
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            return [];
+        }
+        if (cleanOldModels) {
+            await this.cleanOldModels();
+        }
+        return await this.userIdsPresenter.call({ start_index, entries });
+    }
+
     public async sendInvitationEmails(users: Identifiable[], meetingId?: Id): Promise<string> {
         const response = (await this.repo.sendInvitationEmails(users, meetingId).resolve()) as EmailSentResult[];
 
@@ -251,5 +287,30 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         }
 
         return responseMessage;
+    }
+
+    /**
+     * Finds users, that don't exist in the backend but still linger in the internal store, and deletes them.
+     */
+    private async cleanOldModels(): Promise<void> {
+        const savedUserModels = this.getViewModelList();
+        if (savedUserModels.length === 0) {
+            return;
+        }
+        const searchResult = await this.searchUsersPresenter.call({
+            permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION,
+            permissionRelatedId: ORGANIZATION_ID,
+            searchCriteria: savedUserModels.map(user => ({ username: user.username }))
+        });
+        const oldModelIds: number[] = [];
+        savedUserModels.forEach(user => {
+            if (
+                !searchResult[`${user.username}/`] ||
+                !searchResult[`${user.username}/`].map(date => date.id).includes(user.id)
+            ) {
+                oldModelIds.push(user.id);
+            }
+        });
+        this.repo.deleteModels(oldModelIds);
     }
 }

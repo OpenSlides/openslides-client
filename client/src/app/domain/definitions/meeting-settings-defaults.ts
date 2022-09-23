@@ -74,7 +74,6 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     assignment_poll_ballot_paper_selection: `CUSTOM_NUMBER`,
     assignment_poll_ballot_paper_number: 8,
     assignments_export_title: _(`Elections`),
-    users_sort_by: `first_name`,
     users_enable_presence_view: false,
     users_allow_self_set_present: true,
     users_enable_vote_weight: false,

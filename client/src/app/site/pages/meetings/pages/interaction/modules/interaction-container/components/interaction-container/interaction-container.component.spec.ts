@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InteractionContainerComponent } from './interaction-container.component';
 
-describe(`InteractionContainerComponent`, () => {
+xdescribe(`InteractionContainerComponent`, () => {
     let component: InteractionContainerComponent;
     let fixture: ComponentFixture<InteractionContainerComponent>;
 

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HttpStreamEndpointService } from './http-stream-endpoint.service';
 
-describe(`HttpStreamEndpointService`, () => {
+xdescribe(`HttpStreamEndpointService`, () => {
     let service: HttpStreamEndpointService;
 
     beforeEach(() => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
 import { Action, ActionService } from 'src/app/gateways/actions';
@@ -15,6 +15,7 @@ import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { UserDeleteDialogService } from 'src/app/site/modules/user-components';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -41,9 +42,12 @@ export const MEETING_RELATED_FORM_CONTROLS = [
 export class ParticipantControllerService extends BaseMeetingControllerService<ViewUser, User> {
     private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);
 
+    private _participantListUpdateSubscription: Subscription;
+
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
+        public meetingController: MeetingControllerService,
         private userController: UserControllerService,
         private userDeleteDialog: UserDeleteDialogService,
         private presenter: GetUserScopePresenterService,
@@ -51,8 +55,29 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         private actions: ActionService
     ) {
         super(controllerServiceCollector, User, repo);
+
+        let meetingUserIds = [];
+        // this.activeMeeting.users_as_observable.subscribe(users => this._participantListSubject.next(users))
+        this.activeMeetingIdService.meetingIdObservable.subscribe(newId => {
+            if (this._participantListUpdateSubscription) {
+                this._participantListUpdateSubscription.unsubscribe();
+            }
+            if (newId) {
+                this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
+                    meetingUserIds = meeting?.user_ids;
+                    const meetingUsers =
+                        meeting && meeting?.user_ids
+                            ? repo.getViewModelList().filter(user => meeting?.user_ids.includes(user.id))
+                            : [];
+                    this._participantListSubject.next(meetingUsers);
+                });
+            }
+        });
+
         repo.getViewModelListObservable().subscribe(users => {
-            const meetingUsers = users.filter(user => user.group_ids(this.activeMeetingId).length);
+            const meetingUsers = users.filter(
+                user => user.group_ids(this.activeMeetingId).length && meetingUserIds.includes(user.id)
+            );
             this._participantListSubject.next(meetingUsers);
         });
     }
@@ -84,8 +109,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this.repo.updateSelf(patch, participant);
     }
 
-    public delete(...participants: Identifiable[]): Action<void> {
-        return this.repo.delete(...participants) as Action<void>;
+    public delete(participants: Identifiable[], handle_separately = false): Action<void> {
+        return this.repo.delete(participants, handle_separately) as Action<void>;
     }
 
     public bulkGenerateNewPasswords(...users: ViewUser[]): Promise<void> {
@@ -162,7 +187,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const answer = await firstValueFrom(prompt.afterClosed());
         if (answer) {
             const patch = { group_$_ids: { [this.activeMeetingId!]: [] } };
-            await this.delete(...toDeleteUsers)
+            await this.delete(toDeleteUsers, true)
                 .concat(this.update(patch, ...toRemoveUsers))
                 .resolve();
         }
@@ -232,17 +257,20 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 [this.activeMeetingId!]: participant.structure_level
             },
             group_$_ids: participant.group_$_ids || {
-                [this.activeMeetingId!]: participant.group_ids || [this.activeMeeting.meeting!.default_group_id]
+                [this.activeMeetingId!]: participant.group_ids
             },
             number_$: participant.number_$ || { [this.activeMeetingId!]: participant.number },
             vote_weight_$: participant.vote_weight_$ || {
-                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any)
+                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any, false)
             },
             vote_delegated_$_to_id: participant.vote_delegated_$_to_id || {
                 [this.activeMeetingId!]: participant.vote_delegated_to_id
             },
             vote_delegations_$_from_ids: participant.vote_delegations_$_from_ids || {
                 [this.activeMeetingId!]: participant.vote_delegations_from_ids
+            },
+            comment_$: participant.comment_$ || {
+                [this.activeMeetingId!]: participant.comment
             }
         };
     }

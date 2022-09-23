@@ -32,7 +32,7 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: `sort_weight`, label: `Call list` },
+        { property: [`tree_weight`, `id`], label: `Call list` },
         { property: `number` },
         { property: `title` },
         { property: `submitters` },

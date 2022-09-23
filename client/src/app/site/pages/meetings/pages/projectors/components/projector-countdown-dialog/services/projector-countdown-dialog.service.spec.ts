@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectorCountdownDialogService } from './projector-countdown-dialog.service';
 
-describe(`ProjectorCountdownDialogService`, () => {
+xdescribe(`ProjectorCountdownDialogService`, () => {
     let service: ProjectorCountdownDialogService;
 
     beforeEach(() => {

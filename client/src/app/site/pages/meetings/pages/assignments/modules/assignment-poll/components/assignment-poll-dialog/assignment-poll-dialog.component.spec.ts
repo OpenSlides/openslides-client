@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignmentPollDialogComponent } from './assignment-poll-dialog.component';
 
-describe(`AssignmentPollDialogComponent`, () => {
+xdescribe(`AssignmentPollDialogComponent`, () => {
     let component: AssignmentPollDialogComponent;
     let fixture: ComponentFixture<AssignmentPollDialogComponent>;
 

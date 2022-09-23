@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { C4DialogComponent } from './c4-dialog.component';
 
-describe(`C4DialogComponent`, () => {
+xdescribe(`C4DialogComponent`, () => {
     let component: C4DialogComponent;
     let fixture: ComponentFixture<C4DialogComponent>;
 

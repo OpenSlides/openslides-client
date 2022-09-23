@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionMultiselectActionsComponent } from './motion-multiselect-actions.component';
 
-describe(`MotionMultiselectActionsComponent`, () => {
+xdescribe(`MotionMultiselectActionsComponent`, () => {
     let component: MotionMultiselectActionsComponent;
     let fixture: ComponentFixture<MotionMultiselectActionsComponent>;
 

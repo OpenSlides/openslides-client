@@ -9,7 +9,7 @@ export const getAgendaSubscriptionConfig = (id: Id, hasMeetingIdChangedObservabl
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`agenda_item_ids`, `speaker_ids`, `list_of_speakers_ids`]
+        follow: [`agenda_item_ids`, `speaker_ids`, `list_of_speakers_ids`, `tag_ids`]
     },
     subscriptionName: AGENDA_ITEM_SUBSCRIPTION,
     hideWhen: hasMeetingIdChangedObservable()

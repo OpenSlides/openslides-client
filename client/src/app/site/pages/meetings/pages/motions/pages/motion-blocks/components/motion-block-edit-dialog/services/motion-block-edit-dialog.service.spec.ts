@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionBlockEditDialogService } from './motion-block-edit-dialog.service';
 
-describe(`MotionBlockEditDialogService`, () => {
+xdescribe(`MotionBlockEditDialogService`, () => {
     let service: MotionBlockEditDialogService;
 
     beforeEach(() => {

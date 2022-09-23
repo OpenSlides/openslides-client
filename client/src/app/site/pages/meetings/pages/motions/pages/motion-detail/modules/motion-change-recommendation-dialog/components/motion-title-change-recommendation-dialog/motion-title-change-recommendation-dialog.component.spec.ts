@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionTitleChangeRecommendationDialogComponent } from './motion-title-change-recommendation-dialog.component';
 
-describe(`MotionTitleChangeRecommendationDialogComponent`, () => {
+xdescribe(`MotionTitleChangeRecommendationDialogComponent`, () => {
     let component: MotionTitleChangeRecommendationDialogComponent;
     let fixture: ComponentFixture<MotionTitleChangeRecommendationDialogComponent>;
 

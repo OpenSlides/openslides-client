@@ -13,6 +13,7 @@ import {
     ROUTING_FIELDSET,
     TypedFieldset
 } from 'src/app/site/services/model-request-builder';
+import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Motion } from '../../../../domain/models/motions/motion';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
@@ -38,7 +39,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
 
     constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
+        agendaItemRepo: AgendaItemRepositoryService,
+        private treeService: TreeService
     ) {
         super(repositoryServiceCollector, Motion, agendaItemRepo);
         this.meetingSettingsService.get(`motions_default_sorting`).subscribe(conf => {
@@ -336,6 +338,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         viewModel.getProjectorTitle = () => this.getProjectorTitle(viewModel);
 
         return viewModel;
+    }
+
+    protected override tapViewModels(viewModels: ViewMotion[]): void {
+        this.treeService.injectFlatNodeInformation(viewModels, `sort_weight`, `sort_parent_id`);
     }
 
     private getCreatePayload(partialMotion: any): any {

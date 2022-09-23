@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionPdfExportService } from './motion-pdf-export.service';
 
-describe(`MotionPdfExportService`, () => {
+xdescribe(`MotionPdfExportService`, () => {
     let service: MotionPdfExportService;
 
     beforeEach(() => {

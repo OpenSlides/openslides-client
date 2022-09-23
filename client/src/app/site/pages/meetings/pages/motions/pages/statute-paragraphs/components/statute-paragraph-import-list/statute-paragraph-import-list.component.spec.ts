@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatuteParagraphImportListComponent } from './statute-paragraph-import-list.component';
 
-describe(`StatuteParagraphImportListComponent`, () => {
+xdescribe(`StatuteParagraphImportListComponent`, () => {
     let component: StatuteParagraphImportListComponent;
     let fixture: ComponentFixture<StatuteParagraphImportListComponent>;
 

@@ -683,7 +683,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
             const { importModel, allImportModels } = config;
             return config.importFindHandler.findByName(value, { importModel, allImportModels });
         }
-        value = this.pipeParseValue(value, config.header) || value;
+        value = this.pipeParseValue(value, config.header) ?? value;
         return value;
     }
 

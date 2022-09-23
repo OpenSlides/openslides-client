@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrganizationSettingsComponent } from './organization-settings.component';
 
-describe(`OrganizationSettingsComponent`, () => {
+xdescribe(`OrganizationSettingsComponent`, () => {
     let component: OrganizationSettingsComponent;
     let fixture: ComponentFixture<OrganizationSettingsComponent>;
 

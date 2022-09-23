@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommitteeImportService } from './committee-import.service';
 
-describe(`CommitteeImportService`, () => {
+xdescribe(`CommitteeImportService`, () => {
     let service: CommitteeImportService;
 
     beforeEach(() => {

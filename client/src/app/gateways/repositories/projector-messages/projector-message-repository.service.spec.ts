@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ProjectorMessageRepositoryService } from './projector-message-repository.service';
 
-describe(`ProjectorMessageRepositoryService`, () => {
+xdescribe(`ProjectorMessageRepositoryService`, () => {
     let service: ProjectorMessageRepositoryService;
 
     beforeEach(() => {

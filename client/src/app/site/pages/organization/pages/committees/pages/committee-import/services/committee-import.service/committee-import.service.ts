@@ -103,7 +103,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             MANAGER_IDS,
             new UserImportHelper({
                 repo: userRepo,
-                verboseName: _(`Committee management`),
+                verboseName: _(`Committee admin`),
                 property: MANAGER_IDS,
                 searchService: userSearchService,
                 useDefault: [operator.operatorId!],

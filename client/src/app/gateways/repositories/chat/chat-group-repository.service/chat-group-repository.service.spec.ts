@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ChatGroupRepositoryService } from './chat-group-repository.service';
 
-describe(`ChatGroupRepositoryService`, () => {
+xdescribe(`ChatGroupRepositoryService`, () => {
     let service: ChatGroupRepositoryService;
 
     beforeEach(() => {

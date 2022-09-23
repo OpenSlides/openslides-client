@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import {
+    BaseSortListService,
+    OsHideSortingOptionSetting,
+    OsSortingDefinition,
+    OsSortingOption
+} from 'src/app/site/base/base-sort.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { ParticipantListServiceModule } from '../participant-list-service.module';
@@ -27,13 +33,20 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         { property: `is_physical_person`, label: `Is a natural person` },
         { property: `number`, label: `Participant number` },
         { property: `structure_level`, label: `Structure level` },
-        { property: `vote_weight`, label: `Vote weight` },
+        { property: `voteWeight`, label: `Vote weight` },
         { property: `comment` }
         // TODO email send?
     ];
 
-    public constructor(translate: TranslateService, store: StorageService) {
+    private _voteWeightEnabled: boolean;
+
+    public constructor(
+        translate: TranslateService,
+        store: StorageService,
+        private meetingSettings: MeetingSettingsService
+    ) {
         super(translate, store);
+        this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
     }
 
     /**
@@ -53,5 +66,14 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
             sortProperty: [`first_name`, `last_name`],
             sortAscending: true
         };
+    }
+
+    protected override getHideSortingOptionSettings(): OsHideSortingOptionSetting<ViewUser>[] {
+        return [
+            {
+                property: `vote_weight`,
+                shouldHideFn: () => !this._voteWeightEnabled
+            }
+        ];
     }
 }

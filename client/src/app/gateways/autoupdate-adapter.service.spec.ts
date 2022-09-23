@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AutoupdateAdapterService } from './autoupdate-adapter.service';
 
-describe(`AutoupdateAdapterService`, () => {
+xdescribe(`AutoupdateAdapterService`, () => {
     let service: AutoupdateAdapterService;
 
     beforeEach(() => {

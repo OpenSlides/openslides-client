@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, merge, Observable } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    map,
+    merge,
+    Observable
+} from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { NotifyService } from '../../../../../../gateways/notify.service';
+import { NotifyResponse, NotifyService } from '../../../../../../gateways/notify.service';
+import { ViewUser } from '../../../view-models/view-user';
 import { BroadcastService } from './broadcast.service';
 import { CallRestrictionService } from './call-restriction.service';
 import { InteractionServiceModule } from './interaction-service.module';
@@ -22,9 +32,14 @@ interface senderMessage {
     inviter: string;
 }
 
+interface kickMessage {
+    reason: string;
+}
+
 const BroadcastMessageType = `callInteraction`;
 const InviteMessage = `invitationToCall`;
 const CallInviteTitle = _(`Please join the conference room now!`);
+const KickMessage = `kickFromCall`;
 
 @Injectable({
     providedIn: InteractionServiceModule
@@ -51,6 +66,8 @@ export class InteractionService {
     public get isConfStateNone(): Observable<boolean> {
         return this.conferenceStateObservable.pipe(map(state => state === ConferenceState.none));
     }
+
+    private _kickObservable = this.notifyService.getMessageObservable<kickMessage>(KickMessage);
 
     public constructor(
         private streamService: StreamService,
@@ -108,6 +125,8 @@ export class InteractionService {
         broadcast.get(BroadcastMessageType).subscribe(() => {
             this.promptService.close();
         });
+
+        this._kickObservable.subscribe(response => this.onKickMessage(response));
     }
 
     public async enterCall(): Promise<void> {
@@ -126,6 +145,16 @@ export class InteractionService {
     public viewStream(): void {
         if (this.conferenceState !== ConferenceState.stream) {
             this.setConferenceState(ConferenceState.stream);
+        }
+    }
+
+    public kickUsers(users: ViewUser[], reason?: string): void {
+        this.notifyService.sendToUsers(KickMessage, { reason }, ...users.map(user => user.id));
+    }
+
+    private async onKickMessage(message: NotifyResponse<kickMessage>): Promise<void> {
+        if (await firstValueFrom(this.rtcService.isJitsiActiveObservable)) {
+            this.rtcService.stopJitsi();
         }
     }
 

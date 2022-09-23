@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectorMessageSlideComponent } from './projector-message-slide.component';
 
-describe(`ProjectorMessageSlideComponent`, () => {
+xdescribe(`ProjectorMessageSlideComponent`, () => {
     let component: ProjectorMessageSlideComponent;
     let fixture: ComponentFixture<ProjectorMessageSlideComponent>;
 

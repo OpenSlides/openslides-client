@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserDetailViewComponent } from './user-detail-view.component';
 
-describe(`UserDetailViewComponent`, () => {
+xdescribe(`UserDetailViewComponent`, () => {
     let component: UserDetailViewComponent;
     let fixture: ComponentFixture<UserDetailViewComponent>;
 

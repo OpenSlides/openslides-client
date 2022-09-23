@@ -1,4 +1,4 @@
-import { Compiler, ComponentFactory, Inject, Injectable, Injector, NgModuleFactory, Type } from '@angular/core';
+import { createNgModuleRef, Inject, Injectable, Injector, Type } from '@angular/core';
 
 import { BaseSlideComponent } from '../base/base-slide-component';
 import { SLIDE_MANIFESTS, SlideConfiguration, SlideManifest, SlideToken } from '../definitions';
@@ -8,11 +8,7 @@ import { SlidesModule } from '../slides.module';
 export class SlideManagerService {
     private loadedSlides: { [name: string]: SlideManifest } = {};
 
-    public constructor(
-        @Inject(SLIDE_MANIFESTS) private manifests: SlideManifest[],
-        private compiler: Compiler,
-        private injector: Injector
-    ) {
+    public constructor(@Inject(SLIDE_MANIFESTS) private manifests: SlideManifest[], private injector: Injector) {
         this.manifests.forEach(slideManifest => {
             this.loadedSlides[slideManifest.path] = slideManifest;
         });
@@ -55,27 +51,16 @@ export class SlideManagerService {
     }
 
     /**
-     * Asynchronously load the slide's component factory, which is used to create
-     * the slide component.
+     * Asynchronously load the slide's component
      *
      * @param slideName The slide to search.
      */
-    public async getSlideFactory<T extends BaseSlideComponent<Record<string, unknown>>>(
+    public async getSlideType<T extends BaseSlideComponent<Record<string, unknown>>>(
         slideName: string
-    ): Promise<ComponentFactory<T>> {
+    ): Promise<Type<T>> {
         const manifest = this.getManifest(slideName);
-
-        // Load the module factory.
-        let ngModuleFactory: NgModuleFactory<any>;
         const loadedModule = (await manifest.loadChildren()) as any;
-        if (loadedModule instanceof NgModuleFactory) {
-            ngModuleFactory = loadedModule;
-        } else {
-            ngModuleFactory = await this.compiler.compileModuleAsync(loadedModule);
-        }
-
-        // create the module
-        const moduleRef = ngModuleFactory.create(this.injector);
+        const moduleRef = createNgModuleRef(loadedModule, this.injector);
 
         // Get the slide provided by the `SlideToken.token`-injectiontoken.
         let dynamicComponentType: Type<T>;
@@ -88,8 +73,7 @@ export class SlideManagerService {
             );
             throw e;
         }
-        // Resolve this component factory
-        const componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(dynamicComponentType);
-        return componentFactory;
+
+        return dynamicComponentType;
     }
 }

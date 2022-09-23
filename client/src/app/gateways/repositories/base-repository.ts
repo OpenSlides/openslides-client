@@ -441,9 +441,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @param actions
      * @returns
      */
-    protected async sendActionsToBackend(actions: ActionRequest[]): Promise<any> {
+    protected async sendActionsToBackend(actions: ActionRequest[], handle_separately = false): Promise<any> {
         try {
-            return await this.actions.sendRequests(actions);
+            return await this.actions.sendRequests(actions, handle_separately);
         } catch (e) {
             throw e;
         }

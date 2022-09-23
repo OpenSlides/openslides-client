@@ -1,3 +1,4 @@
+import { CML } from 'src/app/domain/definitions/organization-permission';
 import { User } from 'src/app/domain/models/users/user';
 
 import { Id } from '../../../../domain/definitions/key-types';
@@ -30,6 +31,18 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
         return !!this.user.last_email_send;
     }
 
+    public get hasEmail(): boolean {
+        return !!this.email;
+    }
+
+    public get isCommitteeManager(): boolean {
+        return !!this.committee_management_levels(CML.can_manage).length;
+    }
+
+    public get numberOfMeetings(): number {
+        return this.meeting_ids.length;
+    }
+
     public get name(): string {
         if (this.user && this.getName) {
             return this.getName();
@@ -55,7 +68,7 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get delegationType(): DelegationType {
-        if (this.user.isVoteRightDelegated) {
+        if (this.isVoteRightDelegated) {
             return DelegationType.Transferred;
         } else if (this.hasVoteRightFromOthers()) {
             return DelegationType.Received;
@@ -211,11 +224,15 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get isVoteWeightOne(): boolean {
-        return this.default_vote_weight === 1;
+        return (!this.getEnsuredActiveMeetingId() ? this.default_vote_weight : this.vote_weight()) === 1;
     }
 
     public get isVoteRightDelegated(): boolean {
         return !!this.vote_delegated_to_id(this.getEnsuredActiveMeetingId());
+    }
+
+    public get voteWeight(): number {
+        return this.vote_weight() ?? this.default_vote_weight;
     }
 
     public get isVoteCountable(): boolean {
@@ -246,8 +263,8 @@ type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
-    // committee_management_levels: (cml: CML) => ViewCommittee[]; // Not working yet!
     meetings: ViewMeeting[];
+    committee_management_levels: (arg?: CML) => ViewCommittee[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;
     personal_notes: UserManyStructuredRelation<ViewPersonalNote>;

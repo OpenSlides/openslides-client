@@ -18,6 +18,12 @@ export interface OsSortingOption<T> {
     sortFn?: (itemA: T, itemB: T, ascending: boolean, intl?: Intl.Collator) => number;
 }
 
+export interface OsHideSortingOptionSetting<T> {
+    property: keyof T;
+    shouldHideFn: () => boolean;
+    currentlyHidden?: boolean;
+}
+
 /**
  * An array of properties may be given to define secondary options
  *

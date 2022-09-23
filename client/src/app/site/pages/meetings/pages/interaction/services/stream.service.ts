@@ -40,7 +40,7 @@ export class StreamService {
             .watch(STREAM_RUNNING_STORAGE_KEY, { type: `boolean` })
             .pipe(distinctUntilChanged() as any);
 
-        operator.userObservable.subscribe(() => {
+        operator.permissionsObservable.subscribe(() => {
             this.canSeeLiveStreamSubject.next(operator.hasPerms(Permission.meetingCanSeeLivestream));
         });
     }

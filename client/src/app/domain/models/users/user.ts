@@ -1,4 +1,5 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { filter, interval, map } from 'rxjs';
 
 import { Id } from '../../definitions/key-types';
 import { CML, OMLMapping } from '../../definitions/organization-permission';
@@ -13,6 +14,23 @@ export type UserSortProperty = 'first_name' | 'last_name' | 'number';
  * Iterable pre selection of genders (sexes)
  */
 export const GENDERS = [_(`female`), _(`male`), _(`diverse`)];
+
+/**
+ * Workaround that exists to ensure that the account list always gets updates for the users, that are already known to the client.
+ * TODO: Remove this when we have a more proper way to update the account list.
+ */
+export const USER_IDS_OBSERVABLE = interval(1000).pipe(
+    map(number => Array.from(USER_IDS_SET.values())),
+    filter(userIds => {
+        if (userIdsChanged) {
+            userIdsChanged = false;
+            return true;
+        }
+        return false;
+    })
+);
+const USER_IDS_SET = new Set<number>();
+var userIdsChanged = false;
 
 /**
  * Representation of a user in contrast to the operator.
@@ -68,20 +86,15 @@ export class User extends BaseDecimalModel<User> {
     public organization_management_level!: keyof OMLMapping;
     public committee_$_management_level!: CML[];
 
-    public get isVoteWeightOne(): boolean {
-        throw new Error(`TODO`);
-        // TODO: this is meeting dependend (check for vote_weight_$!) -> must be answered in the view-user
-        // return this.default_vote_weight === 1;
-    }
-
-    public get isVoteRightDelegated(): boolean {
-        throw new Error(`TODO`);
-        // TODO: this is meeting dependend -> must be answered in the view-user
-        // return !!this.vote_delegated_to_id(this.meeting_id);
-    }
-
     public constructor(input?: Partial<User>) {
         super(User.COLLECTION, input);
+
+        // Workaround that exists to ensure that the account list always gets updates for the users, that are already known to the client.
+        // TODO: Remove this when we have a more proper way to update the account list.
+        if (this.id && !USER_IDS_SET.has(this.id)) {
+            USER_IDS_SET.add(this.id);
+            userIdsChanged = true;
+        }
     }
 
     public hasVoteRightFromOthers(meetingId: Id): boolean {
@@ -89,7 +102,7 @@ export class User extends BaseDecimalModel<User> {
     }
 
     public vote_weight(meetingId: Id): number {
-        return ((this as any)[`vote_weight_$${meetingId}`] as number) || this.default_vote_weight;
+        return ((this as any)[`vote_weight_$${meetingId}`] as number) ?? this.default_vote_weight;
     }
 
     public structure_level(meetingId: Id): string {

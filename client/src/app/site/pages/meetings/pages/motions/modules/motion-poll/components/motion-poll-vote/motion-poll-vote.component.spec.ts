@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MotionPollVoteComponent } from './motion-poll-vote.component';
 
-describe(`MotionPollVoteComponent`, () => {
+xdescribe(`MotionPollVoteComponent`, () => {
     let component: MotionPollVoteComponent;
     let fixture: ComponentFixture<MotionPollVoteComponent>;
 

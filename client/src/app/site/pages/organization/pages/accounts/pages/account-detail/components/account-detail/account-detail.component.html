@@ -79,27 +79,27 @@
         </div>
 
         <div [formGroup]="form">
-            <div *osOmlPerms="OML.can_manage_organization">
-                <mat-form-field>
-                    <os-repo-search-selector
-                        formControlName="committee_$_management_level"
-                        [multiple]="true"
-                        placeholder="{{ 'Committee management' | translate }}"
-                        [repo]="committeeController"
-                        [transformPropagateFn]="getTransformPropagateFn()"
-                        [transformSetFn]="getTransformSetFn()"
-                    ></os-repo-search-selector>
-                </mat-form-field>
-            </div>
             <div *osOmlPerms="OML.can_manage_users">
                 <mat-form-field>
-                    <mat-label>{{ 'User permission' | translate }}</mat-label>
+                    <mat-label>{{ 'Administration roles (at organization level)' | translate }}</mat-label>
                     <mat-select formControlName="organization_management_level">
                         <mat-option [value]="null">-</mat-option>
                         <mat-option *ngFor="let level of organizationManagementLevels" [value]="level">
                             {{ getOmlVerboseName(level) | translate }}
                         </mat-option>
                     </mat-select>
+                </mat-form-field>
+            </div>
+            <div *osOmlPerms="OML.can_manage_organization">
+                <mat-form-field>
+                    <os-repo-search-selector
+                        formControlName="committee_$_management_level"
+                        [multiple]="true"
+                        placeholder="{{ 'Committee admin' | translate }}"
+                        [repo]="committeeController"
+                        [transformPropagateFn]="getTransformPropagateFn()"
+                        [transformSetFn]="getTransformSetFn()"
+                    ></os-repo-search-selector>
                 </mat-form-field>
             </div>
         </div>
@@ -119,25 +119,25 @@
             <span>{{ user.default_number }}</span>
         </div>
 
-        <div *ngIf="user.default_vote_weight">
+        <div *ngIf="user.default_vote_weight || user.default_vote_weight === 0">
             <h4>{{ 'Default vote weight' | translate }}</h4>
             <span>{{ user.default_vote_weight }}</span>
         </div>
 
-        <!-- Committee management -->
+        <!-- Organization management level -->
+        <div *ngIf="user.organization_management_level">
+            <h4>{{ 'Administration roles (at organization level)' | translate }}</h4>
+            <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
+        </div>
+
+        <!-- Committee admin -->
         <div *ngIf="user.committee_$_management_level?.length">
-            <h4>{{ 'Committee management' | translate }}</h4>
+            <h4>{{ 'Committee admin' | translate }}</h4>
             <ng-container
                 *ngTemplateOutlet="modelListTemplate; context: { models: getUserCommitteeManagementLevels() }"
             ></ng-container>
         </div>
-
-        <!-- Organization management level -->
-        <div *ngIf="user.organization_management_level">
-            <h4>{{ 'User permission' | translate }}</h4>
-            <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
-        </div>
-
+    
         <div *ngIf="user?.isLastEmailSend">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>

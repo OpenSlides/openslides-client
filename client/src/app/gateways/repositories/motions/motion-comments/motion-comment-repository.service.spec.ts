@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionCommentRepositoryService } from './motion-comment-repository.service';
 
-describe(`MotionCommentRepositoryService`, () => {
+xdescribe(`MotionCommentRepositoryService`, () => {
     let service: MotionCommentRepositoryService;
 
     beforeEach(() => {

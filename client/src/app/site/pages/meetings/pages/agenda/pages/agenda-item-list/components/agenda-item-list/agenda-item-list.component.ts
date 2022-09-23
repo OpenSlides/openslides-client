@@ -24,10 +24,13 @@ import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
+import { ViewTag } from '../../../../../motions';
+import { TagControllerService } from '../../../../../motions/modules/tags/services';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../services';
 import { AgendaItemExportService } from '../../services/agenda-item-export.service/agenda-item-export.service';
 import { AgendaItemFilterService } from '../../services/agenda-item-filter.service/agenda-item-filter.service';
+import { AgendaItemMultiselectService } from '../../services/agenda-item-multiselect.service/agenda-item-multiselect.service';
 import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';
 
 const AGENDA_ITEM_LIST_STORAGE_INDEX = `agenda_item_list`;
@@ -54,6 +57,11 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     public isNumberingAllowed: boolean = false;
 
     public showSubtitles: Observable<boolean> = this.meetingSettingsService.get(`agenda_show_subtitles`);
+
+    /**
+     * The list of all tags.
+     */
+    public tags: ViewTag[] = [];
 
     /**
      * Helper to check main button permissions
@@ -93,7 +101,9 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         private topicRepo: TopicControllerService,
         private meetingRepo: MeetingControllerService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private treeService: TreeService
+        private treeService: TreeService,
+        private tagRepo: TagControllerService,
+        private agendaItemMultiselectService: AgendaItemMultiselectService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
@@ -129,7 +139,8 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                 } else {
                     this.itemListSlide = null;
                 }
-            })
+            }),
+            this.tagRepo.getViewModelListObservable().subscribe(tags => (this.tags = tags))
         );
     }
 
@@ -274,6 +285,13 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         } catch (e) {
             this.raiseError(e);
         }
+    }
+
+    /**
+     * Opens a dialog to add or remove tags to the given tags
+     */
+    public async changeSelectedTags(): Promise<void> {
+        this.agendaItemMultiselectService.changeTags(this.selectedRows);
     }
 
     /**

@@ -137,7 +137,9 @@
 <ng-template #mobileView>
     <div class="mobile-view">
         <!-- Meta info -->
-        <div><ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container></div>
+        <div *ngIf="!newMotion && !editMotion">
+            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+        </div>
 
         <!-- Content -->
         <mat-card [ngClass]="editMotion ? 'os-form-card-mobile' : 'os-card'">

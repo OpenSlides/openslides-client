@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { OrganizationTagRepositoryService } from './organization-tag-repository.service';
 
-describe(`OrganizationTagRepositoryService`, () => {
+xdescribe(`OrganizationTagRepositoryService`, () => {
     let service: OrganizationTagRepositoryService;
 
     beforeEach(() => {

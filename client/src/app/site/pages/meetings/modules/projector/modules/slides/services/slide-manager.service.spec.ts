@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { SlideManagerService } from './slide-manager.service';
 
-describe(`SlideManagerService`, () => {
+xdescribe(`SlideManagerService`, () => {
     let service: SlideManagerService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { MotionPdfCatalogService } from './motion-pdf-catalog.service';
 
-describe(`MotionPdfCatalogService`, () => {
+xdescribe(`MotionPdfCatalogService`, () => {
     let service: MotionPdfCatalogService;
 
     beforeEach(() => {

@@ -90,6 +90,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public user: ViewUser | null = null;
 
     public get usersGroups(): ViewGroup[] {
+        if (!this.activeMeetingId) {
+            return [];
+        }
         return this.user?.groups() || [];
     }
 
@@ -306,6 +309,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         if (this.operator.hasPerms(Permission.userCanManage)) {
             this.checkForGroups(this.personalInfoFormValue);
             const isPresent = this.personalInfoFormValue.is_present || false;
+            if (this.personalInfoFormValue.vote_delegated_to_id === 0) {
+                this.personalInfoFormValue.vote_delegated_to_id = null;
+            }
             await this.repo
                 .update(this.personalInfoFormValue, this.user!)
                 .concat(this.repo.setPresent(isPresent, this.user!))

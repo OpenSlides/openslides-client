@@ -28,8 +28,8 @@
     ],
     "dataGroups": [
         {
-            "name": "api",
-            "urls": ["/rest/*", "/apps/*", "/system/*", "/stats"],
+            "name": "system",
+            "urls": ["/system/*"],
             "cacheConfig": {
                 "maxSize": 0,
                 "maxAge": "0u",

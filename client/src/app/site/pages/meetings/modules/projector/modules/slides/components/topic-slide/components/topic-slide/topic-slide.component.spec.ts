@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TopicSlideComponent } from './topic-slide.component';
 
-describe(`TopicSlideComponent`, () => {
+xdescribe(`TopicSlideComponent`, () => {
     let component: TopicSlideComponent;
     let fixture: ComponentFixture<TopicSlideComponent>;
 

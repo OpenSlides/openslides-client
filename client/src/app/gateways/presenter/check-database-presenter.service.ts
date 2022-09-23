@@ -14,7 +14,10 @@ interface CheckDatabasePresenterResult {
 export class CheckDatabasePresenterService {
     public constructor(private presenter: PresenterService) {}
 
-    public async call(): Promise<CheckDatabasePresenterResult> {
-        return await this.presenter.call<CheckDatabasePresenterResult>(Presenter.CHECK_DATABASE, {});
+    public async call(all: boolean = false): Promise<CheckDatabasePresenterResult> {
+        return await this.presenter.call<CheckDatabasePresenterResult>(
+            all ? Presenter.CHECK_DATABASE_ALL : Presenter.CHECK_DATABASE,
+            {}
+        );
     }
 }
