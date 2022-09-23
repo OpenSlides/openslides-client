@@ -134,6 +134,7 @@ _(`The reason field may not be blank.`);
 _(`Searching for candidates`);
 _(`In the election process`);
 _(`Finished`);
+_(`Ballot opened`);
 
 // Voting strings
 _(`Motion votes`);

@@ -1,12 +1,12 @@
 <mat-card class="os-card">
     <div>
-        <h2>{{ 'Browser actions' | translate }}</h2>
+        <h2>{{ 'Troubleshooting' | translate }}</h2>
         <button type="button" mat-stroked-button (click)="resetCache()">
             {{ 'Reset cache' | translate }}
         </button>
     </div>
     <div *osOmlPerms="OML.superadmin" class="superadmin-button">
-        <h2>{{ 'Superadmin actions' | translate }}</h2>
+        <h3>{{ 'Superadmin actions' | translate }}</h3>
         <button type="button" mat-stroked-button (click)="checkDatastore()">
             {{ 'Check datastore' | translate }}
         </button>
