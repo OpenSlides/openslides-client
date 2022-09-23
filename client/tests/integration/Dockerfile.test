@@ -1,12 +1,9 @@
-FROM cypress/base:16.13.0
+FROM cypress/base:14.17.0
 
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
+ENV CI=1
 RUN npm ci
 
-COPY ./cypress.config.js .
-COPY ./resource-config.js .
-COPY ./cypress .
-
-CMD ["npm", "run", "cypress:run"]
+RUN npx cypress verify
