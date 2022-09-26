@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Action } from 'src/app/gateways/actions';
 
 import { Ids } from '../../../../../../domain/definitions/key-types';
 import { Identifiable } from '../../../../../../domain/interfaces';
@@ -32,7 +33,7 @@ export class CommitteeControllerService extends BaseController<ViewCommittee, Co
         return this.repo.create(...committees);
     }
 
-    public update(update?: any, ...committees: ViewCommittee[]): Promise<void> {
+    public update(update?: any, ...committees: ViewCommittee[]): Action<void> {
         return this.repo.update(update, ...committees);
     }
 

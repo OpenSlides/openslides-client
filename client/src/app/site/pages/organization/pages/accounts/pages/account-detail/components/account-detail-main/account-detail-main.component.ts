@@ -10,8 +10,8 @@ const ACCOUNT_DETAIL_SUBSCRIPTION_NAME = `account_detail`;
     styleUrls: [`./account-detail-main.component.scss`]
 })
 export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onParamsChanged(params: any): void {
-        if (params[`id`]) {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`]) {
             const id = +params[`id`];
             this.subscribeTo({
                 modelRequest: {
