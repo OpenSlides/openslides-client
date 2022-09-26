@@ -248,6 +248,16 @@ export class OperatorService {
                 console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
                 this._lastActiveMeetingId = newMeetingId;
                 this.operatorStateChange();
+                if (this._userSubject.getValue()) {
+                    const user = this._userSubject.getValue();
+                    if (this.activeMeetingId) {
+                        this._groupIds = user.group_ids(this.activeMeetingId);
+                        this._permissions = this.calcPermissions();
+                    }
+                    this._CML = getUserCML(user);
+                    this._OML = user.organization_management_level || null;
+                    this._operatorUpdatedSubject.next();
+                }
             }
         });
         // Specific operator data: The user itself and the groups for permissions.
