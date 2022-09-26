@@ -22,8 +22,8 @@ export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {
         return [getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())];
     }
 
-    protected override onParamsChanged(params: any): void {
-        if (params[`committeeId`]) {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`committeeId`] !== oldParams[`committeeId`]) {
             this.committeeId = +params[`committeeId`] || null;
             this.subscribeTo({
                 hideWhenDestroyed: true,
