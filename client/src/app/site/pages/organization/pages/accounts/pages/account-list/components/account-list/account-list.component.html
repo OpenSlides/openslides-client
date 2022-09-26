@@ -34,14 +34,13 @@
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
         <div class="flex-vertical-center">
             <div class="nameCell">
-                <div class="title-line">
+                <div class="title-line ellipsis-overflow">
                     {{ user.short_name }}
                     <ng-container *ngIf="user.pronoun">
                         &nbsp;
                         ({{ user.pronoun }})
                     </ng-container>
                 </div>
-                <br>
                 <div class="meta-info user-subtitle">
                     {{ user.username }}
                     <ng-container *ngIf="user.email">
@@ -60,40 +59,37 @@
         </div>
     </div>
     <!-- Info column -->
-    <div *osScrollingTableCell="'info'; row as user; config: { width: isMobile ? 60 : 180 }" class="committee-wrapper">
-        <div class="flex-center container">
-            <div class="long-box">
-                <os-icon-container
-                    *ngIf="!!user.meetings?.length"
-                    icon="apps"
-                    iconTooltip="{{ 'Meetings' | translate }}"
-                    [showIcon]="true"
-                    [noWrap]="true"
-                >
-                    {{ user.meetings.length }}
-                </os-icon-container>
-            </div>
-            <div class="box">
-                <div *ngIf="user.isLastEmailSend">
-                    <mat-icon
-                        inline
-                        matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
-                    >
-                        mail
-                    </mat-icon>
-                    &nbsp;
-                </div>
-            </div>
-            <div *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)" class="box">
-                <os-icon-container
-                    icon="engineering"
-                    matTooltip="{{ getOmlByUser(user) | translate }}"
-                >
-                    <ng-container *ngIf="!isMobile">
-                        {{ getOmlByUser(user) | translate }}
-                    </ng-container>
-                </os-icon-container>
-            </div>
+    <div *osScrollingTableCell="'info'; row as user; config: { width: isMobile ? 55 : 160 }" class="committee-wrapper">
+        <div class="flex-center">
+            <os-icon-container
+                *ngIf="!!user.meetings?.length"
+                icon="apps"
+                iconTooltip="{{ 'Meetings' | translate }}"
+                [showIcon]="true"
+                [noWrap]="true"
+            >
+                {{ user.meetings.length }}
+            </os-icon-container>
+        </div>
+        <div class="flex-center">
+            <os-icon-container
+                icon="mail"
+                *ngIf="user.isLastEmailSend"
+                matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
+            >
+            </os-icon-container>
+        </div>
+        <div class="flex-center">
+            <os-icon-container
+                icon="engineering"
+                *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)"
+                [matTooltipDisabled]="!isMobile"
+                matTooltip="{{ getOmlByUser(user) | translate }}"
+            >
+                <ng-container *ngIf="!isMobile">
+                    {{ getOmlByUser(user) | translate }}
+                </ng-container>
+            </os-icon-container>
         </div>
     </div>
 
