@@ -250,7 +250,7 @@ export class OperatorService {
                 this.operatorStateChange(false);
                 const user = this._userSubject.getValue();
                 if (user) {
-                    this.updatePermissions(user);
+                    this.updateUser(user);
                     this._operatorUpdatedSubject.next();
                 }
             }
@@ -259,7 +259,7 @@ export class OperatorService {
         this.userRepo.getGeneralViewModelObservable().subscribe(user => {
             if (user !== undefined && this.operatorId === user.id && !!user.username) {
                 this._shortName = this.userRepo.getShortName(user);
-                this.updatePermissions(user);
+                this.updateUser(user);
                 this._operatorShortNameSubject.next(this._shortName);
                 this._userSubject.next(user);
                 this._operatorUpdatedSubject.next();
@@ -292,7 +292,7 @@ export class OperatorService {
         return this.user.meeting_ids?.includes(meetingId) || false;
     }
 
-    private updatePermissions(user: ViewUser): void {
+    private updateUser(user: ViewUser): void {
         if (this.activeMeetingId) {
             this._groupIds = user.group_ids(this.activeMeetingId);
             this._permissions = this.calcPermissions();
