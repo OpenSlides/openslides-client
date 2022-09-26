@@ -26,7 +26,6 @@
     [filterService]="filterService"
     [searchService]="searchService"
     [sortService]="sortService"
-    [hiddenInMobile]="['info']"
     [alwaysShowMenu]="true"
     [vScrollFixed]="60"
 >
@@ -35,19 +34,19 @@
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
         <div class="flex-vertical-center">
             <div class="nameCell">
-                <div>
+                <div class="title-line">
                     {{ user.short_name }}
+                    <ng-container *ngIf="user.pronoun">
+                        &nbsp;
+                        ({{ user.pronoun }})
+                    </ng-container>
                 </div>
-                <ng-container *ngIf="user.pronoun">
-                    &nbsp;
-                    <div>({{ user.pronoun }})</div>
-                </ng-container>
                 <br>
                 <div class="meta-info user-subtitle">
-                    {{ 'Username' | translate }} : {{ user.username }}
-                </div>
-                <div class="meta-info user-subtitle" *ngIf="user.email">
-                    {{ 'Email' | translate }} : {{ user.email }}
+                    {{ user.username }}
+                    <ng-container *ngIf="user.email">
+                        · {{ user.email }}
+                    </ng-container>
                 </div>
             </div>
             <div class="icon-group">
@@ -61,25 +60,9 @@
         </div>
     </div>
     <!-- Info column -->
-    <div *osScrollingTableCell="'info'; row as user" class="committee-wrapper">
+    <div *osScrollingTableCell="'info'; row as user; config: { width: isMobile ? 60 : 180 }" class="committee-wrapper">
         <div class="flex-center container">
-            <div class="box">
-                <os-icon-container
-                    *ngIf="!!user.committee_ids?.length"
-                    icon="auto_awesome_mosaic"
-                    iconTooltip="{{ 'Committees' | translate }}"
-                    [showIcon]="true"
-                    [noWrap]="true"
-                >
-                    {{ user.committee_ids.length }}
-                </os-icon-container>
-            </div>
-            <div class="box">
-                <os-icon-container *ngIf="user.isLastEmailSend" icon="mail">
-                    {{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})
-                </os-icon-container>
-            </div>
-            <div class="box">
+            <div class="long-box">
                 <os-icon-container
                     *ngIf="!!user.meetings?.length"
                     icon="apps"
@@ -90,9 +73,25 @@
                     {{ user.meetings.length }}
                 </os-icon-container>
             </div>
+            <div class="box">
+                <div *ngIf="user.isLastEmailSend">
+                    <mat-icon
+                        inline
+                        matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
+                    >
+                        mail
+                    </mat-icon>
+                    &nbsp;
+                </div>
+            </div>
             <div *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)" class="box">
-                <os-icon-container icon="engineering">
-                    {{ getOmlByUser(user) | translate }}
+                <os-icon-container
+                    icon="engineering"
+                    matTooltip="{{ getOmlByUser(user) | translate }}"
+                >
+                    <ng-container *ngIf="!isMobile">
+                        {{ getOmlByUser(user) | translate }}
+                    </ng-container>
                 </os-icon-container>
             </div>
         </div>

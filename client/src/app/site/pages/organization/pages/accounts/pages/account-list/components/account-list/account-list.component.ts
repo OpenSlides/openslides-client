@@ -10,6 +10,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 
 import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
@@ -27,6 +28,10 @@ const ACCOUNT_LIST_STORAGE_INDEX = `account_list`;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountListComponent extends BaseListViewComponent<ViewUser> {
+    public get isMobile(): boolean {
+        return this.vp.isMobile;
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -38,7 +43,8 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private meetingRepo: MeetingControllerService,
         private choiceService: ChoiceService,
         private userController: UserControllerService,
-        public searchService: AccountListSearchService
+        public searchService: AccountListSearchService,
+        private vp: ViewPortService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Accounts`);
