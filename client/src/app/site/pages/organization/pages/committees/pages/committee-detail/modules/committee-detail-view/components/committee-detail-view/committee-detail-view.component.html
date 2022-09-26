@@ -39,7 +39,7 @@
         <os-committee-meta-info
             icon="file_upload"
             [title]="forwardLabel"
-            *ngIf="committee.forward_to_committees.length > 0"
+            *ngIf="committee.forward_to_committees.length > 0 && isOrgaAdmin()"
         >
             <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
                 <li *ngFor="let forwarding of committee.forward_to_committees">
@@ -59,7 +59,7 @@
         <os-committee-meta-info
             icon="file_download"
             [title]="receiveLabel"
-            *ngIf="committee.receive_forwardings_from_committees.length > 0"
+            *ngIf="committee.receive_forwardings_from_committees.length > 0 && isOrgaAdmin()"
         >
             <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
                 <li *ngFor="let receive of committee.receive_forwardings_from_committees">
