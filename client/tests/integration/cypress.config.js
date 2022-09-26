@@ -6,7 +6,11 @@ module.exports = defineConfig({
         "supportFile": "cypress/support/index.ts",
         "specPattern": "cypress/integration/**/*.spec.ts",
     },
-    "retries": 2,
+    "video": false,
+    "retries": {
+        "openMode": 0,
+        "runMode": 2
+    },
     "pageLoadTimeout": 120000,
     "screenshotsFolder": "results/screenshots",
     "videosFolder": "results/videos",
