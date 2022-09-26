@@ -547,6 +547,9 @@ msgstr ""
 msgid "Ballot"
 msgstr ""
 
+msgid "Ballot opened"
+msgstr ""
+
 msgid "Ballot papers"
 msgstr ""
 
@@ -1468,6 +1471,9 @@ msgstr ""
 msgid "Font size in pt"
 msgstr ""
 
+msgid "For large instances this may block the server to the point of unusability"
+msgstr ""
+
 msgid "Foreground color"
 msgstr ""
 
@@ -1654,6 +1660,9 @@ msgid "Import accounts"
 msgstr ""
 
 msgid "Import committees"
+msgstr ""
+
+msgid "Import data needs to have the JSON format"
 msgstr ""
 
 msgid "Import meeting"
@@ -3249,6 +3258,9 @@ msgstr ""
 msgid "Superadmin"
 msgstr ""
 
+msgid "Superadmin actions"
+msgstr ""
+
 msgid "Superadmin settings"
 msgstr ""
 
@@ -3461,6 +3473,9 @@ msgstr ""
 msgid "This will set the workflow for all selected motions:"
 msgstr ""
 
+msgid "Thoroughly check datastore (unsafe)"
+msgstr ""
+
 msgid "Tile view"
 msgstr ""
 
@@ -3495,6 +3510,9 @@ msgid "Touch the book icon to enter text"
 msgstr ""
 
 msgid "Translation"
+msgstr ""
+
+msgid "Troubleshooting"
 msgstr ""
 
 msgid "Type"

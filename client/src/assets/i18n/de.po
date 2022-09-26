@@ -595,6 +595,9 @@ msgstr "Hintergrundfarbe"
 msgid "Ballot"
 msgstr "Wahlgang"
 
+msgid "Ballot opened"
+msgstr "Wahlgang eröffnet"
+
 msgid "Ballot papers"
 msgstr "Stimmzettel"
 
@@ -1557,6 +1560,10 @@ msgstr "Folgende Nutzer bearbeiten aktuell diesen Antrag:"
 msgid "Font size in pt"
 msgstr "Schriftgröße in pt"
 
+msgid ""
+"For large instances this may block the server to the point of unusability"
+msgstr "Bei großen Instanzen kann dies den Server stark blockieren."
+
 msgid "Foreground color"
 msgstr "Vordergrundfarbe"
 
@@ -1748,6 +1755,9 @@ msgstr "Accounts importieren"
 
 msgid "Import committees"
 msgstr "Gremien importieren"
+
+msgid "Import data needs to have the JSON format"
+msgstr "Importierte Daten müssen im JSON-Format vorliegen"
 
 msgid "Import meeting"
 msgstr "Veranstaltung importieren"
@@ -3386,6 +3396,9 @@ msgstr "Zusammenfassung der Änderungen:"
 msgid "Superadmin"
 msgstr "Superadmin"
 
+msgid "Superadmin actions"
+msgstr "Superadmin-Aktionen"
+
 msgid "Superadmin settings"
 msgstr "Superadmin-Einstellungen"
 
@@ -3632,6 +3645,9 @@ msgstr "Folgender Status wird für alle ausgewählten Anträge gesetzt:"
 msgid "This will set the workflow for all selected motions:"
 msgstr "Folgender Arbeitsablauf wird für alle ausgewählten Anträge gesetzt:"
 
+msgid "Thoroughly check datastore (unsafe)"
+msgstr "Gründliche Überprüfung des Datastores (unsicher)"
+
 msgid "Tile view"
 msgstr "Kachelansicht"
 
@@ -3667,6 +3683,9 @@ msgstr "Tippen Sie auf das Buch-Icon, um den Text zu bearbeiten."
 
 msgid "Translation"
 msgstr "Übersetzung"
+
+msgid "Troubleshooting"
+msgstr "Fehlerbehebung"
 
 msgid "Type"
 msgstr "Typ"
