@@ -8,6 +8,7 @@ import { Committee } from '../../domain/models/comittees/committee';
 import { ViewCommittee } from '../../site/pages/organization/pages/committees';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
 import { OperatorService } from '../../site/services/operator.service';
+import { Action } from '../actions';
 import { BaseRepository } from './base-repository';
 import { CommitteeAction } from './committees/committee.action';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
@@ -56,7 +57,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
         return this.sendBulkActionToBackend(CommitteeAction.CREATE, payload);
     }
 
-    public update(update?: any, ...committees: ViewCommittee[]): Promise<void> {
+    public update(update?: any, ...committees: ViewCommittee[]): Action<void> {
         const createPayload = (id: Id, model: Partial<Committee>) => ({
             id,
             name: model.name,
@@ -64,7 +65,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             ...this.getPartialCommitteePayload(model)
         });
         const payload: any[] = committees.map(committee => createPayload(committee.id, update ?? committee));
-        return this.sendBulkActionToBackend(CommitteeAction.UPDATE, payload);
+        return this.createAction(CommitteeAction.UPDATE, payload);
     }
 
     public delete(...committees: ViewCommittee[]): Promise<void> {

@@ -68,7 +68,7 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get delegationType(): DelegationType {
-        if (this.user.isVoteRightDelegated) {
+        if (this.isVoteRightDelegated) {
             return DelegationType.Transferred;
         } else if (this.hasVoteRightFromOthers()) {
             return DelegationType.Received;

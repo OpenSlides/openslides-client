@@ -137,7 +137,8 @@ export class AssignmentPollService extends PollService {
         if (!poll.options?.length) {
             return 0;
         }
-        const generalOptions = poll.global_option.abstain! + poll.global_option.no!;
+
+        const generalOptions = (poll.global_option.abstain || 0) + (poll.global_option.no || 0);
         return poll.votesvalid - generalOptions;
     }
 }

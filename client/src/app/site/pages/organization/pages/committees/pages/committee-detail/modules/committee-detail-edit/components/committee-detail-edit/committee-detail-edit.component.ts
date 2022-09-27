@@ -120,7 +120,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             const identifiable = (await this.committeeRepo.create(value))[0];
             id = identifiable.id;
         } else {
-            await this.committeeRepo.update(value, this.editCommittee);
+            await this.committeeRepo.update(value, this.editCommittee).resolve();
             id = this.committeeId;
         }
         this.navigateBack(id);

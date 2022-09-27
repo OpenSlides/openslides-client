@@ -78,9 +78,6 @@ msgstr ""
 msgid "Account admin"
 msgstr ""
 
-msgid "Account management"
-msgstr ""
-
 msgid "Account successfully assigned"
 msgstr ""
 
@@ -168,6 +165,9 @@ msgid "Admin"
 msgstr ""
 
 msgid "Administration roles"
+msgstr ""
+
+msgid "Administration roles (at organization level)"
 msgstr ""
 
 msgid "Administrator"
@@ -545,6 +545,9 @@ msgid "Background color"
 msgstr ""
 
 msgid "Ballot"
+msgstr ""
+
+msgid "Ballot opened"
 msgstr ""
 
 msgid "Ballot papers"
@@ -1153,9 +1156,6 @@ msgstr ""
 msgid "Divergent:"
 msgstr ""
 
-msgid "Diverse"
-msgstr ""
-
 msgid "Do not concern"
 msgstr ""
 
@@ -1435,9 +1435,6 @@ msgstr ""
 msgid "Favorites"
 msgstr ""
 
-msgid "Female"
-msgstr ""
-
 msgid "Filename"
 msgstr ""
 
@@ -1474,6 +1471,9 @@ msgstr ""
 msgid "Font size in pt"
 msgstr ""
 
+msgid "For large instances this may block the server to the point of unusability"
+msgstr ""
+
 msgid "Foreground color"
 msgstr ""
 
@@ -1508,6 +1508,9 @@ msgid "Front page text"
 msgstr ""
 
 msgid "Front page title"
+msgstr ""
+
+msgid "Full name"
 msgstr ""
 
 msgid "Fullscreen"
@@ -1577,6 +1580,9 @@ msgid "Has an email address"
 msgstr ""
 
 msgid "Has changed vote weight"
+msgstr ""
+
+msgid "Has forwardings"
 msgstr ""
 
 msgid "Has no email address"
@@ -1654,6 +1660,9 @@ msgid "Import accounts"
 msgstr ""
 
 msgid "Import committees"
+msgstr ""
+
+msgid "Import data needs to have the JSON format"
 msgstr ""
 
 msgid "Import meeting"
@@ -1800,9 +1809,6 @@ msgstr ""
 msgid "Label color"
 msgstr ""
 
-msgid "Last email send"
-msgstr ""
-
 msgid "Last email sent"
 msgstr ""
 
@@ -1897,9 +1903,6 @@ msgid "Logout"
 msgstr ""
 
 msgid "Lowest applause amount"
-msgstr ""
-
-msgid "Male"
 msgstr ""
 
 msgid "Mark as personal favorite"
@@ -2211,6 +2214,9 @@ msgid "No email sent"
 msgstr ""
 
 msgid "No encryption"
+msgstr ""
+
+msgid "No forwardings"
 msgstr ""
 
 msgid "No group name has been entered."
@@ -3252,6 +3258,9 @@ msgstr ""
 msgid "Superadmin"
 msgstr ""
 
+msgid "Superadmin actions"
+msgstr ""
+
 msgid "Superadmin settings"
 msgstr ""
 
@@ -3464,6 +3473,9 @@ msgstr ""
 msgid "This will set the workflow for all selected motions:"
 msgstr ""
 
+msgid "Thoroughly check datastore (unsafe)"
+msgstr ""
+
 msgid "Tile view"
 msgstr ""
 
@@ -3500,6 +3512,9 @@ msgstr ""
 msgid "Translation"
 msgstr ""
 
+msgid "Troubleshooting"
+msgstr ""
+
 msgid "Type"
 msgstr ""
 
@@ -3507,9 +3522,6 @@ msgid "Undone"
 msgstr ""
 
 msgid "Unique speakers"
-msgstr ""
-
-msgid "Unknown"
 msgstr ""
 
 msgid "Unsaved changes will not be applied."
@@ -3630,6 +3642,9 @@ msgstr ""
 msgid "Voting stopped"
 msgstr ""
 
+msgid "Voting stopped/published"
+msgstr ""
+
 msgid "Voting successful."
 msgstr ""
 
@@ -3655,6 +3670,9 @@ msgid ""
 "Warning: Amendments exist for this motion. Editing this text will likely "
 "impact them negatively. Particularily, amendments might become unusable if "
 "the paragraph they affect is deleted."
+msgstr ""
+
+msgid "Was forwarded to this meeting"
 msgstr ""
 
 msgid "Web interface header logo"
@@ -4123,6 +4141,9 @@ msgid "today"
 msgstr ""
 
 msgid "undocumented"
+msgstr ""
+
+msgid "unknown"
 msgstr ""
 
 msgid "version"

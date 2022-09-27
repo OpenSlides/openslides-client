@@ -50,18 +50,4 @@ export class MeetingInfoComponent extends BaseComponent implements OnInit {
             await this.orgaRepo.update({ privacy_policy: text });
         }
     }
-
-    public resetCache(): void {
-        this.lifecycleService.reset();
-    }
-
-    public async checkDatastore(): Promise<void> {
-        const response = await this.presenter.call();
-        if (response.ok) {
-            this.snackbar.open(this.translate.instant(`Datastore is ok!`), `Ok`);
-        } else {
-            this.snackbar.open(this.translate.instant(`Datastore is corrupt! See the console for errors.`), `Ok`);
-            console.log(response.errors);
-        }
-    }
 }

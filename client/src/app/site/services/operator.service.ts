@@ -137,6 +137,10 @@ export class OperatorService {
         return this._operatorReadySubject.asObservable();
     }
 
+    public get permissionsObservable(): Observable<Permission[] | undefined> {
+        return this._permissionsSubject.asObservable();
+    }
+
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
     }
@@ -181,7 +185,15 @@ export class OperatorService {
     // permissions and groupIds are bound to the active meeting.
     // If there is no active meeting, both will be undefined.
     // If groupIds is undefined or [], the default group must be used (given, there is an active meeting).
-    private _permissions: Permission[] | undefined = undefined;
+    private set _permissions(perms: Permission[] | undefined) {
+        this._permissionsSubject.next(perms);
+    }
+    private get _permissions(): Permission[] | undefined {
+        return this._permissionsSubject.value;
+    }
+
+    private _permissionsSubject: BehaviorSubject<Permission[] | undefined> = new BehaviorSubject(undefined);
+
     private _groupIds: Id[] | undefined = undefined;
     private _meetingIds: Id[] | undefined = undefined;
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
@@ -208,7 +220,7 @@ export class OperatorService {
             if (id !== this._lastUserId) {
                 console.debug(`operator: user changed from `, this._lastUserId, `to`, id);
                 this._lastUserId = id;
-                this.operatorStateChange();
+                this.operatorStateChange(true);
             }
             if (token) {
                 this.checkReadyState();
@@ -235,23 +247,19 @@ export class OperatorService {
             if (this._lastActiveMeetingId !== newMeetingId) {
                 console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
                 this._lastActiveMeetingId = newMeetingId;
-                this.operatorStateChange();
+                this.operatorStateChange(false);
+                const user = this._userSubject.getValue();
+                if (user) {
+                    this.updateUser(user);
+                    this._operatorUpdatedSubject.next();
+                }
             }
         });
         // Specific operator data: The user itself and the groups for permissions.
         this.userRepo.getGeneralViewModelObservable().subscribe(user => {
             if (user !== undefined && this.operatorId === user.id && !!user.username) {
                 this._shortName = this.userRepo.getShortName(user);
-                if (this.activeMeetingId) {
-                    this._groupIds = user.group_ids(this.activeMeetingId);
-                    this._permissions = this.calcPermissions();
-                }
-                // The OML has to be changed only if new data come in.
-                if (user.organization_management_level !== undefined || this._OML === undefined) {
-                    this._OML = user.organization_management_level || null;
-                }
-                this._meetingIds = (user.group_$_ids || []).map(idString => parseInt(idString, 10));
-                this._CML = getUserCML(user);
+                this.updateUser(user);
                 this._operatorShortNameSubject.next(this._shortName);
                 this._userSubject.next(user);
                 this._operatorUpdatedSubject.next();
@@ -282,6 +290,19 @@ export class OperatorService {
 
     public isInMeeting(meetingId: Id): boolean {
         return this.user.meeting_ids?.includes(meetingId) || false;
+    }
+
+    private updateUser(user: ViewUser): void {
+        if (this.activeMeetingId) {
+            this._groupIds = user.group_ids(this.activeMeetingId);
+            this._permissions = this.calcPermissions();
+        }
+        // The OML has to be changed only if new data come in.
+        if (user.organization_management_level !== undefined || this._OML === undefined) {
+            this._OML = user.organization_management_level || null;
+        }
+        this._meetingIds = (user.group_$_ids || []).map(idString => parseInt(idString, 10));
+        this._CML = getUserCML(user);
     }
 
     private checkReadyState(): void {
@@ -345,10 +366,10 @@ export class OperatorService {
     // - changed meeting
     // - changed user
     // Results in the operator not being ready until all necessary data is there.
-    private async operatorStateChange(): Promise<void> {
+    private async operatorStateChange(reopenConnection: boolean): Promise<void> {
         this.setNotReady();
 
-        if (this._currentOperatorDataSubscription) {
+        if (this._currentOperatorDataSubscription && reopenConnection) {
             this._currentOperatorDataSubscription.close();
             this._currentOperatorDataSubscription = null;
         }
@@ -380,7 +401,7 @@ export class OperatorService {
         }
         operatorRequest = this.getOperatorRequestWithoutActiveMeeting();
 
-        if (operatorRequest) {
+        if (operatorRequest && !this._currentOperatorDataSubscription) {
             // Do not wait for the subscription to be done...
             (async () => {
                 console.log(`operator: Do operator model request`, operatorRequest);
