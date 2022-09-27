@@ -109,6 +109,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     }
 
     public sortCommitteesByName(committees: ViewCommittee[]): ViewCommittee[] {
-        return committees.sort((a, b) => (a.name > b.name ? 1 : 0));
+        return committees.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
 }

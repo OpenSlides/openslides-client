@@ -50,8 +50,8 @@
                 </li>
             </ul>
             <button *ngIf="committee.forward_to_committees.length > 1" mat-button (click)="toggleForwardingList()">
-                <ng-container *ngIf="!forwardingExpanded">{{ 'Expand more' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
-                <ng-container *ngIf="forwardingExpanded">{{ 'Collapse' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
+                <ng-container *ngIf="!forwardingExpanded">{{ 'More' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
+                <ng-container *ngIf="forwardingExpanded">{{ 'Less' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
             </button>
         </os-committee-meta-info>
 
@@ -70,8 +70,8 @@
                 </li>
             </ul>
             <button *ngIf="committee.receive_forwardings_from_committees.length > 1" mat-button (click)="toggleReceiveList()">
-                <ng-container *ngIf="!receiveExpanded">{{ 'Expand more' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
-                <ng-container *ngIf="receiveExpanded">{{ 'Collapse' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
+                <ng-container *ngIf="!receiveExpanded">{{ 'More' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
+                <ng-container *ngIf="receiveExpanded">{{ 'Less' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
             </button>
         </os-committee-meta-info>
 
