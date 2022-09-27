@@ -39,30 +39,40 @@
         <os-committee-meta-info
             icon="file_upload"
             [title]="forwardLabel"
-            *ngIf="committee.forward_to_committees.length > 0"
+            *ngIf="committee.forward_to_committees.length > 0 && isOrgaAdmin()"
         >
-            <ul class="content-list">
-                <li *ngFor="let forwarding of committee.forward_to_committees">
-                    <a [routerLink]="['/', 'committees', forwarding.id]">
+            <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
+                <li *ngFor="let forwarding of sortCommitteesByName(committee.forward_to_committees)">
+                    <a *ngIf="canAccessCommittee(forwarding)" [routerLink]="['/', 'committees', forwarding.id]">
                         {{ forwarding.name }}
                     </a>
+                    <ng-container *ngIf="!canAccessCommittee(forwarding)">{{ forwarding.name }}</ng-container>
                 </li>
             </ul>
+            <button *ngIf="committee.forward_to_committees.length > 1" mat-button (click)="toggleForwardingList()">
+                <ng-container *ngIf="!forwardingExpanded">{{ 'More' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
+                <ng-container *ngIf="forwardingExpanded">{{ 'Less' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
+            </button>
         </os-committee-meta-info>
 
         <!-- receive motions from -->
         <os-committee-meta-info
             icon="file_download"
             [title]="receiveLabel"
-            *ngIf="committee.receive_forwardings_from_committees.length > 0"
+            *ngIf="committee.receive_forwardings_from_committees.length > 0 && isOrgaAdmin()"
         >
-            <ul class="content-list">
-                <li *ngFor="let receive of committee.receive_forwardings_from_committees">
-                    <a [routerLink]="['/', 'committees', receive.id]">
+            <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
+                <li *ngFor="let receive of sortCommitteesByName(committee.receive_forwardings_from_committees)">
+                    <a *ngIf="canAccessCommittee(receive)" [routerLink]="['/', 'committees', receive.id]">
                         {{ receive.name }}
                     </a>
+                    <span *ngIf="!canAccessCommittee(receive)">{{ receive.name }}</span>
                 </li>
             </ul>
+            <button *ngIf="committee.receive_forwardings_from_committees.length > 1" mat-button (click)="toggleReceiveList()">
+                <ng-container *ngIf="!receiveExpanded">{{ 'More' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
+                <ng-container *ngIf="receiveExpanded">{{ 'Less' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
+            </button>
         </os-committee-meta-info>
 
         <!-- Member amount -->

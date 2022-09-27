@@ -56,7 +56,7 @@
     </div>
     <div *osScrollingTableCell="'forwarding'; row as committee; config: { width: 70 }">
         <div class="forwarding-wrapper">
-            <div *ngIf="committee.forward_to_committees?.length">
+            <div *ngIf="committee.forward_to_committees?.length && operator.isOrgaManager">
                 <os-icon-container
                     iconTooltip="{{ 'Can forward motions to committee' | translate }}"
                     icon="file_upload"
@@ -67,7 +67,7 @@
                     </span>
                 </os-icon-container>
             </div>
-            <div *ngIf="committee.receive_forwardings_from_committees?.length">
+            <div *ngIf="committee.receive_forwardings_from_committees?.length && operator.isOrgaManager">
                 <os-icon-container
                     iconTooltip="{{ 'Can receive motions from committee' | translate }}"
                     icon="file_download"
