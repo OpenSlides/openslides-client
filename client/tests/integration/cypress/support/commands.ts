@@ -115,7 +115,7 @@ Cypress.Commands.add('getAnchorFor', (url: string) => {
 Cypress.Commands.add('clearDatabase', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/truncate_db',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/truncate_db',
         headers: ['Content-Type: application/json']
     }).should(response => {
         expect(response.status).to.eq(204);
@@ -125,7 +125,7 @@ Cypress.Commands.add('clearDatabase', () => {
 Cypress.Commands.add('createDefaultUser', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/write',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/write',
         headers: ['Content-Type: application/json'],
         body: {
             user_id: 1,
@@ -153,7 +153,7 @@ Cypress.Commands.add('createDefaultUser', () => {
 Cypress.Commands.add('createSuperUser', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/write',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/write',
         headers: ['Content-Type: application/json'],
         body: {
             user_id: 2,

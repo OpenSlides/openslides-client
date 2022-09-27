@@ -74,6 +74,10 @@ declare global {
             createAccount(name?: string): Chainable<{ id: number; name: string }>;
             deleteAccounts(...ids: number[]): void;
         }
+
+        interface Cypress {
+            config(key: 'datastoreUrl'): string;
+        }
     }
 }
 

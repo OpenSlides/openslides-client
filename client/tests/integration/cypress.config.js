@@ -1,6 +1,7 @@
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
+    "datastoreUrl": "http://localhost:9011",
     "e2e": {
         "baseUrl": "https://localhost:8000",
         "supportFile": "cypress/support/index.ts",
