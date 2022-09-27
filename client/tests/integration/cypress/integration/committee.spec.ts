@@ -6,7 +6,6 @@ describe('Testing committees', () => {
 
     before(() => {
         cy.login();
-        cy.visit('/');
         cy.createCommittee().then(_committee => {
             committee = _committee;
         });
@@ -15,6 +14,10 @@ describe('Testing committees', () => {
 
     beforeEach(() => {
         cy.loginAndVisit('/committees');
+    });
+
+    afterEach(() => {
+        cy.logout();
     });
 
     it('visit committees', () => {
@@ -50,7 +53,7 @@ describe('Testing committees', () => {
     xit('updates a committee', () => {
         cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
         cy.getElement(`committeeListSingleMenuTrigger`).first().click();
-        cy.getAnchorFor(`/committees/edit-committee?committeeId=${committee.id}`).trigger('click');
+        cy.getAnchorFor(`/committees/edit-committee?committeeId=${committee.id}`).click();
         cy.url().should('include', 'edit-committee');
         const committeeDescription = 'Hahaha';
         cy.getElement('committeeDescription').type(committeeDescription);
