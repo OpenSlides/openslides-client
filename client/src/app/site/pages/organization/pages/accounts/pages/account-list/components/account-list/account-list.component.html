@@ -32,16 +32,16 @@
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
-        <div class="flex-vertical-center">
-            <div class="nameCell">
+        <div style="overflow: hidden" class="flex-vertical-center">
+            <div style="overflow: hidden" class="nameCell">
                 <div class="title-line ellipsis-overflow">
-                    {{ user.short_name }}
-                    <ng-container *ngIf="user.pronoun">
+                    {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')'  : '') }}
+                    <!-- <ng-container *ngIf="user.pronoun">
                         &nbsp;
                         ({{ user.pronoun }})
-                    </ng-container>
+                    </ng-container> -->
                 </div>
-                <div class="meta-info user-subtitle">
+                <div class="meta-info user-subtitle ellipsis-overflow">
                     {{ user.username }}
                     <ng-container *ngIf="user.email">
                         · {{ user.email }}
@@ -64,7 +64,8 @@
             <os-icon-container
                 *ngIf="!!user.meetings?.length"
                 icon="apps"
-                iconTooltip="{{ 'Meetings' | translate }}"
+                matTooltip="{{ 'Meetings' | translate }}"
+                matTooltipPosition="left"
                 [showIcon]="true"
                 [noWrap]="true"
             >
@@ -76,6 +77,7 @@
                 icon="mail"
                 *ngIf="user.isLastEmailSend"
                 matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
+                matTooltipPosition="left"
             >
             </os-icon-container>
         </div>
@@ -84,6 +86,7 @@
                 icon="engineering"
                 *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)"
                 [matTooltipDisabled]="!isMobile"
+                matTooltipPosition="left"
                 matTooltip="{{ getOmlByUser(user) | translate }}"
             >
                 <ng-container *ngIf="!isMobile">
