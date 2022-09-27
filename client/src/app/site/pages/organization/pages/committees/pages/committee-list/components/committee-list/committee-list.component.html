@@ -180,7 +180,7 @@
                 <mat-icon>swap_horiz</mat-icon>
                 <span>{{ 'Motion forwarding' | translate }} ...</span>
             </button>
-            <button mat-menu-item [disabled]="!selectedRows.length">
+            <button mat-menu-item (click)="editTags()" [disabled]="!selectedRows.length">
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Tags' | translate }}</span>
             </button>

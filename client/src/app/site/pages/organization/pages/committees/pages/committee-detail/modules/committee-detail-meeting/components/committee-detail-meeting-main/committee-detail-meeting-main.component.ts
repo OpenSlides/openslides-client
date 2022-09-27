@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -10,12 +11,12 @@ const MEETING_DETAIL_EDIT_SUBSCRIPTION = `meeting_detail_edit`; // Used for edit
     styleUrls: [`./committee-detail-meeting-main.component.scss`]
 })
 export class CommitteeDetailMeetingMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onParamsChanged(params: any): void {
-        if (params[`meetingId`]) {
+    protected override onNextMeetingId(id: Id | null): void {
+        if (id) {
             this.subscribeTo({
                 modelRequest: {
                     viewModelCtor: ViewMeeting,
-                    ids: [Number(params[`meetingId`])],
+                    ids: [id],
                     fieldset: [],
                     additionalFields: [
                         `is_template`,

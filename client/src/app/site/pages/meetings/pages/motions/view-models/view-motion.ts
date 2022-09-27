@@ -222,7 +222,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get forwardingStatus(): ForwardingStatus {
         let status = ForwardingStatus.none;
-        if (!!this.all_origin_ids?.length) {
+        if (!!this.origin_id) {
             status = ForwardingStatus.isDerived;
         }
         if (!!this.derived_motion_ids?.length) {

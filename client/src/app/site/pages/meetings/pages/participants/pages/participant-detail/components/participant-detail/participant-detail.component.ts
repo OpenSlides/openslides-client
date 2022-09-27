@@ -11,8 +11,8 @@ export const PARTICIPANT_DETAIL_SUBSCRIPTION = `user_list`;
     styleUrls: [`./participant-detail.component.scss`]
 })
 export class ParticipantDetailComponent extends BaseModelRequestHandlerComponent {
-    protected override onParamsChanged(params: any): void {
-        if (params[`id`]) {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`]) {
             this.subscribeTo({
                 modelRequest: {
                     viewModelCtor: ViewUser,

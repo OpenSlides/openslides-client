@@ -12,7 +12,7 @@ export const getMotionListSubscriptionConfig = (id: Id, hasMeetingIdChangedObser
         viewModelCtor: ViewMeeting,
         ids: [id],
         follow: [`motion_ids`],
-        additionalFields: [`all_origin_ids`, `derived_motion_ids`]
+        additionalFields: [`origin_id`, `derived_motion_ids`]
     },
     subscriptionName: MOTION_LIST_SUBSCRIPTION,
     hideWhen: hasMeetingIdChangedObservable()

@@ -18,9 +18,6 @@ import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectionDialogModule } from '../../../../modules/meetings-component-collector/projection-dialog/projection-dialog.module';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
-import { TopicPollServiceModule } from '../../../agenda/modules/topics/modules/topic-poll/services/topic-poll-service.module';
-import { AssignmentPollServiceModule } from '../../../assignments/modules/assignment-poll/services/assignment-poll-service.module';
-import { MotionPollServiceModule } from '../../../motions/modules/motion-poll';
 import { ProjectorCountdownDialogModule } from '../../components/projector-countdown-dialog/projector-countdown-dialog.module';
 import { ProjectorEditDialogModule } from '../../components/projector-edit-dialog/projector-edit-dialog.module';
 import { ProjectorMessageDialogModule } from '../../components/projector-message-dialog/projector-message-dialog.module';
@@ -61,10 +58,7 @@ import { ProjectorDetailServiceModule } from './services/projector-detail-servic
         MatTooltipModule,
         MatExpansionModule,
         MatCardModule,
-        DragDropModule,
-        AssignmentPollServiceModule,
-        MotionPollServiceModule,
-        TopicPollServiceModule
+        DragDropModule
     ]
 })
 export class ProjectorDetailModule {}
