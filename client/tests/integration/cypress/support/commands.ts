@@ -34,6 +34,12 @@ Cypress.Commands.add(`urlShouldAllOf`, (...toCheck: {chainer: string, values: an
     })
 })
 
+Cypress.Commands.add('loginAndVisit', (url: string = '/', username = 'admin', password = 'admin') => {
+    cy.login(username, password);
+    cy.visit(url);
+    return cy.waitUntil(() => Cypress.$(`[data-cy=osOverlay]`).length === 0)
+});
+
 /**
  * Login
  */

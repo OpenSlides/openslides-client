@@ -20,6 +20,15 @@ declare global {
         interface Chainable {
             urlShouldAllOf(...toCheck: {chainer: string, values: any[]}[]): void;
             /**
+             * Signs in as a quick command, visits the given page and waits until the
+             * page is ready.
+             *
+             * @param url the url to visit. Defaults to `/`.
+             * @param username the username of a user to sign in as. Defaults to `admin`.
+             * @param password the password of the user to sign in as. Defaults to `admin`.
+             */
+            loginAndVisit(url?: string, username?: string, password?: string): Cypress.Chainable;
+            /**
              * Signs in as a quick command.
              *
              * @param username the username of a user to sign in as. Defaults to `admin`.
