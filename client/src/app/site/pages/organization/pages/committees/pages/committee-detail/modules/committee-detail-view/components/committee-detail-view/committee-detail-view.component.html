@@ -42,7 +42,7 @@
             *ngIf="committee.forward_to_committees.length > 0 && isOrgaAdmin()"
         >
             <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
-                <li *ngFor="let forwarding of committee.forward_to_committees">
+                <li *ngFor="let forwarding of sortCommitteesByName(committee.forward_to_committees)">
                     <a *ngIf="canAccessCommittee(forwarding)" [routerLink]="['/', 'committees', forwarding.id]">
                         {{ forwarding.name }}
                     </a>
@@ -62,7 +62,7 @@
             *ngIf="committee.receive_forwardings_from_committees.length > 0 && isOrgaAdmin()"
         >
             <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
-                <li *ngFor="let receive of committee.receive_forwardings_from_committees">
+                <li *ngFor="let receive of sortCommitteesByName(committee.receive_forwardings_from_committees)">
                     <a *ngIf="canAccessCommittee(receive)" [routerLink]="['/', 'committees', receive.id]">
                         {{ receive.name }}
                     </a>

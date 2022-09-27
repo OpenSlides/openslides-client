@@ -107,4 +107,8 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
     public toggleReceiveList(): void {
         this.receiveExpanded = !this.receiveExpanded;
     }
+
+    public sortCommitteesByName(committees: ViewCommittee[]): ViewCommittee[] {
+        return committees.sort((a, b) => (a > b ? 1 : 0));
+    }
 }
