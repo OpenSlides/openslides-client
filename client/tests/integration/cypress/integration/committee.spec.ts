@@ -77,9 +77,11 @@ describe('Testing committees', () => {
     });
 
     it('deletes a committee', () => {
+        cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
         cy.getElement('committeeListSingleMenuTrigger').first().click();
         cy.getElement('committeeListSingleDeleteButton').click();
         cy.get('os-choice-dialog button').first().click();
+        cy.wait('@handle_request');
         cy.get(committee.name).should('not.exist');
     });
 });
