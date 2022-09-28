@@ -48,7 +48,13 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         await this.updateForwardMeetings();
 
         const module = await import(`../motion-forward-dialog.module`).then(m => m.MotionForwardDialogModule);
-        return this.dialog.open(module.getComponent(), { ...mediumDialogSettings, data });
+        return this.dialog.open(module.getComponent(), {
+            ...mediumDialogSettings,
+            data: {
+                motion: data,
+                forwardingMeetings: this._forwardingMeetings
+            }
+        });
     }
 
     public async forwardMotionsToMeetings(...motions: ViewMotion[]): Promise<void> {
