@@ -4,6 +4,7 @@ import { User } from 'src/app/domain/models/users/user';
 import { Id } from '../../../../domain/definitions/key-types';
 import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
 import { ViewCommittee } from '../../organization/pages/committees';
+import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewSpeaker } from '../pages/agenda';
 import { ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatMessage } from '../pages/chat/view-models/view-chat-message';
@@ -264,6 +265,7 @@ interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
     meetings: ViewMeeting[];
+    organization: ViewOrganization;
     committee_management_levels: (arg?: CML) => ViewCommittee[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;

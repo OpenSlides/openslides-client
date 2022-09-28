@@ -7,15 +7,25 @@ describe('Testing the sign in and out process', () => {
     const username = `Mississipi`;
     let secondAccountId: number;
     let meetingId: number;
+    let committeeId: number;
 
     before(() => {
         cy.login();
         cy.createAccount(username).then(({ id }) => {
-            cy.createMeeting(`Mississipi_2`, [id]).then(({ id: _meetingId }) => {
+            cy.createMeeting(`Mississipi_2`, [id]).then(({ id: _meetingId, committeeId: _committeeId }) => {
                 meetingId = _meetingId;
+                committeeId = _committeeId;
             });
             secondAccountId = id;
         });
+        cy.logout();
+    });
+
+    after(() => {
+        cy.login();
+        cy.deleteAccounts(secondAccountId);
+        cy.deleteMeetings(meetingId);
+        cy.deleteCommittees(committeeId);
         cy.logout();
     });
 
@@ -34,10 +44,10 @@ describe('Testing the sign in and out process', () => {
         cy.getElement(`loginButton`).click();
         cy.wait(`@login`);
         cy.url().should(`not.include`, `login`);
+        cy.getCookie("refreshId").should("exist");
     });
 
     it(`signs in as meeting admin`, () => {
-        cy.visit(`/login`);
         cy.intercept(`${AUTH_URL}/login`).as(`login`);
         cy.intercept({ method: 'POST', url: ACTION_URL }).as('action');
 
@@ -47,10 +57,10 @@ describe('Testing the sign in and out process', () => {
         cy.wait(`@login`);
         cy.url().should(`not.include`, `login`);
         cy.url().should(`include`, meetingId);
+        cy.getCookie("refreshId").should("exist");
     });
 
     it(`signs in as delegate`, () => {
-        cy.visit(`/login`);
         cy.intercept(`${AUTH_URL}/login`).as(`login`);
         cy.intercept({ method: 'POST', url: ACTION_URL }).as('action');
 
@@ -60,5 +70,6 @@ describe('Testing the sign in and out process', () => {
         cy.wait(`@login`);
         cy.url().should(`not.include`, `login`);
         cy.url().should(`include`, DEFAULT_MEETING_ID);
+        cy.getCookie("refreshId").should("exist");
     });
 });

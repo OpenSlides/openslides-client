@@ -28,3 +28,12 @@
         margin-top: 2em;
     }
 }
+
+.expandable-list {
+    max-height: 24px;
+    overflow: hidden;
+    transition: max-height 0.25s ease-in-out;
+    &.expanded {
+        max-height: 100%;
+    }
+}
