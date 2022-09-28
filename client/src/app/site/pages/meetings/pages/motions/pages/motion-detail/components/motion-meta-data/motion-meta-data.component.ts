@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -20,7 +19,7 @@ import { MotionDetailServiceCollectorService } from '../../services/motion-detai
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`]
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit {
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -76,15 +75,16 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.viewService.showAllAmendmentsStateSubject.next(is);
     }
 
-    public get canForwardMotion(): boolean {
+    public get showForwardButton(): boolean {
         return (
             !!this.motion.state?.allow_motion_forwarding &&
             this.operator.hasPerms(Permission.motionCanForward) &&
-            !!this._forwardingMeetings.length
+            this._forwardingAvailable &&
+            !this.motion.derived_motions.length
         );
     }
 
-    private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
+    private _forwardingAvailable: boolean = false;
 
     /**
      * The subscription to the recommender config variable.
@@ -97,14 +97,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         motionServiceCollector: MotionDetailServiceCollectorService,
         public perms: MotionPermissionService,
         private operator: OperatorService,
-        private motionForwardingService: MotionForwardDialogService,
-        private presenter: GetForwardingMeetingsPresenterService
+        private motionForwardingService: MotionForwardDialogService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
-    }
 
-    public ngOnInit(): void {
-        this.updateForwardingMeetings();
+        this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 
     /**
@@ -248,14 +247,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     protected override onAfterInit(): void {
         this.motionObserver = this.repo.getViewModelListObservable();
         this.setupRecommender();
-    }
-
-    private updateForwardingMeetings() {
-        if (this.operator.hasPerms(Permission.motionCanForward)) {
-            this.presenter.call({ meeting_id: this.activeMeeting.id }).then(meetings => {
-                this._forwardingMeetings = meetings;
-            });
-        }
     }
 
     /**
