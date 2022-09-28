@@ -34,6 +34,12 @@ Cypress.Commands.add(`urlShouldAllOf`, (...toCheck: {chainer: string, values: an
     })
 })
 
+Cypress.Commands.add('loginAndVisit', (url: string = '/', username = 'admin', password = 'admin') => {
+    cy.login(username, password);
+    cy.visit(url);
+    return cy.waitUntil(() => Cypress.$(`[data-cy=osOverlay]`).length === 0)
+});
+
 /**
  * Login
  */
@@ -46,13 +52,13 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
             password
         }
     })
-        .as('loginResponse')
-        .then(response => {
-            Cypress.env('authToken', response.headers.authentication);
-            return response;
-        })
-        .its('status')
-        .should('eq', 200);
+    .as('loginResponse')
+    .then(response => {
+        Cypress.env('authToken', response.headers.authentication);
+        return response;
+    })
+    .its('status')
+    .should('eq', 200);
 });
 
 Cypress.Commands.add(`logout`, () => {
@@ -61,13 +67,13 @@ Cypress.Commands.add(`logout`, () => {
         url: '/system/auth/secure/logout',
         body: {}
     })
-        .as('logoutResponse')
-        .then(response => {
-            Cypress.env('authToken', null);
-            return response;
-        })
-        .its('status')
-        .should('eq', 200);
+    .as('logoutResponse')
+    .then(response => {
+        Cypress.env('authToken', null);
+        return response;
+    })
+    .its('status')
+    .should('eq', 200);
 });
 
 /**
@@ -115,7 +121,7 @@ Cypress.Commands.add('getAnchorFor', (url: string) => {
 Cypress.Commands.add('clearDatabase', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/truncate_db',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/truncate_db',
         headers: ['Content-Type: application/json']
     }).should(response => {
         expect(response.status).to.eq(204);
@@ -125,7 +131,7 @@ Cypress.Commands.add('clearDatabase', () => {
 Cypress.Commands.add('createDefaultUser', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/write',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/write',
         headers: ['Content-Type: application/json'],
         body: {
             user_id: 1,
@@ -153,7 +159,7 @@ Cypress.Commands.add('createDefaultUser', () => {
 Cypress.Commands.add('createSuperUser', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/write',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/write',
         headers: ['Content-Type: application/json'],
         body: {
             user_id: 2,

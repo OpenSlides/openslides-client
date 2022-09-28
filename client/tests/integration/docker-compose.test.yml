@@ -5,8 +5,12 @@ services:
             context: .
             dockerfile: Dockerfile.test
         image: cypress
+        container_name: cypress
+        command: npm run cypress:run
         volumes:
+            - ./cypress:/app/cypress
+            - ./cypress.config.js:/app/cypress.config.js
+            - ./resource-config.js:/app/resource-config.js
             - ./results/videos :/app/cypress/videos
             - ./results/screenshots :/app/cypress/screenshots
-        extra_hosts:
-            host.docker.internal: host-gateway
+        network_mode: host

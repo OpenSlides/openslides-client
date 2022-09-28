@@ -4,7 +4,7 @@
         "cypress:run": "wait-on -c resource-config.js && cypress run"
     },
     "devDependencies": {
-        "cypress": "^9.6.0",
+        "cypress": "^10.8.0",
         "cypress-wait-until": "^1.7.2",
         "wait-on": "^6.0.1"
     },
