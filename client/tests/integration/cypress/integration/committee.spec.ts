@@ -63,6 +63,19 @@ describe('Testing committees', () => {
         cy.contains(committeeDescription);
     });
 
+    it('receives a name change', () => {
+        cy.visit(`/committees/${committee.id}`);
+        cy.contains(committee.name);
+        const updatedName = committee.name + "update";
+        const committeeData = {
+            id: committee.id,
+            name: updatedName,
+        };
+        cy.os4request("committee.update", committeeData).then(() => {
+            cy.contains(updatedName);
+        });
+    });
+
     it('deletes a committee', () => {
         cy.getElement('committeeListSingleMenuTrigger').first().click();
         cy.getElement('committeeListSingleDeleteButton').click();
