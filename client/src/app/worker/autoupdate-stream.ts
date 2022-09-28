@@ -187,6 +187,11 @@ export class AutoupdateStream {
         }
 
         if (!response.ok) {
+            let errorContent = null;
+            if (next && (errorContent = this.parse(this.decode(next)))?.error) {
+                errorContent = errorContent.error;
+            }
+
             let type = ErrorType.UNKNOWN;
             if (response.status >= 400 && response.status < 500) {
                 type = ErrorType.CLIENT;
@@ -194,7 +199,7 @@ export class AutoupdateStream {
                 type = ErrorType.SERVER;
             }
 
-            this.error = { reason: `HTTP error`, type, error: { code: response.status } };
+            this.error = { reason: `HTTP error`, type, error: { code: response.status, content: errorContent } };
             this.sendErrorToSubscriptions(this.error);
             this.failedCounter++;
         } else if (this.error) {

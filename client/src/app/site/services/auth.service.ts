@@ -88,7 +88,7 @@ export class AuthService {
         this.clearRefreshRoutine();
         this.lifecycleService.shutdown();
         const response = await this.authAdapter.logout();
-        if (response.success) {
+        if (response?.success) {
             this.authTokenService.setRawAccessToken(null);
         }
         this._logoutEvent.emit();

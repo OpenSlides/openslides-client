@@ -19,6 +19,7 @@ import {
     AutoupdateStatus
 } from 'src/app/worker/interfaces-autoupdate';
 
+import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
 import { ModelRequest } from './autoupdate.service';
@@ -34,6 +35,7 @@ export class AutoupdateCommunicationService {
 
     constructor(
         private authTokenService: AuthTokenService,
+        private authService: AuthService,
         private sharedWorker: SharedWorkerService,
         private endpointService: HttpStreamEndpointService,
         private matSnackBar: MatSnackBar,
@@ -64,7 +66,9 @@ export class AutoupdateCommunicationService {
                             });
                     } else if (data.content.data?.reason === `HTTP error`) {
                         console.error(data);
-                        if (data.content?.data?.error.code === 403) {
+                        if (data.content?.data?.error.content?.type === `auth`) {
+                            this.authService.logout();
+                        } else if (data.content?.data?.error.code === 403) {
                             this.setEndpoint();
                         }
                     }
