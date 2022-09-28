@@ -94,6 +94,14 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Input()
     public tooltipFn: (value: Selectable, source: MatOption) => string = () => ``;
 
+    /**
+     * Function that calculates something that is to be appended after an item.
+     *
+     * @returns a string containing whatever should follow the items title in the selector.
+     */
+    @Input()
+    public getItemAdditionalInfoFn: (item: Selectable) => string = () => ``;
+
     @Input()
     public set sortFn(fn: false | ((valueA: Selectable, valueB: Selectable) => number)) {
         if (typeof fn === `function` || fn === false) {

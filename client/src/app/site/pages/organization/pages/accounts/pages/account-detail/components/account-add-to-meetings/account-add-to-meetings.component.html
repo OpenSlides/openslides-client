@@ -7,17 +7,32 @@
         <h2>{{ user?.getFullName() }}</h2>
     </div>
 </os-head-bar>
-<div>
+<mat-card class="os-card" style="padding-right: 30px">
     <div class="assign-meetings-element">
         <h2>{{ 'Add to meetings' | translate }}</h2>
         <div class="assign-meetings-subtext">
-            <span translate>Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.</span>
+            <p translate>Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.</p>
             <p *ngIf="showLanguageWarning">
                 <i translate>Regardless of current language settings, the entered group name must be consistent with original group name (for the built-in groups it is the English group name).</i>
+            </p>
+            <br>
+            <p>
+                <i><span translate>Meetings selected</span>: {{ selectedMeetings.length }}</i>
             </p>
         </div>
         <form [formGroup]="assignMeetingsForm">
             <div class="assign-meetings-form form-wrapper">
+                <div class="long-child">
+                    <mat-form-field class="form-element">
+                        <os-list-search-selector
+                            formControlName="meeting_ids"
+                            [multiple]="true"
+                            placeholder="{{ 'Select meetings ...' | translate }}"
+                            [inputListValues]="meetingsObservable"
+                            [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
+                        ></os-list-search-selector>
+                    </mat-form-field>
+                </div>
                 <div class="grid-child">
                     <mat-form-field class="form-element">
                         <input
@@ -25,16 +40,6 @@
                             matInput
                             placeholder="{{ 'Group name' | translate }}"
                         >
-                    </mat-form-field>
-                </div>
-                <div class="grid-child">
-                    <mat-form-field class="form-element">
-                        <os-list-search-selector
-                            formControlName="meeting_ids"
-                            [multiple]="true"
-                            placeholder="{{ 'Select meetings ...' | translate }}"
-                            [inputListValues]="meetingsObservable">
-                       </os-list-search-selector>
                     </mat-form-field>
                 </div>
                 <div class="grid-child">
@@ -55,8 +60,10 @@
             </div>
         </div>
     </div>
+</mat-card>
+<mat-card *ngIf="hasResult || waitingForResults" class="os-card" style="padding-right: 30px">
     <!-- Display results -->
-    <div *ngIf="hasResult || waitingForResults" class="assign-meetings-element">
+    <div class="assign-meetings-element">
         <h2>{{ 'Results' | translate }}</h2>
         <div class="assign-meetings-subtext">
             <span>{{ 'Group name' | translate }}: '{{ lastGroupName || groupName}}'</span>
@@ -89,7 +96,7 @@
             </tr>
         </table>
     </div>
-</div>
+</mat-card>
 
 <ng-template #tableData let-key>
     <div *ngIf="!waitingForResults">

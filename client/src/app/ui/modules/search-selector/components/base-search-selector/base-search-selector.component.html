@@ -10,7 +10,7 @@
     <mat-select-trigger *ngIf="multiple">
         <ng-container *ngIf="selectedItems?.length">
             <span *ngFor="let item of selectedItems; let last = last" class="inline-flex">
-                {{ item.getTitle() | translate }}
+                {{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}
                 <span *ngIf="!last">,&nbsp;</span>
             </span>
         </ng-container>
@@ -70,7 +70,7 @@
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
         >
-            {{ selectableItem.getTitle() | translate }}
+            {{ selectableItem.getTitle() | translate }} {{ getItemAdditionalInfoFn(selectableItem) }}
         </mat-option>
     </cdk-virtual-scroll-viewport>
 </mat-select>

@@ -54,8 +54,12 @@
 .form-wrapper {
     width: 95%;
     display: grid;
-    grid-template-columns: 1fr 2fr 75px;
-    grid-gap: 20px;
+    grid-template-columns: 1fr 75px;
+    grid-gap: 0 20px;
+
+    .long-child {
+        grid-column: 1 / 3;
+    }
 }
 
 .potential-warning {
