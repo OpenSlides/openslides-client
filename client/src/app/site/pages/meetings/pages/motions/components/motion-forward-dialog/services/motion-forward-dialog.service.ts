@@ -4,8 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { MotionFormatService } from '../../../services/common/motion-format.service';
@@ -17,17 +19,34 @@ import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
     providedIn: MotionForwardDialogModule
 })
 export class MotionForwardDialogService extends BaseDialogService<MotionForwardDialogComponent, ViewMotion[], Ids> {
+    private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
+    private _forwardingMeetingsUpdateRequired: boolean = true;
+
     public constructor(
         dialog: MatDialog,
         private translate: TranslateService,
         private repo: MotionRepositoryService,
         private formatService: MotionFormatService,
-        private snackbar: MatSnackBar
+        private snackbar: MatSnackBar,
+        private presenter: GetForwardingMeetingsPresenterService,
+        private activeMeeting: ActiveMeetingService
     ) {
         super(dialog);
+
+        this.activeMeeting.meetingIdObservable.subscribe(() => {
+            this._forwardingMeetingsUpdateRequired = true;
+        });
+    }
+
+    public async forwardingMeetingsAvailable(): Promise<boolean> {
+        await this.updateForwardMeetings();
+
+        return !!this._forwardingMeetings.length;
     }
 
     public async open(data: ViewMotion[]): Promise<MatDialogRef<MotionForwardDialogComponent, Ids>> {
+        await this.updateForwardMeetings();
+
         const module = await import(`../motion-forward-dialog.module`).then(m => m.MotionForwardDialogModule);
         return this.dialog.open(module.getComponent(), { ...mediumDialogSettings, data });
     }
@@ -44,6 +63,14 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
             }
+        }
+    }
+
+    private async updateForwardMeetings(): Promise<void> {
+        if (this._forwardingMeetingsUpdateRequired) {
+            const meetings = await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! });
+            this._forwardingMeetings = meetings;
+            this._forwardingMeetingsUpdateRequired = false;
         }
     }
 

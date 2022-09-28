@@ -75,10 +75,21 @@
     </os-motion-extension-field>
 
     <!-- Forward to meeting -->
-    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="canForwardMotion" class="spacer-top-10">
+    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="showForwardButton" class="spacer-top-10">
         <mat-icon>forward</mat-icon>
         <span>{{ 'Forward' | translate }}</span>
     </button>
+</div>
+
+<!-- Forwardings - display only -->
+<div *ngIf="motion?.derived_motions?.length">
+    <h4>{{ 'Motion forwarded to' | translate }}</h4>
+    <div>
+        <div *ngFor="let derived of motion.derived_motions; let last = last">
+            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
+            <span>({{ derived.forwarded | localizedDate }})</span>
+        </div>
+    </div>
 </div>
 
 <!-- Recommendation -->
@@ -246,17 +257,6 @@
                 <mat-icon *ngIf="!last">north</mat-icon>
             </div>
         </ng-container>
-    </div>
-</div>
-
-<!-- Forwardings - display only -->
-<div *ngIf="motion?.derived_motions?.length">
-    <h4>{{ 'Motion forwarded to' | translate }}</h4>
-    <div>
-        <div *ngFor="let derived of motion.derived_motions; let last = last">
-            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
-            <span>({{ derived.forwarded | localizedDate }})</span>
-        </div>
     </div>
 </div>
 
