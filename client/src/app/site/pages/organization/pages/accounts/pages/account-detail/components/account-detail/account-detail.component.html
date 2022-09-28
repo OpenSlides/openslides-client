@@ -137,13 +137,33 @@
                 *ngTemplateOutlet="modelListTemplate; context: { models: getUserCommitteeManagementLevels() }"
             ></ng-container>
         </div>
-    
+
         <div *ngIf="user?.isLastEmailSend">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
                 <span>{{ getEmailSentTime() }}</span>
             </div>
         </div>
+
+        <!-- Meeting Table -->
+        <ng-container *ngIf="user.committee_ids?.length">
+            <h2>{{ 'Participation information' | translate }}</h2>
+
+            <table>
+                <tr>
+                    <th translate>Committees</th>
+                    <th translate>Meetings</th>
+                    <th translate>Groups</th>
+                </tr>
+                <ng-container *ngFor="let row of tableData | keyvalue">
+                    <tr *ngFor="let meeting_row of row.value.meetings | keyvalue; first as isFirst">
+                        <td><span *ngIf="isFirst">{{ row.value.committee_name }}</span></td>
+                        <td>{{ meeting_row.value.meeting_name }}</td>
+                        <td><span *ngFor="let group of meeting_row.value.group_names, last as isLast"> {{ group + (!isLast ? ', ' : '') }} </span></td>
+                    </tr>
+                </ng-container>
+            </table>
+        </ng-container>
     </ng-template>
 </os-user-detail-view>
 

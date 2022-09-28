@@ -16,6 +16,9 @@ import { ViewCommittee } from '../../../../../committees';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
+interface ParticipationTableData {[ committee_id: Id] : ParticipationTableDataRow};
+type ParticipationTableDataRow = { committee_name?: string, meetings: {[ meeting_id: Id ]: { meeting_name: string, group_names: string[] }}};
+
 @Component({
     selector: `os-account-detail`,
     templateUrl: `./account-detail.component.html`,
@@ -46,6 +49,12 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isEditingUser = false;
     public user: ViewUser | null = null;
     public isNewUser = false;
+
+    public get tableData(): ParticipationTableData {
+        return this._tableData;
+    }
+
+    private _tableData: ParticipationTableData = {};
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
@@ -148,6 +157,23 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
     }
 
+    private generateParticipationTableData(): void {
+        const tableData: ParticipationTableData = this.user.committees.mapToObject(item => {
+            return { [item.id]: { committee_name: item.getTitle(), meetings: {}}}
+        });
+        this.user.meetings.forEach(meeting => {
+            if (!tableData[meeting.committee_id]) {
+                tableData[meeting.committee_id] = { meetings: {} };
+            }
+            tableData[meeting.committee_id][`meetings`][meeting.id] = {
+                meeting_name: meeting.getTitle(),
+                group_names: this.user.groups(meeting.id).map(group => group.getTitle())
+            }
+        });
+        console.log(`ParticipationTableData: `, tableData);
+        this._tableData = tableData;
+    }
+
     private getUserByUrl(): void {
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
@@ -175,6 +201,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                         const title = user.getTitle();
                         super.setTitle(title);
                         this.user = user;
+                        this.generateParticipationTableData();
                     }
                 })
             );
