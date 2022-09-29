@@ -114,6 +114,13 @@ Cypress.Commands.add('getElement', (name: string) => {
     return cy.get(`[data-cy=${name}]`);
 });
 
+/**
+ * Get a specific element for `formcontrolname`
+ */
+Cypress.Commands.add('getFormControl', (name: string) => {
+    return cy.get(`[formcontrolname=${name}]`);
+});
+
 Cypress.Commands.add('getAnchorFor', (url: string) => {
     return cy.get(`a[href=\"${url}\"]`);
 });

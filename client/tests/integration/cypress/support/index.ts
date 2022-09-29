@@ -50,6 +50,12 @@ declare global {
              */
             getElement(name: string): Chainable<Element>;
             /**
+             * Gets a form control element
+             *
+             * @param name the name for an element prefixed by `formcontrolname=`
+             */
+            getFormControl(name: string): Chainable<Element>;
+            /**
              * Tries to find an anchor-HTML-element for a specific url.
              *
              * @param url the url an anchor points to.
