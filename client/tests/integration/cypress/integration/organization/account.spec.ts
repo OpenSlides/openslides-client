@@ -76,12 +76,12 @@ describe('Testing accounts', () => {
     it('receives a account name change', () => {
         cy.getAnchorFor(`/accounts/${account.id}`).click();
         cy.contains(account.name);
-        const updatedName = "Updated Name";
+        const updatedName = 'Updated Name';
         const accountData = {
             id: account.id,
-            first_name: updatedName,
+            first_name: updatedName
         };
-        cy.os4request("user.update", accountData).then(() => {
+        cy.os4request('user.update', accountData).then(() => {
             cy.contains(updatedName);
         });
     });

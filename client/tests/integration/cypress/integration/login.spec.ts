@@ -45,7 +45,7 @@ describe('Testing the sign in and out process', () => {
         cy.getElement(`loginButton`).click();
         cy.wait(`@login`);
         cy.url().should(`not.include`, `login`);
-        cy.getCookie("refreshId").should("exist");
+        cy.getCookie('refreshId').should('exist');
     });
 
     it(`signs in as meeting admin`, () => {
@@ -58,7 +58,7 @@ describe('Testing the sign in and out process', () => {
         cy.wait(`@login`);
         cy.url().should(`not.include`, `login`);
         cy.url().should(`include`, meetingId);
-        cy.getCookie("refreshId").should("exist");
+        cy.getCookie('refreshId').should('exist');
     });
 
     it(`signs in as delegate`, () => {
@@ -71,7 +71,7 @@ describe('Testing the sign in and out process', () => {
         cy.wait(`@login`);
         cy.url().should(`not.include`, `login`);
         cy.url().should(`include`, DEFAULT_MEETING_ID);
-        cy.getCookie("refreshId").should("exist");
+        cy.getCookie('refreshId').should('exist');
     });
 
     it(`logout as admin`, () => {

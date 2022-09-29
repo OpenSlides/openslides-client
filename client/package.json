@@ -30,7 +30,7 @@
     "po2json": "./node_modules/.bin/po2json -f mf src/assets/i18n/de.po src/assets/i18n/de.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/cs.po src/assets/i18n/cs.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/ru.po src/assets/i18n/ru.json",
     "po2json-tempfix": "./node_modules/.bin/po2json -f mf src/assets/i18n/de.po /dev/stdout | sed -f sed_replacements > src/assets/i18n/de.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/cs.po /dev/stdout | sed -f sed_replacements > src/assets/i18n/cs.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/ru.po /dev/stdout | sed -f sed_replacements > src/assets/i18n/ru.json",
     "prettify-check": "prettier --config ./.prettierrc --list-different \"src/{app,environments}/**/*{.ts,.js,.json,.css,.scss}\" cli/*{.ts,.json}",
-    "prettify-write": "prettier --config ./.prettierrc --write \"src/{app,environments}/**/*{.ts,.js,.json,.css,.scss}\" cli/*{.ts,.json}",
+    "prettify-write": "prettier --config ./.prettierrc --write \"src/{app,environments}/**/*{.ts,.js,.json,.css,.scss}\" cli/*{.ts,.json} tests/integration/**/*{.ts,.js,.json}",
     "cleanup": "ts-node -s -r tsconfig-paths/register cli/cleanup.ts",
     "generate-defaults": "ts-node -s -r tsconfig-paths/register cli/generate-settings-defaults.ts && prettier --config ./.prettierrc --write src/app/core/repositories/management/meeting-settings-defaults.ts",
     "generate-permissions": "ts-node -s -r tsconfig-paths/register cli/generate-permissions.ts && prettier --config ./.prettierrc --write src/app/core/core-services/permission-children.ts"

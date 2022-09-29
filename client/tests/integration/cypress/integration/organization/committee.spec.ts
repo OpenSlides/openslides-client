@@ -75,12 +75,12 @@ describe('Testing committees', () => {
     it('receives a name change', () => {
         cy.visit(`/committees/${committee.id}`);
         cy.contains(committee.name);
-        const updatedName = committee.name + "update";
+        const updatedName = committee.name + 'update';
         const committeeData = {
             id: committee.id,
-            name: updatedName,
+            name: updatedName
         };
-        cy.os4request("committee.update", committeeData).then(() => {
+        cy.os4request('committee.update', committeeData).then(() => {
             cy.contains(updatedName);
         });
     });

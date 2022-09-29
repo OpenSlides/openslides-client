@@ -18,7 +18,7 @@
 declare global {
     namespace Cypress {
         interface Chainable {
-            urlShouldAllOf(...toCheck: {chainer: string, values: any[]}[]): void;
+            urlShouldAllOf(...toCheck: { chainer: string; values: any[] }[]): void;
             /**
              * Signs in as a quick command, visits the given page and waits until the
              * page is ready.
@@ -78,7 +78,10 @@ declare global {
              */
             createCommittee(name?: string): Chainable<{ id: number; name: string }>;
             deleteCommittees(...ids: number[]): void;
-            createMeeting(name?: string, admin_ids?: number[]): Chainable<{ id: number; name: string, committeeId: number }>;
+            createMeeting(
+                name?: string,
+                admin_ids?: number[]
+            ): Chainable<{ id: number; name: string; committeeId: number }>;
             deleteMeetings(...ids: number[]): void;
             createAccount(name?: string): Chainable<{ id: number; name: string }>;
             deleteAccounts(...ids: number[]): void;
