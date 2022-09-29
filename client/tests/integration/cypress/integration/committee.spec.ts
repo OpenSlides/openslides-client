@@ -1,6 +1,5 @@
 describe('Testing committees', () => {
     const ACTION_URL = 'system/action/handle_request';
-    const PRESENTER_URL = 'system/presenter/handle_request';
 
     let committee: { id: number; name: string };
 
@@ -9,6 +8,12 @@ describe('Testing committees', () => {
         cy.createCommittee().then(_committee => {
             committee = _committee;
         });
+        cy.logout();
+    });
+
+    after(() => {
+        cy.login();
+        cy.deleteCommittees(committee.id);
         cy.logout();
     });
 
@@ -48,11 +53,15 @@ describe('Testing committees', () => {
 
         cy.url().should('not.include', 'create');
         cy.contains(committeeName);
+        cy.url().then(url => {
+            let urlSegments = url.split(`/`);
+            cy.deleteCommittees(Number(urlSegments[urlSegments.length - 1]));
+        });
     });
 
     it('updates a committee', () => {
         cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
-        cy.getElement(`committeeListSingleMenuTrigger`).first().click();
+        cy.contains(committee.name).closest('.scrolling-table-row').find('button.mat-menu-trigger').click();
         cy.getAnchorFor(`/committees/edit-committee?committeeId=${committee.id}`).click();
         cy.url().should('include', 'edit-committee');
         const committeeDescription = 'Hahaha';
@@ -77,11 +86,14 @@ describe('Testing committees', () => {
     });
 
     it('deletes a committee', () => {
-        cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
-        cy.getElement('committeeListSingleMenuTrigger').first().click();
-        cy.getElement('committeeListSingleDeleteButton').click();
-        cy.get('os-choice-dialog button').first().click();
-        cy.wait('@handle_request');
-        cy.get(committee.name).should('not.exist');
+        cy.createCommittee(`CypressTestDeleteCommittee ${Date.now().toString()}`).then(_committee => {
+            cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
+            const delRow = cy.contains(_committee.name).closest('.scrolling-table-row');
+            delRow.find('button.mat-menu-trigger').click();
+            cy.getElement('committeeListSingleDeleteButton').click();
+            cy.get('os-choice-dialog button').first().click();
+            cy.wait('@handle_request');
+            cy.get(committee.name).should('not.exist');
+        });
     });
 });
