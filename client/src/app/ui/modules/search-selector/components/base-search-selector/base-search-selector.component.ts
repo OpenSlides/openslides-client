@@ -102,6 +102,12 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Input()
     public getItemAdditionalInfoFn: (item: Selectable) => string = () => ``;
 
+    /**
+     * Allows for the definition of additional strings that should be checked against the search value for a given item
+     */
+    @Input()
+    public getAdditionalySearchedValuesFn: (item: Selectable) => string[] = item => [];
+
     @Input()
     public set sortFn(fn: false | ((valueA: Selectable, valueB: Selectable) => number)) {
         if (typeof fn === `function` || fn === false) {
@@ -109,6 +115,19 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         } else {
             this._sortFn = this._defaultSortFn;
         }
+    }
+
+    @Input()
+    public showEntriesNumber: number = 4;
+
+    public itemSizeInPx = 50;
+
+    public get panelHeight(): number {
+        return this.showEntriesNumber * this.itemSizeInPx;
+    }
+
+    public get maxHeight(): string {
+        return 112 + this.panelHeight + `px`;
     }
 
     public get sortFn(): false | ((valueA: Selectable, valueB: Selectable) => number) {
@@ -204,6 +223,11 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
                 this.onSearchValueUpdated(value.trim());
             })
         );
+
+        //Create css style for the mat-selects panel
+        let sheet = document.createElement(`style`);
+        sheet.innerHTML = `.os-search-selector { max-height: ${this.maxHeight} !important;}`;
+        document.body.appendChild(sheet);
     }
 
     public onChipRemove(itemId: Id): void {
@@ -335,7 +359,9 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
                 return true;
             }
 
-            return item.toString().toLowerCase().indexOf(searchValue) > -1;
+            return this.getAdditionalySearchedValuesFn(item)
+                .concat(item.toString())
+                .some(value => value.toLowerCase().indexOf(searchValue) > -1);
         });
         return filteredItems;
     }

@@ -77,6 +77,8 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     public getMeetingAdditionalInfoFn = (item: ViewMeeting) =>
         item?.committee?.getTitle().trim() === item.getTitle().trim() ? `` : `(${item?.committee?.getTitle()})`;
 
+    public getMeetingAdditionallySearchedFn = (item: ViewMeeting) => [item.committee.getTitle()];
+
     public constructor(
         private operator: OperatorService,
         private userController: UserControllerService,

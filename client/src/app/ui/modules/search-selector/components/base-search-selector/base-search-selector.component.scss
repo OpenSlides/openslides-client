@@ -1,7 +1,3 @@
-.os-search-selector {
-    max-height: 312px !important ;
-}
-
 .os-search-selector--no-options {
     mat-pseudo-checkbox {
         display: none;
@@ -52,6 +48,5 @@
 }
 
 .vscroll-viewport {
-    height: 200px;
     display: block;
 }

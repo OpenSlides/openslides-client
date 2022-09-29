@@ -54,7 +54,7 @@
             <ng-container *ngTemplateOutlet="notFoundTemplate"></ng-container>
         </button>
     </ng-container>
-    <cdk-virtual-scroll-viewport class="vscroll-viewport" minBufferPx="400" maxBufferPx="600" [itemSize]="50">
+    <cdk-virtual-scroll-viewport [ngStyle]="{ height: panelHeight + 'px' }" class="vscroll-viewport" minBufferPx="400" maxBufferPx="600" [itemSize]="50">
         <mat-option
             *ngIf="(filteredItemsObservable | async)?.length === 0"
             class="os-search-selector--no-options"

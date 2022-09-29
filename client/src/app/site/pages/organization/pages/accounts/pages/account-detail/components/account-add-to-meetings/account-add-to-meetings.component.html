@@ -9,7 +9,7 @@
 </os-head-bar>
 <mat-card class="os-card" style="padding-right: 30px">
     <div class="assign-meetings-element">
-        <h2>{{ 'Add to meetings' | translate }}</h2>
+        <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
         <div class="assign-meetings-subtext">
             <p translate>Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.</p>
             <p *ngIf="showLanguageWarning">
@@ -17,7 +17,7 @@
             </p>
             <br>
             <p>
-                <i><span translate>Meetings selected</span>: {{ selectedMeetings.length }}</i>
+                <i><span translate>Meetings selected</span>: {{ selectedMeetings?.length }}</i>
             </p>
         </div>
         <form [formGroup]="assignMeetingsForm">
@@ -28,8 +28,11 @@
                             formControlName="meeting_ids"
                             [multiple]="true"
                             placeholder="{{ 'Select meetings ...' | translate }}"
+                            [showChips]="false"
                             [inputListValues]="meetingsObservable"
                             [getItemAdditionalInfoFn]="getMeetingAdditionalInfoFn"
+                            [getAdditionalySearchedValuesFn]="getMeetingAdditionallySearchedFn"
+                            [showEntriesNumber]="8"
                         ></os-list-search-selector>
                     </mat-form-field>
                 </div>
