@@ -146,20 +146,29 @@
         </div>
 
         <!-- Meeting Table -->
-        <ng-container *ngIf="user.committee_ids?.length">
-            <h2>{{ 'Participation information' | translate }}</h2>
+        <ng-container *ngIf="canSeeParticipationTable">
+            <h3><B>{{ 'Committees and meetings' | translate }}</B></h3>
+            <p> {{ user.short_name }} {{ 'is assigned to the following committees, meetings and groups' | translate }}:</p>
 
-            <table>
-                <tr>
-                    <th translate>Committees</th>
-                    <th translate>Meetings</th>
+            <table class="participation-table">
+                <tr class="header-underline">
+                    <th translate>Committees ({{ user.committee_ids?.length }})</th>
+                    <th translate>Meetings ({{ user.meeting_ids?.length }})</th>
                     <th translate>Groups</th>
                 </tr>
-                <ng-container *ngFor="let row of tableData | keyvalue">
-                    <tr *ngFor="let meeting_row of row.value.meetings | keyvalue; first as isFirst">
-                        <td><span *ngIf="isFirst">{{ row.value.committee_name }}</span></td>
-                        <td>{{ meeting_row.value.meeting_name }}</td>
-                        <td><span *ngFor="let group of meeting_row.value.group_names, last as isLast"> {{ group + (!isLast ? ', ' : '') }} </span></td>
+                <ng-container *ngFor="let row of tableData | keyvalue: tableDataAscOrderCompare; last as lastLine">
+                    <tr *ngFor="let meeting_row of row.value.meetings | keyvalue: tableDataAscOrderCompare; first as isFirst; last as isLast" [ngClass]="getCellClass(true, true, lastLine)">
+                        <td *ngIf="isFirst" [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
+                            {{ row.value.committee_name }}
+                        </td>
+                        <td [ngClass]="getCellClass(false, isLast, lastLine)">
+                            {{ meeting_row.value.meeting_name }}
+                        </td>
+                        <td [ngClass]="getCellClass(false, isLast, lastLine)">
+                            <span *ngFor="let group of meeting_row.value.group_names, last as lastGroup">
+                                {{ group | translate }}{{ !lastGroup ? ', ' : '' }}
+                            </span>
+                        </td>
                     </tr>
                 </ng-container>
             </table>

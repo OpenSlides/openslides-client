@@ -1,0 +1,33 @@
+.participation-table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th {
+        text-align: left;
+        vertical-align: bottom;
+    }
+
+    th,
+    td {
+        padding-right: 10px;
+        min-width: 120px;
+    }
+
+    td {
+        padding-right: 5px;
+        min-width: 120px;
+        vertical-align: top;
+    }
+
+    .header-underline {
+        border-bottom: 2px solid;
+    }
+
+    .committee-underline {
+        border-bottom: 1px solid;
+    }
+
+    .meeting-underline {
+        border-bottom: 1px solid #888888;
+    }
+}

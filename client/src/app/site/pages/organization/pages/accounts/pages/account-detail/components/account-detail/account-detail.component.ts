@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,8 +17,14 @@ import { ViewCommittee } from '../../../../../committees';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
-interface ParticipationTableData {[ committee_id: Id] : ParticipationTableDataRow};
-type ParticipationTableDataRow = { committee_name?: string, meetings: {[ meeting_id: Id ]: { meeting_name: string, group_names: string[] }}};
+interface ParticipationTableData {
+    [committee_id: Id]: ParticipationTableDataRow;
+}
+type ParticipationTableDataRow = {
+    committee_name?: string;
+    meetings: { [meeting_id: Id]: ParticipationTableMeetingDataRow };
+};
+type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: string[] };
 
 @Component({
     selector: `os-account-detail`,
@@ -53,6 +60,19 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get tableData(): ParticipationTableData {
         return this._tableData;
     }
+
+    public get canSeeParticipationTable(): boolean {
+        return (
+            this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
+            (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
+        );
+    }
+
+    public tableDataAscOrderCompare = <T extends unknown>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
+        const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
+        const bName = b.value[`committee_name`] ?? b.value[`meeting_name`] ?? ``;
+        return aName.localeCompare(bName);
+    };
 
     private _tableData: ParticipationTableData = {};
 
@@ -157,9 +177,23 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
     }
 
+    public getCellClass(isCommitteeRow: boolean, isLastColumnOfCommitte: boolean, isLastLine: boolean): string {
+        if (isLastLine) {
+            return ``;
+        }
+        if (isCommitteeRow) {
+            return `committee-underline`;
+        }
+        return !isLastColumnOfCommitte ? `meeting-underline` : ``;
+    }
+
+    public getNumberOfKeys(item: { [key: string]: any }): number {
+        return Object.keys(item).length;
+    }
+
     private generateParticipationTableData(): void {
         const tableData: ParticipationTableData = this.user.committees.mapToObject(item => {
-            return { [item.id]: { committee_name: item.getTitle(), meetings: {}}}
+            return { [item.id]: { committee_name: item.getTitle(), meetings: {} } };
         });
         this.user.meetings.forEach(meeting => {
             if (!tableData[meeting.committee_id]) {
@@ -167,8 +201,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             }
             tableData[meeting.committee_id][`meetings`][meeting.id] = {
                 meeting_name: meeting.getTitle(),
-                group_names: this.user.groups(meeting.id).map(group => group.getTitle())
-            }
+                group_names: this.user
+                    .groups(meeting.id)
+                    .map(group => group.getTitle())
+                    .sort((a, b) => a.localeCompare(b))
+            };
         });
         console.log(`ParticipationTableData: `, tableData);
         this._tableData = tableData;
