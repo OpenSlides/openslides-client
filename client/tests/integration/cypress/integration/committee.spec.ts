@@ -36,7 +36,7 @@ describe('Testing committees', () => {
         cy.url().should('not.include', 'committees/');
     });
 
-    xit('creates a committee', () => {
+    it('creates a committee', () => {
         cy.intercept({ method: 'POST', url: ACTION_URL }).as('action');
         cy.getElement('headbarMainButton').click();
         cy.url().should('include', 'create');
@@ -50,7 +50,7 @@ describe('Testing committees', () => {
         cy.contains(committeeName);
     });
 
-    xit('updates a committee', () => {
+    it('updates a committee', () => {
         cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
         cy.getElement(`committeeListSingleMenuTrigger`).first().click();
         cy.getAnchorFor(`/committees/edit-committee?committeeId=${committee.id}`).click();
