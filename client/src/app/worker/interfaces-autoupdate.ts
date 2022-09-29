@@ -2,7 +2,6 @@ import { Id } from '../domain/definitions/key-types';
 import { WorkerMessageContent } from './interfaces';
 
 export interface AutoupdateSetEndpointParams {
-    authToken: string;
     url: string;
     healthUrl: string;
     method: string;

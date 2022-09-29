@@ -11,8 +11,7 @@ import {
 const autoupdatePool = new AutoupdateStreamPool({
     url: `/system/autoupdate`,
     healthUrl: `/system/autoupdate/health`,
-    method: `post`,
-    authToken: null
+    method: `post`
 } as AutoupdateSetEndpointParams);
 
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
@@ -99,6 +98,9 @@ export function addAutoupdateListener(context: any): void {
                 break;
             case `close`:
                 closeConnection(context, params);
+                break;
+            case `auth-change`:
+                autoupdatePool.updateAuthentication();
                 break;
             case `set-endpoint`:
                 autoupdatePool.setEndpoint(params);

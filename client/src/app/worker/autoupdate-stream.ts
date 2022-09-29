@@ -30,7 +30,8 @@ export class AutoupdateStream {
     constructor(
         private _subscriptions: AutoupdateSubscription[],
         public queryParams: string,
-        private endpoint: AutoupdateSetEndpointParams
+        private endpoint: AutoupdateSetEndpointParams,
+        private authToken: string
     ) {}
 
     /**
@@ -39,7 +40,7 @@ export class AutoupdateStream {
      * @param subscriptions The subscriptions handled by the created stream
      */
     public cloneWithSubscriptions(subscriptions: AutoupdateSubscription[]): AutoupdateStream {
-        return new AutoupdateStream(subscriptions, this.queryParams, this.endpoint);
+        return new AutoupdateStream(subscriptions, this.queryParams, this.endpoint, this.authToken);
     }
 
     /**
@@ -133,6 +134,10 @@ export class AutoupdateStream {
         this.abort();
     }
 
+    public setAuthToken(token: string) {
+        this.authToken = token;
+    }
+
     private async doRequest(): Promise<void> {
         this.active = true;
 
@@ -148,8 +153,8 @@ export class AutoupdateStream {
             'Content-Type': `application/json`
         };
 
-        if (this.endpoint.authToken) {
-            headers.authentication = this.endpoint.authToken;
+        if (this.authToken) {
+            headers.authentication = this.authToken;
         }
 
         this.abortCtrl = new AbortController();
@@ -187,6 +192,10 @@ export class AutoupdateStream {
         }
 
         if (!response.ok) {
+            if (headers.authentication !== this.authToken) {
+                return await this.doRequest();
+            }
+
             let errorContent = null;
             if (next && (errorContent = this.parse(this.decode(next)))?.error) {
                 errorContent = errorContent.error;

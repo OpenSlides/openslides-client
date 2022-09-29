@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+
 import {
     ErrorDescription,
     ErrorType,
@@ -18,10 +20,14 @@ export class AutoupdateStreamPool {
     private streams: AutoupdateStream[] = [];
     private subscriptions: Map<number, AutoupdateSubscription> = new Map<number, AutoupdateSubscription>();
     private messagePorts: Set<MessagePort> = new Set<MessagePort>();
+    private authToken: string = undefined;
 
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
+    private _authTokenRefreshTimeout: any | null = null;
 
-    constructor(private endpoint: AutoupdateSetEndpointParams) {}
+    constructor(private endpoint: AutoupdateSetEndpointParams) {
+        this.updateAuthentication();
+    }
 
     /**
      * Opens a new stream with the specified subscriptions and params
@@ -34,7 +40,7 @@ export class AutoupdateStreamPool {
             this.subscriptions[subscription.id] = subscription;
         }
 
-        const stream = new AutoupdateStream(subscriptions, queryParams, this.endpoint);
+        const stream = new AutoupdateStream(subscriptions, queryParams, this.endpoint, this.authToken);
         this.streams.push(stream);
         this.connectStream(stream);
 
@@ -94,6 +100,10 @@ export class AutoupdateStreamPool {
      * @param endpoint The new endpoint configuration
      */
     public setEndpoint(endpoint: AutoupdateSetEndpointParams): void {
+        if (JSON.stringify(this.endpoint) === JSON.stringify(endpoint)) {
+            return;
+        }
+
         this.endpoint = Object.assign(this.endpoint, endpoint);
 
         for (let stream of this.streams) {
@@ -127,6 +137,35 @@ export class AutoupdateStreamPool {
         }
 
         return null;
+    }
+
+    /**
+     * Updates the auth token
+     */
+    public async updateAuthentication(): Promise<void> {
+        clearTimeout(this._authTokenRefreshTimeout);
+        const res = await fetch(`/${environment.authUrlPrefix}/who-am-i/`, {
+            method: `POST`
+        });
+        const json = await res.json();
+
+        if (json?.success) {
+            this.authToken = res.headers.get(`authentication`);
+
+            for (let stream of this.streams) {
+                stream.setAuthToken(this.authToken);
+            }
+
+            if (this.authToken) {
+                const payload = atob(this.authToken.split(`.`)[1]);
+                const token = JSON.parse(payload);
+                const issuedAt = new Date().getTime(); // in ms
+                const expiresAt = token.exp; // in sec
+                this._authTokenRefreshTimeout = setTimeout(() => {
+                    this.updateAuthentication();
+                }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
+            }
+        }
     }
 
     private async connectStream(stream: AutoupdateStream, force?: boolean): Promise<void> {

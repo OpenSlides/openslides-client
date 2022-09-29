@@ -28,11 +28,19 @@ export class AuthService {
         return this._logoutEvent.asObservable();
     }
 
+    /**
+     * "Pings" every time when a user logs in.
+     */
+    public get loginObservable(): Observable<void> {
+        return this._loginEvent.asObservable();
+    }
+
     // This is a wrapper around authTokenService.accessTokenObservable
     // We need to control the point, when specific token changes should be propagated.
     // undefined is used to indicate, that there is no valid token yet
     private readonly _authTokenSubject = new BehaviorSubject<AuthToken | null>(null);
     private readonly _logoutEvent = new EventEmitter<void>();
+    private readonly _loginEvent = new EventEmitter<void>();
 
     private _authTokenSubscription: Subscription | null = null;
     private _authTokenRefreshTimeout: any | null = null;
@@ -63,6 +71,7 @@ export class AuthService {
             if (response?.success) {
                 // Shutdowning kills all connections. The operator is listening for token changes, so
                 // we must hold them back to this point.
+                this._loginEvent.emit();
                 this.lifecycleService.reboot();
                 this.resumeTokenSubscription();
                 this.redirectUser(meetingId);

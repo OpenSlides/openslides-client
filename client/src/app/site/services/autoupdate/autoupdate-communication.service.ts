@@ -114,6 +114,24 @@ export class AutoupdateCommunicationService {
             }
         });
 
+        this.authService.loginObservable.subscribe(() => {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `auth-change`,
+                params: {
+                    type: `login`
+                }
+            });
+        });
+
+        this.authService.logoutObservable.subscribe(() => {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `auth-change`,
+                params: {
+                    type: `logout`
+                }
+            });
+        });
+
         this.registerConnectionStatusListener();
     }
 
@@ -131,7 +149,6 @@ export class AutoupdateCommunicationService {
         this.sharedWorker.sendMessage(`autoupdate`, {
             action: `set-endpoint`,
             params: {
-                authToken: this.authTokenService.rawAccessToken,
                 url: config.url,
                 healthUrl: config.healthUrl,
                 method: config.method
