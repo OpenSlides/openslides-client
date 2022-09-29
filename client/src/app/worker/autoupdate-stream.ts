@@ -199,7 +199,11 @@ export class AutoupdateStream {
                 type = ErrorType.SERVER;
             }
 
-            this.error = { reason: `HTTP error`, type, error: { code: response.status, content: errorContent } };
+            this.error = {
+                reason: `HTTP error`,
+                type,
+                error: { code: response.status, content: errorContent, endpoint: this.endpoint }
+            };
             this.sendErrorToSubscriptions(this.error);
             this.failedCounter++;
         } else if (this.error) {

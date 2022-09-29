@@ -32,6 +32,8 @@ export class AutoupdateCommunicationService {
     private openResolvers = new Map<string, (value: number | PromiseLike<number>) => void>();
     private endpointName: string;
     private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
+    private unhealtyTimeout: any;
+    private tryReconnectOpen: boolean = false;
 
     constructor(
         private authTokenService: AuthTokenService,
@@ -47,9 +49,14 @@ export class AutoupdateCommunicationService {
                 if (msg?.action === `receive-data` && msg.content !== undefined) {
                     const data = <AutoupdateReceiveData>msg;
                     dataSubscription.next(data.content);
+                    if (this.tryReconnectOpen) {
+                        this.matSnackBar.dismiss();
+                        this.tryReconnectOpen = false;
+                    }
                 } else if (msg?.action === `receive-error`) {
                     const data = <AutoupdateReceiveError>msg;
                     if (data.content.data?.terminate) {
+                        this.tryReconnectOpen = true;
                         this.matSnackBar
                             .open(
                                 this.translate.instant(`Error talking to autoupdate service`),
@@ -60,15 +67,20 @@ export class AutoupdateCommunicationService {
                             )
                             .onAction()
                             .subscribe(() => {
+                                this.tryReconnectOpen = false;
                                 this.sharedWorker.sendMessage(`autoupdate`, {
                                     action: `reconnect-inactive`
                                 } as AutoupdateReconnectInactive);
                             });
                     } else if (data.content.data?.reason === `HTTP error`) {
-                        console.error(data);
-                        if (data.content?.data?.error.content?.type === `auth`) {
+                        console.error(data.content.data);
+                        const error = data.content?.data?.error;
+                        if (
+                            error.content?.type === `auth` &&
+                            error.endpoint?.authToken === this.authTokenService.rawAccessToken
+                        ) {
                             this.authService.logout();
-                        } else if (data.content?.data?.error.code === 403) {
+                        } else if (error.code === 403) {
                             this.setEndpoint();
                         }
                     }
@@ -81,12 +93,16 @@ export class AutoupdateCommunicationService {
                     this.autoupdateEndpointStatus = data.content.status;
 
                     if (this.autoupdateEndpointStatus === `unhealthy`) {
-                        this.connectionStatusService.goOffline({
-                            reason: `Autoupdate unhealthy`,
-                            isOnlineFn: () => {
-                                return this.autoupdateEndpointStatus === `healthy`;
-                            }
-                        });
+                        this.unhealtyTimeout = setTimeout(() => {
+                            this.connectionStatusService.goOffline({
+                                reason: `Autoupdate unhealthy`,
+                                isOnlineFn: () => {
+                                    return this.autoupdateEndpointStatus === `healthy`;
+                                }
+                            });
+                        }, 1000);
+                    } else {
+                        clearTimeout(this.unhealtyTimeout);
                     }
                 }
             });
