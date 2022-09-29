@@ -72,4 +72,22 @@ describe('Testing the sign in and out process', () => {
         cy.url().should(`include`, DEFAULT_MEETING_ID);
         cy.getCookie("refreshId").should("exist");
     });
+
+    it(`logout as admin`, () => {
+        cy.loginAndVisit(`/`);
+        cy.intercept({ method: 'POST', url: `${AUTH_URL}/secure/logout` }).as(`logout`);
+        cy.get(`os-account-button > div`).click();
+        cy.getElement(`accountLogoutButton`).click();
+        cy.wait(`@logout`);
+        cy.url().should(`include`, `login`);
+    });
+
+    it(`logout from meeting as delegate`, () => {
+        cy.loginAndVisit(`/${DEFAULT_MEETING_ID}`, DELEGATE_NAME, DELEGATE_NAME);
+        cy.intercept({ method: 'POST', url: `${AUTH_URL}/secure/logout` }).as(`logout`);
+        cy.get(`os-account-button > div`).click();
+        cy.getElement(`accountLogoutButton`).click();
+        cy.wait(`@logout`);
+        cy.url().should(`include`, `login`);
+    });
 });
