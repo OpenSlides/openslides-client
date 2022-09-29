@@ -4,12 +4,13 @@ describe('Testing the sign in and out process', () => {
     const DELEGATE_NAME = `a`;
     const DEFAULT_MEETING_ID = 1;
 
-    const username = `Mississipi`;
+    let username = `Mississipi`;
     let secondAccountId: number;
     let meetingId: number;
     let committeeId: number;
 
     before(() => {
+        username = username + Date.now().toString();
         cy.login();
         cy.createAccount(username).then(({ id }) => {
             cy.createMeeting(`Mississipi_2`, [id]).then(({ id: _meetingId, committeeId: _committeeId }) => {
