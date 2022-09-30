@@ -207,9 +207,7 @@ export class AutoupdateCommunicationService {
         } else if (data.content.data?.reason === `HTTP error`) {
             console.error(data.content.data);
             const error = data.content?.data?.error;
-            if (error.content?.type === `auth`) {
-                this.authService.logout();
-            } else if (error.code === 403) {
+            if (error.code === 403) {
                 this.setEndpoint();
             }
         }

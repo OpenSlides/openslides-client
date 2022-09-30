@@ -30,6 +30,7 @@ export class AutoupdateStreamPool {
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
     private _authTokenRefreshTimeout: any | null = null;
     private _updateAuthPromise: Promise<void> | undefined;
+    private _waitingForUpdateAuthPromise: boolean = false;
 
     constructor(private endpoint: AutoupdateSetEndpointParams) {
         this.updateAuthentication();
@@ -151,21 +152,30 @@ export class AutoupdateStreamPool {
     public async updateAuthentication(): Promise<void> {
         const currentPromise = this._updateAuthPromise;
 
+        if (this._waitingForUpdateAuthPromise) {
+            await this._updateAuthPromise;
+            return;
+        }
+
         this._updateAuthPromise = new Promise(async resolve => {
+            if (currentPromise) {
+                this._waitingForUpdateAuthPromise = true;
+                await currentPromise;
+                this._waitingForUpdateAuthPromise = false;
+            }
+
             try {
                 clearTimeout(this._authTokenRefreshTimeout);
                 const res = await fetch(`/${environment.authUrlPrefix}/who-am-i/`, {
                     method: `POST`
                 });
                 const json = await res.json();
-                if (currentPromise) {
-                    await currentPromise;
-                }
-
                 if (json?.success) {
                     this.setAuthToken(res.headers.get(`authentication`) || null);
-                    resolve();
+                } else if (!res.ok && json?.message === `Not signed in`) {
+                    this.setAuthToken(null);
                 }
+                resolve();
             } catch (e) {}
         });
 
@@ -284,7 +294,9 @@ export class AutoupdateStreamPool {
     }
 
     private async handleError(stream: AutoupdateStream, error: any): Promise<void> {
-        await this.waitUntilEndpointHealthy();
+        if (error?.error.content?.type !== `auth`) {
+            await this.waitUntilEndpointHealthy();
+        }
 
         if (stream.failedConnects <= 3 && error?.reason !== ErrorType.CLIENT) {
             if (error?.error.content?.type === `auth`) {

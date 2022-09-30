@@ -213,7 +213,9 @@ export class AutoupdateStream {
                 type,
                 error: { code: response.status, content: errorContent, endpoint: this.endpoint }
             };
-            this.sendErrorToSubscriptions(this.error);
+            if (errorContent?.type !== `auth`) {
+                this.sendErrorToSubscriptions(this.error);
+            }
             this.failedCounter++;
         } else if (this.error) {
             this.failedCounter++;
