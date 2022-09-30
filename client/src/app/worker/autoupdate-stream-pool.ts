@@ -8,7 +8,11 @@ import {
 } from '../gateways/http-stream/stream-utils';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
-import { AutoupdateSetEndpointParams, AutoupdateStatusContent } from './interfaces-autoupdate';
+import {
+    AutoupdateNewUserContent,
+    AutoupdateSetEndpointParams,
+    AutoupdateStatusContent
+} from './interfaces-autoupdate';
 
 const POOL_CONFIG = {
     RETRY_AMOUNT: 3,
@@ -174,7 +178,7 @@ export class AutoupdateStreamPool {
             if (lastUserId !== undefined && this.currentUserId !== lastUserId) {
                 this.sendToAll(`new-user`, {
                     id: this.currentUserId
-                });
+                } as AutoupdateNewUserContent);
             }
         }
     }

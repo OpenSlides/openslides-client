@@ -57,6 +57,15 @@ export interface AutoupdateSetStreamIdContent {
     streamId: Id;
 }
 
+export interface AutoupdateAuthChangeParams {
+    type: 'login' | 'logout';
+}
+
+export interface AutoupdateAuthChange extends WorkerMessageContent {
+    action: 'auth-change';
+    params: AutoupdateAuthChangeParams;
+}
+
 export interface AutoupdateSetStreamId extends AutoupdateWorkerResponse {
     action: 'set-streamid';
     content: AutoupdateSetStreamIdContent;
@@ -85,4 +94,13 @@ export interface AutoupdateStatusContent {
 export interface AutoupdateStatus extends AutoupdateWorkerResponse {
     action: 'status';
     content: AutoupdateStatusContent;
+}
+
+export interface AutoupdateNewUserContent {
+    id: number;
+}
+
+export interface AutoupdateNewUser extends AutoupdateWorkerResponse {
+    action: 'new-user';
+    content: AutoupdateNewUserContent;
 }

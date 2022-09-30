@@ -8,7 +8,9 @@ import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
 import { djb2hash } from 'src/app/infrastructure/utils';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 import {
+    AutoupdateAuthChange,
     AutoupdateCloseStream,
+    AutoupdateNewUser,
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveError,
@@ -60,7 +62,7 @@ export class AutoupdateCommunicationService {
                         this.handleStatus(<AutoupdateStatus>msg);
                         break;
                     case `new-user`:
-                        this.authService.updateUser(msg.content?.id);
+                        this.authService.updateUser((<AutoupdateNewUser>msg).content?.id);
                         break;
                 }
             });
@@ -78,7 +80,7 @@ export class AutoupdateCommunicationService {
                 params: {
                     type: `login`
                 }
-            });
+            } as AutoupdateAuthChange);
         });
 
         this.authService.logoutObservable.subscribe(() => {
@@ -87,7 +89,7 @@ export class AutoupdateCommunicationService {
                 params: {
                     type: `logout`
                 }
-            });
+            } as AutoupdateAuthChange);
         });
 
         this.registerConnectionStatusListener();
