@@ -91,4 +91,11 @@ describe('Testing the sign in and out process', () => {
         cy.wait(`@logout`);
         cy.url().should(`include`, `login`);
     });
+
+    it(`open login after logout via api`, () => {
+        cy.loginAndVisit(`/`);
+        cy.url().should(`not.include`, `login`);
+        cy.logout();
+        cy.url().should(`include`, `login`);
+    });
 });
