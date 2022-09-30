@@ -15,8 +15,12 @@
 
     td {
         padding-right: 5px;
-        min-width: 120px;
         vertical-align: top;
+    }
+
+    .admin-column {
+        text-align: right;
+        min-width: 10px;
     }
 
     .header-underline {

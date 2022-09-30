@@ -22,6 +22,7 @@ interface ParticipationTableData {
 }
 type ParticipationTableDataRow = {
     committee_name?: string;
+    is_manager?: boolean;
     meetings: { [meeting_id: Id]: ParticipationTableMeetingDataRow };
 };
 type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: string[] };
@@ -66,6 +67,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
             (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
         );
+    }
+
+    public get comitteeAdministrationAmount(): number {
+        return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
     }
 
     public tableDataAscOrderCompare = <T extends unknown>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
@@ -193,7 +198,13 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private generateParticipationTableData(): void {
         const tableData: ParticipationTableData = this.user.committees.mapToObject(item => {
-            return { [item.id]: { committee_name: item.getTitle(), meetings: {} } };
+            return {
+                [item.id]: {
+                    committee_name: item.getTitle(),
+                    is_manager: item.getManagers().some(manager => manager.id === this.user.id),
+                    meetings: {}
+                }
+            };
         });
         this.user.meetings.forEach(meeting => {
             if (!tableData[meeting.committee_id]) {
