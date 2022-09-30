@@ -189,7 +189,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         if (isCommitteeRow) {
             return `committee-underline`;
         }
-        return !isLastColumnOfCommitte ? `meeting-underline` : ``;
+        return !isLastColumnOfCommitte ? `divider-bottom` : ``;
     }
 
     public getNumberOfKeys(item: { [key: string]: any }): number {
