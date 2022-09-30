@@ -16,10 +16,12 @@ const autoupdatePool = new AutoupdateStreamPool({
 
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
+    sequentialnumbermapping: [],
     other: []
 };
 let openTimeouts = {
     required: null,
+    sequentialnumbermapping: null,
     other: null
 };
 
@@ -34,10 +36,17 @@ function openConnection(
     ctx: MessagePort,
     { streamId, queryParams = ``, request, requestHash, description }: AutoupdateOpenStreamParams
 ): void {
-    function getRequestCategory(description: string, _request: Object): 'required' | 'other' {
+    function getRequestCategory(
+        description: string,
+        _request: Object
+    ): 'required' | 'other' | 'sequentialnumbermapping' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
             return `required`;
+        }
+
+        if (description === `SequentialNumberMappingService:prepare`) {
+            return `sequentialnumbermapping`;
         }
 
         return `other`;

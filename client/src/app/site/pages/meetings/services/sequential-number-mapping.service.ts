@@ -132,7 +132,7 @@ export class SequentialNumberMappingService {
     }
 
     private insertViewModelId(viewModel: BaseViewModel & HasSequentialNumber & HasMeetingId): void {
-        const meetingIdSequentialNumber = `${viewModel.meeting_id || this.activeMeetingId}/${viewModel.sequential_number}`;
+        const meetingIdSequentialNumber = `${viewModel.meeting_id}/${viewModel.sequential_number}`;
         this.getBehaviorSubject(viewModel.collection, meetingIdSequentialNumber).next(viewModel.id);
     }
 
