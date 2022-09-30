@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
 import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
@@ -46,63 +46,22 @@ export class AutoupdateCommunicationService {
     ) {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
-                if (msg?.action === `receive-data` && msg.content !== undefined) {
-                    const data = <AutoupdateReceiveData>msg;
-                    dataSubscription.next(data.content);
-                    if (this.tryReconnectOpen) {
-                        this.matSnackBar.dismiss();
-                        this.tryReconnectOpen = false;
-                    }
-                } else if (msg?.action === `receive-error`) {
-                    const data = <AutoupdateReceiveError>msg;
-                    if (data.content.data?.terminate) {
-                        this.tryReconnectOpen = true;
-                        this.matSnackBar
-                            .open(
-                                this.translate.instant(`Error talking to autoupdate service`),
-                                this.translate.instant(`Try reconnect`),
-                                {
-                                    duration: 0
-                                }
-                            )
-                            .onAction()
-                            .subscribe(() => {
-                                this.tryReconnectOpen = false;
-                                this.sharedWorker.sendMessage(`autoupdate`, {
-                                    action: `reconnect-inactive`
-                                } as AutoupdateReconnectInactive);
-                            });
-                    } else if (data.content.data?.reason === `HTTP error`) {
-                        console.error(data.content.data);
-                        const error = data.content?.data?.error;
-                        if (error.content?.type === `auth`) {
-                            this.authService.logout();
-                        } else if (error.code === 403) {
-                            this.setEndpoint();
-                        }
-                    }
-                } else if (msg?.action === `set-streamid` && this.openResolvers.has(msg?.content?.requestHash)) {
-                    const data = <AutoupdateSetStreamId>msg;
-                    this.openResolvers.get(data.content.requestHash)(data.content?.streamId);
-                    this.openResolvers.delete(data.content.requestHash);
-                } else if (msg?.action === `status` && this.autoupdateEndpointStatus !== msg?.content.status) {
-                    const data = <AutoupdateStatus>msg;
-                    this.autoupdateEndpointStatus = data.content.status;
-
-                    if (this.autoupdateEndpointStatus === `unhealthy`) {
-                        this.unhealtyTimeout = setTimeout(() => {
-                            this.connectionStatusService.goOffline({
-                                reason: `Autoupdate unhealthy`,
-                                isOnlineFn: () => {
-                                    return this.autoupdateEndpointStatus === `healthy`;
-                                }
-                            });
-                        }, 1000);
-                    } else {
-                        clearTimeout(this.unhealtyTimeout);
-                    }
-                } else if (msg?.action === `new-user`) {
-                    this.authService.updateUser(msg.content?.id);
+                switch (msg?.action) {
+                    case `receive-data`:
+                        this.handleReceiveData(<AutoupdateReceiveData>msg, dataSubscription);
+                        break;
+                    case `receive-error`:
+                        this.handleReceiveError(<AutoupdateReceiveError>msg);
+                        break;
+                    case `set-streamid`:
+                        this.handleSetStreamId(<AutoupdateSetStreamId>msg);
+                        break;
+                    case `status`:
+                        this.handleStatus(<AutoupdateStatus>msg);
+                        break;
+                    case `new-user`:
+                        this.authService.updateUser(msg.content?.id);
+                        break;
                 }
             });
         });
@@ -215,5 +174,72 @@ export class AutoupdateCommunicationService {
                 params: { status: `online` }
             } as AutoupdateSetConnectionStatus);
         });
+    }
+
+    private handleReceiveData(data: AutoupdateReceiveData, dataSubscription: Subscriber<any>): void {
+        dataSubscription.next(data.content);
+        if (this.tryReconnectOpen) {
+            this.matSnackBar.dismiss();
+            this.tryReconnectOpen = false;
+        }
+    }
+
+    private handleReceiveError(data: AutoupdateReceiveError): void {
+        if (data.content.data?.terminate) {
+            this.tryReconnectOpen = true;
+            this.matSnackBar
+                .open(
+                    this.translate.instant(`Error talking to autoupdate service`),
+                    this.translate.instant(`Try reconnect`),
+                    {
+                        duration: 0
+                    }
+                )
+                .onAction()
+                .subscribe(() => {
+                    this.tryReconnectOpen = false;
+                    this.sharedWorker.sendMessage(`autoupdate`, {
+                        action: `reconnect-inactive`
+                    } as AutoupdateReconnectInactive);
+                });
+        } else if (data.content.data?.reason === `HTTP error`) {
+            console.error(data.content.data);
+            const error = data.content?.data?.error;
+            if (error.content?.type === `auth`) {
+                this.authService.logout();
+            } else if (error.code === 403) {
+                this.setEndpoint();
+            }
+        }
+    }
+
+    private handleSetStreamId(data: AutoupdateSetStreamId): void {
+        if (!this.openResolvers.has(data.content?.requestHash)) {
+            return;
+        }
+
+        this.openResolvers.get(data.content.requestHash)(data.content?.streamId);
+        this.openResolvers.delete(data.content.requestHash);
+    }
+
+    private handleStatus(data: AutoupdateStatus): void {
+        if (this.autoupdateEndpointStatus === data.content.status) {
+            return;
+        }
+
+        this.autoupdateEndpointStatus = data.content.status;
+
+        if (this.autoupdateEndpointStatus === `unhealthy`) {
+            this.unhealtyTimeout = setTimeout(() => {
+                this.connectionStatusService.goOffline({
+                    reason: `Autoupdate unhealthy`,
+                    isOnlineFn: () => {
+                        return this.autoupdateEndpointStatus === `healthy`;
+                    }
+                });
+            }, 1000);
+        } else {
+            clearTimeout(this.unhealtyTimeout);
+        }
     }
 }
