@@ -143,7 +143,7 @@
         <ng-container>
             <h2>{{ 'Committees and meetings' | translate }}</h2>
             <p *ngIf="canSeeParticipationTable"> {{ user.short_name }} {{ 'is assigned to the following committees, meetings and groups' | translate }}:</p>
-            <p *ngIf="!canSeeParticipationTable"> {{ user.short_name }} {{ 'is not assigned to any committees or meetings yet' | translate }}</p>
+            <p *ngIf="!canSeeParticipationTable"> {{ user.short_name }} {{ 'is not assigned to any committees or meetings yet' | translate }}.</p>
 
             <table *ngIf="canSeeParticipationTable" class="participation-table">
                 <tr class="header-underline">

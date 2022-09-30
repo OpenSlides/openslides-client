@@ -947,6 +947,9 @@ msgstr "Gremienverwalter"
 msgid "Committees"
 msgstr "Gremien"
 
+msgid "Committees and meetings"
+msgstr "Gremien und Veranstaltungen"
+
 msgid "Complex Workflow"
 msgstr "Komplexer Arbeitsablauf"
 
@@ -1924,6 +1927,9 @@ msgstr "Links"
 msgid "Legal notice"
 msgstr "Impressum"
 
+msgid "Less"
+msgstr "Weniger"
+
 msgid "Level indicator"
 msgstr "Pegelanzeige"
 
@@ -2046,6 +2052,9 @@ msgstr "Veranstaltungstitel"
 
 msgid "Meetings"
 msgstr "Veranstaltungen"
+
+msgid "Meetings selected"
+msgstr "Anzahl der ausgewählte Veranstaltungen"
 
 msgid "Message"
 msgstr "Mitteilung"
@@ -4214,6 +4223,12 @@ msgstr "innerhalb"
 
 msgid "internal"
 msgstr "intern"
+
+msgid "is assigned to the following committees, meetings and groups"
+msgstr "ist folgenden Gremien, Veranstaltungen und Gruppen zugeordnet"
+
+msgid "is not assigned to any committees or meetings yet"
+msgstr "ist noch keinen Gremien oder Veranstaltungen zugeordnet"
 
 msgid "is now"
 msgstr "ist jetzt"

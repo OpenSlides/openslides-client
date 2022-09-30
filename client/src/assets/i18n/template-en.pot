@@ -898,6 +898,9 @@ msgstr ""
 msgid "Committees"
 msgstr ""
 
+msgid "Committees and meetings"
+msgstr ""
+
 msgid "Complex Workflow"
 msgstr ""
 
@@ -1827,6 +1830,9 @@ msgstr ""
 msgid "Legal notice"
 msgstr ""
 
+msgid "Less"
+msgstr ""
+
 msgid "Level indicator"
 msgstr ""
 
@@ -1944,6 +1950,9 @@ msgid "Meeting titel"
 msgstr ""
 
 msgid "Meetings"
+msgstr ""
+
+msgid "Meetings selected"
 msgstr ""
 
 msgid "Message"
@@ -4003,6 +4012,12 @@ msgid "inline"
 msgstr ""
 
 msgid "internal"
+msgstr ""
+
+msgid "is assigned to the following committees, meetings and groups"
+msgstr ""
+
+msgid "is not assigned to any committees or meetings yet"
 msgstr ""
 
 msgid "is now"
