@@ -262,6 +262,10 @@ export class AutoupdateStreamPool {
         await this.waitUntilEndpointHealthy();
 
         if (stream.failedConnects <= 3 && error?.reason !== ErrorType.CLIENT) {
+            if (error?.error.content?.type === `auth`) {
+                await this.updateAuthentication();
+            }
+
             await this.connectStream(stream);
         } else if (
             stream.failedConnects === 4 &&
