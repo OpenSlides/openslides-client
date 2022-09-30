@@ -75,10 +75,7 @@ export class AutoupdateCommunicationService {
                     } else if (data.content.data?.reason === `HTTP error`) {
                         console.error(data.content.data);
                         const error = data.content?.data?.error;
-                        if (
-                            error.content?.type === `auth` &&
-                            error.endpoint?.authToken === this.authTokenService.rawAccessToken
-                        ) {
+                        if (error.content?.type === `auth`) {
                             this.authService.logout();
                         } else if (error.code === 403) {
                             this.setEndpoint();
@@ -104,6 +101,8 @@ export class AutoupdateCommunicationService {
                     } else {
                         clearTimeout(this.unhealtyTimeout);
                     }
+                } else if (msg?.action === `new-user`) {
+                    this.authService.updateUser(msg.content?.id);
                 }
             });
         });

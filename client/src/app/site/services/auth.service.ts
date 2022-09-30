@@ -93,6 +93,22 @@ export class AuthService {
         }
     }
 
+    public async updateUser(userId: number): Promise<void> {
+        this.clearRefreshRoutine();
+        if (userId) {
+            await this.doWhoAmIRequest();
+            this._loginEvent.emit();
+            this.lifecycleService.reboot();
+            this.redirectUser(null);
+        } else {
+            this.lifecycleService.shutdown();
+            this.authTokenService.setRawAccessToken(null);
+            this._logoutEvent.emit();
+            await this.DS.clear();
+            this.lifecycleService.bootup();
+        }
+    }
+
     public async logout(): Promise<void> {
         this.clearRefreshRoutine();
         this.lifecycleService.shutdown();

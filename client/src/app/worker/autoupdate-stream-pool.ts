@@ -21,6 +21,7 @@ export class AutoupdateStreamPool {
     private subscriptions: Map<number, AutoupdateSubscription> = new Map<number, AutoupdateSubscription>();
     private messagePorts: Set<MessagePort> = new Set<MessagePort>();
     private authToken: string = undefined;
+    private currentUserId: number = undefined;
 
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
     private _authTokenRefreshTimeout: any | null = null;
@@ -150,7 +151,8 @@ export class AutoupdateStreamPool {
         const json = await res.json();
 
         if (json?.success) {
-            this.authToken = res.headers.get(`authentication`);
+            const lastUserId = this.currentUserId;
+            this.authToken = res.headers.get(`authentication`) || null;
 
             for (let stream of this.streams) {
                 stream.setAuthToken(this.authToken);
@@ -161,9 +163,18 @@ export class AutoupdateStreamPool {
                 const token = JSON.parse(payload);
                 const issuedAt = new Date().getTime(); // in ms
                 const expiresAt = token.exp; // in sec
+                this.currentUserId = token.userId;
                 this._authTokenRefreshTimeout = setTimeout(() => {
                     this.updateAuthentication();
                 }, expiresAt * 1000 - issuedAt - 100); // 100ms before token is invalid
+            } else {
+                this.currentUserId = null;
+            }
+
+            if (lastUserId !== undefined && this.currentUserId !== lastUserId) {
+                this.sendToAll(`new-user`, {
+                    id: this.currentUserId
+                });
             }
         }
     }
