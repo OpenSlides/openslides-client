@@ -63,14 +63,18 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     };
 
     public get waitingForResults(): boolean {
-        return this._waitingForResults;
+        return this.waitingForResultsSubject.value;
+    }
+
+    public set waitingForResults(isWaiting: boolean) {
+        this.waitingForResultsSubject.next(isWaiting);
     }
 
     public get showLanguageWarning(): boolean {
         return this.translate.currentLang !== `en`;
     }
 
-    private _waitingForResults = false;
+    public waitingForResultsSubject = new BehaviorSubject(false);
 
     private userId: Id | null = null;
 
@@ -109,7 +113,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
 
     public async assign(): Promise<void> {
         if (this.user) {
-            this._waitingForResults = true;
+            this.waitingForResults = true;
             const result = await this.userController
                 .assignMeetings(this.user, { meeting_ids: this.selectedMeetings, group_name: this.groupName })
                 .resolve();
@@ -117,7 +121,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
                 this.lastGroupName = this.groupName;
                 this.parseIntoResultSubject(result);
             }
-            this._waitingForResults = false;
+            this.waitingForResults = false;
         }
     }
 

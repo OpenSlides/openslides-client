@@ -102,10 +102,10 @@
 </mat-card>
 
 <ng-template #tableData let-key>
-    <div *ngIf="!waitingForResults">
-        <div *ngFor="let meetingName of resultsTableDataSubjects[key] | async">
+    <div *ngIf="(waitingForResultsSubject | async) === false">
+        <div *ngFor="let meetingName of resultsTableDataSubjects[key] | async" class="assign-meetings-name-line">
             {{ meetingName }}
         </div>
     </div>
-    <mat-spinner *ngIf="waitingForResults" class="small-spinner await-result-spinner"></mat-spinner>
+    <mat-spinner *ngIf="waitingForResultsSubject | async" class="small-spinner await-result-spinner"></mat-spinner>
 </ng-template>
