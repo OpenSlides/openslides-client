@@ -22,17 +22,21 @@
             <mat-card class="os-card">
                 <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
             </mat-card>
-            <mat-card class="os-card margin-bottom-60" *ngIf="showView">
-                <ng-container *ngTemplateOutlet="showView; context: { user: user }"></ng-container>
-            </mat-card>
+            <ng-container *ngIf="showView">
+                <mat-card [ngClass]="{'os-card': true, 'margin-bottom-60': isLast}" *ngFor="let showViewElement of showView; last as isLast">
+                    <ng-container *ngTemplateOutlet="showViewElement; context: { user: user }"></ng-container>
+                </mat-card>
+            </ng-container>
         </ng-container>
         <ng-container *ngIf="!useMatcard">
             <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
-            <ng-container
-                *ngIf="showView"
-                [ngTemplateOutlet]="showView"
-                [ngTemplateOutletContext]="{ user: user }"
-            ></ng-container>
+            <ng-container *ngIf="showView">
+                <ng-container
+                    *ngFor="let showViewElement of showView"
+                    [ngTemplateOutlet]="showViewElement"
+                    [ngTemplateOutletContext]="{ user: user }"
+                ></ng-container>
+            </ng-container>
         </ng-container>
     </ng-container>
 </div>
