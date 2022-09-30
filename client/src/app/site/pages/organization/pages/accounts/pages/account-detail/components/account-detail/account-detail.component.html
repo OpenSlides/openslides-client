@@ -147,9 +147,9 @@
 
             <table *ngIf="canSeeParticipationTable" class="participation-table">
                 <tr class="header-underline">
-                    <th translate>Committees ({{ user.committee_ids?.length }})</th>
+                    <th><span translate>Committees</span> ({{ user.committee_ids?.length }})</th>
                     <th class="admin-column" *ngIf="comitteeAdministrationAmount">({{ comitteeAdministrationAmount }})</th>
-                    <th translate>Meetings ({{ user.meeting_ids?.length }})</th>
+                    <th><span translate>Meetings</span> ({{ user.meeting_ids?.length }})</th>
                     <th translate>Groups</th>
                 </tr>
                 <ng-container *ngFor="let row of tableData | keyvalue: tableDataAscOrderCompare; last as lastLine">
