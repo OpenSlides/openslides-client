@@ -71,7 +71,10 @@ export class ModelRequestService {
     }: SubscribeToConfig): Promise<void> {
         const fn = async () => {
             const request = await this.modelRequestBuilder.build(modelRequest);
-            const modelSubscription = this.autoupdateService.subscribe(request, `${subscriptionName}:subscription`);
+            const modelSubscription = await this.autoupdateService.subscribe(
+                request,
+                `${subscriptionName}:subscription`
+            );
             this._modelSubscriptionMap[subscriptionName] = modelSubscription;
             if (hideWhen) {
                 this.setCloseFn(subscriptionName, hideWhen);
