@@ -1472,6 +1472,9 @@ msgstr "Fehler bei der PDF-Erstellung in Antrag"
 msgid "Error in form field."
 msgstr "Fehler im Formularfeld."
 
+msgid "Error talking to autoupdate service"
+msgstr "Fehler bei der Kommunikation mit dem Autoupdate-Service"
+
 msgid "Estimated end"
 msgstr "Voraussichtliches Ende"
 
@@ -3378,6 +3381,9 @@ msgstr "Auswahl jetzt senden?"
 msgid "Submit vote now"
 msgstr "Stimme(n) jetzt senden"
 
+msgid "Submitter (in target meeting)"
+msgstr "Antragsteller*in (in der Zielveranstaltung)"
+
 msgid "Submitters"
 msgstr "Antragsteller*in"
 
@@ -3695,6 +3701,9 @@ msgstr "Übersetzung"
 
 msgid "Troubleshooting"
 msgstr "Fehlerbehebung"
+
+msgid "Try reconnect"
+msgstr "Verbindung wiederherstellen"
 
 msgid "Type"
 msgstr "Typ"
