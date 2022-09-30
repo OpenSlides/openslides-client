@@ -1385,6 +1385,9 @@ msgstr ""
 msgid "Error in form field."
 msgstr ""
 
+msgid "Error talking to autoupdate service"
+msgstr ""
+
 msgid "Estimated end"
 msgstr ""
 
@@ -3240,6 +3243,9 @@ msgstr ""
 msgid "Submit vote now"
 msgstr ""
 
+msgid "Submitter (in target meeting)"
+msgstr ""
+
 msgid "Submitters"
 msgstr ""
 
@@ -3522,6 +3528,9 @@ msgid "Translation"
 msgstr ""
 
 msgid "Troubleshooting"
+msgstr ""
+
+msgid "Try reconnect"
 msgstr ""
 
 msgid "Type"
