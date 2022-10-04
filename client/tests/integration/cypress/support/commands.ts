@@ -26,18 +26,18 @@
 
 import 'cypress-wait-until';
 
-Cypress.Commands.add(`urlShouldAllOf`, (...toCheck: {chainer: string, values: any[]}[]) => {
+Cypress.Commands.add(`urlShouldAllOf`, (...toCheck: { chainer: string; values: any[] }[]) => {
     toCheck.forEach(check => {
         check.values.forEach(value => {
             cy.url().should(check.chainer, value);
-        })
-    })
-})
+        });
+    });
+});
 
 Cypress.Commands.add('loginAndVisit', (url: string = '/', username = 'admin', password = 'admin') => {
     cy.login(username, password);
     cy.visit(url);
-    return cy.waitUntil(() => Cypress.$(`[data-cy=osOverlay]`).length === 0)
+    return cy.waitUntil(() => Cypress.$(`[data-cy=osOverlay]`).length === 0);
 });
 
 /**
@@ -52,13 +52,13 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
             password
         }
     })
-    .as('loginResponse')
-    .then(response => {
-        Cypress.env('authToken', response.headers.authentication);
-        return response;
-    })
-    .its('status')
-    .should('eq', 200);
+        .as('loginResponse')
+        .then(response => {
+            Cypress.env('authToken', response.headers.authentication);
+            return response;
+        })
+        .its('status')
+        .should('eq', 200);
 });
 
 Cypress.Commands.add(`logout`, () => {
@@ -67,13 +67,13 @@ Cypress.Commands.add(`logout`, () => {
         url: '/system/auth/secure/logout',
         body: {}
     })
-    .as('logoutResponse')
-    .then(response => {
-        Cypress.env('authToken', null);
-        return response;
-    })
-    .its('status')
-    .should('eq', 200);
+        .as('logoutResponse')
+        .then(response => {
+            Cypress.env('authToken', null);
+            return response;
+        })
+        .its('status')
+        .should('eq', 200);
 });
 
 /**
@@ -112,6 +112,13 @@ Cypress.Commands.add('os4request', (osAction, body) => {
  */
 Cypress.Commands.add('getElement', (name: string) => {
     return cy.get(`[data-cy=${name}]`);
+});
+
+/**
+ * Get a specific element for `formcontrolname`
+ */
+Cypress.Commands.add('getFormControl', (name: string) => {
+    return cy.get(`[formcontrolname=${name}]`);
 });
 
 Cypress.Commands.add('getAnchorFor', (url: string) => {
@@ -215,20 +222,20 @@ Cypress.Commands.add(`createAccount`, (name: string = `Mississipi`) => {
 
 Cypress.Commands.add(`deleteAccounts`, (...ids: number[]) => {
     ids.forEach((value, index) => {
-        cy.os4request(`user.delete`, {id: ids[index]});
-    })
+        cy.os4request(`user.delete`, { id: ids[index] });
+    });
 });
 
 Cypress.Commands.add(`deleteMeetings`, (...ids: number[]) => {
     ids.forEach((value, index) => {
-        cy.os4request(`meeting.delete`, {id: ids[index]});
-    })
+        cy.os4request(`meeting.delete`, { id: ids[index] });
+    });
 });
 
 Cypress.Commands.add(`deleteCommittees`, (...ids: number[]) => {
     ids.forEach((value, index) => {
-        cy.os4request(`committee.delete`, {id: ids[index]});
-    })
+        cy.os4request(`committee.delete`, { id: ids[index] });
+    });
 });
 
 /**
