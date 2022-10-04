@@ -18,9 +18,11 @@ export class VotesTableComponent {
 
     @Input()
     public set votesDataObservable(observable: Observable<BaseVoteData[]>) {
-        this._votesDataObservable = observable.pipe(map(entries => entries.sort(
-            (entryA, entryB) => entryA.user?.getName().localeCompare(entryB.user?.getName())
-        )));
+        this._votesDataObservable = observable.pipe(
+            map(entries =>
+                entries.sort((entryA, entryB) => entryA.user?.getName().localeCompare(entryB.user?.getName()))
+            )
+        );
     }
 
     @Input()
@@ -44,7 +46,7 @@ export class VotesTableComponent {
     public filterProps = [`user.full_name`, `valueVerbose`];
 
     public get votesDataObservable(): Observable<BaseVoteData[]> {
-        return this._votesDataObservable
+        return this._votesDataObservable;
     }
 
     private _votesDataObservable!: Observable<BaseVoteData[]>;

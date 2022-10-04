@@ -17,9 +17,13 @@ export class EntitledUsersTableComponent {
 
     @Input()
     public set entitledUsersObservable(observable: Observable<EntitledUsersTableEntry[]>) {
-        this._entitledUsersObservable = observable.pipe(map(entries => entries.sort(
-            (entryA, entryB) => this.getNameFromEntry(entryA).localeCompare(this.getNameFromEntry(entryB))
-        )));
+        this._entitledUsersObservable = observable.pipe(
+            map(entries =>
+                entries.sort((entryA, entryB) =>
+                    this.getNameFromEntry(entryA).localeCompare(this.getNameFromEntry(entryB))
+                )
+            )
+        );
     }
 
     @Input()
@@ -35,7 +39,7 @@ export class EntitledUsersTableComponent {
 
     public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
 
-    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]>{
+    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
         return this._entitledUsersObservable;
     }
 
