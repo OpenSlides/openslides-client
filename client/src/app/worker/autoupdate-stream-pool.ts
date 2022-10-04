@@ -221,8 +221,6 @@ export class AutoupdateStreamPool {
             this.removeStream(stream);
         } else if (stopReason === `error`) {
             await this.handleError(stream, error);
-        } else if (stopReason === `resolved`) {
-            await this.handleError(stream, undefined);
         }
     }
 
