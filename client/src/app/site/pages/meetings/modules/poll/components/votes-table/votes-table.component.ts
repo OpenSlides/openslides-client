@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
@@ -17,10 +17,11 @@ export class VotesTableComponent {
     private _isViewingThis: boolean = true;
 
     @Input()
-    public votesDataObservable!: Observable<BaseVoteData[]>;
-
-    @Input()
-    public listStorageKey!: string;
+    public set votesDataObservable(observable: Observable<BaseVoteData[]>) {
+        this._votesDataObservable = observable.pipe(map(entries => entries.sort(
+            (entryA, entryB) => entryA.user?.getName().localeCompare(entryB.user?.getName())
+        )));
+    }
 
     @Input()
     public set isViewingThis(value: boolean) {
@@ -41,6 +42,12 @@ export class VotesTableComponent {
 
     @Input()
     public filterProps = [`user.full_name`, `valueVerbose`];
+
+    public get votesDataObservable(): Observable<BaseVoteData[]> {
+        return this._votesDataObservable
+    }
+
+    private _votesDataObservable!: Observable<BaseVoteData[]>;
 
     public getVoteIcon(voteValue: string): string {
         return this.parent.voteOptionStyle[voteValue]?.icon;
