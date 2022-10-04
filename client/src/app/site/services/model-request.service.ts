@@ -41,7 +41,8 @@ export class ModelRequestService {
 
     public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
         if (this._modelSubscriptionMap[subscriptionName]) {
-            console.warn(`A subscription already made for ${subscriptionName}. Aborting.`);
+            console.warn(`A subscription already made for ${subscriptionName}. Resending.`);
+            this._modelSubscriptionMap[subscriptionName].resend();
             return;
         }
         modelRequest.fieldset = modelRequest.fieldset || [];
