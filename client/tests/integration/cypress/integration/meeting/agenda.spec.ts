@@ -18,7 +18,7 @@ describe('agenda tests', () => {
                     agenda_type: 'common',
                     text: `Cypress Agenda Test Topic Text`,
                     agenda_parent_id: null
-                }).then((_topic) => {
+                }).then(_topic => {
                     topic = _topic;
                     topic.name = title;
                 });
@@ -61,4 +61,4 @@ describe('agenda tests', () => {
         cy.contains(agendaTitle);
         cy.logout();
     });
-})
+});

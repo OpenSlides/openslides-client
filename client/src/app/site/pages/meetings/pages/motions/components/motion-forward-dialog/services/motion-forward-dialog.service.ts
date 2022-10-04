@@ -4,10 +4,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
 import { MotionFormatService } from '../../../services/common/motion-format.service';
@@ -29,7 +31,8 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         private formatService: MotionFormatService,
         private snackbar: MatSnackBar,
         private presenter: GetForwardingMeetingsPresenterService,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        private operator: OperatorService
     ) {
         super(dialog);
 
@@ -74,7 +77,9 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
 
     private async updateForwardMeetings(): Promise<void> {
         if (this._forwardingMeetingsUpdateRequired) {
-            const meetings = await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! });
+            const meetings = this.operator.hasPerms(Permission.motionCanManage)
+                ? await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! })
+                : [];
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
         }

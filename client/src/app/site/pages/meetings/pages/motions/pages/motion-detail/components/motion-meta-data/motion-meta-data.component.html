@@ -281,10 +281,10 @@
 <ng-template let-motion="motion" #meetingLink>
     <span *ngIf="motion.meeting?.canAccess()">
         <a [routerLink]="motion.getDetailStateUrl()">
-            {{ motion.meeting?.name }}
+            {{ getMeetingNameForMotion(motion) }}
         </a>
     </span>
     <div *ngIf="!motion.meeting?.canAccess()">
-        {{ motion.meeting?.name }}
+        {{ getMeetingNameForMotion(motion) }}
     </div>
 </ng-template>
