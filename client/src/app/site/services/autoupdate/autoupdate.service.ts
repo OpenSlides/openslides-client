@@ -41,6 +41,7 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
+    resend: () => void;
     close: () => void;
 }
 
@@ -160,6 +161,9 @@ export class AutoupdateService {
 
         return {
             id,
+            resend: () => {
+                this.communication.resend(id);
+            },
             close: () => {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];

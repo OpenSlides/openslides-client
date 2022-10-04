@@ -15,6 +15,7 @@ import {
     AutoupdateReceiveData,
     AutoupdateReceiveError,
     AutoupdateReconnectInactive,
+    AutoupdateResendStreamData,
     AutoupdateSetConnectionStatus,
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
@@ -139,6 +140,20 @@ export class AutoupdateCommunicationService {
                 }
             } as AutoupdateOpenStream);
         });
+    }
+
+    /**
+     * Tells the worker to resend the current data of the given subscription
+     *
+     * @param streamId Id of the stream
+     */
+    public resend(streamId: Id): void {
+        this.sharedWorker.sendMessage(`autoupdate`, {
+            action: `resend`,
+            params: {
+                streamId
+            }
+        } as AutoupdateResendStreamData);
     }
 
     /**

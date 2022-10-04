@@ -34,6 +34,15 @@ export interface AutoupdateCloseStream extends WorkerMessageContent {
     params: AutoupdateCloseStreamParams;
 }
 
+export interface AutoupdateResendStreamDataParams {
+    streamId: number;
+}
+
+export interface AutoupdateResendStreamData extends WorkerMessageContent {
+    action: 'resend';
+    params: AutoupdateResendStreamDataParams;
+}
+
 export interface AutoupdateSetConnectionStatusParams {
     status: 'online' | 'offline';
 }
