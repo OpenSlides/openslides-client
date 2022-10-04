@@ -1,24 +1,31 @@
-<div mat-dialog-title>{{ 'Forward motions to' | translate }}:</div>
+<div mat-dialog-title>{{ 'Forward motions' | translate }}</div>
 <div mat-dialog-content>
-    <ng-container *ngFor="let committee of committeesObservable | async">
-        <div *ngIf="committee.meetings?.length">
-            <h4>{{ committee.name }}</h4>
-            <div *ngFor="let meeting of committee.meetings">
-                <mat-checkbox
-                    [disabled]="isActiveMeeting(meeting)"
-                    [value]="meeting.id"
-                    [(ngModel)]="checkboxStateMap[meeting.id]"
-                    (change)="onChangeCheckbox($event)"
-                >
-                    {{ meeting.name }}
-                    <span *ngIf="meeting.start_time || meeting.end_time">
-                        &nbsp;&middot;&nbsp;
-                        <os-meeting-time [startTime]="meeting.start_time" [endTime]="meeting.end_time"></os-meeting-time>
-                    </span>
-                </mat-checkbox>
+    <span *ngIf="data.motion.length === 1">{{ 'State' | translate }}: <b>{{ data.motion[0].state.name | translate }} {{data.motion[0].state_extension}}</b></span>
+    <br *ngIf="data.motion.length === 1 && activeMeetingCommitteeName">
+    <span *ngIf="activeMeetingCommitteeName">{{ 'Submitter (in target meeting)' | translate }}: <b>{{ activeMeetingCommitteeName }}</b></span>
+    <div class="motion-forward-meeting-list">
+        <ng-container *ngFor="let committee of committeesObservable | async">
+            <div *ngIf="committee.meetings?.length">
+                <h4>{{ committee.name }}</h4>
+                <div *ngFor="let meeting of committee.meetings">
+                    <mat-checkbox
+                        [disabled]="isActiveMeeting(meeting)"
+                        [value]="meeting.id"
+                        [(ngModel)]="checkboxStateMap[meeting.id]"
+                        (change)="onChangeCheckbox($event)">
+                        {{ meeting.name }}
+                        <span *ngIf="meeting.start_time || meeting.end_time">
+                            &nbsp;&middot;&nbsp;
+                            <os-meeting-time
+                                [startTime]="meeting.start_time"
+                                [endTime]="meeting.end_time"
+                            ></os-meeting-time>
+                        </span>
+                    </mat-checkbox>
+                </div>
             </div>
-        </div>
-    </ng-container>
+        </ng-container>
+    </div>
 </div>
 <div mat-dialog-actions>
     <button mat-button [disabled]="!selectedMeetings?.size" color="primary" (click)="onSaveClicked()">

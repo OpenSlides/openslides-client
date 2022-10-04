@@ -253,3 +253,65 @@ export function djb2hash(str: string): string {
     }
     return hash.toString();
 }
+
+/**
+ * Joins two typed arrays together
+ *
+ * @param {TypeArray} type Type of the array
+ * @param {TypeArray} a part one
+ * @param {TypeArray} b part two
+ */
+export function joinTypedArrays<
+    T extends
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array
+>(type: { new (len: number): T }, a: T, b: T): T {
+    const res = new type(a.length + b.length);
+    res.set(a);
+    res.set(b, a.length);
+
+    return res;
+}
+
+/**
+ * Splits a typed array by a given seperator including the
+ * seperator at the end of every return array
+ *
+ * @param {TypeArray} type Type of the array
+ * @param {TypeArray} seperator
+ * @param {TypeArray} arr The array to seperate
+ */
+export function splitTypedArray<
+    T extends
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array
+>(seperator: any, arr: T): T[] {
+    const res: T[] = [];
+    let start = 0;
+    let nextIdx: number;
+    do {
+        nextIdx = arr.indexOf(seperator, start);
+        if (nextIdx !== -1) {
+            res.push(arr.slice(start, nextIdx + 1) as T);
+            start = nextIdx + 1;
+        } else {
+            res.push(arr.slice(start, arr.length) as T);
+        }
+    } while (nextIdx !== -1 && nextIdx !== arr.length - 1);
+
+    return res;
+}

@@ -63,7 +63,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             }
             if (newId) {
                 this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
-                    meetingUserIds = meeting?.user_ids;
+                    meetingUserIds = meeting?.user_ids ?? [];
                     const meetingUsers =
                         meeting && meeting?.user_ids
                             ? repo.getViewModelList().filter(user => meeting?.user_ids.includes(user.id))

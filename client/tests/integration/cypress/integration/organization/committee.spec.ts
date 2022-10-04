@@ -59,19 +59,6 @@ describe('Testing committees', () => {
         });
     });
 
-    it('updates a committee', () => {
-        cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
-        cy.contains(committee.name).closest('.scrolling-table-row').find('button.mat-menu-trigger').click();
-        cy.getAnchorFor(`/committees/edit-committee?committeeId=${committee.id}`).click();
-        cy.url().should('include', 'edit-committee');
-        const committeeDescription = 'Hahaha';
-        cy.getElement('committeeDescription').type(committeeDescription);
-        cy.getElement('headbarSaveButton').click();
-        cy.wait('@handle_request');
-        cy.url().should('not.include', 'edit-committee');
-        cy.contains(committeeDescription);
-    });
-
     it('receives a name change', () => {
         cy.visit(`/committees/${committee.id}`);
         cy.contains(committee.name);
@@ -83,6 +70,19 @@ describe('Testing committees', () => {
         cy.os4request('committee.update', committeeData).then(() => {
             cy.contains(updatedName);
         });
+    });
+
+    it('updates a committee', () => {
+        cy.intercept({ method: 'POST', url: ACTION_URL }).as('handle_request');
+        cy.getElement(`committeeListSingleMenuTrigger`).first().click();
+        cy.getAnchorFor(`/committees/edit-committee?committeeId=${committee.id}`).click();
+        cy.url().should('include', 'edit-committee');
+        const committeeDescription = 'Hahaha';
+        cy.getElement('committeeDescription').type(committeeDescription);
+        cy.getElement('headbarSaveButton').click();
+        cy.wait('@handle_request');
+        cy.url().should('not.include', 'edit-committee');
+        cy.contains(committeeDescription);
     });
 
     it('deletes a committee', () => {

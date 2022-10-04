@@ -413,7 +413,7 @@ export class OperatorService {
                     `anonymous enabled`,
                     this.anonymousEnabled
                 );
-                this._currentOperatorDataSubscription = this.autoupdateService.subscribe(
+                this._currentOperatorDataSubscription = await this.autoupdateService.subscribe(
                     await this.modelRequestBuilder.build(operatorRequest),
                     `operator:subscription`
                 );
