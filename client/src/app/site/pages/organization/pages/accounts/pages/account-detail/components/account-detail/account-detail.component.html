@@ -157,7 +157,7 @@
                     <ng-container *ngIf="!getNumberOfKeys(row.value.meetings)">
                         <tr [ngClass]="getCellClass(true, true, lastLine)">
                             <td>
-                                {{ row.value.committee_name }}
+                                <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                             </td>
                             <td class="admin-column" *ngIf="comitteeAdministrationAmount">
                                 <mat-icon matTooltip="{{ 'Committee admin' | translate }}" [matTooltipPosition]="'left'" *ngIf="row.value.is_manager">engineering</mat-icon>
@@ -168,13 +168,13 @@
                     <!-- Handle committees with meetings-->
                     <tr *ngFor="let meeting_row of row.value.meetings | keyvalue: tableDataAscOrderCompare; first as isFirst; last as isLast" [ngClass]="getCellClass(true, true, lastLine)">
                         <td *ngIf="isFirst" [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
-                            {{ row.value.committee_name }}
+                            <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                         </td>
                         <td class="admin-column" *ngIf="isFirst && comitteeAdministrationAmount" [attr.rowspan]="getNumberOfKeys(row.value.meetings)" >
                             <mat-icon matTooltip="{{ 'Committee admin' | translate }}" [matTooltipPosition]="'left'" *ngIf="row.value.is_manager">engineering</mat-icon>
                         </td>
                         <td [ngClass]="getCellClass(false, isLast, lastLine)">
-                            {{ meeting_row.value.meeting_name }}
+                            <a [routerLink]="'/' + meeting_row.key + ''">{{ meeting_row.value.meeting_name }}</a>
                         </td>
                         <td [ngClass]="getCellClass(false, isLast, lastLine)">
                             <span *ngFor="let group of meeting_row.value.group_names, last as lastGroup">
