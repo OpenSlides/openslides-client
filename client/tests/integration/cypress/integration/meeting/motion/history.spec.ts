@@ -5,47 +5,51 @@ describe('motion history mode test', () => {
 
     before(() => {
         cy.login();
-        cy.createMeeting(`CypressMeetingMotionHistoryTestMeeting${Date.now().toString()}`, [ADMIN_ID]).then(_meeting => {
-            meeting = _meeting;
-            cy.os4request('motion.create', {
-                meeting_id: meeting.id,
-                title: 'CypressMotionHistoryTestTitle',
-                text: '<p>CypressMotionHistoryTestText</p>',
-                submitter_ids: [],
-                category_id: null,
-                attachment_ids: [],
-                reason: '',
-                supporter_ids: [],
-                agenda_create: false,
-                agenda_type: 'internal'
-            }).then(_motion => {
-                motion = _motion;
-                cy.os4request('poll.create', {
+        cy.createMeeting(`CypressMeetingMotionHistoryTestMeeting${Date.now().toString()}`, [ADMIN_ID]).then(
+            _meeting => {
+                meeting = _meeting;
+                cy.os4request('motion.create', {
                     meeting_id: meeting.id,
-                    title: 'Vote',
-                    onehundred_percent_base: 'YNA',
-                    pollmethod: 'YNA',
-                    type: 'pseudoanonymous',
-                    global_abstain: false,
-                    global_no: false,
-                    global_yes: false,
-                    max_votes_amount: 1,
-                    min_votes_amount: 1,
-                    max_votes_per_option: 1,
-                    options: [{
-                        content_object_id: `motion/${motion.id}`
-                    }],
-                    content_object_id: `motion/${motion.id}`,
-                    backend: 'fast'
-                });
+                    title: 'CypressMotionHistoryTestTitle',
+                    text: '<p>CypressMotionHistoryTestText</p>',
+                    submitter_ids: [],
+                    category_id: null,
+                    attachment_ids: [],
+                    reason: '',
+                    supporter_ids: [],
+                    agenda_create: false,
+                    agenda_type: 'internal'
+                }).then(_motion => {
+                    motion = _motion;
+                    cy.os4request('poll.create', {
+                        meeting_id: meeting.id,
+                        title: 'Vote',
+                        onehundred_percent_base: 'YNA',
+                        pollmethod: 'YNA',
+                        type: 'pseudoanonymous',
+                        global_abstain: false,
+                        global_no: false,
+                        global_yes: false,
+                        max_votes_amount: 1,
+                        min_votes_amount: 1,
+                        max_votes_per_option: 1,
+                        options: [
+                            {
+                                content_object_id: `motion/${motion.id}`
+                            }
+                        ],
+                        content_object_id: `motion/${motion.id}`,
+                        backend: 'fast'
+                    });
 
-                cy.os4request('motion.update', {
-                    id: motion.id,
-                    title: 'CypressMotionHistoryTestChangedTitle',
-                    text: '<p>CypressMotionHistoryTestChangedText</p>',
+                    cy.os4request('motion.update', {
+                        id: motion.id,
+                        title: 'CypressMotionHistoryTestChangedTitle',
+                        text: '<p>CypressMotionHistoryTestChangedText</p>'
+                    });
                 });
-            });
-        });
+            }
+        );
         cy.logout();
     });
 

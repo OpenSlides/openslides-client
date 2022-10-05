@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
+import { unix } from 'moment';
 
 import { HistoryService } from '../../services/history.service';
-import { unix } from 'moment';
 
 @Component({
     selector: `os-history-banner`,
