@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { SpinnerModule } from 'src/app/ui/modules/spinner';
 
 import { LoginMaskComponent } from './components/login-mask/login-mask.component';
 import { LoginMaskRoutingModule } from './login-mask-routing.module';
@@ -23,6 +24,7 @@ import { LoginMaskRoutingModule } from './login-mask-routing.module';
         MatInputModule,
         MatIconModule,
         MatButtonModule,
+        SpinnerModule,
         ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild()
     ]
