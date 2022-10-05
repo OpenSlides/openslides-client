@@ -279,12 +279,13 @@
 <os-motion-manage-polls [motion]="motion"></os-motion-manage-polls>
 
 <ng-template let-motion="motion" #meetingLink>
+    »
     <span *ngIf="motion.meeting?.canAccess()">
         <a [routerLink]="motion.getDetailStateUrl()">
             {{ getMeetingNameForMotion(motion) }}
         </a>
     </span>
-    <div *ngIf="!motion.meeting?.canAccess()">
+    <span *ngIf="!motion.meeting?.canAccess()">
         {{ getMeetingNameForMotion(motion) }}
-    </div>
+    </span>
 </ng-template>
