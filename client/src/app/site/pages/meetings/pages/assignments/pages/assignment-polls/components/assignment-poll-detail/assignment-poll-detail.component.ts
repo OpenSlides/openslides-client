@@ -114,7 +114,6 @@ export class AssignmentPollDetailComponent
                 }
             }
         }
-        console.log(`CREATE VOTES DATA: `, Object.values(votes));
         return Object.values(votes);
     }
 
