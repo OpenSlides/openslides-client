@@ -53,6 +53,13 @@ export class MotionForwardDialogComponent implements OnInit {
         return +meeting.id === this.activeMeeting.meetingId;
     }
 
+    public hasAlreadyBeenForwardedTo(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
+        if (this.data.motion.length === 1) {
+            return this.data.motion[0].derived_motions?.map(motion => motion.meeting_id).includes(+meeting.id) ?? false;
+        }
+        return false;
+    }
+
     private initStateMap(): void {
         const meetings = this.committeesSubject.value.flatMap(committee => committee.meetings)!;
         for (const meeting of meetings) {
