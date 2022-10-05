@@ -7,6 +7,7 @@ import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
@@ -97,13 +98,18 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         motionServiceCollector: MotionDetailServiceCollectorService,
         public perms: MotionPermissionService,
         private operator: OperatorService,
-        private motionForwardingService: MotionForwardDialogService
+        private motionForwardingService: MotionForwardDialogService,
+        private meetingController: MeetingControllerService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
 
-        this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
-            this._forwardingAvailable = forwardingAvailable;
-        });
+        if (operator.hasPerms(Permission.motionCanManage)) {
+            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+                this._forwardingAvailable = forwardingAvailable;
+            });
+        } else {
+            this._forwardingAvailable = false;
+        }
     }
 
     /**
@@ -230,6 +236,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public getOriginMotions(): ViewMotion[] {
         const copy = [...(this.motion.all_origins || [])];
         return copy.reverse();
+    }
+
+    public getMeetingNameForMotion(motion: ViewMotion): string {
+        return motion.meeting?.name ?? this.meetingController.getViewModelUnsafe(motion.meeting_id)?.name;
     }
 
     protected override getSubscriptions(): Subscription[] {
