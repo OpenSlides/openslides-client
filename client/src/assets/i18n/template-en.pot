@@ -1507,6 +1507,9 @@ msgstr ""
 msgid "Forwarding created"
 msgstr ""
 
+msgid "Forwarding of motion"
+msgstr ""
+
 msgid "Forwardings"
 msgstr ""
 
