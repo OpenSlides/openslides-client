@@ -18,6 +18,11 @@ import { Position } from '../definitions';
 export class HistoryService {
     private _isInHistoryMode = false;
     private _actionFnIndex: number | null = null;
+    private _currentHistoryPosition: Position | null = null;
+
+    public get currentHistoryPosition(): Position | null {
+        return this._currentHistoryPosition;
+    }
 
     public constructor(
         _openslidesRouter: OpenSlidesRouterService,
@@ -44,11 +49,13 @@ export class HistoryService {
             this.setHistoryMode();
         }
         await this.loadHistoryPosition(fqid, historyPosition);
+        this._currentHistoryPosition = historyPosition;
     }
 
     public leaveHistoryMode(): void {
         if (this._isInHistoryMode) {
             this._isInHistoryMode = false;
+            this._currentHistoryPosition = null;
             this.removeActionFn();
             this.bannerService.removeBanner({ component: HistoryBannerComponent });
             this.autoupdateService.reconnect();

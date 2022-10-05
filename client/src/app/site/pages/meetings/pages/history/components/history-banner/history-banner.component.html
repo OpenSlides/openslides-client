@@ -2,6 +2,6 @@
     <span>
         {{ 'You are using the history mode of OpenSlides. Changes will not be saved.' | translate }}
     </span>
-    <span></span>
+    <span>{{ historyPositionTimestamp }}</span>
     <a (click)="leaveHistoryMode()">{{ 'Exit' | translate }}</a>
 </div>
