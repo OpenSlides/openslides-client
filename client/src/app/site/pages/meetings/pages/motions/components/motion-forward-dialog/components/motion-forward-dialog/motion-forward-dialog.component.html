@@ -9,7 +9,7 @@
                 <h4>{{ committee.name }}</h4>
                 <div *ngFor="let meeting of committee.meetings">
                     <mat-checkbox
-                        [disabled]="isActiveMeeting(meeting)"
+                        [disabled]="isActiveMeeting(meeting) || hasAlreadyBeenForwardedTo(meeting)"
                         [value]="meeting.id"
                         [(ngModel)]="checkboxStateMap[meeting.id]"
                         (change)="onChangeCheckbox($event)">
