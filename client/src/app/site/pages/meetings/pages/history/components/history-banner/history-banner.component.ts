@@ -10,6 +10,10 @@ import { HistoryService } from '../../services/history.service';
 export class HistoryBannerComponent {
     public constructor(private historyService: HistoryService) {}
 
+    public get historyPositionTimestamp(): number | null {
+        return this.historyService.currentHistoryPosition?.timestamp;
+    }
+
     public leaveHistoryMode(): void {
         this.historyService.leaveHistoryMode();
     }

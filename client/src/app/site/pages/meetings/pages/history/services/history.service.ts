@@ -7,6 +7,7 @@ import { NotifyService } from 'src/app/gateways/notify.service';
 import { BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { DataStoreService } from 'src/app/site/services/data-store.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 import { HistoryBannerComponent } from '../components/history-banner/history-banner.component';
@@ -18,6 +19,11 @@ import { Position } from '../definitions';
 export class HistoryService {
     private _isInHistoryMode = false;
     private _actionFnIndex: number | null = null;
+    private _currentHistoryPosition: Position | null = null;
+
+    public get currentHistoryPosition(): Position | null {
+        return this._currentHistoryPosition;
+    }
 
     public constructor(
         _openslidesRouter: OpenSlidesRouterService,
@@ -26,7 +32,8 @@ export class HistoryService {
         private notify: NotifyService,
         private activeMeetingIdService: ActiveMeetingIdService,
         private actions: ActionService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private datastore: DataStoreService
     ) {
         combineLatest([
             _openslidesRouter.beforeLeaveMeetingObservable,
@@ -43,14 +50,17 @@ export class HistoryService {
             this.notify.disconnect();
             this.setHistoryMode();
         }
+        this._currentHistoryPosition = historyPosition;
         await this.loadHistoryPosition(fqid, historyPosition);
     }
 
     public leaveHistoryMode(): void {
         if (this._isInHistoryMode) {
             this._isInHistoryMode = false;
+            this._currentHistoryPosition = null;
             this.removeActionFn();
             this.bannerService.removeBanner({ component: HistoryBannerComponent });
+            this.datastore.clear();
             this.autoupdateService.reconnect();
             this.notify.connect(this.activeMeetingIdService.meetingId!);
         }
@@ -77,6 +87,7 @@ export class HistoryService {
     }
 
     private async loadHistoryPosition(fqid: Fqid, historyPosition: Position): Promise<void> {
+        this.datastore.clear();
         this.autoupdateService.reconnect({ position: historyPosition.position });
     }
 }
