@@ -71,7 +71,8 @@ export enum PollState {
 export enum PollType {
     Analog = `analog`,
     Named = `named`,
-    Pseudoanonymous = `pseudoanonymous`
+    Pseudoanonymous = `pseudoanonymous`,
+    Cryptographic = `cryptographic`
 }
 
 export enum PollMethod {
@@ -123,7 +124,8 @@ export const PollStateChangeActionVerbose = {
 export const PollTypeVerbose = {
     analog: _(`analog`),
     named: _(`nominal`),
-    pseudoanonymous: _(`non-nominal`)
+    pseudoanonymous: _(`non-nominal`),
+    cryptographic: _(`cryptographic`)
 };
 
 export type PollTypeVerboseKey = keyof typeof PollTypeVerbose;
