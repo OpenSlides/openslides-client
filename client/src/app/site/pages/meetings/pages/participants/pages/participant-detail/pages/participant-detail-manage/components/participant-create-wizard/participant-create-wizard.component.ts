@@ -146,7 +146,11 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
             this.createUserForm.valueChanges.subscribe(() => (this._hasFormChanged = true)),
             this.organizationSettingsService
                 .get(`enable_electronic_voting`)
-                .subscribe(is => (this._isElectronicVotingEnabled = is))
+                .subscribe(is => (this._isElectronicVotingEnabled = is)),
+
+            this.meetingSettingsService
+                .get(`users_enable_vote_weight`)
+                .subscribe(enabled => (this._isVoteWeightEnabled = enabled))
         );
         const urlSegments = this.router.url.split(`/`);
         if (urlSegments.at(-1) === `new`) {
