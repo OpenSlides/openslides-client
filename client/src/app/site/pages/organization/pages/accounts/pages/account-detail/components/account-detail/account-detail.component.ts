@@ -233,7 +233,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                         !Number.isNaN(+segments[accountsIndex + 1]))
                 ) {
                     this.loadUserById(params[`id`] ? +params[`id`] : +segments[accountsIndex + 1]);
-                } else if (accountsIndex === -1) {
+                } else if (accountsIndex !== -1) {
                     super.setTitle(`New member`);
                     this.isNewUser = true;
                     this.isEditingUser = true;
