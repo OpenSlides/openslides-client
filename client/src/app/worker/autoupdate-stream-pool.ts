@@ -225,15 +225,19 @@ export class AutoupdateStreamPool {
     }
 
     private async isEndpointHealthy(): Promise<boolean> {
-        const data = await fetch(this.endpoint.healthUrl).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
+        try {
+            const data = await fetch(this.endpoint.healthUrl).then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
 
-            return { healthy: false };
-        });
+                return { healthy: false };
+            });
 
-        return !!data?.healthy;
+            return !!data?.healthy;
+        } catch (e) {
+            return false;
+        }
     }
 
     private updateMessagePorts(): void {
