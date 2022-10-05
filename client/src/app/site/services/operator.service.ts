@@ -20,7 +20,6 @@ import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
 import { SimplifiedModelRequest } from './model-request-builder/model-request-builder.service';
-import { OpenSlidesRouterService } from './openslides-router.service';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
@@ -204,7 +203,6 @@ export class OperatorService {
         private DS: DataStoreService,
         private authService: AuthService,
         private lifecycle: LifecycleService,
-        private osRouter: OpenSlidesRouterService,
         private userRepo: UserRepositoryService,
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
@@ -220,6 +218,7 @@ export class OperatorService {
             if (id !== this._lastUserId) {
                 console.debug(`operator: user changed from `, this._lastUserId, `to`, id);
                 this._lastUserId = id;
+                this.resetOperatorData();
                 this.operatorStateChange(true);
             }
             if (token) {
@@ -350,16 +349,19 @@ export class OperatorService {
     private setNotReady(): void {
         this._ready = false;
         this._operatorReadySubject.next(false);
-        this._meetingIds = undefined;
-        this._groupIds = undefined;
-        this._permissions = undefined;
-        this._OML = undefined;
-        this._CML = undefined;
         if (this._readyDeferred.wasResolved) {
             console.log(`operator: not ready`);
             this._readyDeferred = new Deferred();
             this._readyDeferred.then(() => console.log(`operator is ready!`));
         }
+    }
+
+    private resetOperatorData(): void {
+        this._meetingIds = undefined;
+        this._groupIds = undefined;
+        this._permissions = undefined;
+        this._OML = undefined;
+        this._CML = undefined;
     }
 
     // The surrounding environment changes:
