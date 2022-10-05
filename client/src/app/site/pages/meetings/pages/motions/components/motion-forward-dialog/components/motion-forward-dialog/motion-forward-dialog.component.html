@@ -1,4 +1,7 @@
-<div mat-dialog-title>{{ data.motion.length > 1 ? 'Forward motions' : 'Forward motion' | translate }}{{ ': ' + data.motion[0].number }}</div>
+<div mat-dialog-title>
+    {{ data.motion.length > 1 ? 'Forward motions' : 'Forwarding of motion' | translate }}
+    <span *ngIf="data.motion.length === 1">{{ data.motion[0].number }}</span>
+</div>
 <div mat-dialog-content>
     <span *ngIf="data.motion.length === 1">{{ 'State' | translate }}: <b>{{ data.motion[0].state.name | translate }} {{data.motion[0].state_extension}}</b></span>
     <br *ngIf="data.motion.length === 1 && activeMeetingCommitteeName">
