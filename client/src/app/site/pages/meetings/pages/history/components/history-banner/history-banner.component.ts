@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { unix } from 'moment';
 
 import { HistoryService } from '../../services/history.service';
 
@@ -11,12 +10,8 @@ import { HistoryService } from '../../services/history.service';
 export class HistoryBannerComponent {
     public constructor(private historyService: HistoryService) {}
 
-    public get historyPositionTimestamp(): string {
-        if (!this.historyService.currentHistoryPosition?.timestamp) {
-            return ``;
-        }
-
-        return unix(this.historyService.currentHistoryPosition.timestamp).local().format(`lll`);
+    public get historyPositionTimestamp(): number | null {
+        return this.historyService.currentHistoryPosition?.timestamp;
     }
 
     public leaveHistoryMode(): void {
