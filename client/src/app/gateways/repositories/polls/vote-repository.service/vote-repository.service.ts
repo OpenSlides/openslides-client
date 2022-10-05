@@ -81,10 +81,10 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         this._requestHasVotedPromise = def;
         setTimeout(async () => {
             this._requestHasVotedPromise = null;
+            const ids = Array.from(this._nextRequestIds);
+            this._nextRequestIds.clear();
 
-            let results: HasVotedResponse = await this.http.get(
-                `${HAS_VOTED_URL}?ids=${Array.from(this._nextRequestIds).join()}`
-            );
+            let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
             for (let id in results) {
                 clearTimeout(this._hasVotedCache[id]?.invalidateTimeout);
                 this._hasVotedCache[id] = {
