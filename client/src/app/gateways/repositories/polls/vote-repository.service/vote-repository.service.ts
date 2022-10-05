@@ -11,8 +11,12 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 const VOTE_URL = `/system/vote`;
 const HAS_VOTED_URL = `${VOTE_URL}/voted`;
 
+/**
+ * keys are poll ids,
+ * the arrays contain the ids of the users that have voted for the corresponding polls
+ */
 export interface HasVotedResponse {
-    [key: string]: boolean;
+    [key: string]: Id[];
 }
 
 @Injectable({
