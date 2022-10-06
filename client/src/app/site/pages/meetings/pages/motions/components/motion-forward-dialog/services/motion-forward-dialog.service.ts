@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { Selectable } from 'src/app/domain/interfaces';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
@@ -21,6 +24,12 @@ import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
     providedIn: MotionForwardDialogModule
 })
 export class MotionForwardDialogService extends BaseDialogService<MotionForwardDialogComponent, ViewMotion[], Ids> {
+    public get forwardingMeetingsObservable(): Observable<(Partial<ViewMeeting> & Selectable)[]> {
+        return this._forwardingMeetingsSubject.asObservable();
+    }
+
+    private _forwardingMeetingsSubject = new BehaviorSubject<(Partial<ViewMeeting> & Selectable)[]>([]);
+
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
     private _forwardingMeetingsUpdateRequired: boolean = true;
 
@@ -32,7 +41,8 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         private snackbar: MatSnackBar,
         private presenter: GetForwardingMeetingsPresenterService,
         private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private meetingController: MeetingControllerService
     ) {
         super(dialog);
 
@@ -82,7 +92,26 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                 : [];
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
+            this._forwardingMeetingsSubject.next(
+                meetings.flatMap(committee => this.getMeetingsFromPresenterRow(committee))
+            );
         }
+    }
+
+    private getMeetingsFromPresenterRow(row: GetForwardingMeetingsPresenter): (Selectable | ViewMeeting)[] {
+        return (
+            row.meetings?.map(meeting => {
+                return {
+                    id: +meeting.id,
+                    name: meeting.name,
+                    committee: {
+                        name: row.name
+                    },
+                    getTitle: () => meeting.name,
+                    getListTitle: () => ``
+                };
+            }) ?? []
+        );
     }
 
     private createForwardingSuccessMessage(toForwardLength: number, selectedMotionsLength: number): string {

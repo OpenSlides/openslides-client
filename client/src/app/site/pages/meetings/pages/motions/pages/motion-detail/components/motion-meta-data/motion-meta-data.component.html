@@ -52,6 +52,8 @@
         [inputValue]="motion?.state_extension"
         [classes]="motion.stateCssColor"
         extensionLabel="{{ 'Extension' | translate }}"
+        [searchList]="meetingObservable"
+        searchListLabel="{{ 'Meetings' | translate }}"
         (succeeded)="setStateExtension($event)"
     >
         <span class="trigger-menu" *ngIf="motion.state">

@@ -101,6 +101,9 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      */
     private searchValueSubscription!: Subscription;
 
+    private searchListValue?: Selectable[];
+    private searchListSubscription?: Subscription;
+
     /**
      * Constructor
      *
@@ -125,6 +128,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         this.initInput();
 
         if (this.searchList) {
+            this.searchListSubscription = this.searchList.subscribe(list => (this.searchListValue = list));
             this.extensionFieldForm = this.formBuilder.group({
                 list: [[]]
             });
@@ -137,7 +141,9 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
                         if (!this.inputControl) {
                             this.inputControl = ``;
                         }
-                        this.inputControl += `[${this.listValuePrefix}${value}]`;
+                        this.inputControl += `[${this.listValuePrefix}${this.searchListValue
+                            .find(entry => entry.id === value)
+                            ?.getTitle()}]`;
                     }
                     this.extensionFieldForm.reset();
                 });
@@ -151,6 +157,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         this.navigationSubscription.unsubscribe();
         if (this.searchValueSubscription) {
             this.searchValueSubscription.unsubscribe();
+            this.searchListSubscription.unsubscribe();
         }
     }
 
