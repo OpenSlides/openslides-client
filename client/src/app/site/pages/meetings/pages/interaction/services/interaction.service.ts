@@ -166,6 +166,7 @@ export class InteractionService {
 
     private async onCallInvite(): Promise<void> {
         if (!this.isInCall) {
+            console.log(`ON CALL INVITE`)
             const accept = await this.promptService.open(CallInviteTitle);
 
             if (accept) {
