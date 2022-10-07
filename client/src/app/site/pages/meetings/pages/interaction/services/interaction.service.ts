@@ -11,10 +11,10 @@ import {
     Observable
 } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-import { NotifyResponse, NotifyService } from '../../../../../../gateways/notify.service';
 import { ViewUser } from '../../../view-models/view-user';
 import { BroadcastService } from './broadcast.service';
 import { CallRestrictionService } from './call-restriction.service';
@@ -40,6 +40,8 @@ const BroadcastMessageType = `callInteraction`;
 const InviteMessage = `invitationToCall`;
 const CallInviteTitle = _(`Please join the conference room now!`);
 const KickMessage = `kickFromCall`;
+
+let InteractionServiceRegistry: InteractionService[] = [];
 
 @Injectable({
     providedIn: InteractionServiceModule
@@ -78,6 +80,8 @@ export class InteractionService {
         private promptService: PromptService,
         private broadcast: BroadcastService
     ) {
+        InteractionServiceRegistry = InteractionServiceRegistry.concat(this);
+
         combineLatest([
             this.showLiveConfObservable,
             this.streamService.hasLiveStreamUrlObservable,
@@ -165,8 +169,7 @@ export class InteractionService {
     }
 
     private async onCallInvite(): Promise<void> {
-        if (!this.isInCall) {
-            console.log(`ON CALL INVITE`)
+        if (!this.isInCall && this.isFirstInteractionService()) {
             const accept = await this.promptService.open(CallInviteTitle);
 
             if (accept) {
@@ -179,5 +182,16 @@ export class InteractionService {
                 payload: null
             });
         }
+    }
+
+    private isFirstInteractionService(): boolean {
+        for (let i = 0; i < InteractionServiceRegistry.length; i++) {
+            if (InteractionServiceRegistry[i] === this) {
+                break;
+            } else if (!!InteractionServiceRegistry[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 }

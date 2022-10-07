@@ -190,7 +190,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
 
     private buildRequest<T>(data: NotifySendOptions<T>): NotifyRequest<T> {
         if (!this.channelId) {
-            throw new Error(`${this.serviceDescription}: Can't send '${data.name}': no channel_id.`)
+            throw new Error(`${this.serviceDescription}: Can't send '${data.name}': no channel_id.`);
         }
         const notify: NotifyRequest<T> = {
             name: data.name,
