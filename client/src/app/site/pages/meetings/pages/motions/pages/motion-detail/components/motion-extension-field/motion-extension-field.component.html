@@ -38,11 +38,11 @@
             (keydown)="keyDownFunction($event)"
         />
     </mat-form-field>
-    <mat-form-field *ngIf="searchList" [formGroup]="extensionFieldForm">
+    <mat-form-field *ngFor="let list of searchLists; let i = index" [formGroup]="extensionFieldForm">
         <os-list-search-selector
-            formControlName="list"
-            [inputListValues]="searchList"
-            [placeholder]="searchListLabel"
+            formControlName="{{ 'list' + i + '' }}"
+            [inputListValues]="list"
+            placeholder="{{ searchListLabels[i] | translate }}"
         ></os-list-search-selector>
     </mat-form-field>
 

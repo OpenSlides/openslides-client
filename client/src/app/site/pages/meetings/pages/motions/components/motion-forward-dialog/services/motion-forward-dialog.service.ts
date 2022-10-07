@@ -10,8 +10,7 @@ import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService }
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
@@ -24,11 +23,11 @@ import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
     providedIn: MotionForwardDialogModule
 })
 export class MotionForwardDialogService extends BaseDialogService<MotionForwardDialogComponent, ViewMotion[], Ids> {
-    public get forwardingMeetingsObservable(): Observable<(Partial<ViewMeeting> & Selectable)[]> {
-        return this._forwardingMeetingsSubject.asObservable();
+    public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
+        return this._forwardingCommitteesSubject.asObservable();
     }
 
-    private _forwardingMeetingsSubject = new BehaviorSubject<(Partial<ViewMeeting> & Selectable)[]>([]);
+    private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);
 
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
     private _forwardingMeetingsUpdateRequired: boolean = true;
@@ -41,8 +40,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         private snackbar: MatSnackBar,
         private presenter: GetForwardingMeetingsPresenterService,
         private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService,
-        private meetingController: MeetingControllerService
+        private operator: OperatorService
     ) {
         super(dialog);
 
@@ -92,26 +90,15 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                 : [];
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
-            this._forwardingMeetingsSubject.next(
-                meetings.flatMap(committee => this.getMeetingsFromPresenterRow(committee))
+            this._forwardingCommitteesSubject.next(
+                meetings.map(committee => {return {
+                    id: committee.id,
+                    name: committee.name,
+                    getTitle: () => committee.name,
+                    getListTitle: () => ``
+                }})
             );
         }
-    }
-
-    private getMeetingsFromPresenterRow(row: GetForwardingMeetingsPresenter): (Selectable | ViewMeeting)[] {
-        return (
-            row.meetings?.map(meeting => {
-                return {
-                    id: +meeting.id,
-                    name: meeting.name,
-                    committee: {
-                        name: row.name
-                    },
-                    getTitle: () => meeting.name,
-                    getListTitle: () => ``
-                };
-            }) ?? []
-        );
     }
 
     private createForwardingSuccessMessage(toForwardLength: number, selectedMotionsLength: number): string {

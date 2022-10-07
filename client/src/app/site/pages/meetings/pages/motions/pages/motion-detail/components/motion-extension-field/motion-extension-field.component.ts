@@ -44,13 +44,26 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      * Optional label for the search-list.
      */
     @Input()
-    public searchListLabel!: string;
+    public set searchListLabel(label: string) {
+        this.searchListLabels = [label];
+    }
+
+    /**
+     * Optional label for the search-list.
+     */
+    @Input()
+    public searchListLabels!: string[];
 
     /**
      * BehaviourSubject for the search-list.
      */
     @Input()
-    public searchList!: Observable<Selectable[]>;
+    public set searchList(searchList: Observable<Selectable[]>) {
+        this.searchLists = [searchList];
+    }
+
+    @Input()
+    public searchLists: Observable<Selectable[]>[] = [];
 
     /**
      * Boolean, whether the input and the search-list can be changed.
@@ -62,7 +75,18 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      * Prefix, if the value from list should be appended to the input.
      */
     @Input()
-    public listValuePrefix = ``;
+    public set listValuePrefix(prefix: string) {
+        this.listValuePrefixes = [prefix];
+    }
+
+    /**
+     * Prefix, if the value from list should be appended to the input.
+     */
+    @Input()
+    public listValuePrefixes: string[] = [];
+
+    @Input()
+    public listValueTransformFns: ((value: Selectable) => string)[] = []
 
     /**
      * Initial value of the input-field.
@@ -101,8 +125,9 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      */
     private searchValueSubscription!: Subscription;
 
-    private searchListValue?: Selectable[];
+    private searchListValues?: Selectable[][] = [];
     private searchListSubscription?: Subscription;
+    private searchListSubscriptions?: Subscription[] = [];
 
     /**
      * Constructor
@@ -127,23 +152,33 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
 
         this.initInput();
 
-        if (this.searchList) {
-            this.searchListSubscription = this.searchList.subscribe(list => (this.searchListValue = list));
-            this.extensionFieldForm = this.formBuilder.group({
-                list: [[]]
-            });
+        const lists = {};
+        for (let i=0; i<this.searchLists.length; i++) {
+            lists[`list${i}`] = [[]];
+            if (this.searchListLabels.length <= i) {
+                this.searchListLabels.push(``);
+            }
+            if (this.listValuePrefixes.length <= i) {
+                this.listValueTransformFns.push((value) => value.getTitle());
+            }
+            this.searchListValues.push([]);
+        }
+
+        this.extensionFieldForm = this.formBuilder.group(lists);
+
+        for (let i=0; i<this.searchLists.length; i++) {
+            this.searchListSubscriptions.concat(this.searchLists[i].subscribe(list => (this.searchListValues[i] = list)));
 
             this.searchValueSubscription = this.extensionFieldForm
-                .get(`list`)
+                .get(`list${i}`)
                 .valueChanges.pipe(distinctUntilChanged())
                 .subscribe((value: any) => {
+                    const transformFn = this.listValueTransformFns[i];
                     if (value && typeof value === `number`) {
                         if (!this.inputControl) {
                             this.inputControl = ``;
                         }
-                        this.inputControl += `[${this.listValuePrefix}${this.searchListValue
-                            .find(entry => entry.id === value)
-                            ?.getTitle()}]`;
+                        this.inputControl += transformFn(this.searchListValues[i].find(entry => entry.id === value));
                     }
                     this.extensionFieldForm.reset();
                 });

@@ -52,8 +52,6 @@
         [inputValue]="motion?.state_extension"
         [classes]="motion.stateCssColor"
         extensionLabel="{{ 'Extension' | translate }}"
-        [searchList]="meetingObservable"
-        searchListLabel="{{ 'Forwarding meetings' | translate }}"
         (succeeded)="setStateExtension($event)"
     >
         <span class="trigger-menu" *ngIf="motion.state">
@@ -103,9 +101,9 @@
         [chipValue]="recommendationLabel | translate"
         [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
         extensionLabel="{{ 'Extension' | translate }}"
-        [searchList]="motionObserver"
-        searchListLabel="{{ 'Motions' | translate }}"
-        listValuePrefix="motion:"
+        [searchLists]="[motionObserver, committeeObservable]"
+        [searchListLabels]="['Motions', 'Committees']"
+        [listValueTransformFns]="[motionTransformFn]"
         (succeeded)="setRecommendationExtension($event)"
     >
         <span class="trigger-menu">
