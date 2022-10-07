@@ -41,27 +41,14 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     public extensionLabel!: string;
 
     /**
-     * Optional label for the search-list.
-     */
-    @Input()
-    public set searchListLabel(label: string) {
-        this.searchListLabels = [label];
-    }
-
-    /**
-     * Optional label for the search-list.
+     * Optional labels for the search-lists.
      */
     @Input()
     public searchListLabels!: string[];
 
     /**
-     * BehaviourSubject for the search-list.
+     * BehaviourSubjects for the search-lists.
      */
-    @Input()
-    public set searchList(searchList: Observable<Selectable[]>) {
-        this.searchLists = [searchList];
-    }
-
     @Input()
     public searchLists: Observable<Selectable[]>[] = [];
 
@@ -71,22 +58,8 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     @Input()
     public canBeEdited = true;
 
-    /**
-     * Prefix, if the value from list should be appended to the input.
-     */
     @Input()
-    public set listValuePrefix(prefix: string) {
-        this.listValuePrefixes = [prefix];
-    }
-
-    /**
-     * Prefix, if the value from list should be appended to the input.
-     */
-    @Input()
-    public listValuePrefixes: string[] = [];
-
-    @Input()
-    public listValueTransformFns: ((value: Selectable) => string)[] = []
+    public listValueTransformFns: ((value: Selectable) => string)[] = [];
 
     /**
      * Initial value of the input-field.
@@ -153,21 +126,23 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         this.initInput();
 
         const lists = {};
-        for (let i=0; i<this.searchLists.length; i++) {
+        for (let i = 0; i < this.searchLists.length; i++) {
             lists[`list${i}`] = [[]];
             if (this.searchListLabels.length <= i) {
                 this.searchListLabels.push(``);
             }
-            if (this.listValuePrefixes.length <= i) {
-                this.listValueTransformFns.push((value) => value.getTitle());
+            if (this.listValueTransformFns.length <= i) {
+                this.listValueTransformFns.push(value => value.getTitle());
             }
             this.searchListValues.push([]);
         }
 
         this.extensionFieldForm = this.formBuilder.group(lists);
 
-        for (let i=0; i<this.searchLists.length; i++) {
-            this.searchListSubscriptions.concat(this.searchLists[i].subscribe(list => (this.searchListValues[i] = list)));
+        for (let i = 0; i < this.searchLists.length; i++) {
+            this.searchListSubscriptions.concat(
+                this.searchLists[i].subscribe(list => (this.searchListValues[i] = list))
+            );
 
             this.searchValueSubscription = this.extensionFieldForm
                 .get(`list${i}`)

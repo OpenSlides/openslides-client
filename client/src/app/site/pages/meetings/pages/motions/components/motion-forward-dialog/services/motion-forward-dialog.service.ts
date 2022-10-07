@@ -91,12 +91,14 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(
-                meetings.map(committee => {return {
-                    id: committee.id,
-                    name: committee.name,
-                    getTitle: () => committee.name,
-                    getListTitle: () => ``
-                }})
+                meetings.map(committee => {
+                    return {
+                        id: committee.id,
+                        name: committee.name,
+                        getTitle: () => committee.name,
+                        getListTitle: () => ``
+                    };
+                })
             );
         }
     }
