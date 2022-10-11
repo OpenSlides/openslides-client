@@ -207,6 +207,10 @@ export class AutoupdateStreamPool {
             this.sendToAll(`new-user`, {
                 id: this.currentUserId
             } as AutoupdateNewUserContent);
+
+            for (let stream of this.streams) {
+                stream.restart();
+            }
         }
     }
 

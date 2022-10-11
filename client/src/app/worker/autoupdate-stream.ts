@@ -17,7 +17,7 @@ export class AutoupdateStream {
     private activeSubscriptions: AutoupdateSubscription[] = null;
     private active: boolean = false;
     private error: any | ErrorDescription = null;
-    private restart: boolean = false;
+    private restarting: boolean = false;
 
     public get subscriptions(): AutoupdateSubscription[] {
         return this._subscriptions;
@@ -69,7 +69,7 @@ export class AutoupdateStream {
             this.abort();
         }
 
-        this.restart = false;
+        this.restarting = false;
         this.error = null;
         try {
             await this.doRequest();
@@ -80,7 +80,7 @@ export class AutoupdateStream {
                 console.error(e);
 
                 return { stopReason: `error`, error: this.error };
-            } else if (this.restart) {
+            } else if (this.restarting) {
                 return await this.start();
             }
 
@@ -130,11 +130,15 @@ export class AutoupdateStream {
      */
     public updateEndpoint(endpoint: AutoupdateSetEndpointParams): void {
         this.endpoint = endpoint;
-        this.restart = true;
+        this.restart();
+    }
+
+    public restart(): void {
+        this.restarting = true;
         this.abort();
     }
 
-    public setAuthToken(token: string) {
+    public setAuthToken(token: string): void {
         this.authToken = token;
     }
 
