@@ -48,14 +48,26 @@
             <mat-label>{{ 'Start date' | translate }}</mat-label>
             <input matInput [matDatepicker]="startDatePicker" formControlName="start_time" (click)="startDatePicker.open()" readonly />
             <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #startDatePicker></mat-datepicker>
+            <mat-datepicker #startDatePicker>
+                <mat-datepicker-actions>
+                    <button mat-button (click)="onClearDate('start_time')"  matDatepickerCancel color="warn">Clear date</button>
+                    <button mat-button matDatepickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+            </mat-datepicker>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>{{ 'End date' | translate }}</mat-label>
             <input matInput [matDatepicker]="endDatePicker" formControlName="end_time" (click)="endDatePicker.open()" readonly />
             <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #endDatePicker></mat-datepicker>
+            <mat-datepicker #endDatePicker>
+                <mat-datepicker-actions>
+                    <button mat-button (click)="onClearDate('end_time')"  matDatepickerCancel color="warn">Clear date</button>
+                    <button mat-button matDatepickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+            </mat-datepicker>
         </mat-form-field>
 
         <mat-form-field>

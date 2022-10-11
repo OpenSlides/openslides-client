@@ -322,6 +322,10 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         this.form.controls[`value`].setValue(this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting));
     }
 
+    public onClearDate(): void {
+        this.form.controls[`date`].setValue(null);
+    }
+
     /**
      * Sends an update request for the config item to the server.
      * @param value The new value to set.

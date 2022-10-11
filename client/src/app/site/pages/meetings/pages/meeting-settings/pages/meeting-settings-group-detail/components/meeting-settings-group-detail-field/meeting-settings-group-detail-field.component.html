@@ -107,7 +107,13 @@
                                 ></mat-datepicker-toggle>
                             </div>
                             <mat-error *ngIf="error">{{ error }}</mat-error>
-                            <mat-datepicker #datepicker></mat-datepicker>
+                            <mat-datepicker #datepicker>
+                                <mat-datepicker-actions>
+                                    <button mat-button (click)="onClearDate()"  matDatepickerCancel color="warn">Clear date</button>
+                                    <button mat-button matDatepickerCancel>Cancel</button>
+                                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                                </mat-datepicker-actions>
+                            </mat-datepicker>
                         </mat-form-field>
                         <mat-form-field *ngIf="setting.type === 'datetime'">
                             <input matInput [format]="24" formControlName="time" [ngxTimepicker]="timepicker" />
