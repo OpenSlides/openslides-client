@@ -5,7 +5,6 @@ import { AutoupdateSubscription } from './autoupdate-subscription';
 import {
     AutoupdateCloseStreamParams,
     AutoupdateOpenStreamParams,
-    AutoupdateResendStreamDataParams,
     AutoupdateSetEndpointParams
 } from './interfaces-autoupdate';
 
@@ -82,15 +81,6 @@ function closeConnection(ctx: MessagePort, params: AutoupdateCloseStreamParams):
     subscription.closePort(ctx);
 }
 
-function resendSubscription(ctx: MessagePort, params: AutoupdateResendStreamDataParams): void {
-    const subscription = autoupdatePool.getSubscriptionById(params.streamId);
-    if (!subscription) {
-        return;
-    }
-
-    subscription.resendTo(ctx);
-}
-
 let currentlyOnline = navigator.onLine;
 function updateOnlineStatus(): void {
     if (currentlyOnline === navigator.onLine) {
@@ -117,9 +107,6 @@ export function addAutoupdateListener(context: any): void {
                 break;
             case `close`:
                 closeConnection(context, params);
-                break;
-            case `resend`:
-                resendSubscription(context, params);
                 break;
             case `auth-change`:
                 autoupdatePool.updateAuthentication();
