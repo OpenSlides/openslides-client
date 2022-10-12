@@ -26,6 +26,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
     };
 
     private _voteWeightEnabled: boolean;
+    private _voteDelegationEnabled: boolean;
 
     public constructor(
         store: MeetingActiveFiltersService,
@@ -39,6 +40,9 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             filter: this.userGroupFilterOptions
         });
         this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
+        this.meetingSettings
+            .get(`users_enable_vote_delegations`)
+            .subscribe(value => (this._voteDelegationEnabled = value));
     }
 
     /**
@@ -114,6 +118,12 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 property: `isVoteWeightOne`,
                 shouldHideFn: () => {
                     return !this._voteWeightEnabled;
+                }
+            },
+            {
+                property: `delegationType`,
+                shouldHideFn: () => {
+                    return !this._voteDelegationEnabled;
                 }
             }
         ];

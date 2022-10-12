@@ -138,7 +138,7 @@
                 </mat-form-field>
 
                 <!-- Delegate Vote -->
-                <mat-form-field>
+                <mat-form-field *ngIf="showVoteDelegations">
                     <os-repo-search-selector
                         formControlName="vote_delegations_from_ids"
                         [repo]="repo"
@@ -148,7 +148,7 @@
                 </mat-form-field>
 
                 <!-- Delegate Vote -->
-                <mat-form-field>
+                <mat-form-field *ngIf="showVoteDelegations">
                     <os-repo-search-selector
                         formControlName="vote_delegated_to_id"
                         [repo]="repo"
@@ -213,13 +213,13 @@
 
         <div *ngIf="isAllowed('manage') || ownPage">
             <!-- Own Vote delegations -->
-            <div *ngIf="user?.vote_delegated_to()">
+            <div *ngIf="user?.vote_delegated_to() && showVoteDelegations">
                 <h4>{{ 'Voting right delegated to (proxy)' | translate }}</h4>
                 <span>{{ user!.vote_delegated_to() }}</span>
             </div>
 
             <!-- Received Vote delegations -->
-            <div *ngIf="user!.vote_delegations_from().length > 0">
+            <div *ngIf="showVoteDelegations && (user!.vote_delegations_from().length > 0)">
                 <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
                 <span>{{ user!.vote_delegations_from() }}</span>
             </div>

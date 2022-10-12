@@ -14,7 +14,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
@@ -55,6 +54,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     private voteWeightEnabled: boolean = false;
+    public voteDelegationEnabled: boolean = false;
 
     /**
      * Helper to check for main button permissions
@@ -100,7 +100,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private groupRepo: GroupControllerService,
         private choiceService: ChoiceService,
         public operator: OperatorService,
-        private promptService: PromptService,
         public filterService: ParticipantListFilterService,
         public sortService: ParticipantListSortService,
         private csvExport: ParticipantCsvExportService,
@@ -125,6 +124,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             this.meetingSettingsService
                 .get(`users_enable_vote_weight`)
                 .subscribe(enabled => (this.voteWeightEnabled = enabled)),
+            this.meetingSettingsService
+                .get(`users_enable_vote_delegations`)
+                .subscribe(enabled => (this.voteDelegationEnabled = enabled)),
             this.meetingSettingsService
                 .get(`users_allow_self_set_present`)
                 .subscribe(allowed => (this._allowSelfSetPresent = allowed))

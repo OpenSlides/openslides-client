@@ -11,6 +11,7 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -71,9 +72,10 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         pollRepo: PollControllerService,
         cd: ChangeDetectorRef,
         private promptService: PromptService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        meetingSettingsService: MeetingSettingsService
     ) {
-        super(operator, votingService, cd, pollRepo);
+        super(operator, votingService, cd, pollRepo, meetingSettingsService);
     }
 
     public ngOnInit(): void {

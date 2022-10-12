@@ -5,6 +5,7 @@ import { GENDERS } from 'src/app/domain/models/users/user';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -31,15 +32,21 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         return this._isUserInScope;
     }
 
+    public get showVoteDelegations(): boolean {
+        return this._voteDelegationEnabled;
+    }
+
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewUser[]>([]);
     private _isUserInScope = true;
     private _currentUser: ViewUser | null = null;
+    private _voteDelegationEnabled: boolean = false;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
         private participantRepo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
-        private userService: UserService
+        private userService: UserService,
+        private meetingSettings: MeetingSettingsService
     ) {
         super();
     }
@@ -54,7 +61,10 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
                     this._otherParticipantsSubject.next(
                         participants.filter(participant => participant.id !== this._currentUser.id)
                     )
-                )
+                ),
+            this.meetingSettings
+                .get(`users_enable_vote_delegations`)
+                .subscribe(enabled => (this._voteDelegationEnabled = enabled))
         );
     }
 
