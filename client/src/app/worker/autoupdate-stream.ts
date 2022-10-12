@@ -75,6 +75,7 @@ export class AutoupdateStream {
             await this.doRequest();
             this.active = false;
         } catch (e) {
+            console.error(e);
             this.active = false;
             if (e.name !== `AbortError`) {
                 console.error(e);
@@ -175,6 +176,7 @@ export class AutoupdateStream {
         let next: Uint8Array = null;
         let result: ReadableStreamDefaultReadResult<Uint8Array>;
         while (!(result = await reader.read()).done) {
+            console.debug(`AUTOUPDATE RECEIVED: `, result.value);
             const lines = splitTypedArray(LINE_BREAK, result.value);
             for (let line of lines) {
                 if (line[line.length - 1] === LINE_BREAK) {
@@ -184,7 +186,9 @@ export class AutoupdateStream {
 
                     next = null;
 
+                    console.debug(`AUTOUPDATE PARSING LINE: `, line);
                     const data = this.decode(line);
+                    console.debug(`LINE DECODED: `, data);
                     const parsedData = this.parse(data);
                     this.handleContent(parsedData);
                 } else if (next) {
@@ -195,6 +199,7 @@ export class AutoupdateStream {
             }
         }
 
+        console.debug(`AUTOUPDATE RESPONSE: `, response);
         if (!response.ok) {
             if (headers.authentication !== this.authToken) {
                 return await this.doRequest();
@@ -217,6 +222,7 @@ export class AutoupdateStream {
                 type,
                 error: { code: response.status, content: errorContent, endpoint: this.endpoint }
             };
+            console.error(this.error);
             if (errorContent?.type !== `auth`) {
                 this.sendErrorToSubscriptions(this.error);
             }
