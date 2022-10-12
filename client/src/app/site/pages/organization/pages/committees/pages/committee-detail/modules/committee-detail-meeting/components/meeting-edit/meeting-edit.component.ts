@@ -189,6 +189,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.theDuplicateFromId = id;
     }
 
+    public onClearDate(formControlName: string): void {
+        this.meetingForm.controls[formControlName].setValue(null);
+    }
+
     private checkCreateView(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `create`) {
             this.isCreateView = true;
