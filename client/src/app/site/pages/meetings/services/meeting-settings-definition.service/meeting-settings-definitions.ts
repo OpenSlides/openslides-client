@@ -797,6 +797,11 @@ export const meetingSettings: SettingsGroup[] = [
                         key: `users_enable_vote_weight`,
                         label: _(`Activate vote weight`),
                         type: `boolean`
+                    },
+                    {
+                        key: `users_enable_vote_delegations`,
+                        label: _(`Activate vote delegations`),
+                        type: `boolean`
                     }
                 ]
             },

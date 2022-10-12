@@ -9,6 +9,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { VotingError, VotingService } from '../services/voting.service';
 
 export interface VoteOption {
@@ -52,6 +53,10 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     protected user!: ViewUser;
 
+    /** TODO: Implement checks for this!!! */
+    public voteDelegationEnabled: Observable<boolean> =
+        this.meetingSettingsService.get(`users_enable_vote_delegations`);
+
     private _isReady = false;
     private _poll!: ViewPoll<C>;
     private _delegationsMap: { [userId: number]: ViewUser } = {};
@@ -61,7 +66,8 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
         operator: OperatorService,
         protected votingService: VotingService,
         protected cd: ChangeDetectorRef,
-        private pollRepo: PollControllerService
+        private pollRepo: PollControllerService,
+        private meetingSettingsService: MeetingSettingsService
     ) {
         super();
         this.subscriptions.push(

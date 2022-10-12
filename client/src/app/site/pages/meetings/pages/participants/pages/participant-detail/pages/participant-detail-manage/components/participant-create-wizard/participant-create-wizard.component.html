@@ -196,7 +196,7 @@
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
-                                <mat-form-field>
+                                <mat-form-field *ngIf="showVoteDelegations">
                                     <os-repo-search-selector
                                         formControlName="vote_delegations_from_ids"
                                         [repo]="repo"
@@ -206,7 +206,7 @@
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
-                                <mat-form-field>
+                                <mat-form-field *ngIf="showVoteDelegations">
                                     <os-repo-search-selector
                                         formControlName="vote_delegated_to_id"
                                         [repo]="repo"
