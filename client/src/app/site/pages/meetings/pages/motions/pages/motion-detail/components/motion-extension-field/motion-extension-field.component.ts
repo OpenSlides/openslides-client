@@ -99,7 +99,6 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     private searchValueSubscription!: Subscription;
 
     private searchListValues?: Selectable[][] = [];
-    private searchListSubscription?: Subscription;
     private searchListSubscriptions?: Subscription[] = [];
 
     /**
@@ -167,7 +166,9 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         this.navigationSubscription.unsubscribe();
         if (this.searchValueSubscription) {
             this.searchValueSubscription.unsubscribe();
-            this.searchListSubscription.unsubscribe();
+        }
+        if (this.searchListSubscriptions?.length) {
+            this.searchListSubscriptions.forEach(subscription => subscription.unsubscribe());
         }
     }
 
