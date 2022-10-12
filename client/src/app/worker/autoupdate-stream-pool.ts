@@ -167,7 +167,10 @@ export class AutoupdateStreamPool {
             try {
                 clearTimeout(this._authTokenRefreshTimeout);
                 const res = await fetch(`/${environment.authUrlPrefix}/who-am-i/`, {
-                    method: `POST`
+                    method: `POST`,
+                    headers: {
+                        'ngsw-bypass': true
+                    } as any
                 });
                 const json = await res.json();
                 if (json?.success) {
@@ -230,7 +233,11 @@ export class AutoupdateStreamPool {
 
     private async isEndpointHealthy(): Promise<boolean> {
         try {
-            const data = await fetch(this.endpoint.healthUrl).then(response => {
+            const data = await fetch(this.endpoint.healthUrl, {
+                headers: {
+                    'ngsw-bypass': true
+                } as any
+            }).then(response => {
                 if (response.ok) {
                     return response.json();
                 }
