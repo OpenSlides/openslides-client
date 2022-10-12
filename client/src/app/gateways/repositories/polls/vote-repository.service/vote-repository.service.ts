@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { HttpService } from 'src/app/gateways/http.service';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { ViewVote } from 'src/app/site/pages/meetings/pages/polls';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
@@ -23,6 +24,10 @@ export interface HasVotedResponse {
     providedIn: `root`
 })
 export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
+    private _hasVotedCache: HasVotedResponse = {};
+    private _nextRequestIds: Set<Id> = new Set<Id>();
+    private _requestHasVotedPromise: Deferred<void>;
+
     public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         private http: HttpService
@@ -45,10 +50,61 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         return await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
     }
 
-    public async hasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
-        if (ids.length) {
-            return await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
+    public async updateHasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
+        if (!ids.length) {
+            return undefined;
         }
-        return undefined;
+
+        for (let id of ids) {
+            this._nextRequestIds.add(id);
+        }
+
+        await this.requestHasVoted();
+        return this.getIdsFromCache(ids);
+    }
+
+    public async hasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
+        if (!ids.length) {
+            return undefined;
+        }
+
+        const result = this.getIdsFromCache(ids);
+        if (ids.every(id => result[id] !== undefined)) {
+            return result;
+        } else {
+            for (let id of ids) {
+                this._nextRequestIds.add(id);
+            }
+
+            await this.requestHasVoted();
+        }
+
+        return this.getIdsFromCache(ids);
+    }
+
+    private requestHasVoted(): Deferred<void> {
+        if (this._requestHasVotedPromise) {
+            return this._requestHasVotedPromise;
+        }
+
+        const def = new Deferred();
+        this._requestHasVotedPromise = def;
+        setTimeout(async () => {
+            this._requestHasVotedPromise = null;
+            const ids = Array.from(this._nextRequestIds);
+            this._nextRequestIds.clear();
+
+            let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
+            for (let id in results) {
+                this._hasVotedCache[id] = results[id];
+            }
+            def.resolve();
+        }, 50);
+
+        return this._requestHasVotedPromise;
+    }
+
+    private getIdsFromCache(ids: Id[]): HasVotedResponse {
+        return Object.fromEntries(Object.entries(this._hasVotedCache).filter(entry => ids.includes(+entry[0])));
     }
 }
