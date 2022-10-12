@@ -20,7 +20,7 @@ import { BaseFormFieldControlComponent } from 'src/app/ui/base/base-form-field-c
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerComponent<D> extends BaseFormFieldControlComponent<D> {
+export class DatepickerComponent extends BaseFormFieldControlComponent<any> {
     public get empty(): boolean {
         return !this.value;
     }
@@ -59,7 +59,7 @@ export class DatepickerComponent<D> extends BaseFormFieldControlComponent<D> {
         return this.fb.control(null);
     }
 
-    protected updateForm(value: D | null): void {
+    protected updateForm(value: any | null): void {
         this.contentForm.setValue(value);
     }
 }
