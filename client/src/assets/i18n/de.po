@@ -111,6 +111,9 @@ msgstr "Änderungsanträge aktivieren"
 msgid "Activate statute amendments"
 msgstr "Satzungsänderungsanträge aktivieren"
 
+msgid "Activate vote delegations"
+msgstr "Stimmrechtsübertragung aktivieren"
+
 msgid "Activate vote weight"
 msgstr "Stimmgewichtung aktivieren"
 
