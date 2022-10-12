@@ -6,6 +6,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
+import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { PollServiceModule } from '../poll-service.module';
 
 export enum VotingError {
@@ -36,9 +37,17 @@ const VotingErrorVerbose = {
 })
 export class VotingService {
     private _currentUser: ViewUser | null = null;
+    private _voteDelegationEnabled: boolean = false;
 
-    public constructor(private activeMeetingService: ActiveMeetingService, private operator: OperatorService) {
+    public constructor(
+        private activeMeetingService: ActiveMeetingService,
+        private operator: OperatorService,
+        private meetingSettingsService: MeetingSettingsService
+    ) {
         this.operator.userObservable.subscribe(user => (this._currentUser = user));
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
     }
 
     /**
@@ -55,7 +64,7 @@ export class VotingService {
      */
     public getVotePermissionError(poll: ViewPoll, user: ViewUser | null = this._currentUser): VotingError | void {
         if (this._currentUser?.id === user?.id) {
-            if (user?.isVoteRightDelegated) {
+            if (user?.isVoteRightDelegated && this._voteDelegationEnabled) {
                 return VotingError.USER_HAS_DELEGATED_RIGHT;
             }
             if (poll.hasVoted) {
