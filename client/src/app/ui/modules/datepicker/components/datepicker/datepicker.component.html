@@ -1,0 +1,19 @@
+<div class="os-datetimepicker-container">
+    <mat-form-field class="datepicker-form-field">
+        <mat-label *ngIf="title">{{ title | translate }}</mat-label>
+        <input matInput [matDatepicker]="datepicker" [formControl]="contentForm" (click)="datepicker.open()" readonly />
+        <mat-hint *ngIf="hintText">{{ hintText | translate }}</mat-hint>
+        <div class="suffix-wrapper" matSuffix>
+            <mat-icon class="red-warning-text" *ngIf="showUpdateSuccessIcon">check_circle</mat-icon>
+            <mat-datepicker-toggle [for]="datepicker" (click)="$event.preventDefault()"></mat-datepicker-toggle>
+        </div>
+        <mat-error *ngIf="error">{{ error }}</mat-error>
+        <mat-datepicker #datepicker>
+            <mat-datepicker-actions>
+                <button mat-button (click)="updateForm(null)" matDatepickerCancel color="warn">Clear date</button>
+                <button mat-button matDatepickerCancel>Cancel</button>
+                <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+            </mat-datepicker-actions>
+        </mat-datepicker>
+    </mat-form-field>
+</div>
