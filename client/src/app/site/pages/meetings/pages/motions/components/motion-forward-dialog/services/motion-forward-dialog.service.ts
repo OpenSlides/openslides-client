@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { Selectable } from 'src/app/domain/interfaces';
 import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
@@ -21,6 +23,12 @@ import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
     providedIn: MotionForwardDialogModule
 })
 export class MotionForwardDialogService extends BaseDialogService<MotionForwardDialogComponent, ViewMotion[], Ids> {
+    public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
+        return this._forwardingCommitteesSubject.asObservable();
+    }
+
+    private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);
+
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
     private _forwardingMeetingsUpdateRequired: boolean = true;
 
@@ -82,6 +90,16 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
                 : [];
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
+            this._forwardingCommitteesSubject.next(
+                meetings.map(committee => {
+                    return {
+                        id: committee.id,
+                        name: committee.name,
+                        getTitle: () => committee.name,
+                        getListTitle: () => ``
+                    };
+                })
+            );
         }
     }
 
