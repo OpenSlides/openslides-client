@@ -51,7 +51,7 @@ export class VotingBannerService {
      */
     private async checkForVotablePolls(polls: ViewPoll[]): Promise<void> {
         // refresh the voting info on all polls. This is a single request to the vote service
-        await this.sendVotesService.setHasVotedOnPoll(...polls);
+        await this.sendVotesService.updateHasVotedOnPoll(...polls);
         // display no banner if in history mode or there are no polls to vote
         this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
         if ((this.historyService.isInHistoryMode() && this.currentBanner) || !this.pollsToVote.length) {

@@ -20,18 +20,11 @@ export interface HasVotedResponse {
     [key: string]: Id[];
 }
 
-export interface HasVotedResponseCache {
-    [key: string]: {
-        hasVoted: boolean;
-        invalidateTimeout: any;
-    };
-}
-
 @Injectable({
     providedIn: `root`
 })
 export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
-    private _hasVotedCache: HasVotedResponseCache = {};
+    private _hasVotedCache: HasVotedResponse = {};
     private _nextRequestIds: Set<Id> = new Set<Id>();
     private _requestHasVotedPromise: Deferred<void>;
 
@@ -57,13 +50,26 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         return await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
     }
 
+    public async updateHasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
+        if (!ids.length) {
+            return undefined;
+        }
+
+        for (let id of ids) {
+            this._nextRequestIds.add(id);
+        }
+
+        await this.requestHasVoted();
+        return this.getIdsFromCache(ids);
+    }
+
     public async hasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
         if (!ids.length) {
             return undefined;
         }
 
         const result = this.getIdsFromCache(ids);
-        if (ids.some(id => !!result[id])) {
+        if (ids.every(id => result[id] !== undefined)) {
             return result;
         } else {
             for (let id of ids) {
@@ -90,13 +96,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
 
             let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
             for (let id in results) {
-                clearTimeout(this._hasVotedCache[id]?.invalidateTimeout);
-                this._hasVotedCache[id] = {
-                    hasVoted: results[id],
-                    invalidateTimeout: setTimeout(() => {
-                        delete this._hasVotedCache[id];
-                    }, 1000)
-                };
+                this._hasVotedCache[id] = results[id];
             }
             def.resolve();
         }, 50);
@@ -105,10 +105,6 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     }
 
     private getIdsFromCache(ids: Id[]): HasVotedResponse {
-        return Object.fromEntries(
-            Object.entries(this._hasVotedCache)
-                .map(v => [v[0], v[1].hasVoted])
-                .filter(entry => ids.includes(+entry[0]))
-        );
+        return Object.fromEntries(Object.entries(this._hasVotedCache).filter(entry => ids.includes(+entry[0])));
     }
 }

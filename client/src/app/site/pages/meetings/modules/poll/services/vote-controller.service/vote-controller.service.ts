@@ -20,6 +20,12 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         super(controllerServiceCollector, Vote, repo);
     }
 
+    public async updateHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
+        const pollIds: Id[] = viewPolls.map(poll => poll.id);
+        await this.repo.updateHasVotedFor(...pollIds);
+        await this.setHasVotedOnPoll(...viewPolls);
+    }
+
     public async setHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
         const pollIds: Id[] = viewPolls.map(poll => poll.id);
         const voteResp = await this.repo.hasVotedFor(...pollIds);
