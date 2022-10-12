@@ -93,6 +93,9 @@ msgstr ""
 msgid "Activate statute amendments"
 msgstr ""
 
+msgid "Activate vote delegations"
+msgstr ""
+
 msgid "Activate vote weight"
 msgstr ""
 
