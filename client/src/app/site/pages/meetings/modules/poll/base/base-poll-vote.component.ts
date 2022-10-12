@@ -53,7 +53,6 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     protected user!: ViewUser;
 
-    /** TODO: Implement checks for this!!! */
     public voteDelegationEnabled: Observable<boolean> =
         this.meetingSettingsService.get(`users_enable_vote_delegations`);
 

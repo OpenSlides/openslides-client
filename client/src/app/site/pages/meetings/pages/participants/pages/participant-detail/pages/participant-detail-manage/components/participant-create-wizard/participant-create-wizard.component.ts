@@ -111,7 +111,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _isOwnPage = false;
     private _isUserInScope = false;
     private _isVoteWeightEnabled = false;
-    private _isVoteDelegationEnabled = false; // TODO: implement checks
+    private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
     private _hasFormChanged = false;
 
