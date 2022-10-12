@@ -33,10 +33,13 @@ export class CommunicationManagerService {
     public constructor(connectionStatus: ConnectionStatusService, lifecycleService: LifecycleService) {
         connectionStatus.offlineGone.subscribe(() => this.stopCommunication());
         connectionStatus.onlineGone.subscribe(() => this.startCommunication());
-        lifecycleService.openslidesBooted.subscribe(() => {
-            this._isAlive = true;
-            this.startCommunication();
-        });
+        if (lifecycleService.isBooted) {
+            this.activateStreams();
+        } else {
+            lifecycleService.openslidesBooted.subscribe(() => {
+                this.activateStreams();
+            });
+        }
         lifecycleService.openslidesShutdowned.subscribe(() => this.stopCommunication());
     }
 
@@ -59,6 +62,11 @@ export class CommunicationManagerService {
             },
             id: nextId
         };
+    }
+
+    private activateStreams(): void {
+        this._isAlive = true;
+        this.startCommunication();
     }
 
     private startCommunication(): void {

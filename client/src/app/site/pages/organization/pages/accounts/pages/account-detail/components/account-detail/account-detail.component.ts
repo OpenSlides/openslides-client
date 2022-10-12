@@ -218,16 +218,22 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                     .sort((a, b) => a.localeCompare(b))
             };
         });
-        console.log(`ParticipationTableData: `, tableData);
         this._tableData = tableData;
     }
 
     private getUserByUrl(): void {
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
-                if (params[`id`]) {
-                    this.loadUserById(+params[`id`]);
-                } else {
+                const segments = this.router.url.split(`/`);
+                const accountsIndex = segments.indexOf(`accounts`);
+                if (
+                    params[`id`] ||
+                    (accountsIndex !== -1 &&
+                        accountsIndex + 1 < segments.length &&
+                        !Number.isNaN(+segments[accountsIndex + 1]))
+                ) {
+                    this.loadUserById(params[`id`] ? +params[`id`] : +segments[accountsIndex + 1]);
+                } else if (accountsIndex !== -1) {
                     super.setTitle(`New member`);
                     this.isNewUser = true;
                     this.isEditingUser = true;
