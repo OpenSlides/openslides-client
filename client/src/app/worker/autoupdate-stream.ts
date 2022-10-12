@@ -155,7 +155,8 @@ export class AutoupdateStream {
         }
 
         const headers: any = {
-            'Content-Type': `application/json`
+            'Content-Type': `application/json`,
+            'ngsw-bypass': true
         };
 
         if (this.authToken) {
