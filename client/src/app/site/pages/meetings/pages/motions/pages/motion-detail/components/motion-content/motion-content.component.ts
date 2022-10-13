@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ActivatedRoute } from '@angular/router';
@@ -52,8 +52,7 @@ type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [k
 @Component({
     selector: `os-motion-content`,
     templateUrl: `./motion-content.component.html`,
-    styleUrls: [`./motion-content.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`./motion-content.component.scss`]
 })
 export class MotionContentComponent extends BaseMotionDetailChildComponent {
     @Output()
