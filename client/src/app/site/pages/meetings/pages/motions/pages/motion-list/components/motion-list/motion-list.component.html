@@ -346,6 +346,7 @@
                     <span>{{ 'Move in call list' | translate }}</span>
                 </button>
                 <button
+                    *ngIf="canForward"
                     mat-menu-item
                     [disabled]="!selectedRows.length"
                     (click)="forwardMotionsToMeetings(selectedRows)"

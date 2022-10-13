@@ -83,6 +83,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      */
     public filterProps = [`submitters`, `block`, `title`, `number`];
 
+    public get canForward(): boolean {
+        return this._forwardingAvailable;
+    }
+
     /**
      * List of `TileCategoryInformation`.
      * Necessary to not iterate over the values of the map below.
@@ -92,6 +96,8 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
     private motionTiles: TileCategoryInformation[] = [];
 
     private categoryTiles: TileCategoryInformation[] = [];
+
+    private _forwardingAvailable: boolean = false;
 
     /**
      * The verbose name for the motions.
@@ -134,6 +140,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
         this.listStorageIndex = MOTION_LIST_STORAGE_INDEX;
+
+        this.motionService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 
     /**
