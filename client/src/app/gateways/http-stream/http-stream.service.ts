@@ -51,6 +51,11 @@ export class HttpStreamService {
         }: HttpStreamOptions<T> = {},
         { bodyFn = () => {}, paramsFn = () => null }: RequestOptions = {}
     ): HttpStream<T> {
+        // TODO: remove if https://github.com/cypress-io/cypress/issues/3708 fixed
+        if ((<any>window).isCypressTest) {
+            return new HttpStream(() => null, {});
+        }
+
         const endpoint = this.getEndpointConfiguration(endpointConfiguration);
         const requestOptions = this.getOptions(bodyFn, paramsFn);
         const httpContext = { method: endpoint.method, url: endpoint.url, options: requestOptions };
