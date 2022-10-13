@@ -359,9 +359,12 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                         map(parent => parent?.number),
                         distinctUntilChanged()
                     )
-                    .subscribe(number =>
-                        this.contentForm.patchValue({ title: this.translate.instant(_(`Amendment to`)) + ` ${number}` })
-                    );
+                    .subscribe(number => {
+                        this.contentForm.patchValue({
+                            title: this.translate.instant(_(`Amendment to`)) + ` ${number}`
+                        });
+                        this.propagateChanges();
+                    });
             }
         }
     }
