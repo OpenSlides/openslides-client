@@ -9,17 +9,21 @@
     <div class="os-form-card-mobile" mat-dialog-content>
         <form [formGroup]="dialogVoteForm">
             <div formGroupName="options">
-                <div *ngFor="let option of options">
-                    <div *ngFor="let field of analogVoteFields" [formGroupName]="option.fqid">
-                        <os-check-input
-                            [placeholder]="voteValueVerbose[field] | translate"
-                            [checkboxValue]="-1"
-                            inputType="number"
-                            [checkboxLabel]="'majority' | translate"
-                            [formControlName]="field"
-                        ></os-check-input>
+                <mat-radio-group name="majority" [(ngModel)]="majority" [ngModelOptions]="{standalone: true}">
+                    <div *ngFor="let option of options">
+                        <div *ngFor="let field of analogVoteFields" [formGroupName]="option.fqid">
+                            <os-check-input
+                                [placeholder]="voteValueVerbose[field] | translate"
+                                [checkboxValue]="-1"
+                                inputType="number"
+                                radioGroup="majority"
+                                [checkboxLabel]="'majority' | translate"
+                                [formControlName]="field"
+                                [radioGroupValue]="majority"
+                            ></os-check-input>
+                        </div>
                     </div>
-                </div>
+                </mat-radio-group>
             </div>
             <os-check-input
                 [placeholder]="'Valid votes' | translate"
