@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, map, Subscription } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
@@ -51,7 +52,8 @@ type MotionFormControlsConfig = { [key in keyof MotionFormFields]?: any } & { [k
 @Component({
     selector: `os-motion-content`,
     templateUrl: `./motion-content.component.html`,
-    styleUrls: [`./motion-content.component.scss`]
+    styleUrls: [`./motion-content.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MotionContentComponent extends BaseMotionDetailChildComponent {
     @Output()
@@ -138,6 +140,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
     }
+
+    private titleFieldUpdateSubscription: Subscription;
 
     private _canSaveParagraphBasedAmendment = true;
     private _paragraphBasedAmendmentContent: any = {};
@@ -347,6 +351,19 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             }
             this._initialState = deepCopy(contentPatch);
             this.contentForm.patchValue(contentPatch);
+        } else {
+            const parentId = Number(this.route.snapshot.queryParams[`parent`]);
+            if (!this.titleFieldUpdateSubscription && parentId && !Number.isNaN(parentId)) {
+                this.titleFieldUpdateSubscription = this.repo
+                    .getViewModelObservable(parentId)
+                    .pipe(
+                        map(parent => parent?.number),
+                        distinctUntilChanged()
+                    )
+                    .subscribe(number =>
+                        this.contentForm.patchValue({ title: this.translate.instant(_(`Amendment to`)) + ` ${number}` })
+                    );
+            }
         }
     }
 
