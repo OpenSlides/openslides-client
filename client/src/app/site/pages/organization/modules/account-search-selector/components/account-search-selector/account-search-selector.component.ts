@@ -58,14 +58,15 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
 
     private async searchAccount(name: string): Promise<void> {
         const user = this.userController.parseStringIntoUser(name);
-        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)){
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
             const result = await this.presenter.call({
                 searchCriteria: [{ username: user.username }],
                 permissionRelatedId: ORGANIZATION_ID,
                 permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
             });
             const nextValue = Object.values(result).flat();
-            const getTitle = (user: { first_name: string; last_name: string }) => `${user.first_name ?? ``} ${user.last_name ?? ``}`;
+            const getTitle = (user: { first_name: string; last_name: string }) =>
+                `${user.first_name ?? ``} ${user.last_name ?? ``}`;
             this.filteredItemsSubject.next(
                 nextValue.map(entry => ({
                     id: entry.id,
@@ -74,9 +75,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
                 }))
             );
         } else {
-            this.filteredItemsSubject.next(
-                [this.operator.user]
-            );
+            this.filteredItemsSubject.next([this.operator.user]);
         }
     }
 }
