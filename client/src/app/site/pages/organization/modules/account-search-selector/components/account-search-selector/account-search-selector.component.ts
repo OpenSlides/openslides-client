@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import {
     SearchUsersByNameOrEmailPresenterScope,
@@ -57,19 +58,25 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
 
     private async searchAccount(name: string): Promise<void> {
         const user = this.userController.parseStringIntoUser(name);
-        const result = await this.presenter.call({
-            searchCriteria: [{ username: user.username }],
-            permissionRelatedId: ORGANIZATION_ID,
-            permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
-        });
-        const nextValue = Object.values(result).flat();
-        const getTitle = (user: { first_name: string; last_name: string }) => `${user.first_name} ${user.last_name}`;
-        this.filteredItemsSubject.next(
-            nextValue.map(entry => ({
-                id: entry.id,
-                getTitle: () => getTitle(entry),
-                getListTitle: () => getTitle(entry)
-            }))
-        );
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)){
+            const result = await this.presenter.call({
+                searchCriteria: [{ username: user.username }],
+                permissionRelatedId: ORGANIZATION_ID,
+                permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
+            });
+            const nextValue = Object.values(result).flat();
+            const getTitle = (user: { first_name: string; last_name: string }) => `${user.first_name ?? ``} ${user.last_name ?? ``}`;
+            this.filteredItemsSubject.next(
+                nextValue.map(entry => ({
+                    id: entry.id,
+                    getTitle: () => getTitle(entry),
+                    getListTitle: () => getTitle(entry)
+                }))
+            );
+        } else {
+            this.filteredItemsSubject.next(
+                [this.operator.user]
+            );
+        }
     }
 }
