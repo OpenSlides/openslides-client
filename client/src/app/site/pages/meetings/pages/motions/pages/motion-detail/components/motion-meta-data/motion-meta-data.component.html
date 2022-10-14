@@ -246,7 +246,7 @@
 </div>
 
 <!-- Origins - display only -->
-<div *ngIf="motion?.all_origins?.length">
+<div *ngIf="getOriginMotions().length">
     <h4>{{ 'Origin' | translate }}</h4>
     <div class="origin-view">
         <ng-container *ngFor="let origin of getOriginMotions(); let last = last">
@@ -280,12 +280,12 @@
 
 <ng-template let-motion="motion" #meetingLink>
     »
-    <span *ngIf="motion.meeting?.canAccess()">
-        <a [routerLink]="motion.getDetailStateUrl()">
-            {{ getMeetingNameForMotion(motion) }}
+    <span *ngIf="canAccess(motion)">
+        <a [routerLink]="getUrl(motion)">
+            {{ getMeetingName(motion) }}
         </a>
     </span>
-    <span *ngIf="!motion.meeting?.canAccess()">
-        {{ getMeetingNameForMotion(motion) }}
+    <span *ngIf="!canAccess(motion)">
+        {{ getMeetingName(motion) }}
     </span>
 </ng-template>

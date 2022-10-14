@@ -61,6 +61,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
                 viewModelCtor: ViewMotion,
                 additionalFields: [
                     `all_origin_ids`,
+                    `origin_meeting_id`,
                     `derived_motion_ids`,
                     `amendment_ids`,
                     { templateField: `amendment_paragraph_$` }
