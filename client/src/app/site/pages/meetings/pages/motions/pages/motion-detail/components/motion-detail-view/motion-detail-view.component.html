@@ -24,21 +24,17 @@
             </div>
 
             <!-- Back and forth buttons -->
-            <div *ngIf="!editMotion && !vp.isMobile" class="extra-controls-slot prev-next-motion-controls">
-                <div *ngIf="previousMotion">
-                    <button mat-button (click)="navigateToMotion(previousMotion)">
-                        <os-icon-container icon="chevron_left">
-                            {{ previousMotion.number }}
-                        </os-icon-container>
-                    </button>
-                </div>
-                <div *ngIf="nextMotion">
-                    <button mat-button (click)="navigateToMotion(nextMotion)">
-                        <os-icon-container icon="chevron_right" [swap]="true">
-                            {{ nextMotion.number }}
-                        </os-icon-container>
-                    </button>
-                </div>
+            <div *ngIf="!editMotion && !vp.isMobile && showNavigateButtons" class="extra-controls-slot prev-next-motion-controls">
+                <button mat-button (click)="navigateToMotion(previousMotion)" [disabled]="!previousMotion">
+                    <os-icon-container icon="chevron_left">
+                        {{ previousMotion ? previousMotion.number : '' }}
+                    </os-icon-container>
+                </button>
+                <button mat-button (click)="navigateToMotion(nextMotion)" [disabled]="!nextMotion">
+                    <os-icon-container icon="chevron_right" [swap]="true">
+                        {{ nextMotion ? nextMotion.number : '' }}
+                    </os-icon-container>
+                </button>
             </div>
 
             <!-- Menu -->
@@ -49,14 +45,14 @@
             </div>
 
             <mat-menu #motionExtraMenu="matMenu">
-                <div *ngIf="vp.isMobile">
-                    <button mat-menu-item (click)="navigateToMotion(previousMotion)" *ngIf="previousMotion">
+                <div *ngIf="vp.isMobile && showNavigateButtons">
+                    <button mat-menu-item (click)="navigateToMotion(previousMotion)" [disabled]="!previousMotion">
                         <mat-icon>chevron_left</mat-icon>
-                        <span>{{ 'Motion' | translate }} {{ previousMotion.number }}</span>
+                        <span *ngIf="previousMotion">{{ 'Motion' | translate }} {{ previousMotion.number }}</span>
                     </button>
-                    <button mat-menu-item (click)="navigateToMotion(nextMotion)" *ngIf="nextMotion">
+                    <button mat-menu-item (click)="navigateToMotion(nextMotion)" [disabled]="!nextMotion">
                         <mat-icon>chevron_right</mat-icon>
-                        <span>{{ 'Motion' | translate }} {{ nextMotion.number }}</span>
+                        <span *ngIf="nextMotion">{{ 'Motion' | translate }} {{ nextMotion.number }}</span>
                     </button>
                     <mat-divider *ngIf="previousMotion || nextMotion"></mat-divider>
                 </div>
