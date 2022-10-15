@@ -36,7 +36,7 @@ export class MotionForwardDialogComponent implements OnInit {
 
     public async ngOnInit(): Promise<void> {
         this.committeesSubject.next(this.data.forwardingMeetings);
-        this.selectedMeetings = new Set(this.getDefaultMeetingsIds());
+        this.selectedMeetings = new Set();
         this.initStateMap();
     }
 
@@ -65,15 +65,5 @@ export class MotionForwardDialogComponent implements OnInit {
         for (const meeting of meetings) {
             this.checkboxStateMap[meeting!.id] = this.selectedMeetings.has(+meeting!.id);
         }
-    }
-
-    private getDefaultMeetingsIds(): Id[] {
-        const committees = this.committeesSubject.value;
-        return committees
-            .filter(
-                committee =>
-                    committee.default_meeting_id && committee.default_meeting_id !== this.activeMeeting.meetingId
-            )
-            .map(committee => committee.default_meeting_id!);
     }
 }
