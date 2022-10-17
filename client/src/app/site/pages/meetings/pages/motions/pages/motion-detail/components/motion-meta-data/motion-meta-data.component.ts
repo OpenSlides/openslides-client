@@ -240,13 +240,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     }
 
     public getOriginMotions(): (ViewMotion | ViewMeeting)[] {
-        console.log(`LOG: getOriginMotions: `, this.motion.origin_id, this.motion.all_origins, this.motion.origin_meeting, this.motion.origin_meeting_id, this.motion.derived_motions, this.motion.derived_motion_ids);
-        const copy = this.motion.origin_id ? [...(this.motion.all_origins || [])] : (this.motion.origin_meeting ?[this.motion.origin_meeting] : []);
+        const copy = this.motion.origin_id
+            ? [...(this.motion.all_origins || [])]
+            : this.motion.origin_meeting
+            ? [this.motion.origin_meeting]
+            : [];
         return copy.reverse();
     }
 
     public getMeetingName(origin: ViewMotion | ViewMeeting): string {
-        console.log(`LOG: getMeetingNameForOrigin: `, origin)
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
             return motion.meeting?.name ?? this.meetingController.getViewModelUnsafe(motion.meeting_id)?.name;
@@ -265,7 +267,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public canAccess(origin: ViewMotion | ViewMeeting): boolean {
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
-            return motion.meeting?.canAccess()
+            return motion.meeting?.canAccess();
         }
         return origin?.canAccess();
     }
