@@ -6,18 +6,26 @@
 <mat-card class="os-card spacer-bottom-60">
     <div class="history-table-header">
         <div>
-            <span [formGroup]="motionSelectForm">
+            <span [formGroup]="modelSelectForm">
                 <mat-form-field>
+                    <mat-select formControlName="collection" placeholder="{{ 'Collection' | translate }}">
+                        <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
+                            {{ item.key | titlecase | translate }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="spacer-left-20">
                     <os-list-search-selector
-                        formControlName="motion"
+                        formControlName="id"
                         [multiple]="false"
-                        placeholder="{{ 'Motion' | translate }}"
-                        [inputListValues]="motions"
+                        placeholder="{{ 'Model' | translate }}"
+                        [inputListValues]="models"
+                        [disabled]="!modelSelectForm.get('collection').value"
                     ></os-list-search-selector>
                 </mat-form-field>
             </span>
             <span class="spacer-left-20">
-                <button mat-button (click)="refresh()" *ngIf="currentMotionId">
+                <button mat-button (click)="refresh()" *ngIf="currentFqid">
                     <mat-icon>refresh</mat-icon>
                     <span>{{ 'Refresh' | translate }}</span>
                 </button>

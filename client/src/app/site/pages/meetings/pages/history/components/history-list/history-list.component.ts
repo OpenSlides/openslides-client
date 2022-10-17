@@ -4,27 +4,24 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
-import { Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
-import { Motion } from 'src/app/domain/models/motions/motion';
+import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { HistoryPosition, HistoryPresenterService } from 'src/app/gateways/presenter/history-presenter.service';
+import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { langToLocale } from 'src/app/infrastructure/utils/lang-to-locale';
-import {
-    collectionIdFromFqid,
-    fqidFromCollectionAndId,
-    idFromFqid
-} from 'src/app/infrastructure/utils/transform-functions';
+import { collectionIdFromFqid, fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
 import { Position } from '../../definitions';
 import { HistoryService } from '../../services/history.service';
-
-const COLLECTION = Motion.COLLECTION;
 
 /**
  * A list view for the history.
@@ -47,51 +44,67 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     public pageSizes = [50, 100, 150, 200, 250];
 
     /**
-     * The form for the selection of the motion
-     * When more models are supported, add a "collection"-dropdown
+     * The form for the selection of the model
      */
-    public motionSelectForm: UntypedFormGroup;
+    public modelSelectForm: UntypedFormGroup;
 
     /**
      * The observer for the all motions
      */
-    public motions: Observable<ViewMotion[]>;
+    public models: Observable<BaseViewModel[]>;
 
-    public get currentMotionId(): number | null {
-        return this.motionSelectForm.controls[`motion`].value;
+    public get currentFqid(): Fqid | null {
+        if (this.modelSelectForm.controls[`collection`].value && this.modelSelectForm.controls[`id`].value) {
+            return fqidFromCollectionAndId(
+                this.modelSelectForm.controls[`collection`].value,
+                this.modelSelectForm.controls[`id`].value
+            );
+        } else {
+            return null;
+        }
     }
 
-    private _fqid: Fqid | null = null;
+    public get modelsRepoMap(): { [collection: Collection]: BaseRepository<BaseViewModel, BaseModel> } {
+        // add repos to this array to extend the selection for history models
+        const historyRepos = [this.motionRepo, this.userRepo, this.assignmentRepo];
+        return historyRepos.mapToObject(repo => {
+            return { [repo.collection]: repo };
+        });
+    }
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private viewModelStore: ViewModelStoreService,
         private formBuilder: UntypedFormBuilder,
-        private motionRepo: MotionRepositoryService,
         private activatedRoute: ActivatedRoute,
         private presenter: HistoryPresenterService,
         private operator: OperatorService,
-        private historyService: HistoryService
+        private historyService: HistoryService,
+        private motionRepo: MotionRepositoryService,
+        private assignmentRepo: AssignmentRepositoryService,
+        private userRepo: UserRepositoryService
     ) {
         super(componentServiceCollector, translate);
 
-        this.motionSelectForm = this.formBuilder.group({
-            motion: []
+        this.modelSelectForm = this.formBuilder.group({
+            collection: [],
+            id: []
         });
-        this.motions = this.motionRepo.getViewModelListObservable();
-
-        this.motionSelectForm.controls[`motion`].valueChanges.subscribe((id: number) => {
-            if (!id || (Array.isArray(id) && !id.length)) {
+        this.modelSelectForm.controls[`collection`].valueChanges.subscribe((collection: Collection) => {
+            this.models = this.modelsRepoMap[collection].getViewModelListObservable();
+            this.modelSelectForm.controls[`id`].setValue(null);
+        });
+        this.modelSelectForm.controls[`id`].valueChanges.subscribe((id: Id) => {
+            if (!id || (Array.isArray(id) && !id.length) || !this.modelSelectForm.controls[`collection`].value) {
                 return;
             }
-            const fqid = fqidFromCollectionAndId(COLLECTION, id);
-            this.queryByFqid(fqid);
+            this.queryByFqid(this.currentFqid);
 
             // Update the URL.
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
-                queryParams: { fqid },
+                queryParams: { fqid: this.currentFqid },
                 replaceUrl: true
             });
         });
@@ -113,9 +126,10 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                 return true;
             }
 
-            if (this.currentMotionId) {
-                const motion = this.viewModelStore.get(COLLECTION, this.currentMotionId);
-                if (motion && motion.getTitle().toLowerCase().indexOf(filter) >= 0) {
+            if (this.currentFqid) {
+                const [collection, id] = collectionIdFromFqid(this.currentFqid);
+                const model = this.viewModelStore.get(collection, id);
+                if (model && model.getTitle().toLowerCase().indexOf(filter) >= 0) {
                     return true;
                 }
             }
@@ -132,30 +146,15 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         if (!fqid) {
             return;
         }
-
-        let id: Id;
-        try {
-            id = idFromFqid(fqid);
-        } catch {
-            return;
-        }
-        if (!id) {
-            return;
-        }
         this.queryByFqid(fqid);
-        this.motionSelectForm.patchValue(
-            {
-                motion: id
-            },
-            { emitEvent: false }
-        );
+        const [collection, id] = collectionIdFromFqid(fqid);
+        this.modelSelectForm.patchValue({ collection, id });
     }
 
     /**
      * Sets the data source to the requested element id.
      */
     private async queryByFqid(fqid: Fqid): Promise<void> {
-        this._fqid = fqid;
         try {
             const response = await this.presenter.call(fqid);
             this.dataSource.data = response;
@@ -183,8 +182,8 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             return;
         }
 
-        await this.historyService.enterHistoryMode(this._fqid, position);
-        const [collection, id] = collectionIdFromFqid(this._fqid);
+        await this.historyService.enterHistoryMode(this.currentFqid, position);
+        const [collection, id] = collectionIdFromFqid(this.currentFqid);
         const element = this.viewModelStore.get(collection, id);
         console.log(`go to element:`, element);
         if (element && isDetailNavigable(element)) {
@@ -200,8 +199,8 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
     }
 
     public refresh(): void {
-        if (this.currentMotionId) {
-            this.queryByFqid(fqidFromCollectionAndId(COLLECTION, this.currentMotionId));
+        if (this.currentFqid) {
+            this.queryByFqid(this.currentFqid);
         }
     }
 
