@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/cor
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ActivatedRoute } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, map, Subscription } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
@@ -360,10 +359,14 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                         distinctUntilChanged()
                     )
                     .subscribe(number => {
-                        this.contentForm.patchValue({
-                            title: this.translate.instant(_(`Amendment to`)) + ` ${number}`
-                        });
-                        this.propagateChanges();
+                        const title = this.translate.instant(`Amendment to`) + ` ${number}`;
+                        if (!this.contentForm.get(`title`).value) {
+                            this.contentForm.patchValue({
+                                title: title
+                            });
+                            this._motionContent[`title`] = title;
+                            this.propagateChanges();
+                        }
                     });
             }
         }
