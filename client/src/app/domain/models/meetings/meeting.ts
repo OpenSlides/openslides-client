@@ -225,6 +225,7 @@ export class Meeting extends BaseModel<Meeting> {
     public motion_workflow_ids!: Id[]; // (motion_workflow/meeting_id)[];
     public motion_state_ids!: Id[]; // (motion_state/meeting_id)[];
     public motion_statute_paragraph_ids!: Id[]; // (motion_statute_paragraph/meeting_id)[];
+    public forwarded_motion_ids!: Id[];
     public poll_ids!: Id[]; // (poll/meeting_id)[];
     public option_ids!: Id[]; // (option/meeting_id)[];
     public vote_ids!: Id[]; // (vote/meeting_id)[];
