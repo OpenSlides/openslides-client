@@ -732,16 +732,23 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotion,
         OViewModel: ViewMotion,
         MField: `origin`,
-        OField: `all_derived_motions`
+        MIdField: `origin_id`,
+        OField: `derived_motions`,
+        OIdField: `derived_motion_ids`
     }),
-    // motion/all_origin_ids -> motion/derived_motion_ids
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMeeting,
+        MField: `origin_meeting`,
+        OField: `forwarded_motions`
+    }),
     ...makeM2M({
         AViewModel: ViewMotion,
         BViewModel: ViewMotion,
         AField: `all_origins`,
         AIdField: `all_origin_ids`,
-        BField: `derived_motions`,
-        BIdField: `derived_motion_ids`
+        BField: `all_derived_motions`,
+        BIdField: `all_derived_motion_ids`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,

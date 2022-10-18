@@ -3,11 +3,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
@@ -237,13 +239,41 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
     }
 
-    public getOriginMotions(): ViewMotion[] {
-        const copy = [...(this.motion.all_origins || [])];
+    public getOriginMotions(): (ViewMotion | ViewMeeting)[] {
+        const copy = this.motion.origin_id
+            ? [...(this.motion.all_origins || [])]
+            : this.motion.origin_meeting
+            ? [this.motion.origin_meeting]
+            : [];
         return copy.reverse();
     }
 
-    public getMeetingNameForMotion(motion: ViewMotion): string {
-        return motion.meeting?.name ?? this.meetingController.getViewModelUnsafe(motion.meeting_id)?.name;
+    public getMeetingName(origin: ViewMotion | ViewMeeting): string {
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.meeting?.name ?? this.meetingController.getViewModelUnsafe(motion.meeting_id)?.name;
+        }
+        return (origin as ViewMeeting)?.name;
+    }
+
+    public getUrl(origin: ViewMotion | ViewMeeting): string {
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.getDetailStateUrl();
+        }
+        return `/${(origin as ViewMeeting).id}/motions`;
+    }
+
+    public canAccess(origin: ViewMotion | ViewMeeting): boolean {
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.meeting?.canAccess();
+        }
+        return origin?.canAccess();
+    }
+
+    private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
+        return toTest.COLLECTION === Motion.COLLECTION;
     }
 
     protected override getSubscriptions(): Subscription[] {
