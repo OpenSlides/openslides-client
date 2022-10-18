@@ -140,6 +140,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     private titleFieldUpdateSubscription: Subscription;
+    private textFieldUpdateSubscription: Subscription;
 
     private _canSaveParagraphBasedAmendment = true;
     private _paragraphBasedAmendmentContent: any = {};
@@ -351,23 +352,32 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             this.contentForm.patchValue(contentPatch);
         } else {
             const parentId = Number(this.route.snapshot.queryParams[`parent`]);
-            if (!this.titleFieldUpdateSubscription && parentId && !Number.isNaN(parentId)) {
-                this.titleFieldUpdateSubscription = this.repo
-                    .getViewModelObservable(parentId)
-                    .pipe(
-                        map(parent => parent?.number),
-                        distinctUntilChanged()
-                    )
-                    .subscribe(number => {
-                        const title = this.translate.instant(`Amendment to`) + ` ${number}`;
-                        if (!this.contentForm.get(`title`).value) {
-                            this.contentForm.patchValue({
-                                title: title
-                            });
-                            this._motionContent[`title`] = title;
-                            this.propagateChanges();
-                        }
-                    });
+            if (parentId && !Number.isNaN(parentId)) {
+                if (!this.titleFieldUpdateSubscription) {
+                    this.titleFieldUpdateSubscription = this.repo
+                        .getViewModelObservable(parentId)
+                        .pipe(
+                            map(parent => { return { number: parent?.number, text: parent?.text}}),
+                            distinctUntilChanged()
+                        )
+                        .subscribe(data => {
+                            if (!this.contentForm.get(`title`).value) {
+                                const title = this.translate.instant(`Amendment to`) + ` ${data.number}`;
+                                this.contentForm.patchValue({
+                                   title: title
+                                });
+                                this._motionContent[`title`] = title;
+                                this.propagateChanges();
+                            }
+                            if (!this.contentForm.get(`text`).value) {
+                                this.contentForm.patchValue({
+                                    text: data.text
+                                });
+                                this._motionContent[`text`] = data.text;
+                                this.propagateChanges();
+                            }
+                        });
+                }
             }
         }
     }
