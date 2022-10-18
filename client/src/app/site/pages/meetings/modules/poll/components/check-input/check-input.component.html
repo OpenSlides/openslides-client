@@ -10,7 +10,7 @@
         />
     </mat-form-field>
     <mat-checkbox
-        *ngIf="checkboxLabel && !radioGroup"
+        *ngIf="checkboxLabel"
         [name]="'checkbox'"
         [ngModel]="isChecked"
         (change)="checkboxStateChanged($event.checked)"
@@ -18,15 +18,5 @@
     >
         {{ checkboxLabel }}
     </mat-checkbox>
-    <mat-radio-button
-        #radioButton
-        *ngIf="checkboxLabel && radioGroup"
-        [name]="radioGroup"
-        [checked]="isChecked"
-        [value]="formControlName"
-        tabindex="-1"
-    >
-        {{ checkboxLabel }}
-    </mat-radio-button>
     <div *ngIf="!checkboxLabel" class="placeholder"></div>
 </div>
