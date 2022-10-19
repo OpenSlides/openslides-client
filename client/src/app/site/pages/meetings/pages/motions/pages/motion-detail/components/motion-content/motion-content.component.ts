@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, map, Subscription } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
@@ -138,6 +138,9 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
     }
+
+    private titleFieldUpdateSubscription: Subscription;
+    private textFieldUpdateSubscription: Subscription;
 
     private _canSaveParagraphBasedAmendment = true;
     private _paragraphBasedAmendmentContent: any = {};
@@ -347,6 +350,40 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             }
             this._initialState = deepCopy(contentPatch);
             this.contentForm.patchValue(contentPatch);
+        } else {
+            const parentId = Number(this.route.snapshot.queryParams[`parent`]);
+            if (parentId && !Number.isNaN(parentId)) {
+                if (!this.titleFieldUpdateSubscription) {
+                    this.titleFieldUpdateSubscription = this.repo
+                        .getViewModelObservable(parentId)
+                        .pipe(
+                            map(parent => {
+                                return { number: parent?.number, text: parent?.text };
+                            }),
+                            distinctUntilChanged()
+                        )
+                        .subscribe(data => {
+                            if (!this.contentForm.get(`title`).value) {
+                                const title = this.translate.instant(`Amendment to`) + ` ${data.number}`;
+                                this.contentForm.patchValue({
+                                    title: title
+                                });
+                                this._motionContent[`title`] = title;
+                                this.propagateChanges();
+                            }
+                            if (
+                                !this.contentForm.get(`text`).value &&
+                                this.meetingSettingsService.instant(`motions_amendments_text_mode`) === `fulltext`
+                            ) {
+                                this.contentForm.patchValue({
+                                    text: data.text
+                                });
+                                this._motionContent[`text`] = data.text;
+                                this.propagateChanges();
+                            }
+                        });
+                }
+            }
         }
     }
 

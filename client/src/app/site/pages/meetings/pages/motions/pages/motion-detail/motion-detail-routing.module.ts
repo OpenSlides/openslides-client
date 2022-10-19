@@ -27,6 +27,11 @@ const routes: Routes = [
                 ]
             },
             {
+                path: `new-amendment`,
+                component: MotionDetailViewComponent,
+                data: { meetingPermissions: [Permission.motionCanCreateAmendments] }
+            },
+            {
                 path: `:id`,
                 children: [
                     {
