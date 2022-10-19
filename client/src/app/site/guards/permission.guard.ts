@@ -31,7 +31,6 @@ export class PermissionGuard implements CanLoad {
             return false;
         }
         if (route.data && !(await this.authCheck.isAuthorized(route.data))) {
-            console.log(`LOG: 5`);
             this.reroute.handleForbiddenRoute(route.data, segments, url);
             return false;
         }

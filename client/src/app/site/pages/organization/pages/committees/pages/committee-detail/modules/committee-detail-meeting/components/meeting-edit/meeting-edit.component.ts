@@ -189,6 +189,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.theDuplicateFromId = id;
     }
 
+    public onClearDate(formControlName: string): void {
+        this.meetingForm.controls[formControlName].setValue(null);
+    }
+
     private checkCreateView(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `create`) {
             this.isCreateView = true;
@@ -283,8 +287,13 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private updateFormByCommittee(): void {
         if (this.isCreateView) {
+            let name = this.committee?.name;
+            if (this.committee?.meeting_ids?.length > 0) {
+                name = `${name} (${this.committee?.meeting_ids?.length + 1 || 1})`;
+            }
+
             const update: any = {
-                name: `${this.committee?.name} (${this.committee?.meeting_ids?.length + 1 || 1})`
+                name
             };
             if ((this.committee?.user_ids || []).includes(this.operator.operatorId!)) {
                 update.admin_ids = [this.operator.operatorId];

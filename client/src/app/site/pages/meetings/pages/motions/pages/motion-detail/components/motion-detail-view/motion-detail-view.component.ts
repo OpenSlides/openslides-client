@@ -23,6 +23,7 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
+import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -73,6 +74,8 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         return this._motion;
     }
 
+    private originalMotion: ViewMotion;
+
     public temporaryMotion: any = {};
 
     public canSave = false;
@@ -112,6 +115,8 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private _hasModelSubscriptionInitiated = false;
 
+    private _forwardingAvailable = false;
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -125,6 +130,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private itemRepo: AgendaItemControllerService,
         private motionSortService: MotionListSortService,
         private motionFilterService: MotionListFilterService,
+        private motionForwardingService: MotionForwardDialogService,
         private amendmentRepo: AmendmentControllerService,
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
@@ -132,6 +138,10 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private pdfExport: MotionPdfExportService
     ) {
         super(componentServiceCollector, translate);
+
+        this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
     }
 
     /**
@@ -171,7 +181,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         if (this.newMotion) {
             await this.createMotion(update);
         } else {
-            await this.updateMotion(update, this.motion);
+            await this.updateMotion(update, this.originalMotion ?? this.motion);
             this.leaveEditMotion();
         }
     }
@@ -203,8 +213,17 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         }
     }
 
+    public async forwardMotionToMeetings(): Promise<void> {
+        await this.motionForwardingService.forwardMotionsToMeetings(this.motion);
+    }
+
+    public get showForwardButton(): boolean {
+        return !!this.motion.state?.allow_motion_forwarding && this._forwardingAvailable;
+    }
+
     public enterEditMotion(): void {
         this.editMotion = true;
+        this.originalMotion = JSON.parse(JSON.stringify(this.motion));
         this.showMotionEditConflictWarningIfNecessary();
     }
 

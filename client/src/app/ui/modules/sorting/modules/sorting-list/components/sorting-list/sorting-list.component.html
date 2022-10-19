@@ -22,7 +22,10 @@
 
         <!-- Content -->
         <div class="content">
-            <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
+            <ng-template
+                [ngTemplateOutlet]="templateRef"
+                [ngTemplateOutletContext]="{ $implicit: item, index: i }"
+            ></ng-template>
         </div>
 
         <div *cdkDragPlaceholder class="margin-bottom-5"></div>

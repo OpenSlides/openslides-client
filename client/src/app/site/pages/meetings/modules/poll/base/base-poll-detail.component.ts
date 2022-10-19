@@ -203,12 +203,17 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
             this.repo.getViewModelObservable(this._pollId).subscribe(poll => {
                 if (poll) {
                     this.poll = poll!;
-                    this.setVotesData(this.createVotesData());
-                    this.onAfterSetVotesData();
-                    this.setEntitledUsersData();
+                    this.setVotesAndEntitledUsersData();
                 }
-            })
+            }),
+            this.userRepo.getViewModelListObservable().subscribe(users => this.setVotesAndEntitledUsersData())
         );
+    }
+
+    private setVotesAndEntitledUsersData(): void {
+        this.setVotesData(this.createVotesData());
+        this.onAfterSetVotesData();
+        this.setEntitledUsersData();
     }
 
     private setEntitledUsersData(): void {

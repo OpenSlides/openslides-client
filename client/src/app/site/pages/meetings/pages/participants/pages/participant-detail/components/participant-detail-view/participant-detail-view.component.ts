@@ -90,6 +90,9 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public user: ViewUser | null = null;
 
     public get usersGroups(): ViewGroup[] {
+        if (!this.activeMeetingId) {
+            return [];
+        }
         return this.user?.groups() || [];
     }
 
@@ -105,8 +108,13 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.user ? isVoteWeightEnabled && typeof this.user.vote_weight() === `number` : isVoteWeightEnabled;
     }
 
+    public get showVoteDelegations(): boolean {
+        return this._isVoteDelegationEnabled;
+    }
+
     private _userId: Id | undefined = undefined; // Not initialized
     private _isVoteWeightEnabled: boolean = false;
+    private _isVoteDelegationEnabled: boolean = false;
     private _isElectronicVotingEnabled: boolean = false;
     private _isUserInScope: boolean = false;
 
@@ -134,7 +142,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
 
             this.meetingSettingsService
                 .get(`users_enable_vote_weight`)
-                .subscribe(enabled => (this._isVoteWeightEnabled = enabled))
+                .subscribe(enabled => (this._isVoteWeightEnabled = enabled)),
+
+            this.meetingSettingsService
+                .get(`users_enable_vote_delegations`)
+                .subscribe(enabled => (this._isVoteDelegationEnabled = enabled))
         );
 
         this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();

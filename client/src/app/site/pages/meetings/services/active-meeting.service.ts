@@ -38,7 +38,8 @@ const getMeetingDetailSubscriptionConfig = (id: Id, getNextMeetingIdObservable: 
             { idField: `poll_ids`, follow: [`content_object_id`] },
             `group_ids`,
             { idField: `option_ids`, follow: [`content_object_id`], additionalFields: [`text`] },
-            `vote_ids`
+            `vote_ids`,
+            { idField: `committee_id`, additionalFields: [`name`] }
         ],
         additionalFields: [`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`]
     },

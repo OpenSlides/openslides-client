@@ -75,10 +75,21 @@
     </os-motion-extension-field>
 
     <!-- Forward to meeting -->
-    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="canForwardMotion" class="spacer-top-10">
+    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="showForwardButton" class="spacer-top-10">
         <mat-icon>forward</mat-icon>
         <span>{{ 'Forward' | translate }}</span>
     </button>
+</div>
+
+<!-- Forwardings - display only -->
+<div *ngIf="motion?.derived_motions?.length">
+    <h4>{{ 'Motion forwarded to' | translate }}</h4>
+    <div>
+        <div *ngFor="let derived of motion.derived_motions; let last = last">
+            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
+            <span>({{ derived.forwarded | localizedDate }})</span>
+        </div>
+    </div>
 </div>
 
 <!-- Recommendation -->
@@ -90,9 +101,9 @@
         [chipValue]="recommendationLabel | translate"
         [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
         extensionLabel="{{ 'Extension' | translate }}"
-        [searchList]="motionObserver"
-        searchListLabel="{{ 'Motions' | translate }}"
-        listValuePrefix="motion:"
+        [searchLists]="[motionObserver, committeeObservable]"
+        [searchListLabels]="['Motions', 'Committees']"
+        [listValueTransformFns]="[motionTransformFn]"
         (succeeded)="setRecommendationExtension($event)"
     >
         <span class="trigger-menu">
@@ -235,7 +246,7 @@
 </div>
 
 <!-- Origins - display only -->
-<div *ngIf="motion?.all_origins?.length">
+<div *ngIf="getOriginMotions().length">
     <h4>{{ 'Origin' | translate }}</h4>
     <div class="origin-view">
         <ng-container *ngFor="let origin of getOriginMotions(); let last = last">
@@ -246,17 +257,6 @@
                 <mat-icon *ngIf="!last">north</mat-icon>
             </div>
         </ng-container>
-    </div>
-</div>
-
-<!-- Forwardings - display only -->
-<div *ngIf="motion?.derived_motions?.length">
-    <h4>{{ 'Motion forwarded to' | translate }}</h4>
-    <div>
-        <div *ngFor="let derived of motion.derived_motions; let last = last">
-            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
-            <span>({{ derived.forwarded | localizedDate }})</span>
-        </div>
     </div>
 </div>
 
@@ -279,12 +279,13 @@
 <os-motion-manage-polls [motion]="motion"></os-motion-manage-polls>
 
 <ng-template let-motion="motion" #meetingLink>
-    <span *ngIf="motion.meeting?.canAccess()">
-        <a [routerLink]="motion.getDetailStateUrl()">
-            {{ motion.meeting?.name }}
+    »
+    <span *ngIf="canAccess(motion)">
+        <a [routerLink]="getUrl(motion)">
+            {{ getMeetingName(motion) }}
         </a>
     </span>
-    <div *ngIf="!motion.meeting?.canAccess()">
-        {{ motion.meeting?.name }}
-    </div>
+    <span *ngIf="!canAccess(motion)">
+        {{ getMeetingName(motion) }}
+    </span>
 </ng-template>

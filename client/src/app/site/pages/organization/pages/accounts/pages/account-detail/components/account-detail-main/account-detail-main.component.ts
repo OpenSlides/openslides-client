@@ -10,15 +10,18 @@ const ACCOUNT_DETAIL_SUBSCRIPTION_NAME = `account_detail`;
     styleUrls: [`./account-detail-main.component.scss`]
 })
 export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onParamsChanged(params: any): void {
-        if (params[`id`]) {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`]) {
             const id = +params[`id`];
             this.subscribeTo({
                 modelRequest: {
                     viewModelCtor: ViewUser,
                     ids: [id],
                     fieldset: `accountList`,
-                    follow: [`committee_ids` /* , `committee_$_management_level` */]
+                    follow: [
+                        `committee_ids`,
+                        { idField: `meeting_ids`, additionalFields: [`committee_id`] } // , `committee_$_management_level`
+                    ]
                 },
                 subscriptionName: ACCOUNT_DETAIL_SUBSCRIPTION_NAME,
                 hideWhenDestroyed: true

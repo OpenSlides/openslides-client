@@ -160,10 +160,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.sendActionToBackend(UserAction.UPDATE_SELF, payload);
     }
 
-    public delete(...users: Identifiable[]): Action<void> {
+    public delete(users: Identifiable[], handle_separately = false): Action<void> {
         this.preventInDemo();
         const data: any[] = users.map(user => ({ id: user.id }));
-        return this.actions.create({ action: UserAction.DELETE, data });
+        return this.actions.createFromArray([{ action: UserAction.DELETE, data }], handle_separately);
     }
 
     public assignMeetings(user: Identifiable, data: AssignMeetingsPayload): Action<AssignMeetingsResult> {
@@ -191,7 +191,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             email: partialUser.email,
             default_structure_level: partialUser.default_structure_level,
             default_number: partialUser.default_number,
-            default_vote_weight: toDecimal(partialUser.default_vote_weight) as any,
+            default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
             committee_$_management_level: partialUser.committee_$_management_level,
             group_$_ids: partialUser.group_$_ids,

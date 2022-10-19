@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
+import { Action } from 'src/app/gateways/actions';
 import { MotionWorkflowRepositoryService } from 'src/app/gateways/repositories/motions';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
@@ -25,7 +26,7 @@ export class MotionWorkflowControllerService extends BaseMeetingControllerServic
         return this.repo.create(workflow);
     }
 
-    public update(update: Partial<MotionWorkflow>, workflow: Identifiable): Promise<void> {
+    public update(update: Partial<MotionWorkflow>, workflow: Identifiable): Action<void> {
         return this.repo.update(update, workflow);
     }
 

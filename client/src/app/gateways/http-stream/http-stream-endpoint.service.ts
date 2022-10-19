@@ -38,7 +38,6 @@ export class HttpStreamEndpointService {
     }
 
     public async isEndpointHealthy(endpoint: EndpointConfiguration): Promise<boolean> {
-        // TODO: Add ngsw-bypass header
         try {
             const response = await this.http.get<{ healthy: boolean }>(endpoint.healthUrl);
             return !!response.healthy;

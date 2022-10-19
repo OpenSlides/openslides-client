@@ -98,6 +98,7 @@ interface IMeetingRelations {
     motion_workflows: ViewMotionWorkflow[];
     motion_states: ViewMotionState[];
     motion_statute_paragraphs: ViewMotionStatuteParagraph[];
+    forwarded_motions: ViewMotion[];
     polls: ViewPoll[];
     options: ViewOption[];
     votes: ViewVote[];

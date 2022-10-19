@@ -1,17 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { HttpService } from 'src/app/gateways/http.service';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-
-interface InformationObject {
-    [fqid: string]: string[];
-}
 
 export class Position {
     public position: number;
     public timestamp: number;
-    public information: InformationObject;
+    public information: string[];
     public user_id: Id;
     public fqid: Fqid;
 
@@ -29,10 +24,6 @@ export class HistoryPosition extends Position {
         return new Date(this.timestamp * 1000);
     }
 
-    private get _collection(): Collection {
-        return collectionFromFqid(this.fqid);
-    }
-
     public constructor(input?: Partial<HistoryPosition>) {
         super(input);
         if (input) {
@@ -48,11 +39,6 @@ export class HistoryPosition extends Position {
      */
     public getLocaleString(locale: string): string {
         return this.date.toLocaleString(locale);
-    }
-
-    public getPositionDescriptions(): string[] {
-        const information = this.information[this.fqid];
-        return information.map(entry => entry.replace(`Object`, this._collection));
     }
 }
 

@@ -2,12 +2,17 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
+import { Action } from 'src/app/gateways/actions';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
+import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { ChoiceAnswer } from 'src/app/ui/modules/choice-dialog/definitions';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog/services/choice.service';
 
+import { ViewOrganizationTag } from '../../../../../organization-tags';
+import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service';
 import { CommitteeControllerService } from '../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../view-models';
 import { CommitteeExportService } from '../../services/committee-list-export.service/committee-export.service';
@@ -24,6 +29,10 @@ const COMMITTEE_LIST_STORAGE_INDEX = `committee_list`;
     styleUrls: [`./committee-list.component.scss`]
 })
 export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee> {
+    private get messageForSpinner(): string {
+        return this.translate.instant(`Agenda items are in process. Please wait ...`);
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -34,7 +43,9 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
         private csvService: CommitteeExportService,
         private route: ActivatedRoute,
         private choiceService: ChoiceService,
-        private meetingRepo: MeetingControllerService
+        private meetingRepo: MeetingControllerService,
+        private tagRepo: OrganizationTagControllerService,
+        private spinnerService: SpinnerService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Committees`);
@@ -104,5 +115,77 @@ export class CommitteeListComponent extends BaseListViewComponent<ViewCommittee>
             ? this.selectedRows
             : this.committeeController.getViewModelList();
         this.csvService.export(committeesToExport);
+    }
+
+    public async editTags(): Promise<void> {
+        const committees = this.selectedRows;
+        const title = this.translate.instant(
+            `This will add or remove the following tags for all selected agenda items:`
+        );
+        const ADD = this.translate.instant(`Add`);
+        const REMOVE = this.translate.instant(`Remove`);
+        const actions = [ADD, REMOVE];
+        const selectedChoice = await this.choiceService.open({
+            title,
+            choices: this.tagRepo.getViewModelListObservable(),
+            multiSelect: true,
+            actions,
+            clearChoiceOption: this.translate.instant(`Clear tags`)
+        });
+
+        if (selectedChoice) {
+            let requestData: Promise<void>[] = [];
+            if (selectedChoice.action === ADD) {
+                this.addTags(committees, selectedChoice);
+            } else if (selectedChoice.action === REMOVE) {
+                this.removeTags(committees, selectedChoice);
+            } else {
+                this.clearTags(committees);
+            }
+
+            const message = `${committees.length} ` + this.translate.instant(this.messageForSpinner);
+            this.spinnerService.show(message, {
+                hideAfterPromiseResolved: async () => {
+                    for (let request of requestData) {
+                        await request;
+                    }
+                }
+            });
+        }
+    }
+
+    private async addTags(
+        committees: ViewCommittee[],
+        selectedChoice: ChoiceAnswer<ViewOrganizationTag>
+    ): Promise<void | void[]> {
+        return await Action.from(
+            ...committees.map(committee => {
+                const tagIds = new Set((committee.organization_tag_ids || []).concat(selectedChoice.ids));
+                return this.committeeController.update({ organization_tag_ids: Array.from(tagIds) }, committee);
+            })
+        ).resolve();
+    }
+
+    private async removeTags(
+        committees: ViewCommittee[],
+        selectedChoice: ChoiceAnswer<ViewOrganizationTag>
+    ): Promise<void | void[]> {
+        return Action.from(
+            ...committees.map(committee => {
+                const remainingTagIds = new Set(
+                    committee.organization_tag_ids.filter(tagId => selectedChoice.ids.indexOf(tagId) === -1)
+                );
+                return this.committeeController.update(
+                    { organization_tag_ids: Array.from(remainingTagIds) },
+                    committee
+                );
+            })
+        ).resolve();
+    }
+
+    private async clearTags(committees: ViewCommittee[]): Promise<void | void[]> {
+        return Action.from(
+            ...committees.map(committee => this.committeeController.update({ organization_tag_ids: [] }, committee))
+        ).resolve();
     }
 }

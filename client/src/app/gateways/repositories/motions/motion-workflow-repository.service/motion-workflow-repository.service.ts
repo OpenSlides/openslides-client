@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
+import { Action } from 'src/app/gateways/actions';
 import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
 import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
@@ -39,13 +40,13 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
         return this.sendActionToBackend(MotionWorkflowAction.CREATE, payload);
     }
 
-    public update(update: Partial<MotionWorkflow>, viewModel: Identifiable): Promise<void> {
+    public update(update: Partial<MotionWorkflow>, viewModel: Identifiable): Action<void> {
         const payload = {
             id: viewModel.id,
             name: update.name,
             first_state_id: update.first_state_id
         };
-        return this.sendActionToBackend(MotionWorkflowAction.UPDATE, payload);
+        return this.createAction(MotionWorkflowAction.UPDATE, payload);
     }
 
     public delete(viewModel: Identifiable): Promise<void> {

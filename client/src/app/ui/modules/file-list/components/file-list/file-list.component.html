@@ -110,8 +110,8 @@
             [matMenuTriggerData]="{ mediafile: mediafile }"
             [matTooltip]="tooltipFn(mediafile)"
         >
-            <mat-icon class="foreground-icon" *ngIf="mediafile.isFont()">text_fields</mat-icon>
-            <mat-icon class="foreground-icon" *ngIf="mediafile.isImage()">insert_photo</mat-icon>
+            <mat-icon class="foreground-icon" *ngIf="mediafile.isFont() && mediafile.mediafile.used_as_font_in_meeting_id()">text_fields</mat-icon>
+            <mat-icon class="foreground-icon" *ngIf="mediafile.isImage() && mediafile.mediafile.used_as_logo_in_meeting_id()">insert_photo</mat-icon>
         </div>
     </div>
 

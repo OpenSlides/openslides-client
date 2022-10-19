@@ -1,7 +1,16 @@
 .particle-wrapper {
     height: 100%;
+    position: relative;
 }
 
 .tsparticles-canvas-el {
     pointer-events: none !important;
+}
+
+#particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

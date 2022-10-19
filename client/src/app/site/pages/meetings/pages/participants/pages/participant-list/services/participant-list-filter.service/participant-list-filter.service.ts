@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { OsFilter } from 'src/app/site/base/base-filter.service';
+import { OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
 import { BaseMeetingFilterListService } from 'src/app/site/pages/meetings/base/base-meeting-filter-list.service';
 import { MeetingActiveFiltersService } from 'src/app/site/pages/meetings/services/meeting-active-filters.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -24,16 +25,24 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
         options: []
     };
 
+    private _voteWeightEnabled: boolean;
+    private _voteDelegationEnabled: boolean;
+
     public constructor(
         store: MeetingActiveFiltersService,
         groupRepo: GroupControllerService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private meetingSettings: MeetingSettingsService
     ) {
         super(store);
         this.updateFilterForRepo({
             repo: groupRepo,
             filter: this.userGroupFilterOptions
         });
+        this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
+        this.meetingSettings
+            .get(`users_enable_vote_delegations`)
+            .subscribe(value => (this._voteDelegationEnabled = value));
     }
 
     /**
@@ -67,7 +76,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             },
             {
                 property: `isLastEmailSend`,
-                label: this.translate.instant(`Last email send`),
+                label: this.translate.instant(`Last email sent`),
                 options: [
                     { condition: true, label: this.translate.instant(`Got an email`) },
                     { condition: [false, null], label: this.translate.instant(`Didn't get an email`) }
@@ -101,5 +110,22 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
             }
         ];
         return staticFilterOptions.concat(this.userGroupFilterOptions);
+    }
+
+    protected override getHideFilterSettings(): OsHideFilterSetting<ViewUser>[] {
+        return [
+            {
+                property: `isVoteWeightOne`,
+                shouldHideFn: () => {
+                    return !this._voteWeightEnabled;
+                }
+            },
+            {
+                property: `delegationType`,
+                shouldHideFn: () => {
+                    return !this._voteDelegationEnabled;
+                }
+            }
+        ];
     }
 }

@@ -37,7 +37,7 @@
         <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting" (selectedTabChange)="onTabChange()">
             <mat-tab label="{{ 'Single votes' | translate }}">
                 <div class="named-result-table">
-                    <os-votes-table [votesDataObservable]="votesDataObservable" listStorageKey="motion-poll-vote" [isViewingThis]="isViewingVoteslist" [parent]="self"></os-votes-table>
+                    <os-votes-table [votesDataObservable]="votesDataObservable" [isViewingThis]="isViewingVoteslist" [parent]="self"></os-votes-table>
                 </div>
             </mat-tab>
             <mat-tab label="{{ 'Entitled users' | translate }}">

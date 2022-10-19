@@ -75,7 +75,7 @@ msgstr ""
 msgid "Access-data"
 msgstr ""
 
-msgid "Account management"
+msgid "Account admin"
 msgstr ""
 
 msgid "Account successfully assigned"
@@ -91,6 +91,9 @@ msgid "Activate amendments"
 msgstr ""
 
 msgid "Activate statute amendments"
+msgstr ""
+
+msgid "Activate vote delegations"
 msgstr ""
 
 msgid "Activate vote weight"
@@ -164,6 +167,12 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
+msgid "Administration roles"
+msgstr ""
+
+msgid "Administration roles (at organization level)"
+msgstr ""
+
 msgid "Administrator"
 msgstr ""
 
@@ -174,6 +183,9 @@ msgid "After verifiy the preview click on \"import\" please (see top right)."
 msgstr ""
 
 msgid "Agenda"
+msgstr ""
+
+msgid "Agenda items are in process. Please wait ..."
 msgstr ""
 
 msgid "Agenda visibility"
@@ -526,6 +538,9 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+msgid "Back to OpenSlides"
+msgstr ""
+
 msgid "Back to login"
 msgstr ""
 
@@ -533,6 +548,9 @@ msgid "Background color"
 msgstr ""
 
 msgid "Ballot"
+msgstr ""
+
+msgid "Ballot opened"
 msgstr ""
 
 msgid "Ballot papers"
@@ -727,6 +745,15 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
+msgid "Category changed"
+msgstr ""
+
+msgid "Category removed"
+msgstr ""
+
+msgid "Category set to {}"
+msgstr ""
+
 msgid "Center"
 msgstr ""
 
@@ -767,6 +794,9 @@ msgid "Chat"
 msgstr ""
 
 msgid "Chat groups"
+msgstr ""
+
+msgid "Check datastore"
 msgstr ""
 
 msgid "Check in or check out participants based on their participant numbers:"
@@ -832,16 +862,34 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
+msgid "Comment created"
+msgstr ""
+
+msgid "Comment deleted"
+msgstr ""
+
 msgid "Comment fields"
 msgstr ""
 
-msgid "Comment {arg1} updated"
+msgid "Comment updated"
+msgstr ""
+
+msgid "Comment {} created"
+msgstr ""
+
+msgid "Comment {} deleted"
+msgstr ""
+
+msgid "Comment {} updated"
 msgstr ""
 
 msgid "Comments"
 msgstr ""
 
 msgid "Committee"
+msgstr ""
+
+msgid "Committee admin"
 msgstr ""
 
 msgid "Committee management"
@@ -851,6 +899,9 @@ msgid "Committee managers"
 msgstr ""
 
 msgid "Committees"
+msgstr ""
+
+msgid "Committees and meetings"
 msgstr ""
 
 msgid "Complex Workflow"
@@ -965,6 +1016,12 @@ msgid "Customize design"
 msgstr ""
 
 msgid "Dark mode"
+msgstr ""
+
+msgid "Datastore is corrupt! See the console for errors."
+msgstr ""
+
+msgid "Datastore is ok!"
 msgstr ""
 
 msgid ""
@@ -1114,13 +1171,22 @@ msgstr ""
 msgid "Do not forget to save your changes!"
 msgstr ""
 
+msgid "Do you really want to discard all your changes?"
+msgstr ""
+
 msgid "Do you really want to exit this page?"
 msgstr ""
 
 msgid "Do you really want to go ahead?"
 msgstr ""
 
+msgid "Do you really want to make available this meeting as a public template?"
+msgstr ""
+
 msgid "Do you really want to save your changes?"
+msgstr ""
+
+msgid "Do you really want to stop sharing this meeting as a public template?"
 msgstr ""
 
 msgid "Does not have notes"
@@ -1216,6 +1282,9 @@ msgid "Electronic voting is disabled. Only analog polls are allowed"
 msgstr ""
 
 msgid "Email"
+msgstr ""
+
+msgid "Email address"
 msgstr ""
 
 msgid "Email body"
@@ -1319,6 +1388,9 @@ msgstr ""
 msgid "Error in form field."
 msgstr ""
 
+msgid "Error talking to autoupdate service"
+msgstr ""
+
 msgid "Estimated end"
 msgstr ""
 
@@ -1408,6 +1480,9 @@ msgstr ""
 msgid "Font size in pt"
 msgstr ""
 
+msgid "For large instances this may block the server to the point of unusability"
+msgstr ""
+
 msgid "Foreground color"
 msgstr ""
 
@@ -1432,6 +1507,12 @@ msgstr ""
 msgid "Forwarding"
 msgstr ""
 
+msgid "Forwarding created"
+msgstr ""
+
+msgid "Forwarding of motion"
+msgstr ""
+
 msgid "Forwardings"
 msgstr ""
 
@@ -1439,6 +1520,9 @@ msgid "Front page text"
 msgstr ""
 
 msgid "Front page title"
+msgstr ""
+
+msgid "Full name"
 msgstr ""
 
 msgid "Fullscreen"
@@ -1504,7 +1588,16 @@ msgstr ""
 msgid "Has amendments"
 msgstr ""
 
+msgid "Has an email address"
+msgstr ""
+
 msgid "Has changed vote weight"
+msgstr ""
+
+msgid "Has forwardings"
+msgstr ""
+
+msgid "Has no email address"
 msgstr ""
 
 msgid "Has no speakers"
@@ -1581,6 +1674,9 @@ msgstr ""
 msgid "Import committees"
 msgstr ""
 
+msgid "Import data needs to have the JSON format"
+msgstr ""
+
 msgid "Import meeting"
 msgstr ""
 
@@ -1653,6 +1749,9 @@ msgstr ""
 msgid "Is a committee"
 msgstr ""
 
+msgid "Is a natural person"
+msgstr ""
+
 msgid "Is active"
 msgstr ""
 
@@ -1663,6 +1762,9 @@ msgid "Is amendment"
 msgstr ""
 
 msgid "Is candidate"
+msgstr ""
+
+msgid "Is committee admin"
 msgstr ""
 
 msgid "Is favorite"
@@ -1719,9 +1821,6 @@ msgstr ""
 msgid "Label color"
 msgstr ""
 
-msgid "Last email send"
-msgstr ""
-
 msgid "Last email sent"
 msgstr ""
 
@@ -1738,6 +1837,9 @@ msgid "Left"
 msgstr ""
 
 msgid "Legal notice"
+msgstr ""
+
+msgid "Less"
 msgstr ""
 
 msgid "Level indicator"
@@ -1839,13 +1941,27 @@ msgstr ""
 msgid "Meeting administrator"
 msgstr ""
 
+msgid "Meeting information"
+msgstr ""
+
 msgid "Meeting specific information"
 msgstr ""
 
 msgid "Meeting template"
 msgstr ""
 
+msgid ""
+"Meeting templates and the data they contain are publicly viewable by all "
+"committee administrators."
+msgstr ""
+
+msgid "Meeting titel"
+msgstr ""
+
 msgid "Meetings"
+msgstr ""
+
+msgid "Meetings selected"
 msgstr ""
 
 msgid "Message"
@@ -1881,7 +1997,13 @@ msgstr ""
 msgid "Motion block"
 msgstr ""
 
-msgid "Motion block set to"
+msgid "Motion block changed"
+msgstr ""
+
+msgid "Motion block removed"
+msgstr ""
+
+msgid "Motion block set to {}"
 msgstr ""
 
 msgid "Motion blocks"
@@ -2070,6 +2192,9 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "No admin role"
+msgstr ""
+
 msgid "No category"
 msgstr ""
 
@@ -2088,6 +2213,9 @@ msgstr ""
 msgid "No comment"
 msgstr ""
 
+msgid "No committee admin"
+msgstr ""
+
 msgid "No concernment"
 msgstr ""
 
@@ -2104,6 +2232,9 @@ msgid "No email sent"
 msgstr ""
 
 msgid "No encryption"
+msgstr ""
+
+msgid "No forwardings"
 msgstr ""
 
 msgid "No group name has been entered."
@@ -2125,6 +2256,9 @@ msgid "No meetings have been selected."
 msgstr ""
 
 msgid "No motion block set"
+msgstr ""
+
+msgid "No one has voted for this poll"
 msgstr ""
 
 msgid "No options found"
@@ -2298,6 +2432,9 @@ msgid "Options"
 msgstr ""
 
 msgid "Organization"
+msgstr ""
+
+msgid "Organization admin"
 msgstr ""
 
 msgid "Organization specific information"
@@ -2547,6 +2684,9 @@ msgstr ""
 msgid "Public item"
 msgstr ""
 
+msgid "Public template"
+msgstr ""
+
 msgid "Publish"
 msgstr ""
 
@@ -2580,10 +2720,16 @@ msgstr ""
 msgid "Recommendation"
 msgstr ""
 
+msgid "Recommendation changed"
+msgstr ""
+
 msgid "Recommendation label"
 msgstr ""
 
-msgid "Recommendation set to {arg1}"
+msgid "Recommendation reset"
+msgstr ""
+
+msgid "Recommendation set to {}"
 msgstr ""
 
 msgid "Reenter to conference room"
@@ -2677,7 +2823,13 @@ msgid ""
 "in the first row:"
 msgstr ""
 
+msgid "Required permissions to view this page:"
+msgstr ""
+
 msgid "Reset"
+msgstr ""
+
+msgid "Reset cache"
 msgstr ""
 
 msgid "Reset password"
@@ -2810,9 +2962,6 @@ msgid "Set as parent"
 msgstr ""
 
 msgid "Set as reference projector"
-msgstr ""
-
-msgid "Set as template meeting"
 msgstr ""
 
 msgid "Set category"
@@ -3028,7 +3177,7 @@ msgstr ""
 msgid "Sort motions by"
 msgstr ""
 
-msgid "Sort name of participants by"
+msgid "Sort workflow"
 msgstr ""
 
 msgid "Speakers"
@@ -3052,7 +3201,10 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-msgid "State set to {arg1}"
+msgid "State changed"
+msgstr ""
+
+msgid "State set to {}"
 msgstr ""
 
 msgid "Statistics"
@@ -3097,6 +3249,9 @@ msgstr ""
 msgid "Submit vote now"
 msgstr ""
 
+msgid "Submitter (in target meeting)"
+msgstr ""
+
 msgid "Submitters"
 msgstr ""
 
@@ -3119,6 +3274,12 @@ msgid "Summary of changes"
 msgstr ""
 
 msgid "Summary of changes:"
+msgstr ""
+
+msgid "Superadmin"
+msgstr ""
+
+msgid "Superadmin actions"
 msgstr ""
 
 msgid "Superadmin settings"
@@ -3146,9 +3307,6 @@ msgid "Tag"
 msgstr ""
 
 msgid "Tags"
-msgstr ""
-
-msgid "Template meeting"
 msgstr ""
 
 msgid "Text"
@@ -3230,6 +3388,9 @@ msgstr ""
 msgid "The title is required"
 msgstr ""
 
+msgid "There are not enough options."
+msgstr ""
+
 msgid "There are some columns that do not match the template"
 msgstr ""
 
@@ -3295,6 +3456,9 @@ msgstr ""
 msgid "This will add or remove the following submitters for all selected motions:"
 msgstr ""
 
+msgid "This will add or remove the following tags for all selected agenda items:"
+msgstr ""
+
 msgid "This will add or remove the following tags for all selected motions:"
 msgstr ""
 
@@ -3328,6 +3492,9 @@ msgid "This will set the following state for all selected motions:"
 msgstr ""
 
 msgid "This will set the workflow for all selected motions:"
+msgstr ""
+
+msgid "Thoroughly check datastore (unsafe)"
 msgstr ""
 
 msgid "Tile view"
@@ -3366,6 +3533,12 @@ msgstr ""
 msgid "Translation"
 msgstr ""
 
+msgid "Troubleshooting"
+msgstr ""
+
+msgid "Try reconnect"
+msgstr ""
+
 msgid "Type"
 msgstr ""
 
@@ -3373,6 +3546,9 @@ msgid "Undone"
 msgstr ""
 
 msgid "Unique speakers"
+msgstr ""
+
+msgid "Unsaved changes will not be applied."
 msgstr ""
 
 msgid "Unsupport"
@@ -3404,9 +3580,6 @@ msgstr ""
 msgid "User not found."
 msgstr ""
 
-msgid "User permission"
-msgstr ""
-
 msgid "Username"
 msgstr ""
 
@@ -3434,15 +3607,6 @@ msgstr ""
 msgid "Vote"
 msgstr ""
 
-msgid "Vote created"
-msgstr ""
-
-msgid "Vote deleted"
-msgstr ""
-
-msgid "Vote updated"
-msgstr ""
-
 msgid "Vote weight"
 msgstr ""
 
@@ -3456,6 +3620,9 @@ msgid "Voting"
 msgstr ""
 
 msgid "Voting and ballot papers"
+msgstr ""
+
+msgid "Voting anonymized"
 msgstr ""
 
 msgid "Voting duration"
@@ -3475,6 +3642,12 @@ msgstr ""
 msgid "Voting opened"
 msgstr ""
 
+msgid "Voting published"
+msgstr ""
+
+msgid "Voting reset"
+msgstr ""
+
 msgid "Voting result"
 msgstr ""
 
@@ -3485,6 +3658,15 @@ msgid "Voting right for"
 msgstr ""
 
 msgid "Voting right received from (principals)"
+msgstr ""
+
+msgid "Voting started"
+msgstr ""
+
+msgid "Voting stopped"
+msgstr ""
+
+msgid "Voting stopped/published"
 msgstr ""
 
 msgid "Voting successful."
@@ -3512,6 +3694,9 @@ msgid ""
 "Warning: Amendments exist for this motion. Editing this text will likely "
 "impact them negatively. Particularily, amendments might become unusable if "
 "the paragraph they affect is deleted."
+msgstr ""
+
+msgid "Was forwarded to this meeting"
 msgstr ""
 
 msgid "Web interface header logo"
@@ -3621,9 +3806,6 @@ msgid "You can't delete the last projector."
 msgstr ""
 
 msgid "You cannot change the recommendation of motions in different workflows!"
-msgstr ""
-
-msgid "You cannot change the state of motions in different workflows!"
 msgstr ""
 
 msgid ""
@@ -3847,6 +4029,12 @@ msgstr ""
 msgid "internal"
 msgstr ""
 
+msgid "is assigned to the following committees, meetings and groups"
+msgstr ""
+
+msgid "is not assigned to any committees or meetings yet"
+msgstr ""
+
 msgid "is now"
 msgstr ""
 
@@ -3916,6 +4104,9 @@ msgstr ""
 msgid "outside"
 msgstr ""
 
+msgid "participants"
+msgstr ""
+
 msgid "participants-example"
 msgstr ""
 
@@ -3980,6 +4171,9 @@ msgid "today"
 msgstr ""
 
 msgid "undocumented"
+msgstr ""
+
+msgid "unknown"
 msgstr ""
 
 msgid "version"

@@ -60,9 +60,10 @@
             class="login-button"
             type="submit"
             data-cy="loginButton"
-            [disabled]="loginForm.invalid"
+            [disabled]="loginForm.invalid || isWaitingOnLogin"
         >
-            {{ 'Login' | translate }}
+            <span *ngIf="!isWaitingOnLogin">{{ 'Login' | translate }}</span>
+            <os-spinner *ngIf="isWaitingOnLogin" [width]="20" [height]="20" [showText]="false"></os-spinner>
         </button>
         <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">
             {{ 'Login as guest' | translate }}

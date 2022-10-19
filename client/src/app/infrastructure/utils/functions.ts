@@ -74,12 +74,13 @@ const AMOUNT_DECIMAL_PLACES = 6;
  * with exactly six digits after a comma and returns it as string.
  *
  * @param input The number to convert.
+ * @param returnNull If this is set to false, undefined will be returned instead of null.
  *
  * @returns A string containing the floating point representation of the given number.
  */
-export function toDecimal(input: string | number | undefined): Decimal | null {
+export function toDecimal(input: string | number | undefined, returnNull = true): Decimal | null {
     if ((typeof input !== `string` || !input?.length) && typeof input !== `number`) {
-        return null;
+        return returnNull ? null : undefined;
     }
     if (typeof input === `number`) {
         return input.toFixed(AMOUNT_DECIMAL_PLACES);
@@ -197,4 +198,120 @@ export function isEmpty(instance: any): boolean {
         return true;
     }
     return false;
+}
+
+/**
+ * Escapes a string for use as regex
+ *
+ * @param str
+ *
+ * @returns escaped string
+ */
+export function escapeRegExp(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`);
+}
+
+/**
+ * Splits a string by a given character and keeps the seperator at
+ * the given position
+ *
+ * Valid positions: prepend, append, between
+ *
+ * @param str
+ * @param by
+ * @param position default between
+ *
+ * @returns splitted string
+ */
+export function splitStringKeepSeperator(
+    str: string,
+    by: string,
+    position?: 'prepend' | 'append' | 'between' | string
+): string[] {
+    if (position === `prepend`) {
+        return str.split(new RegExp(`(?=${escapeRegExp(by)})`, `g`));
+    } else if (position === `append`) {
+        return str.split(new RegExp(`(.*?${escapeRegExp(by)})`, `g`)).filter(el => el !== ``);
+    }
+
+    return str.split(new RegExp(`(${escapeRegExp(by)})`, `g`));
+}
+
+/**
+ * Creates a hash of a given string. This is not meant to be specifically secure, but rather as quick as possible.
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+export function djb2hash(str: string): string {
+    let hash = 5381;
+    let char: number;
+    for (let i = 0; i < str.length; i++) {
+        char = str.charCodeAt(i);
+        // tslint:disable-next-line:no-bitwise
+        hash = (hash << 5) + hash + char;
+    }
+    return hash.toString();
+}
+
+/**
+ * Joins two typed arrays together
+ *
+ * @param {TypeArray} type Type of the array
+ * @param {TypeArray} a part one
+ * @param {TypeArray} b part two
+ */
+export function joinTypedArrays<
+    T extends
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array
+>(type: { new (len: number): T }, a: T, b: T): T {
+    const res = new type(a.length + b.length);
+    res.set(a);
+    res.set(b, a.length);
+
+    return res;
+}
+
+/**
+ * Splits a typed array by a given seperator including the
+ * seperator at the end of every return array
+ *
+ * @param {TypeArray} type Type of the array
+ * @param {TypeArray} seperator
+ * @param {TypeArray} arr The array to seperate
+ */
+export function splitTypedArray<
+    T extends
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array
+>(seperator: any, arr: T): T[] {
+    const res: T[] = [];
+    let start = 0;
+    let nextIdx: number;
+    do {
+        nextIdx = arr.indexOf(seperator, start);
+        if (nextIdx !== -1) {
+            res.push(arr.slice(start, nextIdx + 1) as T);
+            start = nextIdx + 1;
+        } else {
+            res.push(arr.slice(start, arr.length) as T);
+        }
+    } while (nextIdx !== -1 && nextIdx !== arr.length - 1);
+
+    return res;
 }

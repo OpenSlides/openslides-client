@@ -108,7 +108,7 @@ export class SequentialNumberMappingService {
             this._modelRequestSubscription.close();
             this._modelRequestSubscription = null;
         }
-        this._modelRequestSubscription = this.autoupdateService.subscribe(
+        this._modelRequestSubscription = await this.autoupdateService.subscribe(
             await this.modelRequestBuilder.build(this.getSequentialNumberRequest()),
             MODEL_REQUEST_DESCRIPTION
         );

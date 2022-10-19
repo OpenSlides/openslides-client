@@ -89,7 +89,11 @@ export class MotionMultiselectService {
         }
         const title = this.translate.instant(`This will set the following state for all selected motions:`);
         const choices = this.workflowRepo.getWorkflowStatesForMotions(motions);
-        const selectedChoice = await this.choiceService.open({ title, choices });
+        const selectedChoice = await this.choiceService.open({
+            title,
+            choices,
+            sortFn: (a, b) => (a.weight && b.weight ? a.weight - b.weight : 0)
+        });
         if (selectedChoice) {
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {

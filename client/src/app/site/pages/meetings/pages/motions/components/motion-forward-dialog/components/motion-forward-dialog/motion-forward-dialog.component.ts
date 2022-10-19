@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import {
-    GetForwardingMeetingsPresenter,
-    GetForwardingMeetingsPresenterMeeting,
-    GetForwardingMeetingsPresenterService
-} from 'src/app/gateways/presenter';
+import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterMeeting } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+
+import { ViewMotion } from '../../../../view-models';
 
 @Component({
     selector: `os-motion-forward-dialog`,
@@ -24,19 +21,22 @@ export class MotionForwardDialogComponent implements OnInit {
     public readonly checkboxStateMap: { [id: string]: boolean } = {};
     public selectedMeetings: Set<Id> = new Set();
 
+    public get activeMeetingCommitteeName(): string {
+        return this.activeMeeting.meeting?.committee?.name;
+    }
+
     private readonly committeesSubject = new BehaviorSubject<GetForwardingMeetingsPresenter[]>([]);
 
     public constructor(
+        @Inject(MAT_DIALOG_DATA)
+        public data: { motion: ViewMotion[]; forwardingMeetings: GetForwardingMeetingsPresenter[] },
         private dialogRef: MatDialogRef<MotionForwardDialogComponent, Id[]>,
-        private presenter: GetForwardingMeetingsPresenterService,
-        private activeMeeting: ActiveMeetingService,
-        private meetingController: MeetingControllerService
+        private activeMeeting: ActiveMeetingService
     ) {}
 
     public async ngOnInit(): Promise<void> {
-        const result = await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! });
-        this.committeesSubject.next(result);
-        this.selectedMeetings = new Set(this.getDefaultMeetingsIds());
+        this.committeesSubject.next(this.data.forwardingMeetings);
+        this.selectedMeetings = new Set();
         this.initStateMap();
     }
 
@@ -53,20 +53,17 @@ export class MotionForwardDialogComponent implements OnInit {
         return +meeting.id === this.activeMeeting.meetingId;
     }
 
+    public hasAlreadyBeenForwardedTo(meeting: GetForwardingMeetingsPresenterMeeting): boolean {
+        if (this.data.motion.length === 1) {
+            return this.data.motion[0].derived_motions?.map(motion => motion.meeting_id).includes(+meeting.id) ?? false;
+        }
+        return false;
+    }
+
     private initStateMap(): void {
         const meetings = this.committeesSubject.value.flatMap(committee => committee.meetings)!;
         for (const meeting of meetings) {
             this.checkboxStateMap[meeting!.id] = this.selectedMeetings.has(+meeting!.id);
         }
-    }
-
-    private getDefaultMeetingsIds(): Id[] {
-        const committees = this.committeesSubject.value;
-        return committees
-            .filter(
-                committee =>
-                    committee.default_meeting_id && committee.default_meeting_id !== this.activeMeeting.meetingId
-            )
-            .map(committee => committee.default_meeting_id!);
     }
 }

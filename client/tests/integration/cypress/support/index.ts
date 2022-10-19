@@ -18,7 +18,16 @@
 declare global {
     namespace Cypress {
         interface Chainable {
-            urlShouldAllOf(...toCheck: {chainer: string, values: any[]}[]): void;
+            urlShouldAllOf(...toCheck: { chainer: string; values: any[] }[]): void;
+            /**
+             * Signs in as a quick command, visits the given page and waits until the
+             * page is ready.
+             *
+             * @param url the url to visit. Defaults to `/`.
+             * @param username the username of a user to sign in as. Defaults to `admin`.
+             * @param password the password of the user to sign in as. Defaults to `admin`.
+             */
+            loginAndVisit(url?: string, username?: string, password?: string): Cypress.Chainable;
             /**
              * Signs in as a quick command.
              *
@@ -40,6 +49,12 @@ declare global {
              * @param name the name for an element prefixed by `data-cy=`
              */
             getElement(name: string): Chainable<Element>;
+            /**
+             * Gets a form control element
+             *
+             * @param name the name for an element prefixed by `formcontrolname=`
+             */
+            getFormControl(name: string): Chainable<Element>;
             /**
              * Tries to find an anchor-HTML-element for a specific url.
              *
@@ -69,16 +84,24 @@ declare global {
              */
             createCommittee(name?: string): Chainable<{ id: number; name: string }>;
             deleteCommittees(...ids: number[]): void;
-            createMeeting(name?: string, admin_ids?: number[]): Chainable<{ id: number; name: string, committeeId: number }>;
+            createMeeting(
+                name?: string,
+                admin_ids?: number[]
+            ): Chainable<{ id: number; name: string; committeeId: number }>;
             deleteMeetings(...ids: number[]): void;
             createAccount(name?: string): Chainable<{ id: number; name: string }>;
             deleteAccounts(...ids: number[]): void;
+        }
+
+        interface Cypress {
+            config(key: 'datastoreUrl'): string;
         }
     }
 }
 
 // Import commands.ts using ES2015 syntax:
 import './commands';
+import './setup';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

@@ -242,6 +242,8 @@ export class TopicDetailComponent extends BaseMeetingComponent {
             return;
         }
 
+        this.topicForm.get(`agenda_parent_id`).setValue(this.topicForm.get(`agenda_parent_id`).getRawValue() || null);
+
         try {
             if (this.newTopic) {
                 await this.createTopic();

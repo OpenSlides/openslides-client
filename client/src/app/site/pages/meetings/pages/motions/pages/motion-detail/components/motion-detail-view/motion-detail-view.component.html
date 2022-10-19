@@ -98,6 +98,13 @@
                         <span>{{ 'History' | translate }}</span>
                     </button>
                 </div>
+                <!-- Forward motion -->
+                <div *osPerms="permission.motionCanForward">
+                    <button mat-menu-item (click)="forwardMotionToMeetings()">
+                        <mat-icon>forward</mat-icon>
+                        <span>{{ 'Forward' | translate }}</span>
+                    </button>
+                </div>
                 <mat-divider *ngIf="perms.isAllowed('update', motion) || perms.isAllowed('manage')"></mat-divider>
                 <!-- Edit-->
                 <button mat-menu-item (click)="enterEditMotion()" *ngIf="perms.isAllowed('update', motion)">
@@ -137,7 +144,9 @@
 <ng-template #mobileView>
     <div class="mobile-view">
         <!-- Meta info -->
-        <div><ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container></div>
+        <div *ngIf="!newMotion && !editMotion">
+            <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
+        </div>
 
         <!-- Content -->
         <mat-card [ngClass]="editMotion ? 'os-form-card-mobile' : 'os-card'">

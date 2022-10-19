@@ -24,6 +24,15 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
         return this.repo.getViewModel(id);
     }
 
+    /**
+     * Fetches a ViewModel without checking for accessibility.
+     * Should therefore only be used in special cases where completely public attributes need to be checked.
+     * (An example would be to display names of meetings that the user isn't in)
+     */
+    public getViewModelUnsafe(id: Id): V | null {
+        return this.repo.getViewModelUnsafe(id);
+    }
+
     public getViewModelObservable(id: Id): Observable<V | null> {
         return this.repo.getViewModelObservable(id);
     }

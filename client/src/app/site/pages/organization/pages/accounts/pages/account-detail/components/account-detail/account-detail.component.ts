@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,6 +16,16 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ViewCommittee } from '../../../../../committees';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
+
+interface ParticipationTableData {
+    [committee_id: Id]: ParticipationTableDataRow;
+}
+type ParticipationTableDataRow = {
+    committee_name?: string;
+    is_manager?: boolean;
+    meetings: { [meeting_id: Id]: ParticipationTableMeetingDataRow };
+};
+type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: string[] };
 
 @Component({
     selector: `os-account-detail`,
@@ -46,6 +57,29 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isEditingUser = false;
     public user: ViewUser | null = null;
     public isNewUser = false;
+
+    public get tableData(): ParticipationTableData {
+        return this._tableData;
+    }
+
+    public get canSeeParticipationTable(): boolean {
+        return (
+            this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
+            (!!this.user.committee_ids?.length || !!this.user.meeting_ids?.length)
+        );
+    }
+
+    public get comitteeAdministrationAmount(): number {
+        return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
+    }
+
+    public tableDataAscOrderCompare = <T extends unknown>(a: KeyValue<string, T>, b: KeyValue<string, T>) => {
+        const aName = a.value[`committee_name`] ?? a.value[`meeting_name`] ?? ``;
+        const bName = b.value[`committee_name`] ?? b.value[`meeting_name`] ?? ``;
+        return aName.localeCompare(bName);
+    };
+
+    private _tableData: ParticipationTableData = {};
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
@@ -148,12 +182,58 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
     }
 
+    public getCellClass(isCommitteeRow: boolean, isLastColumnOfCommitte: boolean, isLastLine: boolean): string {
+        if (isLastLine) {
+            return ``;
+        }
+        if (isCommitteeRow) {
+            return `committee-underline`;
+        }
+        return !isLastColumnOfCommitte ? `divider-bottom` : ``;
+    }
+
+    public getNumberOfKeys(item: { [key: string]: any }): number {
+        return Object.keys(item).length;
+    }
+
+    private generateParticipationTableData(): void {
+        const tableData: ParticipationTableData = this.user.committees.mapToObject(item => {
+            return {
+                [item.id]: {
+                    committee_name: item.getTitle(),
+                    is_manager: item.getManagers().some(manager => manager.id === this.user.id),
+                    meetings: {}
+                }
+            };
+        });
+        this.user.meetings.forEach(meeting => {
+            if (!tableData[meeting.committee_id]) {
+                tableData[meeting.committee_id] = { meetings: {} };
+            }
+            tableData[meeting.committee_id][`meetings`][meeting.id] = {
+                meeting_name: meeting.getTitle(),
+                group_names: this.user
+                    .groups(meeting.id)
+                    .map(group => group.getTitle())
+                    .sort((a, b) => a.localeCompare(b))
+            };
+        });
+        this._tableData = tableData;
+    }
+
     private getUserByUrl(): void {
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
-                if (params[`id`]) {
-                    this.loadUserById(+params[`id`]);
-                } else {
+                const segments = this.router.url.split(`/`);
+                const accountsIndex = segments.indexOf(`accounts`);
+                if (
+                    params[`id`] ||
+                    (accountsIndex !== -1 &&
+                        accountsIndex + 1 < segments.length &&
+                        !Number.isNaN(+segments[accountsIndex + 1]))
+                ) {
+                    this.loadUserById(params[`id`] ? +params[`id`] : +segments[accountsIndex + 1]);
+                } else if (accountsIndex !== -1) {
                     super.setTitle(`New member`);
                     this.isNewUser = true;
                     this.isEditingUser = true;
@@ -175,6 +255,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                         const title = user.getTitle();
                         super.setTitle(title);
                         this.user = user;
+                        this.generateParticipationTableData();
                     }
                 })
             );
@@ -202,7 +283,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     private getPartialUserPayload(): any {
-        return this.personalInfoFormValue;
+        const payload = this.personalInfoFormValue;
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
+            payload[`committee_$_management_level`] = { [CML.can_manage]: [] };
+        }
+        return payload;
     }
 
     private checkFormForErrors(): void {

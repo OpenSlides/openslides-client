@@ -67,7 +67,8 @@ interface MakeStructuredUserRelationArguments<V extends BaseViewModel> {
 }
 function _makeStructuredUserRelation<V extends BaseViewModel>(
     args: MakeStructuredUserRelationArguments<V>,
-    many: boolean
+    many: boolean,
+    otherFieldStructured = false
 ): Relation[] {
     return [
         // structured -> other
@@ -89,7 +90,7 @@ function _makeStructuredUserRelation<V extends BaseViewModel>(
             ownIdField: args.otherViewModelIdField,
             many,
             generic: false,
-            structured: false
+            structured: otherFieldStructured
         }
     ];
 }
@@ -106,6 +107,12 @@ function makeManyStructuredUsers2MRelation<V extends BaseViewModel>(
     return _makeStructuredUserRelation(args, true);
 }
 
+function makeMany2WayStructuredUsers2MRelation<V extends BaseViewModel>(
+    args: MakeStructuredUserRelationArguments<V>
+): Relation[] {
+    return _makeStructuredUserRelation(args, true, true);
+}
+
 // Where to place relations (in this order):
 // 1) For structured relations, the relation is defined on the structured side
 // 2) For generic relations, the relation is defined on the generic side
@@ -119,6 +126,13 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganization,
         MViewModel: ViewCommittee,
         OField: `committees`,
+        MField: `organization`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
+        MViewModel: ViewUser,
+        OField: `users`,
         MField: `organization`,
         isFullList: true
     }),
@@ -238,18 +252,18 @@ export const RELATIONS: Relation[] = [
         otherViewModelField: `user`,
         otherViewModelIdField: `user_id`
     }),
-    // ...makeManyStructuredUsers2MRelation({
-    //     otherViewModel: ViewCommittee,
-    //     structuredField: `committee_management_levels`,
-    //     structuredIdField: `committee_$_management_level`,
-    //     otherViewModelField: `user_management_levels`,
-    //     otherViewModelIdField: `user_$_management_level`
-    // }),
+    ...makeMany2WayStructuredUsers2MRelation({
+        otherViewModel: ViewCommittee,
+        structuredField: `committee_management_levels`,
+        structuredIdField: `committee_$_management_level`,
+        otherViewModelField: `user_management_levels`,
+        otherViewModelIdField: `user_$_management_level`
+    }),
     // ...makeOneStructuredGenericUser2MRelation({
     //     otherViewModel: ViewOption,
-    //     structuredField: 'options',
-    //     structuredIdField: 'option_$_ids',
-    //     otherViewModelField: 'content_object'
+    //     structuredField: `options`,
+    //     structuredIdField: `option_$_ids`,
+    //     otherViewModelField: `content_object`
     // }),
     // Vote delegations
     // vote_delegated_$_to_id -> vote_delegations_$_from_ids
@@ -718,16 +732,23 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotion,
         OViewModel: ViewMotion,
         MField: `origin`,
-        OField: `all_derived_motions`
+        MIdField: `origin_id`,
+        OField: `derived_motions`,
+        OIdField: `derived_motion_ids`
     }),
-    // motion/all_origin_ids -> motion/derived_motion_ids
+    ...makeM2O({
+        MViewModel: ViewMotion,
+        OViewModel: ViewMeeting,
+        MField: `origin_meeting`,
+        OField: `forwarded_motions`
+    }),
     ...makeM2M({
         AViewModel: ViewMotion,
         BViewModel: ViewMotion,
         AField: `all_origins`,
         AIdField: `all_origin_ids`,
-        BField: `derived_motions`,
-        BIdField: `derived_motion_ids`
+        BField: `all_derived_motions`,
+        BIdField: `all_derived_motion_ids`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,

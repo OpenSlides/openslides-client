@@ -3,7 +3,7 @@
     <ng-container [ngTemplateOutlet]="votingArea"></ng-container>
 
     <!-- Delegations -->
-    <ng-container *ngIf="isUserPresent">
+    <ng-container *ngIf="isUserPresent && voteDelegationEnabled | async">
         <div class="assignment-vote-delegation" *ngFor="let delegation of delegations">
             <mat-divider></mat-divider>
 
