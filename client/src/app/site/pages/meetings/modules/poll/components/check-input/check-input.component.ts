@@ -34,6 +34,23 @@ export class CheckInputComponent extends BaseUiComponent implements OnInit, Cont
     public checkboxLabel!: string;
 
     /**
+     * Name of the radio group
+     */
+    @Input()
+    public radioGroup: string;
+
+    /**
+     * Form element name
+     */
+    @Input()
+    public formControlName: string;
+
+    @Input()
+    public set radioGroupValue(m: string) {
+        this.checkboxStateChanged(m === this.formControlName);
+    }
+
+    /**
      * Model for the state of the checkbox.
      */
     public isChecked = false;
@@ -68,7 +85,7 @@ export class CheckInputComponent extends BaseUiComponent implements OnInit, Cont
      */
     public checkboxStateChanged(checked: boolean): void {
         this.isChecked = checked;
-        if (checked) {
+        if (this.isChecked) {
             this.contentForm.disable({ emitEvent: false });
         } else {
             this.contentForm.enable({ emitEvent: false });
