@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, delay, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -306,7 +306,7 @@ export class OperatorService {
             }
         });
         this.DS.getChangeObservable(Group)
-            .pipe(delay(100))
+            .pipe(debounceTime(50))
             .subscribe(changes => {
                 if (!this._groupsLoaded) {
                     console.log(`operator: group permissions loaded`);
