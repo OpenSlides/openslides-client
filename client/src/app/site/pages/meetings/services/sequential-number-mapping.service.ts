@@ -77,7 +77,7 @@ export class SequentialNumberMappingService {
         collection,
         meetingId,
         sequentialNumber
-    }: SequentialNumberMappingConfig): Promise<number | null> {
+    }: SequentialNumberMappingConfig): Promise<Id | null> {
         if (!collection || !meetingId || !sequentialNumber) {
             return null;
         }

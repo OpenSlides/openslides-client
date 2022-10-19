@@ -92,7 +92,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
-    private _resolveDataReceived: any[] = [];
+    private _resolveDataReceived: (() => void)[] = [];
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -172,7 +172,7 @@ export class AutoupdateService {
             close: () => {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
-                if (this._resolveDataReceived[id]()) {
+                if (this._resolveDataReceived[id]) {
                     rejectReceivedData();
                 }
             }
@@ -216,7 +216,7 @@ export class AutoupdateService {
                 deletedModels: {}
             })
             .then(() => {
-                if (this._resolveDataReceived[requestId]()) {
+                if (this._resolveDataReceived[requestId]) {
                     this._resolveDataReceived[requestId]();
                     delete this._resolveDataReceived[requestId];
                 }
