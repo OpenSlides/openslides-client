@@ -125,7 +125,7 @@ export class MotionMultiselectService {
                 getTitle: () => workflowState.recommendation_label,
                 getListTitle: () => workflowState.recommendation_label
             }));
-        const clearChoiceOption = this.translate.instant(`Delete recommendation`);
+        const clearChoiceOption = this.translate.instant(`Clear recommendation`);
         const selectedChoice = await this.choiceService.open({ title, choices, multiSelect: false, clearChoiceOption });
         if (selectedChoice) {
             const message = `${motions.length} ` + this.translate.instant(this.messageForSpinner);

@@ -147,12 +147,6 @@ msgstr ""
 msgid "Add/remove groups ..."
 msgstr ""
 
-msgid "Add/remove submitters"
-msgstr ""
-
-msgid "Add/remove tags"
-msgstr ""
-
 msgid ""
 "Additional columns after the required ones may be present and will not "
 "affect the import."
@@ -820,9 +814,6 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-msgid "Clear all"
-msgstr ""
-
 msgid "Clear all filters"
 msgstr ""
 
@@ -833,6 +824,9 @@ msgid "Clear list"
 msgstr ""
 
 msgid "Clear motion block"
+msgstr ""
+
+msgid "Clear recommendation"
 msgstr ""
 
 msgid "Clear tags"
@@ -1121,9 +1115,6 @@ msgid "Delete final print template"
 msgstr ""
 
 msgid "Delete projector"
-msgstr ""
-
-msgid "Delete recommendation"
 msgstr ""
 
 msgid "Deleted user"
@@ -3010,6 +3001,12 @@ msgid "Set status for selected accounts"
 msgstr ""
 
 msgid "Set status for selected participants:"
+msgstr ""
+
+msgid "Set submitters"
+msgstr ""
+
+msgid "Set tags"
 msgstr ""
 
 msgid "Set timestamp of creation"

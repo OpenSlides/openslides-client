@@ -20,13 +20,9 @@
     </div>
     <div class="current-filters" *ngIf="hasActiveFilter">
         <div>
-            <span>{{ 'Active filters' | translate }}</span>
-            :&nbsp;
-        </div>
-        <div>
             <button mat-button (click)="resetFilters()">
                 <mat-icon inline>cancel</mat-icon>
-                <span>{{ 'Clear all' | translate }}</span>
+                <span>{{ 'Clear all filters' | translate }}</span>
             </button>
         </div>
     </div>

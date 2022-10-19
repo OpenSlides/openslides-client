@@ -26,7 +26,7 @@
     (click)="action.emit(multiselectService.bulkSetFavorite(selectedMotions))"
 >
     <mat-icon>star</mat-icon>
-    <span>{{ 'Set favorite' | translate }}</span>
+    <span>{{ 'Set favorite' | translate }} ...</span>
 </button>
 <button
     mat-menu-item
@@ -34,15 +34,7 @@
     (click)="action.emit(multiselectService.setStateOfMultiple(selectedMotions))"
 >
     <mat-icon>label</mat-icon>
-    <span>{{ 'Set status' | translate }}</span>
-</button>
-<button
-    mat-menu-item
-    [disabled]="!selectedMotions.length"
-    (click)="action.emit(multiselectService.setWorkflow(selectedMotions))"
->
-    <mat-icon>build</mat-icon>
-    <span>{{ 'Set workflow' | translate }}</span>
+    <span>{{ 'Set status' | translate }} ...</span>
 </button>
 <button
     *ngIf="recommendationEnabled"
@@ -52,7 +44,7 @@
 >
     <mat-icon>report</mat-icon>
     <!-- TODO: better icon -->
-    <span>{{ 'Set recommendation' | translate }}</span>
+    <span>{{ 'Set recommendation' | translate }} ...</span>
 </button>
 <button
     mat-menu-item
@@ -61,8 +53,7 @@
     (click)="action.emit(multiselectService.setCategory(selectedMotions))"
 >
     <mat-icon>category</mat-icon>
-    <!-- TODO: icon -->
-    <span>{{ 'Set category' | translate }}</span>
+    <span>{{ 'Set category' | translate }} ...</span>
 </button>
 <button
     mat-menu-item
@@ -71,18 +62,7 @@
     (click)="action.emit(multiselectService.setMotionBlock(selectedMotions))"
 >
     <mat-icon>widgets</mat-icon>
-    <!-- TODO: icon -->
-    <span>{{ 'Set motion block' | translate }}</span>
-</button>
-
-<button
-    mat-menu-item
-    [disabled]="!selectedMotions.length"
-    (click)="action.emit(multiselectService.changeSubmitters(selectedMotions))"
->
-    <mat-icon>person_add</mat-icon>
-    <!-- TODO: icon -->
-    <span>{{ 'Add/remove submitters' | translate }}</span>
+    <span>{{ 'Set motion block' | translate }} ...</span>
 </button>
 <button
     mat-menu-item
@@ -90,9 +70,24 @@
     [disabled]="!selectedMotions.length"
     (click)="action.emit(multiselectService.changeTags(selectedMotions))"
 >
-    <mat-icon>bookmarks</mat-icon>
-    <!-- TODO: icon -->
-    <span>{{ 'Add/remove tags' | translate }}</span>
+    <mat-icon>local_offer</mat-icon>
+    <span>{{ 'Set tags' | translate }} ...</span>
+</button>
+<button
+    mat-menu-item
+    [disabled]="!selectedMotions.length"
+    (click)="action.emit(multiselectService.setWorkflow(selectedMotions))"
+>
+    <mat-icon>build</mat-icon>
+    <span>{{ 'Set workflow' | translate }} ...</span>
+</button>
+<button
+    mat-menu-item
+    [disabled]="!selectedMotions.length"
+    (click)="action.emit(multiselectService.changeSubmitters(selectedMotions))"
+>
+    <mat-icon>person_add</mat-icon>
+    <span>{{ 'Set submitters' | translate }} ...</span>
 </button>
 
 <ng-content></ng-content>
@@ -100,7 +95,7 @@
 <ng-container *osPerms="permission.motionCanManage">
     <button mat-menu-item [disabled]="!selectedMotions.length" (click)="openExportDialog()">
         <mat-icon>archive</mat-icon>
-        <span>{{ 'Export selected motions' | translate }}</span>
+        <span>{{ 'Export selected motions' | translate }} ...</span>
     </button>
     <mat-divider></mat-divider>
     <button

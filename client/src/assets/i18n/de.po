@@ -166,12 +166,6 @@ msgstr ""
 msgid "Add/remove groups ..."
 msgstr "Gruppen hinzufügen/entfernen ..."
 
-msgid "Add/remove submitters"
-msgstr "Antragsteller hinzufügen/entfernen"
-
-msgid "Add/remove tags"
-msgstr "Schlagwörter hinzufügen/entfernen"
-
 msgid ""
 "Additional columns after the required ones may be present and will not "
 "affect the import."
@@ -869,11 +863,8 @@ msgstr "Schriftfarbe Bauchbinde"
 msgid "Clear"
 msgstr "Bereinigen"
 
-msgid "Clear all"
-msgstr "Alle löschen"
-
 msgid "Clear all filters"
-msgstr "Alle Filter löschen"
+msgstr "Alle Filter entfernen"
 
 msgid "Clear all list of speakers"
 msgstr "Alle Redelisten bereinigen"
@@ -882,10 +873,13 @@ msgid "Clear list"
 msgstr "Liste leeren"
 
 msgid "Clear motion block"
-msgstr "Antragsblock löschen"
+msgstr "Antragsblock entfernen"
+
+msgid "Clear recommendation"
+msgstr "Empfehlung entfernen"
 
 msgid "Clear tags"
-msgstr "Schlagwörter löschen"
+msgstr "Schlagwörter entfernen"
 
 msgid "Click here to vote!"
 msgstr "Zur Stimmabgabe hier klicken!"
@@ -1187,9 +1181,6 @@ msgstr "Beschluss-Druckvorlage löschen"
 
 msgid "Delete projector"
 msgstr "Projektor löschen"
-
-msgid "Delete recommendation"
-msgstr "Empfehlung löschen"
 
 msgid "Deleted user"
 msgstr "Gelöschter Nutzer"
@@ -3139,6 +3130,12 @@ msgstr "Status für ausgewählte Accounts setzen:"
 
 msgid "Set status for selected participants:"
 msgstr "Status für ausgewählte Teilnehmende setzen:"
+
+msgid "Set submitters"
+msgstr "Antragsteller/in setzen"
+
+msgid "Set tags"
+msgstr "Schlagwörter setzen"
 
 msgid "Set timestamp of creation"
 msgstr "Erstellungszeitstempel setzen"
