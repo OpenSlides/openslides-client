@@ -13,8 +13,6 @@ import { OperatorService } from './operator.service';
     providedIn: `root`
 })
 export class AuthCheckService {
-    private _lastSuccessfulUrl: string | null = null;
-
     /**
      * The last url to be approved by the permission guard, will be automatically emptied after the first read.
      */
@@ -27,6 +25,8 @@ export class AuthCheckService {
     public set lastSuccessfulUrl(successfulUrl: string | null) {
         this._lastSuccessfulUrl = successfulUrl;
     }
+
+    private _lastSuccessfulUrl: string | null = null;
 
     public constructor(
         private operator: OperatorService,
@@ -83,6 +83,7 @@ export class AuthCheckService {
         let result = true;
         if (!!basePerm && !!this.activeMeeting.meetingId) {
             const toCheck = Array.isArray(basePerm) ? basePerm : [basePerm];
+            await this.operator.groupPermissionsLoaded;
             result = this.operator.hasPerms(...toCheck);
         }
         if (!omlPerm) {
