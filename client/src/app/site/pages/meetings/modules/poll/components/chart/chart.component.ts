@@ -157,7 +157,7 @@ export class ChartComponent {
                 // removes undefined and null values
                 return chartDate.data.filter(data => !!data);
             });
-            if (!this.circleColors) {
+            if (!this.circleColors || inputChartData.length !== this.circleColors[0].backgroundColor.length) {
                 this.createCircleColors(inputChartData);
             }
             this.chartData.datasets = [
