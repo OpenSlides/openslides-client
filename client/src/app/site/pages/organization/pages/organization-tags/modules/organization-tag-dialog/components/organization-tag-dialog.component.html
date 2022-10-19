@@ -9,12 +9,9 @@
             <mat-label>{{ 'Color' | translate }}</mat-label>
             <input
                 matInput
+                type="color"
                 formControlName="color"
                 [required]="isCreateView"
-                [osOnlyNumber]="true"
-                [osOnlyNumberAllowHex]="true"
-                [osOnlyNumberAllowLeadingZero]="true"
-                maxlength="6"
             />
             <span matPrefix>#&nbsp;</span>
             <button

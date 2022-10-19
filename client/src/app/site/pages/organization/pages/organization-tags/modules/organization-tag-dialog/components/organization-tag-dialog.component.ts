@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { HtmlColor } from 'src/app/domain/definitions/key-types';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { OrganizationTagDialogData } from '../services/organization-tag-dialog.service';
@@ -48,7 +47,7 @@ export class OrganizationTagDialogComponent extends BaseUiComponent implements O
 
     public onSaveClicked(): void {
         const { name, color }: { name: string; color: string } = this.organizationTagForm!.value;
-        this.dialogRef.close({ name, color: color.startsWith(`#`) ? color : `#${color}` });
+        this.dialogRef.close({ name, color });
     }
 
     public generateColor(): void {
@@ -63,18 +62,18 @@ export class OrganizationTagDialogComponent extends BaseUiComponent implements O
     }
 
     private getRandomColor(): string {
-        return this.getColor(this.data.getRandomColor());
+        return this.data.getRandomColor();
     }
 
     private createForm(): void {
-        this._lastValidColor = this.getColor(this.data.defaultColor);
+        this._lastValidColor = this.data.defaultColor;
         this.organizationTagForm = this.fb.group({
             name: [``, Validators.required],
-            color: [this._lastValidColor, Validators.pattern(/^[0-9a-fA-F]{6}$/)]
+            color: [this._lastValidColor, Validators.pattern(/^#[0-9a-fA-F]{6}$/)]
         });
         this.subscriptions.push(
             this.organizationTagForm.get(`color`)!.valueChanges.subscribe((currentColor: string) => {
-                if (currentColor.length === 6) {
+                if (/^#[0-9a-fA-F]{6}$/.test(currentColor)) {
                     this._lastValidColor = currentColor;
                 }
             })
@@ -85,12 +84,8 @@ export class OrganizationTagDialogComponent extends BaseUiComponent implements O
         const color = this.data.organizationTag!.color;
         const update = {
             name: this.data.organizationTag!.name,
-            color: this.getColor(color)
+            color
         };
         this.organizationTagForm!.patchValue(update);
-    }
-
-    private getColor(htmlCode: HtmlColor): string {
-        return htmlCode.startsWith(`#`) ? htmlCode.slice(1) : htmlCode;
     }
 }
