@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, delay, Observable, Subject } from 'rxjs';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -132,6 +132,14 @@ export class OperatorService {
         return this._readyDeferred;
     }
 
+    /**
+     * Fires once the function hasPerms will be able to load the current
+     * meeting permissions from the backend.
+     */
+    public get groupPermissionsLoaded(): Deferred<void> {
+        return this._groupsLoadedDeferred;
+    }
+
     public get isReadyObservable(): Observable<boolean> {
         return this._operatorReadySubject.asObservable();
     }
@@ -173,6 +181,9 @@ export class OperatorService {
     private _ready = false;
 
     private _readyDeferred: Deferred<void> = new Deferred();
+
+    private _groupsLoaded = false;
+    private _groupsLoadedDeferred: Deferred<void> = new Deferred();
 
     private _currentOperatorDataSubscription: ModelSubscription | null = null;
     private _hasOperatorDataSubscriptionInitiated = false;
@@ -285,6 +296,24 @@ export class OperatorService {
         this.operatorUpdated.subscribe(() => {
             this.checkReadyState();
         });
+        this.DS.clearObservable.subscribe(cleared => {
+            if (cleared.includes(Group.COLLECTION)) {
+                this._groupsLoaded = false;
+                if (this._groupsLoadedDeferred.wasResolved) {
+                    console.log(`operator: group permissions not loaded`);
+                    this._groupsLoadedDeferred = new Deferred();
+                }
+            }
+        });
+        this.DS.getChangeObservable(Group)
+            .pipe(delay(100))
+            .subscribe(changes => {
+                if (!this._groupsLoaded) {
+                    console.log(`operator: group permissions loaded`);
+                    this._groupsLoaded = true;
+                    this._groupsLoadedDeferred.resolve();
+                }
+            });
     }
 
     public isInMeeting(meetingId: Id): boolean {
@@ -448,8 +477,7 @@ export class OperatorService {
                 permissionSet.add(childPermission);
             }
         }
-        const permissions = Array.from(permissionSet.values());
-        return permissions;
+        return Array.from(permissionSet.values());
     }
 
     /**
