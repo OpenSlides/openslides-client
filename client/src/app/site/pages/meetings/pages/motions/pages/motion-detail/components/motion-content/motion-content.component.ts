@@ -357,19 +357,24 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
                     this.titleFieldUpdateSubscription = this.repo
                         .getViewModelObservable(parentId)
                         .pipe(
-                            map(parent => { return { number: parent?.number, text: parent?.text}}),
+                            map(parent => {
+                                return { number: parent?.number, text: parent?.text };
+                            }),
                             distinctUntilChanged()
                         )
                         .subscribe(data => {
                             if (!this.contentForm.get(`title`).value) {
                                 const title = this.translate.instant(`Amendment to`) + ` ${data.number}`;
                                 this.contentForm.patchValue({
-                                   title: title
+                                    title: title
                                 });
                                 this._motionContent[`title`] = title;
                                 this.propagateChanges();
                             }
-                            if (!this.contentForm.get(`text`).value) {
+                            if (
+                                !this.contentForm.get(`text`).value &&
+                                this.meetingSettingsService.instant(`motions_amendments_text_mode`) === `fulltext`
+                            ) {
                                 this.contentForm.patchValue({
                                     text: data.text
                                 });
