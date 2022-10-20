@@ -35,7 +35,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         return this._filterDefinitionsSubject.pipe(
             distinctUntilChanged(),
             map(definitions => {
-                this.log(`Filter definitions changed: `, definitions);
                 return definitions.filter(definition => !this.shouldHideOption(definition));
             })
         );
@@ -117,6 +116,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * The currently used filters.
      */
     private set filterDefinitions(filters: OsFilter<V>[]) {
+        filters.forEach(def => {
+            if (!Number.isInteger(def.count)) {
+                def.count = this.getCountForFilterOptions(def);
+            }
+        });
         this._filterDefinitionsSubject.next(filters);
     }
 
@@ -157,11 +161,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             this.storeActiveFilters();
         }
 
-        this.log(`INIT FILTERS: Set new definitions: `, this.filterDefinitions);
-        // for (const nextDefinition of nextDefinitions) {
-        //     nextDefinition.count = this.getCountForFilterOptions(nextDefinition, storedFilter);
-        // }
-
         if (this.inputDataSubscription) {
             this.inputDataSubscription.unsubscribe();
             this.inputDataSubscription = null;
@@ -199,7 +198,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         this.filterDefinitions = nextDefinitions ?? []; // Prevent being null or undefined
         this.storeActiveFilters();
-        this.log(`Updated filter definitions: `, this.filterDefinitions);
     }
 
     /**
@@ -412,7 +410,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     }
 
     private async loadFilters(): Promise<OsFilter<V>[] | null> {
-        console.log(`Loading filters...`)
         return this.parseFilters(await this.activeFiltersStore.load<V>(this.storageKey));
     }
 
@@ -435,7 +432,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 }
             });
         });
-        this.log(`Parsed filters: New filter definitions: `, newFilterDefs)
         return newFilterDefs;
     }
 
@@ -459,7 +455,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             }
         }
         this._filterStack = stack;
-        this.log(`New filter stack: `, stack)
     }
 
     /**
@@ -481,34 +476,37 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         }
     }
 
-    private getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters: OsFilter<V>[]): number {
+    private getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters?: OsFilter<V>[]): number {
         if (!nextFilterDefinition) {
-            this.log(`ALERT: NO NEXT FILTER OPTIONS!`)
             return 0;
         }
         let count = 0;
-        const matchingExistingFilter = storedFilters.find(oldDef => oldDef.property === nextFilterDefinition.property);
+        let matchingExistingFilter: OsFilter<V>;
+        if (storedFilters) {
+            matchingExistingFilter = storedFilters.find(oldDef => oldDef.property === nextFilterDefinition.property);
+        }
         for (const option of nextFilterDefinition.options) {
             if (typeof option !== `object`) {
                 continue;
             }
-            if (!matchingExistingFilter || !matchingExistingFilter.options) {
-                continue;
-            }
-            const existingOption = matchingExistingFilter.options.find(toCompare => {
-                if (typeof toCompare === `string` || !toCompare) {
-                    return false;
+            if (storedFilters) {
+                if (!matchingExistingFilter || !matchingExistingFilter.options) {
+                    continue;
                 }
-                return JSON.stringify(toCompare.condition) === JSON.stringify(option.condition);
-            }) as OsFilterOption;
-            if (existingOption) {
-                option.isActive = existingOption.isActive;
+                const existingOption = matchingExistingFilter.options.find(toCompare => {
+                    if (typeof toCompare === `string` || !toCompare) {
+                        return false;
+                    }
+                    return JSON.stringify(toCompare.condition) === JSON.stringify(option.condition);
+                }) as OsFilterOption;
+                if (existingOption) {
+                    option.isActive = existingOption.isActive;
+                }
             }
             if (option.isActive) {
                 ++count;
             }
         }
-        this.log(`NEW COUNT FOR FILTER OPTIONS: `, count, nextFilterDefinition, storedFilters)
         return count;
     }
 
@@ -578,19 +576,13 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         let filteredData: V[] = [];
         if (this._inputData) {
             if (!this.filterDefinitions || !this.filterDefinitions.length) {
-                this.log(`Failed to enter else block: `, this.filterDefinitions);
                 filteredData = this._inputData;
             } else {
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
                 filteredData = this._inputData.filter(item => {
-                    this.log(`Checking item: `, item.getTitle())
-                    const result = activeFilters.every(
-                        filter => {
-                            this.log(`     >`, (!!this.isPassingFilter(item, filter)), (!this.shouldHideOption(filter, false)));
-                            return this.isPassingFilter(item, filter) && !this.shouldHideOption(filter, false)
-                        }
-                    )
-                    this.log(`     ==>`, result)
+                    const result = activeFilters.every(filter => {
+                        return this.isPassingFilter(item, filter) && !this.shouldHideOption(filter, false);
+                    });
                     return result;
                 });
             }
@@ -598,15 +590,5 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         this._outputSubject.next(filteredData);
         this.activeFiltersToStack();
-        this.log(`Update filtered data: `, filteredData);
-    }
-
-    private log(text: string, ...data: any[]): void {
-        console.log(`LOG: `, text, ...(data.map(date => {
-            if (Array.isArray(date) && date.length === 1) {
-                return JSON.parse(JSON.stringify(date[0]));
-            }
-            return JSON.parse(JSON.stringify(date))
-        } )));
     }
 }
