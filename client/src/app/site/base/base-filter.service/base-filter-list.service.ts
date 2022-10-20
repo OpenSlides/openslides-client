@@ -580,9 +580,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             } else {
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
                 filteredData = this._inputData.filter(item =>
-                    activeFilters.every(filter => {
-                        return this.isPassingFilter(item, filter) && !this.shouldHideOption(filter, false);
-                    })
+                    activeFilters.every(filter => this.isPassingFilter(item, filter) && !this.shouldHideOption(filter, false))
                 );
             }
         }
