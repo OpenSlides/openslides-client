@@ -44,6 +44,6 @@ export class PermissionGuard implements CanLoad {
      * @returns the current navigation's url
      */
     public getCurrentNavigationUrl(): string {
-        return this.router.getCurrentNavigation().extractedUrl.toString();
+        return this.router.getCurrentNavigation()?.extractedUrl.toString() || this.router.url;
     }
 }

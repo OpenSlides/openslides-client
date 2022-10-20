@@ -1,12 +1,24 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router, RoutesRecognized } from '@angular/router';
-import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subject, tap } from 'rxjs';
+import { Injectable, Injector, ProviderToken } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RoutesRecognized, UrlTree } from '@angular/router';
+import {
+    BehaviorSubject,
+    distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    isObservable,
+    map,
+    Observable,
+    Subject,
+    tap
+} from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
     ActiveMeetingIdService,
     MeetingIdChangedEvent
 } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { AuthService } from 'src/app/site/services/auth.service';
+
+import { OperatorService } from './operator.service';
 
 enum UrlTarget {
     LOGIN = `login`,
@@ -42,7 +54,10 @@ export class OpenSlidesRouterService {
     public constructor(
         _auth: AuthService,
         private router: Router,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private route: ActivatedRoute,
+        private injector: Injector,
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private operator: OperatorService
     ) {
         _auth.logoutObservable.subscribe(() => {
             this.navigateToLogin();
@@ -56,6 +71,12 @@ export class OpenSlidesRouterService {
             )
             .subscribe(event => this._currentParamMap.next(event));
         activeMeetingIdService.meetingIdChanged.subscribe(event => console.log(`has meeting changed?`, event));
+
+        this.operator.permissionsObservable.subscribe(permissions => {
+            if (permissions) {
+                this.checkCurrentRouteGuards();
+            }
+        });
     }
 
     public navigateToLogin(): void {
@@ -84,6 +105,54 @@ export class OpenSlidesRouterService {
         const segments = info.split(`/`);
         const meetingIdString = segments.length > 1 ? segments[1] : segments[0];
         return Number(meetingIdString);
+    }
+
+    /**
+     * Checks if user can still access the current page
+     */
+    public async checkCurrentRouteGuards(): Promise<void> {
+        if (this.route.root.firstChild) {
+            await this.checkRouteGuards(this.route.root.firstChild);
+        }
+    }
+
+    private async checkRouteGuards(route: ActivatedRoute): Promise<boolean> {
+        const routeSnapshot = route.snapshot;
+        const config = routeSnapshot.routeConfig;
+        let conditions: Promise<boolean | UrlTree>[] = [
+            ...(config?.canActivate?.map(guard => this.validateGuard(guard, route, `canActivate`)) || []),
+            ...(config?.canActivateChild?.map(guard => this.validateGuard(guard, route, `canActivateChild`)) || []),
+            ...(config?.canLoad?.map(guard => this.validateGuard(guard, route, `canLoad`)) || [])
+        ];
+
+        let conditionResults = await Promise.all(conditions);
+        if (conditionResults.some(r => !r)) {
+            return false;
+        }
+
+        if (route.firstChild) {
+            return await this.checkRouteGuards(route.firstChild);
+        }
+
+        return true;
+    }
+
+    private async validateGuard(
+        guardToken: ProviderToken<any>,
+        route: ActivatedRoute,
+        type: 'canActivateChild' | 'canActivate' | 'canLoad'
+    ): Promise<boolean | UrlTree> {
+        const guard = this.injector.get(guardToken);
+        const routerStateSnapshot = Object.assign({}, route.snapshot, { url: this.router.url });
+        const result = guard[type](route.snapshot, routerStateSnapshot);
+
+        if (isObservable(result)) {
+            return await firstValueFrom(result as Observable<boolean | UrlTree>);
+        } else if (typeof result?.then === `function`) {
+            return await result;
+        }
+
+        return true;
     }
 
     private buildParamMap(rootSnapshot: ActivatedRouteSnapshot): { [paramName: string]: any } {
