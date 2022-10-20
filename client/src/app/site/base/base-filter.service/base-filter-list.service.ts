@@ -579,12 +579,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 filteredData = this._inputData;
             } else {
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
-                filteredData = this._inputData.filter(item => {
-                    const result = activeFilters.every(filter => {
+                filteredData = this._inputData.filter(item =>
+                    activeFilters.every(filter => {
                         return this.isPassingFilter(item, filter) && !this.shouldHideOption(filter, false);
-                    });
-                    return result;
-                });
+                    })
+                );
             }
         }
 
