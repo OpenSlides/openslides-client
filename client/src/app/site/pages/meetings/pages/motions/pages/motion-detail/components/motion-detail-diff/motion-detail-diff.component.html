@@ -202,7 +202,7 @@
                     {{ state.name | translate }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
-                <button mat-menu-item (click)="setAmendmentState(change, null)">
+                <button mat-menu-item (click)="resetAmendmentState(change)">
                     <mat-icon>replay</mat-icon>
                     {{ 'Reset state' | translate }}
                 </button>
