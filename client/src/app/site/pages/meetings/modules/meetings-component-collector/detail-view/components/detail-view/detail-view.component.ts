@@ -90,11 +90,11 @@ export class DetailViewComponent implements OnInit {
                             this._id = id;
                             this._shouldShowContent = true;
                             this.idFound.next(id);
-                            this.cd.markForCheck();
                         }
                     } else {
                         this._shouldShowContent = false;
                     }
+                    this.cd.markForCheck();
                 })
             );
         });
