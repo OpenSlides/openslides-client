@@ -1,0 +1,9 @@
+.spinner-container {
+    min-height: calc(100vh - 100px);
+
+    .spinner-inner-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

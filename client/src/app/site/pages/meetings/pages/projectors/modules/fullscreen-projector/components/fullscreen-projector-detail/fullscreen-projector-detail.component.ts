@@ -32,12 +32,12 @@ export class FullscreenProjectorDetailComponent implements OnInit {
         this.osRouter.currentParamMap.subscribe(params => {
             if (params[`id`]) {
                 this.sequentialNumberMappingService
-                    .getIdObservableBySequentialNumber({
+                    .getIdBySequentialNumber({
                         collection: ViewProjector.COLLECTION,
                         meetingId: params[`meetingId`],
                         sequentialNumber: +params[`id`]
                     })
-                    .subscribe(id => {
+                    .then(id => {
                         if (id) {
                             this._projectorId = id;
                             const body = this.domService.buildBodyPane(this.viewContainer);

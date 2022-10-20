@@ -41,6 +41,7 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
+    receivedData: Promise<void>;
     close: () => void;
 }
 
@@ -91,6 +92,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
+    private _resolveDataReceived: (() => void)[] = [];
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -158,11 +160,21 @@ export class AutoupdateService {
     private async request(request: ModelRequest, description: string, streamId?: Id): Promise<ModelSubscription> {
         const id = await this.communication.open(streamId, description, request, this._currentQueryParams);
 
+        let rejectReceivedData: any;
+        const receivedData = new Promise<void>((resolve, reject) => {
+            this._resolveDataReceived[id] = resolve;
+            rejectReceivedData = reject;
+        });
+
         return {
             id,
+            receivedData,
             close: () => {
                 this.communication.close(id);
                 delete this._activeRequestObjects[id];
+                if (this._resolveDataReceived[id]) {
+                    rejectReceivedData();
+                }
             }
         };
     }
@@ -187,20 +199,28 @@ export class AutoupdateService {
                     autoupdateData[key];
             }
         }
-        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections);
+        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, id);
     }
 
     private async prepareCollectionUpdates(
         modelData: ModelData,
-        fullListUpdateCollections: { [collection: string]: Id[] }
+        fullListUpdateCollections: { [collection: string]: Id[] },
+        requestId: number
     ): Promise<void> {
         const unlock = await this._mutex.lock();
 
-        this.viewmodelStoreUpdate.triggerUpdate({
-            patch: modelData,
-            changedModels: fullListUpdateCollections,
-            deletedModels: {}
-        });
+        this.viewmodelStoreUpdate
+            .triggerUpdate({
+                patch: modelData,
+                changedModels: fullListUpdateCollections,
+                deletedModels: {}
+            })
+            .then(() => {
+                if (this._resolveDataReceived[requestId]) {
+                    this._resolveDataReceived[requestId]();
+                    delete this._resolveDataReceived[requestId];
+                }
+            });
 
         unlock();
     }
