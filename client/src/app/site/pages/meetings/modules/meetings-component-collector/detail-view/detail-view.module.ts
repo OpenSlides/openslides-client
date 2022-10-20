@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -20,6 +21,13 @@ const DECLARATIONS = [
 @NgModule({
     exports: DECLARATIONS,
     declarations: DECLARATIONS,
-    imports: [CommonModule, RouterModule, HeadBarModule, OpenSlidesTranslationModule.forChild(), MatCardModule]
+    imports: [
+        CommonModule,
+        RouterModule,
+        HeadBarModule,
+        OpenSlidesTranslationModule.forChild(),
+        MatCardModule,
+        MatProgressSpinnerModule
+    ]
 })
 export class DetailViewModule {}
