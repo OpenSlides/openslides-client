@@ -228,6 +228,11 @@ export class AutoupdateStreamPool {
             this.removeStream(stream);
         } else if (stopReason === `error`) {
             await this.handleError(stream, error);
+        } else if (stopReason === `resolved`) {
+            let params = new URLSearchParams(stream.queryParams);
+            if (+params.get(`position`) === 0 && !params.get(`single`)) {
+                await this.handleError(stream, null);
+            }
         }
     }
 

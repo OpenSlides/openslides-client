@@ -318,7 +318,10 @@ export abstract class PollService {
     }
 
     public generateChartData(poll: PollData): ChartData {
-        const fields = this.getPollDataFields(poll);
+        let fields = this.getPollDataFields(poll);
+        if (poll.onehundred_percent_base === PollPercentBase.YN) {
+            fields = fields.filter(key => key === YES_KEY || key === NO_KEY);
+        }
 
         const data: ChartData = fields
             .map(
