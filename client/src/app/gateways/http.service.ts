@@ -31,7 +31,12 @@ export class HttpService {
         return this._actionWorkerWatch;
     }
 
-    public constructor(private http: HttpClient, private errorMapper: ErrorMapService, private injector: Injector, private snackBar: MatSnackBar) {}
+    public constructor(
+        private http: HttpClient,
+        private errorMapper: ErrorMapService,
+        private injector: Injector,
+        private snackBar: MatSnackBar
+    ) {}
 
     /**
      * Send the a http request the the given path.

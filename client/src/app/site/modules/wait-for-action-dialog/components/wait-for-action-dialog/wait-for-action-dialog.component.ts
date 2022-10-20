@@ -16,11 +16,17 @@ export class WaitForActionDialogComponent extends BaseUiComponent {
     }
 
     public get currentWorkerId(): number {
-        return this._dataArraySubject.value[0]?.workerId;
+        if (this.sameTypeArrayLength) {
+            return this._dataArraySubject.value[0]?.workerId;
+        }
+        return undefined;
     }
 
     public get currentWorkerName(): string {
-        return this._dataArraySubject.value[0]?.workerName;
+        if (this.sameTypeArrayLength) {
+            return this._dataArraySubject.value[0]?.workerName;
+        }
+        return ``;
     }
 
     public get sameTypeArrayLength(): number {
