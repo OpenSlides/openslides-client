@@ -369,6 +369,13 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             .catch(this.raiseError);
     }
 
+    public resetAmendmentState(change: ViewUnifiedChange): void {
+        this.motionRepo
+            .resetState((change as ViewMotionAmendedParagraph).amendment)
+            .resolve()
+            .catch(this.raiseError);
+    }
+
     /**
      * Scrolls to the native element specified by [scrollToChange]
      */
