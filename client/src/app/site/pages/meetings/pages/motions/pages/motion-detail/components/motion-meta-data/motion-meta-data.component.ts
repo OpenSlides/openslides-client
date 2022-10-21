@@ -69,7 +69,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     public motionObserver: Observable<ViewMotion[]> = of([]);
 
-    public motionTransformFn = (value: ViewMotion) => `[motion:` + value.number + `]`;
+    public motionTransformFn = (value: ViewMotion) => `[motion:` + value.id + `]`;
 
     public committeeObservable = this.motionForwardingService.forwardingCommitteesObservable;
 
