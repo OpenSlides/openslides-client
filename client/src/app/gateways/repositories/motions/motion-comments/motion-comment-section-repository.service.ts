@@ -51,7 +51,8 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
             meeting_id: this.activeMeetingId,
             name: partialModel.name,
             read_group_ids: partialModel.read_group_ids,
-            write_group_ids: partialModel.write_group_ids
+            write_group_ids: partialModel.write_group_ids,
+            submitter_can_write: partialModel.submitter_can_write
         };
         return this.sendActionToBackend(MotionCommentSectionAction.CREATE, payload);
     }
@@ -61,7 +62,8 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
             id: viewModel.id,
             name: update.name,
             read_group_ids: update.read_group_ids,
-            write_group_ids: update.write_group_ids
+            write_group_ids: update.write_group_ids,
+            submitter_can_write: update.submitter_can_write
         };
         return this.sendActionToBackend(MotionCommentSectionAction.UPDATE, payload);
     }
