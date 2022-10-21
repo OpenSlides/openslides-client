@@ -138,13 +138,11 @@ export class CommentSectionListComponent extends BaseComponent implements OnInit
     }
 
     private updateSection(): Promise<void> {
-        console.log(`LOG: createNewSection: `, this.commentFieldForm.value)
         return this.repo.update(this.commentFieldForm.value as Partial<MotionCommentSection>, this.currentComment);
     }
 
     private createNewSection(): Promise<Identifiable> {
         const comment = new MotionCommentSection(this.commentFieldForm.value);
-        console.log(`LOG: createNewSection: `, this.commentFieldForm.value)
         return this.repo.create(comment);
     }
 

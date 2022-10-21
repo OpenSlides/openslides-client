@@ -60,7 +60,8 @@ export class MotionCommentsComponent extends BaseUiComponent implements OnInit {
     private canReadSection(section: ViewMotionCommentSection): boolean {
         return (
             this.operator.isInGroupIds(...(section.read_group_ids || []), ...(section.write_group_ids || [])) ||
-            (section.submitter_can_write && this.motion.submitter_ids?.includes(this.operator.operatorId))
+            (section.submitter_can_write &&
+                this.motion.submittersAsUsers?.map(submitter => submitter.id).includes(this.operator.operatorId))
         );
     }
 
