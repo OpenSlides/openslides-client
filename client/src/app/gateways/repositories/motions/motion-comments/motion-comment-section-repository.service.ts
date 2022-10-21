@@ -33,6 +33,7 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
             `weight`,
             `read_group_ids`,
             `write_group_ids`,
+            `submitter_can_write`,
             `comment_ids`
         ];
         return {

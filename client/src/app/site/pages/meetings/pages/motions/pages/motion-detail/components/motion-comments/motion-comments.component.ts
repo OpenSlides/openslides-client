@@ -58,7 +58,10 @@ export class MotionCommentsComponent extends BaseUiComponent implements OnInit {
     }
 
     private canReadSection(section: ViewMotionCommentSection): boolean {
-        return this.operator.isInGroupIds(...(section.read_group_ids || []));
+        return (
+            this.operator.isInGroupIds(...(section.read_group_ids || []), ...(section.write_group_ids || [])) ||
+            (section.submitter_can_write && this.motion.submitter_ids?.includes(this.operator.operatorId))
+        );
     }
 
     /**
@@ -68,6 +71,9 @@ export class MotionCommentsComponent extends BaseUiComponent implements OnInit {
      */
     public canEditSection(section: ViewMotionCommentSection): boolean {
         const groupIds = section.write_group_ids || [];
-        return this.operator.isInGroupIds(...groupIds);
+        return (
+            this.operator.isInGroupIds(...groupIds) ||
+            (section.submitter_can_write && this.motion.submitter_ids?.includes(this.operator.operatorId))
+        );
     }
 }
