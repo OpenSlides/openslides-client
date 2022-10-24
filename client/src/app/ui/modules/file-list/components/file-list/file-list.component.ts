@@ -262,7 +262,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     public getMediaUrl(file: ViewMediafile): (number | string)[] {
-        return [`/system`, `media`, `get`, file.id]; //`/download/${file.id}`;
+        return [`/system`, `media`, `get`, file.id];
     }
 
     /**
