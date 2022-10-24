@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
@@ -39,10 +39,10 @@ export class VotingBannerService {
         private sendVotesService: VoteControllerService,
         private operator: OperatorService
     ) {
-        pollRepo
-            .getViewModelListObservable()
-            .pipe(distinctUntilChanged(), debounceTime(500))
-            .subscribe(polls => this.checkForVotablePolls(polls));
+        combineLatest([
+            this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
+            pollRepo.getViewModelListObservable().pipe(distinctUntilChanged(), debounceTime(500))
+        ]).subscribe(([meetingId, polls]) => this.checkForVotablePolls(polls));
     }
 
     /**
