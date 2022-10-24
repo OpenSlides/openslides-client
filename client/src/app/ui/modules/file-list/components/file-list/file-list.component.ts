@@ -261,8 +261,8 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
         this.deleted.emit({ file });
     }
 
-    public getMediaUrl(file: ViewMediafile): string {
-        return `/download/${file.id}`;
+    public getMediaUrl(file: ViewMediafile): (number | string)[] {
+        return [`/system`, `media`, `get`, file.id]; //`/download/${file.id}`;
     }
 
     /**
