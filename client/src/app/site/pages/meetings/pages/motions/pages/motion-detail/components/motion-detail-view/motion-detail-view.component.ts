@@ -117,6 +117,8 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private _forwardingAvailable = false;
 
+    private _amendmentsInMainList = false;
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -142,6 +144,10 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
             this._forwardingAvailable = forwardingAvailable;
         });
+
+        this.meetingSettingsService
+            .get(`motions_amendments_in_main_list`)
+            .subscribe(enabled => (this._amendmentsInMainList = enabled));
     }
 
     /**
@@ -450,7 +456,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.registerSubjects();
 
         // use the filter and the search service to get the current sorting
-        if (this.motion && this.motion.lead_motion_id) {
+        if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
             // only use the amendments for this motion
             this.amendmentFilterService.initFilters(
                 this.amendmentRepo.getViewModelListObservableFor({ id: this.motion.lead_motion_id })
