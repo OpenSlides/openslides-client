@@ -23,12 +23,12 @@ export const titleVerbose: { [key: number]: string } = {
 
 export const multiActionVerbose: { [key: number]: { wait: string; stop: string } } = {
     [waitForActionReason.notWritten]: {
-        wait: _(`Continue for all unwritten actions`),
-        stop: _(`Stop for all unwritten actions`)
+        wait: _(`Await all unwritten actions`),
+        stop: _(`Stop all unwritten actions`)
     },
     [waitForActionReason.inactive]: {
-        wait: _(`Continue for all inactive actions`),
-        stop: _(`Stop for all inactive actions`)
+        wait: _(`Await all inactive actions`),
+        stop: _(`Stop all inactive actions`)
     },
-    [waitForActionReason.slow]: { wait: _(`Continue for all slow actions`), stop: _(`Stop for all slow actions`) }
+    [waitForActionReason.slow]: { wait: _(`Await all slow actions`), stop: _(`Stop all slow actions`) }
 };
