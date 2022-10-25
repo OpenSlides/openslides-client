@@ -112,6 +112,7 @@
                 mat-menu-item
                 (click)="setRecommendation(recommendation.id)"
             >
+                <mat-icon *ngIf="motion.recommendation_id === recommendation.id">check</mat-icon>
                 {{ recommendation.recommendation_label | translate }}
                 <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
             </button>
