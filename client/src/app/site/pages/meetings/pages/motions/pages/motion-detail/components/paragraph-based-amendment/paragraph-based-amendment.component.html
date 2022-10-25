@@ -9,7 +9,7 @@
             <div class="alert alert-info alert-inconsistency" *ngIf="amendmentErrorMessage">
                 <i [innerHTML]="amendmentErrorMessage"></i>
             </div>
-            <ng-container *ngIf="motion.lead_motion && changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit">
+            <ng-container *ngIf="motion.lead_motion && !isFinalEdit">
                 <div
                     *ngFor="let paragraph of getAmendmentParagraphs(); trackBy: trackByIndex"
                     class="motion-text motion-text-diff amendment-view"
@@ -24,6 +24,7 @@
 
                     <os-motion-detail-original-change-recommendations
                         *ngIf="
+                            changeRecoMode !== ChangeRecoMode.Diff && 
                             lineNumberingMode === LineNumberingMode.Outside &&
                             (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed)
                         "
@@ -32,19 +33,33 @@
                         (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                         (createChangeRecommendation)="createChangeRecommendation.emit($event)"
                     ></os-motion-detail-original-change-recommendations>
+
                     <div
                         *ngIf="
-                            lineNumberingMode !== LineNumberingMode.Outside ||
-                            (changeRecoMode !== ChangeRecoMode.Original && changeRecoMode !== ChangeRecoMode.Changed)
+                            changeRecoMode !== ChangeRecoMode.Diff && 
+                            (lineNumberingMode !== LineNumberingMode.Outside ||
+                            (changeRecoMode !== ChangeRecoMode.Original && changeRecoMode !== ChangeRecoMode.Changed))
                         "
                         [innerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust: 'html'"
                     ></div>
+
+                    <os-motion-detail-diff
+                        *ngIf="changeRecoMode === ChangeRecoMode.Diff"
+                        [motion]="motion"
+                        [lineRange]="{ from: paragraph.paragraphLineFrom, to: paragraph.paragraphLineTo }"
+                        [changes]="changesForDiffMode"
+                        [scrollToChange]="scrollToChange"
+                        [highlightedLine]="highlightedLine"
+                        [showAllAmendments]="showAllAmendments"
+                        [lineNumberingMode]="lineNumberingMode"
+                        (createChangeRecommendation)="createChangeRecommendation.emit($event)"
+                    ></os-motion-detail-diff>
                     <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
                 </div>
             </ng-container>
 
             <os-motion-detail-diff
-                *ngIf="changeRecoMode === ChangeRecoMode.Diff"
+                *ngIf="changeRecoMode === ChangeRecoMode.Diff && (!motion.lead_motion || isFinalEdit)"
                 [motion]="motion"
                 [changes]="changesForDiffMode"
                 [scrollToChange]="scrollToChange"
