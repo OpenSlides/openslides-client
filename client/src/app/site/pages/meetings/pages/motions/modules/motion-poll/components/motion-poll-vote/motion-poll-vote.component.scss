@@ -41,6 +41,7 @@
 .user-has-voted {
     display: flex;
     text-align: center;
+    vertical-align: middle;
     > * {
         margin-top: 1em;
         margin-left: auto;
@@ -51,5 +52,6 @@
         color: $votes-yes-color;
         font-size: 200%;
         overflow: visible;
+        vertical-align: middle;
     }
 }

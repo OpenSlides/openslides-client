@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -10,7 +11,11 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { CheckVoteValidityDialogComponent } from '../components/check-vote-validity-dialog/check-vote-validity-dialog.component';
+import { VotingCryptographyInfoDialogService } from '../modules/voting-cryptography-info-dialog/services/voting-cryptography-info-dialog.service';
+import { VotingPrivacyWarningDialogService } from '../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollControllerService } from '../services/poll-controller.service/poll-controller.service';
+import { PollDialogService } from '../services/poll-dialog.service';
 
 @Directive()
 export abstract class BasePollComponent<C extends BaseViewModel = any> extends BaseMeetingComponent {
@@ -20,6 +25,10 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
 
     public get poll(): ViewPoll<C> {
         return this._poll;
+    }
+
+    public get canSeeCheckValidity(): boolean {
+        return this.poll.type === PollType.Cryptographic && !!this.poll.votes_raw;
     }
 
     public pollStateActions = {
@@ -53,9 +62,20 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
         protected override translate: TranslateService,
         protected promptService: PromptService,
         protected choiceService: ChoiceService,
-        protected repo: PollControllerService
+        protected repo: PollControllerService,
+        private dialog: PollDialogService,
+        private votingPrivacyDialog: VotingPrivacyWarningDialogService,
+        private votingCryptoInfoDialog: VotingCryptographyInfoDialogService
     ) {
         super(componentServiceCollector, translate);
+    }
+
+    public openVotingWarning(): void {
+        if (this.poll?.isCryptographic) {
+            this.votingCryptoInfoDialog.open(this.poll);
+        } else {
+            this.votingPrivacyDialog.open();
+        }
     }
 
     public async nextPollState(): Promise<void> {
@@ -124,4 +144,8 @@ export abstract class BasePollComponent<C extends BaseViewModel = any> extends B
     }
 
     public abstract getDetailLink(): string;
+
+    public openCheckValidityDialog(): void {
+        this.dialog.open(CheckVoteValidityDialogComponent, { ...infoDialogSettings, data: this.poll });
+    }
 }

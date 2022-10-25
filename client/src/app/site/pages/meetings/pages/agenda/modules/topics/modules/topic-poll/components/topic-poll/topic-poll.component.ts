@@ -4,8 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { VotingCryptographyInfoDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-cryptography-info-dialog/services/voting-cryptography-info-dialog.service';
 import { VotingPrivacyWarningDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { PollDialogService } from 'src/app/site/pages/meetings/modules/poll/services/poll-dialog.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -72,9 +74,20 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService,
         private votingService: VotingService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
+        votingPrivacyDialog: VotingPrivacyWarningDialogService,
+        votingCryptoInfoDialog: VotingCryptographyInfoDialogService,
+        dialog: PollDialogService
     ) {
-        super(componentServiceCollector, translate, promptService, choiceService, repo);
+        super(
+            componentServiceCollector,
+            translate,
+            promptService,
+            choiceService,
+            repo,
+            dialog,
+            votingPrivacyDialog,
+            votingCryptoInfoDialog
+        );
     }
 
     public ngOnInit(): void {
@@ -93,10 +106,6 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
             console.error(e);
             this.raiseError(e);
         }
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
     }
 
     public getDetailLink(): string {

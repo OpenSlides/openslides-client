@@ -5,6 +5,8 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { PollType } from 'src/app/domain/models/poll';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -19,13 +21,30 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table';
 
 import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
+import { CheckVoteValidityDialogComponent } from '../components/check-vote-validity-dialog/check-vote-validity-dialog.component';
 import { EntitledUsersTableEntry } from '../definitions';
 import { PollService } from '../services/poll.service';
+import { PollDialogService } from '../services/poll-dialog.service';
 import { VoteControllerService } from '../services/vote-controller.service';
 
 export interface BaseVoteData extends Identifiable {
     user?: ViewUser;
 }
+
+export const VOTE_OPTION_STYLE: any = {
+    Y: {
+        css: `yes`,
+        icon: `thumb_up`
+    },
+    N: {
+        css: `no`,
+        icon: `thumb_down`
+    },
+    A: {
+        css: `abstain`,
+        icon: `trip_origin`
+    }
+};
 
 @Directive()
 export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends PollService>
@@ -47,20 +66,7 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
     /**
      * Details for the iconification of the votes
      */
-    public readonly voteOptionStyle: any = {
-        Y: {
-            css: `yes`,
-            icon: `thumb_up`
-        },
-        N: {
-            css: `no`,
-            icon: `thumb_down`
-        },
-        A: {
-            css: `abstain`,
-            icon: `trip_origin`
-        }
-    };
+    public readonly voteOptionStyle: any = VOTE_OPTION_STYLE;
 
     /**
      * The reference to the poll.
@@ -92,6 +98,10 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
 
     public get isViewingEntitledUserslist(): boolean {
         return this._isViewingEntitledUserslist;
+    }
+
+    public get canSeeCheckValidity(): boolean {
+        return this.poll.type === PollType.Cryptographic && !!this.poll.votes_raw;
     }
 
     private _isViewingEntitledUserslist = false;
@@ -129,7 +139,8 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
         protected operator: OperatorService,
         protected cd: ChangeDetectorRef,
         protected userRepo: ParticipantControllerService,
-        private scrollTableManage: ScrollingTableManageService
+        private scrollTableManage: ScrollingTableManageService,
+        private dialog: PollDialogService
     ) {
         super(componentServiceCollector, translate);
 
@@ -298,5 +309,9 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
         if (entitledUsersList) {
             this._isViewingEntitledUserslist = !this.isViewingEntitledUserslist;
         }
+    }
+
+    public openCheckValidityDialog(): void {
+        this.dialog.open(CheckVoteValidityDialogComponent, { ...infoDialogSettings, data: this.poll });
     }
 }

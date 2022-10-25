@@ -83,7 +83,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      * The different types the poll can accept.
      */
     @Input()
-    public pollTypes = PollTypeVerbose;
+    public pollTypes: { [key: string]: string } = PollTypeVerbose;
 
     /**
      * the filtered `percentBases`.

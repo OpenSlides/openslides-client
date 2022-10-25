@@ -53,6 +53,7 @@
 .centered-button-wrapper {
     display: flex;
     text-align: center;
+    vertical-align: middle;
     > * {
         margin-left: auto;
         margin-right: auto;
@@ -62,6 +63,25 @@
         color: $votes-yes-color;
         font-size: 200%;
         overflow: visible;
+        vertical-align: middle;
+    }
+}
+
+.token-secret-wrapper {
+    display: inline-flex;
+
+    button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .token-secret-field {
+        width: 200px;
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid grey;
+        text-align: center;
+        vertical-align: center;
     }
 }
 

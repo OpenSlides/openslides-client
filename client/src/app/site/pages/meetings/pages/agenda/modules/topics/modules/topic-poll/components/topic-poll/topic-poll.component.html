@@ -8,21 +8,31 @@
 
             <!-- Type and State -->
             <div class="type-and-state italic spacer-bottom-20">
-                <span *osPerms="permission.agendaItemCanManage; and: poll.isEVoting">
-                    <os-icon-container
-                        class="poll-type"
-                        icon="info"
-                        size="large"
-                        color="primary"
-                        [swap]="true"
-                        [showIcon]="poll.isAnonymous"
-                        (iconAction)="openVotingWarning()"
-                    >
-                        {{ poll.typeVerbose | translate }}
-                    </os-icon-container>
-                    <span *ngIf="poll.isAnonymous">&nbsp;</span>
-                    &middot;&nbsp;
-                </span>
+                <ng-container *ngIf="poll.isEVoting">
+                    <span *osPerms="permission.agendaItemCanManage; or: poll.isCryptographic">
+                        <os-icon-container
+                            class="poll-type"
+                            icon="info"
+                            size="large"
+                            color="primary"
+                            [swap]="true"
+                            [showIcon]="poll.isAnonymous || (poll.isCryptographic && !poll.votes_raw)"
+                            (iconAction)="openVotingWarning()"
+                        >
+                            {{ poll.typeVerbose | translate }}
+                        </os-icon-container>
+                        <os-icon-container
+                            class="poll-type break-word"
+                            *ngIf="poll.isCryptographic && poll.votes_raw"
+                            [ngStyle]="{ 'color' : poll.verified ? 'green' : poll.verified === false ? 'red' : 'yellow'}"
+                            iconTooltip="{{ poll.verified ? 'Results verification success.' : poll.verified === false ? 'Result verification failed.' : 'Result verification pending.' | translate }}"
+                            [icon]="poll.verified? 'verified_user' : poll.verified === false ? 'gpp_bad' : 'shield'"
+                            (iconAction)="openVotingWarning()">
+                        </os-icon-container>
+                        <span *ngIf="poll.isAnonymous || poll.isCryptographic === false">&nbsp;</span>
+                        &middot;&nbsp;
+                    </span>
+                </ng-container>
                 <span>
                     {{ poll.stateVerbose | translate }}
                 </span>
@@ -33,7 +43,7 @@
                 <!-- Buttons -->
                 <button
                     mat-icon-button
-                    *osPerms="[permission.projectorCanManage, permission.agendaItemCanManage]"
+                    *osPerms="[permission.projectorCanManage, permission.agendaItemCanManage]; or: canSeeCheckValidity"
                     [matMenuTriggerFor]="pollItemMenu"
                     (click)="$event.stopPropagation()"
                 >
@@ -70,8 +80,10 @@
         <!-- Chart / Table -->
         <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper">
             <os-topic-poll-detail-content
+                *ngIf="!poll.isCryptographic || poll.verified"
                 [poll]="poll"
             ></os-topic-poll-detail-content>
+            <os-poll-non-verification-content *ngIf="poll.isCryptographic && !poll.verified" [poll]="poll"></os-poll-non-verification-content>
         </div>
 
         <!-- Poll progress bar -->
@@ -89,6 +101,10 @@
 </mat-card>
 
 <mat-menu #pollItemMenu="matMenu">
+    <button *ngIf="canSeeCheckValidity" mat-menu-item (click)="openCheckValidityDialog()">
+        <mat-icon>search</mat-icon>
+        <span>{{ 'Check vote validity' | translate }}</span>
+    </button>
     <div *osPerms="permission.agendaItemCanManage">
         <button mat-menu-item (click)="dialogOpened.emit()">
             <mat-icon>edit</mat-icon>

@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>
+    <span>{{ 'Check vote validity' | translate }}: {{ poll.getTitle() }}</span>
+</h1>
+
+<ng-container *ngIf="!hasData">
+    <p><i translate>No votes to check.</i></p>
+</ng-container>
+<ng-container *ngIf="hasData">
+    <p translate>Please enter your token. Make sure it is the correct token for this poll.</p>
+    <form>
+        <mat-form-field>
+            <mat-label>{{ 'Your token' | translate }}</mat-label>
+            <input matInput [formControl]="token">
+        </mat-form-field>
+    </form>
+
+    <h3>
+        <span>{{ 'Results' | translate }}:</span>
+    </h3>
+    <div class="check-vote-result-wrapper">
+        <p [ngClass]="{'divider-bottom': votes.length}">
+            <i *ngIf="!token.value" translate>No token entered.</i>
+            <i *ngIf="votes.length===0 && token.value" translate>No votes found. Check if you have the correct token for this poll.</i>
+            <i *ngIf="votes.length===1"i translate>This user voted as follows:</i>
+            <i *ngIf="votes.length>1" translate>Found multiple votes with the same token, displaying all:</i>
+        </p>
+        <ng-container *ngIf="votes.length">
+            <table *ngFor="let vote of votes; last as isLast"  [ngClass]="{'divider-bottom': !isLast}" class="check-validity-table">
+                <tr *ngFor="let item of vote | keyvalue">
+                    <td *ngIf="showOptionName">{{ optionTitles[item.key] }}</td>
+                    <td [ngClass]="{'right-bound': showOptionName}">
+                        <ng-container *ngIf="shouldDisplayIconForValue(item.value)">{{ verboseYNA[item.value] | translate }}</ng-container>
+                        <ng-container *ngIf="!shouldDisplayIconForValue(item.value)">{{ item.value }} {{ item.value === 1 ? 'vote' : 'votes' | translate }}</ng-container>
+                    </td>
+                </tr>
+            </table>
+        </ng-container>
+    </div>
+</ng-container>
+
+<p mat-dialog-actions>
+    <button mat-button [matDialogClose]="true">{{ 'Close' | translate }}</button>
+</p>

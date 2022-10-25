@@ -45,6 +45,10 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     public delegations: ViewUser[] = [];
 
+    public get fallbackUser(): ViewUser {
+        return this.user;
+    }
+
     protected voteRequestData: IdentifiedVotingData = {};
 
     protected alreadyVoted: { [userId: number]: boolean } = {};
@@ -105,7 +109,7 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
         return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName) || ``;
     }
 
-    protected async sendVote(userId: Id, votePayload: any): Promise<void> {
+    protected async sendVote(userId: Id, votePayload: { value: any; user_id: Id }): Promise<void> {
         try {
             await this.pollRepo.vote(this.poll, votePayload);
             this.alreadyVoted[userId] = true;

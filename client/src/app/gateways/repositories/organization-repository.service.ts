@@ -21,7 +21,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
         this.translate.instant(plural ? `Organizations` : `Organization`);
 
     public override getFieldsets(): Fieldsets<Organization> {
-        const coreFieldset: (keyof Organization)[] = [`name`, `description`];
+        const coreFieldset: (keyof Organization)[] = [`name`, `description`, `vote_decrypt_public_main_key`];
         const settingsFieldset: (keyof (OrganizationSetting & Organization))[] = coreFieldset.concat(
             `url`,
             `legal_notice`,

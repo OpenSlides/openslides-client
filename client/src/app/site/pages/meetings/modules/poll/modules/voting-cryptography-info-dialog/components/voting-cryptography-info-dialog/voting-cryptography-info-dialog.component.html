@@ -1,0 +1,39 @@
+<h1 mat-dialog-title>
+    <span>{{ 'This poll is cryptographic' | translate }}</span>
+</h1>
+
+<div mat-dialog-content>
+    <span>{{ 'For this poll all votes are encrypted using SHA256-AES-GCM encryption. Therefore your vote will not be tracable for anyone else.' | translate }}</span>
+    <p>{{ 'You can ensure that your vote has been tallied correctly, by using the unique token that will appear upon sending the vote, and entering it in this specific polls "Check vote validity" function.' | translate }}</p>
+    <p>{{ 'The poll results are signed using the public main key. That way their correct transmission can be verified in the browser.' | translate }}</p>
+    <br *ngIf="pubKey" />
+    <p *ngIf="pubKey">{{ 'Public main key' | translate }}: {{ pubKey }}</p>
+
+    <br/>
+    <ng-container *ngIf="(waiting | async) === false">
+        <div class="verification-info-wrapper" *ngIf="poll.verified">
+            <os-icon-container class="green-icon" icon="verified_user">{{ 'The signature of the result list is valid.' | translate }}</os-icon-container>
+        </div>
+        <div class="verification-info-wrapper" *ngIf="poll.verified === false">
+            <os-icon-container class="red-icon" icon="gpp_bad">{{ 'The signature of the result list is invalid. The result may have been manipulated.' | translate }}</os-icon-container>
+        </div>
+        <div class="verification-info-wrapper" *ngIf="poll.votes_raw && poll.verified === undefined">
+            <os-icon-container class="yellow-icon" icon="shield">{{ 'The result list has not yet been verified.' | translate }}</os-icon-container>
+        </div>
+        <div class="verification-info-wrapper" *ngIf="!poll.votes_raw">
+            <os-icon-container icon="info" color="primary">{{ 'There are no results yet.' | translate }}</os-icon-container>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="waiting | async">
+        <div class="verification-info-wrapper">
+            <os-spinner height="4px" width="4px" [showText]="false"></os-spinner>&nbsp;{{ 'Verifying results...' | translate }}
+        </div>
+    </ng-container>
+</div>
+
+<div mat-dialog-actions>
+    <button type="button" mat-button [mat-dialog-close]="null">
+        <span>{{ 'Ok' | translate }}</span>
+    </button>
+    <button mat-button *ngIf="poll.votes_raw" [disabled]="!poll.votes_signature" (click)="verifyPoll()">{{ 'Verify results' | translate }}</button>
+</div>

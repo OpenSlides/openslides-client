@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
@@ -61,6 +62,7 @@ const COMPONENTS = [
         MatSelectModule,
         MatButtonModule,
         MatInputModule,
+        MatTooltipModule,
         SearchSelectorModule,
         PollModule,
         DirectivesModule,

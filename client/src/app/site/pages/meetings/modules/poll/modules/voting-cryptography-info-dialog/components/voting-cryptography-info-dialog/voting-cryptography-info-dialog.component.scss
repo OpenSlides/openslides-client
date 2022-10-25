@@ -1,0 +1,19 @@
+.verification-info-wrapper {
+    display: inline-flex;
+
+    .red-icon {
+        mat-icon {
+            color: red;
+        }
+    }
+    .yellow-icon {
+        mat-icon {
+            color: yellow;
+        }
+    }
+    .green-icon {
+        mat-icon {
+            color: green;
+        }
+    }
+}

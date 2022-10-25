@@ -72,6 +72,8 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return PollTypeVerbose[this.type];
     }
 
+    public verified: boolean;
+
     public getContentObjectTitle(): string | null {
         return this.content_object?.getTitle() || null;
     }

@@ -34,6 +34,7 @@ export class Organization extends BaseModel<Organization> {
 
     public name!: string;
     public description!: string;
+    public vote_decrypt_public_main_key!: string;
 
     public committee_ids!: Id[]; // (committee/organization_id)[];
     public user_ids!: Id[]; // (user/organization_id)[];

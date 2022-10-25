@@ -53,6 +53,7 @@
 .centered-button-wrapper {
     display: flex;
     text-align: center;
+    vertical-align: middle;
     > * {
         margin-left: auto;
         margin-right: auto;
@@ -62,6 +63,7 @@
         color: $votes-yes-color;
         font-size: 200%;
         overflow: visible;
+        vertical-align: middle;
     }
 }
 

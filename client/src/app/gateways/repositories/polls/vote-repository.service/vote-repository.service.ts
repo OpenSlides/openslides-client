@@ -46,7 +46,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         };
     }
 
-    public async sendVote(pollId: Id, payload: any): Promise<void> {
+    public async sendVote(pollId: Id, payload: { value: any; user_id: Id }): Promise<void> {
         return await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
     }
 

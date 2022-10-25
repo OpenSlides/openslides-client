@@ -4,7 +4,7 @@
             <h2 *ngIf="poll">{{ 'Motion' | translate }} {{ poll.title }}</h2>
         </div>
 
-        <div class="menu-slot" *osPerms="permission.motionCanManagePolls">
+        <div class="menu-slot" *osPerms="permission.motionCanManagePolls; or: canSeeCheckValidity">
             <button type="button" mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
@@ -50,6 +50,10 @@
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
+    <button *ngIf="canSeeCheckValidity" mat-menu-item (click)="openCheckValidityDialog()">
+        <mat-icon>search</mat-icon>
+        <span>{{ 'Check vote validity' | translate }}</span>
+    </button>
     <os-projector-button
         [menuItem]="true"
         [object]="poll"

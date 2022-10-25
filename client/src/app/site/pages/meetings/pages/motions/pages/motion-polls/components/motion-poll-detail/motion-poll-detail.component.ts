@@ -7,6 +7,7 @@ import {
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
+import { PollDialogService } from 'src/app/site/pages/meetings/modules/poll/services/poll-dialog.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -46,7 +47,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         cd: ChangeDetectorRef,
         participantRepo: ParticipantControllerService,
         private pollDialog: MotionPollDialogService,
-        scrollTableManage: ScrollingTableManageService
+        scrollTableManage: ScrollingTableManageService,
+        dialog: PollDialogService
     ) {
         super(
             componentServiceCollector,
@@ -60,7 +62,8 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
             operator,
             cd,
             participantRepo,
-            scrollTableManage
+            scrollTableManage,
+            dialog
         );
     }
 
