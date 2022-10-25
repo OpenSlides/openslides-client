@@ -74,8 +74,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         return this._motion;
     }
 
-    private originalMotion: ViewMotion;
-
     public temporaryMotion: any = {};
 
     public canSave = false;
@@ -181,7 +179,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         if (this.newMotion) {
             await this.createMotion(update);
         } else {
-            await this.updateMotion(update, this.originalMotion ?? this.motion);
+            await this.updateMotion(update, this.motion);
             this.leaveEditMotion();
         }
     }
@@ -223,7 +221,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     public enterEditMotion(): void {
         this.editMotion = true;
-        this.originalMotion = JSON.parse(JSON.stringify(this.motion));
         this.showMotionEditConflictWarningIfNecessary();
     }
 
