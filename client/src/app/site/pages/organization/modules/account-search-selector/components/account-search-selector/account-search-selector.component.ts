@@ -58,7 +58,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     private async searchAccount(name: string): Promise<void> {
         const user = this.userController.parseStringIntoUser(name);
         const result = await this.presenter.call({
-            searchCriteria: [{ username: user.username }],
+            searchCriteria: [{ username: user.username }, { username: name }],
             permissionRelatedId: ORGANIZATION_ID,
             permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
         });
