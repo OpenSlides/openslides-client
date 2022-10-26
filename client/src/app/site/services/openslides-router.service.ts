@@ -114,13 +114,21 @@ export class OpenSlidesRouterService {
     /**
      * Checks if user can still access the current page
      */
-    public async checkCurrentRouteGuards(): Promise<void> {
+    public async checkCurrentRouteGuards(): Promise<boolean> {
         if (this.route.root.firstChild) {
-            await this.checkRouteGuards(this.route.root.firstChild);
+            const result = await this.checkRouteGuards(this.route.root.firstChild);
+            if (typeof result !== `boolean`) {
+                this.router.navigateByUrl(result);
+                return false;
+            }
+
+            return result;
         }
+
+        return true;
     }
 
-    private async checkRouteGuards(route: ActivatedRoute): Promise<boolean> {
+    private async checkRouteGuards(route: ActivatedRoute): Promise<boolean | UrlTree> {
         const routeSnapshot = route.snapshot;
         const config = routeSnapshot.routeConfig;
         let conditions: Promise<boolean | UrlTree>[] = [
@@ -130,8 +138,14 @@ export class OpenSlidesRouterService {
         ];
 
         let conditionResults = await Promise.all(conditions);
-        if (conditionResults.some(r => !r)) {
-            return false;
+        if (conditionResults.some(r => r !== true)) {
+            let redirect: boolean | UrlTree = false;
+            for (let r of conditionResults) {
+                if (typeof r !== `boolean`) {
+                    redirect = r;
+                }
+            }
+            return redirect;
         }
 
         if (route.firstChild) {

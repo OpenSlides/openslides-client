@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, Router, UrlSegment } from '@angular/router';
+import { CanLoad, Route, Router, UrlSegment, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
+import { OperatorService } from '../services/operator.service';
 import { RerouteService } from '../services/reroute.service';
 
 @Injectable({
@@ -13,26 +14,25 @@ export class PermissionGuard implements CanLoad {
         private router: Router,
         private reroute: RerouteService,
         private osRouter: OpenSlidesRouterService,
+        private operator: OperatorService,
         private authCheck: AuthCheckService
     ) {}
 
-    public async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean> {
+    public async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean | UrlTree> {
         const url = this.getCurrentNavigationUrl();
         if (this.osRouter.isOrganizationUrl(url)) {
             if (!(await this.authCheck.isAuthorizedToSeeOrganization())) {
-                this.reroute.forwardToOnlyMeeting(url === `/info` ? [`info`] : []);
-                return false;
+                const meetingId = this.operator.onlyMeeting.toString();
+                return this.router.createUrlTree(url === `/info` ? [meetingId, `info`] : [meetingId]);
             }
         } else if (!(await this.authCheck.hasAccessToMeeting(url))) {
-            this.reroute.handleForbiddenRoute(route.data, segments, url);
+            return await this.reroute.handleForbiddenRoute(route.data, segments, url);
         }
         if (!(await this.authCheck.isAuthenticated())) {
-            this.reroute.toLogin();
-            return false;
+            return this.reroute.toLogin();
         }
         if (route.data && !(await this.authCheck.isAuthorized(route.data))) {
-            this.reroute.handleForbiddenRoute(route.data, segments, url);
-            return false;
+            return await this.reroute.handleForbiddenRoute(route.data, segments, url);
         }
         this.authCheck.lastSuccessfulUrl = url;
         return true;

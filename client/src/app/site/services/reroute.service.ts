@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Data, Router, UrlSegment } from '@angular/router';
+import { Data, Router, UrlSegment, UrlTree } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { FallbackRoutesService } from './fallback-routes.service';
@@ -23,7 +23,7 @@ export class RerouteService {
      * or it wasn't the start page in the first place, the operator will be redirected
      * to an error page.
      */
-    public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<void> {
+    public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<UrlTree> {
         if (segments.length === 0) {
             const fallbackMeetingId = Number.isNaN(this.osRouter.getMeetingId(url))
                 ? null
@@ -31,8 +31,10 @@ export class RerouteService {
             // start page
             const fallbackRoute = this.fallbackRoutesService.getFallbackRoute();
             if (fallbackRoute && (this.operator.user || fallbackMeetingId)) {
-                this.router.navigate([fallbackMeetingId ?? this.operator.user.meeting_ids[0], fallbackRoute]);
-                return;
+                return this.router.createUrlTree([
+                    fallbackMeetingId ?? this.operator.user.meeting_ids[0],
+                    fallbackRoute
+                ]);
             }
         }
         const routeParams = await firstValueFrom(this.osRouter.currentParamMap);
@@ -50,7 +52,7 @@ export class RerouteService {
             error: `Authorization Error`,
             msg: routeDataArray
         };
-        this.router.navigate([`error`], {
+        return this.router.createUrlTree([`error`], {
             queryParams: meetingId
                 ? {
                       meetingId,
@@ -63,16 +65,16 @@ export class RerouteService {
     /**
      * If the user requested a route without direct meaning, forward to their meaningful meeting
      */
-    public forwardToOnlyMeeting(segments: string[] = []): void {
+    public forwardToOnlyMeeting(segments: string[] = []): UrlTree | void {
         try {
             const meetingId = this.operator.onlyMeeting;
-            this.router.navigate([meetingId, ...segments]);
+            return this.router.createUrlTree([meetingId, ...segments]);
         } catch (e) {
             throw new Error(`Error when trying to forward to only meeting: ${e?.message}`);
         }
     }
 
-    public toLogin(): void {
-        this.osRouter.navigateToLogin();
+    public toLogin(): UrlTree {
+        return this.router.createUrlTree([`login`]);
     }
 }
