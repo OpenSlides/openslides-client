@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ActionWorkerWatchService } from './action-worker-watch.service';
 
-describe(`BackendThreadWatcherService`, () => {
+xdescribe(`BackendThreadWatcherService`, () => {
     let service: ActionWorkerWatchService;
 
     beforeEach(() => {

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { WaitForActionDialogService } from './wait-for-action-dialog.service';
 
-describe(`WaitForActionDialogService`, () => {
+xdescribe(`WaitForActionDialogService`, () => {
     let service: WaitForActionDialogService;
 
     beforeEach(() => {

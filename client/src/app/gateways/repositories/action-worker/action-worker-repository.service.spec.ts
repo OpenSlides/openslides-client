@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ActionWorkerRepositoryService } from './action-worker-repository.service';
 
-describe(`ActionWorkerRepositoryService`, () => {
+xdescribe(`ActionWorkerRepositoryService`, () => {
     let service: ActionWorkerRepositoryService;
 
     beforeEach(() => {

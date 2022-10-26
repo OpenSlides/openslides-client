@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WaitForActionDialogComponent } from './wait-for-action-dialog.component';
 
-describe(`WaitForActionDialogComponent`, () => {
+xdescribe(`WaitForActionDialogComponent`, () => {
     let component: WaitForActionDialogComponent;
     let fixture: ComponentFixture<WaitForActionDialogComponent>;
 
