@@ -3,7 +3,6 @@ import { CanLoad, Route, Router, UrlSegment, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
-import { OperatorService } from '../services/operator.service';
 import { RerouteService } from '../services/reroute.service';
 
 @Injectable({
@@ -14,7 +13,6 @@ export class PermissionGuard implements CanLoad {
         private router: Router,
         private reroute: RerouteService,
         private osRouter: OpenSlidesRouterService,
-        private operator: OperatorService,
         private authCheck: AuthCheckService
     ) {}
 
@@ -22,8 +20,7 @@ export class PermissionGuard implements CanLoad {
         const url = this.getCurrentNavigationUrl();
         if (this.osRouter.isOrganizationUrl(url)) {
             if (!(await this.authCheck.isAuthorizedToSeeOrganization())) {
-                const meetingId = this.operator.onlyMeeting.toString();
-                return this.router.createUrlTree(url === `/info` ? [meetingId, `info`] : [meetingId]);
+                return this.reroute.getOnlyMeetingUrlTree(url === `/info` ? [`info`] : []);
             }
         } else if (!(await this.authCheck.hasAccessToMeeting(url))) {
             return await this.reroute.handleForbiddenRoute(route.data, segments, url);

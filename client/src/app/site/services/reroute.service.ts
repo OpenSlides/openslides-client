@@ -63,15 +63,11 @@ export class RerouteService {
     }
 
     /**
-     * If the user requested a route without direct meaning, forward to their meaningful meeting
+     * Return users url to their meaningful meeting
      */
-    public forwardToOnlyMeeting(segments: string[] = []): UrlTree | void {
-        try {
-            const meetingId = this.operator.onlyMeeting;
-            return this.router.createUrlTree([meetingId, ...segments]);
-        } catch (e) {
-            throw new Error(`Error when trying to forward to only meeting: ${e?.message}`);
-        }
+    public getOnlyMeetingUrlTree(segments: string[] = []): UrlTree {
+        const meetingId = this.operator.onlyMeeting;
+        return this.router.createUrlTree([meetingId, ...segments]);
     }
 
     public toLogin(): UrlTree {
