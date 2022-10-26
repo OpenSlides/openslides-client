@@ -20,8 +20,8 @@ export class RerouteService {
     /**
      * Handles a forbidden route. If the route is "/" (start page), It is tried to
      * use a fallback route provided by AuthGuardFallbackRoutes. If this won't work
-     * or it wasn't the start page in the first place, the operator will be redirected
-     * to an error page.
+     * or it wasn't the start page in the first place, a url to an error page is
+     * returned.
      */
     public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<UrlTree> {
         if (segments.length === 0) {
