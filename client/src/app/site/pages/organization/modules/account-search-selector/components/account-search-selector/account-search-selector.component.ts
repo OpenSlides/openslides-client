@@ -3,11 +3,13 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import {
     SearchUsersByNameOrEmailPresenterScope,
     SearchUsersByNameOrEmailPresenterService
 } from 'src/app/gateways/presenter';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -34,42 +36,65 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         ngControl: NgControl,
         private userController: UserControllerService,
         private operator: OperatorService,
-        private presenter: SearchUsersByNameOrEmailPresenterService
+        private presenter: SearchUsersByNameOrEmailPresenterService,
+        private userRepo: UserRepositoryService
     ) {
         super(fb, fm, element, ngControl);
     }
 
     public override ngOnInit(): void {
         super.ngOnInit();
-        this.selectableItems = [this.userController.getViewModel(this.operator.operatorId!)!];
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            this.initItems();
+        } else {
+            this.selectableItems = [this.userController.getViewModel(this.operator.operatorId!)!];
+        }
     }
 
     public override onSelectionChange(value: Selectable, change: MatOptionSelectionChange<any>): void {
         super.onSelectionChange(value, change);
-        this.addSelectableItem(value);
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            this.addSelectableItem(value);
+        }
     }
 
     protected override onSearchValueUpdated(nextValue: string): void {
-        if (nextValue.length >= 3) {
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            super.onSearchValueUpdated(nextValue);
+        } else if (nextValue.length >= 3) {
             this.searchAccount(nextValue);
         }
     }
 
+    private initItems(): void {
+        const observer = this.userRepo.getViewModelListObservable();
+        this.subscriptions.push(
+            observer.subscribe(items => {
+                this.selectableItems = items || [];
+            })
+        );
+    }
+
     private async searchAccount(name: string): Promise<void> {
         const user = this.userController.parseStringIntoUser(name);
-        const result = await this.presenter.call({
-            searchCriteria: [{ username: user.username }, { username: name }],
-            permissionRelatedId: ORGANIZATION_ID,
-            permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
-        });
-        const nextValue = Object.values(result).flat();
-        const getTitle = (user: { first_name: string; last_name: string }) => `${user.first_name} ${user.last_name}`;
-        this.filteredItemsSubject.next(
-            nextValue.map(entry => ({
-                id: entry.id,
-                getTitle: () => getTitle(entry),
-                getListTitle: () => getTitle(entry)
-            }))
-        );
+        try {
+            const result = await this.presenter.call({
+                searchCriteria: [{ username: user.username }, { username: name }],
+                permissionRelatedId: ORGANIZATION_ID,
+                permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
+            });
+            const nextValue = Object.values(result).flat();
+            const getTitle = (user: { first_name: string; last_name: string }) =>
+                `${user.first_name ?? ``} ${user.last_name ?? ``}`;
+            this.filteredItemsSubject.next(
+                nextValue.map(entry => ({
+                    id: entry.id,
+                    getTitle: () => getTitle(entry),
+                    getListTitle: () => getTitle(entry)
+                }))
+            );
+        } catch (e) {
+            this.filteredItemsSubject.next([this.operator.user]);
+        }
     }
 }
