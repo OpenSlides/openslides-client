@@ -137,9 +137,25 @@ export class MotionPollService extends PollService {
                         : data.poll[data.result.vote as PollDataKey]) as number,
                     hide: data.result.hide,
                     icon: data.result.icon,
-                    showPercent: data.showPercent ?? data.result.showPercent
+                    showPercent: this.calculateShowPercent(
+                        data.poll,
+                        data.option ? (data.result.vote as OptionDataKey) : (data.result.vote as PollDataKey),
+                        data.showPercent ?? data.result.showPercent
+                    )
                 }
             ]
         };
+    }
+
+    private calculateShowPercent(
+        poll: PollData,
+        votingOption: OptionDataKey | PollDataKey,
+        pollShowPercent: boolean
+    ): boolean {
+        const option = [`yes`, `no`, `abstain`].includes(votingOption) ? votingOption.charAt(0).toUpperCase() : null;
+        if (!option || !poll.onehundred_percent_base) {
+            return pollShowPercent;
+        }
+        return poll.onehundred_percent_base.indexOf(option) !== -1 ? pollShowPercent : false;
     }
 }
