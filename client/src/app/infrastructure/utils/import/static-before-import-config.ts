@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 
 import { SideImportHandlerConfig } from './side-import-handler-config';
@@ -12,4 +13,5 @@ export interface StaticBeforeImportConfig<ToCreate = any, ToImport = any>
      * If none value is given, this value will be inserted
      */
     useDefault?: Ids;
+    useDefaultObservable?: Observable<Ids>;
 }
