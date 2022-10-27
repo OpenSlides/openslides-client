@@ -34,6 +34,13 @@ export class ParticipantCsvExportService {
                         .map(group => group.name)
                         .join(`,`)
             }
+        ],
+        [
+            `is_present_in_meeting_ids`,
+            {
+                label: `Is present`,
+                map: user => (user.isPresentInMeeting() ? `1` : ``)
+            }
         ]
     ]);
 
