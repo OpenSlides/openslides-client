@@ -80,7 +80,7 @@ export class MotionPollService extends PollService {
 
     public generateTableDataAsObservable(poll: PollData): Observable<PollTableData[]> {
         // The "of(...)"-observable is used to fire the current state the first time.
-        return merge(of(poll.options), poll.options_as_observable).pipe(
+        return merge(of(poll?.options), poll.options_as_observable).pipe(
             map(options => this.createTableData(poll, options))
         );
     }
@@ -98,7 +98,7 @@ export class MotionPollService extends PollService {
     }
 
     protected override getPollDataFields(poll: PollData): CalculablePollKey[] {
-        switch (poll.onehundred_percent_base) {
+        switch (poll?.onehundred_percent_base) {
             case PollPercentBase.YN:
                 return [YES_KEY, NO_KEY];
             case PollPercentBase.Cast:
