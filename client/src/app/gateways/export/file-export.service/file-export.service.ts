@@ -38,7 +38,7 @@ export class FileExportService {
         createContentFn: (zip: JSZip, http: HttpService) => void
     ): Promise<void> {
         const zip = new JSZip();
-        createContentFn(zip, this.http);
+        await createContentFn(zip, this.http);
         const archive = await zip.generateAsync({ type: `blob` });
         saveAs(archive, `${filename}.zip`);
     }

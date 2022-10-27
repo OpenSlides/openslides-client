@@ -20,20 +20,7 @@
         [uploadFn]="uploadFn"
         (uploadSuccessEvent)="uploadSuccess($event)"
         (errorEvent)="showError($event)"
-    >
-        <div *osScrollingTableCell="'access_groups'; row as file" class="cell-slot">
-            <form [formGroup]="file.form">
-                <mat-form-field>
-                    <os-list-search-selector
-                        formControlName="access_group_ids"
-                        [multiple]="true"
-                        placeholder="{{ 'Access groups' | translate }}"
-                        [inputListValues]="availableGroups"
-                    ></os-list-search-selector>
-                </mat-form-field>
-            </form>
-        </div>
-    </os-media-upload-content>
+    ></os-media-upload-content>
 </mat-card>
 
 <mat-menu #uploadMenu="matMenu">

@@ -5,7 +5,6 @@ import { NavigationModule } from './modules/navigation/navigation.module';
 import { OrganizationRoutingModule } from './organization-routing.module';
 
 @NgModule({
-    declarations: [],
     imports: [CommonModule, OrganizationRoutingModule, NavigationModule]
 })
 export class OrganizationModule {}

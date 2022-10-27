@@ -1,44 +1,41 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import {
-    FontDisplayNames,
-    FontPlace,
-    LogoDisplayNames,
-    LogoPlace
-} from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
+import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
+import { MediafileListSortService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-sort.service';
+import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 
-import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
-import { MediafileCommonService } from '../../../../services/mediafile-common.service';
-import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
-import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
-import { MediafileListSortService } from '../../services/mediafile-list-sort.service';
-
 @Component({
-    selector: `os-mediafile-list`,
-    templateUrl: `./mediafile-list.component.html`,
-    styleUrls: [`./mediafile-list.component.scss`]
+    selector: `os-organization-mediafile-list`,
+    templateUrl: `./organization-mediafile-list.component.html`,
+    styleUrls: [`./organization-mediafile-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMediafile> implements OnInit, OnDestroy {
+export class OrganizationMediafileListComponent
+    extends BaseListViewComponent<ViewMediafile>
+    implements OnInit, OnDestroy
+{
     @ViewChild(FileListComponent)
     public readonly fileListComponent!: FileListComponent;
-
-    public logoPlaces: string[];
-    public logoDisplayNames = LogoDisplayNames;
-    public fontPlaces: string[];
-    public fontDisplayNames = FontDisplayNames;
 
     /**
      * Holds the file to edit
@@ -46,13 +43,12 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     public fileToEdit!: ViewMediafile;
 
     public newDirectoryForm: UntypedFormGroup;
-    public groupsBehaviorSubject: Observable<ViewGroup[]>;
 
     /**
      * @return true if the user can manage media files
      */
     public get canEdit(): boolean {
-        return this.operator.hasPerms(Permission.mediafileCanManage);
+        return this.operator.hasOrganizationPermissions(OML.can_manage_organization);
     }
 
     public get shouldShowFileMenuFn(): (file: ViewMediafile) => boolean {
@@ -63,12 +59,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * Determine if the file menu should generally be accessible, according to the users permission
      */
     public get canAccessFileMenu(): boolean {
-        return (
-            this.operator.hasPerms(Permission.projectorCanManage) ||
-            this.operator.hasPerms(Permission.listOfSpeakersCanSee) ||
-            this.operator.hasPerms(Permission.meetingCanManageLogosAndFonts) ||
-            this.canEdit
-        );
+        return this.canEdit;
     }
 
     /**
@@ -85,31 +76,24 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     private directorySubject: BehaviorSubject<ViewMediafile[]> = new BehaviorSubject([]);
 
     public constructor(
-        componentServiceCollector: MeetingComponentServiceCollectorService,
+        componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
         private route: ActivatedRoute,
         public repo: MediafileControllerService,
         private exporter: MediafileListExportService,
-        private mediaManage: MediaManageService,
         public vp: ViewPortService,
         public sortService: MediafileListSortService,
         private operator: OperatorService,
         private formBuilder: UntypedFormBuilder,
-        private groupRepo: MediafileListGroupService,
         private cd: ChangeDetectorRef,
         private commonService: MediafileCommonService
     ) {
         super(componentServiceCollector, translate);
         this.canMultiSelect = true;
 
-        this.logoPlaces = this.mediaManage.allLogoPlaces;
-        this.fontPlaces = this.mediaManage.allFontPlaces;
-
         this.newDirectoryForm = this.formBuilder.group({
-            title: [``, Validators.required],
-            access_group_ids: []
+            title: [``, Validators.required]
         });
-        this.groupsBehaviorSubject = this.groupRepo.getViewModelListObservable();
         this.directoryObservable = this.directorySubject.asObservable();
     }
 
@@ -152,23 +136,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
      * @returns wether the extra menu should be accessible
      */
     public showFileMenu(file: ViewMediafile): boolean {
-        return (
-            (file.isProjectable() && this.operator.hasPerms(Permission.projectorCanManage)) ||
-            (file.isFont() && this.operator.hasPerms(Permission.meetingCanManageLogosAndFonts)) ||
-            (file.isImage() && this.operator.hasPerms(Permission.meetingCanManageLogosAndFonts)) ||
-            this.canEdit
-        );
-    }
-
-    public isMediafileUsed(file: ViewMediafile, place: string): boolean {
-        const mediafile = this.repo.getViewModel(file.id)!;
-        if (mediafile.isFont()) {
-            return mediafile.used_as_font_in_meeting_id(place) === this.activeMeetingId;
-        }
-        if (mediafile.isImage()) {
-            return mediafile.used_as_logo_in_meeting_id(place) === this.activeMeetingId;
-        }
-        return false;
+        return this.canEdit;
     }
 
     public changeDirectory(directoryId: number | null): void {
@@ -211,8 +179,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
             this.fileToEdit = file;
 
             this.fileEditForm = this.formBuilder.group({
-                title: [file.title, Validators.required],
-                access_group_ids: [file.access_group_ids]
+                title: [file.title, Validators.required]
             });
         }
     }
@@ -239,38 +206,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         await this.commonService.handleDeleteSelected(this.selectedRows, () => this.deselectAll());
     }
 
-    /**
-     * Returns a formated string for the tooltip containing all the action names.
-     *
-     * @param file the target file where the tooltip should be shown
-     * @returns getNameOfAction with formated strings.
-     */
-    public formatIndicatorTooltip(file: ViewMediafile): string {
-        const settings = this.mediaManage.getPlacesDisplayNames(file);
-        const optionNames = settings.map(displayName => this.translate.instant(displayName));
-        return optionNames.join(`\n`);
-    }
-
-    public getDisplayNameForPlace(place: FontPlace | LogoPlace): string {
-        if (this.logoDisplayNames[place as LogoPlace]) {
-            return this.logoDisplayNames[place as LogoPlace];
-        } else {
-            return this.fontDisplayNames[place as FontPlace];
-        }
-    }
-
-    public async toggleMediafileUsage(event: Event, file: ViewMediafile, place: FontPlace | LogoPlace): Promise<void> {
-        // prohibits automatic closing
-        event.stopPropagation();
-        if (file.isFont()) {
-            await this.toggleFontUsage(file, place as FontPlace);
-        }
-        if (file.isImage()) {
-            await this.toggleLogoUsage(file, place as LogoPlace);
-        }
-        this.cd.markForCheck();
-    }
-
     public createNewFolder(templateRef: TemplateRef<string>): void {
         this.commonService
             .handleCreateNewFolder(this.newDirectoryForm, this.directory, templateRef)
@@ -278,26 +213,9 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
     }
 
     public downloadMultiple(mediafiles: ViewMediafile[] = this.directorySubject.value): void {
-        const eventName = this.meetingSettingsService.instant(`name`);
         const dirName = this.directory?.title ?? this.translate.instant(`Files`);
-        const archiveName = `${eventName} - ${dirName}`.trim();
+        const archiveName = `${dirName}`.trim();
         this.exporter.downloadArchive(archiveName, mediafiles);
-    }
-
-    private async toggleLogoUsage(file: ViewMediafile, place: LogoPlace): Promise<void> {
-        if (this.isMediafileUsed(file, place)) {
-            await this.mediaManage.unsetLogo(place);
-        } else {
-            await this.mediaManage.setLogo(place, file);
-        }
-    }
-
-    private async toggleFontUsage(file: ViewMediafile, place: FontPlace): Promise<void> {
-        if (this.isMediafileUsed(file, place)) {
-            await this.mediaManage.unsetFont(place);
-        } else {
-            await this.mediaManage.setFont(place, file);
-        }
     }
 
     private clearSubscriptions(): void {
