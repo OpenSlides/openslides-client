@@ -83,12 +83,34 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     /**
      * preload the next motion for direct navigation
      */
-    public nextMotion: ViewMotion | null = null;
+    public set nextMotion(motion: ViewMotion | null) {
+        this._nextMotion = motion;
+        this.cd.markForCheck();
+    }
 
     /**
      * preload the previous motion for direct navigation
      */
-    public previousMotion: ViewMotion | null = null;
+    public set previousMotion(motion: ViewMotion | null) {
+        this._previousMotion = motion;
+        this.cd.markForCheck();
+    }
+
+    public get nextMotion(): ViewMotion | null {
+        return this._nextMotion;
+    }
+
+    public get previousMotion(): ViewMotion | null {
+        return this._previousMotion;
+    }
+
+    private _nextMotion: ViewMotion | null = null;
+
+    private _previousMotion: ViewMotion | null = null;
+
+    public get showNavigateButtons(): boolean {
+        return !!this.previousMotion || !!this.nextMotion;
+    }
 
     public hasLoaded = new BehaviorSubject(false);
 
@@ -272,7 +294,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         } else {
             this.nextMotion = null;
         }
-        this.cd.markForCheck();
     }
 
     /**
