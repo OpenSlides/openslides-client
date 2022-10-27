@@ -144,7 +144,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      * @param id Motion recommendation id
      */
     public setRecommendation(id: number): void {
-        this.repo.setRecommendation(id, this.motion).resolve();
+        this.repo.setRecommendation(id, this.motion)?.resolve();
     }
 
     public resetRecommendation(): void {
