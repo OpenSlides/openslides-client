@@ -36,7 +36,7 @@ export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComp
     }
 
     public getOptionTitle(option: ViewOption): string {
-        return option.content_object?.getShortName().trim() ?? this.unknownUserLabel;
+        return option.getOptionTitle().title;
     }
 
     public getVerbosePollMethod(): string {
