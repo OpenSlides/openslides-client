@@ -1,0 +1,33 @@
+.change-recommendation-summary {
+    border-radius: 3px;
+    padding: 0.5em 0 0 0.5em;
+    margin-bottom: 1em;
+
+    .summary-of-changes-scroll {
+        padding-top: 4px;
+        height: 100px;
+    }
+
+    .amendment-link {
+        margin-left: 0.3em;
+    }
+
+    ul {
+        padding: 0 0 0 32px;
+        list-style: none;
+        display: table;
+        margin-right: 1em;
+    }
+
+    li {
+        display: table-row;
+
+        & > * {
+            display: table-cell;
+            padding: 1px;
+        }
+    }
+    .mat-badge-content {
+        top: -8px !important;
+    }
+}

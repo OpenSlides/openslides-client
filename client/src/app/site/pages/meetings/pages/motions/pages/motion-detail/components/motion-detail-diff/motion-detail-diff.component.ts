@@ -73,6 +73,14 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public lineNumberingMode!: LineNumberingMode;
     @Input()
     public showAllAmendments: boolean = false;
+    @Input()
+    public showSummary: boolean = true;
+    @Input()
+    public set showPreamble(value: boolean) {
+        this._showPreamble = value;
+    }
+    @Input()
+    public lineRange: LineRange | null = null;
 
     @Output()
     public createChangeRecommendation: EventEmitter<LineRange> = new EventEmitter<LineRange>();
@@ -85,7 +93,12 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public preamble!: string;
 
     public get showPreamble(): boolean {
-        return this.motion.showPreamble;
+        return this.motion.showPreamble ? this._showPreamble : false;
+    }
+    private _showPreamble: boolean = true;
+
+    public get nativeElement(): any {
+        return this.el.nativeElement;
     }
 
     public constructor(
@@ -113,8 +126,8 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public getTextBetweenChanges(change1: ViewUnifiedChange, change2: ViewUnifiedChange): string {
         // @TODO Highlighting
         const lineRange: LineRange = {
-            from: change1 ? change1.getLineTo() + 1 : this.motion.firstLine,
-            to: change2 ? change2.getLineFrom() - 1 : null
+            from: change1 ? change1.getLineTo() + 1 : this.lineRange?.from ?? this.motion.firstLine,
+            to: change2 ? change2.getLineFrom() - 1 : this.lineRange?.to ?? null
         };
 
         if (lineRange.from > lineRange.to && change1 && change2) {
@@ -196,7 +209,14 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 firstLine: this.motion.firstLine
             });
         }
-        return this.diff.getTextRemainderAfterLastChange(baseText, this.changes, this.lineLength, this.highlightedLine);
+
+        return this.diff.getTextRemainderAfterLastChange(
+            baseText,
+            this.getAllTextChangingObjects(),
+            this.lineLength,
+            this.highlightedLine,
+            this.lineRange
+        );
     }
 
     /**
@@ -268,7 +288,20 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public getAllTextChangingObjects(): ViewUnifiedChange[] {
-        return this.changes.filter((obj: ViewUnifiedChange) => !obj.isTitleChange());
+        const inRange = (from: number, to: number): boolean => {
+            if (!this.lineRange) {
+                return true;
+            }
+
+            return (
+                (this.lineRange.from <= from && this.lineRange.to >= from) ||
+                (this.lineRange.from <= to && this.lineRange.to >= to)
+            );
+        };
+
+        return this.changes.filter(
+            (obj: ViewUnifiedChange) => !obj.isTitleChange() && inRange(obj.getLineFrom(), obj.getLineTo())
+        );
     }
 
     public getTitleChangingObject(): ViewUnifiedChange {
