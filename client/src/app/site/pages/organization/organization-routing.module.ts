@@ -44,7 +44,7 @@ const routes: Routes = [
             {
                 path: `mediafiles`,
                 loadChildren: () => import(`./pages/mediafiles/mediafiles.module`).then(m => m.MediafilesModule),
-                data: { omlPermissions: [OML.can_manage_organization] },
+                data: { omlPermissions: [OML.superadmin] },
                 canLoad: [PermissionGuard]
             },
             {
