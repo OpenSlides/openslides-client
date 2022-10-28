@@ -30,7 +30,10 @@ jobs:
       - name: Start dev setup
         run: make run-dev ARGS="-d"
       - name: Wait for dev setup
-        run: wget -t 36 -w 5 -T 300 --retry-connrefused --retry-on-host-error --no-check-certificate -O /dev/null https://localhost:8000
+        uses: ifaxity/wait-on-action
+        with:
+          resource: https://localhost:8000
+          timeout: 180000
       - name: Start tests 
         working-directory: "./openslides-client"
         run: make run-playwright
