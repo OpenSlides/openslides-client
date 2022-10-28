@@ -1,0 +1,14 @@
+version: '3'
+services:
+    playwright:
+        build:
+            context: .
+            dockerfile: Dockerfile.test
+        image: playwright
+        container_name: playwright
+        command: npx playwright test
+        volumes:
+            - ./integration:/app/integration
+            - ./playwright.config.ts:/app/playwright.config.ts
+            - ./playwright-report:/app/playwright-report
+        network_mode: host

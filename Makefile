@@ -33,6 +33,6 @@ run-check-linting:
 run-check-prettifying:
 	docker run -t openslides-client-dev npm run prettify-check
 
-run-cypress:
-	docker-compose -f client/tests/integration/docker-compose.test.yml build
-	docker-compose -f client/tests/integration/docker-compose.test.yml up
+run-playwright:
+	docker-compose -f client/tests/docker-compose.test.yml build
+	docker-compose -f client/tests/docker-compose.test.yml up
