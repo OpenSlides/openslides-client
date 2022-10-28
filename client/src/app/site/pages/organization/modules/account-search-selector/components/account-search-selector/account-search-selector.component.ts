@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import {
     SearchUsersByNameOrEmailPresenterService
 } from 'src/app/gateways/presenter';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -25,6 +26,17 @@ import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/
     providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }]
 })
 export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit {
+    @Input()
+    public set accounts(users: ViewUser[]) {
+        if (!this.selectableItems?.length) {
+            this.selectableItems = [...users];
+        } else {
+            for (let user of users) {
+                this.addSelectableItem(user);
+            }
+        }
+    }
+
     public readonly controlType = `account-search-selector`;
 
     public override readonly multiple = true;
@@ -46,8 +58,6 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         super.ngOnInit();
         if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
             this.initItems();
-        } else {
-            this.selectableItems = [this.userController.getViewModel(this.operator.operatorId!)!];
         }
     }
 
@@ -61,7 +71,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     protected override onSearchValueUpdated(nextValue: string): void {
         if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
             super.onSearchValueUpdated(nextValue);
-        } else if (nextValue.length >= 3) {
+        } else {
             this.searchAccount(nextValue);
         }
     }
@@ -76,8 +86,11 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     }
 
     private async searchAccount(name: string): Promise<void> {
-        const user = this.userController.parseStringIntoUser(name);
-        try {
+        // TODO: This condition is not reachable because the presenter
+        //       needs the checked permission currently which might change
+        //       in the future.
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users) && name.length >= 3) {
+            const user = this.userController.parseStringIntoUser(name);
             const result = await this.presenter.call({
                 searchCriteria: [{ username: user.username }, { username: name }],
                 permissionRelatedId: ORGANIZATION_ID,
@@ -93,8 +106,8 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
                     getListTitle: () => getTitle(entry)
                 }))
             );
-        } catch (e) {
-            this.filteredItemsSubject.next([this.operator.user]);
+        } else {
+            super.onSearchValueUpdated(name);
         }
     }
 }
