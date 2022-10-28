@@ -30,7 +30,7 @@ jobs:
       - name: Start dev setup
         run: make run-dev ARGS="-d"
       - name: Wait for dev setup
-        run: curl -m 300 --retry 12 --retry-delay 5 --retry-all-errors --insecure -I https://localhost:8000
+        run: wget -t 36 -w 5 -T 300 --retry-connrefused --retry-on-host-error --no-check-certificate -O /dev/null https://localhost:8000
       - name: Start tests 
         working-directory: "./openslides-client"
         run: make run-playwright
