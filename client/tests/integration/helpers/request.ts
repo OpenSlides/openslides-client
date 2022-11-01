@@ -10,8 +10,35 @@ export async function os4request(context: BrowserContext, osAction: string, body
         }]
     });
 
-    expect(response.status()).toBe(200);
     const responseBody = await response.json();
+    if (response.status() === 202) {
+        await new Promise(r => setTimeout(r, 1000));
+        const workerFqid = responseBody?.results[0][0].fqid;
+        const workerId = workerFqid.split('/')[1];
+        for (let i = 0; i <= 5; i++) {
+            await new Promise(r => setTimeout(r, 1000 + i * 1000));
+            const workerStat = await context.request.post('/system/autoupdate?single=1', {
+                data: [{
+                    collection: `action_worker`,
+                    fields: { name: null, state: null, created: null, timestamp: null, result: null },
+                    ids: [workerId]
+                }]
+            });
+
+            const auBody = await workerStat.json();
+            expect(auBody[`${workerFqid}/state`]).not.toBe('aborted');
+            if (auBody[`${workerFqid}/state`] === 'end') {
+                const actionResponse = auBody[`${workerFqid}/response`];
+                expect(actionResponse?.status_code).toBe(200);
+                expect(actionResponse?.success).toBeTruthy();
+
+                return actionResponse?.results[0][0];
+            }
+        }
+        expect('run').not.toBe('end');
+    }
+
+    expect(response.status()).toBe(200);
     expect(responseBody?.success).toBeTruthy();
 
     return responseBody?.results[0][0];
