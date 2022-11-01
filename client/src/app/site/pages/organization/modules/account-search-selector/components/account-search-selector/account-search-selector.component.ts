@@ -3,6 +3,7 @@ import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { distinctUntilChanged } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import {
@@ -79,7 +80,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
     private initItems(): void {
         const observer = this.userRepo.getViewModelListObservable();
         this.subscriptions.push(
-            observer.subscribe(items => {
+            observer.pipe(distinctUntilChanged((c, o) => c.length === o.length)).subscribe(items => {
                 this.selectableItems = items || [];
             })
         );
