@@ -73,7 +73,7 @@ test.describe('Testing committees', () => {
     test('updates a committee', async ({ context, page }) => {
         await login(context);
         await page.goto(`/committees`);
-        await page.locator(`[data-cy=committeeListSingleMenuTrigger]`).first().click();
+        await page.locator('.scrolling-table-row', { hasText: committee.name }).locator('button.mat-menu-trigger').click();
         await page.locator(`a[href="/committees/edit-committee?committeeId=${committee.id}"]`).click();
         await expect(page).toHaveURL(`/committees/edit-committee?committeeId=${committee.id}`);
         const committeeDescription = 'Hahaha';
