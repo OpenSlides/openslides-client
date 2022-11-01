@@ -13,7 +13,7 @@ mat-card {
 .header-container {
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: 33.333% 33.333% 33.333%;
+    grid-template-columns: 25% 25% 25% 25%;
     gap: 5px;
     width: 100%;
 
@@ -33,6 +33,10 @@ mat-card {
 
     .write {
         grid-column-start: 3;
+    }
+
+    .submitter-write {
+        grid-column-start: 4;
     }
 }
 

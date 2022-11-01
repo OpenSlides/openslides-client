@@ -43,6 +43,7 @@ import { MotionCommentsComponent } from './components/motion-comments/motion-com
 import { MotionContentComponent } from './components/motion-content/motion-content.component';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
 import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
+import { MotionDetailDiffSummaryComponent } from './components/motion-detail-diff-summary/motion-detail-diff-summary.component';
 import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
 import { MotionDetailViewComponent } from './components/motion-detail-view/motion-detail-view.component';
 import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
@@ -74,6 +75,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionManageSubmittersComponent,
         MotionParagraphbasedAmendmentComponent,
         MotionDetailDiffComponent,
+        MotionDetailDiffSummaryComponent,
         MotionDetailOriginalChangeRecommendationsComponent,
         MotionCommentsComponent,
         MotionPersonalNoteComponent,

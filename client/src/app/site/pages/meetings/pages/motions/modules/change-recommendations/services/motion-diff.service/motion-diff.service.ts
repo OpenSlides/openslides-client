@@ -1882,29 +1882,35 @@ export class MotionDiffService {
      * @param {ViewUnifiedChange[]} changes
      * @param {number} lineLength
      * @param {number} highlight
+     * @param {LineRange} lineRange
      * @returns {string}
      */
     public getTextRemainderAfterLastChange(
         motionHtml: LineNumberedString,
         changes: ViewUnifiedChange[],
         lineLength: number,
-        highlight?: number
+        highlight?: number,
+        lineRange?: LineRange
     ): string {
-        let maxLine = 1;
+        let maxLine = 0;
         changes.forEach((change: ViewUnifiedChange) => {
             if (change.getLineTo() > maxLine) {
                 maxLine = change.getLineTo();
             }
         }, 0);
 
-        if (changes.length === 0) {
+        if (changes.length === 0 && !lineRange) {
             return motionHtml;
         }
 
         let data: ExtractedContent;
 
         try {
-            data = this.extractRangeByLineNumbers(motionHtml, maxLine + 1, null);
+            data = this.extractRangeByLineNumbers(
+                motionHtml,
+                Math.max(maxLine + 1, lineRange?.from || 1),
+                lineRange?.to ?? null
+            );
         } catch (e) {
             // This only happens (as far as we know) when the motion text has been altered (shortened)
             // without modifying the change recommendations accordingly.

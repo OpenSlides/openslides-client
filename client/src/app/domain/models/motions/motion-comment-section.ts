@@ -11,6 +11,7 @@ export class MotionCommentSection extends BaseModel<MotionCommentSection> {
 
     public name!: string;
     public weight!: number;
+    public submitter_can_write: boolean;
 
     public comment_ids!: Id[]; // (motion_comment/section_id)[];
     public read_group_ids!: Id[]; // (group/read_comment_section_ids)[];

@@ -116,6 +116,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * The currently used filters.
      */
     private set filterDefinitions(filters: OsFilter<V>[]) {
+        filters.forEach(def => {
+            if (!Number.isInteger(def.count)) {
+                def.count = this.getCountForFilterOptions(def);
+            }
+        });
         this._filterDefinitionsSubject.next(filters);
     }
 
@@ -471,27 +476,32 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         }
     }
 
-    private getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters: OsFilter<V>[]): number {
+    private getCountForFilterOptions(nextFilterDefinition: OsFilter<V>, storedFilters?: OsFilter<V>[]): number {
         if (!nextFilterDefinition) {
             return 0;
         }
         let count = 0;
-        const matchingExistingFilter = storedFilters.find(oldDef => oldDef.property === nextFilterDefinition.property);
+        let matchingExistingFilter: OsFilter<V>;
+        if (storedFilters) {
+            matchingExistingFilter = storedFilters.find(oldDef => oldDef.property === nextFilterDefinition.property);
+        }
         for (const option of nextFilterDefinition.options) {
             if (typeof option !== `object`) {
                 continue;
             }
-            if (!matchingExistingFilter || !matchingExistingFilter.options) {
-                continue;
-            }
-            const existingOption = matchingExistingFilter.options.find(toCompare => {
-                if (typeof toCompare === `string` || !toCompare) {
-                    return false;
+            if (storedFilters) {
+                if (!matchingExistingFilter || !matchingExistingFilter.options) {
+                    continue;
                 }
-                return JSON.stringify(toCompare.condition) === JSON.stringify(option.condition);
-            }) as OsFilterOption;
-            if (existingOption) {
-                option.isActive = existingOption.isActive;
+                const existingOption = matchingExistingFilter.options.find(toCompare => {
+                    if (typeof toCompare === `string` || !toCompare) {
+                        return false;
+                    }
+                    return JSON.stringify(toCompare.condition) === JSON.stringify(option.condition);
+                }) as OsFilterOption;
+                if (existingOption) {
+                    option.isActive = existingOption.isActive;
+                }
             }
             if (option.isActive) {
                 ++count;

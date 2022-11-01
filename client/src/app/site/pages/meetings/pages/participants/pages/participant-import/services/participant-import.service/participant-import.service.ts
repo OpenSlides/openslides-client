@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
@@ -90,7 +91,10 @@ export class ParticipantImportService extends BaseUserImportService {
         this.registerBeforeImportHandler(GROUP_PROPERTY, {
             idProperty: GROUP_PROPERTY,
             repo: this.groupRepo as any,
-            useDefault: [activeMeetingService.meeting.default_group_id]
+            useDefault: [activeMeetingService.meeting.default_group_id],
+            useDefaultObservable: this.activeMeetingService.meetingObservable.pipe(
+                map(meeting => (meeting?.default_group_id ? [meeting.default_group_id] : undefined))
+            )
         });
     }
 

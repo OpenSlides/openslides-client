@@ -5,6 +5,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
 import { ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCommentControllerService } from '../../../../modules/comments/services/motion-comment-controller.service';
 import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
@@ -29,6 +30,13 @@ export class MotionCommentComponent extends BaseMotionDetailActionCardComponent 
     @Input()
     public index!: number;
 
+    public get hasSubmitterEditRights(): boolean {
+        return (
+            this.section?.submitter_can_write &&
+            this.motion?.submittersAsUsers.map(user => user.id).includes(this.operator.operatorId)
+        );
+    }
+
     protected get sectionId(): string {
         return this.section.id.toString();
     }
@@ -39,7 +47,8 @@ export class MotionCommentComponent extends BaseMotionDetailActionCardComponent 
         cd: ChangeDetectorRef,
         fb: UntypedFormBuilder,
         private pdfService: MotionPdfExportService,
-        private commentRepo: MotionCommentControllerService
+        private commentRepo: MotionCommentControllerService,
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate, cd, fb);
     }

@@ -25,6 +25,7 @@ export class Mediafile extends BaseModel<Mediafile> {
     public pdf_information!: PdfInformation;
     public create_timestamp!: string;
     public has_inherited_access_groups!: boolean;
+    public token: string;
 
     public access_group_ids!: Id[]; // (group/mediafile_access_group_ids)[];
     public inherited_access_group_ids!: Id[]; // (group/mediafile_inherited_access_group_ids)[];  // Note: calculated

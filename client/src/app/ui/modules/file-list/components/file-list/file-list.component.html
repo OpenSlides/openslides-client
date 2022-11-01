@@ -80,7 +80,7 @@
         <a
             class="detail-link"
             target="_blank"
-            [routerLink]="['/system', 'media', 'get', mediafile.id]"
+            [routerLink]="getMediaUrl(mediafile)"
             *ngIf="!mediafile.is_directory && !isMultiSelect"
         ></a>
         <a
