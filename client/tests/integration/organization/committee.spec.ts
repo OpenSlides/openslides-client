@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { login, logout } from '../helpers/auth';
 import { createCommittee, deleteCommittees, os4request } from '../helpers/request';
+import { ListComponent } from '../page-objects/components/list-component';
 
 test.describe('Testing committees', () => {
     let committee: { id: number; name: string };
@@ -30,9 +31,9 @@ test.describe('Testing committees', () => {
     test('visits one committee', async ({ context, page }) => {
         await login(context);
         await page.goto(`/committees`);
-        await page.getByText(committee.name).waitFor();
-        await page.locator(`a[href="/committees/${committee.id}"]`).scrollIntoViewIfNeeded()
-        await page.locator(`a[href="/committees/${committee.id}"]`).click();
+        const listComponent = new ListComponent(page);
+        await listComponent.getRowByText(committee.name).scrollIntoViewIfNeeded();
+        await listComponent.getRowByText(committee.name).click();
         await expect(page).toHaveURL(`/committees/${committee.id}`);
         await expect(page.locator(`body`)).toContainText(committee.name);
         await page.locator('[data-cy=headbarBackButton]').click();
@@ -75,9 +76,8 @@ test.describe('Testing committees', () => {
     test('updates a committee', async ({ context, page }) => {
         await login(context);
         await page.goto(`/committees`);
-        await page.getByText(committee.name).waitFor();
-        await page.locator('.scrolling-table-row', { hasText: committee.name }).scrollIntoViewIfNeeded();
-        await page.locator('.scrolling-table-row', { hasText: committee.name }).locator('button.mat-menu-trigger').click();
+        const listComponent = new ListComponent(page);
+        await listComponent.openRowMenu(listComponent.getRowByText(committee.name));
         await page.locator(`a[href="/committees/edit-committee?committeeId=${committee.id}"]`).click();
         await expect(page).toHaveURL(`/committees/edit-committee?committeeId=${committee.id}`);
         const committeeDescription = 'Hahaha';
@@ -92,12 +92,11 @@ test.describe('Testing committees', () => {
         await login(context);
         await page.goto(`/committees`);
         let delCommittee = await createCommittee(context, `CypressTestDeleteCommittee ${Date.now().toString()}`);
-        await page.getByText(delCommittee.name).waitFor();
-        await page.locator('.scrolling-table-row', { hasText: delCommittee.name }).scrollIntoViewIfNeeded();
-        await page.locator('.scrolling-table-row', { hasText: delCommittee.name }).locator('button.mat-menu-trigger').click();
+        const listComponent = new ListComponent(page);
+        await listComponent.openRowMenu(listComponent.getRowByText(delCommittee.name));
         await page.locator('.mat-menu-content button', { hasText: `Delete` }).first().click();
         await page.locator('os-choice-dialog button', { hasText: `Yes` }).first().click();
-        await expect(page.locator('.scrolling-table-row', { hasText: delCommittee.name })).toBeHidden();
+        await expect(listComponent.getRowByText(delCommittee.name)).toBeHidden();
         await logout(context);
     });
 });

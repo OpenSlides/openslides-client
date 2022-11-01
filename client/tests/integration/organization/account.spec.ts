@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { login, logout } from '../helpers/auth';
 import { createAccount, deleteAccounts, os4request } from '../helpers/request';
+import { ListComponent } from '../page-objects/components/list-component';
 
 test.describe('Testing accounts', () => {
     let account: { id: number; name: string };
@@ -30,7 +31,9 @@ test.describe('Testing accounts', () => {
     test('visits one account', async ({ context, page }) => {
         await login(context);
         await page.goto(`/accounts`);
-        await page.locator(`a[href="/accounts/${account.id}"]`).click();
+        const listComponent = new ListComponent(page);
+        await listComponent.getRowByText(account.name).scrollIntoViewIfNeeded();
+        await listComponent.getRowByText(account.name).click();
         await expect(page).toHaveURL(`/accounts/${account.id}`);
         await expect(page.locator(`body`)).toContainText(account.name);
         await page.locator('[data-cy=headbarBackButton]').click();
@@ -59,7 +62,8 @@ test.describe('Testing accounts', () => {
     test('updates a account', async ({ context, page }) => {
         await login(context);
         await page.goto('/accounts');
-        await page.locator('.scrolling-table-row', { hasText: account.name }).locator('button.mat-menu-trigger').click();
+        const listComponent = new ListComponent(page);
+        await listComponent.openRowMenu(listComponent.getRowByText(account.name));
         await page.locator(`a[href="/accounts/${account.id}/edit"]`).click();
         await expect(page).toHaveURL(`/accounts/${account.id}/edit`);
         const pronoun = 'Test';
@@ -89,10 +93,11 @@ test.describe('Testing accounts', () => {
         await login(context);
         await page.goto('/accounts');
         const delAccount = await createAccount(context, `CypressTestDeleteAccount ${Date.now().toString()}`);
-        await page.locator('.scrolling-table-row', { hasText: delAccount.name }).locator('button.mat-menu-trigger').click();
+        const listComponent = new ListComponent(page);
+        await listComponent.openRowMenu(listComponent.getRowByText(delAccount.name));
         await page.locator('.mat-menu-content button', { hasText: `Delete` }).first().click();
         await page.locator('os-user-delete-dialog button', { hasText: `Yes, delete` }).first().click();
-        await expect(page.locator('.scrolling-table-row', { hasText: delAccount.name })).toBeHidden();
+        await expect(listComponent.getRowByText(delAccount.name)).toBeHidden();
         await logout(context);
     });
 });
