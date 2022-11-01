@@ -35,4 +35,4 @@ run-check-prettifying:
 
 run-playwright:
 	docker-compose -f client/tests/docker-compose.test.yml build
-	docker-compose -f client/tests/docker-compose.test.yml up
+	docker-compose -f client/tests/docker-compose.test.yml up --exit-code-from playwright
