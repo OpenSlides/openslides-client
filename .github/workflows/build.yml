@@ -44,6 +44,7 @@ jobs:
           path: "./openslides-client/client/tests/playwright-report/"
           retention-days: 7
       - name: Shut down dev setup
+        if: always()
         run: make stop-dev
 
   build-and-check-dev-image:
