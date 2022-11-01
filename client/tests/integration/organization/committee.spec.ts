@@ -30,6 +30,7 @@ test.describe('Testing committees', () => {
     test('visits one committee', async ({ context, page }) => {
         await login(context);
         await page.goto(`/committees`);
+        await page.getByText(committee.name).waitFor();
         await page.locator(`a[href="/committees/${committee.id}"]`).click();
         await expect(page).toHaveURL(`/committees/${committee.id}`);
         await expect(page.locator(`body`)).toContainText(committee.name);
@@ -73,6 +74,7 @@ test.describe('Testing committees', () => {
     test('updates a committee', async ({ context, page }) => {
         await login(context);
         await page.goto(`/committees`);
+        await page.getByText(committee.name).waitFor();
         await page.locator('.scrolling-table-row', { hasText: committee.name }).locator('button.mat-menu-trigger').click();
         await page.locator(`a[href="/committees/edit-committee?committeeId=${committee.id}"]`).click();
         await expect(page).toHaveURL(`/committees/edit-committee?committeeId=${committee.id}`);
@@ -88,6 +90,7 @@ test.describe('Testing committees', () => {
         await login(context);
         await page.goto(`/committees`);
         let delCommittee = await createCommittee(context, `CypressTestDeleteCommittee ${Date.now().toString()}`);
+        await page.getByText(delCommittee.name).waitFor();
         await page.locator('.scrolling-table-row', { hasText: delCommittee.name }).locator('button.mat-menu-trigger').click();
         await page.locator('.mat-menu-content button', { hasText: `Delete` }).first().click();
         await page.locator('os-choice-dialog button', { hasText: `Yes` }).first().click();

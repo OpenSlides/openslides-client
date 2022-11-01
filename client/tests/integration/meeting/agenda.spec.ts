@@ -61,7 +61,7 @@ test.describe('agenda tests', () => {
         const agendaTitle = `CypressAgendaCreateTest${Date.now().toString()}`;
         await page.locator('[formcontrolname=title]').fill(agendaTitle);
         await page.locator('[data-cy=headbarSaveButton]').click();
-        await expect(page.locator(`body`)).toContainText(agendaTitle);
+        await expect(page.locator(`.title-line`, { hasText: agendaTitle })).toBeVisible();
         await logout(context);
     });
 });
