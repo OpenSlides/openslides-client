@@ -1,6 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { login, logout } from '../helpers/auth';
-import { createAccount, createMeeting, deleteAccounts, deleteCommittees, deleteMeetings, os4request } from '../helpers/request';
+import {
+    createAccount,
+    createMeeting,
+    deleteAccounts,
+    deleteCommittees,
+    deleteMeetings,
+    os4request
+} from '../helpers/request';
 
 test.describe('agenda tests', () => {
     let username = `CypressAgendaTestUser`;

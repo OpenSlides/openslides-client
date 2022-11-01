@@ -2,12 +2,16 @@ import { BrowserContext, expect } from '@playwright/test';
 
 export async function os4request(context: BrowserContext, osAction: string, body: any): Promise<any> {
     const response = await context.request.post('/system/action/handle_request', {
-        data: [{
-            action: osAction,
-            data: [{
-                ...body
-            }]
-        }]
+        data: [
+            {
+                action: osAction,
+                data: [
+                    {
+                        ...body
+                    }
+                ]
+            }
+        ]
     });
 
     const responseBody = await response.json();
@@ -18,11 +22,13 @@ export async function os4request(context: BrowserContext, osAction: string, body
         for (let i = 0; i <= 5; i++) {
             await new Promise(r => setTimeout(r, 1000 + i * 1000));
             const workerStat = await context.request.post('/system/autoupdate?single=1', {
-                data: [{
-                    collection: `action_worker`,
-                    fields: { name: null, state: null, created: null, timestamp: null, result: null },
-                    ids: [workerId]
-                }]
+                data: [
+                    {
+                        collection: `action_worker`,
+                        fields: { name: null, state: null, created: null, timestamp: null, result: null },
+                        ids: [workerId]
+                    }
+                ]
             });
 
             const auBody = await workerStat.json();
@@ -44,7 +50,10 @@ export async function os4request(context: BrowserContext, osAction: string, body
     return responseBody?.results[0][0];
 }
 
-export async function createAccount(context: BrowserContext, name: string = `TestUser ${Date.now().toString()}`): Promise<{ id: number, name: string }> {
+export async function createAccount(
+    context: BrowserContext,
+    name: string = `TestUser ${Date.now().toString()}`
+): Promise<{ id: number; name: string }> {
     const accountData = {
         username: name,
         default_password: name,
@@ -54,7 +63,10 @@ export async function createAccount(context: BrowserContext, name: string = `Tes
     return await os4request(context, `user.create`, accountData).then(res => ({ id: res.id, name }));
 }
 
-export async function createCommittee(context: BrowserContext, name: string = `TestMeeting ${Date.now().toString()}`): Promise<{ id: number, name: string }> {
+export async function createCommittee(
+    context: BrowserContext,
+    name: string = `TestMeeting ${Date.now().toString()}`
+): Promise<{ id: number; name: string }> {
     const committeeData = {
         organization_id: 1,
         name,
@@ -64,7 +76,11 @@ export async function createCommittee(context: BrowserContext, name: string = `T
     return await os4request(context, `committee.create`, committeeData).then(res => ({ id: res.id, name }));
 }
 
-export async function createMeeting(context: BrowserContext, name: string = `TestMeeting ${Date.now().toString()}`, admin_ids: number[] = [1]): Promise<{ id: number, committeeId: number, name: string }> {
+export async function createMeeting(
+    context: BrowserContext,
+    name: string = `TestMeeting ${Date.now().toString()}`,
+    admin_ids: number[] = [1]
+): Promise<{ id: number; committeeId: number; name: string }> {
     let { id } = await createCommittee(context, name);
     const meetingData = {
         committee_id: id,
@@ -72,7 +88,11 @@ export async function createMeeting(context: BrowserContext, name: string = `Tes
         admin_ids
     };
 
-    return await os4request(context, `meeting.create`, meetingData).then(res => ({ id: res.id, name, committeeId: id }));
+    return await os4request(context, `meeting.create`, meetingData).then(res => ({
+        id: res.id,
+        name,
+        committeeId: id
+    }));
 }
 
 export async function deleteAccounts(context: BrowserContext, ...ids: number[]): Promise<void> {
