@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Workbook } from 'exceljs';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import { CellFillingDefinition, XlsxExportService } from 'src/app/gateways/export/xlsx-export.service';
 import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
 
@@ -122,7 +123,12 @@ export class MotionXlsxExportService {
         );
         if (commentIds) {
             columns.push(
-                ...commentIds.map(commentId => ({ header: this.commentRepo.getViewModel(commentId)!.getTitle() }))
+                ...commentIds.map(commentId => ({
+                    header:
+                        commentId === PERSONAL_NOTE_ID
+                            ? this.translate.instant(`Personal note`)
+                            : this.commentRepo.getViewModel(commentId)!.getTitle()
+                }))
             );
         }
 
@@ -165,11 +171,15 @@ export class MotionXlsxExportService {
             if (commentIds) {
                 data.push(
                     ...commentIds.map(commentId => {
-                        const section = this.commentRepo.getViewModel(commentId)!;
-                        const motionComment = motion.getCommentForSection(section);
-                        return motionComment && motionComment.comment
-                            ? reconvertChars(stripHtmlTags(motionComment.comment))
-                            : ``;
+                        if (commentId === PERSONAL_NOTE_ID) {
+                            return motion && motion.getPersonalNote()! && motion.getPersonalNote()!.note;
+                        } else {
+                            const section = this.commentRepo.getViewModel(commentId)!;
+                            const motionComment = motion.getCommentForSection(section);
+                            return motionComment && motionComment.comment
+                                ? reconvertChars(stripHtmlTags(motionComment.comment))
+                                : ``;
+                        }
                     })
                 );
             }

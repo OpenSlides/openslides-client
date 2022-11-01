@@ -1,6 +1,7 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
@@ -120,6 +121,7 @@ interface IMediafileRelations {
     attachments: (BaseViewModel & HasAttachment)[];
     used_as_logo_in_meeting: StructuredRelation<string, ViewMeeting | null>;
     used_as_font_in_meeting: StructuredRelation<string, ViewMeeting | null>;
+    organization?: ViewOrganization;
 }
 export interface ViewMediafile
     extends Mediafile,

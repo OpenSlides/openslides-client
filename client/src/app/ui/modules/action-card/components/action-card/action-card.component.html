@@ -19,7 +19,7 @@
                 osResized
                 class="content"
                 (osResizedHeight)="onResizedHeight($event)"
-                [ngClass]="!isExpanded && !disableExpandControl ? 'collapsed' : ''"
+                [ngClass]="!isExpanded && !disableExpandControl ? 'collapsed collapsed-card-content' : ''"
             >
                 <ng-container *ngTemplateOutlet="content"></ng-container>
             </div>

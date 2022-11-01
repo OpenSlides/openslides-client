@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
@@ -34,22 +35,26 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     public override getFieldsets(): Fieldsets<Mediafile> {
         const fileSelectionFields: TypedFieldset<Mediafile> = [`title`, `is_directory`];
         const fileCreationFields: TypedFieldset<Mediafile> = fileSelectionFields.concat([`parent_id`, `child_ids`]);
-        const listFields: TypedFieldset<Mediafile> = fileCreationFields.concat([
+        const baseListFields: TypedFieldset<Mediafile> = fileCreationFields.concat([
             `owner_id`,
             `mimetype`,
             `filesize`,
             `create_timestamp`,
+            `pdf_information`
+        ]);
+        const listFields: TypedFieldset<Mediafile> = baseListFields.concat([
             `has_inherited_access_groups`,
-            `pdf_information`,
             `access_group_ids`,
             `inherited_access_group_ids`,
             { templateField: `used_as_logo_$_in_meeting_id` },
             { templateField: `used_as_font_$_in_meeting_id` }
         ]);
+        const organizationListFields: TypedFieldset<Mediafile> = baseListFields.concat([`token`]);
         return {
             [DEFAULT_FIELDSET]: listFields,
             fileSelection: fileSelectionFields,
-            fileCreation: fileCreationFields
+            fileCreation: fileCreationFields,
+            organizationDetail: organizationListFields
         };
     }
 
@@ -57,39 +62,48 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
         const payload = {
             ids: mediafiles.map(mediafile => mediafile.id),
             parent_id: directoryId,
-            owner_id: `meeting/${this.activeMeetingId}`
+            owner_id: this.getOwnerId()
         };
         return this.sendActionToBackend(MediafileAction.MOVE, payload);
     }
 
     public async uploadFile(partialMediafile: any): Promise<Identifiable> {
+        const variables: { [key: string]: any } = this.activeMeetingId
+            ? { access_group_ids: partialMediafile.access_group_ids }
+            : { token: partialMediafile.token };
         const payload = {
-            owner_id: `meeting/${this.activeMeetingId}`,
+            owner_id: this.getOwnerId(),
             file: partialMediafile.file,
             filename: partialMediafile.filename,
             title: partialMediafile.title,
-            access_group_ids: partialMediafile.access_group_ids,
-            parent_id: partialMediafile.parent_id || null
+            parent_id: partialMediafile.parent_id || null,
+            ...variables
         };
         return this.sendActionToBackend(MediafileAction.CREATE_FILE, payload);
     }
 
     public async createDirectory(partialMediafile: Partial<Mediafile>): Promise<Identifiable> {
+        const variables: { [key: string]: any } = this.activeMeetingId
+            ? { access_group_ids: partialMediafile.access_group_ids || [] }
+            : {};
         const payload = {
-            owner_id: `meeting/${this.activeMeetingId}`,
+            owner_id: this.getOwnerId(),
             title: partialMediafile.title,
-            access_group_ids: partialMediafile.access_group_ids || [],
-            parent_id: partialMediafile.parent_id
+            parent_id: partialMediafile.parent_id,
+            ...variables
         };
         return this.sendActionToBackend(MediafileAction.CREATE_DIRECTORY, payload);
     }
 
     public async update(update: any, viewMediafile: Identifiable): Promise<void> {
+        const variables: { [key: string]: any } = this.activeMeetingId
+            ? { access_group_ids: update.access_group_ids }
+            : { token: update.token };
         const payload = {
             id: viewMediafile.id,
-            access_group_ids: update.access_group_ids,
             title: update.title,
-            parent_id: update.parent_id
+            parent_id: update.parent_id,
+            ...variables
         };
         return this.sendActionToBackend(MediafileAction.UPDATE, payload);
     }
@@ -97,5 +111,9 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     public async delete(...viewMediafiles: Identifiable[]): Promise<void> {
         const payload: Identifiable[] = viewMediafiles.map(file => ({ id: file.id }));
         return this.sendBulkActionToBackend(MediafileAction.DELETE, payload);
+    }
+
+    private getOwnerId(): string {
+        return this.activeMeetingId ? `meeting/${this.activeMeetingId}` : `organization/${ORGANIZATION_ID}`;
     }
 }
