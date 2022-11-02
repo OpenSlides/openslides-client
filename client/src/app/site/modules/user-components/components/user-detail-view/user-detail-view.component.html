@@ -117,10 +117,20 @@
                 />
                 <mat-hint *ngIf="isNewUser" align="end">Generate</mat-hint>
                 <button
-                    *ngIf="isNewUser && generatePasswordFn"
+                    *ngIf="isNewUser"
+                    matSuffix
                     type="button"
                     mat-button
+                    mat-icon-button
+                    [matTooltip]="'If left empty, the password will be generated automatically' | translate"
+                >
+                    <mat-icon>help</mat-icon>
+                </button>
+                <button
+                    *ngIf="isNewUser && generatePasswordFn"
                     matSuffix
+                    type="button"
+                    mat-button
                     mat-icon-button
                     [disabled]="!generatePasswordFn"
                     (click)="setRandomPassword()"
