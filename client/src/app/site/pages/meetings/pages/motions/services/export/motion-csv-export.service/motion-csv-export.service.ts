@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { ChangeRecoMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
@@ -130,16 +130,26 @@ export class MotionCsvExportService {
                 }
             });
         exportProperties.push(
-            ...comments.map(commentId => ({
-                label: this.commentRepo.getViewModel(commentId)!.getTitle(),
-                map: (motion: ViewMotion) => {
-                    const viewComment = this.commentRepo.getViewModel(commentId)!;
-                    const motionComment = motion.getCommentForSection(viewComment);
-                    return motionComment && motionComment.comment
-                        ? reconvertChars(stripHtmlTags(motionComment.comment))
-                        : ``;
-                }
-            }))
+            ...comments.map(commentId => {
+                let label =
+                    commentId === PERSONAL_NOTE_ID
+                        ? this.translate.instant(`Personal note`)
+                        : this.commentRepo.getViewModel(commentId)!.getTitle();
+                return {
+                    label,
+                    map: (motion: ViewMotion) => {
+                        if (commentId === PERSONAL_NOTE_ID) {
+                            return motion && motion.getPersonalNote()! && motion.getPersonalNote()!.note;
+                        } else {
+                            const viewComment = this.commentRepo.getViewModel(commentId)!;
+                            const motionComment = motion.getCommentForSection(viewComment);
+                            return motionComment && motionComment.comment
+                                ? reconvertChars(stripHtmlTags(motionComment.comment))
+                                : ``;
+                        }
+                    }
+                };
+            })
         );
 
         this.csvExport.export(motions, exportProperties, this.translate.instant(`Motions`) + `.csv`);

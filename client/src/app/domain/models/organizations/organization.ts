@@ -43,6 +43,7 @@ export class Organization extends BaseModel<Organization> {
     public active_meeting_ids!: Id[]; // (meeting/is_active_in_organization_id)[];
     public archived_meeting_ids!: Id[]; // (meeting/is_archived_in_organization_id)[];
     public template_meeting_ids!: Id[]; // (meeting/template_for_organization_id)[];
+    public mediafile_ids!: Id[];
 
     public constructor(input?: any) {
         super(Organization.COLLECTION, input);
