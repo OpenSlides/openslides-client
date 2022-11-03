@@ -12,13 +12,6 @@
         </h2>
     </div>
 
-    <!-- Last speakers -->
-    <div *ngIf="data.data.finished && data.data.finished.length" class="lastSpeakers">
-        <div *ngFor="let speaker of data.data.finished">
-            <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:speaker}"></ng-container>
-        </div>
-    </div>
-
     <!-- Current speaker -->
     <div *ngIf="data.data.current" class="currentSpeaker">
         <mat-icon class="micicon">mic</mat-icon>

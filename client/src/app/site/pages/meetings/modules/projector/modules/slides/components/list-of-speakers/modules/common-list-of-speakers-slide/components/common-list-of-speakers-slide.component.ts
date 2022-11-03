@@ -37,7 +37,7 @@ export class CommonListOfSpeakersSlideComponent extends BaseSlideComponent<Commo
         }
         super.setData(value);
 
-        if (hasData) {
+        if (hasData && this.data.data.title_information) {
             const repo = this.collectionMapperService.getRepository(this.data.data.title_information.collection);
             if (!isAgendaItemContentObjectRepository(repo)) {
                 throw new Error(`The content object has no agenda base repository!`);
