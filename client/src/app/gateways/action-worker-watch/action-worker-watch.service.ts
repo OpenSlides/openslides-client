@@ -65,7 +65,14 @@ export class ActionWorkerWatchService {
             throw new Error(_(`Received invalid fqid for action worker: `) + actionName);
         }
         if (originalResponse.body[`results`][0][0][`written`] === false) {
-            this.openWaitingPrompt(id, waitForActionReason.notWritten, actionName);
+            throw new HttpErrorResponse({
+                error: {
+                    success: false,
+                    message: `Worker for ${actionName} could not be written on time, however the action may still be completed. Please check the results manually.`,
+                    url: originalResponse.url
+                },
+                status: 500
+            });
         }
         this.subscribeToWorker(id);
         let worker: ViewActionWorker;
@@ -100,7 +107,7 @@ export class ActionWorkerWatchService {
                 message: `${worker.name} aborted without any specific message`,
                 url: originalResponse.url
             },
-            status: worker.result.status_code,
+            status: worker.result?.status_code,
             statusText: worker.result?.message
         });
     }
