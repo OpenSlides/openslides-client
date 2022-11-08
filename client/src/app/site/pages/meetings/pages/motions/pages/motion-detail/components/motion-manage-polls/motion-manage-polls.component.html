@@ -6,14 +6,8 @@
             (dialogOpened)="onEditPoll(id)"
         ></os-motion-poll>
     </ng-container>
-    <button
-        class="create-poll-button"
-        create-poll-button
-        mat-stroked-button
-        (click)="openDialog()"
-        *osPerms="permission.motionCanManagePolls; and: canStateHavePolls"
-    >
-        <mat-icon class="main-nav-color">add</mat-icon>
-        <span>{{ 'New vote' | translate }}</span>
-    </button>
+    <os-motion-add-poll-button
+        *ngIf="!hideAdd"
+        class="spacer-top-10 spacer-bottom-20"
+        [motion]="motion"></os-motion-add-poll-button>
 </div>
