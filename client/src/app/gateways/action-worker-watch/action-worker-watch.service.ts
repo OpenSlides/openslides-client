@@ -4,6 +4,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
+import { idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { WaitForActionReason, waitForActionReason } from 'src/app/site/modules/wait-for-action-dialog/definitions';
 import { WaitForActionDialogService } from 'src/app/site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
@@ -42,18 +43,24 @@ export class ActionWorkerWatchService {
 
     private _toBeDeleted: { workerId: number; timestamp: number }[] = [];
 
+    private _waitingForDeletion: number[] = [];
+
     public constructor(
         private actionWorkerRepo: ActionWorkerRepositoryService,
         private modelRequestService: ModelRequestService,
         private dialogService: WaitForActionDialogService
     ) {
-        this.actionWorkerRepo.getViewModelListObservable().subscribe(workers => this._workerSubject.next(workers));
+        this.actionWorkerRepo
+            .getViewModelListObservable()
+            .subscribe(workers =>
+                this._workerSubject.next(workers.filter(worker => !this._waitingForDeletion.includes(worker.id)))
+            );
     }
 
     public async watch<T>(originalResponse: HttpResponse<T>, watchActivity: boolean): Promise<HttpResponse<T>> {
         const actionName = originalResponse.body[`results`][0][0][`name`];
         const fqid: string = originalResponse.body[`results`][0][0][`fqid`];
-        const id = Number(fqid.split(`/`).slice(-1)[0]);
+        const id = idFromFqid(fqid);
         if (Number.isNaN(id)) {
             throw new Error(_(`Received invalid fqid for action worker: `) + actionName);
         }
@@ -126,12 +133,12 @@ export class ActionWorkerWatchService {
      */
     public async unsubscribeFromWorker(workerId: Id): Promise<void> {
         this._currentWorkerIds = this._currentWorkerIds.filter(id => id !== workerId);
-        await this.refreshAutoupdateSubscription([workerId]);
+        await this.markForWorkerDeletion([workerId]);
     }
 
     public async unsubscribeFromWorkers(workerIds: Ids): Promise<void> {
         this._currentWorkerIds = this._currentWorkerIds.filter(id => !workerIds.includes(id));
-        await this.refreshAutoupdateSubscription(workerIds);
+        await this.markForWorkerDeletion(workerIds);
     }
 
     public async unsubscribeFromAllWorkers(): Promise<void> {
@@ -140,8 +147,19 @@ export class ActionWorkerWatchService {
         await this.refreshAutoupdateSubscription(ids);
     }
 
+    private async markForWorkerDeletion(workerIds: number[]): Promise<void> {
+        this._waitingForDeletion = this._waitingForDeletion.concat(workerIds);
+        this._workerSubject.next(
+            this._workerSubject.value.filter(worker => !this._waitingForDeletion.includes(worker.id))
+        );
+        if (!this._currentWorkerIds?.length) {
+            await this.refreshAutoupdateSubscription(this._waitingForDeletion);
+            this._waitingForDeletion = [];
+        }
+    }
+
     /**
-     * Deletes all users from _toBeDeleted that have been in there for more than 10 seconds.
+     * Deletes all workers from _toBeDeleted that have been in there for more than 10 seconds.
      */
     private cleanup() {
         const toDelete = this._toBeDeleted
