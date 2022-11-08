@@ -64,6 +64,7 @@ export class HttpService {
             const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>({ method, url, options }));
             return response?.body as T;
         } catch (error) {
+            console.log(error);
             if (error instanceof HttpErrorResponse) {
                 if (!!error.error.message) {
                     const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
@@ -74,11 +75,13 @@ export class HttpService {
                         throw cleanError;
                     }
                     this.snackBar.open(cleanError, `Ok`);
+                    return null;
                 }
-                return null;
-            } else {
-                throw new ProcessError(error);
+
+                // TODO: Handle offline, ...
             }
+
+            throw new ProcessError(error);
         }
     }
 
