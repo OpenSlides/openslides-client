@@ -79,6 +79,8 @@
         <mat-icon>forward</mat-icon>
         <span>{{ 'Forward' | translate }}</span>
     </button>
+
+    <os-motion-add-poll-button [motion]="motion"></os-motion-add-poll-button>
 </div>
 
 <!-- Forwardings - display only -->
@@ -277,7 +279,7 @@
 </div>
 
 <!-- motion polls -->
-<os-motion-manage-polls [motion]="motion"></os-motion-manage-polls>
+<os-motion-manage-polls [motion]="motion" [hideAdd]="true"></os-motion-manage-polls>
 
 <ng-template let-motion="motion" #meetingLink>
     »

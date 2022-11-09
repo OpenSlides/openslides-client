@@ -38,6 +38,7 @@ import { MotionPollModule } from '../../modules/motion-poll';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
+import { MotionAddPollButtonComponent } from './components/motion-add-poll-button/motion-add-poll-button.component';
 import { MotionCommentComponent } from './components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './components/motion-comments/motion-comments.component';
 import { MotionContentComponent } from './components/motion-content/motion-content.component';
@@ -63,6 +64,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
 
 @NgModule({
     declarations: [
+        MotionAddPollButtonComponent,
         MotionDetailComponent,
         MotionDetailViewComponent,
         AmendmentCreateWizardComponent,
