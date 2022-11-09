@@ -9,7 +9,7 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { PollServiceModule } from '../poll-service.module';
 
-export enum VotingError {
+export enum VotingProhibition {
     POLL_WRONG_STATE = 1, // 1 so we can check with negation
     POLL_WRONG_TYPE,
     USER_HAS_NO_PERMISSION,
@@ -22,14 +22,14 @@ export enum VotingError {
 /**
  * TODO: It appears that the only message that makes sense for the user to see it the last one.
  */
-const VotingErrorVerbose = {
-    [VotingError.POLL_WRONG_STATE]: _(`You can not vote right now because the voting has not yet started.`),
-    [VotingError.POLL_WRONG_TYPE]: _(`You can not vote because this is an analog voting.`),
-    [VotingError.USER_HAS_NO_PERMISSION]: _(`You do not have the permission to vote.`),
-    [VotingError.USER_IS_ANONYMOUS]: _(`You have to be logged in to be able to vote.`),
-    [VotingError.USER_NOT_PRESENT]: _(`You have to be present to vote.`),
-    [VotingError.USER_HAS_DELEGATED_RIGHT]: _(`Your voting right was delegated to another person.`),
-    [VotingError.USER_HAS_VOTED]: _(`You have already voted.`)
+const VotingProhibitionVerbose = {
+    [VotingProhibition.POLL_WRONG_STATE]: _(`You can not vote right now because the voting has not yet started.`),
+    [VotingProhibition.POLL_WRONG_TYPE]: _(`You can not vote because this is an analog voting.`),
+    [VotingProhibition.USER_HAS_NO_PERMISSION]: _(`You do not have the permission to vote.`),
+    [VotingProhibition.USER_IS_ANONYMOUS]: _(`You have to be logged in to be able to vote.`),
+    [VotingProhibition.USER_NOT_PRESENT]: _(`You have to be present to vote.`),
+    [VotingProhibition.USER_HAS_DELEGATED_RIGHT]: _(`Your voting right was delegated to another person.`),
+    [VotingProhibition.USER_HAS_VOTED]: _(`You have already voted.`)
 };
 
 @Injectable({
@@ -54,55 +54,58 @@ export class VotingService {
      * checks whether the operator can vote on the given poll
      */
     public canVote(poll: ViewPoll, user?: ViewUser): boolean {
-        const error = this.getVotePermissionError(poll, user);
+        const error = this.getVotingProhibitionReason(poll, user);
         return !error;
     }
 
     /**
      * checks whether the operator can vote on the given poll
-     * @returns null if no errors exist (= user can vote) or else a VotingError
+     * @returns null if no errors exist (= user can vote) or else a VotingProhibition reason
      */
-    public getVotePermissionError(poll: ViewPoll, user: ViewUser | null = this._currentUser): VotingError | void {
+    private getVotingProhibitionReason(
+        poll: ViewPoll,
+        user: ViewUser | null = this._currentUser
+    ): VotingProhibition | void {
         if (this._currentUser?.id === user?.id) {
             if (user?.isVoteRightDelegated && this._voteDelegationEnabled) {
-                return VotingError.USER_HAS_DELEGATED_RIGHT;
+                return VotingProhibition.USER_HAS_DELEGATED_RIGHT;
             }
             if (poll.hasVoted) {
-                return VotingError.USER_HAS_VOTED;
+                return VotingProhibition.USER_HAS_VOTED;
             }
         }
         if (this._currentUser?.id !== user?.id && poll.hasVotedForDelegations(user?.id)) {
-            return VotingError.USER_HAS_VOTED;
+            return VotingProhibition.USER_HAS_VOTED;
         }
         if (this.operator.isAnonymous) {
-            return VotingError.USER_IS_ANONYMOUS;
+            return VotingProhibition.USER_IS_ANONYMOUS;
         }
         if (
             !(poll.entitled_group_ids || []).some(id =>
                 user.group_ids(this.activeMeetingService.meetingId).includes(id)
             )
         ) {
-            return VotingError.USER_HAS_NO_PERMISSION;
+            return VotingProhibition.USER_HAS_NO_PERMISSION;
         }
         if (poll.type === PollType.Analog) {
-            return VotingError.POLL_WRONG_TYPE;
+            return VotingProhibition.POLL_WRONG_TYPE;
         }
         if (poll.state !== PollState.Started) {
-            return VotingError.POLL_WRONG_STATE;
+            return VotingProhibition.POLL_WRONG_STATE;
         }
         if (!user?.isPresentInMeeting() && !this._currentUser?.canVoteFor(user)) {
-            return VotingError.USER_NOT_PRESENT;
+            return VotingProhibition.USER_NOT_PRESENT;
         }
     }
 
-    public getVotePermissionErrorVerbose(poll: ViewPoll, user: ViewUser | null = this._currentUser): string | void {
-        const error = this.getVotePermissionError(poll, user);
-        if (error) {
-            return VotingErrorVerbose[error];
+    public getVotingProhibitionReasonVerbose(poll: ViewPoll, user: ViewUser | null = this._currentUser): string | void {
+        const reason = this.getVotingProhibitionReason(poll, user);
+        if (reason) {
+            return VotingProhibitionVerbose[reason];
         }
     }
 
-    public getVotePermissionErrorVerboseFromName(errorName: string) {
-        return VotingErrorVerbose[VotingError[errorName]] ?? _(`There is an unknown voting problem.`);
+    public getVotingProhibitionReasonVerboseFromName(reasonName: string) {
+        return VotingProhibitionVerbose[VotingProhibition[reasonName]] ?? _(`There is an unknown voting problem.`);
     }
 }
