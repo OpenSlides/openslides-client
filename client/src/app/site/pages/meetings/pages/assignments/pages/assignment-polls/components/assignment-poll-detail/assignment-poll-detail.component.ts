@@ -20,7 +20,10 @@ import { ScrollingTableManageService } from 'src/app/ui/modules/scrolling-table'
 
 import { VoteControllerService } from '../../../../../../modules/poll/services/vote-controller.service/vote-controller.service';
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
-import { AssignmentPollService } from '../../../../modules/assignment-poll/services/assignment-poll.service';
+import {
+    AssignmentPollService,
+    UnknownUserLabel
+} from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
 
 @Component({
@@ -146,10 +149,10 @@ export class AssignmentPollDetailComponent
     private getMethodYVoteLabel(vote: ViewVote, optionContent: ViewUser): string {
         if (this.poll.max_votes_per_option > 1) {
             // Show how often the option was selected
-            return Math.floor(vote.weight).toString() + `x ` + optionContent.getFullName();
+            return Math.floor(vote.weight).toString() + `x ` + optionContent?.getFullName() ?? UnknownUserLabel;
         } else {
             if (vote.value === `Y`) {
-                return optionContent.getFullName();
+                return optionContent?.getFullName() ?? UnknownUserLabel;
             } else {
                 return this.voteValueToLabel(vote.value);
             }

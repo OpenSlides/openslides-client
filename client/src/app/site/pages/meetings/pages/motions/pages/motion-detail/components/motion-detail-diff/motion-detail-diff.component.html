@@ -1,63 +1,18 @@
 <!-- A summary of all changes -->
 <div class="motion-detail-diff">
-    <div class="change-recommendation-summary outlined" *ngIf="changes?.length">
-        <strong [matBadge]="changes.length" matBadgeOverlap="false">
-            {{ 'Summary of changes' | translate }}&nbsp;
-        </strong>
-
-        <cdk-virtual-scroll-viewport
-            itemSize="22"
-            minBufferPx="100"
-            maxBufferPx="300"
-            class="summary-of-changes-scroll"
-        >
-            <ul>
-                <li *cdkVirtualFor="let change of changes; let index = index">
-                    <span class="one-line">
-                        <a href="" (click)="scrollToChangeClicked(change, $event)" *ngIf="!change.isTitleChange()">
-                            <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
-                            <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
-                            <span *ngIf="isChangeRecommendation(change)">
-                                ({{ 'Change recommendation' | translate }})
-                            </span>
-                            <span *ngIf="isAmendment(change)">
-                                ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})
-                            </span>
-                        </a>
-                        <i class="user-subtitle" *ngIf="isChangeRecommendation(change)">
-                            – {{ getRecommendationTypeName(change) | translate }}
-                        </i>
-                        <i class="user-subtitle">
-                            <ng-container *ngIf="change.isRejected() && !isAmendment(change)">
-                                –
-                                <span>{{ 'Rejected' | translate }}</span>
-                            </ng-container>
-                            <ng-container *ngIf="(change.isAccepted() || isAmendment(change)) && change.stateName">
-                                – {{ change.stateName | translate }}
-                            </ng-container>
-                        </i>
-                        <a
-                            mat-icon-button
-                            [routerLink]="change.amendment.getDetailStateUrl()"
-                            [state]="{ back: 'true' }"
-                            class="smaller-icon-button amendment-link"
-                            *ngIf="isAmendment(change)"
-                        >
-                            <mat-icon>arrow_forward</mat-icon>
-                        </a>
-                    </span>
-                </li>
-            </ul>
-        </cdk-virtual-scroll-viewport>
-        <div *ngIf="changes.length === 0" class="no-changes">{{ 'No change recommendations yet' | translate }}</div>
-    </div>
+    <os-motion-detail-diff-summary
+        *ngIf="showSummary"
+        [changes]="changes"
+        [scrollToChange]="scrollToChange"
+        [elContainer]="nativeElement"
+    ></os-motion-detail-diff-summary>
 
     <span class="text-prefix-label" *ngIf="showPreamble">{{ preamble | translate }}</span>
 
     <!-- The actual diff view -->
     <div class="motion-text-with-diffs">
         <div *ngIf="getTitleChangingObject() as changedTitle">
-            <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-border">
+            <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
                 <div class="action-row" *osPerms="permission.motionCanManage">
                     <button
                         mat-icon-button
@@ -100,7 +55,7 @@
             </div>
 
             <div
-                class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-border"
+                class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
                 [class.collides]="hasCollissions(change, getAllTextChangingObjects())"
             >
                 <div class="collission-hint" *ngIf="hasCollissions(change, getAllTextChangingObjects())">

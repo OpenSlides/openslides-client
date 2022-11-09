@@ -62,8 +62,9 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     public setRecommendation(recommendationId: number, ...viewMotions: ViewMotion[]): Action<void> | null {
-        if (recommendationId) {
-            return this.repo.setRecommendation(recommendationId, ...viewMotions);
+        const changedViewMotions = viewMotions.filter(viewMotion => viewMotion.recommendation_id !== recommendationId);
+        if (recommendationId && !!changedViewMotions.length) {
+            return this.repo.setRecommendation(recommendationId, ...changedViewMotions);
         } else {
             return null;
         }

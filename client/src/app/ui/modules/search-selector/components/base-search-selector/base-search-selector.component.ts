@@ -290,6 +290,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     protected addSelectableItem(item: Selectable): void {
         if (!this._selectableItemsIdMap[item.id]) {
             this._selectableItemsIdMap[item.id] = item;
+            this._selectableItemsList.push(item);
         }
     }
 

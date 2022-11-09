@@ -63,6 +63,9 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit, OnDe
         this.cd.markForCheck();
         this.cd.detectChanges();
         this.cd.markForCheck();
+        this.service.outputObservable.subscribe(() => {
+            this.cd.markForCheck();
+        });
     }
 
     /**

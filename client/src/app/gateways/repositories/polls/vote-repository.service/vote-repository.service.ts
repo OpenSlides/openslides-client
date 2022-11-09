@@ -94,11 +94,13 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
             const ids = Array.from(this._nextRequestIds);
             this._nextRequestIds.clear();
 
-            let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
-            for (let id in results) {
-                this._hasVotedCache[id] = results[id];
+            if (this.activeMeetingId) {
+                let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
+                for (let id in results) {
+                    this._hasVotedCache[id] = results[id];
+                }
+                def.resolve();
             }
-            def.resolve();
         }, 50);
 
         return this._requestHasVotedPromise;

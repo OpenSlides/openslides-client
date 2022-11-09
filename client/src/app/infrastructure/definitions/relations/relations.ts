@@ -152,6 +152,13 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
+        MViewModel: ViewMediafile,
+        OField: `mediafiles`,
+        MField: `organization`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `active_meetings`,
         MField: `is_active_in_organization`

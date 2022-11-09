@@ -236,14 +236,15 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         const REMOVE = _(`remove group(s)`);
         const choices = [ADD, REMOVE];
         const selectedChoice = await this.choiceService.open(content, this.groupsObservable, true, choices);
-        if (selectedChoice) {
+        if (selectedChoice && selectedChoice.ids.length) {
             const choosedGroupIds = selectedChoice.ids as Ids;
             if (selectedChoice.action === ADD) {
                 this.repo
                     .update(user => {
+                        const nextGroupIds = user.group_ids().filter(id => this.activeMeeting.default_group_id !== id);
                         return {
                             id: user.id,
-                            group_ids: user.group_ids().concat(choosedGroupIds)
+                            group_ids: nextGroupIds.concat(choosedGroupIds)
                         };
                     }, ...this.selectedRows)
                     .resolve();

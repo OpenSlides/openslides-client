@@ -3,7 +3,7 @@ import { userHeadersAndVerboseNames } from 'src/app/domain/models/users/user.con
 
 export const accountHeadersAndVerboseNames: { [key in keyof User]?: string } = {
     ...userHeadersAndVerboseNames,
-    default_number: `Participant number`,
     default_structure_level: `Structure level`,
+    default_number: `Participant number`,
     default_vote_weight: `Vote weight`
 };

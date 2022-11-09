@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
@@ -62,12 +70,17 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
         return this.motion?.changedAmendmentLines;
     }
 
+    public get nativeElement(): any {
+        return this.el.nativeElement;
+    }
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         motionServiceCollector: MotionDetailServiceCollectorService,
         private fb: UntypedFormBuilder,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private el: ElementRef
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
     }

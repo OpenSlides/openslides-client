@@ -80,7 +80,7 @@ export class MotionPollService extends PollService {
 
     public generateTableDataAsObservable(poll: PollData): Observable<PollTableData[]> {
         // The "of(...)"-observable is used to fire the current state the first time.
-        return merge(of(poll.options), poll.options_as_observable).pipe(
+        return merge(of(poll?.options), poll.options_as_observable).pipe(
             map(options => this.createTableData(poll, options))
         );
     }
@@ -98,7 +98,7 @@ export class MotionPollService extends PollService {
     }
 
     protected override getPollDataFields(poll: PollData): CalculablePollKey[] {
-        switch (poll.onehundred_percent_base) {
+        switch (poll?.onehundred_percent_base) {
             case PollPercentBase.YN:
                 return [YES_KEY, NO_KEY];
             case PollPercentBase.Cast:
@@ -137,9 +137,25 @@ export class MotionPollService extends PollService {
                         : data.poll[data.result.vote as PollDataKey]) as number,
                     hide: data.result.hide,
                     icon: data.result.icon,
-                    showPercent: data.showPercent ?? data.result.showPercent
+                    showPercent: this.calculateShowPercent(
+                        data.poll,
+                        data.option ? (data.result.vote as OptionDataKey) : (data.result.vote as PollDataKey),
+                        data.showPercent ?? data.result.showPercent
+                    )
                 }
             ]
         };
+    }
+
+    private calculateShowPercent(
+        poll: PollData,
+        votingOption: OptionDataKey | PollDataKey,
+        pollShowPercent: boolean
+    ): boolean {
+        const option = [`yes`, `no`, `abstain`].includes(votingOption) ? votingOption.charAt(0).toUpperCase() : null;
+        if (!option || !poll.onehundred_percent_base) {
+            return pollShowPercent;
+        }
+        return poll.onehundred_percent_base.indexOf(option) !== -1 ? pollShowPercent : false;
     }
 }

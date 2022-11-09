@@ -14,7 +14,9 @@ export class StaticBeforeImportHandler<
     SideModel,
     MainModel extends ImportIdentifiable = any
 > extends BaseBeforeImportHandler<MainModel, SideModel> {
-    private readonly _useDefault: Ids | undefined;
+    private _useDefault: Ids | undefined;
+
+    private _useDefaultSubscription;
 
     public constructor(
         config: StaticBeforeImportConfig<MainModel, SideModel>,
@@ -25,6 +27,11 @@ export class StaticBeforeImportHandler<
             ...config
         });
         this._useDefault = config.useDefault;
+        if (config.useDefaultObservable) {
+            this._useDefaultSubscription = config.useDefaultObservable.subscribe(
+                useDefault => (this._useDefault = useDefault ?? this._useDefault)
+            );
+        }
     }
 
     public doResolve(mainModel: MainModel, propertyName: string): ImportResolveInformation<MainModel> {

@@ -69,7 +69,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     public motionObserver: Observable<ViewMotion[]> = of([]);
 
-    public motionTransformFn = (value: ViewMotion) => `[motion:` + value.number + `]`;
+    public motionTransformFn = (value: ViewMotion) => `[motion:` + value.id + `]`;
 
     public committeeObservable = this.motionForwardingService.forwardingCommitteesObservable;
 
@@ -144,7 +144,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      * @param id Motion recommendation id
      */
     public setRecommendation(id: number): void {
-        this.repo.setRecommendation(id, this.motion).resolve();
+        this.repo.setRecommendation(id, this.motion)?.resolve();
     }
 
     public resetRecommendation(): void {

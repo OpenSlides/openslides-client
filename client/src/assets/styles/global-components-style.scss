@@ -266,7 +266,10 @@
      */
     .outlined {
         background: mat.get-color-from-palette($background, background);
+    }
 
+    .outlined-hover {
+        @extend .outlined;
         &:hover {
             background-color: mat.get-color-from-palette($background, selected-button);
         }
@@ -315,6 +318,12 @@
     .background-card {
         background: mat.get-color-from-palette($background, card);
         color: mat.get-color-from-palette($foreground, text);
+    }
+
+    .collapsed-card-content {
+        &::after {
+            background: linear-gradient(rgba(255, 255, 255, 0), mat.get-color-from-palette($background, card));
+        }
     }
 
     .background-selected {

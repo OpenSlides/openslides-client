@@ -45,7 +45,7 @@
                         <section
                             *ngFor="let paragraph of paragraphs; let i = index"
                             class="paragraph-row background-hover"
-                            [class.outlined]="isParagraphSelected(paragraph)"
+                            [class.outlined-hover]="isParagraphSelected(paragraph)"
                             (click)="onParagraphClicked(paragraph)"
                         >
                             <mat-checkbox
