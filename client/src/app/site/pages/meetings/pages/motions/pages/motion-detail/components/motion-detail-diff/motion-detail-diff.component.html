@@ -12,7 +12,7 @@
     <!-- The actual diff view -->
     <div class="motion-text-with-diffs">
         <div *ngIf="getTitleChangingObject() as changedTitle">
-            <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-border">
+            <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
                 <div class="action-row" *osPerms="permission.motionCanManage">
                     <button
                         mat-icon-button
@@ -55,7 +55,7 @@
             </div>
 
             <div
-                class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-border"
+                class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
                 [class.collides]="hasCollissions(change, getAllTextChangingObjects())"
             >
                 <div class="collission-hint" *ngIf="hasCollissions(change, getAllTextChangingObjects())">
