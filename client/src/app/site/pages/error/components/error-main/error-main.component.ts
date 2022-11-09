@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/site/services/auth.service';
 import { FallbackRoutesService } from 'src/app/site/services/fallback-routes.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-error-main`,
@@ -18,6 +19,7 @@ export class ErrorMainComponent implements OnInit {
         private route: ActivatedRoute,
         private authService: AuthService,
         private router: Router,
+        private operator: OperatorService,
         private fallbackRoutesService: FallbackRoutesService
     ) {}
 
@@ -36,7 +38,7 @@ export class ErrorMainComponent implements OnInit {
     private getReturnUrl(): (string | number)[] {
         if (!this.authService.isAuthenticated()) {
             return [`login`];
-        } else if (this._meetingId) {
+        } else if (this._meetingId && this.operator.isInMeeting(this._meetingId)) {
             const fallbackRoute = this.fallbackRoutesService.getFallbackRoute();
             if (fallbackRoute) {
                 return [this._meetingId, fallbackRoute];
