@@ -103,6 +103,7 @@
             <mat-form-field class="full-width">
                 <input type="text" matInput placeholder="{{ 'Username' | translate }}" formControlName="username" />
                 <button
+                    *ngIf="isNewUser"
                     matSuffix
                     type="button"
                     mat-button
@@ -124,7 +125,18 @@
                     placeholder="{{ 'Initial password' | translate }}"
                     formControlName="default_password"
                 />
-                <mat-hint *ngIf="isNewUser" align="end">Generate</mat-hint>
+                <button
+                    *ngIf="isNewUser && generatePasswordFn"
+                    matSuffix
+                    type="button"
+                    mat-button
+                    mat-icon-button
+                    [disabled]="!generatePasswordFn"
+                    (click)="setRandomPassword()"
+                    [matTooltip]="'Generate password' | translate"
+                >
+                    <mat-icon>autorenew</mat-icon>
+                </button>
                 <button
                     *ngIf="isNewUser"
                     matSuffix
@@ -134,17 +146,6 @@
                     [matTooltip]="'If left empty, the password will be generated automatically' | translate"
                 >
                     <mat-icon>help</mat-icon>
-                </button>
-                <button
-                    *ngIf="isNewUser && generatePasswordFn"
-                    matSuffix
-                    type="button"
-                    mat-button
-                    mat-icon-button
-                    [disabled]="!generatePasswordFn"
-                    (click)="setRandomPassword()"
-                >
-                    <mat-icon>sync_problem</mat-icon>
                 </button>
             </mat-form-field>
         </div>
