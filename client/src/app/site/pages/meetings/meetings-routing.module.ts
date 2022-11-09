@@ -83,6 +83,10 @@ const routes: Routes = [
                 canLoad: [PermissionGuard]
             }
         ]
+    },
+    {
+        path: `error`,
+        loadChildren: () => import(`../error/error.module`).then(m => m.ErrorModule)
     }
 ];
 

@@ -52,7 +52,7 @@ export class RerouteService {
             error: `Authorization Error`,
             msg: routeDataArray
         };
-        return this.router.createUrlTree([`error`], {
+        return this.router.createUrlTree(meetingId ? [meetingId, `error`] : [`error`], {
             queryParams: meetingId
                 ? {
                       meetingId,
