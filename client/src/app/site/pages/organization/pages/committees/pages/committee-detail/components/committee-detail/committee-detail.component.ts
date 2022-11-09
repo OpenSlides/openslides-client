@@ -31,7 +31,13 @@ export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {
                     viewModelCtor: ViewCommittee,
                     ids: [this.committeeId!],
                     fieldset: DEFAULT_FIELDSET,
-                    follow: [{ idField: `user_ids`, fieldset: `accountList` }]
+                    follow: [
+                        {
+                            idField: `user_ids`,
+                            fieldset: `accountList`,
+                            additionalFields: [{ templateField: `group_$_ids` }]
+                        }
+                    ]
                 },
                 subscriptionName: COMMITTEE_DETAIL_SUBSCRIPTION
             });
