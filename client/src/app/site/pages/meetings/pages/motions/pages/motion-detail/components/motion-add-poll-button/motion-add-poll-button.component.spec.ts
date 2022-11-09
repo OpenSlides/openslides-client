@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MotionManagePollsComponent } from './motion-manage-polls.component';
+import { MotionAddPollButtonComponent } from './motion-add-poll-button.component';
 
-xdescribe(`MotionManagePollsComponent`, () => {
-    let component: MotionManagePollsComponent;
-    let fixture: ComponentFixture<MotionManagePollsComponent>;
+xdescribe(`MotionAddPollButtonComponent`, () => {
+    let component: MotionAddPollButtonComponent;
+    let fixture: ComponentFixture<MotionAddPollButtonComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [MotionManagePollsComponent]
+            declarations: [MotionAddPollButtonComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(MotionManagePollsComponent);
+        fixture = TestBed.createComponent(MotionAddPollButtonComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
