@@ -266,7 +266,10 @@
      */
     .outlined {
         background: mat.get-color-from-palette($background, background);
+    }
 
+    .outlined-hover {
+        @extend .outlined;
         &:hover {
             background-color: mat.get-color-from-palette($background, selected-button);
         }
