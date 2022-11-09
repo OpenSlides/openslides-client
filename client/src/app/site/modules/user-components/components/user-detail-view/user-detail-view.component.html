@@ -102,6 +102,16 @@
         <div *ngIf="isAllowed('seePersonal')">
             <mat-form-field class="full-width">
                 <input type="text" matInput placeholder="{{ 'Username' | translate }}" formControlName="username" />
+                <button
+                    *ngIf="isNewUser"
+                    matSuffix
+                    type="button"
+                    mat-button
+                    mat-icon-button
+                    [matTooltip]="'If left empty, the user name will be assigned automatically' | translate"
+                >
+                    <mat-icon>help</mat-icon>
+                </button>
                 <mat-error>{{ 'You have to enter at least one character' | translate }}</mat-error>
             </mat-form-field>
         </div>
@@ -115,17 +125,27 @@
                     placeholder="{{ 'Initial password' | translate }}"
                     formControlName="default_password"
                 />
-                <mat-hint *ngIf="isNewUser" align="end">Generate</mat-hint>
                 <button
                     *ngIf="isNewUser && generatePasswordFn"
+                    matSuffix
                     type="button"
                     mat-button
-                    matSuffix
                     mat-icon-button
                     [disabled]="!generatePasswordFn"
                     (click)="setRandomPassword()"
+                    [matTooltip]="'Generate password' | translate"
                 >
-                    <mat-icon>sync_problem</mat-icon>
+                    <mat-icon>autorenew</mat-icon>
+                </button>
+                <button
+                    *ngIf="isNewUser"
+                    matSuffix
+                    type="button"
+                    mat-button
+                    mat-icon-button
+                    [matTooltip]="'If left empty, the password will be generated automatically' | translate"
+                >
+                    <mat-icon>help</mat-icon>
                 </button>
             </mat-form-field>
         </div>

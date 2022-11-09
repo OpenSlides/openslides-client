@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -34,6 +35,7 @@ import { ParticipantDetailManageRoutingModule } from './participant-detail-manag
         MatFormFieldModule,
         MatDividerModule,
         MatListModule,
+        MatIconModule,
         ReactiveFormsModule
     ]
 })

@@ -81,6 +81,15 @@
                                 placeholder="{{ 'Username' | translate }}"
                                 formControlName="username"
                             />
+                            <button
+                                matSuffix
+                                type="button"
+                                mat-button
+                                mat-icon-button
+                                [matTooltip]="'If left empty, the user name will be assigned automatically' | translate"
+                            >
+                                <mat-icon>help</mat-icon>
+                            </button>
                             <mat-error>{{ 'You have to enter at least one character' | translate }}</mat-error>
                         </mat-form-field>
                     </div>
