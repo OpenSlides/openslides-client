@@ -848,6 +848,12 @@ export const RELATIONS: Relation[] = [
         AField: `next_states`,
         BField: `previous_states`
     }),
+    ...makeM2O({
+        MViewModel: ViewMotionState,
+        OViewModel: ViewMotionState,
+        MField: `submitter_withdraw_state`,
+        OField: `submitter_withdraw_back_states`
+    }),
     // ########## Motion workflow
     ...makeM2O({
         MViewModel: ViewMotionState,

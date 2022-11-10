@@ -50,6 +50,8 @@ export class MotionState extends BaseModel<MotionState> {
     public motion_recommendation_ids!: Id[]; // (motion/recommendation_id)[];
     public workflow_id!: Id; // motion_workflow/state_ids;
     public first_state_of_workflow_id!: Id; // motion_workflow/first_state_id;
+    public submitter_withdraw_state_id!: Id;
+    public submitter_withdraw_back_ids!: Id[];
 
     public constructor(input?: any) {
         super(MotionState.COLLECTION, input);
