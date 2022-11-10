@@ -19,6 +19,19 @@
     img {
         width: 100%;
         height: auto; /* TODO: use dynamic auto width/height for landscape/portrait format */
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    pdf-viewer {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
     }
 }
 

@@ -31,7 +31,7 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
     }
 
     public get isFullscreen(): boolean {
-        return this.data.options[`fullscreen`];
+        return this.data.options[`fullscreen`] ?? true;
     }
 
     public constructor() {
