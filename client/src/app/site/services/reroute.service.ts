@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Data, Router, UrlSegment, UrlTree } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
@@ -38,7 +39,7 @@ export class RerouteService {
             }
         }
         const routeParams = await firstValueFrom(this.osRouter.currentParamMap);
-        const meetingId = routeParams?.[`meetingId`];
+        const meetingId: Id = Number(routeParams?.[`meetingId`]);
 
         let routeDataArray = [];
         if (routeData?.[`meetingPermissions`]) {
