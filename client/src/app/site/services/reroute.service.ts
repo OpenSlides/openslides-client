@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Data, Router, UrlSegment } from '@angular/router';
+import { Data, Router, UrlSegment, UrlTree } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 
 import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
@@ -20,10 +21,10 @@ export class RerouteService {
     /**
      * Handles a forbidden route. If the route is "/" (start page), It is tried to
      * use a fallback route provided by AuthGuardFallbackRoutes. If this won't work
-     * or it wasn't the start page in the first place, the operator will be redirected
-     * to an error page.
+     * or it wasn't the start page in the first place, a url to an error page is
+     * returned.
      */
-    public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<void> {
+    public async handleForbiddenRoute(routeData: Data, segments: UrlSegment[], url?: string): Promise<UrlTree> {
         if (segments.length === 0) {
             const fallbackMeetingId = Number.isNaN(this.osRouter.getMeetingId(url))
                 ? null
@@ -31,12 +32,14 @@ export class RerouteService {
             // start page
             const fallbackRoute = this.fallbackRoutesService.getFallbackRoute();
             if (fallbackRoute && (this.operator.user || fallbackMeetingId)) {
-                this.router.navigate([fallbackMeetingId ?? this.operator.user.meeting_ids[0], fallbackRoute]);
-                return;
+                return this.router.createUrlTree([
+                    fallbackMeetingId ?? this.operator.user.meeting_ids[0],
+                    fallbackRoute
+                ]);
             }
         }
         const routeParams = await firstValueFrom(this.osRouter.currentParamMap);
-        const meetingId = routeParams?.[`meetingId`];
+        const meetingId: Id = Number(routeParams?.[`meetingId`]);
 
         let routeDataArray = [];
         if (routeData?.[`meetingPermissions`]) {
@@ -50,29 +53,28 @@ export class RerouteService {
             error: `Authorization Error`,
             msg: routeDataArray
         };
-        this.router.navigate([`error`], {
-            queryParams: meetingId
-                ? {
-                      meetingId,
-                      ...queryParams
-                  }
-                : queryParams
-        });
+        return this.router.createUrlTree(
+            meetingId && this.operator.isInMeeting(meetingId) ? [meetingId, `error`] : [`error`],
+            {
+                queryParams: meetingId
+                    ? {
+                          meetingId,
+                          ...queryParams
+                      }
+                    : queryParams
+            }
+        );
     }
 
     /**
-     * If the user requested a route without direct meaning, forward to their meaningful meeting
+     * Return users url to their meaningful meeting
      */
-    public forwardToOnlyMeeting(segments: string[] = []): void {
-        try {
-            const meetingId = this.operator.onlyMeeting;
-            this.router.navigate([meetingId, ...segments]);
-        } catch (e) {
-            throw new Error(`Error when trying to forward to only meeting: ${e?.message}`);
-        }
+    public getOnlyMeetingUrlTree(segments: string[] = []): UrlTree {
+        const meetingId = this.operator.onlyMeeting;
+        return this.router.createUrlTree([meetingId, ...segments]);
     }
 
-    public toLogin(): void {
-        this.osRouter.navigateToLogin();
+    public toLogin(): UrlTree {
+        return this.router.createUrlTree([`login`]);
     }
 }
