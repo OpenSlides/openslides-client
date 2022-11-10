@@ -1,8 +1,15 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { multiActionVerbose, titleVerbose, WaitForActionData, WaitForActionReason } from '../../definitions';
+import {
+    multiActionVerbose,
+    titleVerbose,
+    WaitForActionData,
+    WaitForActionReason,
+    waitForActionReason
+} from '../../definitions';
 import { WaitForActionDialogService } from '../../services/wait-for-action-dialog.service';
 
 @Component({
@@ -29,6 +36,15 @@ export class WaitForActionDialogComponent extends BaseUiComponent {
         return ``;
     }
 
+    public get isPastInactivityThreshold(): boolean {
+        return this.sameTypeArrayLength && this.waitService.currentReason === waitForActionReason.inactive;
+    }
+
+    public get lastActivity(): string {
+        const worker = this.repo.getViewModel(this.currentWorkerId);
+        return new Date(worker?.timestamp).toLocaleString();
+    }
+
     public get sameTypeArrayLength(): number {
         return this._dataArraySubject.value?.length;
     }
@@ -49,7 +65,7 @@ export class WaitForActionDialogComponent extends BaseUiComponent {
 
     private _currentData: Map<WaitForActionReason, WaitForActionData[]>;
 
-    public constructor(private waitService: WaitForActionDialogService) {
+    public constructor(private waitService: WaitForActionDialogService, private repo: ActionWorkerRepositoryService) {
         super();
         this.subscriptions.push(
             this.waitService.dataObservable.subscribe(data => {

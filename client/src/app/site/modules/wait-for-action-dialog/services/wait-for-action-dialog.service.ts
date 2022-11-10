@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerWatchService } from 'src/app/gateways/action-worker-watch/action-worker-watch.service';
+import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
 import { WaitForActionDialogComponent } from '../components/wait-for-action-dialog/wait-for-action-dialog.component';
@@ -54,7 +55,11 @@ export class WaitForActionDialogService {
 
     private _dialog: MatDialogRef<WaitForActionDialogComponent>;
 
-    public constructor(private injector: Injector, private dialog: MatDialog) {}
+    public constructor(
+        private injector: Injector,
+        private dialog: MatDialog,
+        private repo: ActionWorkerRepositoryService
+    ) {}
 
     public addNewDialog(reason: WaitForActionReason, data: WaitForActionData): void {
         this.removeAllDates(data.workerId);
@@ -87,7 +92,7 @@ export class WaitForActionDialogService {
         this.newCurrentReason();
     }
 
-    public wait(all = false): WaitForActionData[] {
+    public wait(all = false, noConfirmation = false): WaitForActionData[] {
         const map = this._dataSubject.value;
         let removed: WaitForActionData[];
         if (all || map.get(this.currentReason).length === 1) {
@@ -99,11 +104,17 @@ export class WaitForActionDialogService {
         }
         this._dataSubject.next(map);
         this.newCurrentReason();
+        removed.forEach(date => {
+            const worker = this.repo.getViewModel(date.workerId);
+            if (worker) {
+                worker.lastConfirmationToWaitTimestamp = Date.now();
+            }
+        });
         return removed;
     }
 
     public stopWaiting(all = false): void {
-        const toStop = this.wait(all);
+        const toStop = this.wait(all, true);
         this.workerWatch.unsubscribeFromWorkers(toStop.map(date => date.workerId));
     }
 

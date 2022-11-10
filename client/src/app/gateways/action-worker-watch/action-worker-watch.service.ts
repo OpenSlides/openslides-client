@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, timer } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
 import { idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
@@ -217,9 +217,12 @@ export class ActionWorkerWatchService {
         }
         let hasReportedInactivity = false;
         let hasReportedSlowness = false;
+        let lastRefreshedInactivityReport = 0;
         const actionWorker = (
             await firstValueFrom(
-                this._workerObservable.pipe(
+                combineLatest([this._workerObservable, timer(0, 2000)]).pipe(
+                    // check everytime there is new data and every two seconds
+                    map(data => data[0]),
                     filter(data => {
                         const date = data.find(worker => worker.id === id);
                         if (date && watchActivity) {
@@ -227,6 +230,16 @@ export class ActionWorkerWatchService {
                             if (!hasReportedSlowness && date.isSlow) {
                                 hasReportedSlowness = true;
                                 reason = waitForActionReason.slow;
+                            }
+                            if (
+                                hasReportedInactivity &&
+                                date.lastConfirmationToWaitTimestamp &&
+                                date.lastConfirmationToWaitTimestamp > lastRefreshedInactivityReport &&
+                                date.lastConfirmationToWaitTimestamp < Date.now() - 1000 * 60 * 5
+                            ) {
+                                // Resend inactivity dialog at least 5 minutes after last confirmation
+                                hasReportedInactivity = false;
+                                lastRefreshedInactivityReport = Date.now();
                             }
                             if (!hasReportedInactivity && date.hasPassedInactivityThreshold) {
                                 hasReportedInactivity = true;

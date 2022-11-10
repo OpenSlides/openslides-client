@@ -2,8 +2,9 @@
     <h2>{{ currentTitle | translate }}</h2>
     <p>{{ 'Worker identification' | translate }}: {{ currentWorkerId }}</p>
     <p>{{ 'Action type' | translate }}: {{ currentWorkerName }}</p>
+    <p *ngIf="isPastInactivityThreshold">{{ 'Last confirmed activity on action' | translate }}: {{ lastActivity }}</p>
     <p>{{ 'If you choose to stop waiting for this action, you will not receive results from the server.' | translate }}</p>
-    <p><i class="warn">{{ 'Warning: The process may still continue to run on the server, therefore actions that include creating, updating or deleting data will still do so eventually.' | translate }}</i></p>
+    <p><i class="warn">{{ 'Warning: The process may still continue to run on the server, therefore actions that include creating, updating or deleting data will still do so eventually.' | translate }}</i><i *ngIf="isPastInactivityThreshold" class="warn">{{ 'This is, however, unlikely at this point.' | translate }}</i></p>
     <div class="text-center">
         <div class="wait-for-action-buttons">
             <button mat-button (click)="wait()">
