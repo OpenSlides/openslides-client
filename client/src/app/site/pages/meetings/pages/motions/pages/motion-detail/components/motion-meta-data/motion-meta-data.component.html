@@ -46,7 +46,7 @@
 <div *ngIf="motion?.state">
     <os-motion-extension-field
         title="{{ 'State' | translate }}"
-        [canBeEdited]="perms.isAllowed('change_state', motion)"
+        [canBeEdited]="perms.isAllowed('change_state', motion) || !!motion.state.submitter_withdraw_state"
         [hasExtension]="!!motion.state && motion.state.show_state_extension_field"
         [chipValue]="stateLabel | translate"
         [inputValue]="motion?.state_extension"
@@ -55,22 +55,29 @@
         (succeeded)="setStateExtension($event)"
     >
         <span class="trigger-menu" *ngIf="motion.state">
-            <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
-                {{ state.name | translate }}
-                <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
-            </button>
-            <div>
-                <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
-                <button *ngFor="let state of motion.state.previous_states" mat-menu-item (click)="setState(state.id)">
-                    <mat-icon>arrow_back</mat-icon>
+            <ng-container *ngIf="perms.isAllowed('change_state', motion)">
+                <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
                     {{ state.name | translate }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
-                <button mat-menu-item (click)="resetState()">
-                    <mat-icon>replay</mat-icon>
-                    {{ 'Reset state' | translate }}
+                <div>
+                    <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
+                    <button *ngFor="let state of motion.state.previous_states" mat-menu-item (click)="setState(state.id)">
+                        <mat-icon>arrow_back</mat-icon>
+                        {{ state.name | translate }}
+                        <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                    </button>
+                    <button mat-menu-item (click)="resetState()">
+                        <mat-icon>replay</mat-icon>
+                        {{ 'Reset state' | translate }}
+                    </button>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!perms.isAllowed('change_state', motion) && !!motion.state.submitter_withdraw_state">
+                <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
+                    {{ motion.state.submitter_withdraw_state.name | translate }}
                 </button>
-            </div>
+            </ng-container>
         </span>
     </os-motion-extension-field>
 
