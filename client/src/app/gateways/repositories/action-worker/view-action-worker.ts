@@ -23,10 +23,10 @@ export class ViewActionWorker extends BaseViewModel<ActionWorker> {
     }
 
     /**
-     * Returns true, if the worker timestamp is older than 15 seconds
+     * Returns true, if the worker timestamp is older than 20 seconds
      */
     public get hasPassedInactivityThreshold(): boolean {
-        return this.timeSinceLastActivityConfirmation > 15;
+        return this.timeSinceLastActivityConfirmation > 20;
     }
 
     /**
