@@ -42,7 +42,7 @@ export class WaitForActionDialogComponent extends BaseUiComponent {
 
     public get lastActivity(): string {
         const worker = this.repo.getViewModel(this.currentWorkerId);
-        return new Date(worker?.timestamp).toLocaleString();
+        return !!worker?.timestamp ? new Date(worker?.timestamp).toLocaleString() : ` - `;
     }
 
     public get sameTypeArrayLength(): number {
