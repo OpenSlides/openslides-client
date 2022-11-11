@@ -21,9 +21,12 @@
     >
         <ng-template osListOfSpeakersContentTitle>
             <p class="line-and-icon subtitle-text">
-                <a [routerLink]="closUrl" [class.disabled]="!closUrl">
+                <a [routerLink]="closUrl" *ngIf="closUrl">
                     {{ 'List of speakers' | translate }}
                 </a>
+                <span *ngIf="!closUrl">
+                    {{ 'List of speakers' | translate }}
+                </span>
 
                 <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                     <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">
