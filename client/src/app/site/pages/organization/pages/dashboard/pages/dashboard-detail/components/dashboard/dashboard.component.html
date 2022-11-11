@@ -5,6 +5,11 @@
     </div>
 </os-head-bar>
 
+<mat-card class="os-card">
+    <h1>{{ organizationName | translate }}</h1>
+    <p *ngIf="organizationDescription">{{ organizationDescription | translate }}</p>
+</mat-card>
+
 <div class="meeting-list-container">
     <div class="meeting-spacer"></div>
 </div>
