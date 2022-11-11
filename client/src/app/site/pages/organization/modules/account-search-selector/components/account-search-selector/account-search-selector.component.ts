@@ -1,14 +1,17 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { distinctUntilChanged } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import {
     SearchUsersByNameOrEmailPresenterScope,
     SearchUsersByNameOrEmailPresenterService
 } from 'src/app/gateways/presenter';
+import { UserRepositoryService } from 'src/app/gateways/repositories/users';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -24,6 +27,17 @@ import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/
     providers: [{ provide: MatFormFieldControl, useExisting: AccountSearchSelectorComponent }]
 })
 export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit {
+    @Input()
+    public set accounts(users: ViewUser[]) {
+        if (!this.selectableItems?.length) {
+            this.selectableItems = [...users];
+        } else {
+            for (let user of users) {
+                this.addSelectableItem(user);
+            }
+        }
+    }
+
     public readonly controlType = `account-search-selector`;
 
     public override readonly multiple = true;
@@ -35,32 +49,51 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         ngControl: NgControl,
         private userController: UserControllerService,
         private operator: OperatorService,
-        private presenter: SearchUsersByNameOrEmailPresenterService
+        private presenter: SearchUsersByNameOrEmailPresenterService,
+        private userRepo: UserRepositoryService
     ) {
         super(fb, fm, element, ngControl);
     }
 
     public override ngOnInit(): void {
         super.ngOnInit();
-        this.selectableItems = [this.userController.getViewModel(this.operator.operatorId!)!];
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            this.initItems();
+        }
     }
 
     public override onSelectionChange(value: Selectable, change: MatOptionSelectionChange<any>): void {
         super.onSelectionChange(value, change);
-        this.addSelectableItem(value);
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            this.addSelectableItem(value);
+        }
     }
 
     protected override onSearchValueUpdated(nextValue: string): void {
-        if (nextValue.length >= 3) {
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+            super.onSearchValueUpdated(nextValue);
+        } else {
             this.searchAccount(nextValue);
         }
     }
 
+    private initItems(): void {
+        const observer = this.userRepo.getViewModelListObservable();
+        this.subscriptions.push(
+            observer.pipe(distinctUntilChanged((c, o) => c.length === o.length)).subscribe(items => {
+                this.selectableItems = items || [];
+            })
+        );
+    }
+
     private async searchAccount(name: string): Promise<void> {
-        const user = this.userController.parseStringIntoUser(name);
-        if (this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
+        // TODO: This condition is not reachable because the presenter
+        //       needs the checked permission currently which might change
+        //       in the future.
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users) && name.length >= 3) {
+            const user = this.userController.parseStringIntoUser(name);
             const result = await this.presenter.call({
-                searchCriteria: [{ username: user.username }],
+                searchCriteria: [{ username: user.username }, { username: name }],
                 permissionRelatedId: ORGANIZATION_ID,
                 permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
             });
@@ -75,7 +108,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
                 }))
             );
         } else {
-            this.filteredItemsSubject.next([this.operator.user]);
+            super.onSearchValueUpdated(name);
         }
     }
 }

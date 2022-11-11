@@ -6,7 +6,7 @@ import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from '../../../modules/poll/pipes';
-import { AssignmentPollService } from '../modules/assignment-poll/services/assignment-poll.service';
+import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
 import { ViewAssignment } from '../view-models';
 import { AssignmentExportServiceModule } from './assignment-export-service.module';
 
@@ -115,7 +115,7 @@ export class AssignmentPdfService {
         if (assignment.phase !== AssignmentPhase.Finished) {
             const candidatesText = `${this.translate.instant(`Candidates`)}: `;
             const userList = assignment.candidates.map(candidate => ({
-                text: candidate.user.full_name,
+                text: candidate.user?.full_name || UnknownUserLabel,
                 margin: [0, 0, 0, 10]
             }));
             const listType = assignment.number_poll_candidates ? `ol` : `ul`;
