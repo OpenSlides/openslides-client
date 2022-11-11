@@ -67,7 +67,7 @@
             <p class="subtitle-text">{{ projectorTitle | translate }}</p>
         </a>
 
-        <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }">
+        <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
             <div class="projector">
                 <os-projector *ngIf="projector" [projector]="projector"></os-projector>
             </div>
