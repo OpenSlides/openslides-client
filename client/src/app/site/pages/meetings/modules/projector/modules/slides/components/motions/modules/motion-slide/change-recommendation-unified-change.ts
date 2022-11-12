@@ -21,7 +21,7 @@ export class ChangeRecommendationUnifiedChange implements ChangeRecommendationDa
         Object.assign(this, data);
     }
     public getTitle(): string {
-        throw new Error(`Method not implemented.`);
+        return `Recommendation`;
     }
     public getModificationType(): ModificationType {
         throw new Error(`Method not implemented.`);

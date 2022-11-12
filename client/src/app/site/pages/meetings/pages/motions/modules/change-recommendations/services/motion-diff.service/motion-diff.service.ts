@@ -5,6 +5,7 @@ import { djb2hash, splitStringKeepSeperator } from 'src/app/infrastructure/utils
 import * as DomHelpers from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, LineRange } from '../../../../definitions';
+import { ViewUnifiedChangeType } from '../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
 import { LineNumberedString, LineNumberingService, LineNumberRange } from '../line-numbering.service';
 
@@ -1094,8 +1095,8 @@ export class MotionDiffService {
      * This functions merges two arrays of nodes. The last element of nodes1 and the first element of nodes2
      * are merged, if they are of the same type.
      *
-     * This is done recursively until a TEMPLATE-Tag is is found, which was inserted in this.replaceLines.
-     * Using a TEMPLATE-Tag is a rather dirty hack, as it is allowed inside of any other element, including <ul>.
+     * This is done recursively until a TEMPLATE-Tag is found, which was inserted in this.replaceLines.
+     * Using a TEMPLATE-Tag is a rather dirty hack, as it is allowed inside any other element, including <ul>.
      *
      * @param {Node[]} nodes1
      * @param {Node[]} nodes2
@@ -1288,8 +1289,23 @@ export class MotionDiffService {
             DomHelpers.removeCSSClass(forgottenSplitClasses[i], `os-split-after`);
         }
 
-        const replacedHtml = this.serializeDom(mergedFragment, true);
-        return replacedHtml;
+        return this.serializeDom(mergedFragment, true);
+    }
+
+    public removeLines(oldHtml: string, fromLine: number, toLine: number): string {
+        return this.replaceLines(oldHtml, ``, fromLine, toLine);
+    }
+
+    /**
+     * Hint: as replaceLines does not work with specific points in the text anymore, but full lines, inserting
+     * only works by using the workaround of selecting a "negative line", which results in no removal.
+     *
+     * Only mind that the inserted HTML needs to be wrapped in similar tags to the preceding text; that is, if the
+     * previous text is within a UL/LI construct and insertedHtml is supposted to be inserted within that LI,
+     * it needs to be wrapped accordingly.
+     */
+    public insertLines(oldHtml: string, atLineNumber: number, insertedHtml: string): string {
+        return this.replaceLines(oldHtml, insertedHtml, atLineNumber, atLineNumber - 1);
     }
 
     /**
@@ -1696,12 +1712,28 @@ export class MotionDiffService {
         return diff;
     }
 
+    public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
+        return (
+            changes.filter(
+                (otherChange: ViewUnifiedChange) =>
+                    otherChange.getChangeId() !== change.getChangeId() &&
+                    ((otherChange.getLineFrom() >= change.getLineFrom() &&
+                        otherChange.getLineFrom() <= change.getLineTo()) ||
+                        (otherChange.getLineTo() >= change.getLineFrom() &&
+                            otherChange.getLineTo() <= change.getLineTo()) ||
+                        (otherChange.getLineFrom() <= change.getLineFrom() &&
+                            otherChange.getLineTo() >= change.getLineTo()))
+            ).length > 0
+        );
+    }
+
     /**
      * Applies all given changes to the motion and returns the (line-numbered) text
      *
      * @param {string} motionHtml
      * @param {ViewUnifiedChange[]} changes
      * @param {number} lineLength
+     * @param {boolean} showAllCollisions
      * @param {number} highlightLine
      * @param {number} firstLine
      */
@@ -1709,22 +1741,70 @@ export class MotionDiffService {
         motionHtml: string,
         changes: ViewUnifiedChange[],
         lineLength: number,
+        showAllCollisions: boolean,
         highlightLine?: number,
         firstLine = 1
     ): string {
         let html = motionHtml;
 
+        changes = changes.filter(change => !change.isTitleChange());
         // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
         changes.sort(
             (change1: ViewUnifiedChange, change2: ViewUnifiedChange) => change2.getLineFrom() - change1.getLineFrom()
         );
 
-        changes.forEach((change: ViewUnifiedChange) => {
-            if (!change.isTitleChange()) {
+        if (showAllCollisions) {
+            let lastReplacedLine: number = null;
+
+            changes.forEach(change => {
+                html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: firstLine });
+
+                if (this.changeHasCollissions(change, changes)) {
+                    // In case of colliding amendments, we remove the original text first before inserting the amendments one by one.
+                    // Note: if amendment 1 affects line 3-5, we remove 3-5. If amendment 2 affects line 2-4, we only need to remove
+                    // line 2, as 3-5 is already removed. If Amendment 3 affects 2-4 too, we don't have to remove anything anymore.
+
+                    let removeUntil = change.getLineTo();
+                    if (lastReplacedLine !== null && lastReplacedLine <= removeUntil) {
+                        removeUntil = lastReplacedLine - 1;
+                    }
+                    if (removeUntil >= change.getLineFrom()) {
+                        html = this.removeLines(html, change.getLineFrom(), removeUntil);
+                        html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: firstLine });
+                    }
+
+                    const type =
+                        ` data-change-type="` +
+                        ((type: ViewUnifiedChangeType) => {
+                            switch (type) {
+                                case ViewUnifiedChangeType.TYPE_AMENDMENT:
+                                    return `amendment`;
+                                case ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION:
+                                    return `recommendation`;
+                                default:
+                                    return `unknown`;
+                            }
+                        })(change.getChangeType()) +
+                        `"`;
+                    const changeId = ` data-change-id="` + DomHelpers.replaceHtmlEntities(change.getChangeId()) + `"`;
+                    const title = ` data-title="` + DomHelpers.replaceHtmlEntities(change.getTitle()) + `"`;
+                    const ident = ` data-identifier="` + DomHelpers.replaceHtmlEntities(change.getIdentifier()) + `"`;
+                    const opTag = `<div class="os-colliding-change"` + type + ident + title + changeId + `>`;
+                    const insertingHtml = opTag + change.getChangeNewText() + `</div>`;
+
+                    html = this.insertLines(html, change.getLineFrom(), insertingHtml);
+
+                    lastReplacedLine = change.getLineFrom();
+                } else {
+                    html = this.replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
+                }
+            });
+        } else {
+            changes.forEach((change: ViewUnifiedChange) => {
                 html = this.lineNumberingService.insertLineNumbers({ html, lineLength, firstLine: firstLine });
                 html = this.replaceLines(html, change.getChangeNewText(), change.getLineFrom(), change.getLineTo());
-            }
-        });
+            });
+        }
 
         html = this.lineNumberingService.insertLineNumbers({
             html,
@@ -1734,6 +1814,71 @@ export class MotionDiffService {
         });
 
         return html;
+    }
+
+    public formatOsCollidingChanges(
+        html: string,
+        formatter: (el: HTMLDivElement, type: string, identifier: string, title: string, changeId: string) => void
+    ): string {
+        const frag = DomHelpers.htmlToFragment(html);
+
+        frag.querySelectorAll(`.os-colliding-change`).forEach((el: HTMLElement): void => {
+            const type = el.getAttribute(`data-change-type`) ?? ``;
+            const changeId = el.getAttribute(`data-change-id`) ?? ``;
+            const identifier = el.getAttribute(`data-identifier`) ?? ``;
+            const title = el.getAttribute(`data-title`) ?? ``;
+            formatter.bind(this)(el as HTMLDivElement, type, identifier, title, changeId);
+        });
+
+        return DomHelpers.fragmentToHtml(frag);
+    }
+
+    public formatOsCollidingChanges_wysiwyg_cb(
+        el: HTMLDivElement,
+        type: string,
+        identifier: string,
+        title: string,
+        changeId: string
+    ): void {
+        // In a P, we want to have the collision markers inserted within the P's margins
+        let toInsertElement: HTMLElement, commentsInInlineElement: boolean;
+        if (el.children.length === 1 && el.firstChild.nodeName === `P`) {
+            toInsertElement = el.firstChild as HTMLElement;
+            commentsInInlineElement = true;
+        } else {
+            toInsertElement = el;
+            commentsInInlineElement = false;
+        }
+
+        // Change recommendations do not have a title
+        let strTitle;
+        if (type === `recommendation`) {
+            strTitle = this.translate.instant(`Change recommendation`);
+        } else {
+            strTitle = identifier;
+        }
+        const strStart = this.translate.instant(`Start collision`);
+        const strEnd = this.translate.instant(`End collision`);
+
+        const commentBegin = el.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
+        commentBegin.innerHTML =
+            `&lt;` + DomHelpers.replaceHtmlEntities(`!-- ### ` + strStart + `: ` + strTitle + ` ### --`) + `&gt;`;
+        if (commentsInInlineElement) {
+            commentBegin.innerHTML = commentBegin.innerHTML + `<br>`;
+        }
+        if (toInsertElement.firstChild) {
+            toInsertElement.insertBefore(commentBegin, toInsertElement.firstChild);
+        } else {
+            toInsertElement.appendChild(commentBegin);
+        }
+
+        const commentEnd = toInsertElement.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
+        commentEnd.innerHTML =
+            `&lt;` + DomHelpers.replaceHtmlEntities(`!-- ### ` + strEnd + `: ` + strTitle + ` ### --`) + `&gt;`;
+        if (commentsInInlineElement) {
+            commentEnd.innerHTML = `<br>` + commentEnd.innerHTML;
+        }
+        toInsertElement.appendChild(commentEnd);
     }
 
     /**

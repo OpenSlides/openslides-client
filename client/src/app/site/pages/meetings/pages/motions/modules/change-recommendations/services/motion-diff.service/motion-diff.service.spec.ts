@@ -4,6 +4,9 @@ import { htmlToFragment, nodesToHtml } from 'src/app/infrastructure/utils/dom-he
 import { E2EImportsModule } from 'src/e2e-imports.module';
 import { TestChangeRecommendation } from 'src/testing/models/test-change-recommendation';
 
+import { ChangeRecommendationUnifiedChange } from '../../../../../../modules/projector/modules/slides/components/motions/modules/motion-slide/change-recommendation-unified-change';
+import { ViewMotion } from '../../../../view-models';
+import { ViewMotionAmendedParagraph } from '../../../../view-models/view-motion-amended-paragraph';
 import { LineNumberingService } from '../line-numbering.service';
 import { MotionDiffService } from './motion-diff.service';
 
@@ -1388,7 +1391,7 @@ describe(`MotionDiffService`, () => {
             [MotionDiffService, LineNumberingService],
             (service: MotionDiffService, lineNumberingService: LineNumberingService) => {
                 const inHtml = `<p>Test 1</p><p>Test 2</p>`;
-                const out = service.getTextWithChanges(inHtml, [], 20);
+                const out = service.getTextWithChanges(inHtml, [], 20, false);
                 expect(out).toBe(
                     lineNumberingService.insertLineNumbers({
                         html: inHtml,
@@ -1428,7 +1431,8 @@ describe(`MotionDiffService`, () => {
                             text: `<p>Test 4x</p>`
                         })
                     ],
-                    20
+                    20,
+                    false
                 );
 
                 expect(out).toBe(
@@ -1442,6 +1446,51 @@ describe(`MotionDiffService`, () => {
                 );
             }
         ));
+
+        it(`renders colliding lines`, inject([MotionDiffService], (service: MotionDiffService) => {
+            const inHtml = `<p>Test 1</p><p>Test 2</p><p>Test 3</p>`;
+
+            const out = service.getTextWithChanges(
+                inHtml,
+                [
+                    new ViewMotionAmendedParagraph(
+                        { id: 1, number: `Ä1`, getTitle: () => `Amendment 1` } as ViewMotion,
+                        0,
+                        `<p>Test 1x</p>`,
+                        { from: 1, to: 1 }
+                    ),
+                    new ChangeRecommendationUnifiedChange({
+                        id: 2,
+                        rejected: false,
+                        line_from: 1,
+                        line_to: 1,
+                        text: `<p>Test 2x</p>`,
+                        type: ModificationType.TYPE_REPLACEMENT,
+                        other_description: ``,
+                        creation_time: 0
+                    }),
+                    new ViewMotionAmendedParagraph(
+                        { id: 3, number: `Ä3`, getTitle: () => `Amendment 3` } as ViewMotion,
+                        1,
+                        `<p>Test 2x</p>`,
+                        { from: 2, to: 2 }
+                    )
+                ],
+                20,
+                true
+            );
+
+            expect(out).toBe(
+                `<div class="os-colliding-change" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2">` +
+                    `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 2x</p>` +
+                    `</div>` +
+                    `<div class="os-colliding-change" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0">` +
+                    `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 1x</p>` +
+                    `</div>` +
+                    `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 2x</p>` +
+                    `<p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 3</p>`
+            );
+        }));
     });
 
     describe(`getAmendmentParagraphsLines`, () => {
@@ -1591,5 +1640,54 @@ describe(`MotionDiffService`, () => {
                 `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`
             );
         }));
+    });
+
+    describe(`formatOsCollidingChanges`, () => {
+        it(`converts collision HTML to WYSIWYG-editor-compatible styles for P elements`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const inHtml =
+                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
+                    `<p><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
+                    `</div>`;
+
+                const processedHtml = service.formatOsCollidingChanges(
+                    inHtml,
+                    service.formatOsCollidingChanges_wysiwyg_cb
+                );
+                expect(processedHtml).toBe(
+                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
+                        `<p>` +
+                        `<span>&lt;!-- ### Start collision: 08-Ä02 ### --&gt;<br></span>` +
+                        `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo` +
+                        `<span><br>&lt;!-- ### End collision: 08-Ä02 ### --&gt;</span>` +
+                        `</p></div>`
+                );
+            }
+        ));
+
+        it(`converts collision HTML to WYSIWYG-editor-compatible styles for UL elements`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                const inHtml =
+                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
+                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
+                    `</div>`;
+
+                const processedHtml = service.formatOsCollidingChanges(
+                    inHtml,
+                    service.formatOsCollidingChanges_wysiwyg_cb
+                );
+                expect(processedHtml).toBe(
+                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
+                        `<div>&lt;!-- ### Start collision: 08-Ä02 ### --&gt;</div>` +
+                        `<ul><li>` +
+                        `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo` +
+                        `</li></ul>` +
+                        `<div>&lt;!-- ### End collision: 08-Ä02 ### --&gt;</div>` +
+                        `</div>`
+                );
+            }
+        ));
     });
 });

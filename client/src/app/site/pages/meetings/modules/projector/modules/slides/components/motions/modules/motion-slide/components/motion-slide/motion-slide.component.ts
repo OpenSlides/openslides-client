@@ -415,7 +415,7 @@ export class MotionSlideComponent
      * @param {ViewUnifiedChange[]} changes
      */
     public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return this.motionLineNumbering.changeHasCollissions(change, changes);
+        return this.diff.changeHasCollissions(change, changes);
     }
 
     /**
