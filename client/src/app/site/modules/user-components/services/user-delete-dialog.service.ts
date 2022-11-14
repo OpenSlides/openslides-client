@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Selectable } from 'src/app/domain/interfaces';
-import { GetUserRelatedModelsPresenterService } from 'src/app/gateways/presenter/get-user-related-models-presenter.service';
+import {
+    GetUserRelatedModelsPresenterResult,
+    GetUserRelatedModelsPresenterService
+} from 'src/app/gateways/presenter/get-user-related-models-presenter.service';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
@@ -27,9 +30,20 @@ export class UserDeleteDialogService extends BaseDialogService<
     }
 
     public async open(data: UserDeleteDialogOpenConfig): Promise<MatDialogRef<UserDeleteDialogComponent, boolean>> {
-        const toDelete = await this.userRelatedModelsPresenter.call({
-            user_ids: data.toDelete.map(user => user.id)
-        });
+        let toDelete: GetUserRelatedModelsPresenterResult;
+        try {
+            toDelete = await this.userRelatedModelsPresenter.call({
+                user_ids: data.toDelete.map(user => user.id)
+            });
+        } catch (e) {
+            toDelete = data.toDelete.mapToObject(user => {
+                return {
+                    [user.id]: {
+                        name: user.getTitle()
+                    }
+                };
+            });
+        }
         for (const user of data.toDelete) {
             toDelete[user.id].name = user.getTitle();
         }
