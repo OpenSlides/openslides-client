@@ -5,9 +5,6 @@
     </div>
 </os-head-bar>
 
-<mat-card *ngIf="organizationDescription" class="os-card">
-    <p>{{ organizationDescription | translate }}</p>
-</mat-card>
 
 <div class="meeting-list-container">
     <div class="meeting-spacer"></div>
@@ -20,6 +17,10 @@
 <ng-container *ngIf="!noMeetingsToShow">
     <div class="padding-right-8">
         <!-- active meetings -->
+        <div class="meeting-list-container">
+            <p *ngIf="organizationDescription" class="organization-description">{{ organizationDescription | translate }}</p>
+        </div>
+
         <div id="active-meetings" class="meeting-list-container">
             <div class="meeting-icon-wrapper foreground-accent">
                 <mat-icon color="accent">access_alarm</mat-icon>

@@ -1,6 +1,13 @@
 @import 'src/assets/styles/variables.scss';
 
 os-dashboard {
+    .organization-description {
+        padding-left: 100px;
+        @include phone {
+            padding-left: 60px;
+        }
+    }
+
     .meeting-list-viewport {
         max-width: 100%;
         .cdk-virtual-scroll-content-wrapper {
