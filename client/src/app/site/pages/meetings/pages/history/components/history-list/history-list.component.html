@@ -10,7 +10,7 @@
                 <mat-form-field>
                     <mat-select formControlName="collection" placeholder="{{ 'Collection' | translate }}">
                         <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
-                            {{ item.key | titlecase | translate }}
+                            {{ item.value.getVerboseName() }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -18,7 +18,7 @@
                     <os-list-search-selector
                         formControlName="id"
                         [multiple]="false"
-                        placeholder="{{ 'Model' | translate }}"
+                        placeholder="{{ modelPlaceholder | translate }}"
                         [inputListValues]="models"
                         [disabled]="!modelSelectForm.get('collection').value"
                     ></os-list-search-selector>

@@ -13,7 +13,11 @@ import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { langToLocale } from 'src/app/infrastructure/utils/lang-to-locale';
-import { collectionIdFromFqid, fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
+import {
+    collectionIdFromFqid,
+    fqidFromCollectionAndId,
+    isFqid
+} from 'src/app/infrastructure/utils/transform-functions';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -70,6 +74,15 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         return historyRepos.mapToObject(repo => {
             return { [repo.collection]: repo };
         });
+    }
+
+    public get modelPlaceholder(): string {
+        const value = this.modelSelectForm.controls[`collection`].value;
+        if (!value) {
+            return `-`;
+        } else {
+            return this.modelsRepoMap[value].getVerboseName();
+        }
     }
 
     public constructor(
@@ -211,9 +224,15 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         const informations = [...position.information];
         const result = [];
         while (informations.length) {
-            let baseString = this.translate.instant(informations.shift());
-            if (baseString.includes(`{}`)) {
-                const argumentString = this.translate.instant(informations.shift());
+            let baseString: string = this.translate.instant(informations.shift());
+            while (baseString.includes(`{}`)) {
+                let argumentString = informations.shift();
+                if (isFqid(argumentString)) {
+                    // try to fetch model and replace fqid with name
+                    const [collection, id] = collectionIdFromFqid(argumentString);
+                    const model = this.viewModelStore.get(collection, id);
+                    argumentString = model.getTitle();
+                }
                 baseString = baseString.replace(`{}`, argumentString);
             }
             result.push(baseString);

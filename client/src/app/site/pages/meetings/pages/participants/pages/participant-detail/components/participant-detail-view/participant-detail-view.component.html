@@ -43,6 +43,12 @@
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'PDF' | translate }}</span>
         </button>
+        <div *osPerms="permission.meetingCanSeeHistory">
+            <button mat-menu-item (click)="goToHistory()">
+                <mat-icon>history</mat-icon>
+                <span>{{ 'History' | translate }}</span>
+            </button>
+        </div>
         <!-- delete button -->
         <div *ngIf="isAllowed('delete')">
             <mat-divider></mat-divider>
