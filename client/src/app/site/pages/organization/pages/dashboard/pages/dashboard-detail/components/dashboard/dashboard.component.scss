@@ -3,8 +3,13 @@
 os-dashboard {
     .organization-description {
         padding-left: 104px;
+        @include tablet {
+            padding-left: 66px;
+            padding-top: 15px;
+        }
         @include phone {
-            padding-left: 60px;
+            padding-left: 66px;
+            padding-top: 15px;
         }
     }
 
