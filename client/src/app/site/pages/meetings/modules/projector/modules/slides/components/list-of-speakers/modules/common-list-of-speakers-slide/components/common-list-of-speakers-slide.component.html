@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<div id="overlay" *ngIf="data?.data && data.stable">
+<div id="overlay" *ngIf="data?.data && data.stable && (data.data.current || data.data.waiting.length)">
     <h3>{{ 'List of speakers' | translate }}</h3>
 
     <div *ngIf="data.data.current" class="currentSpeaker one-line">
