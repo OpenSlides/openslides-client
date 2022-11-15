@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { DirectivesModule } from 'src/app/ui/directives';
 
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ResetPasswordRoutingModule } from './reset-password-routing.module';
@@ -17,6 +18,7 @@ import { ResetPasswordRoutingModule } from './reset-password-routing.module';
         MatFormFieldModule,
         MatButtonModule,
         MatInputModule,
+        DirectivesModule,
         ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild()
     ]
