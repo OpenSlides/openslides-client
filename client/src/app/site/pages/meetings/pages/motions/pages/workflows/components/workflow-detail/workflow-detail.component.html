@@ -78,6 +78,19 @@
                                 {{ getValueOfState(state, perm) | translate }}
                             </mat-basic-chip>
                         </div>
+                        <div *ngIf="perm.type === 'submitter_withdraw_state'">
+                            <div class="inner-table">
+                                <div *ngIf="!state.submitter_withdraw_state">-</div>
+                                <div *ngIf="state.submitter_withdraw_state">
+                                    {{ state.submitter_withdraw_state.name | translate }}
+                                </div>
+                            </div>
+                            <div
+                                class="clickable-cell stretch-to-fill-parent"
+                                [matMenuTriggerFor]="submitterWithdrawStateMenu"
+                                [matMenuTriggerData]="{ state: state }"
+                            ></div>
+                        </div>
                         <div *ngIf="perm.type === 'state'">
                             <div class="inner-table">
                                 <div *ngIf="!state.next_states.length">-</div>
@@ -173,6 +186,18 @@
             <mat-icon *ngIf="color === state.css_class">check</mat-icon>
             <span>{{ color | translate }}</span>
         </button>
+    </ng-template>
+</mat-menu>
+
+<!-- select next states menu -->
+<mat-menu matMenuContent #submitterWithdrawStateMenu="matMenu">
+    <ng-template let-state="state" matMenuContent>
+        <div *ngFor="let workflowState of workflow.states">
+            <button mat-menu-item *ngIf="workflowState.name !== state.name" (click)="onSetSubmitterWithdrawState(workflowState, state)">
+                <mat-icon *ngIf="state.submitter_withdraw_state_id === workflowState.id">check</mat-icon>
+                <span>{{ workflowState.name | translate }}</span>
+            </button>
+        </div>
     </ng-template>
 </mat-menu>
 

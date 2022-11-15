@@ -138,6 +138,12 @@ export class AutoupdateStream {
         this.abort();
     }
 
+    public clearSubscriptions(): void {
+        for (let subscription of this.subscriptions) {
+            subscription.currentData = null;
+        }
+    }
+
     public setAuthToken(token: string): void {
         this.authToken = token;
     }
