@@ -46,7 +46,6 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.getViewModelListObservable().pipe(
             map(mediafiles =>
                 mediafiles.filter(mediafile => {
-                    console.log(mediafile.access_group_ids?.length);
                     if (
                         (mediafile.access_group_ids?.length &&
                             !this.operator.isInGroupIds(...mediafile.access_group_ids)) ||
