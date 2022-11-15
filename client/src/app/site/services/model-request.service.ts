@@ -39,7 +39,11 @@ export class ModelRequestService {
         }
     }
 
-    public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
+    public async subscribeTo({
+        modelRequest,
+        subscriptionName,
+        ...config
+    }: SubscribeToConfig): Promise<void | ModelSubscription> {
         if (this._modelSubscriptionMap[subscriptionName]) {
             console.warn(`A subscription already made for ${subscriptionName}. Aborting.`);
             return;
@@ -52,14 +56,14 @@ export class ModelRequestService {
                 console.warn(
                     `Either there are no child models for ${modelRequest.viewModelCtor.name}:${modelRequest.lazyLoad.keyOfParent} yet or they weren't requested`
                 );
-                this.makeSubscription({ modelRequest, subscriptionName, ...config });
+                return await this.makeSubscription({ modelRequest, subscriptionName, ...config });
             } else if (availableIds.length > 20) {
                 this.lazyLoadSubscription({ modelRequest, subscriptionName, ...config }, availableIds);
             } else {
-                this.makeSubscription({ modelRequest, subscriptionName, ...config });
+                return await this.makeSubscription({ modelRequest, subscriptionName, ...config });
             }
         } else {
-            this.makeSubscription({ modelRequest, subscriptionName, ...config });
+            return await this.makeSubscription({ modelRequest, subscriptionName, ...config });
         }
     }
 
@@ -68,7 +72,7 @@ export class ModelRequestService {
         subscriptionName,
         hideWhen,
         isDelayed = true
-    }: SubscribeToConfig): Promise<void> {
+    }: SubscribeToConfig): Promise<void | ModelSubscription> {
         const fn = async () => {
             const request = await this.modelRequestBuilder.build(modelRequest);
             const modelSubscription = await this.autoupdateService.subscribe(
@@ -79,12 +83,14 @@ export class ModelRequestService {
             if (hideWhen) {
                 this.setCloseFn(subscriptionName, hideWhen);
             }
+
+            return modelSubscription;
         };
         if (isDelayed) {
             // const delay = Math.floor(Math.random() * 390 + 110); // [110, 500]
             setTimeout(() => fn(), 0);
         } else {
-            fn();
+            return await fn();
         }
     }
 
@@ -106,6 +112,14 @@ export class ModelRequestService {
         setTimeout(async () => {
             this.makeSubscription({ modelRequest, subscriptionName, ...config });
         }, Math.floor(Math.random() * 2000) + 2000);
+    }
+
+    public getSubscription(subscriptionName: string): ModelSubscription | null {
+        if (this._modelSubscriptionMap[subscriptionName]) {
+            return this._modelSubscriptionMap[subscriptionName];
+        }
+
+        return null;
     }
 
     public closeSubscription(subscriptionName: string): void {

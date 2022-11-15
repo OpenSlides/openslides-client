@@ -9,7 +9,7 @@
     <div class="meeting-spacer"></div>
 </div>
 
-<mat-card *ngIf="noMeetingsToShow" class="no-content os-card">
+<mat-card *ngIf="noMeetingsToShow && ready" class="no-content os-card">
     <i>{{ 'No meetings available' | translate }}</i>
 </mat-card>
 
