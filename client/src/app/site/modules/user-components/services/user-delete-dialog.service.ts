@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { Selectable } from 'src/app/domain/interfaces';
 import {
     GetUserRelatedModelsPresenterResult,
@@ -39,7 +40,8 @@ export class UserDeleteDialogService extends BaseDialogService<
             toDelete = data.toDelete.mapToObject(user => {
                 return {
                     [user.id]: {
-                        name: user.getTitle()
+                        name: user.getTitle(),
+                        error: _(`Relevant information could not be accessed`)
                     }
                 };
             });

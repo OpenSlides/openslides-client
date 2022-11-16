@@ -67,13 +67,13 @@
 
 <ng-template #userDetailTemplate let-user="user">
     <div class="user-name padding-left-25">{{ user.name }}</div>
-    <ng-container *ngIf="user.meetings || user.committees">
-        <ng-container *ngIf="willBeRemoved(user)">
-            <p class="padding-left-25">
-                {{ 'This account will only be removed from this meeting' | translate }}
-            </p>
-        </ng-container>
-        <ng-container *ngIf="!willBeRemoved(user)">
+    <ng-container *ngIf="willBeRemoved(user)">
+        <p class="padding-left-25">
+            {{ 'This account will only be removed from this meeting' | translate }}
+        </p>
+    </ng-container>
+    <ng-container *ngIf="!willBeRemoved(user)">
+        <ng-container *ngIf="!user.error">
             <ng-container *ngIf="!hasRelations(user)">
                 <p class="padding-left-25">
                     {{
@@ -101,10 +101,10 @@
                 </ul>
             </ng-container>
         </ng-container>
-    </ng-container>
-    <ng-container *ngIf="!user.meetings && !user.committees">
-        <p class="padding-left-25">
-            {{ 'Relevant information could not be accessed' | translate }}
-        </p>
+        <ng-container *ngIf="user.error">
+            <p class="padding-left-25">
+                {{ user.error | translate }}
+            </p>
+        </ng-container>
     </ng-container>
 </ng-template>
