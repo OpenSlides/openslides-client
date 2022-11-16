@@ -76,23 +76,17 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     protected onParamsChanged(params: any, oldParams?: any): void {}
 
     protected async subscribeTo(...configs: ModelRequestConfig[]): Promise<void> {
-        const subscriptions = [];
         for (const { modelRequest, subscriptionName, ...config } of configs) {
             if (!this._openedSubscriptions.includes(subscriptionName)) {
                 this._openedSubscriptions.push(subscriptionName);
                 const observable = this.createHideWhenObservable(config);
-                const subscription = await this.modelRequestService.subscribeTo({
+                await this.modelRequestService.subscribeTo({
                     subscriptionName,
                     modelRequest,
                     hideWhen: observable
                 });
-                if (subscription) {
-                    subscriptions.push(subscription.receivedData);
-                }
             }
         }
-
-        await Promise.all(subscriptions);
     }
 
     protected async updateSubscribeTo(...configs: ModelRequestConfig[]): Promise<void> {

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -19,6 +20,7 @@ import { DashboardDetailRoutingModule } from './dashboard-detail-routing.module'
         CommonModule,
         DashboardDetailRoutingModule,
         MatCardModule,
+        MatProgressSpinnerModule,
         MatTooltipModule,
         MatDividerModule,
         MatIconModule,

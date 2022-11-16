@@ -52,15 +52,15 @@ export class DashboardComponent extends BaseComponent {
         super.setTitle(`Calendar`);
         this.loadMeetings();
 
-        const subscriptionInterval = setInterval(() => {
-            const subscription = this.modelRequestService.getSubscription(MEETING_LIST_SUBSCRIPTION);
-            if (subscription) {
-                clearInterval(subscriptionInterval);
-                subscription.receivedData.then(() => {
-                    this.ready = true;
-                });
-            }
-        }, 50);
+        this.modelRequestService
+            .waitSubscriptionReady(MEETING_LIST_SUBSCRIPTION)
+            .then(() => {
+                this.ready = true;
+            })
+            .catch(e => {
+                console.error(e);
+                this.ready = true;
+            });
     }
 
     public getHeightByMeetings(meetings: ViewMeeting[]): string {
