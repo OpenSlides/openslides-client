@@ -80,11 +80,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
             if (!this._openedSubscriptions.includes(subscriptionName)) {
                 this._openedSubscriptions.push(subscriptionName);
                 const observable = this.createHideWhenObservable(config);
-                await this.modelRequestService.subscribeTo({
-                    subscriptionName,
-                    modelRequest,
-                    hideWhen: observable
-                });
+                await this.modelRequestService.subscribeTo({ subscriptionName, modelRequest, hideWhen: observable });
             }
         }
     }
