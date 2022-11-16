@@ -73,31 +73,38 @@
         </p>
     </ng-container>
     <ng-container *ngIf="!willBeRemoved(user)">
-        <ng-container *ngIf="!hasRelations(user)">
-            <p class="padding-left-25">
-                {{
-                    'This account is not linked as candidate, submitter or speaker in any meeting and is not manager of any committee'
-                        | translate
-                }}
-            </p>
+        <ng-container *ngIf="!user.error">
+            <ng-container *ngIf="!hasRelations(user)">
+                <p class="padding-left-25">
+                    {{
+                        'This account is not linked as candidate, submitter or speaker in any meeting and is not manager of any committee'
+                            | translate
+                    }}
+                </p>
+            </ng-container>
+            <ng-container *ngIf="hasRelations(user)">
+                <ul *ngFor="let meeting of user.meetings">
+                    <p class="meeting-title">{{ meeting.name }}</p>
+                    <li *ngIf="meeting.candidate_ids?.length">
+                        {{ 'Is candidate' | translate }}
+                    </li>
+                    <li *ngIf="meeting.submitter_ids?.length">
+                        {{ 'Is submitter' | translate }}
+                    </li>
+                    <li *ngIf="meeting.speaker_ids?.length">
+                        {{ 'Is speaker' | translate }}
+                    </li>
+                </ul>
+                <ul *ngFor="let committee of getManagedCommittees(user)">
+                    <p class="committee-title">{{ committee.name }}</p>
+                    <li>{{ 'Is manager' | translate }}</li>
+                </ul>
+            </ng-container>
         </ng-container>
-        <ng-container *ngIf="hasRelations(user)">
-            <ul *ngFor="let meeting of user.meetings">
-                <p class="meeting-title">{{ meeting.name }}</p>
-                <li *ngIf="meeting.candidate_ids?.length">
-                    {{ 'Is candidate' | translate }}
-                </li>
-                <li *ngIf="meeting.submitter_ids?.length">
-                    {{ 'Is submitter' | translate }}
-                </li>
-                <li *ngIf="meeting.speaker_ids?.length">
-                    {{ 'Is speaker' | translate }}
-                </li>
-            </ul>
-            <ul *ngFor="let committee of getManagedCommittees(user)">
-                <p class="committee-title">{{ committee.name }}</p>
-                <li>{{ 'Is manager' | translate }}</li>
-            </ul>
+        <ng-container *ngIf="user.error">
+            <p class="padding-left-25">
+                {{ user.error | translate }}
+            </p>
         </ng-container>
     </ng-container>
 </ng-template>
