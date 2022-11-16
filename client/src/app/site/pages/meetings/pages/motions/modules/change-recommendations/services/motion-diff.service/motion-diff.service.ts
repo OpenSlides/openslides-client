@@ -1703,6 +1703,7 @@ export class MotionDiffService {
      * @param {ViewUnifiedChange[]} changes
      * @param {number} lineLength
      * @param {number} highlightLine
+     * @param {number} firstLine
      */
     public getTextWithChanges(
         motionHtml: string,
@@ -1743,6 +1744,7 @@ export class MotionDiffService {
      * @param {string} origText The original text - needs to be line-numbered
      * @param {string} newText The changed text
      * @param {number} lineLength the line length
+     * @param {ViewUnifiedChange[]} changeRecos
      * @return {DiffLinesInParagraph|null}
      */
     public getAmendmentParagraphsLines(
