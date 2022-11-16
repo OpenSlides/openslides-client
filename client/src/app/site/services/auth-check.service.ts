@@ -55,7 +55,7 @@ export class AuthCheckService {
     public async isAuthorizedToSeeOrganization() {
         await this.operator.ready;
         try {
-            return this.operator.knowsMultipleMeetings;
+            return this.operator.knowsMultipleMeetings || this.operator.hasOrganizationPermissions();
         } catch (e) {
             return false;
         }
