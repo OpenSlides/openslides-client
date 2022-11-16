@@ -52,14 +52,14 @@ export class ModelRequestService {
                 console.warn(
                     `Either there are no child models for ${modelRequest.viewModelCtor.name}:${modelRequest.lazyLoad.keyOfParent} yet or they weren't requested`
                 );
-                await this.makeSubscription({ modelRequest, subscriptionName, ...config });
+                this.makeSubscription({ modelRequest, subscriptionName, ...config });
             } else if (availableIds.length > 20) {
                 this.lazyLoadSubscription({ modelRequest, subscriptionName, ...config }, availableIds);
             } else {
-                await this.makeSubscription({ modelRequest, subscriptionName, ...config });
+                this.makeSubscription({ modelRequest, subscriptionName, ...config });
             }
         } else {
-            await this.makeSubscription({ modelRequest, subscriptionName, ...config });
+            this.makeSubscription({ modelRequest, subscriptionName, ...config });
         }
     }
 
