@@ -93,7 +93,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
 
     public assignToParents(content: any, meetingId: Id = this.activeMeetingId!): Action<void> {
         const payload = {
-            meetingId,
+            meeting_id: meetingId,
             parent_id: content.parent_id,
             ids: content.ids
         };
