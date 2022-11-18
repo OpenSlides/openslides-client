@@ -82,7 +82,7 @@ export const PERMISSIONS: AppPermission[] = [
             { display_name: `Can see the front page`, value: Permission.meetingCanSeeFrontpage },
             { display_name: `Can see the autopilot`, value: Permission.meetingCanSeeAutopilot },
             { display_name: `Can see the live stream`, value: Permission.meetingCanSeeLivestream },
-            // { display_name: `Can see history`, value: Permission.meetingCanSeeHistory },
+            { display_name: `Can see history`, value: Permission.meetingCanSeeHistory },
             { display_name: `Can manage settings`, value: Permission.meetingCanManageSettings },
             { display_name: `Can manage logos and fonts`, value: Permission.meetingCanManageLogosAndFonts },
             { display_name: `Can manage tags`, value: Permission.tagCanManage },
