@@ -34,7 +34,7 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
      * @returns the new string
      */
     public replaceReferencedMotions(text: string, referencedMotions: ReferencedMotions): string {
-        return text.replace(/\[motion\/(\d+)\]/g, (_, id) => {
+        return text.replace(/\[motion:(\d+)\]/g, (_, id) => {
             const referencedMotion = referencedMotions[id];
             if (referencedMotion) {
                 return this.getNumberOrTitle(referencedMotion);
