@@ -1,5 +1,9 @@
 import { TranslateService } from '@ngx-translate/core';
+import { Id } from 'src/app/domain/definitions/key-types';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { BaseSlideComponent } from '../../../base/base-slide-component';
 import { TitleInformationWithAgendaItem } from '../../../definitions';
@@ -21,8 +25,40 @@ export interface ReferencedMotions {
  * replacing referenced motions (format: `[motion:<id>]`) in strings.
  */
 export class BaseMotionSlideComponent<T extends object> extends BaseSlideComponent<T> {
-    public constructor(protected translate: TranslateService, private motionRepo: MotionControllerService) {
+    private referencedMotions: Set<Id> = new Set();
+
+    public constructor(
+        protected translate: TranslateService,
+        private motionRepo: MotionControllerService,
+        private auService: AutoupdateService,
+        private modelRequestBuilder: ModelRequestBuilderService
+    ) {
         super();
+    }
+
+    public addReferencedMotions(text: string): void {
+        const matches = text.matchAll(/\[motion:(\d+)\]/g);
+        for (const match of matches) {
+            this.referencedMotions.add(Number(match[1]));
+        }
+    }
+
+    public async loadReferencedMotions(): Promise<void> {
+        const load = [];
+        for (const motionId of this.referencedMotions) {
+            if (!this.motionRepo.getViewModel(motionId)?.getNumberOrTitle()) {
+                load.push(motionId);
+            }
+            this.referencedMotions.delete(motionId);
+        }
+
+        if (load.length) {
+            const req = await this.modelRequestBuilder.build({
+                ids: load,
+                viewModelCtor: ViewMotion
+            });
+            this.auService.single(req, `motion_slide:load_referenced_motions`);
+        }
     }
 
     /**
@@ -30,14 +66,13 @@ export class BaseMotionSlideComponent<T extends object> extends BaseSlideCompone
      * referenced motion doe snot exist.
      *
      * @param text the text to replace
-     * @param referencedMotions an object holding the title information for all referenced motions
      * @returns the new string
      */
-    public replaceReferencedMotions(text: string, referencedMotions: ReferencedMotions): string {
+    public replaceReferencedMotions(text: string): string {
         return text.replace(/\[motion:(\d+)\]/g, (_, id) => {
-            const referencedMotion = referencedMotions[id];
+            const referencedMotion = this.motionRepo.getViewModel(id);
             if (referencedMotion) {
-                return this.getNumberOrTitle(referencedMotion);
+                return referencedMotion.getNumberOrTitle();
             } else {
                 return this.translate.instant(`<unknown motion>`);
             }
