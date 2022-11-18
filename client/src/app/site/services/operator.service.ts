@@ -519,6 +519,8 @@ export class OperatorService {
     public hasOrganizationPermissions(...permissionsToCheck: OML[]): boolean {
         if (!this._OML) {
             return false;
+        } else if (!permissionsToCheck.length) {
+            return true;
         }
         return permissionsToCheck.some(permission => omlNameMapping[this._OML!] >= omlNameMapping[permission]);
     }
