@@ -148,6 +148,9 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Output()
     public selectionChanged = new EventEmitter<OsOptionSelectionChanged>();
 
+    @Output()
+    public openedChange = new EventEmitter<boolean>();
+
     public override contentForm!: UntypedFormControl;
     public searchValueForm!: UntypedFormControl;
 
@@ -248,6 +251,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public onOpenChanged(event: boolean): void {
+        this.openedChange.emit(event);
         if (event) {
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();

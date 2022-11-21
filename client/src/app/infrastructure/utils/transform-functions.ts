@@ -68,7 +68,7 @@ export function collectionFromFqid(fqid: Fqid): Collection {
 }
 
 export function isFqid(field: string): boolean {
-    return new RegExp(`^[a-z]+${KEYSEPERATOR}[1-9][0-9]*$`).test(field);
+    return new RegExp(`^[a-z_]+${KEYSEPERATOR}[1-9][0-9]*$`).test(field);
 }
 
 export function isTemplateField(field: string): boolean {

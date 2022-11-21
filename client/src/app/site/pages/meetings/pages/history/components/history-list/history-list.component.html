@@ -21,7 +21,18 @@
                         placeholder="{{ modelPlaceholder | translate }}"
                         [inputListValues]="models"
                         [disabled]="!modelSelectForm.get('collection').value"
-                    ></os-list-search-selector>
+                        (clickNotFound)="searchDeletedMotions($event)"
+                        (openedChange)="resetListValues($event)"
+                    >
+                        <ng-template osSearchSelectorNotFoundTemplate>
+                            <div>
+                                <mat-icon class="os-not-found-button-content">delete</mat-icon>
+                                <span class="os-not-found-button-content">
+                                    {{ 'Search deleted' | translate }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
+                                </span>
+                            </div>
+                        </ng-template>
+                    </os-list-search-selector>
                 </mat-form-field>
             </span>
             <span class="spacer-left-20">
