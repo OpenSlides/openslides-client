@@ -111,7 +111,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     public getAmendmentParagraphs(): DiffLinesInParagraph[] {
         try {
             this.amendmentErrorMessage = null;
-            return this.motion?.getAmendmentParagraphLines(this.showAmendmentContext) || [];
+            return this.motion?.getAmendmentParagraphLines(this.changeRecoMode, this.showAmendmentContext) || [];
         } catch (e: any) {
             this.amendmentErrorMessage = e.toString();
             return [];
