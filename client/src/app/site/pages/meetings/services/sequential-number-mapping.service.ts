@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from 'src/app/domain/interfaces';
+import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
+import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { Mutex } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AutoupdateService } from 'src/app/site/services/autoupdate';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
-import { ViewTopic } from '../pages/agenda';
 import { ViewAssignment } from '../pages/assignments';
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewMotionWorkflow } from '../pages/motions';
 import { ViewPoll } from '../pages/polls';
@@ -21,14 +22,14 @@ const SEQUENTIAL_NUMBER_ID_FIELDS: {
     [collection: string]: (keyof ViewMeeting)[];
 } = {
     [ViewAssignment.COLLECTION]: [`assignment_ids`],
-    // [ViewListOfSpeakers.COLLECTION]: [`list_of_speakers_ids`],
+    [ListOfSpeakers.COLLECTION]: [`list_of_speakers_ids`],
     [ViewMotion.COLLECTION]: [`motion_ids`],
     [ViewMotionBlock.COLLECTION]: [`motion_block_ids`],
     [ViewMotionCategory.COLLECTION]: [`motion_category_ids`],
     [ViewMotionWorkflow.COLLECTION]: [`motion_workflow_ids`],
     [ViewPoll.COLLECTION]: [`poll_ids`],
     [ViewProjector.COLLECTION]: [`projector_ids`],
-    // [ViewTopic.COLLECTION]: [`topic_ids`]
+    [Topic.COLLECTION]: [`topic_ids`]
 };
 
 const SEQUENTIAL_NUMBER_REQUIRED_FIELDS = [`sequential_number`, `meeting_id`];
@@ -118,6 +119,9 @@ export class SequentialNumberMappingService {
     }
 
     private insertViewModelId(viewModel: BaseViewModel & HasSequentialNumber & HasMeetingId): void {
+        if (!viewModel.meeting_id) {
+            console.warn(`Added sequential number mapping view without meeting id`, viewModel, viewModel.COLLECTION);
+        }
         const meetingIdSequentialNumber = `${viewModel.meeting_id}/${viewModel.sequential_number}`;
         this.setBehaviorSubject(viewModel.collection, meetingIdSequentialNumber, viewModel.id);
     }
@@ -150,10 +154,12 @@ export class SequentialNumberMappingService {
                     await this.modelRequestBuilder.build(this.getSequentialNumberRequest(collection)),
                     MODEL_REQUEST_DESCRIPTION + `:` + collection
                 );
-                
-                const val = Object.values(data[collection]).find(el => el['meeting_id'] + '/' + el['sequential_number'] === meetingIdSequentialNumber);
-                this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = val['id'];
-            } catch(e) {}
+
+                const val = Object.values(data[collection]).find(
+                    el => el[`meeting_id`] + `/` + el[`sequential_number`] === meetingIdSequentialNumber
+                );
+                this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = val[`id`];
+            } catch (e) {}
         }
         unlock();
 
