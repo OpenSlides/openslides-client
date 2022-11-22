@@ -82,10 +82,6 @@ export class SequentialNumberMappingService {
             return null;
         }
 
-        console.log(`get id by sequential number: `, collection, meetingId, sequentialNumber);
-        // await this._modelRequestSubscription.receivedData;
-
-        console.log(this._mapSequentialNumberId);
         const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
         return await this.getBehaviorSubject(collection, meetingIdSequentialNumber);
     }
