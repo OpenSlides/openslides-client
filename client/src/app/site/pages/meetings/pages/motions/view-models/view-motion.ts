@@ -8,7 +8,7 @@ import {
     HasReferencedMotionInRecommendationExtensionIds,
     Motion
 } from '../../../../../../domain/models/motions/motion';
-import { AmendmentType } from '../../../../../../domain/models/motions/motions.constants';
+import { AmendmentType, ChangeRecoMode } from '../../../../../../domain/models/motions/motions.constants';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
@@ -198,14 +198,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get changedAmendmentLines(): DiffLinesInParagraph[] | null {
         if (!this._changedAmendmentLines) {
-            this._changedAmendmentLines = this.getAmendmentParagraphLines();
+            this._changedAmendmentLines = this.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         }
         return this._changedAmendmentLines;
     }
 
     public get affectedAmendmentLines(): DiffLinesInParagraph[] | null {
         if (!this._affectedAmendmentLines) {
-            this._affectedAmendmentLines = this.getAmendmentParagraphLines();
+            this._affectedAmendmentLines = this.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         }
         return this._affectedAmendmentLines;
     }
@@ -244,7 +244,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     /**
      * @warning This is injected. Do not use it!
      */
-    public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] = () => [];
+    public getAmendmentParagraphLines: (
+        recoMode: ChangeRecoMode,
+        includeUnchanged?: boolean
+    ) => DiffLinesInParagraph[] = () => [];
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;
