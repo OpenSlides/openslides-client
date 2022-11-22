@@ -40,7 +40,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
 
     public override getFieldsets(): Fieldsets<MotionCategory> {
         const routingFields: (keyof MotionCategory)[] = [`sequential_number`, `meeting_id`];
-        const detailFields: (keyof MotionCategory)[] = [`name`, `prefix`];
+        const detailFields: (keyof MotionCategory)[] = routingFields.concat([`name`, `prefix`]);
         const sortListFields: (keyof MotionCategory)[] = detailFields.concat([
             `weight`,
             `level`,

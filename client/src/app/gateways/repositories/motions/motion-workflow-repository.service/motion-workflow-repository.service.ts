@@ -19,7 +19,9 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
     public override getFieldsets(): Fieldsets<MotionWorkflow> {
         const routingFields: (keyof MotionWorkflow)[] = [`sequential_number`, `meeting_id`, `name`];
         const nameFields: (keyof MotionWorkflow)[] = [`name`];
-        const listFields: (keyof MotionWorkflow)[] = nameFields.concat([`first_state_id`, `state_ids`]);
+        const listFields: (keyof MotionWorkflow)[] = nameFields
+            .concat(routingFields)
+            .concat([`first_state_id`, `state_ids`]);
         return {
             [DEFAULT_FIELDSET]: listFields,
             [ROUTING_FIELDSET]: routingFields,

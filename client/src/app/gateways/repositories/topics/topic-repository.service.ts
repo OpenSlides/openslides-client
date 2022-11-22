@@ -44,7 +44,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
 
     public override getFieldsets(): Fieldsets<Topic> {
         const routingFields: (keyof Topic)[] = [`sequential_number`, `meeting_id`];
-        const titleFields: (keyof Topic)[] = [`title`, `text`];
+        const titleFields: (keyof Topic)[] = routingFields.concat([`title`, `text`]);
         return {
             [DEFAULT_FIELDSET]: titleFields.concat([
                 `text`,
