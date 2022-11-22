@@ -26,7 +26,7 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     }
 
     public override getFieldsets(): Fieldsets<Assignment> {
-        const routingFields: (keyof Assignment)[] = [`sequential_number`];
+        const routingFields: (keyof Assignment)[] = [`sequential_number`, `meeting_id`];
         const titleFields: (keyof Assignment)[] = [`title`];
         const listFields: (keyof Assignment)[] = titleFields.concat([`open_posts`, `phase`, `candidate_ids`]);
         return {

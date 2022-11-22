@@ -140,6 +140,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
         const updatePayload = users.map(user => {
             const update = typeof patch === `function` ? patch(user) : patch;
+            console.log(update);
             return {
                 id: user.id,
                 ...this.sanitizePayload(this.getBaseUserPayload(update))

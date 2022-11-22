@@ -238,7 +238,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     public override getFieldsets(): Fieldsets<Motion> {
-        const routingFields: TypedFieldset<Motion> = [`sequential_number`];
+        const routingFields: TypedFieldset<Motion> = [`sequential_number`, `meeting_id`];
         const titleFields: TypedFieldset<Motion> = routingFields.concat([`title`, `number`, `created`, `forwarded`]);
         const detailFields: TypedFieldset<Motion> = titleFields.concat([
             `sort_weight`,

@@ -41,7 +41,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;
 
     public override getFieldsets(): Fieldsets<Poll> {
-        const routingFields: (keyof Poll)[] = [`sequential_number`];
+        const routingFields: (keyof Poll)[] = [`sequential_number`, `meeting_id`];
         const listFieldset: (keyof Poll)[] = [
             `entitled_group_ids`,
             `state`,
