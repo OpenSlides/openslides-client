@@ -76,7 +76,7 @@ export class MotionLineNumberingService {
             );
             sortedChangingObjects.push(...this.getAmendmentAmendedParagraphs(amendment, lineLength, toApplyChanges));
         }
-        sortedChangingObjects.sort((a: ViewUnifiedChange, b: ViewUnifiedChange) => a.getLineFrom() - b.getLineFrom());
+        sortedChangingObjects.sort(this.diffService.getTextWithChanges_sort_cb);
         return sortedChangingObjects;
     }
 
