@@ -123,7 +123,8 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
                     let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
                         this.addReferencedMotions(motion.recommendation_extension);
-                        recommendation += ` ` + this.replaceReferencedMotions(motion.recommendation_extension);
+                        recommendation +=
+                            ` ` + this.motionRepo.parseMotionPlaceholders(motion.recommendation_extension);
                     }
                     motion.recommendationLabel = recommendation;
                 } else {
