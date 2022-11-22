@@ -36,23 +36,18 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
             this.sequentialNumberMapping
-                .getIdObservableBySequentialNumber({
+                .getIdBySequentialNumber({
                     collection: Motion.COLLECTION,
                     meetingId: params[`meetingId`],
                     sequentialNumber: +params[`id`]
                 })
-                .then(m =>
-                    this.updateSubscription(
-                        MOTION_DETAIL_SEQUENTIAL_NUMBER_MAPPING,
-                        m.subscribe(id => {
-                            if (id && this._currentMotionId !== id) {
-                                this._currentMotionId = id;
-                                this._watchingMap = {};
-                                this.loadMotionDetail();
-                            }
-                        })
-                    )
-                );
+                .then(id => {
+                    if (id && this._currentMotionId !== id) {
+                        this._currentMotionId = id;
+                        this._watchingMap = {};
+                        this.loadMotionDetail();
+                    }
+                });
         }
     }
 

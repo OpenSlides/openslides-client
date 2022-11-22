@@ -1,27 +1,35 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Collection, Id } from 'src/app/domain/definitions/key-types';
 import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from 'src/app/domain/interfaces';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
+import { Mutex } from 'src/app/infrastructure/utils/promises';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { AutoupdateService, ModelSubscription } from 'src/app/site/services/autoupdate';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
+import { ViewTopic } from '../pages/agenda';
+import { ViewAssignment } from '../pages/assignments';
+import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewMotionWorkflow } from '../pages/motions';
+import { ViewPoll } from '../pages/polls';
+import { ViewProjector } from '../pages/projectors';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingService } from './active-meeting.service';
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 
-const SEQUENTIAL_NUMBER_ID_FIELDS: (keyof ViewMeeting)[] = [
-    `motion_ids`,
-    `topic_ids`,
-    `motion_block_ids`,
-    `motion_workflow_ids`,
-    `poll_ids`,
-    `projector_ids`,
-    `motion_category_ids`,
-    `assignment_ids`,
-    `list_of_speakers_ids`
-];
+const SEQUENTIAL_NUMBER_ID_FIELDS: {
+    [collection: string]: (keyof ViewMeeting)[];
+} = {
+    [ViewAssignment.COLLECTION]: [`assignment_ids`],
+    // [ViewListOfSpeakers.COLLECTION]: [`list_of_speakers_ids`],
+    [ViewMotion.COLLECTION]: [`motion_ids`],
+    [ViewMotionBlock.COLLECTION]: [`motion_block_ids`],
+    [ViewMotionCategory.COLLECTION]: [`motion_category_ids`],
+    [ViewMotionWorkflow.COLLECTION]: [`motion_workflow_ids`],
+    [ViewPoll.COLLECTION]: [`poll_ids`],
+    [ViewProjector.COLLECTION]: [`projector_ids`],
+    // [ViewTopic.COLLECTION]: [`topic_ids`]
+};
 
 const SEQUENTIAL_NUMBER_REQUIRED_FIELDS = [`sequential_number`, `meeting_id`];
 
@@ -35,15 +43,15 @@ interface SequentialNumberMappingConfig {
 
 @Injectable({ providedIn: `root` })
 export class SequentialNumberMappingService {
+    private _mutex = new Mutex();
     private get activeMeetingId(): Id {
         return this.activeMeeting.meetingId!;
     }
 
     private _mapSequentialNumberId: {
-        [collection: string]: { [meeting_id_sequential_number: string]: BehaviorSubject<number | null> };
+        [collection: string]: { [meeting_id_sequential_number: string]: number };
     } = {};
 
-    private _modelRequestSubscription: ModelSubscription | null = null;
     private _subscriptions: Subscription[] = [];
     private _repositories: BaseMeetingRelatedRepository<any, any>[] = [];
 
@@ -53,15 +61,6 @@ export class SequentialNumberMappingService {
         private autoupdateService: AutoupdateService,
         private modelRequestBuilder: ModelRequestBuilderService
     ) {
-        activeMeeting.meetingIdObservable.subscribe(nextId => {
-            this._mapSequentialNumberId = {};
-            if (nextId) {
-                this.prepareSequentialNumberMapping();
-            } else if (!nextId && this._modelRequestSubscription) {
-                this._modelRequestSubscription.close();
-                this._modelRequestSubscription = null;
-            }
-        });
         collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
             this._repositories = repositories;
             this.updateRepositoriesSubscriptions();
@@ -82,48 +81,12 @@ export class SequentialNumberMappingService {
             return null;
         }
 
-        await this._modelRequestSubscription.receivedData;
+        console.log(`get id by sequential number: `, collection, meetingId, sequentialNumber);
+        // await this._modelRequestSubscription.receivedData;
 
+        console.log(this._mapSequentialNumberId);
         const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
-        return this.getBehaviorSubject(collection, meetingIdSequentialNumber).getValue();
-    }
-
-    public async getIdObservableBySequentialNumber({
-        collection,
-        meetingId,
-        sequentialNumber
-    }: SequentialNumberMappingConfig): Promise<Observable<Id | null>> {
-        if (!collection || !meetingId || !sequentialNumber) {
-            return of();
-        }
-
-        await this._modelRequestSubscription.receivedData;
-
-        const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
-        return this.getBehaviorSubject(collection, meetingIdSequentialNumber);
-    }
-
-    private async prepareSequentialNumberMapping(): Promise<void> {
-        if (this._modelRequestSubscription) {
-            this._modelRequestSubscription.close();
-            this._modelRequestSubscription = null;
-        }
-        this._modelRequestSubscription = await this.autoupdateService.subscribe(
-            await this.modelRequestBuilder.build(this.getSequentialNumberRequest()),
-            MODEL_REQUEST_DESCRIPTION
-        );
-    }
-
-    private getSequentialNumberRequest(): SimplifiedModelRequest {
-        const createRoutingFollow = (idField: keyof ViewMeeting) => {
-            return { idField, fieldset: [], additionalFields: SEQUENTIAL_NUMBER_REQUIRED_FIELDS };
-        };
-        return {
-            ids: [this.activeMeetingId],
-            viewModelCtor: ViewMeeting,
-            fieldset: [],
-            follow: SEQUENTIAL_NUMBER_ID_FIELDS.map(idField => createRoutingFollow(idField))
-        };
+        return await this.getBehaviorSubject(collection, meetingIdSequentialNumber);
     }
 
     private updateRepositoriesSubscriptions(): void {
@@ -156,21 +119,52 @@ export class SequentialNumberMappingService {
 
     private insertViewModelId(viewModel: BaseViewModel & HasSequentialNumber & HasMeetingId): void {
         const meetingIdSequentialNumber = `${viewModel.meeting_id}/${viewModel.sequential_number}`;
-        this.getBehaviorSubject(viewModel.collection, meetingIdSequentialNumber).next(viewModel.id);
+        this.setBehaviorSubject(viewModel.collection, meetingIdSequentialNumber, viewModel.id);
     }
 
-    private getBehaviorSubject(
+    private getSequentialNumberRequest(collection: string): SimplifiedModelRequest {
+        const createRoutingFollow = (idField: keyof ViewMeeting) => {
+            return { idField, fieldset: [], additionalFields: SEQUENTIAL_NUMBER_REQUIRED_FIELDS };
+        };
+
+        return {
+            ids: [this.activeMeetingId],
+            viewModelCtor: ViewMeeting,
+            fieldset: [],
+            follow: SEQUENTIAL_NUMBER_ID_FIELDS[collection].map(idField => createRoutingFollow(idField))
+        };
+    }
+
+    private async getBehaviorSubject(
         collection: Collection,
         meetingIdSequentialNumber: string
-    ): BehaviorSubject<number | null> {
+    ): Promise<number | null> {
         if (!this._mapSequentialNumberId[collection]) {
             this._mapSequentialNumberId[collection] = {};
         }
+
+        const unlock = await this._mutex.lock();
         if (!this._mapSequentialNumberId[collection][meetingIdSequentialNumber]) {
-            this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = new BehaviorSubject<number | null>(
-                null
-            );
+            try {
+                const data = await this.autoupdateService.single(
+                    await this.modelRequestBuilder.build(this.getSequentialNumberRequest(collection)),
+                    MODEL_REQUEST_DESCRIPTION + `:` + collection
+                );
+                
+                const val = Object.values(data[collection]).find(el => el['meeting_id'] + '/' + el['sequential_number'] === meetingIdSequentialNumber);
+                this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = val['id'];
+            } catch(e) {}
         }
-        return this._mapSequentialNumberId[collection][meetingIdSequentialNumber];
+        unlock();
+
+        return this._mapSequentialNumberId[collection][meetingIdSequentialNumber] || null;
+    }
+
+    private setBehaviorSubject(collection: Collection, meetingIdSequentialNumber: string, value: number): void {
+        if (!this._mapSequentialNumberId[collection]) {
+            this._mapSequentialNumberId[collection] = {};
+        }
+
+        this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = value;
     }
 }

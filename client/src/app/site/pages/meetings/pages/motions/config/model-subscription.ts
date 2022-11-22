@@ -11,7 +11,7 @@ export const getMotionListSubscriptionConfig = (id: Id, hasMeetingIdChangedObser
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`motion_ids`],
+        follow: [{ idField: `motion_ids`, additionalFields: [`meeting_id`] }],
         additionalFields: [`origin_id`, `origin_meeting_id`, `derived_motion_ids`]
     },
     subscriptionName: MOTION_LIST_SUBSCRIPTION,
