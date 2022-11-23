@@ -112,14 +112,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             { templateField: `group_$_ids` }
         ]);
 
-        const participantListFields: TypedFieldset<User> = shortNameFields.concat([
-            { templateField: `vote_delegated_$_to_id` },
-            { templateField: `vote_delegations_$_from_ids` },
-            { templateField: `vote_weight_$` },
-            { templateField: `structure_level_$` },
-            { templateField: `number_$` },
-            { templateField: `comment_$` },
-            { templateField: `group_$_ids` },
+        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal.concat([
             `is_present_in_meeting_ids`
         ]);
 
