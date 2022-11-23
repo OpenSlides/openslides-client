@@ -108,15 +108,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `last_name`,
             `pronoun`,
             `username` /* Required! To getShortName */,
-            `is_active`,
-            `is_physical_person`,
             `gender`,
-            `email`,
-            `organization_management_level`,
             `meeting_ids`,
             { templateField: `structure_level_$` },
             { templateField: `number_$` },
-            { templateField: `comment_$` },
             { templateField: `group_$_ids` }
         ];
 
