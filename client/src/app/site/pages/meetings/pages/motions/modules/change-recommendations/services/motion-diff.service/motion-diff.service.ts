@@ -1727,11 +1727,13 @@ export class MotionDiffService {
         );
     }
 
-    public getTextWithChanges_sort_cb(change1: ViewUnifiedChange, change2: ViewUnifiedChange): number {
-        if (change1.getLineFrom() === change2.getLineFrom()) {
-            return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
-        }
-        return change1.getLineFrom() - change2.getLineFrom();
+    public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
+        return changes.sort((change1: ViewUnifiedChange, change2: ViewUnifiedChange): number => {
+            if (change1.getLineFrom() === change2.getLineFrom()) {
+                return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
+            }
+            return change1.getLineFrom() - change2.getLineFrom();
+        });
     }
 
     /**
@@ -1756,7 +1758,7 @@ export class MotionDiffService {
 
         changes = changes.filter(change => !change.isTitleChange());
         // Changes need to be applied from the bottom up, to prevent conflicts with changing line numbers.
-        changes.sort(this.getTextWithChanges_sort_cb).reverse();
+        changes = this.sortChangeRequests(changes).reverse();
 
         if (showAllCollisions) {
             let lastReplacedLine: number = null;
