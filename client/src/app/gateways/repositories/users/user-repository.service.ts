@@ -102,23 +102,15 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             { templateField: `committee_$_management_level` }
         ]);
 
-        const participantListFieldsMinimal: TypedFieldset<User> = [
-            `title`,
-            `first_name`,
-            `last_name`,
-            `pronoun`,
-            `username` /* Required! To getShortName */,
-            `is_active`,
-            `is_physical_person`,
-            `gender`,
-            `email`,
-            `organization_management_level`,
-            `meeting_ids`,
+        const participantListFieldsMinimal: TypedFieldset<User> = shortNameFields.concat([
+            { templateField: `vote_delegated_$_to_id` },
+            { templateField: `vote_delegations_$_from_ids` },
+            { templateField: `vote_weight_$` },
             { templateField: `structure_level_$` },
             { templateField: `number_$` },
             { templateField: `comment_$` },
             { templateField: `group_$_ids` }
-        ];
+        ]);
 
         const participantListFields: TypedFieldset<User> = shortNameFields.concat([
             { templateField: `vote_delegated_$_to_id` },
