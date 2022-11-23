@@ -6,7 +6,7 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { LifecycleService } from '../../../services/lifecycle.service';
-import { getParticipantSubscriptionConfig } from '../pages/participants/config/model-subscription';
+import { getParticipantMinimalSubscriptionConfig } from '../pages/participants/config/model-subscription';
 import { getProjectorListSubscriptionConfig } from '../pages/projectors/config/model-subscription';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
@@ -172,7 +172,7 @@ export class ActiveMeetingService {
             getMeetingDetailSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
             getMediafilesSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
             getProjectorListSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable()),
-            getParticipantSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable())
+            getParticipantMinimalSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable())
         );
     }
 }
