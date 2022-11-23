@@ -71,15 +71,17 @@ export class SequentialNumberMappingService {
     /**
      * Waits until an id should be available.
      *
-     * @returns null if not found otherwise the id
+     * @returns null if not found
+     *          undefined if config is invalid
+     *          otherwise the id
      */
     public async getIdBySequentialNumber({
         collection,
         meetingId,
         sequentialNumber
-    }: SequentialNumberMappingConfig): Promise<Id | null> {
+    }: SequentialNumberMappingConfig): Promise<Id | null | undefined> {
         if (!collection || !meetingId || !sequentialNumber) {
-            return null;
+            return undefined;
         }
 
         const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;

@@ -82,16 +82,18 @@ export class DetailViewComponent implements OnInit {
 
         this.sequentialNumberMappingService.getIdBySequentialNumber(config).then(id => {
             this._loading = false;
-            if (id) {
-                if (this._id !== id) {
-                    this._id = id;
-                    this._shouldShowContent = true;
-                    this.idFound.next(id);
+            if (id !== undefined) {
+                if (id) {
+                    if (this._id !== id) {
+                        this._id = id;
+                        this._shouldShowContent = true;
+                        this.idFound.next(id);
+                    }
+                } else {
+                    this._shouldShowContent = false;
                 }
-            } else {
-                this._shouldShowContent = false;
+                this.cd.markForCheck();
             }
-            this.cd.markForCheck();
         });
     }
 
