@@ -1464,7 +1464,7 @@ describe(`MotionDiffService`, () => {
                         rejected: false,
                         line_from: 1,
                         line_to: 1,
-                        text: `<p>Test 2x</p>`,
+                        text: `<p>Test 1y</p>`,
                         type: ModificationType.TYPE_REPLACEMENT,
                         other_description: ``,
                         creation_time: 0
@@ -1481,12 +1481,10 @@ describe(`MotionDiffService`, () => {
             );
 
             expect(out).toBe(
-                `<div class="os-colliding-change" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2">` +
-                    `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 2x</p>` +
-                    `</div>` +
-                    `<div class="os-colliding-change" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0">` +
-                    `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 1x</p>` +
-                    `</div>` +
+                `<div class="os-colliding-change os-colliding-change-holder" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
+                    `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
+                    `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
+                    `<p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
                     `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 2x</p>` +
                     `<p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 3</p>`
             );
@@ -1647,7 +1645,7 @@ describe(`MotionDiffService`, () => {
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const inHtml =
-                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
+                    `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
                     `<p><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
                     `</div>`;
 
@@ -1656,12 +1654,10 @@ describe(`MotionDiffService`, () => {
                     service.formatOsCollidingChanges_wysiwyg_cb
                 );
                 expect(processedHtml).toBe(
-                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
-                        `<p>` +
-                        `<span>&lt;!-- ### Start collision: 08-Ä02 ### --&gt;<br></span>` +
-                        `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo` +
-                        `<span><br>&lt;!-- ### End collision: 08-Ä02 ### --&gt;</span>` +
-                        `</p></div>`
+                    `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
+                        `<p><span class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;<br></span>` +
+                        `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</p>` +
+                        `<span>==============</span></div>`
                 );
             }
         ));
@@ -1670,7 +1666,7 @@ describe(`MotionDiffService`, () => {
             [MotionDiffService],
             (service: MotionDiffService) => {
                 const inHtml =
-                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
+                    `<div class="os-colliding-change os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
                     `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
                     `</div>`;
 
@@ -1679,12 +1675,10 @@ describe(`MotionDiffService`, () => {
                     service.formatOsCollidingChanges_wysiwyg_cb
                 );
                 expect(processedHtml).toBe(
-                    `<div class="os-colliding-change" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08">` +
-                        `<div>&lt;!-- ### Start collision: 08-Ä02 ### --&gt;</div>` +
-                        `<ul><li>` +
-                        `<span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo` +
-                        `</li></ul>` +
-                        `<div>&lt;!-- ### End collision: 08-Ä02 ### --&gt;</div>` +
+                    `<div class="os-colliding-change-holder" data-change-type="amendment" data-change-id="amendment-15-0" data-identifier="08-Ä02" data-title="08-Ä02: Änderungsantrag zu 08" data-line-from="3" data-line-to="3">` +
+                        `<div class="os-colliding-change os-colliding-change-comment">==============<br>&lt;!-- ### 08-Ä02 (Line 3) ### --&gt;</div>` +
+                        `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>sit amet justo</li></ul>` +
+                        `<div>==============</div>` +
                         `</div>`
                 );
             }

@@ -2,6 +2,8 @@
 
 $material-design-icons-class-icons-generate-codepoints: false !default;
 
+// Note that this class can be either set to the holder element of a collision,
+// or the comment indicating the collision once the text has been manually edited.
 .os-colliding-change {
     &:before {
         content: 'warning';

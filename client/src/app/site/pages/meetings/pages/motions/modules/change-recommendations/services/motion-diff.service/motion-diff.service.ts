@@ -1796,7 +1796,10 @@ export class MotionDiffService {
                     const changeId = ` data-change-id="` + DomHelpers.replaceHtmlEntities(change.getChangeId()) + `"`;
                     const title = ` data-title="` + DomHelpers.replaceHtmlEntities(change.getTitle()) + `"`;
                     const ident = ` data-identifier="` + DomHelpers.replaceHtmlEntities(change.getIdentifier()) + `"`;
-                    const opTag = `<div class="os-colliding-change"` + type + ident + title + changeId + `>`;
+                    const lineFrom = ` data-line-from="` + change.getLineFrom().toString(10) + `"`;
+                    const lineTo = ` data-line-to="` + change.getLineTo().toString(10) + `"`;
+                    const opAttrs = type + ident + title + changeId + lineFrom + lineTo;
+                    const opTag = `<div class="os-colliding-change os-colliding-change-holder"` + opAttrs + `>`;
                     const insertingHtml = opTag + change.getChangeNewText() + `</div>`;
 
                     html = this.insertLines(html, change.getLineFrom(), insertingHtml);
@@ -1830,23 +1833,55 @@ export class MotionDiffService {
         const frag = DomHelpers.htmlToFragment(html);
 
         frag.querySelectorAll(`.os-colliding-change`).forEach((el: HTMLElement): void => {
-            const type = el.getAttribute(`data-change-type`) ?? ``;
-            const changeId = el.getAttribute(`data-change-id`) ?? ``;
-            const identifier = el.getAttribute(`data-identifier`) ?? ``;
-            const title = el.getAttribute(`data-title`) ?? ``;
-            formatter.bind(this)(el as HTMLDivElement, type, identifier, title, changeId);
+            formatter.bind(this)(el as HTMLDivElement);
         });
 
         return DomHelpers.fragmentToHtml(frag);
     }
 
-    public formatOsCollidingChanges_wysiwyg_cb(
-        el: HTMLDivElement,
-        type: string,
-        identifier: string,
-        title: string,
-        changeId: string
-    ): void {
+    public formatOsCollidingChanges_wysiwyg_cb(el: HTMLDivElement): void {
+        // This callback will only do anything the first time it's called on a generated document.
+        // After that, the document should stay as it is. Hence, we remove the ol-colliding-change class
+        // from the holder element to the comment.
+        if (el.classList.contains(`os-colliding-change-comment`)) {
+            return;
+        }
+        const type = el.getAttribute(`data-change-type`) ?? ``;
+        const identifier = el.getAttribute(`data-identifier`) ?? ``;
+        const lineFrom = el.getAttribute(`data-line-from`) ?? ``;
+        const lineTo = el.getAttribute(`data-line-to`) ?? ``;
+
+        // true if either it's a DIV with the class, or a P with a child-SPAN with the class
+        const nodeIsColliding = (node: ChildNode): boolean => {
+            if (!node || !node.nodeName) {
+                return false;
+            }
+            if (node.nodeName === `DIV` && (node as HTMLDivElement).classList.contains(`os-colliding-change-holder`)) {
+                return true;
+            }
+            if (node.nodeName === `P`) {
+                for (let i = 0; i < node.childNodes.length; i++) {
+                    const child = node.childNodes.item(i);
+                    if (
+                        child &&
+                        child.nodeName === `SPAN` &&
+                        (child as HTMLSpanElement).classList.contains(`os-colliding-change-holder`)
+                    ) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        const prevIsColliding = nodeIsColliding(el.previousSibling);
+        const nextIsColliding = nodeIsColliding(el.nextSibling);
+
+        // Once we start editing, the holder element should not hold the class deciding if to show a warning anymore.
+        // The reason is that it might be hard to get rid of it while editing, yet we still want to be able to get rid
+        // of the collision warning sign if the collision has been resolved
+        el.classList.remove(`os-colliding-change`);
+
         // In a P, we want to have the collision markers inserted within the P's margins
         let toInsertElement: HTMLElement, commentsInInlineElement: boolean;
         if (el.children.length === 1 && el.firstChild.nodeName === `P`) {
@@ -1864,28 +1899,33 @@ export class MotionDiffService {
         } else {
             strTitle = identifier;
         }
-        const strStart = this.translate.instant(`Start collision`);
-        const strEnd = this.translate.instant(`End collision`);
+        if (parseInt(lineTo, 10) === parseInt(lineFrom, 10)) {
+            strTitle += ` (` + this.translate.instant(`Line`) + ` ` + lineFrom + `)`;
+        } else {
+            strTitle += ` (` + this.translate.instant(`Lines`) + ` ` + lineFrom + ` - ` + lineTo + `)`;
+        }
 
-        const commentBegin = el.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
-        commentBegin.innerHTML =
-            `&lt;` + DomHelpers.replaceHtmlEntities(`!-- ### ` + strStart + `: ` + strTitle + ` ### --`) + `&gt;`;
+        const comment = el.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
+        comment.classList.add(`os-colliding-change`);
+        comment.classList.add(`os-colliding-change-comment`);
+        comment.innerHTML = `&lt;` + DomHelpers.replaceHtmlEntities(`!-- ### ` + strTitle + ` ### --`) + `&gt;`;
         if (commentsInInlineElement) {
-            commentBegin.innerHTML = commentBegin.innerHTML + `<br>`;
+            comment.innerHTML = comment.innerHTML + `<br>`;
+        }
+        if (!prevIsColliding) {
+            comment.innerHTML = `==============<br>` + comment.innerHTML;
         }
         if (toInsertElement.firstChild) {
-            toInsertElement.insertBefore(commentBegin, toInsertElement.firstChild);
+            toInsertElement.insertBefore(comment, toInsertElement.firstChild);
         } else {
-            toInsertElement.appendChild(commentBegin);
+            toInsertElement.appendChild(comment);
         }
 
-        const commentEnd = toInsertElement.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
-        commentEnd.innerHTML =
-            `&lt;` + DomHelpers.replaceHtmlEntities(`!-- ### ` + strEnd + `: ` + strTitle + ` ### --`) + `&gt;`;
-        if (commentsInInlineElement) {
-            commentEnd.innerHTML = `<br>` + commentEnd.innerHTML;
+        if (!nextIsColliding) {
+            const terminatorComment = el.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);
+            terminatorComment.innerHTML = `==============`;
+            el.appendChild(terminatorComment);
         }
-        toInsertElement.appendChild(commentEnd);
     }
 
     /**
