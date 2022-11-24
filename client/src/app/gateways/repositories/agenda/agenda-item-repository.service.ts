@@ -161,6 +161,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
     private getOptionalPayload(content: any): any {
         return {
             item_number: content.item_number,
+            parent_id: content.parent_id,
             comment: content.comment,
             closed: content.closed,
             type: content.type,
