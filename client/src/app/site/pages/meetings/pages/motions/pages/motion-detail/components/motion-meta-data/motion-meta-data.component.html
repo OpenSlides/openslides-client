@@ -138,9 +138,9 @@
 </div>
 
 <!-- recommendation referencing motions -->
-<div *ngIf="motion && recommendationReferencingMotions.length > 0 && showReferringMotions">
+<div *ngIf="showReferringMotions && motion?.referenced_in_motion_recommendation_extensions?.length > 0">
     <h4>{{ 'Referring motions' | translate }}</h4>
-    <span *ngFor="let motion of recommendationReferencingMotions; let last = last">
+    <span *ngFor="let motion of motion.referenced_in_motion_recommendation_extensions; let last = last">
         <a [routerLink]="motion.getDetailStateUrl()" class="nowrap">{{ motion.numberOrTitle }}</a>
         <span *ngIf="!last">&nbsp;·&nbsp;</span>
     </span>

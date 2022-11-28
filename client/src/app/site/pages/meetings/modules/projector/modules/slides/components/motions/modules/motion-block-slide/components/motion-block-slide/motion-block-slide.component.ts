@@ -4,8 +4,6 @@ import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/pr
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { modifyAgendaItemNumber } from '../../../../../../definitions/agenda_item_number';
 import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from '../../motion-block-slide-data';
@@ -90,13 +88,11 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
     }
 
     public constructor(
+        private meetingSettingsService: MeetingSettingsService,
         translate: TranslateService,
         motionRepo: MotionControllerService,
-        auService: AutoupdateService,
-        modelRequestBuilder: ModelRequestBuilderService,
-        private meetingSettingsService: MeetingSettingsService
     ) {
-        super(translate, motionRepo, auService, modelRequestBuilder);
+        super(translate, motionRepo);
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
 
         this.meetingSettingsService
@@ -124,7 +120,6 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
                 if (motion.recommendation) {
                     let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
-                        this.addReferencedMotions(motion.recommendation_extension);
                         recommendation +=
                             ` ` + this.motionRepo.parseMotionPlaceholders(motion.recommendation_extension);
                     }
@@ -133,7 +128,6 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
                     motion.recommendationLabel = null;
                 }
             });
-            this.loadReferencedMotions();
 
             // Check, if all motions have the same recommendation label
             if (value.data.motions.length > 0) {
