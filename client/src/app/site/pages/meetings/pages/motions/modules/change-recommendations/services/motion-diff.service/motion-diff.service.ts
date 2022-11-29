@@ -1902,7 +1902,7 @@ export class MotionDiffService {
         if (parseInt(lineTo, 10) === parseInt(lineFrom, 10)) {
             strTitle += ` (` + this.translate.instant(`Line`) + ` ` + lineFrom + `)`;
         } else {
-            strTitle += ` (` + this.translate.instant(`Lines`) + ` ` + lineFrom + ` - ` + lineTo + `)`;
+            strTitle += ` (` + this.translate.instant(`Line`) + ` ` + lineFrom + ` - ` + lineTo + `)`;
         }
 
         const comment = el.ownerDocument.createElement(commentsInInlineElement ? `span` : `div`);

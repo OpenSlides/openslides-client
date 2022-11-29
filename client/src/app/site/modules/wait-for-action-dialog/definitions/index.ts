@@ -1,5 +1,3 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
 export interface WaitForActionData {
     workerId: number;
     workerName: string;

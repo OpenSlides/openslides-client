@@ -193,10 +193,10 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     /**
-     * Deletes the modified final version
+     * Deletes the editorial final version
      */
     public async deleteModifiedFinalVersion(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete the print template?`);
+        const title = this.translate.instant(`Are you sure you want to delete the editorial final version?`);
         if (await this.promptService.open(title)) {
             try {
                 await this.repo.update({ modified_final_version: `` }, this.motion).resolve();
@@ -208,7 +208,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     /**
-     * Submits the modified final version of the motion
+     * Submits the editorial/modified final version of the motion
      */
     public saveModifiedFinalVersion(): void {
         this.viewService.modifiedFinalVersionActionSubject.next(ModifiedFinalVersionAction.SAVE);

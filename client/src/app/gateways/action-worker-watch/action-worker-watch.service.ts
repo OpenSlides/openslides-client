@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, timer } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
