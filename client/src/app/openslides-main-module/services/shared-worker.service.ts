@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { filter, Observable, Subscriber } from 'rxjs';
 import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: `root`
@@ -12,13 +13,18 @@ export class SharedWorkerService {
     private ready = false;
 
     constructor() {
-        try {
-            let worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
-                name: `openslides-shared-worker`
-            });
-            worker.port.start();
-            this.conn = worker.port;
-        } catch (e) {
+        if (environment.autoupdateOnSharedWorker) {
+            try {
+                let worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
+                    name: `openslides-shared-worker`
+                });
+                worker.port.start();
+                this.conn = worker.port;
+            } catch (e) {
+                import(`./default-shared-worker.worker`);
+                this.conn = window;
+            }
+        } else {
             import(`./default-shared-worker.worker`);
             this.conn = window;
         }
