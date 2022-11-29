@@ -143,6 +143,8 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
     private _source = new BehaviorSubject<V[]>([]);
 
+    private _filterOptionsLoad: string[] = [];
+
     public constructor(private activeFiltersStore: ActiveFiltersStoreService) {}
 
     /**
@@ -305,6 +307,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
             .subscribe(filterProperties => {
                 filter.options = filterProperties;
+                this._filterOptionsLoad.push(filter.label);
                 this.updateFilterDefinitions();
             });
     }
@@ -429,17 +432,26 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             if (!oldDefinition) {
                 return;
             }
-            oldDefinition.options.forEach(option => {
-                if (!option || typeof option === `string`) {
-                    return;
-                }
-                const newOption = (
-                    definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
-                ).find(newOpt => newOpt.label === option.label);
-                if (newOption) {
-                    newOption.isActive = option.isActive;
-                }
-            });
+            if (
+                !this._filterOptionsLoad.includes(definition.label) &&
+                definition.options.length === 0 &&
+                oldDefinition.options.length
+            ) {
+                definition.options = oldDefinition.options;
+            } else {
+                oldDefinition.options.forEach(option => {
+                    if (!option || typeof option === `string`) {
+                        return;
+                    }
+
+                    const newOption = (
+                        definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
+                    ).find(newOpt => newOpt.label === option.label);
+                    if (newOption) {
+                        newOption.isActive = option.isActive;
+                    }
+                });
+            }
         });
         return newFilterDefs;
     }
