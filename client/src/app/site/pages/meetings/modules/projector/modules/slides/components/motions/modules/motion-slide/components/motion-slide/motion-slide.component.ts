@@ -19,6 +19,8 @@ import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/s
 import { MotionLineNumberingService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-line-numbering.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { BaseScaleScrollSlideComponent } from '../../../../../../base/base-scale-scroll-slide-component';
 import { BaseMotionSlideComponent, MotionTitleInformation } from '../../../../base/base-motion-slide';
@@ -125,12 +127,7 @@ export class MotionSlideComponent
     public get recommendationLabel(): string {
         let recommendation = this.translate.instant(this.data.data.recommendation_label!);
         if (this.data.data.recommendation_extension) {
-            recommendation +=
-                ` ` +
-                this.replaceReferencedMotions(
-                    this.data.data.recommendation_extension,
-                    this.data.data.recommendation_referenced_motions!
-                );
+            recommendation += ` ` + this.replaceReferencedMotions(this.data.data.recommendation_extension);
         }
         return recommendation;
     }
@@ -154,9 +151,11 @@ export class MotionSlideComponent
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
         private lineNumbering: LineNumberingService,
-        private diff: MotionDiffService
+        private diff: MotionDiffService,
+        auService: AutoupdateService,
+        modelRequestBuilder: ModelRequestBuilderService
     ) {
-        super(translate, motionRepo);
+        super(translate, motionRepo, auService, modelRequestBuilder);
     }
 
     protected override setData(value: SlideData<MotionSlideData>): void {
@@ -173,6 +172,11 @@ export class MotionSlideComponent
             this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
                 a.number.localeCompare(b.number)
             );
+        }
+
+        if (value.data.recommendation_extension) {
+            this.addReferencedMotions(value.data.recommendation_extension);
+            this.loadReferencedMotions();
         }
 
         this.recalcUnifiedChanges();

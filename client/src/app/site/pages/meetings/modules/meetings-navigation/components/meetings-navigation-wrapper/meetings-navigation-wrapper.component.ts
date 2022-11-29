@@ -39,7 +39,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
     }
 
     public get showMeetingNav(): boolean {
-        return this.operator.knowsMultipleMeetings;
+        return this.operator.knowsMultipleMeetings || this.operator.hasOrganizationPermissions();
     }
 
     public get meeting(): ViewMeeting | null {

@@ -3,6 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/projector/modules/slides/components/motions/base/base-motion-slide';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { modifyAgendaItemNumber } from '../../../../../../definitions/agenda_item_number';
 import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from '../../motion-block-slide-data';
@@ -89,8 +91,14 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(translate: TranslateService, motionRepo: MotionControllerService) {
-        super(translate, motionRepo);
+    public constructor(
+        translate: TranslateService,
+        motionRepo: MotionControllerService,
+        auService: AutoupdateService,
+
+        modelRequestBuilder: ModelRequestBuilderService
+    ) {
+        super(translate, motionRepo, auService, modelRequestBuilder);
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
     }
 
@@ -114,14 +122,15 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
                 if (motion.recommendation) {
                     let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
-                        recommendation +=
-                            ` ` + this.replaceReferencedMotions(motion.recommendation_extension, value.data.referenced);
+                        this.addReferencedMotions(motion.recommendation_extension);
+                        recommendation += ` ` + this.replaceReferencedMotions(motion.recommendation_extension);
                     }
                     motion.recommendationLabel = recommendation;
                 } else {
                     motion.recommendationLabel = null;
                 }
             });
+            this.loadReferencedMotions();
 
             // Check, if all motions have the same recommendation label
             if (value.data.motions.length > 0) {

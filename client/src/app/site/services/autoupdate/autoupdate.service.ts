@@ -41,7 +41,7 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
-    receivedData: Promise<void>;
+    receivedData: Promise<ModelData>;
     close: () => void;
 }
 
@@ -92,7 +92,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
-    private _resolveDataReceived: (() => void)[] = [];
+    private _resolveDataReceived: ((value: ModelData) => void)[] = [];
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -142,6 +142,23 @@ export class AutoupdateService {
     }
 
     /**
+     * Requests single data from autoupdate.
+     *
+     * @param modelRequest The request data for a list of models, that will be sent to the Autoupdate-Service
+     * @param description A simple description for developing. It helps tracking streams:
+     * Which component opens which stream?
+     */
+    public async single(modelRequest: ModelRequestObject, description: string): Promise<ModelData> {
+        const request = modelRequest.getModelRequest();
+        console.log(`autoupdate: new single request:`, description, modelRequest, request);
+        const modelSubscription = await this.request(request, description, null, { single: 1 });
+        this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
+        const data = await modelSubscription.receivedData;
+        modelSubscription.close();
+        return data;
+    }
+
+    /**
      * Requests a new autoupdate and listen to incoming messages. This is a heavy task.
      * It needs to be closed when it is not needed anymore.
      *
@@ -157,11 +174,21 @@ export class AutoupdateService {
         return modelSubscription;
     }
 
-    private async request(request: ModelRequest, description: string, streamId?: Id): Promise<ModelSubscription> {
-        const id = await this.communication.open(streamId, description, request, this._currentQueryParams);
+    private async request(
+        request: ModelRequest,
+        description: string,
+        streamId?: Id,
+        customParams?: QueryParams
+    ): Promise<ModelSubscription> {
+        const id = await this.communication.open(
+            streamId,
+            description,
+            request,
+            Object.assign(this._currentQueryParams, customParams || {})
+        );
 
         let rejectReceivedData: any;
-        const receivedData = new Promise<void>((resolve, reject) => {
+        const receivedData = new Promise<ModelData>((resolve, reject) => {
             this._resolveDataReceived[id] = resolve;
             rejectReceivedData = reject;
         });
@@ -217,7 +244,7 @@ export class AutoupdateService {
             })
             .then(() => {
                 if (this._resolveDataReceived[requestId]) {
-                    this._resolveDataReceived[requestId]();
+                    this._resolveDataReceived[requestId](modelData);
                     delete this._resolveDataReceived[requestId];
                 }
             });
