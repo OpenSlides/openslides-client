@@ -8,8 +8,7 @@
         <ng-container *ngIf="getSubmittersObservable() | async as submitters">
             <h3 *ngIf="submitters.length > 0">{{ 'Submitters' | translate }}</h3>
             <span *ngFor="let submitter of submitters; let last = last">
-                {{ submitter }}
-                <span *ngIf="!last">,</span>
+                {{ submitter }}<span *ngIf="!last">,</span>
             </span>
         </ng-container>
 
@@ -30,11 +29,9 @@
             </h1>
             <!-- recommendation referencing motions -->
             <h2 *ngIf="data.data.show_sidebox && data.data.recommendation_referencing_motions" class="projector_h2">
-                <span>{{ 'Referring motions' | translate }}</span>
-                :
+                <span>{{ 'Referring motions' | translate }}</span>:
                 <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                    {{ getNumberOrTitle(titleInformation) }}
-                    <span *ngIf="!last">,</span>
+                    {{ getNumberOrTitle(titleInformation) }}<span *ngIf="!last">,</span>
                 </span>
             </h2>
 
@@ -48,8 +45,7 @@
                         </td>
                         <td>
                             <span *ngFor="let submitter of submitters; let last = last">
-                                {{ submitter }}
-                                <span *ngIf="!last">,</span>
+                                {{ submitter }}<span *ngIf="!last">,</span>
                             </span>
                         </td>
                     </tr>
@@ -70,8 +66,7 @@
                     </td>
                     <td>
                         <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                            {{ getNumberOrTitle(titleInformation) }}
-                            <span *ngIf="!last">,</span>
+                            {{ getNumberOrTitle(titleInformation) }}<span *ngIf="!last">,</span>
                         </span>
                     </td>
                 </tr>
