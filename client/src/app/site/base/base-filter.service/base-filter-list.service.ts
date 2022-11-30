@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription, filter as rxjsFilter } from 'rxjs';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 
@@ -143,8 +143,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
     private _source = new BehaviorSubject<V[]>([]);
 
-    private _filterOptionsLoad: string[] = [];
-
     public constructor(private activeFiltersStore: ActiveFiltersStoreService) {}
 
     /**
@@ -272,6 +270,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         filterFn
     }: RepositoryFilterConfig<OV, V>): void {
         repo.getViewModelListObservable()
+            .pipe(rxjsFilter(v => v === null))
             .pipe(
                 map(viewModels => {
                     if (viewModels && viewModels.length) {
@@ -307,7 +306,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
             .subscribe(filterProperties => {
                 filter.options = filterProperties;
-                this._filterOptionsLoad.push(filter.label);
                 this.updateFilterDefinitions();
             });
     }
@@ -433,7 +431,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
                 return;
             }
             if (
-                !this._filterOptionsLoad.includes(definition.label) &&
                 definition.options.length === 0 &&
                 oldDefinition.options.length
             ) {

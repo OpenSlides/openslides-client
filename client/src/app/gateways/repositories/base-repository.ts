@@ -49,7 +49,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * updates, if e.g. an autoupdate with a lot motions come in. The result is just one
      * update of the new list instead of many unnecessary updates.
      */
-    protected readonly viewModelListSubject = new BehaviorSubject<V[]>([]);
+    protected readonly viewModelListSubject = new BehaviorSubject<V[] | null>(null);
 
     /**
      * Observable subject for any changes of view models. Unaccessible view models are included.
