@@ -56,6 +56,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     motions_amendments_multiple_paragraphs: true,
     motions_amendments_of_amendments: false,
     motions_supporters_min_amount: 0,
+    motions_block_slide_columns: 0,
     motion_poll_default_type: `pseudoanonymous`,
     motion_poll_default_100_percent_base: `YNA`,
     motion_poll_ballot_paper_selection: `CUSTOM_NUMBER`,
