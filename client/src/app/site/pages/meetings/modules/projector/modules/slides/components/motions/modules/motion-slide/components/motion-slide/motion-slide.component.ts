@@ -125,7 +125,12 @@ export class MotionSlideComponent
     public get recommendationLabel(): string {
         let recommendation = this.translate.instant(this.data.data.recommendation_label!);
         if (this.data.data.recommendation_extension) {
-            recommendation += ` ` + this.motionRepo.parseMotionPlaceholders(this.data.data.recommendation_extension);
+            recommendation +=
+                ` ` +
+                this.replaceReferencedMotions(
+                    this.data.data.recommendation_extension,
+                    this.data.data.recommendation_referenced_motions
+                );
         }
         return recommendation;
     }

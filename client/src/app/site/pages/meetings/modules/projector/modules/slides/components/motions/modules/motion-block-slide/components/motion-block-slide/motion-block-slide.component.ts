@@ -90,7 +90,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
     public constructor(
         private meetingSettingsService: MeetingSettingsService,
         translate: TranslateService,
-        motionRepo: MotionControllerService,
+        motionRepo: MotionControllerService
     ) {
         super(translate, motionRepo);
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
@@ -121,7 +121,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
                     let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
                         recommendation +=
-                            ` ` + this.motionRepo.parseMotionPlaceholders(motion.recommendation_extension);
+                            ` ` + this.replaceReferencedMotions(motion.recommendation_extension, value.data.referenced);
                     }
                     motion.recommendationLabel = recommendation;
                 } else {
