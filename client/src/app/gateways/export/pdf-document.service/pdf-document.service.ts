@@ -497,7 +497,7 @@ export class PdfDocumentService {
         let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
         let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
         const header =
-            exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Header) : false;
+            exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Header) : true;
 
         // add the left logo to the header column
         if (logoHeaderLeftUrl) {
