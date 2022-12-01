@@ -376,8 +376,8 @@ msgid ""
 "Are you sure you want to delete all speakers from this list of speakers?"
 msgstr "Sollen wirklich alle Redner*innen von dieser Liste entfernt werden?"
 
-msgid "Are you sure you want to delete the print template?"
-msgstr "Soll die Beschluss-Druckvorlage wirklich gelöscht werden?"
+msgid "Are you sure you want to delete the editorial final version?"
+msgstr "Soll die redaktionelle Beschlussfassung wirklich gelöscht werden?"
 
 msgid "Are you sure you want to delete these accounts?"
 msgstr "Sollen diese Accounts wirklich gelöscht werden?"
@@ -1013,8 +1013,8 @@ msgstr "Countdown mit der Redeliste verkoppeln"
 msgid "Create"
 msgstr "Erstellen"
 
-msgid "Create final print template"
-msgstr "Beschluss-Druckvorlage erstellen"
+msgid "Create editorial final version"
+msgstr "Redaktionelle Beschlussfassung erstellen"
 
 msgid "Create new chat group"
 msgstr "Neue Chat-Gruppe anlegen"
@@ -1176,8 +1176,8 @@ msgstr "Stimmrechtsübertragung"
 msgid "Delete"
 msgstr "Löschen"
 
-msgid "Delete final print template"
-msgstr "Beschluss-Druckvorlage löschen"
+msgid "Delete editorial final version"
+msgstr "Redaktionelle Beschlussfassung löschen"
 
 msgid "Delete projector"
 msgstr "Projektor löschen"
@@ -1313,8 +1313,8 @@ msgstr "Details bearbeiten"
 msgid "Edit details for"
 msgstr "Details bearbeiten für"
 
-msgid "Edit final print template"
-msgstr "Beschluss-Druckvorlage bearbeiten"
+msgid "Edit editorial final version"
+msgstr "Redaktionelle Beschlussfassung bearbeiten"
 
 msgid "Edit meeting"
 msgstr "Veranstaltung bearbeiten"
@@ -1336,6 +1336,9 @@ msgstr "Bearbeiten, um Stimmen einzugeben."
 
 msgid "Edit topic"
 msgstr "Thema bearbeiten"
+
+msgid "Editorial final version"
+msgstr "Redaktionelle Beschlussfassung"
 
 msgid "Election"
 msgstr "Wahl"
@@ -1532,9 +1535,6 @@ msgstr "Dateien"
 
 msgid "Filter"
 msgstr "Filter"
-
-msgid "Final print template"
-msgstr "Beschluss-Druckvorlage"
 
 msgid "Final version"
 msgstr "Beschlussfassung"
@@ -1920,6 +1920,13 @@ msgstr "Letzte Redner*innen"
 
 msgid "Leave"
 msgstr "Verlassen"
+
+msgid "Leave blank to automatically generate the password."
+msgstr "Lassen Sie das Feld leer, um das Passwort automatisch zu generieren."
+
+msgid "Leave blank to automatically generate the username."
+msgstr ""
+"Lassen Sie das Feld leer, um den Benutzernamen automatisch zu generieren."
 
 msgid "Left"
 msgstr "Links"
@@ -2709,6 +2716,9 @@ msgstr ""
 "Bitte aktualisieren Sie Ihren Browser oder kontaktieren Sie Ihre "
 "Systemadministration."
 
+msgid "Please wait"
+msgstr "Bitte warten"
+
 msgid "Point of order"
 msgstr "GO-Antrag"
 
@@ -2759,6 +2769,9 @@ msgstr "Datenschutzerklärung"
 
 msgid "Privacy policy"
 msgstr "Datenschutzerklärung"
+
+msgid "Process type"
+msgstr "Prozesstyp"
 
 msgid "Project"
 msgstr "Projizieren"
@@ -2882,6 +2895,9 @@ msgstr "Ablehnung"
 msgid "Rejection (not authorized)"
 msgstr "Verwerfung (nicht berechtigt)"
 
+msgid "Relevant information could not be accessed"
+msgstr "Relevante Informationen konnten nicht abgerufen werden."
+
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -2989,8 +3005,8 @@ msgstr "Speichern"
 msgid "Save all changes"
 msgstr "Alle Änderungen speichern"
 
-msgid "Save final print template"
-msgstr "Beschluss-Druckvorlage speichern"
+msgid "Save editorial final version"
+msgstr "Redaktionelle Beschlussfassung speichern"
 
 msgid "Scan this QR code to connect to WLAN."
 msgstr "QR-Code scannen um sich mit dem WLAN zu verbinden."
@@ -3387,6 +3403,9 @@ msgstr "Stimme(n) jetzt senden"
 msgid "Submitter (in target meeting)"
 msgstr "Antragsteller*in (in der Zielveranstaltung)"
 
+msgid "Submitter may set state to"
+msgstr "Antragsteller*in darf Status setzen auf"
+
 msgid "Submitters"
 msgstr "Antragsteller*in"
 
@@ -3525,6 +3544,9 @@ msgstr "Der Server konnte nicht erreicht werden."
 
 msgid "The server didn't respond."
 msgstr "Der Server antwortet nicht."
+
+msgid "The server process is still running."
+msgstr "Der Serverprozess läuft noch."
 
 msgid "The text field may not be blank."
 msgstr "Der Antragstext darf nicht leer sein."
