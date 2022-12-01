@@ -15,7 +15,7 @@ export class ActionWorkerRepositoryService extends BaseRepository<ViewActionWork
         super(repositoryServiceCollector, ActionWorker);
     }
 
-    public getVerboseName = (plural?: boolean): string => (plural ? _(`Action workers`) : _(`Action worker`));
+    public getVerboseName = (plural?: boolean): string => (plural ? `Action workers` : `Action worker`);
     public getTitle = (viewModel: ViewActionWorker): string => viewModel.name;
 
     public override getFieldsets(): Fieldsets<ActionWorker> {
