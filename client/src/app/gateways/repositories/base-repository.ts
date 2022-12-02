@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { auditTime, BehaviorSubject, Observable, Subject } from 'rxjs';
+import { auditTime, BehaviorSubject, filter, Observable, Subject } from 'rxjs';
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 
@@ -221,7 +221,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns all sorted view models stored in this repository.
      */
     public getSortedViewModelList(): V[] {
-        return this.viewModelListSubject.getValue();
+        return this.viewModelListSubject.getValue() || [];
     }
 
     public getListTitle: (viewModel: V) => string = (viewModel: V) => this.getTitle(viewModel);
@@ -265,7 +265,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @returns the (sorted) Observable of the whole store.
      */
     public getViewModelListObservable(): Observable<V[]> {
-        return this.viewModelListSubject.asObservable();
+        return this.viewModelListSubject.pipe(filter(v => v !== null));
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription, filter as rxjsFilter } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 
@@ -270,7 +270,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         filterFn
     }: RepositoryFilterConfig<OV, V>): void {
         repo.getViewModelListObservable()
-            .pipe(rxjsFilter(v => v === null))
             .pipe(
                 map(viewModels => {
                     if (viewModels && viewModels.length) {
@@ -430,10 +429,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             if (!oldDefinition) {
                 return;
             }
-            if (
-                definition.options.length === 0 &&
-                oldDefinition.options.length
-            ) {
+            if (definition.options.length === 0 && oldDefinition.options.length) {
                 definition.options = oldDefinition.options;
             } else {
                 oldDefinition.options.forEach(option => {
