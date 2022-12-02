@@ -346,7 +346,7 @@ msgstr ""
 msgid "Are you sure you want to delete all speakers from this list of speakers?"
 msgstr ""
 
-msgid "Are you sure you want to delete the print template?"
+msgid "Are you sure you want to delete the editorial final version?"
 msgstr ""
 
 msgid "Are you sure you want to delete these accounts?"
@@ -964,7 +964,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-msgid "Create final print template"
+msgid "Create editorial final version"
 msgstr ""
 
 msgid "Create new chat group"
@@ -1111,7 +1111,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-msgid "Delete final print template"
+msgid "Delete editorial final version"
 msgstr ""
 
 msgid "Delete projector"
@@ -1236,7 +1236,7 @@ msgstr ""
 msgid "Edit details for"
 msgstr ""
 
-msgid "Edit final print template"
+msgid "Edit editorial final version"
 msgstr ""
 
 msgid "Edit meeting"
@@ -1258,6 +1258,9 @@ msgid "Edit to enter votes."
 msgstr ""
 
 msgid "Edit topic"
+msgstr ""
+
+msgid "Editorial final version"
 msgstr ""
 
 msgid "Election"
@@ -1442,9 +1445,6 @@ msgid "Files"
 msgstr ""
 
 msgid "Filter"
-msgstr ""
-
-msgid "Final print template"
 msgstr ""
 
 msgid "Final version"
@@ -1822,6 +1822,12 @@ msgid "Last speakers"
 msgstr ""
 
 msgid "Leave"
+msgstr ""
+
+msgid "Leave blank to automatically generate the password."
+msgstr ""
+
+msgid "Leave blank to automatically generate the username."
 msgstr ""
 
 msgid "Left"
@@ -2591,6 +2597,9 @@ msgstr ""
 msgid "Please update your browser or contact your system administration."
 msgstr ""
 
+msgid "Please wait"
+msgstr ""
+
 msgid "Point of order"
 msgstr ""
 
@@ -2640,6 +2649,9 @@ msgid "Privacy Policy"
 msgstr ""
 
 msgid "Privacy policy"
+msgstr ""
+
+msgid "Process type"
 msgstr ""
 
 msgid "Project"
@@ -2759,6 +2771,9 @@ msgstr ""
 msgid "Rejection (not authorized)"
 msgstr ""
 
+msgid "Relevant information could not be accessed"
+msgstr ""
+
 msgid "Remove"
 msgstr ""
 
@@ -2862,7 +2877,7 @@ msgstr ""
 msgid "Save all changes"
 msgstr ""
 
-msgid "Save final print template"
+msgid "Save editorial final version"
 msgstr ""
 
 msgid "Scan this QR code to connect to WLAN."
@@ -3249,6 +3264,9 @@ msgstr ""
 msgid "Submitter (in target meeting)"
 msgstr ""
 
+msgid "Submitter may set state to"
+msgstr ""
+
 msgid "Submitters"
 msgstr ""
 
@@ -3377,6 +3395,9 @@ msgid "The server could not be reached."
 msgstr ""
 
 msgid "The server didn't respond."
+msgstr ""
+
+msgid "The server process is still running."
 msgstr ""
 
 msgid "The text field may not be blank."

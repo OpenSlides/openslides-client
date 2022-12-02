@@ -118,6 +118,7 @@ _(`lightblue`);
 _(`yellow`);
 _(`You cannot delete the first state of the workflow.`);
 _(`You cannot delete the last workflow.`);
+_(`Submitter may set state to`);
 // misc for motions
 _(`Amendment`);
 _(`Statute amendment for`);
