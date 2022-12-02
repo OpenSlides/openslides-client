@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { filter, Observable, Subject } from 'rxjs';
 import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
 import { environment } from 'src/environments/environment';
@@ -12,7 +12,7 @@ export class SharedWorkerService {
     private conn: MessagePort | Window;
     private ready = false;
 
-    constructor() {
+    constructor(private zone: NgZone) {
         if (environment.autoupdateOnSharedWorker) {
             try {
                 let worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
@@ -48,10 +48,12 @@ export class SharedWorkerService {
         this.sendRawMessage({ receiver, msg } as WorkerMessage);
     }
 
-    private async setupInWindowAu(): Promise<void> {
+    private setupInWindowAu(): void {
         this.conn = window;
         this.registerMessageListener();
-        await import(`./default-shared-worker.worker`);
+        this.zone.runOutsideAngular(() => {
+            import(`./default-shared-worker.worker`);
+        });
     }
 
     private registerMessageListener(): void {
