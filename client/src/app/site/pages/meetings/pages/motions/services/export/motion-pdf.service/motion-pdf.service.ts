@@ -373,19 +373,6 @@ export class MotionPdfService {
             ]);
         }
 
-        // origin
-        if (motion.origin && (!infoToExport || infoToExport.includes(`origin`))) {
-            metaTableBody.push([
-                {
-                    text: `${this.translate.instant(`Origin`)}:`,
-                    style: `boldText`
-                },
-                {
-                    text: motion.origin
-                }
-            ]);
-        }
-
         // voting results
         if (motion.polls.length && (!infoToExport || infoToExport.includes(`polls`))) {
             motion.polls.forEach(poll => {
