@@ -38,8 +38,8 @@
     width: 100%;
     font-size: 120%;
 
-    td {
-        border-bottom: 2px solid white;
+    tr.topline td {
+        border-top: 2px solid white;
     }
     td.min {
         width: 1%;

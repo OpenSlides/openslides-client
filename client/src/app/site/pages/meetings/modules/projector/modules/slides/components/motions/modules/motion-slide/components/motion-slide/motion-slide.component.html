@@ -51,7 +51,7 @@
                     </tr>
                 </ng-container>
                 <!-- Recommendation -->
-                <tr *ngIf="recommender && recommendationLabel">
+                <tr *ngIf="recommender && recommendationLabel" class="topline">
                     <td class="min">
                         <b>{{ recommender }}:</b>
                     </td>
@@ -60,7 +60,7 @@
                     </td>
                 </tr>
                 <!-- recommendation referencing motions -->
-                <tr *ngIf="data.data.recommendation_referencing_motions">
+                <tr *ngIf="data.data.recommendation_referencing_motions" class="topline">
                     <td class="min">
                         <b>{{ 'Referring motions' | translate }}:</b>
                     </td>
