@@ -145,7 +145,7 @@ export class SlideContainerComponent {
     private updateScroll(): void {
         if (this.slideOptions.scrollable && !this.slideIsAutonomic) {
             let value = this.scroll;
-            value *= -100;
+            value *= -25;
             if (this.projector && this.projector.show_header_footer) {
                 value += 50; // Default offset for the header
             }
