@@ -5,6 +5,7 @@ import { DataStoreService } from 'src/app/site/services/data-store.service';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { AutoupdateService, ModelSubscription } from './autoupdate';
+import { ModelData } from './autoupdate/utils';
 import { SimplifiedModelRequest } from './model-request-builder';
 
 export interface SubscribeToConfig {
@@ -31,12 +32,15 @@ export class ModelRequestService {
      * Pass several subscription configs which will be fired asynchronously.
      * Pay attention: They will not be awaited!
      */
-    public updateSubscribeTo(...configs: SubscribeToConfig[]): void {
+    public async updateSubscribeTo(...configs: SubscribeToConfig[]): Promise<void> {
+        const subscribeToCalls = [];
         for (const config of configs) {
             const { subscriptionName } = config;
             this.closeSubscription(subscriptionName);
-            this.subscribeTo(config);
+            subscribeToCalls.push(this.subscribeTo(config));
         }
+
+        await Promise.all(subscribeToCalls);
     }
 
     public async subscribeTo({ modelRequest, subscriptionName, ...config }: SubscribeToConfig): Promise<void> {
@@ -52,15 +56,23 @@ export class ModelRequestService {
                 console.warn(
                     `Either there are no child models for ${modelRequest.viewModelCtor.name}:${modelRequest.lazyLoad.keyOfParent} yet or they weren't requested`
                 );
-                this.makeSubscription({ modelRequest, subscriptionName, ...config });
+                await this.makeSubscription({ modelRequest, subscriptionName, ...config });
             } else if (availableIds.length > 20) {
                 this.lazyLoadSubscription({ modelRequest, subscriptionName, ...config }, availableIds);
             } else {
-                this.makeSubscription({ modelRequest, subscriptionName, ...config });
+                await this.makeSubscription({ modelRequest, subscriptionName, ...config });
             }
         } else {
-            this.makeSubscription({ modelRequest, subscriptionName, ...config });
+            await this.makeSubscription({ modelRequest, subscriptionName, ...config });
         }
+    }
+
+    public async subscriptionGotData(subscriptionName: string): Promise<boolean | ModelData> {
+        if (!this._modelSubscriptionMap[subscriptionName]) {
+            return false;
+        }
+
+        return await this._modelSubscriptionMap[subscriptionName].receivedData;
     }
 
     private async makeSubscription({
@@ -82,10 +94,9 @@ export class ModelRequestService {
         };
         if (isDelayed) {
             // const delay = Math.floor(Math.random() * 390 + 110); // [110, 500]
-            setTimeout(() => fn(), 0);
-        } else {
-            fn();
+            await new Promise(r => setTimeout(r, 0));
         }
+        await fn();
     }
 
     private async lazyLoadSubscription(
