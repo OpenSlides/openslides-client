@@ -119,6 +119,24 @@ export class ModelRequestService {
         }, Math.floor(Math.random() * 2000) + 2000);
     }
 
+    public async waitSubscriptionReady(subscriptionName: string): Promise<void> {
+        if (this._modelSubscriptionMap[subscriptionName]) {
+            await this._modelSubscriptionMap[subscriptionName].receivedData;
+        } else {
+            const retryInterval = 100;
+            for (let i = 0; i <= 4000; i += retryInterval) {
+                await new Promise(resolve => setTimeout(resolve, retryInterval));
+
+                if (this._modelSubscriptionMap[subscriptionName]) {
+                    await this._modelSubscriptionMap[subscriptionName].receivedData;
+                    return;
+                }
+            }
+
+            throw new Error(`Subscription not found`);
+        }
+    }
+
     public closeSubscription(subscriptionName: string): void {
         if (this._modelSubscriptionMap[subscriptionName]) {
             this._modelSubscriptionMap[subscriptionName].close();
