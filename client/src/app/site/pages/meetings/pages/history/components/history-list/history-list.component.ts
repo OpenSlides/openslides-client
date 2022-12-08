@@ -81,7 +81,10 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
     public get modelsRepoMap(): { [collection: Collection]: BaseRepository<BaseViewModel, BaseModel> } {
         // add repos to this array to extend the selection for history models
-        const historyRepos = [this.motionRepo, this.userRepo, this.assignmentRepo];
+        const historyRepos: BaseRepository<BaseViewModel, BaseModel>[] = [this.motionRepo, this.assignmentRepo];
+        if (this.operator.isOrgaManager) {
+            historyRepos.push(this.userRepo);
+        }
         return historyRepos.mapToObject(repo => {
             return { [repo.collection]: repo };
         });
@@ -200,6 +203,9 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             if (!Array.isArray(position.information)) {
                 position.information = position.information[fqid];
             }
+            if (!position.information) {
+                return false;
+            }
             if (this.operator.isOrgaManager) {
                 return true;
             }
@@ -287,7 +293,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                     const [collection, id] = collectionIdFromFqid(argumentString);
                     const model = this.viewModelStore.get(collection, id);
                     if (model) {
-                        argumentString = model.getTitle();
+                        argumentString = this.translate.instant(model.getTitle());
                     }
                 }
                 baseString = baseString.replace(`{}`, argumentString);
