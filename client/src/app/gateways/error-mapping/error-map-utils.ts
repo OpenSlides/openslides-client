@@ -26,7 +26,6 @@ const VoteServiceErrorMap: ErrorMap = new ErrorMap([
     [/is not allowed to vote/, _(`You do not have the permission to vote.`)]
 ]);
 
-
 const MotionCreateForwardErrorMap: ErrorMap = new ErrorMap([[/(.*)/, input => new Error(input)]]);
 
 /**
@@ -49,7 +48,7 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
 export const UrlFragmentToHttpErrorMap = new Map<string, ErrorMap | ((data: any) => ErrorMap | null)>([
     [`auth`, AuthServiceErrorMap],
     [`action`, getActionErrorMap],
-    [`vote`, VoteServiceErrorMap],
+    [`vote`, VoteServiceErrorMap]
 ]);
 
 export const DefaultErrorMap: ErrorMap = new ErrorMap([]);
