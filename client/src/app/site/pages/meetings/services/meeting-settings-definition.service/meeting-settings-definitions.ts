@@ -52,6 +52,7 @@ export interface SettingsItem<V = any> {
     choicesFunc?: ChoicesFunctionDefinition<V>;
     helpText?: string; // default: ""
     validators?: ValidatorFn[]; // default: []
+    automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
     /**
      * A function to restrict some values of a settings-item depending on used organization's settings
      *
@@ -60,6 +61,17 @@ export interface SettingsItem<V = any> {
      * @param value: The value used...
      */
     restrictionFn?: <T>(orgaSettings: OrganizationSettingsService, value: T) => any;
+}
+
+interface SettingsItemAutomaticChangeSetting<V> {
+    /**
+     * A list of properties that will be listened to, upon any changes, the value of the parent field should be set to value returned by getChangeFnn
+     */
+    watchProperties: (keyof Settings)[];
+    /**
+     * If called with the current values of the parent field and the watch properties, it will return the appropriate Value that the parent field should hold
+     */
+    getChangeFn: (currentValue: V, currentWatchPropertyValues: any[]) => V;
 }
 
 export interface SettingsGroup {
@@ -77,6 +89,66 @@ export const meetingSettings: SettingsGroup[] = [
         icon: `home`,
         subgroups: [
             {
+<<<<<<< 1381-Remove-anonymous-user-access
+=======
+                label: _(`Meeting information`),
+                settings: [
+                    {
+                        key: `name`,
+                        label: _(`Meeting titel`)
+                    },
+                    {
+                        key: `description`,
+                        label: _(`Description`)
+                    },
+                    {
+                        key: `location`,
+                        label: _(`Event location`)
+                    },
+                    {
+                        key: `start_time`,
+                        label: _(`Start date`),
+                        type: `date`,
+                        automaticChangesSetting: {
+                            watchProperties: [`end_time`],
+                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
+                                return currentValue &&
+                                    currentWatchPropertyValues.length &&
+                                    currentValue > currentWatchPropertyValues[0]
+                                    ? currentWatchPropertyValues[0]
+                                    : currentValue;
+                            }
+                        }
+                    },
+                    {
+                        key: `end_time`,
+                        label: _(`End date`),
+                        type: `date`,
+                        automaticChangesSetting: {
+                            watchProperties: [`start_time`],
+                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
+                                return currentValue &&
+                                    currentWatchPropertyValues.length &&
+                                    currentValue < currentWatchPropertyValues[0]
+                                    ? currentWatchPropertyValues[0]
+                                    : currentValue;
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                label: _(`System`),
+                settings: [
+                    {
+                        key: `enable_anonymous`,
+                        label: _(`Allow access for anonymous guest users`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+>>>>>>> main
                 label: _(`CSV export options`),
                 settings: [
                     {
@@ -583,6 +655,18 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
+                label: _(`Projector`),
+                settings: [
+                    {
+                        key: `motions_block_slide_columns`,
+                        label: _(`Maximum number of columns on motion block slide`),
+                        type: `integer`,
+                        helpText: _(`Default is 3`),
+                        validators: [Validators.min(1)]
+                    }
+                ]
+            },
+            {
                 label: _(`PDF export`),
                 settings: [
                     {
@@ -727,6 +811,11 @@ export const meetingSettings: SettingsGroup[] = [
                     {
                         key: `users_enable_vote_weight`,
                         label: _(`Activate vote weight`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `users_enable_vote_delegations`,
+                        label: _(`Activate vote delegations`),
                         type: `boolean`
                     }
                 ]

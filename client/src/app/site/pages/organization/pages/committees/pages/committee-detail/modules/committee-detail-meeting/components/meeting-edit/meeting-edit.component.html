@@ -44,24 +44,15 @@
             <input matInput formControlName="location" />
         </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>{{ 'Start date' | translate }}</mat-label>
-            <input matInput [matDatepicker]="startDatePicker" formControlName="start_time" (click)="startDatePicker.open()" readonly />
-            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #startDatePicker></mat-datepicker>
-        </mat-form-field>
+        <os-datepicker formControlName="start_time" title="Start date"></os-datepicker>
 
-        <mat-form-field>
-            <mat-label>{{ 'End date' | translate }}</mat-label>
-            <input matInput [matDatepicker]="endDatePicker" formControlName="end_time" (click)="endDatePicker.open()" readonly />
-            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #endDatePicker></mat-datepicker>
-        </mat-form-field>
+        <os-datepicker formControlName="end_time" title="End date"></os-datepicker>
 
         <mat-form-field>
             <mat-label>{{ 'Participants' | translate }}</mat-label>
             <os-account-search-selector
                 formControlName="user_ids"
+                [accounts]="meetingUsers"
                 placeholder="{{ 'Participants' | translate }}"
             ></os-account-search-selector>
         </mat-form-field>
@@ -70,6 +61,7 @@
             <mat-label>{{ 'Administrators' | translate }}</mat-label>
             <os-account-search-selector
                 formControlName="admin_ids"
+                [accounts]="meetingUsers"
                 placeholder="{{ 'Administrators' | translate }}"
             ></os-account-search-selector>
         </mat-form-field>

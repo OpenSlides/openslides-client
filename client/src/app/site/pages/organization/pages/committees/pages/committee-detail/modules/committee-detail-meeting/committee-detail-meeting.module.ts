@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { DatepickerModule } from 'src/app/ui/modules/datepicker';
 import { FileUploadModule } from 'src/app/ui/modules/file-upload';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { OpenSlidesDateAdapterModule } from 'src/app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
@@ -37,7 +38,8 @@ import { MeetingImportComponent } from './components/meeting-import/meeting-impo
         OpenSlidesDateAdapterModule,
         FormsModule,
         DirectivesModule,
-        FileUploadModule
+        FileUploadModule,
+        DatepickerModule
     ]
 })
 export class CommitteeDetailMeetingModule {}

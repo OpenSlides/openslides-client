@@ -2,9 +2,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 import { map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+
+import { getParticipantIsPresentSubscriptionConfig } from '../../../../pages/participants/config/model-subscription';
+import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 
 @Component({
     selector: `os-poll-progress`,
@@ -41,8 +46,11 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     }
 
     public constructor(
+        private autoupdate: AutoupdateService,
         private userRepo: UserControllerService,
         private operator: OperatorService,
+        private activeMeeting: ActiveMeetingService,
+        private modelRequestBuilder: ModelRequestBuilderService,
         private cd: ChangeDetectorRef
     ) {
         super();
@@ -77,6 +85,13 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
                     this.cd.markForCheck();
                 })
             );
+
+            if (this.canSeeProgressBar) {
+                const subscriptionConfig = getParticipantIsPresentSubscriptionConfig(this.activeMeeting.meetingId);
+                this.modelRequestBuilder.build(subscriptionConfig.modelRequest).then(modelRequest => {
+                    this.autoupdate.subscribe(modelRequest, subscriptionConfig.subscriptionName);
+                });
+            }
         }
     }
 

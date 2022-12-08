@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
 import { Id, Ids } from '../../../domain/definitions/key-types';
-import { HttpStreamEndpointService, HttpStreamService } from '../../../gateways/http-stream';
+import { HttpStreamEndpointService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
-import { formatQueryParams, HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
+import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
-import { CommunicationManagerService } from '../communication-manager.service';
 import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
+import { AutoupdateCommunicationService } from './autoupdate-communication.service';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
 
 export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
@@ -41,6 +41,7 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
+    receivedData: Promise<ModelData>;
     close: () => void;
 }
 
@@ -91,18 +92,31 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
+    private _resolveDataReceived: ((value: ModelData) => void)[] = [];
 
     public constructor(
-        private communicationManager: CommunicationManagerService,
         private httpEndpointService: HttpStreamEndpointService,
-        private httpStreamService: HttpStreamService,
-        private viewmodelStoreUpdate: ViewModelStoreUpdateService
+        private viewmodelStoreUpdate: ViewModelStoreUpdateService,
+        private communication: AutoupdateCommunicationService
     ) {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
             AUTOUPDATE_DEFAULT_ENDPOINT,
             new AutoupdateEndpoint(`/system/autoupdate`)
         );
+
+        this.communication.setEndpoint(AUTOUPDATE_DEFAULT_ENDPOINT);
+        this.communication.listen().subscribe(data => {
+            this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
+        });
+
+        window.addEventListener(`beforeunload`, () => {
+            for (const id of Object.keys(this._activeRequestObjects)) {
+                const streamId = Number(id);
+                const { modelSubscription } = this._activeRequestObjects[streamId];
+                modelSubscription.close();
+            }
+        });
     }
 
     public reconnect(config?: AutoupdateConnectConfig): void {
@@ -111,12 +125,13 @@ export class AutoupdateService {
             const streamId = Number(id);
             const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
             modelSubscription.close();
-            const nextModelSubscription = this.request(modelRequest.getModelRequest(), description, streamId);
-            this._activeRequestObjects[streamId] = {
-                modelSubscription: nextModelSubscription,
-                modelRequest,
-                description
-            };
+            this.request(modelRequest.getModelRequest(), description, streamId).then(nextModelSubscription => {
+                this._activeRequestObjects[nextModelSubscription.id] = {
+                    modelSubscription: nextModelSubscription,
+                    modelRequest,
+                    description
+                };
+            });
         }
     }
 
@@ -127,6 +142,23 @@ export class AutoupdateService {
     }
 
     /**
+     * Requests single data from autoupdate.
+     *
+     * @param modelRequest The request data for a list of models, that will be sent to the Autoupdate-Service
+     * @param description A simple description for developing. It helps tracking streams:
+     * Which component opens which stream?
+     */
+    public async single(modelRequest: ModelRequestObject, description: string): Promise<ModelData> {
+        const request = modelRequest.getModelRequest();
+        console.log(`autoupdate: new single request:`, description, modelRequest, request);
+        const modelSubscription = await this.request(request, description, null, { single: 1 });
+        this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
+        const data = await modelSubscription.receivedData;
+        modelSubscription.close();
+        return data;
+    }
+
+    /**
      * Requests a new autoupdate and listen to incoming messages. This is a heavy task.
      * It needs to be closed when it is not needed anymore.
      *
@@ -134,40 +166,51 @@ export class AutoupdateService {
      * @param description A simple description for developing. It helps tracking streams:
      * Which component opens which stream?
      */
-    public subscribe(modelRequest: ModelRequestObject, description: string): ModelSubscription {
+    public async subscribe(modelRequest: ModelRequestObject, description: string): Promise<ModelSubscription> {
         const request = modelRequest.getModelRequest();
         console.log(`autoupdate: new request:`, description, modelRequest, request);
-        const modelSubscription = this.request(request, description);
+        const modelSubscription = await this.request(request, description);
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
         return modelSubscription;
     }
 
-    private request(request: ModelRequest, description: string, streamId?: Id): ModelSubscription {
-        const buildStreamFn = (streamId: number) =>
-            this.httpStreamService.create<AutoupdateModelData>(
-                {
-                    endpointIndex: AUTOUPDATE_DEFAULT_ENDPOINT,
-                    customUrlFn: endpointUrl => `${endpointUrl}${formatQueryParams(this._currentQueryParams)}`
-                },
-                {
-                    onMessage: (data, stream) =>
-                        this.handleAutoupdate({ autoupdateData: data, id: stream.id, description }),
-                    description,
-                    id: streamId
-                },
-                { bodyFn: () => [request] }
-            );
-        const { closeFn, id } = this.communicationManager.registerStreamBuildFn(buildStreamFn, streamId);
+    private async request(
+        request: ModelRequest,
+        description: string,
+        streamId?: Id,
+        customParams?: QueryParams
+    ): Promise<ModelSubscription> {
+        const id = await this.communication.open(
+            streamId,
+            description,
+            request,
+            Object.assign(this._currentQueryParams, customParams || {})
+        );
+
+        let rejectReceivedData: any;
+        const receivedData = new Promise<ModelData>((resolve, reject) => {
+            this._resolveDataReceived[id] = resolve;
+            rejectReceivedData = reject;
+        });
+
         return {
             id,
+            receivedData,
             close: () => {
-                closeFn();
+                this.communication.close(id);
                 delete this._activeRequestObjects[id];
+                if (this._resolveDataReceived[id]) {
+                    rejectReceivedData();
+                }
             }
         };
     }
 
     private async handleAutoupdate({ autoupdateData, id, description }: AutoupdateIncomingMessage): Promise<void> {
+        if (!this._activeRequestObjects || !this._activeRequestObjects[id]) {
+            return;
+        }
+
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
         const fullListUpdateCollections: { [collection: string]: Ids } = {};
@@ -183,20 +226,28 @@ export class AutoupdateService {
                     autoupdateData[key];
             }
         }
-        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections);
+        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, id);
     }
 
     private async prepareCollectionUpdates(
         modelData: ModelData,
-        fullListUpdateCollections: { [collection: string]: Id[] }
+        fullListUpdateCollections: { [collection: string]: Id[] },
+        requestId: number
     ): Promise<void> {
         const unlock = await this._mutex.lock();
 
-        this.viewmodelStoreUpdate.triggerUpdate({
-            patch: modelData,
-            changedModels: fullListUpdateCollections,
-            deletedModels: {}
-        });
+        this.viewmodelStoreUpdate
+            .triggerUpdate({
+                patch: modelData,
+                changedModels: fullListUpdateCollections,
+                deletedModels: {}
+            })
+            .then(() => {
+                if (this._resolveDataReceived[requestId]) {
+                    this._resolveDataReceived[requestId](modelData);
+                    delete this._resolveDataReceived[requestId];
+                }
+            });
 
         unlock();
     }

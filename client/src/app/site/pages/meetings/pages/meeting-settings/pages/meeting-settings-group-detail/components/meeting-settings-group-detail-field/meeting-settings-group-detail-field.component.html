@@ -88,26 +88,14 @@
 
                 <!-- date / datetime -->
                 <div *ngIf="setting.type === 'datetime' || setting.type === 'date'">
+                    <os-datepicker
+                        formControlName="date"
+                        [error]="error"
+                        [title]="setting.label"
+                        [hintText]="setting.helpText"
+                        [showUpdateSuccessIcon]="updateSuccessIcon"
+                    ></os-datepicker>
                     <div class="datetimepicker-container">
-                        <mat-form-field>
-                            <mat-label>{{ setting.label | translate }}</mat-label>
-                            <input
-                                matInput
-                                formControlName="date"
-                                [matDatepicker]="datepicker"
-                                (click)="datepicker.open()"
-                            />
-                            <mat-hint *ngIf="setting.helpText">{{ setting.helpText | translate }}</mat-hint>
-                            <div class="suffix-wrapper" matSuffix>
-                                <mat-icon class="red-warning-text" *ngIf="updateSuccessIcon">check_circle</mat-icon>
-                                <mat-datepicker-toggle
-                                    [for]="datepicker"
-                                    (click)="$event.preventDefault()"
-                                ></mat-datepicker-toggle>
-                            </div>
-                            <mat-error *ngIf="error">{{ error }}</mat-error>
-                            <mat-datepicker #datepicker></mat-datepicker>
-                        </mat-form-field>
                         <mat-form-field *ngIf="setting.type === 'datetime'">
                             <input matInput [format]="24" formControlName="time" [ngxTimepicker]="timepicker" />
                             <div class="suffix-wrapper" matSuffix>

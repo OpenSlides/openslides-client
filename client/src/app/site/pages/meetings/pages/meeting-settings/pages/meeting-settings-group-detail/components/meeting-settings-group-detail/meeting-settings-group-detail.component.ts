@@ -74,6 +74,7 @@ export class MeetingSettingsGroupDetailComponent
      */
     public updateSetting(update: SettingsFieldUpdate): void {
         this.changedSettings[update.key] = update.value;
+        this.calculateAutomaticFieldChanges(update);
         this.cd.markForCheck();
     }
 
@@ -133,5 +134,20 @@ export class MeetingSettingsGroupDetailComponent
             return await this.promptDialog.open(title, content);
         }
         return true;
+    }
+
+    /**
+     * Updates the specified settings item indicated by the given key.
+     */
+    private calculateAutomaticFieldChanges(update: SettingsFieldUpdate): void {
+        const detailFields = this.settingsFields.filter(field => field.watchProperties?.includes(update.key));
+        detailFields.forEach(detailField => {
+            const currentValue = detailField.currentValue;
+            const changedValues = detailField.watchProperties.map(key => this.changedSettings[key]);
+            const newValue = detailField.getChangeFn(currentValue, changedValues);
+            if (newValue !== currentValue) {
+                detailField.updateValue(newValue);
+            }
+        });
     }
 }

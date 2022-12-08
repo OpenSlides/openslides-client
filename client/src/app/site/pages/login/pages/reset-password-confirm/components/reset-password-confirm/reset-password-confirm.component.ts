@@ -93,7 +93,7 @@ export class ResetPasswordConfirmComponent extends BaseComponent implements OnIn
                     duration: 0
                 }
             );
-            this.router.navigate([`..`]);
+            this.router.navigate([`/login`]);
         } catch (e) {
             console.log(`error`, e);
         }

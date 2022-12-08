@@ -45,7 +45,7 @@
                         <section
                             *ngFor="let paragraph of paragraphs; let i = index"
                             class="paragraph-row background-hover"
-                            [class.outlined]="isParagraphSelected(paragraph)"
+                            [class.outlined-hover]="isParagraphSelected(paragraph)"
                             (click)="onParagraphClicked(paragraph)"
                         >
                             <mat-checkbox
@@ -61,11 +61,11 @@
                             ></mat-radio-button>
                             <div class="paragraph-text motion-text">
                                 <div>
-                                    <i *ngIf="paragraph.lineFrom >= paragraph.lineTo - 1" class="line-number">
+                                    <i *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
                                         {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
                                     </i>
-                                    <i *ngIf="paragraph.lineFrom < paragraph.lineTo - 1" class="line-number">
-                                        {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}:
+                                    <i *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
+                                        {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
                                     </i>
                                 </div>
                                 <div [innerHTML]="getParagraphPreview(i) | trust: 'html'"></div>
@@ -84,11 +84,11 @@
                 <!-- Text -->
                 <section *ngFor="let paragraph of contentForm.value.selectedParagraphs">
                     <h4>
-                        <span *ngIf="paragraph.lineFrom >= paragraph.lineTo - 1" class="line-number">
+                        <span *ngIf="paragraph.lineFrom >= paragraph.lineTo" class="line-number">
                             {{ 'Line' | translate }} {{ paragraph.lineFrom }}:
                         </span>
-                        <span *ngIf="paragraph.lineFrom < paragraph.lineTo - 1" class="line-number">
-                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo - 1 }}:
+                        <span *ngIf="paragraph.lineFrom < paragraph.lineTo" class="line-number">
+                            {{ 'Line' | translate }} {{ paragraph.lineFrom }} - {{ paragraph.lineTo }}:
                         </span>
                     </h4>
                     <os-editor [formControlName]="'text_' + paragraph.paragraphNo"></os-editor>

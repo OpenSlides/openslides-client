@@ -103,7 +103,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
             MANAGER_IDS,
             new UserImportHelper({
                 repo: userRepo,
-                verboseName: _(`Committee management`),
+                verboseName: _(`Committee admin`),
                 property: MANAGER_IDS,
                 searchService: userSearchService,
                 useDefault: [operator.operatorId!],
@@ -165,7 +165,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                                 };
                             })
                             .filter(update => !!update.id);
-                        return await this.repo.update(null, ...(updates as any));
+                        await this.repo.update(null, ...(updates as any)).resolve();
                     },
                     labelFn: (phase, plural) => {
                         const verboseName = plural ? _(`Forwardings`) : _(`Forwarding`);
@@ -287,7 +287,9 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                 this.repo.getViewModelList().filter(committee => committee.name === entry.name),
             shouldCreateModelFn: entry => entry.status === `new`,
             createFn: entries => this.repo.create(...(entries as any)),
-            updateFn: entries => this.repo.update(null, ...(entries as any)),
+            updateFn: async entries => {
+                await this.repo.update(null, ...(entries as any)).resolve();
+            },
             requiredFields: [NAME]
         };
     }

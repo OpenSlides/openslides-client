@@ -2,10 +2,12 @@ import {
     AfterViewInit,
     Component,
     ContentChild,
+    ContentChildren,
     EventEmitter,
     Input,
     OnInit,
     Output,
+    QueryList,
     TemplateRef
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
@@ -32,8 +34,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     /**
      * Reference to the show template content.
      */
-    @ContentChild(`showView`, { read: TemplateRef, static: true })
-    public showView: TemplateRef<any> | null = null;
+    @ContentChildren(`showView`, { read: TemplateRef })
+    public showView: QueryList<TemplateRef<any> | null> = null;
 
     @Input()
     public set user(user: ViewUser | null) {

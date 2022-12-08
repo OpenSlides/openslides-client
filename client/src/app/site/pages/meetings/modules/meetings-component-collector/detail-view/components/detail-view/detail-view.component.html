@@ -1,7 +1,18 @@
 <ng-container *ngIf="shouldShowContent">
     <ng-content></ng-content>
 </ng-container>
-<ng-container *ngIf="!shouldShowContent">
+<ng-container *ngIf="!shouldShowContent && loading">
+    <os-head-bar [goBack]="true" [nav]="false"></os-head-bar>
+    <div class="spinner-container flex-center">
+        <div class="spinner-inner-container">
+            <mat-progress-spinner
+                class="example-margin"
+                color="primary"
+                mode="indeterminate"></mat-progress-spinner>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="!shouldShowContent && !loading">
     <os-head-bar [goBack]="true" [nav]="false">
         <div class="title-slot">{{ errorMessage | translate }}</div>
     </os-head-bar>

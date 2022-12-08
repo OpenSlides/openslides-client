@@ -24,64 +24,79 @@
     listStorageKey="member"
     [filterProps]="['full_name', 'default_structure_level', 'default_number']"
     [filterService]="filterService"
+    [searchService]="searchService"
     [sortService]="sortService"
-    [hiddenInMobile]="['info']"
     [alwaysShowMenu]="true"
     [vScrollFixed]="60"
 >
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
-        <div class="nameCell flex-vertical-center">
-            <div>
-                {{ user.short_name }}
+        <div style="overflow: hidden" class="flex-vertical-center">
+            <div style="overflow: hidden" class="nameCell">
+                <div class="title-line title-box">
+                    <span class="ellipsis-overflow">{{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')'  : '') }}</span>
+                    <div style="float: right; display: inline-flex">
+                        &nbsp;
+                        <os-icon-container
+                            icon="account_balance"
+                            *ngIf="!user.is_physical_person"
+                            matTooltip="{{ 'Is no natural person' | translate }}"
+                        ></os-icon-container>
+                        <os-icon-container
+                            icon="block"
+                            *ngIf="!user.is_active"
+                            matTooltip="{{ 'Inactive' | translate }}"
+                        ></os-icon-container>
+                    </div>
+                </div>
+                <div class="meta-info user-subtitle ellipsis-overflow">
+                    {{ user.username }}
+                    <ng-container *ngIf="user.email">
+                        · {{ user.email }}
+                    </ng-container>
+                </div>
             </div>
-            <ng-container *ngIf="user.pronoun">
-                &nbsp;
-                <div>({{ user.pronoun }})</div>
-            </ng-container>
         </div>
     </div>
     <!-- Info column -->
-    <div *osScrollingTableCell="'info'; row as user" class="committee-wrapper">
+    <div *osScrollingTableCell="'info'; row as user; config: { width: isMobile ? 55 : 160 }" class="committee-wrapper">
         <div class="flex-center">
             <os-icon-container
-                *ngIf="!!user.committee_ids?.length"
-                icon="auto_awesome_mosaic"
-                iconTooltip="{{ 'Committees' | translate }}"
+                *ngIf="!!user.meetings?.length"
+                icon="event_available"
+                matTooltip="{{ 'Meetings' | translate }}"
+                matTooltipPosition="left"
                 [showIcon]="true"
                 [noWrap]="true"
             >
-                {{ user.committee_ids.length }}
+                {{ user.meetings.length }}
             </os-icon-container>
         </div>
-        <div *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)" class="flex-center">
-            <os-icon-container icon="engineering">
-                {{ getOmlByUser(user) | translate }}
-            </os-icon-container>
-        </div>
-    </div>
-
-    <!-- Info column -->
-    <div *osScrollingTableCell="'infos'; row as user; config: { width: 40 }" class="cell-slot fill">
-        <div class="infoCell">
-            <!-- Email-sent indicator -->
-            <mat-icon
-                inline
+        <div class="flex-center">
+            <os-icon-container
+                icon="mail"
                 *ngIf="user.isLastEmailSend"
                 matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
+                matTooltipPosition="left"
             >
-                mail
-            </mat-icon>
+            </os-icon-container>
+        </div>
+        <div class="flex-center">
+            <os-icon-container
+                icon="engineering"
+                *osOmlPerms="OML.can_manage_users; and: !!getOmlByUser(user)"
+                [matTooltipDisabled]="!isMobile"
+                matTooltipPosition="left"
+                matTooltip="{{ getOmlByUser(user) | translate }}"
+            >
+                <ng-container *ngIf="!isMobile">
+                    {{ getOmlByUser(user) | translate }}
+                </ng-container>
+            </os-icon-container>
         </div>
     </div>
 
-    <!-- Active or not active column -->
-    <div *osScrollingTableCell="'is_active'; row as user; config: { width: 100 }">
-        <div>
-            <mat-label class="inactive-label" *ngIf="!user.is_active">{{ 'Inactive' | translate }}</mat-label>
-        </div>
-    </div>
     <!-- Menu column -->
     <ng-container *osOmlPerms="OML.can_manage_users">
         <div *osScrollingTableCell="'menu'; row as user; config: { width: 40 }" class="cell-slot fill">

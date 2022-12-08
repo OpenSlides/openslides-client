@@ -97,6 +97,10 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return this.user ? isVoteWeightEnabled && typeof this.user.vote_weight() === `number` : isVoteWeightEnabled;
     }
 
+    public get showVoteDelegations(): boolean {
+        return this._isVoteDelegationEnabled;
+    }
+
     private get user(): ViewUser | null {
         return this._currentUser;
     }
@@ -107,6 +111,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _isOwnPage = false;
     private _isUserInScope = false;
     private _isVoteWeightEnabled = false;
+    private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
     private _hasFormChanged = false;
 
@@ -146,7 +151,15 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
             this.createUserForm.valueChanges.subscribe(() => (this._hasFormChanged = true)),
             this.organizationSettingsService
                 .get(`enable_electronic_voting`)
-                .subscribe(is => (this._isElectronicVotingEnabled = is))
+                .subscribe(is => (this._isElectronicVotingEnabled = is)),
+
+            this.meetingSettingsService
+                .get(`users_enable_vote_weight`)
+                .subscribe(enabled => (this._isVoteWeightEnabled = enabled)),
+
+            this.meetingSettingsService
+                .get(`users_enable_vote_delegations`)
+                .subscribe(enabled => (this._isVoteDelegationEnabled = enabled))
         );
         const urlSegments = this.router.url.split(`/`);
         if (urlSegments.at(-1) === `new`) {
@@ -178,7 +191,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 searchCriteria: [{ username: _username, email }],
                 permissionRelatedId: this.activeMeetingId!
             });
-            this._suitableAccountList = Object.keys(result).flatMap(key => result[key]);
+            this._suitableAccountList = Object.values(result).flat();
             if (this._suitableAccountList.length === 0) {
                 this.goToStep(this.CREATE_PARTICIPANT_STEP);
             } else {

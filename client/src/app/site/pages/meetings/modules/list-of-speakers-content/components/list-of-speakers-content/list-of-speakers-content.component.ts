@@ -207,6 +207,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);
             this.filterNonAvailableUsers();
+            this.interactionService.kickUsers([speaker.user], `Removed from the list of speakers`);
         }
     }
 

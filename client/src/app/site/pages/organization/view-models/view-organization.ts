@@ -2,7 +2,9 @@ import { Observable } from 'rxjs';
 import { Organization } from 'src/app/domain/models/organizations/organization';
 
 import { BaseViewModel } from '../../../base/base-view-model';
+import { ViewMediafile } from '../../meetings/pages/mediafiles';
 import { ViewMeeting } from '../../meetings/view-models/view-meeting';
+import { ViewUser } from '../../meetings/view-models/view-user';
 import { ViewCommittee } from '../pages/committees';
 import { ViewTheme } from '../pages/designs';
 import { ViewOrganizationTag } from '../pages/organization-tags';
@@ -26,7 +28,9 @@ interface IOrganizationRelations {
     archived_meetings_as_observable: Observable<ViewMeeting[]>;
     template_meetings: ViewMeeting[];
     template_meetings_as_observable: Observable<ViewMeeting[]>;
+    mediafiles: ViewMediafile[];
     theme: ViewTheme;
     themes: ViewTheme[];
+    users: ViewUser[];
 }
 export interface ViewOrganization extends Organization, IOrganizationRelations {}

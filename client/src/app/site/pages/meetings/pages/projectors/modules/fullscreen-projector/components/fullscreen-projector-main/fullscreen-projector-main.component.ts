@@ -28,15 +28,15 @@ export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerCom
         super(modelRequestService, router, openslidesRouter);
     }
 
-    protected override onParamsChanged(params: any): void {
-        if (params[`id`]) {
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
             this.sequentialNumberMapping
-                .getIdObservableBySequentialNumber({
+                .getIdBySequentialNumber({
                     collection: Projector.COLLECTION,
                     meetingId: +params[`meetingId`],
                     sequentialNumber: +params[`id`]
                 })
-                .subscribe(id => {
+                .then(id => {
                     if (id && this._projectorId !== id) {
                         this._projectorId = id;
                         this.doFullscreenProjectorSubscription();

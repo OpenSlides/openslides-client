@@ -42,7 +42,7 @@ export class OpenSlidesMainComponent implements OnInit {
 
     private loadTranslation(): void {
         // manually add the supported languages
-        this.translate.addLangs([`en`, `de`, `cs`, `ru`]);
+        this.translate.addLangs([`en`, `de`, `cs`, `it`, `es`, `ru`]);
         // this language will be used as a fallback when a translation isn't found in the current language
         this.translate.setDefaultLang(`en`);
         // get the browsers default language

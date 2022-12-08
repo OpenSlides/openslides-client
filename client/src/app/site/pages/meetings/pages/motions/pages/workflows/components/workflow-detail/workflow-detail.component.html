@@ -25,7 +25,8 @@
     <!-- Detail -->
     <div *ngIf="workflow">
         <div class="title-line">
-            <span>{{ 'First state' | translate }}</span>:
+            <span>{{ 'First state' | translate }}</span>
+            :
             <span *ngIf="workflow.first_state">{{ workflow.first_state.name | translate }}</span>
         </div>
 
@@ -76,6 +77,19 @@
                             >
                                 {{ getValueOfState(state, perm) | translate }}
                             </mat-basic-chip>
+                        </div>
+                        <div *ngIf="perm.type === 'submitter_withdraw_state'">
+                            <div class="inner-table">
+                                <div *ngIf="!state.submitter_withdraw_state">-</div>
+                                <div *ngIf="state.submitter_withdraw_state">
+                                    {{ state.submitter_withdraw_state.name | translate }}
+                                </div>
+                            </div>
+                            <div
+                                class="clickable-cell stretch-to-fill-parent"
+                                [matMenuTriggerFor]="submitterWithdrawStateMenu"
+                                [matMenuTriggerData]="{ state: state }"
+                            ></div>
                         </div>
                         <div *ngIf="perm.type === 'state'">
                             <div class="inner-table">
@@ -176,6 +190,18 @@
 </mat-menu>
 
 <!-- select next states menu -->
+<mat-menu matMenuContent #submitterWithdrawStateMenu="matMenu">
+    <ng-template let-state="state" matMenuContent>
+        <div *ngFor="let workflowState of workflow.states">
+            <button mat-menu-item *ngIf="workflowState.name !== state.name" (click)="onSetSubmitterWithdrawState(workflowState, state)">
+                <mat-icon *ngIf="state.submitter_withdraw_state_id === workflowState.id">check</mat-icon>
+                <span>{{ workflowState.name | translate }}</span>
+            </button>
+        </div>
+    </ng-template>
+</mat-menu>
+
+<!-- select next states menu -->
 <mat-menu matMenuContent #nextStatesMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         <div *ngFor="let nextState of workflow.states">
@@ -216,6 +242,12 @@
 <!-- More menu -->
 <mat-menu #workflowMenu="matMenu">
     <ng-template matMenuContent>
+        <div>
+            <button mat-menu-item [routerLink]="['sort']">
+                <mat-icon>sort</mat-icon>
+                <span>{{ 'Sort' | translate }}</span>
+            </button>
+        </div>
         <div>
             <button mat-menu-item (click)="exportCurrentWorkflow()">
                 <mat-icon>archive</mat-icon>

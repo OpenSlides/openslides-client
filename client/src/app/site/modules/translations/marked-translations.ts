@@ -118,6 +118,7 @@ _(`lightblue`);
 _(`yellow`);
 _(`You cannot delete the first state of the workflow.`);
 _(`You cannot delete the last workflow.`);
+_(`Submitter may set state to`);
 // misc for motions
 _(`Amendment`);
 _(`Statute amendment for`);
@@ -134,6 +135,7 @@ _(`The reason field may not be blank.`);
 _(`Searching for candidates`);
 _(`In the election process`);
 _(`Finished`);
+_(`Ballot opened`);
 
 // Voting strings
 _(`Motion votes`);
@@ -215,6 +217,7 @@ _(`You can not delete yourself.`);
 _(`You can not deactivate yourself.`);
 _(`Natural person`);
 _(`No.`);
+_(`Full name`);
 
 // default groups
 _(`Default`);
@@ -227,23 +230,42 @@ _(`Committees`);
 _(`Motion created`);
 _(`Motion deleted`);
 _(`Motion updated`);
+_(`Forwarding created`);
 _(`Submitters changed`);
 _(`Supporters changed`);
-_(`State set to {arg1}`);
-_(`Recommendation set to {arg1}`);
-_(`Vote created`);
-_(`Vote updated`);
-_(`Vote deleted`);
+_(`State set to {}`);
+_(`State changed`);
+_(`Recommendation set to {}`);
+_(`Recommendation changed`);
+_(`Recommendation reset`);
+_(`Category set to {}`);
+_(`Category removed`);
+_(`Category changed`);
+_(`Motion block set to {}`);
+_(`Motion block removed`);
+_(`Motion block changed`);
+_(`Recommendation changed`);
+_(`Recommendation reset`);
+_(`Voting anonymized`);
+_(`Voting started`);
+_(`Voting stopped`);
+_(`Voting published`);
+_(`Voting stopped/published`);
+_(`Voting reset`);
 _(`Number set`);
 _(`OpenSlides is temporarily reset to following timestamp`);
 _(`Motion change recommendation created`);
 _(`Motion change recommendation updated`);
 _(`Motion change recommendation deleted`);
-_(`Motion block set to`);
 _(`Poll created`);
 _(`Poll updated`);
 _(`Poll deleted`);
-_(`Comment {arg1} updated`);
+_(`Comment {} created`);
+_(`Comment {} updated`);
+_(`Comment {} deleted`);
+_(`Comment created`);
+_(`Comment updated`);
+_(`Comment deleted`);
 
 // core misc strings
 _(`items per page`);
@@ -269,7 +291,6 @@ _(`Speaking time`);
 
 // organization strings
 _(`Administrator`);
-_(`Account management`);
 _(`Default committee`);
 _(`Default meeting`);
 _(`Assigned accounts`);

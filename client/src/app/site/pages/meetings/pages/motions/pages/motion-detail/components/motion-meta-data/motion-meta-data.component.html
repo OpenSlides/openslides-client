@@ -46,7 +46,7 @@
 <div *ngIf="motion?.state">
     <os-motion-extension-field
         title="{{ 'State' | translate }}"
-        [canBeEdited]="perms.isAllowed('change_state', motion)"
+        [canBeEdited]="perms.isAllowed('change_state', motion) || !!motion.state.submitter_withdraw_state"
         [hasExtension]="!!motion.state && motion.state.show_state_extension_field"
         [chipValue]="stateLabel | translate"
         [inputValue]="motion?.state_extension"
@@ -55,30 +55,50 @@
         (succeeded)="setStateExtension($event)"
     >
         <span class="trigger-menu" *ngIf="motion.state">
-            <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
-                {{ state.name | translate }}
-                <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
-            </button>
-            <div>
-                <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
-                <button *ngFor="let state of motion.state.previous_states" mat-menu-item (click)="setState(state.id)">
-                    <mat-icon>arrow_back</mat-icon>
+            <ng-container *ngIf="perms.isAllowed('change_state', motion)">
+                <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
                     {{ state.name | translate }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
-                <button mat-menu-item (click)="resetState()">
-                    <mat-icon>replay</mat-icon>
-                    {{ 'Reset state' | translate }}
+                <div>
+                    <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
+                    <button *ngFor="let state of motion.state.previous_states" mat-menu-item (click)="setState(state.id)">
+                        <mat-icon>arrow_back</mat-icon>
+                        {{ state.name | translate }}
+                        <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
+                    </button>
+                    <button mat-menu-item (click)="resetState()">
+                        <mat-icon>replay</mat-icon>
+                        {{ 'Reset state' | translate }}
+                    </button>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!perms.isAllowed('change_state', motion) && !!motion.state.submitter_withdraw_state">
+                <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
+                    {{ motion.state.submitter_withdraw_state.name | translate }}
                 </button>
-            </div>
+            </ng-container>
         </span>
     </os-motion-extension-field>
 
     <!-- Forward to meeting -->
-    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="canForwardMotion" class="spacer-top-10">
+    <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="showForwardButton" class="spacer-top-10">
         <mat-icon>forward</mat-icon>
         <span>{{ 'Forward' | translate }}</span>
     </button>
+
+    <os-motion-add-poll-button [motion]="motion"></os-motion-add-poll-button>
+</div>
+
+<!-- Forwardings - display only -->
+<div *ngIf="motion?.derived_motions?.length">
+    <h4>{{ 'Motion forwarded to' | translate }}</h4>
+    <div>
+        <div *ngFor="let derived of motion.derived_motions; let last = last">
+            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
+            <span>({{ derived.forwarded | localizedDate }})</span>
+        </div>
+    </div>
 </div>
 
 <!-- Recommendation -->
@@ -90,9 +110,9 @@
         [chipValue]="recommendationLabel | translate"
         [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
         extensionLabel="{{ 'Extension' | translate }}"
-        [searchList]="motionObserver"
-        searchListLabel="{{ 'Motions' | translate }}"
-        listValuePrefix="motion:"
+        [searchLists]="[motionObserver, committeeObservable]"
+        [searchListLabels]="['Motions', 'Committees']"
+        [listValueTransformFns]="[motionTransformFn]"
         (succeeded)="setRecommendationExtension($event)"
     >
         <span class="trigger-menu">
@@ -101,6 +121,7 @@
                 mat-menu-item
                 (click)="setRecommendation(recommendation.id)"
             >
+                <mat-icon *ngIf="motion.recommendation_id === recommendation.id">check</mat-icon>
                 {{ recommendation.recommendation_label | translate }}
                 <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
             </button>
@@ -122,7 +143,7 @@
     <h4>{{ 'Referring motions' | translate }}</h4>
     <span *ngFor="let motion of recommendationReferencingMotions; let last = last">
         <a [routerLink]="motion.getDetailStateUrl()" class="nowrap">{{ motion.numberOrTitle }}</a>
-        <span *ngIf="!last">·</span>
+        <span *ngIf="!last">&nbsp;·&nbsp;</span>
     </span>
 </div>
 
@@ -235,7 +256,7 @@
 </div>
 
 <!-- Origins - display only -->
-<div *ngIf="motion?.all_origins?.length">
+<div *ngIf="getOriginMotions().length">
     <h4>{{ 'Origin' | translate }}</h4>
     <div class="origin-view">
         <ng-container *ngFor="let origin of getOriginMotions(); let last = last">
@@ -246,17 +267,6 @@
                 <mat-icon *ngIf="!last">north</mat-icon>
             </div>
         </ng-container>
-    </div>
-</div>
-
-<!-- Forwardings - display only -->
-<div *ngIf="motion?.derived_motions?.length">
-    <h4>{{ 'Motion forwarded to' | translate }}</h4>
-    <div>
-        <div *ngFor="let derived of motion.derived_motions; let last = last">
-            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: derived }"></ng-container>
-            <span>({{ derived.forwarded | localizedDate }})</span>
-        </div>
     </div>
 </div>
 
@@ -276,15 +286,16 @@
 </div>
 
 <!-- motion polls -->
-<os-motion-manage-polls [motion]="motion"></os-motion-manage-polls>
+<os-motion-manage-polls [motion]="motion" [hideAdd]="true"></os-motion-manage-polls>
 
 <ng-template let-motion="motion" #meetingLink>
-    <span *ngIf="motion.meeting?.canAccess()">
-        <a [routerLink]="motion.getDetailStateUrl()">
-            {{ motion.meeting?.name }}
+    »
+    <span *ngIf="canAccess(motion)">
+        <a [routerLink]="getUrl(motion)">
+            {{ getMeetingName(motion) }}
         </a>
     </span>
-    <div *ngIf="!motion.meeting?.canAccess()">
-        {{ motion.meeting?.name }}
-    </div>
+    <span *ngIf="!canAccess(motion)">
+        {{ getMeetingName(motion) }}
+    </span>
 </ng-template>

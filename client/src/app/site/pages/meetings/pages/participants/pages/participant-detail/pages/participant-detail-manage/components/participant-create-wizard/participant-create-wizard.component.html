@@ -81,6 +81,15 @@
                                 placeholder="{{ 'Username' | translate }}"
                                 formControlName="username"
                             />
+                            <button
+                                matSuffix
+                                type="button"
+                                mat-button
+                                mat-icon-button
+                                [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                            >
+                                <mat-icon>help</mat-icon>
+                            </button>
                             <mat-error>{{ 'You have to enter at least one character' | translate }}</mat-error>
                         </mat-form-field>
                     </div>
@@ -196,7 +205,7 @@
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
-                                <mat-form-field>
+                                <mat-form-field *ngIf="showVoteDelegations">
                                     <os-repo-search-selector
                                         formControlName="vote_delegations_from_ids"
                                         [repo]="repo"
@@ -206,7 +215,7 @@
                                 </mat-form-field>
 
                                 <!-- Delegate Vote -->
-                                <mat-form-field>
+                                <mat-form-field *ngIf="showVoteDelegations">
                                     <os-repo-search-selector
                                         formControlName="vote_delegated_to_id"
                                         [repo]="repo"

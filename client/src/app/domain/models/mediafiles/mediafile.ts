@@ -25,6 +25,7 @@ export class Mediafile extends BaseModel<Mediafile> {
     public pdf_information!: PdfInformation;
     public create_timestamp!: string;
     public has_inherited_access_groups!: boolean;
+    public token: string;
 
     public access_group_ids!: Id[]; // (group/mediafile_access_group_ids)[];
     public inherited_access_group_ids!: Id[]; // (group/mediafile_inherited_access_group_ids)[];  // Note: calculated
@@ -38,13 +39,40 @@ export class Mediafile extends BaseModel<Mediafile> {
         super(Mediafile.COLLECTION, input);
     }
 
-    public used_as_logo_in_meeting_id(place: string): Id | null {
-        const path = `used_as_logo_$${place}_in_meeting_id` as keyof Mediafile;
-        return (this[path] as Id) || null;
+    /**
+     * Check if the image is used at the given place. If place is empty, checks
+     * if the image is used in any place and returns the first meeting id found.
+     *
+     * @param place The places the image can be used
+     * @returns the meeting id or `null` if the image is not used.
+     */
+    public used_as_logo_in_meeting_id(place?: string): Id | null {
+        return this.used_in_meeting(`logo`, place);
     }
 
-    public used_as_font_in_meeting_id(place: string): Id | null {
-        const path = `used_as_font_$${place}_in_meeting_id` as keyof Mediafile;
+    /**
+     * Check if the font is used at the given place. If place is empty, checks
+     * if the font is used in any place and returns the first meeting id found.
+     *
+     * @param place The text parts the font can be used
+     * @returns the meeting id or `null` if the font is not used.
+     */
+    public used_as_font_in_meeting_id(place?: string): Id | null {
+        return this.used_in_meeting(`font`, place);
+    }
+
+    private used_in_meeting(type: string, place?: string): Id | null {
+        if (!place) {
+            const list = this[`used_as_${type}_$_in_meeting_id`];
+            for (let i = 0; i < list?.length; i++) {
+                const path = `used_as_${type}_$${list[i]}_in_meeting_id` as keyof Mediafile;
+                if (path in this) {
+                    return this[path] as Id;
+                }
+            }
+            return null;
+        }
+        const path = `used_as_${type}_$${place}_in_meeting_id` as keyof Mediafile;
         return (this[path] as Id) || null;
     }
 

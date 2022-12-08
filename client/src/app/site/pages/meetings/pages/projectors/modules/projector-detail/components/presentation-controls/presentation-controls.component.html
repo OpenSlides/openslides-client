@@ -40,14 +40,14 @@
                 <span>{{ 'Page' | translate }}</span>
                 {{ getPage(projection) }}/{{ getPagesAmountFor(projection) }}
                 <br />
-                <button type="button" mat-icon-button (click)="zoom(projection, 'in')">
-                    <mat-icon>zoom_in</mat-icon>
+                <button type="button" mat-icon-button (click)="zoom(projection, 'out')">
+                    <mat-icon>zoom_out</mat-icon>
                 </button>
                 <button type="button" mat-icon-button (click)="zoom(projection, 'reset')">
                     <mat-icon>replay</mat-icon>
                 </button>
-                <button type="button" mat-icon-button (click)="zoom(projection, 'out')">
-                    <mat-icon>zoom_out</mat-icon>
+                <button type="button" mat-icon-button (click)="zoom(projection, 'in')">
+                    <mat-icon>zoom_in</mat-icon>
                 </button>
             </div>
         </div>

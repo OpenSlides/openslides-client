@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { PipesModule } from 'src/app/ui/pipes';
 
 import { HistoryBannerComponent } from './components/history-banner/history-banner.component';
 import { HistoryListComponent } from './components/history-list/history-list.component';
@@ -33,7 +34,8 @@ import { HistoryRoutingModule } from './history-routing.module';
         ReactiveFormsModule,
         OpenSlidesTranslationModule.forChild(),
         HeadBarModule,
-        SearchSelectorModule
+        SearchSelectorModule,
+        PipesModule
     ],
     declarations: [HistoryListComponent, HistoryMainComponent, HistoryBannerComponent]
 })

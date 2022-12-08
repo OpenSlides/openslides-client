@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
+import { djb2hash } from 'src/app/infrastructure/utils';
+import {
+    findNextAuntNode,
+    fragmentToHtml,
+    htmlToFragment,
+    isInlineElement
+} from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache } from '../../../../definitions';
 
-const ELEMENT_NODE = 1;
-const TEXT_NODE = 3;
+const ELEMENT_NODE = Node.ELEMENT_NODE;
+const TEXT_NODE = Node.TEXT_NODE;
 
 /**
  * A helper to indicate that certain functions expect the provided HTML strings to contain line numbers
@@ -142,59 +149,6 @@ export class LineNumberingService {
     // A precompiled regular expression that looks for line number nodes in a HTML string
     private getLineNumberRangeRegexp = RegExp(/<span[^>]+data\-line\-number=\"(\d+)\"/, `gi`);
 
-    // .setAttribute and .innerHTML seem to be really slow, so we try to avoid them for static attributes / content
-    // by creating a static template, cloning it and only set the dynamic attributes each time
-    private lineNumberToClone: Element | null = null;
-
-    /**
-     * Creates a hash of a given string. This is not meant to be specifically secure, but rather as quick as possible.
-     *
-     * @param {string} str
-     * @returns {string}
-     */
-    public djb2hash(str: string): string {
-        let hash = 5381;
-        let char: number;
-        for (let i = 0; i < str.length; i++) {
-            char = str.charCodeAt(i);
-            // tslint:disable-next-line:no-bitwise
-            hash = (hash << 5) + hash + char;
-        }
-        return hash.toString();
-    }
-
-    /**
-     * Returns true, if the provided element is an inline element (hard-coded list of known elements).
-     *
-     * @param {Element} element
-     * @returns {boolean}
-     */
-    private isInlineElement(element: Element): boolean {
-        const inlineElements = [
-            `SPAN`,
-            `A`,
-            `EM`,
-            `S`,
-            `B`,
-            `I`,
-            `STRONG`,
-            `U`,
-            `BIG`,
-            `SMALL`,
-            `SUB`,
-            `SUP`,
-            `TT`,
-            `INS`,
-            `DEL`,
-            `STRIKE`
-        ];
-        if (element) {
-            return inlineElements.indexOf(element.nodeName) > -1;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * Returns true, if the given node is a OpenSlides-specific line breaking node.
      *
@@ -247,35 +201,6 @@ export class LineNumberingService {
     }
 
     /**
-     * This converts the given HTML string into a DOM tree contained by a DocumentFragment, which is reqturned.
-     *
-     * @param {string} html
-     * @return {DocumentFragment}
-     */
-    private htmlToFragment(html: string): DocumentFragment {
-        const template = document.createElement(`template`);
-        template.innerHTML = html;
-        return template.content;
-    }
-
-    /**
-     * Converts a HTML Document Fragment into HTML string, using the browser's internal mechanisms.
-     * HINT: special characters might get escaped / html-encoded in the process of this.
-     *
-     * @param {DocumentFragment} fragment
-     * @returns string
-     */
-    private fragmentToHtml(fragment: DocumentFragment): string {
-        const div: Element = document.createElement(`DIV`);
-        while (fragment.firstChild) {
-            const child = fragment.firstChild;
-            fragment.removeChild(child);
-            div.appendChild(child);
-        }
-        return div.innerHTML;
-    }
-
-    /**
      * Creates a OpenSlides-specific line break Element
      *
      * @returns {Element}
@@ -294,7 +219,7 @@ export class LineNumberingService {
      * @private
      */
     private moveLeadingLineBreaksToOuterNode(innerNode: Element, outerNode: Element): void {
-        if (this.isInlineElement(innerNode)) {
+        if (isInlineElement(innerNode)) {
             const firstChild = <Element>innerNode.firstChild;
             if (this.isOsLineBreakNode(firstChild)) {
                 const br = innerNode.firstChild as Node;
@@ -359,20 +284,6 @@ export class LineNumberingService {
     }
 
     /**
-     * This converts an array of HTML elements into a string
-     *
-     * @param {Element[]} nodes
-     * @returns {string}
-     */
-    public nodesToHtml(nodes: Element[]): string {
-        const root = document.createElement(`div`);
-        nodes.forEach(node => {
-            root.appendChild(node);
-        });
-        return root.innerHTML;
-    }
-
-    /**
      * Given a HTML string augmented with line number nodes, this function detects the line number range of this text.
      * This method assumes that the line number node indicating the beginning of the next line is not included anymore.
      *
@@ -403,7 +314,7 @@ export class LineNumberingService {
      * @returns {SectionHeading[]}
      */
     public getHeadingsWithLineNumbers(html: string): SectionHeading[] {
-        const fragment = this.htmlToFragment(html);
+        const fragment = htmlToFragment(html);
         const headings = [];
         const headingNodes = fragment.querySelectorAll(`h1, h2, h3, h4, h5, h6`);
         for (let i = 0; i < headingNodes.length; i++) {
@@ -414,19 +325,13 @@ export class LineNumberingService {
                 headings.push({
                     lineNumber: number,
                     level: parseInt(heading.nodeName.substr(1), 10),
-                    text: heading.innerText.replace(/^\s/, ``).replace(/\s$/, ``)
+                    text: (heading.innerText ?? heading.textContent).replace(/^\s/, ``).replace(/\s$/, ``)
                 });
             }
         }
-        return headings.sort((heading1: SectionHeading, heading2: SectionHeading): number => {
-            if (heading1.lineNumber < heading2.lineNumber) {
-                return 0;
-            } else if (heading1.lineNumber > heading2.lineNumber) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
+        return headings.sort(
+            (heading1: SectionHeading, heading2: SectionHeading): number => heading1.lineNumber - heading2.lineNumber
+        );
     }
 
     /**
@@ -482,10 +387,10 @@ export class LineNumberingService {
      * @return {string[]}
      */
     public splitToParagraphs(html: string): string[] {
-        const cacheKey = this.djb2hash(html);
+        const cacheKey = djb2hash(html);
         let cachedParagraphs = this.lineNumberCache.get(cacheKey);
         if (!cachedParagraphs) {
-            const fragment = this.htmlToFragment(html);
+            const fragment = htmlToFragment(html);
             cachedParagraphs = this.splitNodeToParagraphs(fragment).map((node: Element): string => node.outerHTML);
 
             this.lineNumberCache.put(cacheKey, cachedParagraphs);
@@ -521,6 +426,7 @@ export class LineNumberingService {
      * @returns {boolean}
      */
     private isIgnoredByLineNumbering(element: Element): boolean {
+        // TODO: Check if .insert class is really supposed to ignore this.ignoreInsertedText
         if (element.nodeName === `INS`) {
             return this.ignoreInsertedText;
         } else if (this.isOsLineNumberNode(element)) {
@@ -530,6 +436,16 @@ export class LineNumberingService {
         } else {
             return false;
         }
+    }
+
+    private getLineNumberElement(lineNumber: number): Element {
+        const el = document.createElement(`span`);
+        el.appendChild(document.createTextNode(`\u00A0`)); // Prevent ckeditor from stripping out empty span's
+        el.setAttribute(`contenteditable`, `false`);
+        el.setAttribute(`class`, `os-line-number line-number-` + lineNumber);
+        el.setAttribute(`data-line-number`, lineNumber + ``);
+
+        return el;
     }
 
     /**
@@ -544,18 +460,10 @@ export class LineNumberingService {
             return undefined;
         }
 
-        if (this.lineNumberToClone === null) {
-            this.lineNumberToClone = document.createElement(`span`);
-            this.lineNumberToClone.setAttribute(`contenteditable`, `false`);
-            this.lineNumberToClone.innerHTML = `&nbsp;`; // Prevent ckeditor from stripping out empty span's
-        }
-        const node = this.lineNumberToClone.cloneNode(true) as Element;
         const lineNumber = this.currentLineNumber;
         (this.currentLineNumber as number)++;
-        node.setAttribute(`class`, `os-line-number line-number-` + lineNumber);
-        node.setAttribute(`data-line-number`, lineNumber + ``);
 
-        return node;
+        return this.getLineNumberElement(lineNumber);
     }
 
     /**
@@ -728,7 +636,7 @@ export class LineNumberingService {
                 const firstword = this.lengthOfFirstInlineWord(childElement);
                 const overlength =
                     <number>this.currentInlineOffset + firstword > length && <number>this.currentInlineOffset > 0;
-                if (overlength && this.isInlineElement(childElement)) {
+                if (overlength && isInlineElement(childElement)) {
                     this.currentInlineOffset = 0;
                     this.lastInlineBreakablePoint = null;
                     element.appendChild(this.createLineBreak());
@@ -772,9 +680,8 @@ export class LineNumberingService {
             if (oldChildren[i].nodeType === TEXT_NODE) {
                 if (!oldChildren[i].nodeValue!.match(/\S/)) {
                     // White space nodes between block elements should be ignored
-                    const prevIsBlock = i > 0 && !this.isInlineElement((<Element[]>oldChildren)[i - 1]);
-                    const nextIsBlock =
-                        i < oldChildren.length - 1 && !this.isInlineElement((<Element[]>oldChildren)[i + 1]);
+                    const prevIsBlock = i > 0 && !isInlineElement((<Element[]>oldChildren)[i - 1]);
+                    const nextIsBlock = i < oldChildren.length - 1 && !isInlineElement((<Element[]>oldChildren)[i + 1]);
                     if (
                         (prevIsBlock && nextIsBlock) ||
                         (i === 0 && nextIsBlock) ||
@@ -793,7 +700,7 @@ export class LineNumberingService {
                 const overlength = this.currentInlineOffset + firstword > length && this.currentInlineOffset > 0;
                 if (
                     overlength &&
-                    this.isInlineElement((<Element[]>oldChildren)[i]) &&
+                    isInlineElement((<Element[]>oldChildren)[i]) &&
                     !this.isIgnoredByLineNumbering((<Element[]>oldChildren)[i])
                 ) {
                     this.currentInlineOffset = 0;
@@ -831,7 +738,7 @@ export class LineNumberingService {
             throw new Error(`This method may only be called for ELEMENT-nodes: ` + element.nodeValue);
         }
         if (this.isIgnoredByLineNumbering(element)) {
-            if (this.currentInlineOffset === 0 && this.currentLineNumber !== null && this.isInlineElement(element)) {
+            if (this.currentInlineOffset === 0 && this.currentLineNumber !== null && isInlineElement(element)) {
                 const lineNumberNode = this.createLineNumber();
                 if (lineNumberNode) {
                     element.insertBefore(lineNumberNode, element.firstChild);
@@ -839,7 +746,7 @@ export class LineNumberingService {
                 }
             }
             return element;
-        } else if (this.isInlineElement(element)) {
+        } else if (isInlineElement(element)) {
             return this.insertLineNumbersToInlineNode(element, length, highlight);
         } else {
             const newLength = this.calcBlockNodeLength(element, length);
@@ -908,30 +815,23 @@ export class LineNumberingService {
         html,
         lineLength,
         highlight,
-        callback,
         firstLine = 1
     }: InsertLineNumbersConfig): LineNumberedString {
-        let newHtml;
-        let newRoot;
+        let newHtml: string;
+        let newRoot: Element;
 
-        if (<number>highlight > 0) {
-            // Caching versions with highlighted line numbers is probably not worth it
-            newRoot = this.insertLineNumbersNode(html, lineLength, highlight as number, firstLine);
+        const firstLineStr = !firstLine ? `` : firstLine.toString();
+        const cacheKey = djb2hash(firstLineStr + `-` + lineLength.toString() + html);
+        newHtml = this.lineNumberCache.get(cacheKey);
+
+        if (!newHtml) {
+            newRoot = this.insertLineNumbersNode(html, lineLength, null, firstLine);
             newHtml = newRoot.innerHTML;
-        } else {
-            const firstLineStr = !firstLine ? `` : firstLine.toString();
-            const cacheKey = this.djb2hash(firstLineStr + `-` + lineLength.toString() + html);
-            newHtml = this.lineNumberCache.get(cacheKey);
-
-            if (!newHtml) {
-                newRoot = this.insertLineNumbersNode(html, lineLength, null, firstLine);
-                newHtml = newRoot.innerHTML;
-                this.lineNumberCache.put(cacheKey, newHtml);
-            }
+            this.lineNumberCache.put(cacheKey, newHtml);
         }
 
-        if (callback !== undefined && callback !== null) {
-            callback();
+        if (<number>highlight > 0) {
+            newHtml = this.highlightLine(newHtml, highlight);
         }
 
         return newHtml;
@@ -978,22 +878,6 @@ export class LineNumberingService {
     }
 
     /**
-     * Traverses up the DOM tree until it finds a node with a nextSibling, then returns that sibling
-     *
-     * @param {Node} node
-     * @returns {Node}
-     */
-    public findNextAuntNode(node: Node): Node | null {
-        if (node.nextSibling) {
-            return node.nextSibling;
-        } else if (node.parentNode) {
-            return this.findNextAuntNode(node.parentNode);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Highlights (span[class=highlight]) all text starting from the given line number Node to the next one found.
      *
      * @param {Element} lineNumberNode
@@ -1021,7 +905,7 @@ export class LineNumberingService {
             } else if (currentNode.nextSibling) {
                 currentNode = currentNode.nextSibling;
             } else {
-                currentNode = this.findNextAuntNode(currentNode) as Node;
+                currentNode = findNextAuntNode(currentNode) as Node;
             }
 
             if (this.isOsLineNumberNode(currentNode)) {
@@ -1038,12 +922,12 @@ export class LineNumberingService {
      * @return {string}
      */
     public highlightLine(html: string, lineNumber: number): string {
-        const fragment = this.htmlToFragment(html);
+        const fragment = htmlToFragment(html);
         const lineNumberNode = this.getLineNumberNode(fragment, lineNumber);
 
         if (lineNumberNode) {
             this.highlightUntilNextLine(lineNumberNode);
-            html = this.fragmentToHtml(fragment);
+            html = fragmentToHtml(fragment);
         }
 
         return html;
@@ -1055,7 +939,7 @@ export class LineNumberingService {
      * @param {Element} lineNumber
      */
     private splitInlineElementsAtLineBreak(lineNumber: Element): void {
-        const parentIsInline = (el: Element) => this.isInlineElement(el.parentElement!);
+        const parentIsInline = (el: Element) => isInlineElement(el.parentElement!);
         while (parentIsInline(lineNumber)) {
             const parent: Element = lineNumber.parentElement as Element;
             const beforeParent: Element = <Element>parent.cloneNode(false);
@@ -1104,12 +988,12 @@ export class LineNumberingService {
      * @returns {string}
      */
     public splitInlineElementsAtLineBreaks(html: string): string {
-        const fragment = this.htmlToFragment(html);
+        const fragment = htmlToFragment(html);
         const lineNumbers = fragment.querySelectorAll(`span.os-line-number`);
         lineNumbers.forEach((lineNumber: Element) => {
             this.splitInlineElementsAtLineBreak(lineNumber);
         });
 
-        return this.fragmentToHtml(fragment);
+        return fragmentToHtml(fragment);
     }
 }

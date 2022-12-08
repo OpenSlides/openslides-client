@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 
+import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
 import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-entry';
 
 @Component({
@@ -15,10 +16,15 @@ export class EntitledUsersTableComponent {
     private _isViewingThis: boolean = true;
 
     @Input()
-    public entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
-
-    @Input()
-    public listStorageKey!: string;
+    public set entitledUsersObservable(observable: Observable<EntitledUsersTableEntry[]>) {
+        this._entitledUsersObservable = observable.pipe(
+            map(entries =>
+                entries.sort((entryA, entryB) =>
+                    this.getNameFromEntry(entryA).localeCompare(this.getNameFromEntry(entryB))
+                )
+            )
+        );
+    }
 
     @Input()
     public set isViewingThis(value: boolean) {
@@ -32,4 +38,16 @@ export class EntitledUsersTableComponent {
     public readonly permission = Permission;
 
     public filterPropsEntitledUsersTable = [`user.full_name`, `vote_delegated_to.full_name`, `voted_verbose`];
+
+    public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
+        return this._entitledUsersObservable;
+    }
+
+    private _entitledUsersObservable!: Observable<EntitledUsersTableEntry[]>;
+
+    constructor(private controller: ParticipantControllerService) {}
+
+    private getNameFromEntry(entry: EntitledUsersTableEntry): string {
+        return (entry.user ?? this.controller.getViewModel(entry.user_id))?.getShortName();
+    }
 }

@@ -72,6 +72,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public guestsEnabled = false;
 
+    public isWaitingOnLogin = false;
+
     /**
      * The message, that should appear, when the user logs in.
      */
@@ -142,12 +144,14 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
      * Send username and password to the {@link AuthService}
      */
     public async formLogin(): Promise<void> {
+        this.isWaitingOnLogin = true;
         this.loginErrorMsg = ``;
         try {
             // this.spinnerService.show(this.loginMessage, { hideWhenStable: true });
             const { username, password } = this.formatLoginInputValues(this.loginForm.value);
             await this.authService.login(username, password, this.currentMeetingId);
         } catch (e: any) {
+            this.isWaitingOnLogin = false;
             // this.spinnerService.hide();
             this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${e.message}`;
         }

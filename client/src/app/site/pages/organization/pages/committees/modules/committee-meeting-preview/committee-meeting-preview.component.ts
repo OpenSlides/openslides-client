@@ -108,10 +108,32 @@ export class CommitteeMeetingPreviewComponent {
     }
 
     public async toggleTemplateMeeting(): Promise<void> {
+        let content = this.title;
+
         if (this.isTemplateMeeting) {
-            await this.meetingRepo.update({ set_as_template: false }, { meeting: this.meeting });
+            const title = this.translate.instant(
+                `Do you really want to stop sharing this meeting as a public template?`
+            );
+
+            const confirmed = await this.promptService.open(title, content);
+            if (confirmed) {
+                await this.meetingRepo.update({ set_as_template: false }, { meeting: this.meeting });
+            }
         } else {
-            await this.meetingRepo.update({ set_as_template: true }, { meeting: this.meeting });
+            const title = this.translate.instant(
+                `Do you really want to make available this meeting as a public template?`
+            );
+            content =
+                this.translate.instant(
+                    `Meeting templates and the data they contain are publicly viewable by all committee administrators.`
+                ) +
+                `<br><br>` +
+                content;
+
+            const confirmed = await this.promptService.open(title, content);
+            if (confirmed) {
+                await this.meetingRepo.update({ set_as_template: true }, { meeting: this.meeting });
+            }
         }
     }
 

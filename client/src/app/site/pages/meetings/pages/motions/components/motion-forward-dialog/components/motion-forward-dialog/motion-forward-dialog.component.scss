@@ -2,3 +2,10 @@
     display: block;
     padding-bottom: 1.33em;
 }
+
+.motion-forward-meeting-list {
+    vertical-align: middle;
+    min-height: 100px;
+    height: 33vh;
+    overflow-y: auto;
+}

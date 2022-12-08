@@ -33,24 +33,26 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
         super(modelRequestService, router, openslidesRouter);
     }
 
-    protected override onParamsChanged(params: any): void {
-        if (params[`id`]) {
-            this.updateSubscription(
-                MOTION_DETAIL_SEQUENTIAL_NUMBER_MAPPING,
-                this.sequentialNumberMapping
-                    .getIdObservableBySequentialNumber({
-                        collection: Motion.COLLECTION,
-                        meetingId: params[`meetingId`],
-                        sequentialNumber: +params[`id`]
-                    })
-                    .subscribe(id => {
-                        if (id && this._currentMotionId !== id) {
-                            this._currentMotionId = id;
-                            this._watchingMap = {};
-                            this.loadMotionDetail();
-                        }
-                    })
-            );
+    protected override onParamsChanged(params: any, oldParams: any): void {
+        if (params[`id`] !== oldParams[`id`] || params[`meetingId`] !== oldParams[`meetingId`]) {
+            this.sequentialNumberMapping
+                .getIdObservableBySequentialNumber({
+                    collection: Motion.COLLECTION,
+                    meetingId: params[`meetingId`],
+                    sequentialNumber: +params[`id`]
+                })
+                .then(m =>
+                    this.updateSubscription(
+                        MOTION_DETAIL_SEQUENTIAL_NUMBER_MAPPING,
+                        m.subscribe(id => {
+                            if (id && this._currentMotionId !== id) {
+                                this._currentMotionId = id;
+                                this._watchingMap = {};
+                                this.loadMotionDetail();
+                            }
+                        })
+                    )
+                );
         }
     }
 
@@ -61,6 +63,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
                 viewModelCtor: ViewMotion,
                 additionalFields: [
                     `all_origin_ids`,
+                    `origin_meeting_id`,
                     `derived_motion_ids`,
                     `amendment_ids`,
                     { templateField: `amendment_paragraph_$` }

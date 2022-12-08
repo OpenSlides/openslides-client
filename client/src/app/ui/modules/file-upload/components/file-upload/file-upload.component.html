@@ -15,7 +15,7 @@
         <!-- Additional content -->
         <ng-container *ngTemplateOutlet="additionalContent"></ng-container>
     </div>
-    <div class="upload-area--bottom-content">
+    <div [hidden]="isEmpty" class="upload-area--bottom-content">
         <ng-container *ngTemplateOutlet="tableTemplate"></ng-container>
     </div>
 </div>
@@ -37,13 +37,12 @@
 
 <ng-template #tableTemplate>
     <os-scrolling-table
-        *ngIf="!isEmpty"
         vScrollFixed="50"
         [showHeader]="true"
         [dataSource]="dataSource"
         [ngStyle]="{ height: tableHeight }"
     >
-        <div *osScrollingTableCell="'remove'; row as file">
+        <div *osScrollingTableCell="'remove'; row as file; config: { width: 24 }">
             <button mat-icon-button (click)="onRemoveButton(file)" matTooltip="{{ 'Remove file' | translate }}">
                 <mat-icon>close</mat-icon>
             </button>

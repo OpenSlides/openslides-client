@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { HasProjectorTitle } from 'src/app/domain/interfaces';
 import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
+import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -78,6 +79,14 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
             return `_self`;
         } else {
             return `_blank`;
+        }
+    }
+
+    public get lowerProjectionTarget(): '_blank' | '_self' {
+        if (this.projectedViewModel?.COLLECTION === Mediafile.COLLECTION) {
+            return `_blank`;
+        } else {
+            return `_self`;
         }
     }
 

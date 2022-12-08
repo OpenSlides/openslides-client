@@ -3,6 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { BaseMotionSlideComponent } from 'src/app/site/pages/meetings/modules/projector/modules/slides/components/motions/base/base-motion-slide';
 import { MotionControllerService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-controller.service';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { AutoupdateService } from 'src/app/site/services/autoupdate';
+import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { modifyAgendaItemNumber } from '../../../../../../definitions/agenda_item_number';
 import { MotionBlockSlideData, MotionBlockSlideMotionRepresentation } from '../../motion-block-slide-data';
@@ -33,6 +36,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
      * For sorting motion blocks by their displayed title
      */
     private languageCollator: Intl.Collator;
+    private maxColumns: number = MAX_COLUMNS;
 
     /**
      * If this is set, all motions have the same recommendation, saved in this variable.
@@ -75,11 +79,7 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
     public get columns(): number {
         const rowsPerColumn = this.shortDisplayStyle ? ROWS_PER_COLUMN_SHORT : ROWS_PER_COLUMN_LONG;
         const columns = Math.ceil(this.motionsAmount / rowsPerColumn);
-        if (columns > MAX_COLUMNS) {
-            return MAX_COLUMNS;
-        } else {
-            return columns;
-        }
+        return Math.min(columns, this.maxColumns);
     }
 
     /**
@@ -89,9 +89,19 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
         return this.makeIndicesArray(this.columns);
     }
 
-    public constructor(translate: TranslateService, motionRepo: MotionControllerService) {
-        super(translate, motionRepo);
+    public constructor(
+        translate: TranslateService,
+        motionRepo: MotionControllerService,
+        auService: AutoupdateService,
+        modelRequestBuilder: ModelRequestBuilderService,
+        private meetingSettingsService: MeetingSettingsService
+    ) {
+        super(translate, motionRepo, auService, modelRequestBuilder);
         this.languageCollator = new Intl.Collator(this.translate.currentLang);
+
+        this.meetingSettingsService
+            .get(`motions_block_slide_columns`)
+            .subscribe(value => (this.maxColumns = value > 0 ? value : MAX_COLUMNS));
     }
 
     /**
@@ -114,14 +124,16 @@ export class MotionBlockSlideComponent extends BaseMotionSlideComponent<MotionBl
                 if (motion.recommendation) {
                     let recommendation = this.translate.instant(motion.recommendation.recommendation_label);
                     if (motion.recommendation_extension) {
+                        this.addReferencedMotions(motion.recommendation_extension);
                         recommendation +=
-                            ` ` + this.replaceReferencedMotions(motion.recommendation_extension, value.data.referenced);
+                            ` ` + this.motionRepo.parseMotionPlaceholders(motion.recommendation_extension);
                     }
                     motion.recommendationLabel = recommendation;
                 } else {
                     motion.recommendationLabel = null;
                 }
             });
+            this.loadReferencedMotions();
 
             // Check, if all motions have the same recommendation label
             if (value.data.motions.length > 0) {

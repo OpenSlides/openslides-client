@@ -240,17 +240,17 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
 
     private getAnalogPollVotesValues(poll: any): AnalogPollVotesValues {
         return {
-            votescast: toDecimal(poll.votescast),
-            votesinvalid: toDecimal(poll.votesinvalid),
-            votesvalid: toDecimal(poll.votesvalid)
+            votescast: toDecimal(poll.votescast, false),
+            votesinvalid: toDecimal(poll.votesinvalid, false),
+            votesvalid: toDecimal(poll.votesvalid, false)
         };
     }
 
     private getAnalogPollGlobalValues(poll: any): AnalogPollGlobalValues {
         return {
-            amount_global_abstain: toDecimal(poll.amount_global_abstain),
-            amount_global_no: toDecimal(poll.amount_global_no),
-            amount_global_yes: toDecimal(poll.amount_global_yes)
+            amount_global_abstain: toDecimal(poll.amount_global_abstain, false),
+            amount_global_no: toDecimal(poll.amount_global_no, false),
+            amount_global_yes: toDecimal(poll.amount_global_yes, false)
         };
     }
 
@@ -267,9 +267,9 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
                 id: option.id,
                 content_object_id: option.content_object_id,
                 text: option.text,
-                Y: toDecimal(option.Y),
-                A: toDecimal(option.A),
-                N: toDecimal(option.N)
+                Y: toDecimal(option.Y, false),
+                A: toDecimal(option.A, false),
+                N: toDecimal(option.N, false)
             });
         }
         return result;

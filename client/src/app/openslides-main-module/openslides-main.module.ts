@@ -8,6 +8,7 @@ import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { environment } from 'src/environments/environment';
 
+import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog';
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
 import { OpenSlidesOverlayContainerComponent } from './components/openslides-overlay-container/openslides-overlay-container.component';
 import { httpInterceptorProviders } from './interceptors';
@@ -22,7 +23,7 @@ export function AppLoaderFactory(appLoadService: AppLoadService): () => Promise<
     return () => appLoadService.loadApps();
 }
 
-const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule];
+const NOT_LAZY_LOADED_MODULES = [MatSnackBarModule, GlobalSpinnerModule, WaitForActionDialogModule];
 
 @NgModule({
     declarations: [OpenSlidesMainComponent, OpenSlidesOverlayContainerComponent],

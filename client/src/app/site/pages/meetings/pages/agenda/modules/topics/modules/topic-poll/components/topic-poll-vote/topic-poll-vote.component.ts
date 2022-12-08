@@ -9,6 +9,7 @@ import {
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
@@ -58,9 +59,10 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         pollRepo: PollControllerService,
         private promptService: PromptService,
         cd: ChangeDetectorRef,
-        private translate: TranslateService
+        private translate: TranslateService,
+        meetingSettingsService: MeetingSettingsService
     ) {
-        super(operator, votingService, cd, pollRepo);
+        super(operator, votingService, cd, pollRepo, meetingSettingsService);
     }
 
     public ngOnInit(): void {

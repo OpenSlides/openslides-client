@@ -8,12 +8,13 @@ import {
     HasReferencedMotionInRecommendationExtensionIds,
     Motion
 } from '../../../../../../domain/models/motions/motion';
-import { AmendmentType } from '../../../../../../domain/models/motions/motions.constants';
+import { AmendmentType, ChangeRecoMode } from '../../../../../../domain/models/motions/motions.constants';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
+import { ViewMeeting } from '../../../view-models/view-meeting';
 import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
@@ -33,6 +34,13 @@ import { HasTags } from '../modules/tags/view-models/has-tags';
 
 export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
     referenced_in_motion_recommendation_extension: ViewMotion[];
+}
+
+export enum ForwardingStatus {
+    none = `none`,
+    isDerived = `isDerived`,
+    wasForwarded = `wasForwarded`,
+    both = `both`
 }
 
 /**
@@ -190,14 +198,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get changedAmendmentLines(): DiffLinesInParagraph[] | null {
         if (!this._changedAmendmentLines) {
-            this._changedAmendmentLines = this.getAmendmentParagraphLines();
+            this._changedAmendmentLines = this.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         }
         return this._changedAmendmentLines;
     }
 
     public get affectedAmendmentLines(): DiffLinesInParagraph[] | null {
         if (!this._affectedAmendmentLines) {
-            this._affectedAmendmentLines = this.getAmendmentParagraphLines();
+            this._affectedAmendmentLines = this.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         }
         return this._affectedAmendmentLines;
     }
@@ -213,6 +221,17 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         }
     }
 
+    public get forwardingStatus(): ForwardingStatus {
+        let status = ForwardingStatus.none;
+        if (!!this.origin_id || !!this.origin_meeting_id) {
+            status = ForwardingStatus.isDerived;
+        }
+        if (!!this.derived_motion_ids?.length) {
+            return status === ForwardingStatus.none ? ForwardingStatus.wasForwarded : ForwardingStatus.both;
+        }
+        return status;
+    }
+
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
 
@@ -225,7 +244,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     /**
      * @warning This is injected. Do not use it!
      */
-    public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] = () => [];
+    public getAmendmentParagraphLines: (
+        recoMode: ChangeRecoMode,
+        includeUnchanged?: boolean
+    ) => DiffLinesInParagraph[] = () => [];
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;
@@ -342,6 +364,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     sort_parent?: ViewMotion;
     sort_children: ViewMotion[];
     origin?: ViewMotion;
+    origin_meeting?: ViewMeeting;
     derived_motions?: ViewMotion[];
     all_derived_motions?: ViewMotion[];
     all_origins?: ViewMotion[];

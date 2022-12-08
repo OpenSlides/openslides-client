@@ -26,13 +26,19 @@
 
 import 'cypress-wait-until';
 
-Cypress.Commands.add(`urlShouldAllOf`, (...toCheck: {chainer: string, values: any[]}[]) => {
+Cypress.Commands.add(`urlShouldAllOf`, (...toCheck: { chainer: string; values: any[] }[]) => {
     toCheck.forEach(check => {
         check.values.forEach(value => {
             cy.url().should(check.chainer, value);
-        })
-    })
-})
+        });
+    });
+});
+
+Cypress.Commands.add('loginAndVisit', (url: string = '/', username = 'admin', password = 'admin') => {
+    cy.login(username, password);
+    cy.visit(url);
+    return cy.waitUntil(() => Cypress.$(`[data-cy=osOverlay]`).length === 0);
+});
 
 /**
  * Login
@@ -108,6 +114,13 @@ Cypress.Commands.add('getElement', (name: string) => {
     return cy.get(`[data-cy=${name}]`);
 });
 
+/**
+ * Get a specific element for `formcontrolname`
+ */
+Cypress.Commands.add('getFormControl', (name: string) => {
+    return cy.get(`[formcontrolname=${name}]`);
+});
+
 Cypress.Commands.add('getAnchorFor', (url: string) => {
     return cy.get(`a[href=\"${url}\"]`);
 });
@@ -115,7 +128,7 @@ Cypress.Commands.add('getAnchorFor', (url: string) => {
 Cypress.Commands.add('clearDatabase', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/truncate_db',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/truncate_db',
         headers: ['Content-Type: application/json']
     }).should(response => {
         expect(response.status).to.eq(204);
@@ -125,7 +138,7 @@ Cypress.Commands.add('clearDatabase', () => {
 Cypress.Commands.add('createDefaultUser', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/write',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/write',
         headers: ['Content-Type: application/json'],
         body: {
             user_id: 1,
@@ -153,7 +166,7 @@ Cypress.Commands.add('createDefaultUser', () => {
 Cypress.Commands.add('createSuperUser', () => {
     cy.request({
         method: 'POST',
-        url: 'http://localhost:9011/internal/datastore/writer/write',
+        url: Cypress.config('datastoreUrl') + '/internal/datastore/writer/write',
         headers: ['Content-Type: application/json'],
         body: {
             user_id: 2,
@@ -209,20 +222,20 @@ Cypress.Commands.add(`createAccount`, (name: string = `Mississipi`) => {
 
 Cypress.Commands.add(`deleteAccounts`, (...ids: number[]) => {
     ids.forEach((value, index) => {
-        cy.os4request(`user.delete`, {id: ids[index]});
-    })
+        cy.os4request(`user.delete`, { id: ids[index] });
+    });
 });
 
 Cypress.Commands.add(`deleteMeetings`, (...ids: number[]) => {
     ids.forEach((value, index) => {
-        cy.os4request(`meeting.delete`, {id: ids[index]});
-    })
+        cy.os4request(`meeting.delete`, { id: ids[index] });
+    });
 });
 
 Cypress.Commands.add(`deleteCommittees`, (...ids: number[]) => {
     ids.forEach((value, index) => {
-        cy.os4request(`committee.delete`, {id: ids[index]});
-    })
+        cy.os4request(`committee.delete`, { id: ids[index] });
+    });
 });
 
 /**

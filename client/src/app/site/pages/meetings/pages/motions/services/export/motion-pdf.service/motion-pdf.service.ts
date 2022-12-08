@@ -202,7 +202,7 @@ export class MotionPdfService {
         const titleChange = changes.find(change => change?.isTitleChange())!;
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
-        const number = motion.number ? ` ` + motion.number : ``;
+        const number = motion.number ? motion.number : ``;
         let title = ``;
         if (this.pdfDocumentService.pageSize === `A4`) {
             title += `${this.translate.instant(`Motion`)} `;
@@ -373,19 +373,6 @@ export class MotionPdfService {
             ]);
         }
 
-        // origin
-        if (motion.origin && (!infoToExport || infoToExport.includes(`origin`))) {
-            metaTableBody.push([
-                {
-                    text: `${this.translate.instant(`Origin`)}:`,
-                    style: `boldText`
-                },
-                {
-                    text: motion.origin
-                }
-            ]);
-        }
-
         // voting results
         if (motion.polls.length && (!infoToExport || infoToExport.includes(`polls`))) {
             motion.polls.forEach(poll => {
@@ -519,7 +506,7 @@ export class MotionPdfService {
         }
 
         // Checkboxes for resolution
-        if (optionToFollowRecommendation) {
+        if (optionToFollowRecommendation && !motion.state.isFinalState) {
             metaTableBody.push([
                 {
                     text: `${this.translate.instant(`Decision`)}:`,

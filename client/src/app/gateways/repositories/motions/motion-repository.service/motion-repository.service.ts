@@ -264,15 +264,18 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `agenda_item_id`, // for add/remove from agenda,
             { templateField: `amendment_paragraph_$` },
             `origin_id`,
+            `origin_meeting_id`,
             `all_origin_ids`,
             `derived_motion_ids`,
+            `all_derived_motion_ids`,
             `poll_ids`,
             `sort_weight`,
             `sort_parent_id`,
             `state_id`,
             `text`,
             `change_recommendation_ids`,
-            `attachment_ids`
+            `attachment_ids`,
+            `last_modified`
         ]);
         return {
             [DEFAULT_FIELDSET]: detailFields,
@@ -375,9 +378,9 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return {
             id: viewMotion.id,
             ...updatePayload,
-            supporter_ids: updatePayload[`supporter_ids`] === null ? [] : updatePayload[`supporter_ids`],
-            tag_ids: updatePayload[`tag_ids`] === null ? [] : updatePayload[`tag_ids`],
-            attachment_ids: updatePayload[`attachment_ids`] === null ? [] : updatePayload[`attachment_ids`]
+            supporter_ids: update[`supporter_ids`] === null ? [] : update[`supporter_ids`],
+            tag_ids: update[`tag_ids`] === null ? [] : update[`tag_ids`],
+            attachment_ids: update[`attachment_ids`] === null ? [] : update[`attachment_ids`]
         };
     }
 

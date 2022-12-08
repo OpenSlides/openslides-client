@@ -318,7 +318,10 @@ export abstract class PollService {
     }
 
     public generateChartData(poll: PollData): ChartData {
-        const fields = this.getPollDataFields(poll);
+        let fields = this.getPollDataFields(poll);
+        if (poll?.onehundred_percent_base === PollPercentBase.YN) {
+            fields = fields.filter(key => key === YES_KEY || key === NO_KEY);
+        }
 
         const data: ChartData = fields
             .map(
@@ -341,7 +344,7 @@ export abstract class PollService {
      * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
      */
     protected getResultFromPoll(poll: PollData, key: CalculablePollKey): (number | undefined)[] {
-        return [...poll.options, poll.global_option].map(option => (option ? option[key] : undefined));
+        return (poll ? [...poll.options, poll.global_option] : []).map(option => (option ? option[key] : undefined));
     }
 
     protected getPollDataFields(_poll: PollData): CalculablePollKey[] {

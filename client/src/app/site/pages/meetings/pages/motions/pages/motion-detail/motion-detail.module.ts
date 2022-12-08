@@ -38,11 +38,13 @@ import { MotionPollModule } from '../../modules/motion-poll';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { AmendmentCreateWizardComponent } from './components/amendment-create-wizard/amendment-create-wizard.component';
+import { MotionAddPollButtonComponent } from './components/motion-add-poll-button/motion-add-poll-button.component';
 import { MotionCommentComponent } from './components/motion-comment/motion-comment.component';
 import { MotionCommentsComponent } from './components/motion-comments/motion-comments.component';
 import { MotionContentComponent } from './components/motion-content/motion-content.component';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
 import { MotionDetailDiffComponent } from './components/motion-detail-diff/motion-detail-diff.component';
+import { MotionDetailDiffSummaryComponent } from './components/motion-detail-diff-summary/motion-detail-diff-summary.component';
 import { MotionDetailOriginalChangeRecommendationsComponent } from './components/motion-detail-original-change-recommendations/motion-detail-original-change-recommendations.component';
 import { MotionDetailViewComponent } from './components/motion-detail-view/motion-detail-view.component';
 import { MotionExtensionFieldComponent } from './components/motion-extension-field/motion-extension-field.component';
@@ -62,6 +64,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
 
 @NgModule({
     declarations: [
+        MotionAddPollButtonComponent,
         MotionDetailComponent,
         MotionDetailViewComponent,
         AmendmentCreateWizardComponent,
@@ -74,6 +77,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MotionManageSubmittersComponent,
         MotionParagraphbasedAmendmentComponent,
         MotionDetailDiffComponent,
+        MotionDetailDiffSummaryComponent,
         MotionDetailOriginalChangeRecommendationsComponent,
         MotionCommentsComponent,
         MotionPersonalNoteComponent,

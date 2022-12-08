@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from 'src/app/gateways/presenter';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
@@ -20,7 +22,7 @@ import { MotionDetailServiceCollectorService } from '../../services/motion-detai
     templateUrl: `./motion-meta-data.component.html`,
     styleUrls: [`./motion-meta-data.component.scss`]
 })
-export class MotionMetaDataComponent extends BaseMotionDetailChildComponent implements OnInit {
+export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public motionBlocks: MotionBlock[] = [];
 
     public categories: ViewMotionCategory[] = [];
@@ -67,6 +69,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public motionObserver: Observable<ViewMotion[]> = of([]);
 
+    public motionTransformFn = (value: ViewMotion) => `[${value.fqid}]`;
+
+    public committeeObservable = this.motionForwardingService.forwardingCommitteesObservable;
+
     /**
      * All amendments to this motion
      */
@@ -76,15 +82,16 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.viewService.showAllAmendmentsStateSubject.next(is);
     }
 
-    public get canForwardMotion(): boolean {
+    public get showForwardButton(): boolean {
         return (
             !!this.motion.state?.allow_motion_forwarding &&
             this.operator.hasPerms(Permission.motionCanForward) &&
-            !!this._forwardingMeetings.length
+            this._forwardingAvailable &&
+            !this.motion.derived_motions.length
         );
     }
 
-    private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
+    private _forwardingAvailable: boolean = false;
 
     /**
      * The subscription to the recommender config variable.
@@ -98,13 +105,17 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private presenter: GetForwardingMeetingsPresenterService
+        private meetingController: MeetingControllerService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
-    }
 
-    public ngOnInit(): void {
-        this.updateForwardingMeetings();
+        if (operator.hasPerms(Permission.motionCanManage)) {
+            this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+                this._forwardingAvailable = forwardingAvailable;
+            });
+        } else {
+            this._forwardingAvailable = false;
+        }
     }
 
     /**
@@ -133,7 +144,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      * @param id Motion recommendation id
      */
     public setRecommendation(id: number): void {
-        this.repo.setRecommendation(id, this.motion).resolve();
+        this.repo.setRecommendation(id, this.motion)?.resolve();
     }
 
     public resetRecommendation(): void {
@@ -228,9 +239,41 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
     }
 
-    public getOriginMotions(): ViewMotion[] {
-        const copy = [...(this.motion.all_origins || [])];
+    public getOriginMotions(): (ViewMotion | ViewMeeting)[] {
+        const copy = this.motion.origin_id
+            ? [...(this.motion.all_origins || [])]
+            : this.motion.origin_meeting
+            ? [this.motion.origin_meeting]
+            : [];
         return copy.reverse();
+    }
+
+    public getMeetingName(origin: ViewMotion | ViewMeeting): string {
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.meeting?.name ?? this.meetingController.getViewModelUnsafe(motion.meeting_id)?.name;
+        }
+        return (origin as ViewMeeting)?.name;
+    }
+
+    public getUrl(origin: ViewMotion | ViewMeeting): string {
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.getDetailStateUrl();
+        }
+        return `/${(origin as ViewMeeting).id}/motions`;
+    }
+
+    public canAccess(origin: ViewMotion | ViewMeeting): boolean {
+        if (this.isViewMotion(origin)) {
+            const motion = origin as ViewMotion;
+            return motion.meeting?.canAccess();
+        }
+        return origin?.canAccess();
+    }
+
+    private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
+        return toTest.COLLECTION === Motion.COLLECTION;
     }
 
     protected override getSubscriptions(): Subscription[] {
@@ -248,14 +291,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     protected override onAfterInit(): void {
         this.motionObserver = this.repo.getViewModelListObservable();
         this.setupRecommender();
-    }
-
-    private updateForwardingMeetings() {
-        if (this.operator.hasPerms(Permission.motionCanForward)) {
-            this.presenter.call({ meeting_id: this.activeMeeting.id }).then(meetings => {
-                this._forwardingMeetings = meetings;
-            });
-        }
     }
 
     /**

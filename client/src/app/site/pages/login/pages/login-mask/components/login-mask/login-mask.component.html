@@ -45,12 +45,6 @@
         </mat-form-field>
         <mat-error>{{ loginErrorMsg | translate }}</mat-error>
 
-        <!-- forgot password button -->
-        <br />
-        <button mat-button color="primary" type="button" class="forgot-password-button" (click)="resetPassword()">
-            {{ 'Forgot Password?' | translate }}
-        </button>
-
         <!-- login button -->
         <br />
         <!-- TODO: Next to each other...-->
@@ -60,12 +54,19 @@
             class="login-button"
             type="submit"
             data-cy="loginButton"
-            [disabled]="loginForm.invalid"
+            [disabled]="loginForm.invalid || isWaitingOnLogin"
         >
-            {{ 'Login' | translate }}
+            <span *ngIf="!isWaitingOnLogin">{{ 'Login' | translate }}</span>
+            <os-spinner *ngIf="isWaitingOnLogin" [width]="20" [height]="20" [showText]="false"></os-spinner>
         </button>
         <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">
             {{ 'Login as guest' | translate }}
+        </button>
+
+        <!-- forgot password button -->
+        <br />
+        <button mat-button color="primary" type="button" class="forgot-password-button" (click)="resetPassword()">
+            {{ 'Forgot Password?' | translate }}
         </button>
     </form>
 </div>

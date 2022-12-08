@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firstValueFrom, Observable } from 'rxjs';
 
@@ -11,22 +11,38 @@ import {
     ResponseType
 } from '../infrastructure/definitions/http';
 import { ProcessError } from '../infrastructure/errors';
-import { OpenSlidesInjector } from '../infrastructure/utils/di/openslides-injector';
 import { toBase64 } from '../infrastructure/utils/functions';
-import { ErrorMapService } from './error-map.service';
+import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
+import { ErrorMapService } from './error-mapping/error-map.service';
 
-const defaultHeaders = { [`Content-Type`]: `application/json` };
+type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
+
+const defaultHeaders: HttpHeadersObj = { [`Content-Type`]: `application/json` };
+
 @Injectable({
     providedIn: `root`
 })
 export class HttpService {
-    public constructor(private http: HttpClient, private errorMapper: ErrorMapService) {}
+    private _actionWorkerWatch: ActionWorkerWatchService;
+    private get actionWorkerWatch(): ActionWorkerWatchService {
+        if (!this._actionWorkerWatch) {
+            this._actionWorkerWatch = this.injector.get(ActionWorkerWatchService);
+        }
+        return this._actionWorkerWatch;
+    }
+
+    public constructor(
+        private http: HttpClient,
+        private errorMapper: ErrorMapService,
+        private injector: Injector,
+        private snackBar: MatSnackBar
+    ) {}
 
     /**
      * Send the a http request the the given path.
      * Optionally accepts a request body.
      *
-     * @param path the target path, usually starting with /rest
+     * @param path the target path, usually starting with /system
      * @param method the required HTTP method (i.e get, post, put)
      * @param data optional, if sending a data body is required
      * @param queryParams optional queryparams to append to the path
@@ -51,22 +67,30 @@ export class HttpService {
         const options: HttpOptions = {
             observe: `response`,
             body: data,
-            headers: customHeader,
+            // ngsw-bypass tells the angular service worker to ignore this request.
+            // Since any call made from inside the angular code should never be cached anyway, we
+            // set it here as the default.
+            headers: this.injectBypassHeader(customHeader),
             responseType
         };
 
         try {
             const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>({ method, url, options }));
-            return response?.body as T;
+            if (response.status === 202) {
+                return (await this.actionWorkerWatch.watch<T>(response, true)).body as T;
+            }
+            return response.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
                 if (!!error.error.message) {
-                    const snackBar = OpenSlidesInjector.get(MatSnackBar);
-                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, error.url);
+                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
+                        data,
+                        url: error.url
+                    });
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
                     }
-                    snackBar.open(cleanError, `Ok`);
+                    this.snackBar.open(cleanError, `Ok`);
                 }
                 return null;
             } else {
@@ -87,7 +111,7 @@ export class HttpService {
         return this.http.request<T>(method, url, {
             observe: options.observe ?? (`body` as any),
             responseType: options?.responseType ?? (`json` as any),
-            headers: options?.headers ?? defaultHeaders,
+            headers: this.injectBypassHeader(options?.headers ?? defaultHeaders),
             ...options
         }) as any;
     }
@@ -169,5 +193,19 @@ export class HttpService {
         const headers = new HttpHeaders();
         const file = await this.get<Blob>(url, {}, {}, headers, `blob`);
         return await toBase64(file);
+    }
+
+    /**
+     * Injects the bypass header into the given headers.
+     *
+     * @param headers the headers
+     * @returns the modified headers
+     */
+    private injectBypassHeader(headers: HttpHeadersObj): HttpHeadersObj {
+        if (headers instanceof HttpHeaders) {
+            return headers.set(`ngsw-bypass`, `true`);
+        } else {
+            return { 'ngsw-bypass': `true`, ...headers };
+        }
     }
 }

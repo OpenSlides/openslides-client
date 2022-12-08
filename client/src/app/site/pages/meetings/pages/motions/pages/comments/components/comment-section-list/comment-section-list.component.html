@@ -41,6 +41,11 @@
                             <ng-container *ngIf="section.write_groups.length === 0">&ndash;</ng-container>
                         </os-icon-container>
                     </div>
+                    <div class="submitter-write">
+                        <ng-container *ngIf="section.submitter_can_write">
+                            <i>{{ 'Allow submitter edit' | translate }}</i>
+                        </ng-container>
+                    </div>
                 </div>
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -116,6 +121,13 @@
                         [inputListValues]="groups"
                     ></os-list-search-selector>
                 </mat-form-field>
+            </p>
+            <p>
+                <mat-checkbox
+                    formControlName="submitter_can_write"
+                >
+                    {{ 'Allow submitter edit' | translate }}
+                </mat-checkbox>
             </p>
         </form>
     </div>

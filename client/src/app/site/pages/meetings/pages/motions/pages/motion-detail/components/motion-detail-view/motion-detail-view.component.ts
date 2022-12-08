@@ -23,6 +23,7 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
+import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -80,12 +81,34 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     /**
      * preload the next motion for direct navigation
      */
-    public nextMotion: ViewMotion | null = null;
+    public set nextMotion(motion: ViewMotion | null) {
+        this._nextMotion = motion;
+        this.cd.markForCheck();
+    }
 
     /**
      * preload the previous motion for direct navigation
      */
-    public previousMotion: ViewMotion | null = null;
+    public set previousMotion(motion: ViewMotion | null) {
+        this._previousMotion = motion;
+        this.cd.markForCheck();
+    }
+
+    public get nextMotion(): ViewMotion | null {
+        return this._nextMotion;
+    }
+
+    public get previousMotion(): ViewMotion | null {
+        return this._previousMotion;
+    }
+
+    private _nextMotion: ViewMotion | null = null;
+
+    private _previousMotion: ViewMotion | null = null;
+
+    public get showNavigateButtons(): boolean {
+        return !!this.previousMotion || !!this.nextMotion;
+    }
 
     public hasLoaded = new BehaviorSubject(false);
 
@@ -112,6 +135,10 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
 
     private _hasModelSubscriptionInitiated = false;
 
+    private _forwardingAvailable = false;
+
+    private _amendmentsInMainList = false;
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -125,6 +152,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private itemRepo: AgendaItemControllerService,
         private motionSortService: MotionListSortService,
         private motionFilterService: MotionListFilterService,
+        private motionForwardingService: MotionForwardDialogService,
         private amendmentRepo: AmendmentControllerService,
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
@@ -132,6 +160,14 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private pdfExport: MotionPdfExportService
     ) {
         super(componentServiceCollector, translate);
+
+        this.motionForwardingService.forwardingMeetingsAvailable().then(forwardingAvailable => {
+            this._forwardingAvailable = forwardingAvailable;
+        });
+
+        this.meetingSettingsService
+            .get(`motions_amendments_in_main_list`)
+            .subscribe(enabled => (this._amendmentsInMainList = enabled));
     }
 
     /**
@@ -203,6 +239,14 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         }
     }
 
+    public async forwardMotionToMeetings(): Promise<void> {
+        await this.motionForwardingService.forwardMotionsToMeetings(this.motion);
+    }
+
+    public get showForwardButton(): boolean {
+        return !!this.motion.state?.allow_motion_forwarding && this._forwardingAvailable;
+    }
+
     public enterEditMotion(): void {
         this.editMotion = true;
         this.showMotionEditConflictWarningIfNecessary();
@@ -247,7 +291,6 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         } else {
             this.nextMotion = null;
         }
-        this.cd.markForCheck();
     }
 
     /**
@@ -431,7 +474,7 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.registerSubjects();
 
         // use the filter and the search service to get the current sorting
-        if (this.motion && this.motion.lead_motion_id) {
+        if (this.motion && this.motion.lead_motion_id && !this._amendmentsInMainList) {
             // only use the amendments for this motion
             this.amendmentFilterService.initFilters(
                 this.amendmentRepo.getViewModelListObservableFor({ id: this.motion.lead_motion_id })

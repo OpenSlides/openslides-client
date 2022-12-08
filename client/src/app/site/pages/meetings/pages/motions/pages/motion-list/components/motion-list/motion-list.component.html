@@ -335,7 +335,7 @@
                     (click)="multiselectService.moveInAgenda(selectedRows)"
                 >
                     <mat-icon>sort</mat-icon>
-                    <span>{{ 'Move to agenda item' | translate }}</span>
+                    <span>{{ 'Move to agenda item' | translate }} ...</span>
                 </button>
                 <button
                     mat-menu-item
@@ -343,15 +343,16 @@
                     (click)="multiselectService.moveInCallList(selectedRows)"
                 >
                     <mat-icon>format_indent_increase</mat-icon>
-                    <span>{{ 'Move in call list' | translate }}</span>
+                    <span>{{ 'Move in call list' | translate }} ...</span>
                 </button>
                 <button
+                    *ngIf="canForward"
                     mat-menu-item
                     [disabled]="!selectedRows.length"
                     (click)="forwardMotionsToMeetings(selectedRows)"
                 >
                     <mat-icon>forward</mat-icon>
-                    <span>{{ 'Forward' | translate }}</span>
+                    <span>{{ 'Forward' | translate }} ...</span>
                 </button>
             </os-motion-multiselect-actions>
         </ng-container>

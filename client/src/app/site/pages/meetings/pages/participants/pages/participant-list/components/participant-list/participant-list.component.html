@@ -83,7 +83,7 @@
             </div>
 
             <div
-                *ngIf="user.vote_delegated_to()"
+                *ngIf="user.vote_delegated_to() && voteDelegationEnabled"
                 class="spacer-top-5"
                 matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
             >
@@ -91,7 +91,7 @@
             </div>
 
             <div
-                *ngIf="user.vote_delegations_from_ids()?.length"
+                *ngIf="user.vote_delegations_from_ids()?.length && voteDelegationEnabled"
                 class="spacer-top-5"
                 matTooltip="{{ 'Voting right received from (principals)' | translate }}"
             >

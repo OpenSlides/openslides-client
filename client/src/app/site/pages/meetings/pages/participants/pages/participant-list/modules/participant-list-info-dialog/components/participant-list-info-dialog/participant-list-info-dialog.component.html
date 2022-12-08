@@ -9,7 +9,7 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field *ngIf="showVoteDelegations">
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegations_from_ids"
             [multiple]="true"
@@ -17,7 +17,7 @@
             [inputListValues]="otherParticipantsObservable"
         ></os-list-search-selector>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field *ngIf="showVoteDelegations">
         <os-list-search-selector
             [(ngModel)]="infoDialog.vote_delegated_to_id"
             [multiple]="false"

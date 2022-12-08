@@ -38,7 +38,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
      * @param property
      */
     private isFalsy(property: any): boolean {
-        return property === null || property === undefined || property === 0 || property === ``;
+        return property === null || property === undefined || property === ``;
     }
 
     /**

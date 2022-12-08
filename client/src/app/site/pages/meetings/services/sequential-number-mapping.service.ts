@@ -68,14 +68,37 @@ export class SequentialNumberMappingService {
         });
     }
 
-    public getIdObservableBySequentialNumber({
+    /**
+     * Waits until an id should be available.
+     *
+     * @returns null if not found otherwise the id
+     */
+    public async getIdBySequentialNumber({
         collection,
         meetingId,
         sequentialNumber
-    }: SequentialNumberMappingConfig): Observable<Id | null> {
+    }: SequentialNumberMappingConfig): Promise<Id | null> {
+        if (!collection || !meetingId || !sequentialNumber) {
+            return null;
+        }
+
+        await this._modelRequestSubscription.receivedData;
+
+        const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
+        return this.getBehaviorSubject(collection, meetingIdSequentialNumber).getValue();
+    }
+
+    public async getIdObservableBySequentialNumber({
+        collection,
+        meetingId,
+        sequentialNumber
+    }: SequentialNumberMappingConfig): Promise<Observable<Id | null>> {
         if (!collection || !meetingId || !sequentialNumber) {
             return of();
         }
+
+        await this._modelRequestSubscription.receivedData;
+
         const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
         return this.getBehaviorSubject(collection, meetingIdSequentialNumber);
     }
@@ -85,7 +108,7 @@ export class SequentialNumberMappingService {
             this._modelRequestSubscription.close();
             this._modelRequestSubscription = null;
         }
-        this._modelRequestSubscription = this.autoupdateService.subscribe(
+        this._modelRequestSubscription = await this.autoupdateService.subscribe(
             await this.modelRequestBuilder.build(this.getSequentialNumberRequest()),
             MODEL_REQUEST_DESCRIPTION
         );

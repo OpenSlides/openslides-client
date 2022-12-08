@@ -42,8 +42,7 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     }
 
     public getManagers(): ViewUser[] {
-        const userIds = this.user_management_level_ids(CML.can_manage);
-        return userIds ? (userIds.map(userId => this.getViewUser(userId)) as ViewUser[]) : [];
+        return this.user_management_levels(CML.can_manage);
     }
 
     // Functions injected by the committee-repo
@@ -57,6 +56,6 @@ interface ICommitteeRelations {
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
-    // user_management_levels: (cml: CML) => ViewUser[]; // Not working yet!
+    user_management_levels: (cml: CML) => ViewUser[];
 }
 export interface ViewCommittee extends Committee, ICommitteeRelations, HasOrganizationTags {}

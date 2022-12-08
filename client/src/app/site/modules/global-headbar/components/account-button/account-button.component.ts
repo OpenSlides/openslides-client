@@ -106,6 +106,10 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             return `Deutsch`;
         } else if (abbreviation === `cs`) {
             return `Čeština`;
+        } else if (abbreviation === `it`) {
+            return `Italiano`;
+        } else if (abbreviation === `es`) {
+            return `Español`;
         } else if (abbreviation === `ru`) {
             return `русский`;
         }
