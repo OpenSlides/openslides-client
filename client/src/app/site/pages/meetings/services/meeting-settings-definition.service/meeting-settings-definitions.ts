@@ -89,8 +89,6 @@ export const meetingSettings: SettingsGroup[] = [
         icon: `home`,
         subgroups: [
             {
-<<<<<<< 1381-Remove-anonymous-user-access
-=======
                 label: _(`Meeting information`),
                 settings: [
                     {
@@ -138,17 +136,6 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: _(`System`),
-                settings: [
-                    {
-                        key: `enable_anonymous`,
-                        label: _(`Allow access for anonymous guest users`),
-                        type: `boolean`
-                    }
-                ]
-            },
-            {
->>>>>>> main
                 label: _(`CSV export options`),
                 settings: [
                     {
