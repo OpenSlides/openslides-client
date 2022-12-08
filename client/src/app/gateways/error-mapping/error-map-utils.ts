@@ -15,6 +15,18 @@ const AuthServiceErrorMap: ErrorMap = new ErrorMap([
     [/Property [\S] is [\S]/, _(`User not found.`)]
 ]);
 
+const VoteServiceErrorMap: ErrorMap = new ErrorMap([
+    [/Not the first vote/, _(`You have already voted.`)],
+    [/Poll does already exist with differet config/, _(`An error occurred while voting.`)],
+    [/Poll does not exist/, _(`An error occurred while voting.`)],
+    [/The input data is invalid/, _(`The input data for voting is invalid.`)],
+    [/The vote is not open for votes/, _(`You can not vote right now because the voting has not yet started.`)],
+    [/You are not allowed to vote/, _(`You do not have the permission to vote.`)],
+    [/Ups, something went wrong!/, _(`An error occurred while voting.`)],
+    [/is not allowed to vote/, _(`You do not have the permission to vote.`)]
+]);
+
+
 const MotionCreateForwardErrorMap: ErrorMap = new ErrorMap([[/(.*)/, input => new Error(input)]]);
 
 /**
@@ -33,11 +45,11 @@ const getActionErrorMap: (data: any) => ErrorMap | null = data => {
 
 /**
  * Holds http-request path segments and corresponding ErrorMaps.
- * TODO: Expand for other services
  */
 export const UrlFragmentToHttpErrorMap = new Map<string, ErrorMap | ((data: any) => ErrorMap | null)>([
     [`auth`, AuthServiceErrorMap],
-    [`action`, getActionErrorMap]
+    [`action`, getActionErrorMap],
+    [`vote`, VoteServiceErrorMap],
 ]);
 
 export const DefaultErrorMap: ErrorMap = new ErrorMap([]);
