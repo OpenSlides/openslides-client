@@ -40,12 +40,32 @@
 
 .user-has-voted {
     display: flex;
+    flex-wrap: wrap;
     text-align: center;
-    vertical-align: middle;
+    width: 100%;
+    justify-content: center;
+    align-items: stretch;
+
     > * {
-        margin-top: 1em;
+        // margin-top: 1em;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .has-voted-1-icon-wrapper {
+        padding: 0 0 0 0;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        vertical-align: middle;
+    }
+
+    .has-voted-2-icon-wrapper {
+        padding: 0 0 0 0;
+        width: 80px;
+        height: 40px;
+        min-width: 80px;
+        vertical-align: middle;
     }
 
     .vote-submitted {
@@ -53,5 +73,11 @@
         font-size: 200%;
         overflow: visible;
         vertical-align: middle;
+    }
+
+    .has-voted-text {
+        min-width: 180px;
+        display: flex;
+        vertical-align: center;
     }
 }
