@@ -59,11 +59,29 @@
         margin-right: auto;
     }
 
+    .user-has-voted {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+        width: 100%;
+        justify-content: center;
+        align-items: stretch;
+        column-gap: 5px;
+    }
+
     .vote-submitted {
         color: $votes-yes-color;
         font-size: 200%;
         overflow: visible;
         vertical-align: middle;
+        height: 35px;
+        margin-bottom: 5px;
+    }
+
+    .has-voted-text {
+        min-width: 180px;
+        display: flex;
+        vertical-align: center;
     }
 }
 
