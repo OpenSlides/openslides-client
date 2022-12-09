@@ -137,6 +137,9 @@
             }}
         </li>
     </ul>
+    <p *ngIf="additionalInfo">
+        {{ additionalInfo }}
+    </p>
     <button mat-button color="accent" (click)="downloadCsvExample()">
         {{ 'Download CSV example file' | translate }}
     </button>
