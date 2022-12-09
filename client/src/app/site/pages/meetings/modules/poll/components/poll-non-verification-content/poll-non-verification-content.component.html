@@ -6,6 +6,6 @@
     <ng-container *ngIf="(waiting | async)">
         <i translate>Verifying...</i>
     </ng-container>
-    <button mat-button [disabled]="!poll.votes_signature || (waiting | async)"
+    <button mat-button [disabled]="!poll?.votes_signature || (waiting | async)"
         (click)="verifyPoll()">{{ 'Verify results' | translate }}</button>
 </div>
