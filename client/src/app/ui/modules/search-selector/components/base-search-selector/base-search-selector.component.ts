@@ -120,6 +120,9 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Input()
     public showEntriesNumber: number = 4;
 
+    @Input()
+    public excludeIds: boolean = false;
+
     public itemSizeInPx = 50;
 
     public get panelHeight(): number {
@@ -353,11 +356,13 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             return this.selectableItems;
         }
         const filteredItems = this.selectableItems.filter(item => {
-            const idString = `` + item.id;
-            const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
+            if (!this.excludeIds) {
+                const idString = `` + item.id;
+                const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
 
-            if (foundId) {
-                return true;
+                if (foundId) {
+                    return true;
+                }
             }
 
             return this.getAdditionalySearchedValuesFn(item)
