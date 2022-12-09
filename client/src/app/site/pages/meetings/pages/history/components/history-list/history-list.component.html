@@ -8,7 +8,7 @@
         <div>
             <span [formGroup]="modelSelectForm">
                 <mat-form-field>
-                    <mat-select formControlName="collection" placeholder="{{ 'Collection' | translate }}">
+                    <mat-select formControlName="collection" placeholder="{{ 'Module' | translate }}">
                         <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
                             {{ item.value.getVerboseName() }}
                         </mat-option>
@@ -24,14 +24,16 @@
                         (clickNotFound)="searchDeletedMotions($event)"
                         (openedChange)="resetListValues($event)"
                     >
+                        <!--
                         <ng-template osSearchSelectorNotFoundTemplate>
                             <div>
                                 <mat-icon class="os-not-found-button-content">delete</mat-icon>
                                 <span class="os-not-found-button-content">
-                                    {{ 'Search deleted' | translate }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
+                                    {{ 'Search deleted' }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
                                 </span>
                             </div>
                         </ng-template>
+                        -->
                     </os-list-search-selector>
                 </mat-form-field>
             </span>

@@ -22,9 +22,6 @@ msgid ""
 "motions and elections of an assembly."
 msgstr ""
 
-msgid "<unknown motion>"
-msgstr ""
-
 msgid ""
 "A change recommendation or amendment is probably referring to a "
 "non-existant line number."
@@ -209,9 +206,6 @@ msgstr ""
 msgid "All your changes are saved immediately."
 msgstr ""
 
-msgid "Allow access for anonymous guest users"
-msgstr ""
-
 msgid "Allow amendments of amendments"
 msgstr ""
 
@@ -281,6 +275,9 @@ msgid "Amount of votes"
 msgstr ""
 
 msgid "An email with a password reset link was send!"
+msgstr ""
+
+msgid "An error occurred while voting."
 msgstr ""
 
 msgid "An unknown error occurred."
@@ -511,7 +508,7 @@ msgid ""
 "account detail view."
 msgstr ""
 
-msgid "Attention: You can NOT be undone this action!"
+msgid "Attention: This action cannot be undone!"
 msgstr ""
 
 msgid "Automatically open the microphone for new conference speakers"
@@ -544,10 +541,37 @@ msgstr ""
 msgid "Ballot"
 msgstr ""
 
+msgid "Ballot anonymized"
+msgstr ""
+
+msgid "Ballot created"
+msgstr ""
+
+msgid "Ballot deleted"
+msgstr ""
+
 msgid "Ballot opened"
 msgstr ""
 
 msgid "Ballot papers"
+msgstr ""
+
+msgid "Ballot published"
+msgstr ""
+
+msgid "Ballot reset"
+msgstr ""
+
+msgid "Ballot started"
+msgstr ""
+
+msgid "Ballot stopped"
+msgstr ""
+
+msgid "Ballot stopped/published"
+msgstr ""
+
+msgid "Ballot updated"
 msgstr ""
 
 msgid "Ballots"
@@ -718,6 +742,12 @@ msgstr ""
 msgid "Cancel editing without saving"
 msgstr ""
 
+msgid "Candidate added"
+msgstr ""
+
+msgid "Candidate removed"
+msgstr ""
+
 msgid "Candidates"
 msgstr ""
 
@@ -881,6 +911,9 @@ msgid "Comments"
 msgstr ""
 
 msgid "Committee"
+msgstr ""
+
+msgid "Committee Management Level changed"
 msgstr ""
 
 msgid "Committee admin"
@@ -1396,6 +1429,11 @@ msgid ""
 "list of speakers only)"
 msgstr ""
 
+msgid ""
+"Existing accounts can be reused by entering email (with given name and "
+"surname) OR by entering the username in the csv file."
+msgstr ""
+
 msgid "Exit"
 msgstr ""
 
@@ -1495,6 +1533,12 @@ msgstr ""
 msgid "Forward motions to"
 msgstr ""
 
+msgid "Forwarded motion deleted"
+msgstr ""
+
+msgid "Forwarded to {}"
+msgstr ""
+
 msgid "Forwarding"
 msgstr ""
 
@@ -1565,6 +1609,9 @@ msgid "Group not found - assigned to default group"
 msgstr ""
 
 msgid "Groups"
+msgstr ""
+
+msgid "Groups changed in multiple meetings"
 msgstr ""
 
 msgid "Groups with read permissions"
@@ -1926,6 +1973,9 @@ msgstr ""
 msgid "Maximum amount of votes per option"
 msgstr ""
 
+msgid "Maximum number of columns on motion block slide"
+msgstr ""
+
 msgid "Media access is denied"
 msgstr ""
 
@@ -1939,6 +1989,9 @@ msgid "Meeting administrator"
 msgstr ""
 
 msgid "Meeting information"
+msgstr ""
+
+msgid "Meeting not found"
 msgstr ""
 
 msgid "Meeting specific information"
@@ -1985,6 +2038,9 @@ msgstr ""
 msgid "Minimum number of digits for motion number"
 msgstr ""
 
+msgid "Module"
+msgstr ""
+
 msgid "More"
 msgstr ""
 
@@ -2016,6 +2072,9 @@ msgid "Motion change recommendation updated"
 msgstr ""
 
 msgid "Motion created"
+msgstr ""
+
+msgid "Motion created (forwarded)"
 msgstr ""
 
 msgid "Motion deleted"
@@ -2431,6 +2490,9 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
+msgid "Organization Management Level changed"
+msgstr ""
+
 msgid "Organization admin"
 msgstr ""
 
@@ -2438,6 +2500,9 @@ msgid "Organization specific information"
 msgstr ""
 
 msgid "Origin"
+msgstr ""
+
+msgid "Origin motion deleted"
 msgstr ""
 
 msgid "Original"
@@ -2515,7 +2580,31 @@ msgstr ""
 msgid "Participant"
 msgstr ""
 
+msgid "Participant added to group {} in meeting {}"
+msgstr ""
+
+msgid "Participant added to multiple groups in meeting {}"
+msgstr ""
+
+msgid "Participant added to multiple groups in multiple meetings"
+msgstr ""
+
+msgid "Participant created in meeting {}"
+msgstr ""
+
+msgid "Participant data updated in meeting {}"
+msgstr ""
+
+msgid "Participant data updated in multiple meetings"
+msgstr ""
+
 msgid "Participant number"
+msgstr ""
+
+msgid "Participant removed from group {} in meeting {}"
+msgstr ""
+
+msgid "Participant removed from multiple groups in meeting {}"
 msgstr ""
 
 msgid "Participants"
@@ -2530,6 +2619,9 @@ msgid "Particles"
 msgstr ""
 
 msgid "Password"
+msgstr ""
+
+msgid "Password changed"
 msgstr ""
 
 msgid "Password changed successfully!"
@@ -2548,6 +2640,9 @@ msgid "Permissions"
 msgstr ""
 
 msgid "Permit"
+msgstr ""
+
+msgid "Personal data changed"
 msgstr ""
 
 msgid "Personal information"
@@ -2601,15 +2696,6 @@ msgid "Please wait"
 msgstr ""
 
 msgid "Point of order"
-msgstr ""
-
-msgid "Poll created"
-msgstr ""
-
-msgid "Poll deleted"
-msgstr ""
-
-msgid "Poll updated"
 msgstr ""
 
 msgid "Polls"
@@ -2958,6 +3044,9 @@ msgstr ""
 msgid "Server settings required to activate Jitsi Meet integration."
 msgstr ""
 
+msgid "Set active"
+msgstr ""
+
 msgid "Set as favorite"
 msgstr ""
 
@@ -2982,6 +3071,9 @@ msgstr ""
 msgid "Set hidden"
 msgstr ""
 
+msgid "Set inactive"
+msgstr ""
+
 msgid "Set internal"
 msgstr ""
 
@@ -2994,6 +3086,9 @@ msgstr ""
 msgid "Set natural person ..."
 msgstr ""
 
+msgid "Set not present in meeting {}"
+msgstr ""
+
 msgid "Set number"
 msgstr ""
 
@@ -3001,6 +3096,9 @@ msgid "Set or remove motion forwarding from the selected committees to:"
 msgstr ""
 
 msgid "Set presence ..."
+msgstr ""
+
+msgid "Set present in meeting {}"
 msgstr ""
 
 msgid "Set public"
@@ -3312,9 +3410,6 @@ msgstr ""
 msgid "Surname"
 msgstr ""
 
-msgid "System"
-msgstr ""
-
 msgid "Table of contents"
 msgstr ""
 
@@ -3358,6 +3453,9 @@ msgid "The file seems to have additional columns. They will be ignored."
 msgstr ""
 
 msgid "The file seems to have some ommitted columns. They will be considered empty."
+msgstr ""
+
+msgid "The input data for voting is invalid."
 msgstr ""
 
 msgid "The link is broken. Please contact your system administrator."
@@ -3419,6 +3517,9 @@ msgid "There is an error with this amendment. Please edit it manually."
 msgstr ""
 
 msgid "There is an unknown voting problem."
+msgstr ""
+
+msgid "There should be at least 2 options."
 msgstr ""
 
 msgid "Thereof point of orders"
@@ -3641,6 +3742,12 @@ msgid "Voting and ballot papers"
 msgstr ""
 
 msgid "Voting anonymized"
+msgstr ""
+
+msgid "Voting created"
+msgstr ""
+
+msgid "Voting deleted"
 msgstr ""
 
 msgid "Voting duration"
@@ -3945,6 +4052,9 @@ msgstr ""
 msgid "analog"
 msgstr ""
 
+msgid "anonymized"
+msgstr ""
+
 msgid "are required"
 msgstr ""
 
@@ -3979,6 +4089,9 @@ msgid "custom"
 msgstr ""
 
 msgid "dateless"
+msgstr ""
+
+msgid "deleted"
 msgstr ""
 
 msgid "disabled"
@@ -4158,6 +4271,9 @@ msgstr ""
 msgid "represented by"
 msgstr ""
 
+msgid "reset"
+msgstr ""
+
 msgid "result"
 msgstr ""
 
@@ -4171,6 +4287,9 @@ msgid "short running"
 msgstr ""
 
 msgid "started"
+msgstr ""
+
+msgid "stopped"
 msgstr ""
 
 msgid "submitted"
@@ -4192,6 +4311,9 @@ msgid "undocumented"
 msgstr ""
 
 msgid "unknown"
+msgstr ""
+
+msgid "updated"
 msgstr ""
 
 msgid "version"
