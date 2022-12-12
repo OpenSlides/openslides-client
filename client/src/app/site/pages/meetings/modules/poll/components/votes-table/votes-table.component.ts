@@ -41,7 +41,7 @@ export class VotesTableComponent {
     }
 
     public get isCryptographic(): boolean {
-        return this.parent?.poll?.isCryptographic
+        return this.parent?.poll?.isCryptographic;
     }
 
     public readonly permission = Permission;

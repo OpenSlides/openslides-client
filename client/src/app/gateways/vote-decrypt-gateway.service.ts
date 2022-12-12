@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { curve25519, utils, verify } from '@noble/ed25519';
 import { distinctUntilChanged, map, Subscription } from 'rxjs';
 
-import { PollType } from '../domain/models/poll';
+import { PollType, VoteValue } from '../domain/models/poll';
 import { Deferred } from '../infrastructure/utils/promises';
 import { ViewPoll } from '../site/pages/meetings/pages/polls';
 import { ORGANIZATION_ID } from '../site/pages/organization/services/organization.service';
@@ -169,16 +169,107 @@ export class VoteDecryptGatewayService {
             } else {
                 try {
                     model.verified = await verify(signature, raws, this._publicMainKey);
-                    console.log(`Verified: `, model.id, model.verified);
                 } catch (e) {
                     console.warn(`Verification of ${model.id} failed with error: "${e.message}" -> `, false);
                     model.verified = false;
                 }
             }
+            if (model.verified && !this.verifyBackendPollResults(model)) {
+                model.verified = false;
+            }
+            console.log(`Verified: `, model.id, model.verified);
         }
         if (couldntVerify.length) {
             console.error(`Couldn't verify the results of the following poll ids: `, couldntVerify.join(`, `));
         }
+    }
+
+    /**
+     * A function that checks if the vote data that is saved in the backend is the same as that in the raw votes.
+     */
+    private verifyBackendPollResults(poll: ViewPoll): boolean {
+        let result = true;
+        if (!poll.votes_raw) {
+            throw new Error(`Couldn't find raw votes.`);
+        }
+        const rawsArray = (
+            JSON.parse(poll?.votes_raw).votes as { votes: { [id: number]: VoteValue | number }; token: string }[]
+        ).sort((a, b) => a.token.localeCompare(b.token));
+        const modelResults: { [key: string]: [number, VoteValue][] } = {};
+        poll.options.forEach(option =>
+            option.votes.forEach(vote => {
+                modelResults[vote.user_token] = modelResults[vote.user_token]
+                    ? modelResults[vote.user_token].concat([[vote.option_id, vote.value]])
+                    : [[vote.option_id, vote.value]];
+            })
+        );
+        const modelResultsArray = Object.keys(modelResults)
+            .map(token => {
+                return {
+                    token,
+                    votes: modelResults[token].mapToObject(arr => {
+                        return { [arr[0]]: arr[1] };
+                    })
+                };
+            })
+            .sort((a, b) => a.token.localeCompare(b.token));
+        let j = 0;
+        for (let i = 0; i < modelResultsArray.length; i++) {
+            let raw = rawsArray[j];
+            const cooked = modelResultsArray[i];
+            let comparison = raw?.token.localeCompare(cooked.token);
+            while (comparison && comparison < 0) {
+                // raw < cooked
+                if (!/error/.test(JSON.stringify(raw.votes))) {
+                    console.warn(`Verification of ${poll.id}: Vote for ${raw.token} wasn't saved in the backend`);
+                    result = false;
+                }
+                j++;
+                raw = rawsArray[j];
+                comparison = raw?.token.localeCompare(cooked.token);
+            }
+            if (comparison === undefined || comparison > 0) {
+                // cooked < raw
+                console.warn(`Verification of ${poll.id}: Vote from ${cooked.token} isn't in the raw votes`);
+                result = false;
+            } else {
+                //TODO: See if the data is the same
+                if (this.getSingleVoteResults(raw.votes) !== this.getSingleVoteResults(cooked.votes)) {
+                    console.warn(
+                        `Verification of ${poll.id}: Vote from ${raw.token} was saved differently in backend that in the raw votes`
+                    );
+                    result = false;
+                }
+                j++;
+                if (j === rawsArray.length && i + 1 !== modelResultsArray.length) {
+                    console.warn(`Verification of ${poll.id}: Vote from ${cooked.token} isn't in the raw votes`);
+                    result = false;
+                }
+            }
+        }
+        for (let i = j; i < rawsArray.length; i++) {
+            if (!/error/.test(JSON.stringify(rawsArray[i].votes))) {
+                console.warn(`Verification of ${poll.id}: Vote for ${rawsArray[i].token} wasn't saved in the backend`);
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    private getSingleVoteResults(votes: { [id: number]: VoteValue | number }): string {
+        let result = {};
+        Object.keys(votes)
+            .sort()
+            .forEach(id => {
+                result[id] =
+                    typeof votes[id] === `string`
+                        ? { [votes[id]]: 1 }
+                        : votes[id] === 0
+                        ? undefined
+                        : { [`Y`]: votes[id] };
+            });
+        console.log(JSON.stringify(result));
+        return JSON.stringify(result);
     }
 
     private unverify(toUnverify: VoteVerificationData[]): void {
