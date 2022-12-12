@@ -3,7 +3,7 @@
 </h1>
 
 <div mat-dialog-content>
-    <span>{{ 'For this poll all votes are encrypted using SHA256-AES-GCM encryption. Therefore your vote will not be tracable for anyone else.' | translate }}</span>
+    <span>{{ 'For this poll all votes are encrypted using Diffie-Hellman encryption with X25519 and AES256-GCM (see the OpenSlides wiki for further information). Therefore your vote will not be tracable for anyone else.' | translate }}</span>
     <p>{{ 'You can ensure that your vote has been tallied correctly, by using the unique token that will appear upon sending the vote, and entering it in this specific polls "Check vote validity" function.' | translate }}</p>
     <p>{{ 'The poll results are signed using the public main key. That way their correct transmission can be verified in the browser.' | translate }}</p>
     <br *ngIf="pubKey" />
