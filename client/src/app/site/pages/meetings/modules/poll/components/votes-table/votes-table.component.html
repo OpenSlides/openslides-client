@@ -31,7 +31,8 @@
                     </div>
                 </div>
                 <div *ngIf="!vote.user">
-                    <i>{{ 'Anonymous' | translate }}</i>
+                    <i *ngIf="!isCryptographic">{{ 'Anonymous' | translate }}</i>
+                    <span *ngIf="isCryptographic"><b>{{ vote.user_token }}</b> &nbsp; <i>{{ 'voted for' | translate }}</i></span>
                 </div>
             </div>
             <div *ngIf="getTemplateType()==='default'">

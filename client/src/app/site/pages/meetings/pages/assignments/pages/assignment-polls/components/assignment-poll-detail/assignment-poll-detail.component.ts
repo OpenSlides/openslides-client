@@ -105,7 +105,8 @@ export class AssignmentPollDetailComponent
                 if (!votes[token]) {
                     votes[token] = {
                         user: vote.user,
-                        votes: []
+                        votes: [],
+                        user_token: token
                     };
                 }
 

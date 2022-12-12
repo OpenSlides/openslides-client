@@ -24,7 +24,12 @@ function uInt8Enc(str: string, doAtob = true): Uint8Array {
     providedIn: `root`
 })
 export class VoteDecryptGatewayService {
+    public get publicMainKeyFingerprint(): string {
+        return this._publicMainKeyString ?? ``;
+    }
+
     private _publicMainKey: Uint8Array;
+    private _publicMainKeyString: string;
     private readonly _publicKeySize: number = 32;
     private readonly _nonceSize: number = 12;
 
@@ -47,6 +52,7 @@ export class VoteDecryptGatewayService {
             if (organization?.vote_decrypt_public_main_key) {
                 this._publicMainKey = uInt8Enc(organization?.vote_decrypt_public_main_key);
                 console.log(`NEW publicMainKey: `, this._publicMainKey);
+                this._publicMainKeyString = organization?.vote_decrypt_public_main_key;
                 this.hasPublicMainKey.resolve();
             }
         });

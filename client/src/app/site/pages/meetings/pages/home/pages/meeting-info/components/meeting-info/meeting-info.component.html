@@ -23,4 +23,9 @@
     </ng-container>
 </mat-card>
 
+<mat-card class="os-card">
+    <h2>{{ 'Cryptography' | translate }}</h2>
+    <span>{{ 'Public main key' | translate }}: </span><span [ngClass]="{ 'italic': !keyPrint }">{{ keyPrint ?? 'No data' }}</span>
+</mat-card>
+
 <os-privacy-policy-content [isEditable]="true" (update)="updatePrivacyPolicy($event)"></os-privacy-policy-content>

@@ -1,10 +1,8 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { VoteDecryptGatewayService } from 'src/app/gateways/vote-decrypt-gateway.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
 
 import { PollControllerService } from '../../../../services/poll-controller.service';
 
@@ -16,7 +14,7 @@ import { PollControllerService } from '../../../../services/poll-controller.serv
 })
 export class VotingCryptographyInfoDialogComponent {
     public get pubKey(): string {
-        return this._pubKey;
+        return this.decryptGateway.publicMainKeyFingerprint;
     }
 
     public get poll(): ViewPoll {
@@ -25,22 +23,13 @@ export class VotingCryptographyInfoDialogComponent {
 
     public waiting = new BehaviorSubject<boolean>(false);
 
-    private _pubKey: string;
     private _poll: ViewPoll;
 
     constructor(
-        private orgaRepo: OrganizationControllerService,
         private pollRepo: PollControllerService,
         private decryptGateway: VoteDecryptGatewayService,
         @Inject(MAT_DIALOG_DATA) pollData: ViewPoll
     ) {
-        this.orgaRepo
-            .getViewModelObservable(ORGANIZATION_ID)
-            .pipe(
-                map(orga => orga.vote_decrypt_public_main_key),
-                distinctUntilChanged()
-            )
-            .subscribe(mainKey => (this._pubKey = mainKey));
         this.pollRepo
             .getViewModelObservable(pollData.id)
             .pipe(distinctUntilChanged())

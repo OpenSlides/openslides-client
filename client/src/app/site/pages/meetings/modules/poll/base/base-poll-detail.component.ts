@@ -199,6 +199,7 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
      * Set the votes data.
      */
     protected setVotesData(data: BaseVoteData[]): void {
+        console.log(`setVotesData(${this._pollId}): `, data);
         this._votesDataSubject.next(data);
     }
 

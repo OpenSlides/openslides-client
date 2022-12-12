@@ -40,6 +40,10 @@ export class VotesTableComponent {
         return this._isViewingThis;
     }
 
+    public get isCryptographic(): boolean {
+        return this.parent?.poll?.isCryptographic
+    }
+
     public readonly permission = Permission;
 
     @Input()
