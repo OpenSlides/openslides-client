@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -9,6 +8,7 @@ import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-
 import { VoteDecryptGatewayService } from 'src/app/gateways/vote-decrypt-gateway.service';
 import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { PollServiceModule } from '../poll-service.module';
@@ -33,12 +33,16 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
     constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: PollRepositoryService,
-        private dialog: MatDialog,
-        private voteCrypto: VoteDecryptGatewayService
+        private voteCrypto: VoteDecryptGatewayService,
+        private lifecycle: LifecycleService
     ) {
         super(controllerServiceCollector, Poll, repo);
 
         this.voteCrypto.initialize();
+        this.lifecycle.openslidesShutdowned.subscribe(() => {
+            this._tokens = {};
+            this.tokensSubject.next(this._tokens);
+        });
     }
 
     public create(payload: any): Promise<Identifiable> {
