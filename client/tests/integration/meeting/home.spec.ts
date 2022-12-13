@@ -12,7 +12,7 @@ import { MeetingHomePage } from '../page-objects/meeting/home/detail';
 import { MeetingHomeEditPage } from '../page-objects/meeting/home/edit';
 
 test.describe('meeting home tests', () => {
-    let username = `CypressMeetingHomeTestUser`;
+    let username = `MeetingHomeTestUser`;
     let meeting: { id: number; committeeId: number; name: string };
     let account: { id: number; name: string };
 
@@ -21,7 +21,7 @@ test.describe('meeting home tests', () => {
         await login(context);
         username = username + Date.now().toString();
         account = await createAccount(context, username);
-        meeting = await createMeeting(context, `CypressMeetingHomeTestMeeting${Date.now().toString()}`, [account.id]);
+        meeting = await createMeeting(context, `MeetingHomeTestMeeting${Date.now().toString()}`, [account.id]);
         await logout(context);
     });
 

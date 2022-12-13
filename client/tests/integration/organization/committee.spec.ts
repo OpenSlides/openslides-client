@@ -46,7 +46,7 @@ test.describe('Testing committees', () => {
         await page.goto(`/committees`);
         await page.locator('[data-cy=headbarMainButton]').click();
         await expect(page).toHaveURL(`/committees/create`);
-        const committeeName = `Cypress Committee ${Date.now().toString()}`;
+        const committeeName = `Committee ${Date.now().toString()}`;
         await page.locator('[data-cy=committeeName]').fill(committeeName);
 
         await page.locator('[data-cy=headbarSaveButton]').click();
@@ -91,7 +91,7 @@ test.describe('Testing committees', () => {
     test('deletes a committee', async ({ context, page }) => {
         await login(context);
         await page.goto(`/committees`);
-        let delCommittee = await createCommittee(context, `CypressTestDeleteCommittee ${Date.now().toString()}`);
+        let delCommittee = await createCommittee(context, `TestDeleteCommittee ${Date.now().toString()}`);
         const listComponent = new ListComponent(page);
         await listComponent.openRowMenu(listComponent.getRowByText(delCommittee.name));
         await page.locator('.mat-menu-content button', { hasText: `Delete` }).first().click();

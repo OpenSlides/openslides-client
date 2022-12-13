@@ -10,11 +10,11 @@ test.describe('motion history mode test', () => {
     test.beforeAll(async ({ browser }) => {
         const context = await browser.newContext();
         await login(context);
-        meeting = await createMeeting(context, `CypressMeetingMotionHistoryTestMeeting${Date.now().toString()}`, [ADMIN_ID])
+        meeting = await createMeeting(context, `MeetingMotionHistoryTestMeeting${Date.now().toString()}`, [ADMIN_ID])
         motion = await os4request(context, 'motion.create', {
             meeting_id: meeting.id,
-            title: 'CypressMotionHistoryTestTitle',
-            text: '<p>CypressMotionHistoryTestText</p>',
+            title: 'MotionHistoryTestTitle',
+            text: '<p>MotionHistoryTestText</p>',
             submitter_ids: [],
             category_id: null,
             attachment_ids: [],
@@ -45,8 +45,8 @@ test.describe('motion history mode test', () => {
         });
         await os4request(context, 'motion.update', {
             id: motion.id,
-            title: 'CypressMotionHistoryTestChangedTitle',
-            text: '<p>CypressMotionHistoryTestChangedText</p>'
+            title: 'MotionHistoryTestChangedTitle',
+            text: '<p>MotionHistoryTestChangedText</p>'
         });
         await logout(context);
     });
@@ -79,11 +79,11 @@ test.describe('motion history mode test', () => {
     test('history mode changes get reverted', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
-        await expect(page.locator(`body`)).toContainText(`CypressMotionHistoryTestTitle`);
-        await expect(page.locator(`body`)).toContainText(`CypressMotionHistoryTestText`);
+        await expect(page.locator(`body`)).toContainText(`MotionHistoryTestTitle`);
+        await expect(page.locator(`body`)).toContainText(`MotionHistoryTestText`);
         await expect(page.locator(`os-motion-poll`)).not.toBeVisible();
         await logout(context);
     });
@@ -91,13 +91,13 @@ test.describe('motion history mode test', () => {
     test('history mode leave', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
-        await expect(page.locator(`body`)).toContainText(`CypressMotionHistoryTestTitle`);
+        await expect(page.locator(`body`)).toContainText(`MotionHistoryTestTitle`);
         await page.locator('a', { hasText: `Exit` }).first().click();
-        await expect(page.locator(`body`)).toContainText(`CypressMotionHistoryTestChangedTitle`);
-        await expect(page.locator(`body`)).toContainText(`CypressMotionHistoryTestChangedText`);
+        await expect(page.locator(`body`)).toContainText(`MotionHistoryTestChangedTitle`);
+        await expect(page.locator(`body`)).toContainText(`MotionHistoryTestChangedText`);
         await expect(page.locator(`os-motion-poll`)).toBeVisible();
         await logout(context);
     });

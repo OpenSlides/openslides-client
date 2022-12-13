@@ -10,7 +10,7 @@ import {
 } from '../helpers/request';
 
 test.describe('agenda tests', () => {
-    let username = `CypressAgendaTestUser`;
+    let username = `AgendaTestUser`;
     let meeting: { id: number; committeeId: number; name: string };
     let account: { id: number; name: string };
     let topic: { id: number; sequential_number: number; name: string };
@@ -20,13 +20,13 @@ test.describe('agenda tests', () => {
         await login(context);
         username = username + Date.now().toString();
         account = await createAccount(context, username);
-        meeting = await createMeeting(context, `CypressAgendaTestMeeting${Date.now().toString()}`, [account.id]);
-        const title = `CypressAgendaTestTopic${Date.now().toString()}`;
+        meeting = await createMeeting(context, `AgendaTestMeeting${Date.now().toString() + Math.floor(Math.random() * 100)}`, [account.id]);
+        const title = `AgendaTestTopic${Date.now().toString()}`;
         topic = await os4request(context, 'topic.create', {
             meeting_id: meeting.id,
             title,
             agenda_type: 'common',
-            text: `Cypress Agenda Test Topic Text`,
+            text: `Agenda Test Topic Text`,
             agenda_parent_id: null
         });
         topic.name = title;
@@ -65,7 +65,7 @@ test.describe('agenda tests', () => {
         await login(context, username);
         await page.goto(`/${meeting.id}/agenda`);
         await page.locator('[data-cy=headbarMainButton]').click();
-        const agendaTitle = `CypressAgendaCreateTest${Date.now().toString()}`;
+        const agendaTitle = `AgendaCreateTest${Date.now().toString()}`;
         await page.locator('[formcontrolname=title]').fill(agendaTitle);
         await page.locator('[data-cy=headbarSaveButton]').click();
         await expect(page.locator(`.title-line`, { hasText: agendaTitle })).toBeVisible();

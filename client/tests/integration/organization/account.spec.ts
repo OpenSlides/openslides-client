@@ -9,7 +9,7 @@ test.describe('Testing accounts', () => {
     test.beforeAll(async ({ browser }) => {
         const context = await browser.newContext();
         await login(context);
-        account = await createAccount(context, `CypressTestAccount ${Date.now().toString()}`);
+        account = await createAccount(context, `TestAccount ${Date.now().toString()}`);
         await logout(context);
     });
 
@@ -46,7 +46,7 @@ test.describe('Testing accounts', () => {
         await page.goto('/accounts');
         await page.locator('[data-cy=headbarMainButton]').click();
         await expect(page).toHaveURL(`/accounts/create`);
-        const username = `Cypress-Create-User ${Date.now().toString()}`;
+        const username = `Create-User ${Date.now().toString()}`;
         await page.locator('[formcontrolname=username]').fill(username);
 
         await page.locator('[data-cy=headbarSaveButton]').click();
@@ -92,7 +92,7 @@ test.describe('Testing accounts', () => {
     test('deletes a account', async ({ context, page }) => {
         await login(context);
         await page.goto('/accounts');
-        const delAccount = await createAccount(context, `CypressTestDeleteAccount ${Date.now().toString()}`);
+        const delAccount = await createAccount(context, `TestDeleteAccount ${Date.now().toString()}`);
         const listComponent = new ListComponent(page);
         await listComponent.openRowMenu(listComponent.getRowByText(delAccount.name));
         await page.locator('.mat-menu-content button', { hasText: `Delete` }).first().click();
