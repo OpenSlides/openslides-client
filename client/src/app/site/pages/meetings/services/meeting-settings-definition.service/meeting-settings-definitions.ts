@@ -136,16 +136,6 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: _(`System`),
-                settings: [
-                    {
-                        key: `enable_anonymous`,
-                        label: _(`Allow access for anonymous guest users`),
-                        type: `boolean`
-                    }
-                ]
-            },
-            {
                 label: _(`CSV export options`),
                 settings: [
                     {
@@ -658,7 +648,6 @@ export const meetingSettings: SettingsGroup[] = [
                         key: `motions_block_slide_columns`,
                         label: _(`Maximum number of columns on motion block slide`),
                         type: `integer`,
-                        helpText: _(`Default is 3`),
                         validators: [Validators.min(1)]
                     }
                 ]

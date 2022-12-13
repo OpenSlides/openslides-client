@@ -61,7 +61,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
     public PollTypes = PollTypeVerbose;
 
     private minNumberOfOptions = 2;
-    public optionsWarning = `Warning: There should be at least ${this.minNumberOfOptions} options.`;
+    public optionsWarning = `There should be at least 2 options.`;
 
     public newOptions: TextOptionSelectable[] = [];
     public optionsSubject: BehaviorSubject<TextOptionSelectable[]> = new BehaviorSubject(this.newOptions);

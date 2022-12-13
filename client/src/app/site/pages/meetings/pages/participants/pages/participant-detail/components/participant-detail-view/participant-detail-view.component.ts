@@ -157,6 +157,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.userService.isAllowed(action, this.ownPage);
     }
 
+    public goToHistory(): void {
+        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.user.fqid } });
+    }
+
     private getUserByUrl(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `new`) {
             super.setTitle(`New participant`);

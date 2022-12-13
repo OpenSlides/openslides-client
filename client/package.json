@@ -75,7 +75,7 @@
     "pdfmake": "^0.2.6",
     "rxjs": "~7.5.7",
     "tinycolor2": "^1.4.2",
-    "tinymce": "^5.10.3",
+    "tinymce": "^5.10.7",
     "ts-dedent": "^2.2.0",
     "tslib": "^2.3.0",
     "tsparticles": "~1.42.4",
