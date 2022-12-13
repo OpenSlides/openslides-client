@@ -20,7 +20,6 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 export class TopicPollFormComponent extends BasePollFormComponent {
     public get hideSelects(): PollFormHideSelectsData {
         return {
-            // type: true,
             pollMethod: true,
             globalOptions: true,
             hundredPercentBase: true,

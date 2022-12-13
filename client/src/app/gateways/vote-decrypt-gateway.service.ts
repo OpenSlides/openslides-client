@@ -142,6 +142,14 @@ export class VoteDecryptGatewayService {
         return this.createPayload(ephPublKey, nonce, encrypted);
     }
 
+    public async reVerifyPoll(poll: ViewPoll): Promise<void> {
+        const verificationData: VoteVerificationData[] = [
+            { id: poll.id, signature: poll.votes_signature, raws: poll.votes_raw }
+        ];
+        await this.hasPublicMainKey;
+        await this.verify(verificationData);
+    }
+
     private async updateVerification(verificationData: VoteVerificationData[]): Promise<void> {
         const prev = this._lastVoteVerificationData.sort((a, b) => a.id - b.id);
         const curr = verificationData.sort((a, b) => a.id - b.id);
@@ -168,14 +176,6 @@ export class VoteDecryptGatewayService {
         console.log(`${toVerify.length ? `Verifying ${toVerify.length} polls...` : `No polls to verify.`}`);
         this.verify(toVerify);
         this.unverify(toUnverify);
-    }
-
-    public async reVerifyPoll(poll: ViewPoll): Promise<void> {
-        const verificationData: VoteVerificationData[] = [
-            { id: poll.id, signature: poll.votes_signature, raws: poll.votes_raw }
-        ];
-        await this.hasPublicMainKey;
-        await this.verify(verificationData);
     }
 
     private async verify(toVerify: VoteVerificationData[]): Promise<void> {
@@ -265,11 +265,6 @@ export class VoteDecryptGatewayService {
     /**
      * When given two CryptoVoteData arrays with an index for each,
      * this function will return both the entries in these indices and a comparison value between the tokens of these entries.
-     * @param rawArray
-     * @param rawIndex
-     * @param cookedArray
-     * @param cookedIndex
-     * @returns
      */
     private getDatesAndComparison(
         rawArray: CryptoVoteData[],
