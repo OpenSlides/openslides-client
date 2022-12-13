@@ -8,9 +8,6 @@ The client can be installed as a Progressive Web App (PWA).
 Sends requests to the [OpenSlides Backend](https://github.com/OpenSlides/openslides-backend) and receives live data from the [OpenSlides Autoupdate Service](https://github.com/OpenSlides/openslides-autoupdate-service).
 Interchanges information and data with surrounding OpenSlides clients using the [OpenSlides Inter-Client-Communication service](https://github.com/OpenSlides/openslides-icc-service).
 
-[Demo](https://demo.openslides.org/)
-
-**This software is not yet ready for productive use. You might want to see [OpenSlides](https://github.com/OpenSlides/OpenSlides) instead**
 
 # Building the client
 
