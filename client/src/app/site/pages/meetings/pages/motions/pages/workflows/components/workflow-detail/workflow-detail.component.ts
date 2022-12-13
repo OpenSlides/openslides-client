@@ -155,7 +155,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { name: `Label color`, selector: `css_class`, type: `color` },
         { name: `Next states`, selector: `next_states_id`, type: `state` },
         {
-            name: `Motion submitter may set state to`,
+            name: `Submitter may set state to`,
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
         }

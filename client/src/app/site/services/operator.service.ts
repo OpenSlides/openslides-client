@@ -254,7 +254,7 @@ export class OperatorService {
                 return;
             }
             const newMeetingId = meeting?.id || null;
-            if (this._lastActiveMeetingId !== newMeetingId) {
+            if (this._lastActiveMeetingId !== newMeetingId || !this._ready) {
                 console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
                 this._lastActiveMeetingId = newMeetingId;
                 this.operatorStateChange(false);

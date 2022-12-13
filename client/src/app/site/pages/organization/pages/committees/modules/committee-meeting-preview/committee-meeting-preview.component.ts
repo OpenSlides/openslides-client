@@ -69,7 +69,7 @@ export class CommitteeMeetingPreviewComponent {
 
     public async onArchive(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to archive this meeting?`);
-        const content = this.translate.instant(`Attention: You can NOT be undone this action!`);
+        const content = this.translate.instant(`Attention: This action cannot be undone!`);
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {

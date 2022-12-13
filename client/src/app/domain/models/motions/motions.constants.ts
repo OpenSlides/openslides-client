@@ -65,5 +65,5 @@ export const verboseChangeRecoMode = {
     changed: `Changed version`,
     diff: `Diff version`,
     agreed: `Final version`,
-    modified_final_version: `Final print template`
+    modified_final_version: `Editorial final version`
 };
