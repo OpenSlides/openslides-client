@@ -58,7 +58,7 @@ export class VoteDecryptGatewayService {
         this.orgaController.getViewModelObservable(ORGANIZATION_ID).subscribe(organization => {
             if (organization?.vote_decrypt_public_main_key) {
                 this._publicMainKey = uInt8Enc(organization?.vote_decrypt_public_main_key);
-                console.log(`NEW publicMainKey: `, this._publicMainKey);
+                console.log(`New public main key is loaded.`);
                 this._publicMainKeyString = organization?.vote_decrypt_public_main_key;
                 this.hasPublicMainKey.resolve();
             }
@@ -70,7 +70,6 @@ export class VoteDecryptGatewayService {
      */
     public async initialize(): Promise<void> {
         await this.hasPublicMainKey;
-        console.log(`Public main key is loaded.`);
         if (this._verificationSubscription) {
             return;
         }
@@ -112,9 +111,8 @@ export class VoteDecryptGatewayService {
     }
 
     public async encryptVote(poll: ViewPoll, vote: string): Promise<string> {
-        console.log(`----------[encryptVote]----------`);
+        console.log(`Encrypting vote...`);
         await this.hasPublicMainKey;
-        console.log(`Public main key is loaded.`);
         if (!poll.crypt_key || !poll.crypt_signature) {
             throw new Error(`Voting failed: Keys not fully loaded.`);
         }
@@ -130,7 +128,6 @@ export class VoteDecryptGatewayService {
         } catch (e) {
             throw new Error(`Voting failed: Cryptography keys could not be verified.`);
         }
-        console.log(`verified`);
 
         const { ephPublKey, sharedSecret } = await this.generateKeysAndSecret(cryptKey);
         const hkdfKey = await this.generateHkdfKey(sharedSecret);
@@ -342,7 +339,6 @@ export class VoteDecryptGatewayService {
     ): Promise<{ ephPublKey: Uint8Array; sharedSecret: Uint8Array }> {
         const privKey = utils.randomPrivateKey();
         const publKey = curve25519.scalarMultBase(privKey);
-        console.log(`public key generated`);
 
         const secret = curve25519.scalarMult(privKey, cryptKey);
         return { ephPublKey: publKey, sharedSecret: secret };
