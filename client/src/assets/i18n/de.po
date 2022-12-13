@@ -34,9 +34,6 @@ msgstr ""
 "webbasiertes Präsentations- und Versammlungssystem zur Darstellung und "
 "Steuerung von Tagesordnung, Anträgen und Wahlen einer Versammlung."
 
-msgid "<unknown motion>"
-msgstr "<unbekannter Antrag>"
-
 msgid ""
 "A change recommendation or amendment is probably referring to a non-existant"
 " line number."
@@ -232,9 +229,6 @@ msgstr "Alle Stimmen gehen verloren."
 msgid "All your changes are saved immediately."
 msgstr "Alle Änderungen werden sofort gespeichert."
 
-msgid "Allow access for anonymous guest users"
-msgstr "Erlaube Zugriff für anonyme Gast-Nutzer"
-
 msgid "Allow amendments of amendments"
 msgstr "Änderungsanträge zu Änderungsanträgen erlauben"
 
@@ -309,6 +303,9 @@ msgstr "Anzahl der Stimmen"
 msgid "An email with a password reset link was send!"
 msgstr "Es wurde eine E-Mail mit Link zum Passwort-Zurücksetzen gesendet."
 
+msgid "An error occurred while voting."
+msgstr "Bei der Stimmabgabe ist ein Fehler aufgetreten."
+
 msgid "An unknown error occurred."
 msgstr "Ein unbekannter Fehler ist aufgetreten."
 
@@ -376,8 +373,8 @@ msgid ""
 "Are you sure you want to delete all speakers from this list of speakers?"
 msgstr "Sollen wirklich alle Redner*innen von dieser Liste entfernt werden?"
 
-msgid "Are you sure you want to delete the print template?"
-msgstr "Soll die Beschluss-Druckvorlage wirklich gelöscht werden?"
+msgid "Are you sure you want to delete the editorial final version?"
+msgstr "Soll die redaktionelle Beschlussfassung wirklich gelöscht werden?"
 
 msgid "Are you sure you want to delete these accounts?"
 msgstr "Sollen diese Accounts wirklich gelöscht werden?"
@@ -559,8 +556,8 @@ msgstr ""
 "zugewiesen. Wenn eine andere Gruppe vorgesehen ist, verwenden Sie bitte den "
 "Dialog „Zu Veranstaltungen hinzufügen“ in der Account-Detailansicht."
 
-msgid "Attention: You can NOT be undone this action!"
-msgstr "Achtung: Sie können diese Aktion NICHT rückgängig machen!"
+msgid "Attention: This action cannot be undone!"
+msgstr "Achtung: Diese Aktion kann nicht rückgängig gemacht werden!"
 
 msgid "Automatically open the microphone for new conference speakers"
 msgstr "Mikrofon automatisch öffnen beim Eintreten in die Livekonferenz"
@@ -592,11 +589,38 @@ msgstr "Hintergrundfarbe"
 msgid "Ballot"
 msgstr "Wahlgang"
 
+msgid "Ballot anonymized"
+msgstr "Wahlgang anonymisiert"
+
+msgid "Ballot created"
+msgstr "Wahlgang erstellt"
+
+msgid "Ballot deleted"
+msgstr "Wahlgang gelöscht"
+
 msgid "Ballot opened"
 msgstr "Wahlgang eröffnet"
 
 msgid "Ballot papers"
 msgstr "Stimmzettel"
+
+msgid "Ballot published"
+msgstr "Wahlgang veröffentlicht"
+
+msgid "Ballot reset"
+msgstr "Wahlgang zurückgesetzt"
+
+msgid "Ballot started"
+msgstr "Wahlgang gestarted"
+
+msgid "Ballot stopped"
+msgstr "Wahlgeang beendet"
+
+msgid "Ballot stopped/published"
+msgstr "Wahlgang beendet/veröffentlicht"
+
+msgid "Ballot updated"
+msgstr "Wahlgang aktualisiert"
 
 msgid "Ballots"
 msgstr "Wahlgänge"
@@ -766,8 +790,14 @@ msgstr "Bearbeitung abbrechen"
 msgid "Cancel editing without saving"
 msgstr "Bearbeitung ohne Speichern abbrechen"
 
+msgid "Candidate added"
+msgstr "Kandidat*in hinzugefügt"
+
+msgid "Candidate removed"
+msgstr "Kandidat*in entfernt"
+
 msgid "Candidates"
-msgstr "Kandidaten*innen"
+msgstr "Kandidat*innen"
 
 msgid "Cannot do that in demo mode!"
 msgstr "Diese Aktion ist im Demo-Modus nicht möglich!"
@@ -932,6 +962,9 @@ msgstr "Kommentare"
 msgid "Committee"
 msgstr "Gremium"
 
+msgid "Committee Management Level changed"
+msgstr "Committee-Management-Level aktualisiert"
+
 msgid "Committee admin"
 msgstr "Gremienadmin"
 
@@ -1013,8 +1046,8 @@ msgstr "Countdown mit der Redeliste verkoppeln"
 msgid "Create"
 msgstr "Erstellen"
 
-msgid "Create final print template"
-msgstr "Beschluss-Druckvorlage erstellen"
+msgid "Create editorial final version"
+msgstr "Redaktionelle Beschlussfassung erstellen"
 
 msgid "Create new chat group"
 msgstr "Neue Chat-Gruppe anlegen"
@@ -1176,8 +1209,8 @@ msgstr "Stimmrechtsübertragung"
 msgid "Delete"
 msgstr "Löschen"
 
-msgid "Delete final print template"
-msgstr "Beschluss-Druckvorlage löschen"
+msgid "Delete editorial final version"
+msgstr "Redaktionelle Beschlussfassung löschen"
 
 msgid "Delete projector"
 msgstr "Projektor löschen"
@@ -1313,8 +1346,8 @@ msgstr "Details bearbeiten"
 msgid "Edit details for"
 msgstr "Details bearbeiten für"
 
-msgid "Edit final print template"
-msgstr "Beschluss-Druckvorlage bearbeiten"
+msgid "Edit editorial final version"
+msgstr "Redaktionelle Beschlussfassung bearbeiten"
 
 msgid "Edit meeting"
 msgstr "Veranstaltung bearbeiten"
@@ -1336,6 +1369,9 @@ msgstr "Bearbeiten, um Stimmen einzugeben."
 
 msgid "Edit topic"
 msgstr "Thema bearbeiten"
+
+msgid "Editorial final version"
+msgstr "Redaktionelle Beschlussfassung"
 
 msgid "Election"
 msgstr "Wahl"
@@ -1482,6 +1518,14 @@ msgstr ""
 "Jede*r darf das Anliegen eines GO-Antrags sehen (anstatt nur die "
 "Redelistenverwaltung)"
 
+msgid ""
+"Existing accounts can be reused by entering email (with given name and "
+"surname) OR by entering the username in the csv file."
+msgstr ""
+"Bestehende Accounts können durch Eingabe der E-Mail-Adresse (mit Vor- und "
+"Nachname) ODER durch Eingabe des Benutzernamens in der CSV-Datei "
+"wiederverwendet werden."
+
 msgid "Exit"
 msgstr "Beenden"
 
@@ -1533,9 +1577,6 @@ msgstr "Dateien"
 msgid "Filter"
 msgstr "Filter"
 
-msgid "Final print template"
-msgstr "Beschluss-Druckvorlage"
-
 msgid "Final version"
 msgstr "Beschlussfassung"
 
@@ -1584,6 +1625,12 @@ msgstr "Anträge weiterleiten"
 
 msgid "Forward motions to"
 msgstr "Anträge weiterleiten an"
+
+msgid "Forwarded motion deleted"
+msgstr "Weitergeleiteter Antrag gelöscht"
+
+msgid "Forwarded to {}"
+msgstr "Weitergeleitet an: {}"
 
 msgid "Forwarding"
 msgstr "Weiterleitung"
@@ -1658,6 +1705,9 @@ msgstr "Gruppe nicht gefunden - an Standardgruppe zugewiesen"
 
 msgid "Groups"
 msgstr "Gruppen"
+
+msgid "Groups changed in multiple meetings"
+msgstr "Gruppen in mehreren Veranstaltungen geändert"
 
 msgid "Groups with read permissions"
 msgstr "Gruppen mit Leseberechtigungen"
@@ -1921,6 +1971,13 @@ msgstr "Letzte Redner*innen"
 msgid "Leave"
 msgstr "Verlassen"
 
+msgid "Leave blank to automatically generate the password."
+msgstr "Lassen Sie das Feld leer, um das Passwort automatisch zu generieren."
+
+msgid "Leave blank to automatically generate the username."
+msgstr ""
+"Lassen Sie das Feld leer, um den Benutzernamen automatisch zu generieren."
+
 msgid "Left"
 msgstr "Links"
 
@@ -2019,6 +2076,9 @@ msgstr "Maximale Stimmenanzahl"
 msgid "Maximum amount of votes per option"
 msgstr "Max. Stimmenanzahl pro Option"
 
+msgid "Maximum number of columns on motion block slide"
+msgstr "Maximale Spaltenanzahl der Antragsblockprojektion"
+
 msgid "Media access is denied"
 msgstr "Medienzugriff verweigert"
 
@@ -2033,6 +2093,9 @@ msgstr "Veranstaltungsadministrator"
 
 msgid "Meeting information"
 msgstr "Veranstaltungsinformationen"
+
+msgid "Meeting not found"
+msgstr "Veranstaltung nicht gefunden"
 
 msgid "Meeting specific information"
 msgstr "Veranstaltungsspezifische Informationen"
@@ -2082,6 +2145,9 @@ msgstr "Minimale Stimmenanzahl"
 msgid "Minimum number of digits for motion number"
 msgstr "Minimale Anzahl an Ziffern in der Antragsnummer"
 
+msgid "Module"
+msgstr "Modul"
+
 msgid "More"
 msgstr "Mehr"
 
@@ -2114,6 +2180,9 @@ msgstr "Änderungsempfehlung aktualisiert"
 
 msgid "Motion created"
 msgstr "Antrag erstellt"
+
+msgid "Motion created (forwarded)"
+msgstr "Antrag erstellt (weitergeleitet)"
 
 msgid "Motion deleted"
 msgstr "Antrag gelöscht"
@@ -2536,6 +2605,9 @@ msgstr "Optionen"
 msgid "Organization"
 msgstr "Organisation"
 
+msgid "Organization Management Level changed"
+msgstr "Administrationsrolle geändert"
+
 msgid "Organization admin"
 msgstr "Organisationsadmin"
 
@@ -2544,6 +2616,9 @@ msgstr "Organisationsspezifische Informationen"
 
 msgid "Origin"
 msgstr "Herkunft"
+
+msgid "Origin motion deleted"
+msgstr "Herkunftsantrag gelöscht"
 
 msgid "Original"
 msgstr "Original"
@@ -2620,8 +2695,33 @@ msgstr "Elternelement in der Tagesordnung"
 msgid "Participant"
 msgstr "Teilnehmer*in"
 
+msgid "Participant added to group {} in meeting {}"
+msgstr "Teilnehmer*in hinzugefügt zur Gruppe {} in Veranstaltung {}"
+
+msgid "Participant added to multiple groups in meeting {}"
+msgstr "Teilnehmer*in hinzugefügt zu mehreren Gruppen in Veranstaltung {}"
+
+msgid "Participant added to multiple groups in multiple meetings"
+msgstr ""
+"Teilnehmer*in hinzugefügt zu mehreren Gruppen in mehreren Veranstaltungen"
+
+msgid "Participant created in meeting {}"
+msgstr "Teilnehmer*in erstellt in Veranstaltung {}"
+
+msgid "Participant data updated in meeting {}"
+msgstr "Teilnehmendendaten aktualisiert in Veranstaltung {}"
+
+msgid "Participant data updated in multiple meetings"
+msgstr "Teilnehmendendaten aktualisiert in mehreren Veranstaltungen"
+
 msgid "Participant number"
 msgstr "Teilnehmernummer"
+
+msgid "Participant removed from group {} in meeting {}"
+msgstr "Teilnehmer*in entfernt aus der Gruppe {} in Veranstaltung {}"
+
+msgid "Participant removed from multiple groups in meeting {}"
+msgstr "Teilnehmer*in entfernt aus mehreren Gruppen in Veranstaltung {}"
 
 msgid "Participants"
 msgstr "Teilnehmende"
@@ -2638,6 +2738,9 @@ msgstr "Partikel"
 
 msgid "Password"
 msgstr "Passwort"
+
+msgid "Password changed"
+msgstr "Passwort geändert"
 
 msgid "Password changed successfully!"
 msgstr "Passwort erfolgreich geändert!"
@@ -2657,6 +2760,9 @@ msgstr "Berechtigungen"
 
 msgid "Permit"
 msgstr "Zulassen"
+
+msgid "Personal data changed"
+msgstr "Persönliche Stammdaten geändert"
 
 msgid "Personal information"
 msgstr "Persönliche Informationen"
@@ -2709,17 +2815,11 @@ msgstr ""
 "Bitte aktualisieren Sie Ihren Browser oder kontaktieren Sie Ihre "
 "Systemadministration."
 
+msgid "Please wait"
+msgstr "Bitte warten"
+
 msgid "Point of order"
 msgstr "GO-Antrag"
-
-msgid "Poll created"
-msgstr "Abstimmung erstellt"
-
-msgid "Poll deleted"
-msgstr "Abstimmung gelöscht"
-
-msgid "Poll updated"
-msgstr "Abstimmung aktualisiert"
 
 msgid "Polls"
 msgstr "Umfragen"
@@ -2759,6 +2859,9 @@ msgstr "Datenschutzerklärung"
 
 msgid "Privacy policy"
 msgstr "Datenschutzerklärung"
+
+msgid "Process type"
+msgstr "Prozesstyp"
 
 msgid "Project"
 msgstr "Projizieren"
@@ -2882,6 +2985,9 @@ msgstr "Ablehnung"
 msgid "Rejection (not authorized)"
 msgstr "Verwerfung (nicht berechtigt)"
 
+msgid "Relevant information could not be accessed"
+msgstr "Relevante Informationen konnten nicht abgerufen werden."
+
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -2989,8 +3095,8 @@ msgstr "Speichern"
 msgid "Save all changes"
 msgstr "Alle Änderungen speichern"
 
-msgid "Save final print template"
-msgstr "Beschluss-Druckvorlage speichern"
+msgid "Save editorial final version"
+msgstr "Redaktionelle Beschlussfassung speichern"
 
 msgid "Scan this QR code to connect to WLAN."
 msgstr "QR-Code scannen um sich mit dem WLAN zu verbinden."
@@ -3071,6 +3177,9 @@ msgid "Server settings required to activate Jitsi Meet integration."
 msgstr ""
 "Servereinstellungen erforderlich zur Aktivierung der Jitsi-Meet-Integration."
 
+msgid "Set active"
+msgstr "Aktiv gesetzt"
+
 msgid "Set as favorite"
 msgstr "Als Favorit markieren"
 
@@ -3095,6 +3204,9 @@ msgstr "Weiterleitung setzen"
 msgid "Set hidden"
 msgstr "Versteckt setzen"
 
+msgid "Set inactive"
+msgstr "Inaktiv gesetzt"
+
 msgid "Set internal"
 msgstr "Intern setzen"
 
@@ -3107,6 +3219,9 @@ msgstr "Antragsblock setzen"
 msgid "Set natural person ..."
 msgstr "Natürliche Person setzen ..."
 
+msgid "Set not present in meeting {}"
+msgstr "Abwesend gesetzt in Veranstaltung {}"
+
 msgid "Set number"
 msgstr "Bezeichner setzen"
 
@@ -3115,6 +3230,9 @@ msgstr "Antragsweiterleitung für ausgewählte Gremien setzen oder entfernen"
 
 msgid "Set presence ..."
 msgstr "Anwesenheit setzen ..."
+
+msgid "Set present in meeting {}"
+msgstr "Anwesend gesetzt in Veranstaltung {}"
 
 msgid "Set public"
 msgstr "Öffentlich setzen"
@@ -3387,6 +3505,9 @@ msgstr "Stimme(n) jetzt senden"
 msgid "Submitter (in target meeting)"
 msgstr "Antragsteller*in (in der Zielveranstaltung)"
 
+msgid "Submitter may set state to"
+msgstr "Antragsteller*in darf Status setzen auf"
+
 msgid "Submitters"
 msgstr "Antragsteller*in"
 
@@ -3431,9 +3552,6 @@ msgstr "Unterstützer*innen geändert"
 
 msgid "Surname"
 msgstr "Nachname"
-
-msgid "System"
-msgstr "System"
 
 msgid "Table of contents"
 msgstr "Inhaltsverzeichnis"
@@ -3484,6 +3602,9 @@ msgstr ""
 "Die Datei scheint einige ausgelassene Spalten zu haben. Sie werden als leer "
 "betrachtet."
 
+msgid "The input data for voting is invalid."
+msgstr "Die Eingabedaten für die Stimmabgabe sind ungültig."
+
 msgid "The link is broken. Please contact your system administrator."
 msgstr ""
 "Der Link ist defekt. Bitte kontaktieren Sie den zuständigen Administrator."
@@ -3526,6 +3647,9 @@ msgstr "Der Server konnte nicht erreicht werden."
 msgid "The server didn't respond."
 msgstr "Der Server antwortet nicht."
 
+msgid "The server process is still running."
+msgstr "Der Serverprozess läuft noch."
+
 msgid "The text field may not be blank."
 msgstr "Der Antragstext darf nicht leer sein."
 
@@ -3548,6 +3672,9 @@ msgstr ""
 
 msgid "There is an unknown voting problem."
 msgstr "Es gibt ein unbekanntes Problem bei der elektronischen Stimmabgabe."
+
+msgid "There should be at least 2 options."
+msgstr "Es müssen mindestens 2 Optionen vorhanden sein."
 
 msgid "Thereof point of orders"
 msgstr "davon Geschäftsordnungsanträge"
@@ -3801,6 +3928,12 @@ msgstr "Abstimmung und Stimmzettel"
 msgid "Voting anonymized"
 msgstr "Abstimmung anonymisiert"
 
+msgid "Voting created"
+msgstr "Abstimmung erstellt"
+
+msgid "Voting deleted"
+msgstr "Abstimmung gelöscht"
+
 msgid "Voting duration"
 msgstr "Dauer der Stimmabgabe"
 
@@ -3842,10 +3975,10 @@ msgid "Voting started"
 msgstr "Abstimmung gestartet"
 
 msgid "Voting stopped"
-msgstr "Abstimmung gestoppt"
+msgstr "Abstimmung beendet"
 
 msgid "Voting stopped/published"
-msgstr "Abstimmung gestoppt/veröffentlicht"
+msgstr "Abstimmung beendet/veröffentlicht"
 
 msgid "Voting successful."
 msgstr "Stimmabgabe erfolgreich."
@@ -4134,6 +4267,9 @@ msgstr "vertagt"
 msgid "analog"
 msgstr "analog"
 
+msgid "anonymized"
+msgstr "anonymisiert"
+
 msgid "are required"
 msgstr "sind erforderlich"
 
@@ -4169,6 +4305,9 @@ msgstr "benutzerdefiniert"
 
 msgid "dateless"
 msgstr "zeitlos"
+
+msgid "deleted"
+msgstr "gelöscht"
 
 msgid "disabled"
 msgstr "deaktiviert"
@@ -4347,6 +4486,9 @@ msgstr "Gruppe(n) entfernen"
 msgid "represented by"
 msgstr "vertreten durch"
 
+msgid "reset"
+msgstr "zurückgesetzt"
+
 msgid "result"
 msgstr "Ergebnis"
 
@@ -4361,6 +4503,9 @@ msgstr "kurzlaufend"
 
 msgid "started"
 msgstr "gestartet"
+
+msgid "stopped"
+msgstr "beendet"
 
 msgid "submitted"
 msgstr "eingereicht"
@@ -4382,6 +4527,9 @@ msgstr "nicht erfasst"
 
 msgid "unknown"
 msgstr "unbekannt"
+
+msgid "updated"
+msgstr "aktualisiert"
 
 msgid "version"
 msgstr "Version"

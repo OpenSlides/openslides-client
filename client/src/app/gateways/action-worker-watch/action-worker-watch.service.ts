@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, timer } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
@@ -62,7 +61,7 @@ export class ActionWorkerWatchService {
         const fqid: string = originalResponse.body[`results`][0][0][`fqid`];
         const id = idFromFqid(fqid);
         if (Number.isNaN(id)) {
-            throw new Error(_(`Received invalid fqid for action worker: `) + actionName);
+            throw new Error(`Received invalid fqid for action worker: ` + actionName);
         }
         if (originalResponse.body[`results`][0][0][`written`] === false) {
             throw new HttpErrorResponse({
@@ -79,7 +78,7 @@ export class ActionWorkerWatchService {
         try {
             worker = await this.getFinishedWorker(id, watchActivity, true);
         } catch (e) {
-            throw new Error(_(`Client has stopped watching worker: `) + actionName + ` (${e.message})`);
+            throw new Error(`Client has stopped watching worker: ` + actionName + ` (${e.message})`);
         }
         this.dialogService.removeAllDates(id);
         this.unsubscribeFromWorker(id);

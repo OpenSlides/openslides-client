@@ -65,6 +65,9 @@ export class ImportListComponent<M extends Identifiable> implements OnInit, OnDe
     public modelName = ``;
 
     @Input()
+    public additionalInfo = ``;
+
+    @Input()
     public set importer(importer: ImportService<M>) {
         this._importer = importer;
         this.initTable();

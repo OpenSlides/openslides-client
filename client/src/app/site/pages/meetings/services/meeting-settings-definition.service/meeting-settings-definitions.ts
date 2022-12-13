@@ -136,16 +136,6 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
-                label: _(`System`),
-                settings: [
-                    {
-                        key: `enable_anonymous`,
-                        label: _(`Allow access for anonymous guest users`),
-                        type: `boolean`
-                    }
-                ]
-            },
-            {
                 label: _(`CSV export options`),
                 settings: [
                     {
@@ -648,6 +638,17 @@ export const meetingSettings: SettingsGroup[] = [
                         helpText: _(
                             `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
                         )
+                    }
+                ]
+            },
+            {
+                label: _(`Projector`),
+                settings: [
+                    {
+                        key: `motions_block_slide_columns`,
+                        label: _(`Maximum number of columns on motion block slide`),
+                        type: `integer`,
+                        validators: [Validators.min(1)]
                     }
                 ]
             },

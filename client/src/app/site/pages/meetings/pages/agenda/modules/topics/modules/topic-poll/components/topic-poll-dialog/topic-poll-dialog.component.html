@@ -77,9 +77,6 @@
     <!-- Too few options warning -->
     <div class="potential-warning">
         <ng-container *ngIf="!hasEnoughOptions()">
-            <mat-icon inline color="warn">
-                warning
-            </mat-icon>
             <i class="foreground-warn">
                 {{ optionsWarning | translate }}
             </i>

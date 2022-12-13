@@ -1,9 +1,9 @@
 <div *ngIf="poll">
     <table class="assignment-result-table" *ngIf="hasResults && canSeeResults && !shouldShowChart">
         <tbody>
-            <tr>
+            <tr *ngIf="!isMethodY">
                 <td></td>
-                <th class="voting-option">{{ 'Candidates' | translate }}</th>
+                <th class="voting-option"></th>
                 <th class="result yes" *ngIf="showYHeader">
                     <span *ngIf="!isMethodY">
                         {{ 'Yes' | translate }}

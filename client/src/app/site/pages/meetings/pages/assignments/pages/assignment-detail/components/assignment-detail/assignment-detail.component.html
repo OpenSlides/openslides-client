@@ -52,6 +52,14 @@
                         </button>
                     </div>
 
+                    <!-- History -->
+                    <div *osPerms="permission.meetingCanSeeHistory">
+                        <button mat-menu-item (click)="goToHistory()">
+                            <mat-icon>history</mat-icon>
+                            <span>{{ 'History' | translate }}</span>
+                        </button>
+                    </div>
+
                     <!-- Delete -->
                     <div *ngIf="hasPerms('manage')">
                         <!-- Delete -->

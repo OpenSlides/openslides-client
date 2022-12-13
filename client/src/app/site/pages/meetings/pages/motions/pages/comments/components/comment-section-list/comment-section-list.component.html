@@ -43,7 +43,7 @@
                     </div>
                     <div class="submitter-write">
                         <ng-container *ngIf="section.submitter_can_write">
-                            <i>{{ 'Submitters can edit' | translate }}</i>
+                            <i>{{ 'Allow submitter edit' | translate }}</i>
                         </ng-container>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                 <mat-checkbox
                     formControlName="submitter_can_write"
                 >
-                    {{ 'Allow submitter to edit' | translate }}
+                    {{ 'Allow submitter edit' | translate }}
                 </mat-checkbox>
             </p>
         </form>
