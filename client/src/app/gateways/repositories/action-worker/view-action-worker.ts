@@ -33,7 +33,7 @@ export class ViewActionWorker extends BaseViewModel<ActionWorker> {
      * Returns true, if the worker is older than 2 seconds
      */
     public get isSlow(): boolean {
-        return this.timeSinceCreation > 2;
+        return this.timeSinceCreation > 0; //TODO: Reverse
     }
 
     public lastConfirmationToWaitTimestamp: number = undefined;

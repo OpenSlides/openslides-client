@@ -4,8 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerWatchService } from 'src/app/gateways/action-worker-watch/action-worker-watch.service';
 import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
+import { BannerService } from '../../site-wrapper/services/banner.service';
+import { WaitForActionBannerComponent } from '../components/wait-for-action-banner/wait-for-action-banner.component';
 import { WaitForActionDialogComponent } from '../components/wait-for-action-dialog/wait-for-action-dialog.component';
 import { WaitForActionData, WaitForActionReason } from '../definitions';
 import { WaitForActionDialogModule } from '../wait-for-action-dialog.module';
@@ -58,7 +59,8 @@ export class WaitForActionDialogService {
     public constructor(
         private injector: Injector,
         private dialog: MatDialog,
-        private repo: ActionWorkerRepositoryService
+        private repo: ActionWorkerRepositoryService,
+        private bannerService: BannerService
     ) {}
 
     public addNewDialog(reason: WaitForActionReason, data: WaitForActionData): void {
@@ -131,12 +133,14 @@ export class WaitForActionDialogService {
     }
 
     private async openDialog() {
-        const module = await import(`../wait-for-action-dialog.module`).then(m => m.WaitForActionDialogModule);
-        this._dialog = this.dialog.open(module.getComponent(), { ...infoDialogSettings });
+        this.bannerService.addBanner({ component: WaitForActionBannerComponent });
+        // const module = await import(`../wait-for-action-dialog.module`).then(m => m.WaitForActionDialogModule);
+        // this._dialog = this.dialog.open(module.getComponent(), { ...infoDialogSettings });
     }
 
     private closeDialog() {
-        this._dialog.close();
+        this.bannerService.removeBanner({ component: WaitForActionBannerComponent });
+        // this._dialog.close();
     }
 
     private newCurrentReason(): void {
