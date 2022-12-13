@@ -79,6 +79,7 @@ test.describe('motion history mode test', () => {
     test('history mode changes get reverted', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
         await expect(page.locator(`body`)).toContainText(`CypressMotionHistoryTestTitle`);
@@ -90,6 +91,7 @@ test.describe('motion history mode test', () => {
     test('history mode leave', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
         await expect(page.locator(`body`)).toContainText(`CypressMotionHistoryTestTitle`);
