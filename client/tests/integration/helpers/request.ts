@@ -26,7 +26,7 @@ export async function os4request(context: BrowserContext, osAction: string, body
                     {
                         collection: `action_worker`,
                         fields: { name: null, state: null, created: null, timestamp: null, result: null },
-                        ids: [workerId]
+                        ids: [+workerId]
                     }
                 ]
             });
