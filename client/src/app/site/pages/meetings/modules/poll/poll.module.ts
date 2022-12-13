@@ -25,7 +25,6 @@ import { EntitledUsersTableComponent } from './components/entitled-users-table/e
 import { PollNonVerificationContentComponent } from './components/poll-non-verification-content/poll-non-verification-content.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
-import { VoteTokenDialogComponent } from './components/vote-token-dialog/vote-token-dialog.component';
 import { VoteTokenSecretFieldComponent } from './components/vote-token-secret-field/vote-token-secret-field.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
 import { VotingCryptographyInfoDialogModule } from './modules/voting-cryptography-info-dialog';
@@ -42,7 +41,6 @@ const COMPONENTS = [
     EntitledUsersTableComponent,
     SingleOptionChartTableComponent,
     VotesTableComponent,
-    VoteTokenDialogComponent,
     CheckVoteValidityDialogComponent,
     VoteTokenSecretFieldComponent,
     PollNonVerificationContentComponent
