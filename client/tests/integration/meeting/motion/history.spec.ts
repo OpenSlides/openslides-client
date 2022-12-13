@@ -69,6 +69,7 @@ test.describe('motion history mode test', () => {
     test('history mode banner appears', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         await expect(page.locator(`body`)).toContainText(`Motion created`);
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
