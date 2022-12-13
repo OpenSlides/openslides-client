@@ -22,8 +22,12 @@ export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepositor
     }
 
     public override getFieldsets(): Fieldsets<ListOfSpeakers> {
-        const routingFields: (keyof ListOfSpeakers)[] = [`sequential_number`];
-        const defaultFieldset: (keyof ListOfSpeakers)[] = [`closed`, `content_object_id`, `speaker_ids`];
+        const routingFields: (keyof ListOfSpeakers)[] = [`sequential_number`, `meeting_id`];
+        const defaultFieldset: (keyof ListOfSpeakers)[] = routingFields.concat([
+            `closed`,
+            `content_object_id`,
+            `speaker_ids`
+        ]);
         return {
             [DEFAULT_FIELDSET]: defaultFieldset,
             [ROUTING_FIELDSET]: routingFields

@@ -1,0 +1,7 @@
+FROM mcr.microsoft.com/playwright:v1.28.1-focal
+
+WORKDIR /app
+COPY ./package.json .
+COPY ./package-lock.json .
+ENV CI=1
+RUN npm ci
