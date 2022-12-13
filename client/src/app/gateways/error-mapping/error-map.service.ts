@@ -47,7 +47,7 @@ export class ErrorMapService {
     }
 
     private getHttpErrorMap(options: GetHttpErrorMapOptions): ErrorMap | null {
-        let urlFragments = options.url.split(`/`);
+        let urlFragments = options.url.split(/[\/?]+/);
         if (/http/.test(urlFragments[0])) {
             urlFragments = urlFragments.slice(3);
         }

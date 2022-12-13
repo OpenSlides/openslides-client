@@ -16,6 +16,8 @@ import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/mee
 import { DiffLinesInParagraph } from '../../../definitions';
 import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
+export const REFERENCED_MOTION_REGEX = /\[motion[:/](\d+)\]/g;
+
 @Injectable({ providedIn: `root` })
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {
     private _lineLength = 80;
@@ -97,7 +99,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     /**
      * Get the label for the motion's current state with the extension
      * attached (if available). For cross-referencing other motions, `[motion:id]`
-     * will replaced by the referenced motion's number (see {@link solveExtensionPlaceHolder})
+     * will replaced by the referenced motion's number (see {@link parseMotionPlaceholders})
      *
      * @param motion
      * @returns the translated state with the extension attached
@@ -191,14 +193,14 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
      * @returns the translated extension with the extension attached
      */
     public getExtendedRecommendationLabel(motion: ViewMotion): string {
-        if (motion.recommendation) {
-            let rec = this.translate.instant(motion.recommendation.recommendation_label);
-            if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
-                rec += ` ` + this.parseMotionPlaceholders(motion.recommendationExtension);
-            }
-            return rec;
+        if (!motion.recommendation) {
+            return ``;
         }
-        return ``;
+        let rec = this.translate.instant(motion.recommendation.recommendation_label);
+        if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
+            rec += ` ` + this.parseMotionPlaceholders(motion.recommendationExtension);
+        }
+        return rec;
     }
 
     /**
@@ -214,10 +216,9 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
                     }
 
                     // Check, if this motion has the motionId in it's recommendation
-                    const placeholderRegex = /\[motion:(\d+)\]/g;
                     let match;
-                    while ((match = placeholderRegex.exec(motion.recommendationExtension))) {
-                        if (parseInt(match[1], 10) === motionId) {
+                    while ((match = REFERENCED_MOTION_REGEX.exec(motion.recommendationExtension))) {
+                        if (parseInt(match[1]) === motionId) {
                             return true;
                         }
                     }
@@ -233,13 +234,14 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     }
 
     /**
-     * Replaces any motion placeholder (`[motion:id]`) with the motion's title(s)
+     * Replaces any motion placeholder (`[motion/id]`) with the motion's title(s) or
+     * `<unknown motion>` if the referenced motion does not exist.
      *
      * @param value
      * @returns the string with the motion titles replacing the placeholders
      */
-    private parseMotionPlaceholders(value: string): string {
-        return value.replace(/\[motion:(\d+)\]/g, (match, id) => {
+    public parseMotionPlaceholders(value: string): string {
+        return value.replace(REFERENCED_MOTION_REGEX, (_, id) => {
             const motion = this.repo.getViewModel(id);
             if (motion) {
                 return motion.getNumberOrTitle();

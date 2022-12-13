@@ -162,7 +162,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * @param {ViewUnifiedChange[]} changes
      */
     public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return this.motionLineNumbering.changeHasCollissions(change, changes);
+        return this.diff.changeHasCollissions(change, changes);
     }
 
     /**

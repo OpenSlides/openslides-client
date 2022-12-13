@@ -9,7 +9,6 @@ export type InfoToExport =
     | 'recommendation'
     | 'category'
     | 'block'
-    | 'origin'
     | 'tags'
     | 'polls'
     | 'speakers'

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
 
@@ -15,7 +14,7 @@ export class ActionWorkerRepositoryService extends BaseRepository<ViewActionWork
         super(repositoryServiceCollector, ActionWorker);
     }
 
-    public getVerboseName = (plural?: boolean): string => (plural ? _(`Action workers`) : _(`Action worker`));
+    public getVerboseName = (plural?: boolean): string => (plural ? `Action workers` : `Action worker`);
     public getTitle = (viewModel: ViewActionWorker): string => viewModel.name;
 
     public override getFieldsets(): Fieldsets<ActionWorker> {

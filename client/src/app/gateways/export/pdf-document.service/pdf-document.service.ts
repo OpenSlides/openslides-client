@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { Functionable } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { HttpService } from '../../http.service';
 import { ExportServiceModule } from '../export-service.module';
@@ -98,8 +100,7 @@ type DocumentPosition = `left` | `center` | `right`;
 interface PdfDocumentHeaderConfig {
     logoHeaderLeftUrl?: string;
     logoHeaderRightUrl?: string;
-    line1?: string;
-    line2?: string;
+    exportInfo?: any;
     lrMargin: [number, number];
 }
 
@@ -250,7 +251,8 @@ export class PdfDocumentService {
         private progressSnackBarService: ProgressSnackBarService,
         private progressService: ProgressSnackBarControlService,
         private pdfImagesService: PdfImagesService,
-        private mediaManageService: MediaManageService
+        private mediaManageService: MediaManageService,
+        private meetingSettingsService: MeetingSettingsService
     ) {}
 
     /**
@@ -470,7 +472,7 @@ export class PdfDocumentService {
                 font: `PdfFont`,
                 fontSize
             },
-            header: this.getHeader({ lrMargin: [pageMargins[0], pageMargins[2]] }),
+            header: this.getHeader({ exportInfo: exportInfo, lrMargin: [pageMargins[0], pageMargins[2]] }),
             // real footer gets created in the worker
             tmpfooter: this.getFooter({
                 lrMargin: pageMargins ? [pageMargins[0], pageMargins[2]] : undefined,
@@ -489,11 +491,13 @@ export class PdfDocumentService {
      * @param lrMargin optional margin overrides
      * @returns an object that contains the necessary header definition
      */
-    private getHeader({ line1, line2, lrMargin }: PdfDocumentHeaderConfig): object {
+    private getHeader({ exportInfo, lrMargin }: PdfDocumentHeaderConfig): object {
         let text: string;
         const columns = [];
         let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
         let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
+        const header =
+            exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Header) : true;
 
         // add the left logo to the header column
         if (logoHeaderLeftUrl) {
@@ -508,11 +512,23 @@ export class PdfDocumentService {
             this.imageUrls.push(logoHeaderLeftUrl);
         }
 
-        // add the header text if no logo on the right was specified
-        if (logoHeaderLeftUrl && logoHeaderRightUrl) {
-            text = ``;
-        } else {
+        // Add no heading text if there are logos on the right and left.
+        if (header && !(logoHeaderRightUrl && logoHeaderLeftUrl)) {
+            const name = this.translate.instant(this.meetingSettingsService.instant(`name`));
+            const description = this.translate.instant(this.meetingSettingsService.instant(`description`));
+            const location = this.meetingSettingsService.instant(`location`);
+            const start_time = this.meetingSettingsService.instant(`start_time`);
+            const end_time = this.meetingSettingsService.instant(`end_time`);
+            const start_date = start_time
+                ? new Date(start_time * 1000).toLocaleDateString(this.translate.currentLang)
+                : ``;
+            const end_date = end_time ? new Date(end_time * 1000).toLocaleDateString(this.translate.currentLang) : ``;
+            const date = [start_date, end_date].filter(Boolean).join(` - `);
+            const line1 = [name, description].filter(Boolean).join(` - `);
+            const line2 = [location, date].filter(Boolean).join(`, `);
             text = [line1, line2].join(`\n`);
+        } else {
+            text = ``;
         }
         columns.push({
             text,

@@ -442,4 +442,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             } as PollDialogData;
         }
     }
+
+    public goToHistory(): void {
+        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.assignment.fqid } });
+    }
 }

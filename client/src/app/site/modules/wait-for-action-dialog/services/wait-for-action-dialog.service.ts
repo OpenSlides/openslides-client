@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerWatchService } from 'src/app/gateways/action-worker-watch/action-worker-watch.service';
 import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
 import { WaitForActionDialogComponent } from '../components/wait-for-action-dialog/wait-for-action-dialog.component';
 import { WaitForActionData, WaitForActionReason } from '../definitions';
@@ -132,7 +132,7 @@ export class WaitForActionDialogService {
 
     private async openDialog() {
         const module = await import(`../wait-for-action-dialog.module`).then(m => m.WaitForActionDialogModule);
-        this._dialog = this.dialog.open(module.getComponent(), { ...mediumDialogSettings });
+        this._dialog = this.dialog.open(module.getComponent(), { ...infoDialogSettings });
     }
 
     private closeDialog() {
