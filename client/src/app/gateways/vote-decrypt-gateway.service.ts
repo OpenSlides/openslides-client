@@ -15,6 +15,13 @@ interface VoteVerificationData {
     raws: string;
 }
 
+interface CryptoVoteData {
+    votes: {
+        [id: number]: number | VoteValue;
+    };
+    token: string;
+}
+
 function uInt8Enc(str: string, doAtob = true): Uint8Array {
     const useStr = doAtob ? atob(str) : str;
     return Uint8Array.from(useStr, c => c.charCodeAt(0));
@@ -74,18 +81,34 @@ export class VoteDecryptGatewayService {
                     polls
                         .filter(poll => poll.type === PollType.Cryptographic && poll.votes_raw && poll.votes_signature)
                         .map(poll => {
-                            return { id: poll.id, signature: poll.votes_signature, raws: poll.votes_raw };
+                            return {
+                                id: poll.id,
+                                signature: poll.votes_signature,
+                                raws: poll.votes_raw,
+                                options: poll.options.map(opt => [
+                                    opt.yes,
+                                    opt.no,
+                                    opt.abstain,
+                                    opt.votes.flatMap(vot => vot.value)
+                                ])
+                            } as VoteVerificationData & { options: any };
                         })
                 ),
                 distinctUntilChanged((prev, curr) => {
-                    this._lastVoteVerificationData = prev;
+                    this._lastVoteVerificationData = prev.map(date =>
+                        (({ options, ...others }) => others as VoteVerificationData)(date)
+                    );
                     if (prev.length === curr.length && JSON.stringify(prev) === JSON.stringify(curr)) {
                         return true;
                     }
                     return false;
                 })
             )
-            .subscribe(verificationData => this.updateVerification(verificationData));
+            .subscribe(verificationData =>
+                this.updateVerification(
+                    verificationData.map(date => (({ options, ...others }) => others as VoteVerificationData)(date))
+                )
+            );
     }
 
     public async encryptVote(poll: ViewPoll, vote: string): Promise<string> {
@@ -145,7 +168,7 @@ export class VoteDecryptGatewayService {
             toUnverify.push(prev[z]);
         }
 
-        console.log(`verifying polls...`);
+        console.log(`${toVerify.length ? `Verifying ${toVerify.length} polls...` : `No polls to verify.`}`);
         this.verify(toVerify);
         this.unverify(toUnverify);
     }
@@ -162,39 +185,113 @@ export class VoteDecryptGatewayService {
         const couldntVerify: number[] = [];
         for (let date of toVerify) {
             const model = this.repo.getViewModel(date.id);
-            const signature = uInt8Enc(date.signature);
-            const raws = uInt8Enc(date.raws, false);
             if (!model) {
                 couldntVerify.push(date.id);
-            } else {
-                try {
-                    model.verified = await verify(signature, raws, this._publicMainKey);
-                } catch (e) {
-                    console.warn(`Verification of ${model.id} failed with error: "${e.message}" -> `, false);
-                    model.verified = false;
-                }
+                continue;
             }
-            if (model.verified && !this.verifyBackendPollResults(model)) {
-                model.verified = false;
+            const signature = uInt8Enc(date.signature);
+            const raws = uInt8Enc(date.raws, false);
+            let resultVerificationErrors: string[] = [];
+            try {
+                const verified = await verify(signature, raws, this._publicMainKey);
+                resultVerificationErrors = verified ? resultVerificationErrors : [`Signature verification failed`];
+            } catch (e) {
+                resultVerificationErrors.push(`Signature verification failed with error: "${e.message}"`);
             }
-            console.log(`Verified: `, model.id, model.verified);
+            try {
+                resultVerificationErrors = resultVerificationErrors.concat(this.verifyBackendPollResults(model));
+            } catch (e) {
+                resultVerificationErrors.push(
+                    `Comparison between backend and raw poll results failed with error: "${e.message}"`
+                );
+            }
+            this.saveVerificationResult(model, resultVerificationErrors);
         }
         if (couldntVerify.length) {
             console.error(`Couldn't verify the results of the following poll ids: `, couldntVerify.join(`, `));
         }
     }
 
+    private saveVerificationResult(poll: ViewPoll, resultVerificationErrors: string[]): void {
+        poll.verified = !resultVerificationErrors.length;
+        if (resultVerificationErrors.length) {
+            console.warn(
+                `Verification of poll ${poll.id}: ${`Failure\nReasons:\n > ${resultVerificationErrors.join(`\n > `)}`}`
+            );
+            return;
+        }
+        console.log(`Verification of poll ${poll.id}: ${`Success`}`);
+    }
+
     /**
      * A function that checks if the vote data that is saved in the backend is the same as that in the raw votes.
+     * Returns an array of error messages that occured. If the array is empty, everything is alright.
      */
-    private verifyBackendPollResults(poll: ViewPoll): boolean {
-        let result = true;
+    private verifyBackendPollResults(poll: ViewPoll): string[] {
+        const { rawsArray, modelResultsArray } = this.getSortedVoteArrays(poll);
+        let invalid = 0;
+        let j = 0;
+        let errors: string[] = [];
+        for (let i = 0; i < modelResultsArray.length; i++) {
+            let { raw, cooked, comparison } = this.getDatesAndComparison(rawsArray, j, modelResultsArray, i);
+            while (comparison && comparison < 0) {
+                if (!/error/.test(JSON.stringify(raw.votes))) {
+                    errors.push(`Couldn't find vote from ${raw.token} in the backend`);
+                } else {
+                    invalid++;
+                }
+                j++;
+                ({ raw, cooked, comparison } = this.getDatesAndComparison(rawsArray, j, modelResultsArray, i));
+            }
+            if (comparison === undefined || comparison > 0) {
+                errors.push(`Couldn't find vote from ${cooked.token} in the raw votes`);
+                continue;
+            }
+            if (this.getSingleVoteResults(raw.votes) !== this.getSingleVoteResults(cooked.votes)) {
+                errors.push(`Vote from ${raw.token} was saved differently in backend and raw votes`);
+            }
+            j++;
+        }
+        for (let i = j; i < rawsArray.length; i++) {
+            if (!/error/.test(JSON.stringify(rawsArray[i].votes))) {
+                errors.push(`Couldn't find vote from ${rawsArray[i].token} in the backend`);
+            } else {
+                invalid++;
+            }
+        }
+        if (invalid !== poll.votesinvalid) {
+            errors.push(`Incorrect number of invalid votes`);
+        }
+        return errors;
+    }
+
+    /**
+     * When given two CryptoVoteData arrays with an index for each,
+     * this function will return both the entries in these indices and a comparison value between the tokens of these entries.
+     * @param rawArray
+     * @param rawIndex
+     * @param cookedArray
+     * @param cookedIndex
+     * @returns
+     */
+    private getDatesAndComparison(
+        rawArray: CryptoVoteData[],
+        rawIndex: number,
+        cookedArray: CryptoVoteData[],
+        cookedIndex: number
+    ): { raw: CryptoVoteData; cooked: CryptoVoteData; comparison: number } {
+        const raw = rawArray[rawIndex];
+        const cooked = cookedArray[cookedIndex];
+        return { raw, cooked, comparison: raw?.token.localeCompare(cooked?.token) };
+    }
+
+    private getSortedVoteArrays(poll: ViewPoll): { rawsArray: CryptoVoteData[]; modelResultsArray: CryptoVoteData[] } {
         if (!poll.votes_raw) {
             throw new Error(`Couldn't find raw votes.`);
         }
-        const rawsArray = (
-            JSON.parse(poll?.votes_raw).votes as { votes: { [id: number]: VoteValue | number }; token: string }[]
-        ).sort((a, b) => a.token.localeCompare(b.token));
+        const rawsArray = (JSON.parse(poll?.votes_raw).votes as CryptoVoteData[]).sort((a, b) =>
+            a.token.localeCompare(b.token)
+        );
         const modelResults: { [key: string]: [number, VoteValue][] } = {};
         poll.options.forEach(option =>
             option.votes.forEach(vote => {
@@ -206,54 +303,14 @@ export class VoteDecryptGatewayService {
         const modelResultsArray = Object.keys(modelResults)
             .map(token => {
                 return {
-                    token,
                     votes: modelResults[token].mapToObject(arr => {
                         return { [arr[0]]: arr[1] };
-                    })
-                };
+                    }),
+                    token
+                } as CryptoVoteData;
             })
             .sort((a, b) => a.token.localeCompare(b.token));
-        let j = 0;
-        for (let i = 0; i < modelResultsArray.length; i++) {
-            let raw = rawsArray[j];
-            const cooked = modelResultsArray[i];
-            let comparison = raw?.token.localeCompare(cooked.token);
-            while (comparison && comparison < 0) {
-                // raw < cooked
-                if (!/error/.test(JSON.stringify(raw.votes))) {
-                    console.warn(`Verification of ${poll.id}: Vote for ${raw.token} wasn't saved in the backend`);
-                    result = false;
-                }
-                j++;
-                raw = rawsArray[j];
-                comparison = raw?.token.localeCompare(cooked.token);
-            }
-            if (comparison === undefined || comparison > 0) {
-                // cooked < raw
-                console.warn(`Verification of ${poll.id}: Vote from ${cooked.token} isn't in the raw votes`);
-                result = false;
-            } else {
-                //TODO: See if the data is the same
-                if (this.getSingleVoteResults(raw.votes) !== this.getSingleVoteResults(cooked.votes)) {
-                    console.warn(
-                        `Verification of ${poll.id}: Vote from ${raw.token} was saved differently in backend that in the raw votes`
-                    );
-                    result = false;
-                }
-                j++;
-                if (j === rawsArray.length && i + 1 !== modelResultsArray.length) {
-                    console.warn(`Verification of ${poll.id}: Vote from ${cooked.token} isn't in the raw votes`);
-                    result = false;
-                }
-            }
-        }
-        for (let i = j; i < rawsArray.length; i++) {
-            if (!/error/.test(JSON.stringify(rawsArray[i].votes))) {
-                console.warn(`Verification of ${poll.id}: Vote for ${rawsArray[i].token} wasn't saved in the backend`);
-                result = false;
-            }
-        }
-        return result;
+        return { rawsArray, modelResultsArray };
     }
 
     private getSingleVoteResults(votes: { [id: number]: VoteValue | number }): string {
@@ -268,7 +325,6 @@ export class VoteDecryptGatewayService {
                         ? undefined
                         : { [`Y`]: votes[id] };
             });
-        console.log(JSON.stringify(result));
         return JSON.stringify(result);
     }
 
