@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WaitForActionBannerComponent } from './wait-for-action-banner.component';
 
-describe(`WaitForActionBannerComponent`, () => {
+xdescribe(`WaitForActionBannerComponent`, () => {
     let component: WaitForActionBannerComponent;
     let fixture: ComponentFixture<WaitForActionBannerComponent>;
 
