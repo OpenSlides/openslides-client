@@ -44,6 +44,10 @@ export class VotesTableComponent {
     @Input()
     public templateType = ``;
 
+    public get isCryptographic(): boolean {
+        return this.parent?.poll?.isCryptographic;
+    }
+
     public readonly permission = Permission;
 
     @Input()

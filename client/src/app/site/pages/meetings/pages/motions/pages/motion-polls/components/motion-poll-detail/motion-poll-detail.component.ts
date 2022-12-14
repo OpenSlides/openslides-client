@@ -5,6 +5,7 @@ import {
     BasePollDetailComponent,
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
+import { PollDialogService } from 'src/app/site/pages/meetings/modules/poll/services/poll-dialog.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionPollService } from '../../../../modules/motion-poll/services';
@@ -29,9 +30,10 @@ export class MotionPollDetailComponent extends BasePollDetailComponent<ViewMotio
         protected override translate: TranslateService,
         pollService: MotionPollService,
         private pollDialog: MotionPollDialogService,
-        pollPdfService: MotionPollPdfService
+        pollPdfService: MotionPollPdfService,
+        dialog: PollDialogService
     ) {
-        super(pollService, pollPdfService);
+        super(pollService, pollPdfService, dialog);
     }
 
     protected createVotesData(): BaseVoteData[] {

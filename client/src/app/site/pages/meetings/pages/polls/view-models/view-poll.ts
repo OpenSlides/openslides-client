@@ -83,6 +83,8 @@ export class ViewPoll<C extends PollContentObject = any>
         return PollTypeVerbose[this.type];
     }
 
+    public verified: boolean;
+
     public getContentObjectTitle(): string | null {
         return this.content_object?.getTitle() || null;
     }

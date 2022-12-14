@@ -12,7 +12,7 @@
         </div>
 
         <!-- Dot Menu -->
-        <span class="poll-actions" *osPerms="permission.motionCanManagePolls">
+        <span class="poll-actions" *osPerms="permission.motionCanManagePolls; or: canSeeCheckValidity">
             <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
                 <mat-icon class="icon-18">more_horiz</mat-icon>
             </button>
@@ -23,20 +23,36 @@
     <div class="italic spacer-bottom-20">
         <!-- Type and State -->
         <div class="type-and-state italic spacer-bottom-20 break-word">
-            <span *osPerms="permission.motionCanManagePolls; and: poll.isEVoting">
-                <os-icon-container
-                    class="poll-type break-word"
-                    icon="info"
-                    color="primary"
-                    [swap]="true"
-                    [showIcon]="poll.isAnonymous"
-                    (iconAction)="openVotingWarning()"
-                >
-                    {{ poll.typeVerbose | translate }}
-                </os-icon-container>
-                <span *ngIf="poll.isAnonymous">&nbsp;</span>
-                &middot;&nbsp;
-            </span>
+            <ng-container *ngIf="poll.isEVoting">
+                <span *osPerms="permission.motionCanManagePolls; or: poll.isCryptographic">
+                    <os-icon-container
+                        class="poll-type break-word"
+                        icon="info"
+                        color="primary"
+                        [swap]="true"
+                        [showIcon]="poll.isAnonymous || (poll.isCryptographic && !poll.votes_raw)"
+                        (iconAction)="openVotingWarning()"
+                    >
+                        {{ poll.typeVerbose | translate }}
+                    </os-icon-container>
+                    <os-icon-container
+                        class="poll-type break-word"
+                        *ngIf="poll.isCryptographic && poll.votes_raw"
+                        [ngStyle]="{ color: poll.verified ? 'green' : poll.verified === false ? 'red' : 'yellow' }"
+                        iconTooltip="{{
+                            poll.verified
+                                ? 'Results verification success.'
+                                : poll.verified === false
+                                ? 'Result verification failed.'
+                                : ('Result verification pending.' | translate)
+                        }}"
+                        [icon]="poll.verified ? 'verified_user' : poll.verified === false ? 'gpp_bad' : 'shield'"
+                        (iconAction)="openVotingWarning()"
+                    ></os-icon-container>
+                    <span *ngIf="poll.isAnonymous || poll.isCryptographic === false">&nbsp;</span>
+                    &middot;&nbsp;
+                </span>
+            </ng-container>
 
             <!-- State -->
             <span class="break-word">
@@ -93,7 +109,15 @@
 </ng-template>
 
 <ng-template #viewTemplate>
-    <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()"></os-motion-poll-detail-content>
+    <os-motion-poll-detail-content
+        *ngIf="!poll.isCryptographic || poll.verified"
+        [poll]="poll"
+        [routerLink]="getDetailLink()"
+    ></os-motion-poll-detail-content>
+    <os-poll-non-verification-content
+        *ngIf="poll.isCryptographic && !poll.verified"
+        [poll]="poll"
+    ></os-poll-non-verification-content>
 </ng-template>
 
 <ng-template #emptyTemplate>
@@ -114,6 +138,10 @@
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
+    <button *ngIf="canSeeCheckValidity" mat-menu-item (click)="openCheckValidityDialog()">
+        <mat-icon>search</mat-icon>
+        <span>{{ 'Check vote validity' | translate }}</span>
+    </button>
     <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="dialogOpened.emit()">
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>

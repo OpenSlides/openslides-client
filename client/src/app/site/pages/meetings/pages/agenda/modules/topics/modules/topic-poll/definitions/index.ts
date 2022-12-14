@@ -11,5 +11,11 @@ export const TopicPollPercentBaseVerbose = {
 };
 
 export const TopicPollTypeVerbose = {
-    pseudoanonymous: _(`non-nominal`)
+    pseudoanonymous: _(`non-nominal`),
+    cryptographic: _(`cryptographic`)
 };
+
+export enum TopicPollType {
+    Pseudoanonymous = `pseudoanonymous`,
+    Cryptographic = `cryptographic`
+}

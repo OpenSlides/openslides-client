@@ -53,15 +53,51 @@
 .centered-button-wrapper {
     display: flex;
     text-align: center;
+    vertical-align: middle;
     > * {
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .user-has-voted {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+        width: 100%;
+        justify-content: center;
+        align-items: stretch;
+        column-gap: 5px;
     }
 
     .vote-submitted {
         color: $votes-yes-color;
         font-size: 200%;
         overflow: visible;
+        vertical-align: middle;
+    }
+
+    .has-voted-text {
+        min-width: 180px;
+        display: flex;
+        vertical-align: center;
+    }
+}
+
+.token-secret-wrapper {
+    display: inline-flex;
+
+    button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .token-secret-field {
+        width: 200px;
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid grey;
+        text-align: center;
+        vertical-align: center;
     }
 }
 

@@ -57,11 +57,23 @@
 <ng-template #cannotVote let-delegation="delegation">
     <!-- Success -->
     <div *ngIf="hasAlreadyVoted(delegation) && !isDeliveringVote(delegation)" class="user-has-voted">
-        <div>
+        <div [ngClass]="poll.isCryptographic ? 'has-voted-2-icon-wrapper' : 'has-voted-1-icon-wrapper'">
             <mat-icon class="vote-submitted">check_circle</mat-icon>
-            <br />
-            <span>{{ 'Voting successful.' | translate }}</span>
+            &nbsp;
+            <ng-container *ngIf="poll.isCryptographic">
+                <mat-icon class="vote-submitted">lock</mat-icon>
+                &nbsp;
+            </ng-container>
         </div>
+        <div class="has-voted-text">
+            <span>{{ poll.isCryptographic ? 'Encrypted voting successful' : ('Voting successful.' | translate) }}</span>
+        </div>
+        &nbsp;
+        <os-vote-token-secret-field
+            *ngIf="poll.isCryptographic"
+            [poll]="poll"
+            [user]="delegation ?? fallbackUser"
+        ></os-vote-token-secret-field>
     </div>
 
     <div *ngIf="hasAlreadyVoted(delegation) === undefined">

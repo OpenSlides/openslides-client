@@ -5,6 +5,7 @@ import {
     BasePollDetailComponent,
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
+import { PollDialogService } from 'src/app/site/pages/meetings/modules/poll/services/poll-dialog.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewOption, ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -41,9 +42,10 @@ export class AssignmentPollDetailComponent
     public constructor(
         pollService: AssignmentPollService,
         private pollDialog: AssignmentPollDialogService,
-        pollPdfService: AssignmentPollPdfService
+        pollPdfService: AssignmentPollPdfService,
+        dialog: PollDialogService
     ) {
-        super(pollService, pollPdfService);
+        super(pollService, pollPdfService, dialog);
     }
 
     public openDialog(poll: ViewPoll): void {
@@ -66,7 +68,8 @@ export class AssignmentPollDetailComponent
                 if (!votes[token]) {
                     votes[token] = {
                         user: vote.user,
-                        votes: []
+                        votes: [],
+                        user_token: token
                     };
                 }
 

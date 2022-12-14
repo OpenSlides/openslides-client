@@ -11,14 +11,13 @@ import {
     PollMethod,
     PollPercentBaseVerbose,
     PollPropertyVerbose,
-    PollTypeVerbose,
     VoteValue
 } from 'src/app/domain/models/poll';
 import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { ViewTopic } from '../../../../view-models';
-import { TopicPollMethodVerbose } from '../../definitions';
+import { TopicPollMethodVerbose, TopicPollTypeVerbose } from '../../definitions';
 import { TopicPollService } from '../../services/topic-poll.service';
 
 let uniqueId = 0;
@@ -59,7 +58,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
 
     public PollMethodVerbose = TopicPollMethodVerbose;
     public PollPercentBaseVerbose = PollPercentBaseVerbose;
-    public PollTypes = PollTypeVerbose;
+    public PollTypes = TopicPollTypeVerbose;
 
     private minNumberOfOptions = 2;
     public optionsWarning = _(`There should be at least 2 options.`);

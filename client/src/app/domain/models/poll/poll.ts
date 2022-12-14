@@ -28,6 +28,10 @@ export class Poll extends BaseDecimalModel<Poll> {
     public votescast!: number;
     public vote_count!: number;
     public onehundred_percent_base!: PollPercentBase;
+    public crypt_key: string;
+    public crypt_signature: string;
+    public votes_raw: string;
+    public votes_signature: string;
 
     /**
      * TODO:
@@ -85,8 +89,12 @@ export class Poll extends BaseDecimalModel<Poll> {
         return this.type === PollType.Pseudoanonymous;
     }
 
+    public get isCryptographic(): boolean {
+        return this.type === PollType.Cryptographic;
+    }
+
     public get isEVoting(): boolean {
-        return this.isNamed || this.isAnonymous;
+        return this.isNamed || this.isAnonymous || this.isCryptographic;
     }
 
     /**
@@ -175,7 +183,11 @@ export class Poll extends BaseDecimalModel<Poll> {
         `voted_ids`,
         `entitled_group_ids`,
         `projection_ids`,
-        `meeting_id`
+        `meeting_id`,
+        `crypt_key`,
+        `crypt_signature`,
+        `votes_raw`,
+        `votes_signature`
     ];
 }
 

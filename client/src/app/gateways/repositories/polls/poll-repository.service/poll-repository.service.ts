@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Decimal } from 'src/app/domain/definitions/key-types';
+import { Decimal, Id } from 'src/app/domain/definitions/key-types';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
+import { VoteDecryptGatewayService } from 'src/app/gateways/vote-decrypt-gateway.service';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
@@ -32,7 +33,8 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     public constructor(
         repoServiceCollector: RepositoryMeetingServiceCollectorService,
         private voteController: VoteControllerService,
-        private voteRepo: VoteRepositoryService
+        private voteRepo: VoteRepositoryService,
+        private voteCrypto: VoteDecryptGatewayService
     ) {
         super(repoServiceCollector, Poll);
     }
@@ -51,7 +53,11 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             `pollmethod`,
             `onehundred_percent_base`,
             `backend`,
-            `content_object_id`
+            `content_object_id`,
+            `crypt_key`,
+            `crypt_signature`,
+            `votes_raw`,
+            `votes_signature`
         ];
         return {
             ...super.getFieldsets(),
@@ -319,8 +325,16 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         return this.sendActionToBackend(PollAction.UPDATE_OPTION, payload);
     }
 
-    public async vote(poll: Identifiable, options: any): Promise<void> {
-        return this.voteRepo.sendVote(poll.id, options);
+    public async vote(poll: ViewPoll, options: { value: any; user_id: Id }, token: string): Promise<void> {
+        if (poll.type === PollType.Cryptographic) {
+            const withToken = JSON.stringify({ votes: options.value, token: token });
+            return this.voteRepo.sendVote(poll.id, {
+                value: await this.voteCrypto.encryptVote(poll, withToken),
+                user_id: options.user_id
+            });
+        } else {
+            return this.voteRepo.sendVote(poll.id, options);
+        }
     }
 
     public async changePollState(poll: Identifiable, targetState: PollState): Promise<void> {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { VoteDecryptGatewayService } from 'src/app/gateways/vote-decrypt-gateway.service';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -19,10 +20,15 @@ export class OrganizationInfoComponent extends BaseComponent implements OnInit {
         return this.osIsManager || this.operator.hasPerms(Permission.userCanManage);
     }
 
+    public get keyPrint(): string {
+        return this.cryptoGateway.publicMainKeyFingerprint;
+    }
+
     public constructor(
         protected override translate: TranslateService,
         private orgaRepo: OrganizationControllerService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private cryptoGateway: VoteDecryptGatewayService
     ) {
         super();
     }

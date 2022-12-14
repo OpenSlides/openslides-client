@@ -1,0 +1,14 @@
+<div class="non-verification-content-wrapper">
+    <ng-container *ngIf="(waiting | async) === false">
+        <i *ngIf="poll?.verified === undefined" translate>The results have not been verified yet.</i>
+        <i *ngIf="poll?.verified === false" translate>
+            The verification failed. The results have likely been manipulated.
+        </i>
+    </ng-container>
+    <ng-container *ngIf="waiting | async">
+        <i translate>Verifying...</i>
+    </ng-container>
+    <button mat-button [disabled]="!poll?.votes_signature || (waiting | async)" (click)="verifyPoll()">
+        {{ 'Verify results' | translate }}
+    </button>
+</div>

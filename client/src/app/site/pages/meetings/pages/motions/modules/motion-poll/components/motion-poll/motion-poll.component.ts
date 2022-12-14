@@ -4,6 +4,8 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollState, VOTE_MAJORITY } from 'src/app/domain/models/poll';
 import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { VotingCryptographyInfoDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-cryptography-info-dialog/services/voting-cryptography-info-dialog.service';
+import { PollDialogService } from 'src/app/site/pages/meetings/modules/poll/services/poll-dialog.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
@@ -58,13 +60,11 @@ export class MotionPollComponent extends BasePollComponent {
         private pollService: MotionPollService,
         private pdfService: MotionPollPdfService,
         private operator: OperatorService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
+        votingPrivacyDialog: VotingPrivacyWarningDialogService,
+        votingCryptoInfoDialog: VotingCryptographyInfoDialogService,
+        dialog: PollDialogService
     ) {
-        super();
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
+        super(dialog, votingPrivacyDialog, votingCryptoInfoDialog);
     }
 
     public downloadPdf(): void {

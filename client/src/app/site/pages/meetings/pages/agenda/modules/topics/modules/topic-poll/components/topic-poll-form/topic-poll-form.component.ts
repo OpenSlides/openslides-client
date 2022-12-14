@@ -14,7 +14,6 @@ import {
 export class TopicPollFormComponent extends BasePollFormComponent {
     public get hideSelects(): PollFormHideSelectsData {
         return {
-            type: true,
             pollMethod: true,
             globalOptions: true,
             hundredPercentBase: true,
