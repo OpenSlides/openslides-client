@@ -2,13 +2,14 @@
     width: 100%;
 }
 
-.history-banner {
+.wait-for-action-banner {
     background: yellow;
 
     span,
     a {
         padding: 2px;
         color: #000000;
+        background: yellow;
     }
 
     a {

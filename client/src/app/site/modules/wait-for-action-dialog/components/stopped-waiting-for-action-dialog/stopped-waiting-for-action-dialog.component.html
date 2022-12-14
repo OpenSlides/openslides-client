@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>
+    {{ 'Stopped waiting for process(es)' | translate }}
+</h2>
+
+<div mat-dialog-content>
+    <p>{{ 'The server may still be processing them, but you will probably not get a result.' | translate }}</p>
+    <div *ngIf="snapshots && showSnapshots" class="snapshots-field">
+        {{ snapshots }}
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>{{ 'OK' | translate }}</button>
+    <button mat-button *ngIf="!showSnapshots" (click)="showReport()">{{ 'Show report' | translate }}</button>
+    <button mat-button *ngIf="showSnapshots" (click)="copySnapshots()"><mat-icon>content_copy</mat-icon>{{ 'Copy report to clipboard' | translate }}</button>
+</div>

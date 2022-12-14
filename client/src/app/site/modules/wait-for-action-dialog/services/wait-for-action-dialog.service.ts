@@ -1,13 +1,15 @@
 import { Injectable, Injector } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
 import { ActionWorkerWatchService } from 'src/app/gateways/action-worker-watch/action-worker-watch.service';
 import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
 import { BannerService } from '../../site-wrapper/services/banner.service';
+import { StoppedWaitingForActionDialogComponent } from '../components/stopped-waiting-for-action-dialog/stopped-waiting-for-action-dialog.component';
 import { WaitForActionBannerComponent } from '../components/wait-for-action-banner/wait-for-action-banner.component';
-import { WaitForActionDialogComponent } from '../components/wait-for-action-dialog/wait-for-action-dialog.component';
 import { WaitForActionData, WaitForActionReason } from '../definitions';
 import { WaitForActionDialogModule } from '../wait-for-action-dialog.module';
 
@@ -25,6 +27,10 @@ export class WaitForActionDialogService {
 
     public get dataObservable(): Observable<Map<WaitForActionReason, WaitForActionData[]>> {
         return this._dataObservable;
+    }
+
+    public get snapshotsObservable(): Observable<(Partial<ActionWorker> & { closed: number })[]> {
+        return this._snapshots.asObservable();
     }
 
     private get workerWatch(): ActionWorkerWatchService {
@@ -54,7 +60,10 @@ export class WaitForActionDialogService {
     private _dataSubject = new BehaviorSubject<Map<WaitForActionReason, WaitForActionData[]>>(new Map([]));
     private _dataObservable = this._dataSubject.asObservable();
 
-    private _dialog: MatDialogRef<WaitForActionDialogComponent>;
+    private _dialog: MatDialogRef<StoppedWaitingForActionDialogComponent>;
+    private _closingSubscription: Subscription;
+
+    private _snapshots: BehaviorSubject<(Partial<ActionWorker> & { closed: number })[]> = new BehaviorSubject([]);
 
     public constructor(
         private injector: Injector,
@@ -70,6 +79,18 @@ export class WaitForActionDialogService {
         );
         if (this.currentReason === null) {
             this.newCurrentReason();
+        }
+    }
+
+    public async openClosingPrompt(snapshot: Partial<ActionWorker> & { closed: number }): Promise<void> {
+        this._snapshots.next(this._snapshots.value.concat(snapshot));
+        if (!this._dialog) {
+            const module = await import(`../wait-for-action-dialog.module`).then(m => m.WaitForActionDialogModule);
+            this._dialog = this.dialog.open(module.getComponent(), { ...infoDialogSettings });
+            this._closingSubscription = this._dialog.afterClosed().subscribe(() => {
+                this._snapshots.next([]);
+                this._closingSubscription.unsubscribe();
+            });
         }
     }
 
@@ -134,13 +155,10 @@ export class WaitForActionDialogService {
 
     private async openDialog() {
         this.bannerService.addBanner({ component: WaitForActionBannerComponent });
-        // const module = await import(`../wait-for-action-dialog.module`).then(m => m.WaitForActionDialogModule);
-        // this._dialog = this.dialog.open(module.getComponent(), { ...infoDialogSettings });
     }
 
     private closeDialog() {
         this.bannerService.removeBanner({ component: WaitForActionBannerComponent });
-        // this._dialog.close();
     }
 
     private newCurrentReason(): void {

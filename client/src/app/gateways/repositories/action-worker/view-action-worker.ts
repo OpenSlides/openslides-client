@@ -30,10 +30,17 @@ export class ViewActionWorker extends BaseViewModel<ActionWorker> {
     }
 
     /**
+     * Returns true, if the worker timestamp is older than 60 seconds
+     */
+    public get hasPassedDeathThreshold(): boolean {
+        return -this.timestamp + Date.now() / 1000 > 60;
+    }
+
+    /**
      * Returns true, if the worker is older than 2 seconds
      */
     public get isSlow(): boolean {
-        return this.timeSinceCreation > 0; //TODO: Reverse
+        return this.timeSinceCreation > 2;
     }
 
     public lastConfirmationToWaitTimestamp: number = undefined;

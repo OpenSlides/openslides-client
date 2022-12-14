@@ -15,8 +15,8 @@ export type WaitForActionReason = typeof waitForActionReason[WaitForActionReason
 
 export const titleVerbose: { [key: number]: string } = {
     [waitForActionReason.notWritten]: `The process will be started in the future, please wait.`,
-    [waitForActionReason.inactive]: `The process is running, please wait.`,
-    [waitForActionReason.slow]: `The process may have stopped running`
+    [waitForActionReason.slow]: `The process is running, please wait.`,
+    [waitForActionReason.inactive]: `The process may have stopped running`
 };
 
 export const multiActionVerbose: { [key: number]: { wait: string; stop: string } } = {
