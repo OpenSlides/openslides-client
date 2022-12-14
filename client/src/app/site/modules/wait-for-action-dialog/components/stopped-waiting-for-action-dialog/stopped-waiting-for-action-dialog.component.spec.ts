@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WaitForActionDialogComponent } from './wait-for-action-dialog.component';
+import { StoppedWaitingForActionDialogComponent } from './stopped-waiting-for-action-dialog.component';
 
-xdescribe(`WaitForActionDialogComponent`, () => {
-    let component: WaitForActionDialogComponent;
-    let fixture: ComponentFixture<WaitForActionDialogComponent>;
+xdescribe(`StoppedWaitingForActionDialogComponent`, () => {
+    let component: StoppedWaitingForActionDialogComponent;
+    let fixture: ComponentFixture<StoppedWaitingForActionDialogComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [WaitForActionDialogComponent]
+            declarations: [StoppedWaitingForActionDialogComponent]
         }).compileComponents();
 
-        fixture = TestBed.createComponent(WaitForActionDialogComponent);
+        fixture = TestBed.createComponent(StoppedWaitingForActionDialogComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
