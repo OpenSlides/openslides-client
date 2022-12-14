@@ -429,17 +429,22 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             if (!oldDefinition) {
                 return;
             }
-            oldDefinition.options.forEach(option => {
-                if (!option || typeof option === `string`) {
-                    return;
-                }
-                const newOption = (
-                    definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
-                ).find(newOpt => newOpt.label === option.label);
-                if (newOption) {
-                    newOption.isActive = option.isActive;
-                }
-            });
+            if (definition.options.length === 0 && oldDefinition.options.length) {
+                definition.options = oldDefinition.options;
+            } else {
+                oldDefinition.options.forEach(option => {
+                    if (!option || typeof option === `string`) {
+                        return;
+                    }
+
+                    const newOption = (
+                        definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
+                    ).find(newOpt => newOpt.label === option.label);
+                    if (newOption) {
+                        newOption.isActive = option.isActive;
+                    }
+                });
+            }
         });
         return newFilterDefs;
     }

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { filter, Observable, Subscriber } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { filter, Observable, Subject } from 'rxjs';
 import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
 import { environment } from 'src/environments/environment';
 
@@ -7,31 +7,26 @@ import { environment } from 'src/environments/environment';
     providedIn: `root`
 })
 export class SharedWorkerService {
-    public messages: Observable<WorkerResponse>;
+    public messages: Subject<WorkerResponse> = new Subject();
 
     private conn: MessagePort | Window;
     private ready = false;
 
-    constructor() {
+    constructor(private zone: NgZone) {
         if (environment.autoupdateOnSharedWorker) {
             try {
                 let worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
                     name: `openslides-shared-worker`
                 });
-                worker.port.start();
                 this.conn = worker.port;
+                this.registerMessageListener();
+                worker.port.start();
             } catch (e) {
-                import(`./default-shared-worker.worker`);
-                this.conn = window;
+                this.setupInWindowAu();
             }
         } else {
-            import(`./default-shared-worker.worker`);
-            this.conn = window;
+            this.setupInWindowAu();
         }
-
-        this.messages = new Observable<WorkerResponse>(subscriber => {
-            this.registerMessageListener(subscriber);
-        });
     }
 
     /**
@@ -53,10 +48,18 @@ export class SharedWorkerService {
         this.sendRawMessage({ receiver, msg } as WorkerMessage);
     }
 
-    private registerMessageListener(subscriber: Subscriber<WorkerResponse>): void {
+    private setupInWindowAu(): void {
+        this.conn = window;
+        this.registerMessageListener();
+        this.zone.runOutsideAngular(() => {
+            import(`./default-shared-worker.worker`);
+        });
+    }
+
+    private registerMessageListener(): void {
         this.conn.addEventListener(`message`, (e: any) => {
             if (this.ready && e?.data?.sender) {
-                subscriber.next(e?.data);
+                this.messages.next(e?.data);
             } else if (e?.data === `ready`) {
                 this.ready = true;
             }

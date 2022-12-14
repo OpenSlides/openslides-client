@@ -61,7 +61,7 @@
             <button
                 type="button"
                 mat-icon-button
-                matTooltip="{{ 'Create final print template' | translate }}"
+                matTooltip="{{ 'Create editorial final version' | translate }}"
                 *ngIf="showCreateFinalVersionButton"
                 (click)="createModifiedFinalVersion()"
             >
@@ -74,7 +74,7 @@
                     type="button"
                     mat-icon-button
                     *ngIf="!isEditingFinalVersion"
-                    matTooltip="{{ 'Edit final print template' | translate }}"
+                    matTooltip="{{ 'Edit editorial final version' | translate }}"
                     (click)="editModifiedFinalVersion()"
                 >
                     <mat-icon>edit</mat-icon>
@@ -84,7 +84,7 @@
                     type="button"
                     *ngIf="isEditingFinalVersion"
                     mat-icon-button
-                    matTooltip="{{ 'Save final print template' | translate }}"
+                    matTooltip="{{ 'Save editorial final version' | translate }}"
                     (click)="saveModifiedFinalVersion()"
                 >
                     <mat-icon>done</mat-icon>
@@ -105,7 +105,7 @@
                     class="red-warning-text"
                     *ngIf="!isEditingFinalVersion"
                     mat-icon-button
-                    matTooltip="{{ 'Delete final print template' | translate }}"
+                    matTooltip="{{ 'Delete editorial final version' | translate }}"
                     (click)="deleteModifiedFinalVersion()"
                 >
                     <mat-icon>delete</mat-icon>
@@ -169,7 +169,7 @@
 </mat-menu>
 
 <!-- Diff View Menu
-     For motions, all items are available if there are changing objects. The final print template only after is has been created.
+     For motions, all items are available if there are changing objects. The editorial final version only after is has been created.
      For paragraph-based amendments, only the original and the diff version is available.
 -->
 <mat-menu #changeRecoMenu="matMenu">
@@ -210,6 +210,6 @@
         (click)="setChangeRecoMode(ChangeRecoMode.ModifiedFinal)"
         [ngClass]="{ selected: crMode === ChangeRecoMode.ModifiedFinal }"
     >
-        {{ 'Final print template' | translate }}
+        {{ 'Editorial final version' | translate }}
     </button>
 </mat-menu>

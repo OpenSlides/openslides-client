@@ -20,6 +20,7 @@ export class SpinnerService {
     private isStable = false;
     private isOffline = false;
     private isOnLoginMask = false;
+    private isOnErrorPage = false;
 
     private isStableSubscription: Subscription | null = null;
 
@@ -64,7 +65,7 @@ export class SpinnerService {
      * @returns True, if the three booleans are all true.
      */
     public isConnectionStable(): boolean {
-        return this.isOnLoginMask || (this.isOperatorReady && (this.isOffline || this.isStable));
+        return this.isOnLoginMask || this.isOnErrorPage || (this.isOperatorReady && (this.isOffline || this.isStable));
     }
 
     /**
@@ -88,6 +89,7 @@ export class SpinnerService {
             this.isOffline = isOffline;
             this.isStable = isStable;
             this.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
+            this.isOnErrorPage = (event as RoutesRecognized).url.includes(`error`);
             this.checkConnection();
         });
     }

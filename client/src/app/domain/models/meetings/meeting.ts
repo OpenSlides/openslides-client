@@ -131,6 +131,7 @@ export class Settings {
     public motions_amendments_text_mode!: string;
     public motions_amendments_multiple_paragraphs!: boolean;
     public motions_supporters_min_amount!: number;
+    public motions_block_slide_columns!: number;
     public motions_export_title!: string;
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;

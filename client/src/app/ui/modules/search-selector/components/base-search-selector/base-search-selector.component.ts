@@ -120,6 +120,9 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Input()
     public showEntriesNumber: number = 4;
 
+    @Input()
+    public excludeIds: boolean = false;
+
     public itemSizeInPx = 50;
 
     public get panelHeight(): number {
@@ -147,6 +150,9 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     @Output()
     public selectionChanged = new EventEmitter<OsOptionSelectionChanged>();
+
+    @Output()
+    public openedChange = new EventEmitter<boolean>();
 
     public override contentForm!: UntypedFormControl;
     public searchValueForm!: UntypedFormControl;
@@ -248,6 +254,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public onOpenChanged(event: boolean): void {
+        this.openedChange.emit(event);
         if (event) {
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();
@@ -353,11 +360,13 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             return this.selectableItems;
         }
         const filteredItems = this.selectableItems.filter(item => {
-            const idString = `` + item.id;
-            const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
+            if (!this.excludeIds) {
+                const idString = `` + item.id;
+                const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
 
-            if (foundId) {
-                return true;
+                if (foundId) {
+                    return true;
+                }
             }
 
             return this.getAdditionalySearchedValuesFn(item)
