@@ -18,7 +18,11 @@ test.describe('Testing the sign in and out process', () => {
         username = username + Date.now().toString();
         secondAccountId = (await createAccount(context, username)).id;
 
-        const { id: _meetingId, committeeId: _committeeId, name: _meetingName } = await createMeeting(context, `MeetingLoginTest`, [secondAccountId]);
+        const {
+            id: _meetingId,
+            committeeId: _committeeId,
+            name: _meetingName
+        } = await createMeeting(context, `MeetingLoginTest`, [secondAccountId]);
         meetingId = _meetingId;
         committeeId = _committeeId;
 
@@ -88,4 +92,4 @@ test.describe('Testing the sign in and out process', () => {
         await logout(context);
         await expect(page).toHaveURL('/login');
     });
-})
+});
