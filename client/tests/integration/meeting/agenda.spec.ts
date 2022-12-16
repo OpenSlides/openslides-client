@@ -20,7 +20,11 @@ test.describe('agenda tests', () => {
         await login(context);
         username = username + Date.now().toString();
         account = await createAccount(context, username);
-        meeting = await createMeeting(context, `AgendaTestMeeting${Date.now().toString() + Math.floor(Math.random() * 100)}`, [account.id]);
+        meeting = await createMeeting(
+            context,
+            `AgendaTestMeeting${Date.now().toString() + Math.floor(Math.random() * 100)}`,
+            [account.id]
+        );
         const title = `AgendaTestTopic${Date.now().toString()}`;
         topic = await os4request(context, 'topic.create', {
             meeting_id: meeting.id,
