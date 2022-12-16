@@ -802,7 +802,7 @@ button.mat-menu-item.selected {
 
 .flex-vertical-center {
     display: flex;
-    align-items: center;
+    align-items: safe center;
     flex-direction: row;
 
     &.align-left {
