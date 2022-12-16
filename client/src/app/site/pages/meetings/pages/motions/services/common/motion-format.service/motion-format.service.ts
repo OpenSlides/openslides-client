@@ -144,6 +144,7 @@ export class MotionFormatService {
             targetMotion.text,
             appliedChanges,
             lineLength,
+            true,
             highlightedLine,
             firstLine
         );
@@ -193,6 +194,7 @@ export class MotionFormatService {
             targetMotion.text,
             filteredChangeRecommendations,
             lineLength,
+            false,
             highlightedLine!,
             firstLine
         );

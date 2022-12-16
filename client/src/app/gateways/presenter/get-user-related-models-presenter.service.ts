@@ -16,6 +16,7 @@ export interface GetUserRelatedModelsUser {
         submitter_ids: Id[];
     }[];
     committees?: GetUserRelatedModelsCommittee[];
+    error?: string; // This is in case the presenter fails in an unpredicted way
 }
 
 export interface GetUserRelatedModelsCommittee {

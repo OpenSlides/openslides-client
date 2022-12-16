@@ -1,4 +1,5 @@
 import { Injectable, Injector, Type } from '@angular/core';
+import { ActionWorkerAppConfig } from 'src/app/gateways/repositories/action-worker/action-worker.config';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
@@ -49,7 +50,8 @@ const appConfigs: AppConfig[] = [
     ProjectorAppConfig,
     AutopilotAppConfig,
     MeetingSettingsAppConfig,
-    ChatAppConfig
+    ChatAppConfig,
+    ActionWorkerAppConfig
 ];
 
 @Injectable({

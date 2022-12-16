@@ -76,8 +76,7 @@ export class MotionLineNumberingService {
             );
             sortedChangingObjects.push(...this.getAmendmentAmendedParagraphs(amendment, lineLength, toApplyChanges));
         }
-        sortedChangingObjects.sort((a: ViewUnifiedChange, b: ViewUnifiedChange) => a.getLineFrom() - b.getLineFrom());
-        return sortedChangingObjects;
+        return this.diffService.sortChangeRequests(sortedChangingObjects);
     }
 
     public resetAmendmentChangeRecoListeners(amendments: ViewMotion[]): void {
@@ -445,20 +444,5 @@ export class MotionLineNumberingService {
         } else {
             throw new Error(`getDiffedParagraphToChoose: given amendment has no parent`);
         }
-    }
-
-    public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return (
-            changes.filter(
-                (otherChange: ViewUnifiedChange) =>
-                    otherChange.getChangeId() !== change.getChangeId() &&
-                    ((otherChange.getLineFrom() >= change.getLineFrom() &&
-                        otherChange.getLineFrom() < change.getLineTo()) ||
-                        (otherChange.getLineTo() > change.getLineFrom() &&
-                            otherChange.getLineTo() <= change.getLineTo()) ||
-                        (otherChange.getLineFrom() < change.getLineFrom() &&
-                            otherChange.getLineTo() > change.getLineTo()))
-            ).length > 0
-        );
     }
 }

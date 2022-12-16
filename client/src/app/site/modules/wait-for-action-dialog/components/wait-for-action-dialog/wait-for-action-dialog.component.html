@@ -1,0 +1,7 @@
+<div>
+    <h2>{{ 'Please wait' | translate }}</h2>
+    <p></p>
+    <p>{{ 'The server process is still running.' | translate }}</p>
+    <p>{{ 'Process type' | translate }}: <i>{{ currentWorkerName }}</i></p>
+    <button mat-button (click)="wait()">{{ 'OK' | translate }}</button>
+</div>

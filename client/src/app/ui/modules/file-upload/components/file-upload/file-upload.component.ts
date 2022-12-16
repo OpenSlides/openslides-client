@@ -1,4 +1,13 @@
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -36,6 +45,8 @@ export class FileUploadComponent {
 
     @ContentChild(TemplateRef, { static: true })
     public additionalContent: TemplateRef<any> | null = null;
+
+    @ViewChild(`fileInput`) fileInput: ElementRef;
 
     /**
      * Determine if uploading should happen parallel or synchronously.
@@ -84,6 +95,8 @@ export class FileUploadComponent {
                 this.addFile(addedFile);
             }
         }
+
+        this.fileInput.nativeElement.value = null;
     }
 
     /**

@@ -9,7 +9,7 @@
             [saveAction]="getSaveAction()"
             (mainEvent)="createAmendment()"
             (cancelEditEvent)="leaveEditMotion()"
-            [goBack]="true"
+            [goBack]="motion?.hasLeadMotion"
         >
             <!-- Title -->
             <div class="title-slot">

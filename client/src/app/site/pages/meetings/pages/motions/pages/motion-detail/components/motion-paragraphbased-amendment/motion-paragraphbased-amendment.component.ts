@@ -96,7 +96,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
     public getAmendmentParagraphs(): DiffLinesInParagraph[] {
         try {
             this.amendmentErrorMessage = null;
-            return this.motion?.getAmendmentParagraphLines(this.showAmendmentContext) || [];
+            return this.motion?.getAmendmentParagraphLines(ChangeRecoMode.Changed, this.showAmendmentContext) || [];
         } catch (e: any) {
             this.amendmentErrorMessage = e.toString();
             return [];

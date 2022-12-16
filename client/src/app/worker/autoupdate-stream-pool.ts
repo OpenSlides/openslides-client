@@ -212,6 +212,7 @@ export class AutoupdateStreamPool {
             } as AutoupdateNewUserContent);
 
             for (let stream of this.streams) {
+                stream.clearSubscriptions();
                 stream.restart();
             }
         }

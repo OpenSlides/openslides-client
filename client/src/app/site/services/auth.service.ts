@@ -117,6 +117,7 @@ export class AuthService {
             this.authTokenService.setRawAccessToken(null);
         }
         this._logoutEvent.emit();
+        this.DS.deleteCollections(...this.DS.getCollections());
         await this.DS.clear();
         this.lifecycleService.bootup();
     }

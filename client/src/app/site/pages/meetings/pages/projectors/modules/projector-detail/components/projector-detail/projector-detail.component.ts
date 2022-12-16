@@ -2,7 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
@@ -68,6 +68,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     private _projectorId: Id | null = null;
 
+    private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -98,8 +100,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      * Gets the projector and subscribes to it.
      */
     public ngOnInit(): void {
-        const projectorId$ = this.route.params.pipe(map(params => parseInt(params[`id`], 10) || 1));
-        this.projectorObservable = projectorId$.pipe(
+        this.projectorObservable = this._projectorIdSubject.pipe(
             switchMap(projectorId => this.repo.getViewModelObservable(projectorId))
         );
     }
@@ -107,6 +108,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     public onIdFound(id: Id | null): void {
         if (id) {
             this._projectorId = id;
+            this._projectorIdSubject.next(id);
             this.setupSubscription();
         }
     }

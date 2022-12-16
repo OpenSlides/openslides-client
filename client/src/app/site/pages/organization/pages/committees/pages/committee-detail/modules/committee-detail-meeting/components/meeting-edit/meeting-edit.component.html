@@ -52,6 +52,7 @@
             <mat-label>{{ 'Participants' | translate }}</mat-label>
             <os-account-search-selector
                 formControlName="user_ids"
+                [accounts]="meetingUsers"
                 placeholder="{{ 'Participants' | translate }}"
             ></os-account-search-selector>
         </mat-form-field>
@@ -60,6 +61,7 @@
             <mat-label>{{ 'Administrators' | translate }}</mat-label>
             <os-account-search-selector
                 formControlName="admin_ids"
+                [accounts]="meetingUsers"
                 placeholder="{{ 'Administrators' | translate }}"
             ></os-account-search-selector>
         </mat-form-field>

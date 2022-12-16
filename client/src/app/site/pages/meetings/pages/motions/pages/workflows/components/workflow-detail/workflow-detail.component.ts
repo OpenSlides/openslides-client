@@ -153,7 +153,12 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { name: `Show amendment in parent motion`, selector: `merge_amendment_into_final`, type: `amendment` },
         { name: `Restrictions`, selector: `restrictions`, type: `restrictions` },
         { name: `Label color`, selector: `css_class`, type: `color` },
-        { name: `Next states`, selector: `next_states_id`, type: `state` }
+        { name: `Next states`, selector: `next_states_id`, type: `state` },
+        {
+            name: `Submitter may set state to`,
+            selector: `submitter_withdraw_state_id`,
+            type: `submitter_withdraw_state`
+        }
     ] as StatePerm[];
 
     public constructor(
@@ -265,6 +270,20 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      */
     public onSelectColor(state: ViewMotionState, color: string): void {
         this.handleRequest(this.stateRepo.update({ css_class: color }, state));
+    }
+
+    /**
+     * Handler to add or remove next states to a workflow state
+     *
+     * @param setState the potential next workflow state
+     * @param state the state to add or remove another state to
+     */
+    public onSetSubmitterWithdrawState(setState: ViewMotionState, state: ViewMotionState): void {
+        if (setState.id === state.submitter_withdraw_state?.id) {
+            setState = null;
+        }
+
+        this.handleRequest(this.stateRepo.update({ submitter_withdraw_state_id: setState?.id || null }, state));
     }
 
     /**

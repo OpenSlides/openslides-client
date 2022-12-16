@@ -10,7 +10,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
-import { VotingError, VotingService } from '../services/voting.service';
+import { VotingProhibition, VotingService } from '../services/voting.service';
 
 export interface VoteOption {
     vote?: VoteValue;
@@ -31,7 +31,7 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
         return this._poll;
     }
 
-    public votingErrors = VotingError;
+    public votingErrors = VotingProhibition;
 
     public get isReady(): boolean {
         return this._isReady;
@@ -98,11 +98,11 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     }
 
     public getVotingError(user: ViewUser = this.user): string {
-        return this.votingService.getVotePermissionErrorVerbose(this.poll, user) || ``;
+        return this.votingService.getVotingProhibitionReasonVerbose(this.poll, user) || ``;
     }
 
     public getVotingErrorFromName(errorName: string) {
-        return this.votingService.getVotePermissionErrorVerboseFromName(errorName) || ``;
+        return this.votingService.getVotingProhibitionReasonVerboseFromName(errorName) || ``;
     }
 
     protected async sendVote(userId: Id, votePayload: any): Promise<void> {

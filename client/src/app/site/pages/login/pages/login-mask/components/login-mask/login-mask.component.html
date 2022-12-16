@@ -45,12 +45,6 @@
         </mat-form-field>
         <mat-error>{{ loginErrorMsg | translate }}</mat-error>
 
-        <!-- forgot password button -->
-        <br />
-        <button mat-button color="primary" type="button" class="forgot-password-button" (click)="resetPassword()">
-            {{ 'Forgot Password?' | translate }}
-        </button>
-
         <!-- login button -->
         <br />
         <!-- TODO: Next to each other...-->
@@ -67,6 +61,12 @@
         </button>
         <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">
             {{ 'Login as guest' | translate }}
+        </button>
+
+        <!-- forgot password button -->
+        <br />
+        <button mat-button color="primary" type="button" class="forgot-password-button" (click)="resetPassword()">
+            {{ 'Forgot Password?' | translate }}
         </button>
     </form>
 </div>

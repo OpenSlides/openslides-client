@@ -35,7 +35,9 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
             `weight`,
             `workflow_id`,
             `next_state_ids`,
-            `previous_state_ids`
+            `previous_state_ids`,
+            `submitter_withdraw_state_id`,
+            `submitter_withdraw_back_ids`
         ];
         return {
             [DEFAULT_FIELDSET]: detailFields

@@ -269,35 +269,44 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         noneOptionLabel,
         filterFn
     }: RepositoryFilterConfig<OV, V>): void {
-        repo.getViewModelListObservable().subscribe(viewModels => {
-            if (viewModels && viewModels.length) {
-                const filterProperties: (OsFilterOption | string)[] = viewModels
-                    .filter(filterFn ?? (() => true))
-                    .map((model: any) => ({
-                        condition: model.id,
-                        label: model.getTitle(),
-                        isChild: !!model.parent,
-                        children:
-                            model.children && model.children.length
-                                ? model.children.map((child: any) => ({
-                                      label: child.getTitle(),
-                                      condition: child.id
-                                  }))
-                                : undefined
-                    }));
+        repo.getViewModelListObservable()
+            .pipe(
+                map(viewModels => {
+                    if (viewModels && viewModels.length) {
+                        const filterProperties: (OsFilterOption | string)[] = viewModels
+                            .filter(filterFn ?? (() => true))
+                            .map((model: any) => ({
+                                condition: model.id,
+                                label: model.getTitle(),
+                                isChild: !!model.parent,
+                                children:
+                                    model.children && model.children.length
+                                        ? model.children.map((child: any) => ({
+                                              label: child.getTitle(),
+                                              condition: child.id
+                                          }))
+                                        : undefined
+                            }));
 
-                if (noneOptionLabel) {
-                    filterProperties.push(`-`);
-                    filterProperties.push({
-                        condition: null,
-                        label: noneOptionLabel
-                    });
-                }
+                        if (noneOptionLabel) {
+                            filterProperties.push(`-`);
+                            filterProperties.push({
+                                condition: null,
+                                label: noneOptionLabel
+                            });
+                        }
 
+                        return filterProperties;
+                    }
+
+                    return [];
+                })
+            )
+            .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)))
+            .subscribe(filterProperties => {
                 filter.options = filterProperties;
                 this.updateFilterDefinitions();
-            }
-        });
+            });
     }
 
     /**
@@ -420,17 +429,22 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             if (!oldDefinition) {
                 return;
             }
-            oldDefinition.options.forEach(option => {
-                if (!option || typeof option === `string`) {
-                    return;
-                }
-                const newOption = (
-                    definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
-                ).find(newOpt => newOpt.label === option.label);
-                if (newOption) {
-                    newOption.isActive = option.isActive;
-                }
-            });
+            if (definition.options.length === 0 && oldDefinition.options.length) {
+                definition.options = oldDefinition.options;
+            } else {
+                oldDefinition.options.forEach(option => {
+                    if (!option || typeof option === `string`) {
+                        return;
+                    }
+
+                    const newOption = (
+                        definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
+                    ).find(newOpt => newOpt.label === option.label);
+                    if (newOption) {
+                        newOption.isActive = option.isActive;
+                    }
+                });
+            }
         });
         return newFilterDefs;
     }

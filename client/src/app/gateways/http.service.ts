@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firstValueFrom, Observable } from 'rxjs';
 
@@ -12,6 +12,7 @@ import {
 } from '../infrastructure/definitions/http';
 import { ProcessError } from '../infrastructure/errors';
 import { toBase64 } from '../infrastructure/utils/functions';
+import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
 import { ErrorMapService } from './error-mapping/error-map.service';
 
 type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
@@ -22,7 +23,20 @@ const defaultHeaders: HttpHeadersObj = { [`Content-Type`]: `application/json` };
     providedIn: `root`
 })
 export class HttpService {
-    public constructor(private http: HttpClient, private errorMapper: ErrorMapService, private snackBar: MatSnackBar) {}
+    private _actionWorkerWatch: ActionWorkerWatchService;
+    private get actionWorkerWatch(): ActionWorkerWatchService {
+        if (!this._actionWorkerWatch) {
+            this._actionWorkerWatch = this.injector.get(ActionWorkerWatchService);
+        }
+        return this._actionWorkerWatch;
+    }
+
+    public constructor(
+        private http: HttpClient,
+        private errorMapper: ErrorMapService,
+        private injector: Injector,
+        private snackBar: MatSnackBar
+    ) {}
 
     /**
      * Send the a http request the the given path.
@@ -62,7 +76,10 @@ export class HttpService {
 
         try {
             const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>({ method, url, options }));
-            return response?.body as T;
+            if (response.status === 202) {
+                return (await this.actionWorkerWatch.watch<T>(response, true)).body as T;
+            }
+            return response.body as T;
         } catch (error) {
             console.log(error);
             if (error instanceof HttpErrorResponse) {

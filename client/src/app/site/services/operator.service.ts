@@ -254,7 +254,7 @@ export class OperatorService {
                 return;
             }
             const newMeetingId = meeting?.id || null;
-            if (this._lastActiveMeetingId !== newMeetingId) {
+            if (this._lastActiveMeetingId !== newMeetingId || !this._ready) {
                 console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
                 this._lastActiveMeetingId = newMeetingId;
                 this.operatorStateChange(false);
@@ -519,6 +519,8 @@ export class OperatorService {
     public hasOrganizationPermissions(...permissionsToCheck: OML[]): boolean {
         if (!this._OML) {
             return false;
+        } else if (!permissionsToCheck.length) {
+            return true;
         }
         return permissionsToCheck.some(permission => omlNameMapping[this._OML!] >= omlNameMapping[permission]);
     }

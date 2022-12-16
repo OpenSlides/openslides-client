@@ -5,7 +5,8 @@
 export const environment = {
     production: false,
     authUrlPrefix: `system/auth`,
-    authSecurePrefix: `secure`
+    authSecurePrefix: `secure`,
+    autoupdateOnSharedWorker: false
 };
 
 /*

@@ -260,11 +260,6 @@ export class HttpStream<T> {
      * Incoming messages and errors are treated by the optional passed `onMessage`- and `onError`-handlers.
      */
     public open(): void {
-        // TODO: remove if https://github.com/cypress-io/cypress/issues/3708 fixed
-        if ((<any>window).isCypressTest) {
-            return;
-        }
-
         this._isClosed = false;
         this.subscribe();
     }

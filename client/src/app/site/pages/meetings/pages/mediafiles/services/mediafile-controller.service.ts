@@ -7,6 +7,7 @@ import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
 import { BaseController } from 'src/app/site/base/base-controller';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ViewMediafile } from '../view-models';
 import { MediafileCommonServiceModule } from './mediafile-common-service.module';
@@ -15,7 +16,8 @@ import { MediafileCommonServiceModule } from './mediafile-common-service.module'
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {
     constructor(
         protected override controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MediafileRepositoryService
+        protected override repo: MediafileRepositoryService,
+        private operator: OperatorService
     ) {
         super(controllerServiceCollector, Mediafile, repo);
     }
@@ -44,6 +46,15 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
         return this.getViewModelListObservable().pipe(
             map(mediafiles =>
                 mediafiles.filter(mediafile => {
+                    if (
+                        (mediafile.access_group_ids?.length &&
+                            !this.operator.isInGroupIds(...mediafile.access_group_ids)) ||
+                        (mediafile.inherited_access_groups?.length &&
+                            !this.operator.isInGroupIds(...mediafile.inherited_access_group_ids))
+                    ) {
+                        return false;
+                    }
+
                     // instead of being null or undefined, for the root dir
                     // mediafile.parent_id is simply not the in object
                     if (!mediafile.parent_id && !parentId) {

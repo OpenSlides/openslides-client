@@ -5,17 +5,26 @@
     </div>
 </os-head-bar>
 
-<div class="meeting-list-container">
+
+<div *ngIf="!organizationDescription" class="meeting-list-container">
     <div class="meeting-spacer"></div>
 </div>
 
-<mat-card *ngIf="noMeetingsToShow" class="no-content os-card">
+<mat-card *ngIf="noMeetingsToShow && ready" class="no-content os-card">
     <i>{{ 'No meetings available' | translate }}</i>
 </mat-card>
+
+<div *ngIf="noMeetingsToShow && !ready" class="no-content">
+    <mat-spinner class="spinner-center"></mat-spinner>
+</div>
 
 <ng-container *ngIf="!noMeetingsToShow">
     <div class="padding-right-8">
         <!-- active meetings -->
+        <div *ngIf="organizationDescription" class="meeting-list-container">
+            <div class="organization-description" [innerHTML]="organizationDescription | translate"></div>
+        </div>
+
         <div id="active-meetings" class="meeting-list-container">
             <div class="meeting-icon-wrapper foreground-accent">
                 <mat-icon color="accent">access_alarm</mat-icon>

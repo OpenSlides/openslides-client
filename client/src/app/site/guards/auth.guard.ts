@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      *
      * @param route the route the user wants to navigate to
      */
-    public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
         if (this.hasAlreadyBeenChecked(state)) {
             return true;
         }
@@ -48,8 +48,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             return false;
         }
         if (!(await this.authCheck.isAuthenticated())) {
-            this.reroute.toLogin();
-            return false;
+            return this.reroute.toLogin();
         }
         return await this.authCheck.isAuthorized(route.data);
     }
@@ -59,22 +58,29 @@ export class AuthGuard implements CanActivate, CanActivateChild {
      *
      * @param route the route the user wants to navigate to
      */
-    public async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    public async canActivateChild(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
+    ): Promise<boolean | UrlTree> {
         if (this.hasAlreadyBeenChecked(state)) {
             return true;
         }
         await this.operator.ready;
-        const canActivateRoute = await this.canActivate(route, state);
 
+        const canActivateRoute = await this.canActivate(route, state);
         if (canActivateRoute) {
             return true;
         } else {
             if (this._cannotAccessReason === CannotAccessReason.NO_MEANING) {
-                this.reroute.forwardToOnlyMeeting(state.url === `/info` ? [`info`] : []);
+                const forwardTo = this.reroute.getOnlyMeetingUrlTree(state.url === `/info` ? [`info`] : []);
+                if (forwardTo) {
+                    return forwardTo;
+                }
             } else {
-                this.reroute.handleForbiddenRoute(route.data, route.url, state.url);
+                return await this.reroute.handleForbiddenRoute(route.data, route.url, state.url);
             }
         }
+
         return false;
     }
 

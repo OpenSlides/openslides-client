@@ -16,6 +16,12 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
      */
     public resetPasswordForm: UntypedFormGroup;
 
+    public get isWaiting(): boolean {
+        return this._isWaiting;
+    }
+
+    private _isWaiting: boolean = false;
+
     /**
      * Constructur for the reset password view. Initializes the form for the email.
      */
@@ -47,7 +53,9 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
         }
 
         try {
+            this._isWaiting = true;
             await this.userRepo.forgetPassword(this.resetPasswordForm.get(`email`)!.value);
+            this._isWaiting = false;
             this.matSnackBar.open(
                 this.translate.instant(`An email with a password reset link was send!`),
                 this.translate.instant(`OK`),
@@ -55,8 +63,9 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
                     duration: 0
                 }
             );
-            this.router.navigate([`..`]);
+            this.router.navigate([`/login`]);
         } catch (e) {
+            this._isWaiting = false;
             this.raiseError(e);
         }
     }
