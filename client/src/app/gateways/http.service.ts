@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 
 import {
@@ -35,7 +36,8 @@ export class HttpService {
         private http: HttpClient,
         private errorMapper: ErrorMapService,
         private injector: Injector,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private translate: TranslateService
     ) {}
 
     /**
@@ -81,7 +83,6 @@ export class HttpService {
             }
             return response.body as T;
         } catch (error) {
-            console.log(error);
             if (error instanceof HttpErrorResponse) {
                 if (!!error.error.message) {
                     const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
@@ -91,11 +92,11 @@ export class HttpService {
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
                     }
-                    this.snackBar.open(cleanError, `Ok`);
+                    this.snackBar.open(cleanError, this.translate.instant(`Ok`));
                     return null;
+                } else if (!navigator.onLine) {
+                    throw new ProcessError(this.translate.instant(`The request could not be sent. Check your connection.`));
                 }
-
-                // TODO: Handle offline, ...
             }
 
             throw new ProcessError(error);
