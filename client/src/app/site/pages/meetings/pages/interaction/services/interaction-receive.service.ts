@@ -9,6 +9,7 @@ import {
     map,
     merge,
     Observable,
+    startWith,
     Subscription
 } from 'rxjs';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
@@ -87,14 +88,16 @@ export class InteractionReceiveService {
             return;
         }
         this._lazyServices = lazyServices;
-        this._inviteSubscription = combineLatest([
-            this.showLiveConfObservable,
-            this.streamService.hasLiveStreamUrlObservable,
-            this.streamService.canSeeLiveStreamObservable,
-            this.rtcService.isJoinedObservable,
-            this.rtcService.isJitsiActiveObservable,
-            this.callRestrictionService.canEnterCallObservable
-        ])
+        this._inviteSubscription = combineLatest(
+            [
+                this.showLiveConfObservable,
+                this.streamService.hasLiveStreamUrlObservable,
+                this.streamService.canSeeLiveStreamObservable,
+                this.rtcService.isJoinedObservable,
+                this.rtcService.isJitsiActiveObservable,
+                this.callRestrictionService.canEnterCallObservable
+            ].map(observable => observable.pipe(startWith(false)))
+        )
             .pipe(
                 map(([showConf, hasStreamUrl, canSeeStream, inCall, jitsiActive, canEnterCall]) => {
                     this.isInCall = inCall || false;

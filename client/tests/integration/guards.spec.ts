@@ -1,5 +1,5 @@
-import { test, expect, BrowserContext } from "@playwright/test";
-import { login } from "./helpers/auth";
+import { test, expect, BrowserContext } from '@playwright/test';
+import { login } from './helpers/auth';
 
 test.describe(`Testing permission- and auth-guards`, () => {
     const DELEGATE_NAME = `a`;
