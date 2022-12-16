@@ -10,7 +10,7 @@ test.describe('motion history mode test', () => {
     test.beforeAll(async ({ browser }) => {
         const context = await browser.newContext();
         await login(context);
-        meeting = await createMeeting(context, `MeetingMotionHistoryTestMeeting${Date.now().toString()}`, [ADMIN_ID])
+        meeting = await createMeeting(context, `MeetingMotionHistoryTestMeeting${Date.now().toString()}`, [ADMIN_ID]);
         motion = await os4request(context, 'motion.create', {
             meeting_id: meeting.id,
             title: 'MotionHistoryTestTitle',
@@ -22,7 +22,7 @@ test.describe('motion history mode test', () => {
             supporter_ids: [],
             agenda_create: false,
             agenda_type: 'internal'
-        })
+        });
         await os4request(context, 'poll.create', {
             meeting_id: meeting.id,
             title: 'Vote',
@@ -69,7 +69,7 @@ test.describe('motion history mode test', () => {
     test('history mode banner appears', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
         await expect(page.locator(`body`)).toContainText(`Motion created`);
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
@@ -80,7 +80,7 @@ test.describe('motion history mode test', () => {
     test('history mode changes get reverted', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
         await expect(page.locator(`body`)).toContainText(`MotionHistoryTestTitle`);
@@ -92,7 +92,7 @@ test.describe('motion history mode test', () => {
     test('history mode leave', async ({ context, page }) => {
         await login(context);
         await page.goto(`/${meeting.id}/history?fqid=motion%2F${motion.id}`);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
         await page.getByText(`Motion created`).first().click();
         await page.waitForURL(`/${meeting.id}/motions/${motion.sequential_number}`);
         await expect(page.locator(`body`)).toContainText(`MotionHistoryTestTitle`);
