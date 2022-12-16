@@ -7,7 +7,7 @@ export class MeetingMotionDetailPage {
         this.page = page;
     }
 
-    async goto(meetingId: number , id: number) {
+    async goto(meetingId: number, id: number) {
         await this.page.goto(`/${meetingId}/motions/${id}`);
     }
 }
