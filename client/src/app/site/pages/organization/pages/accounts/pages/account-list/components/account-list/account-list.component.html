@@ -77,7 +77,7 @@
             <os-icon-container
                 icon="mail"
                 *ngIf="user.isLastEmailSend"
-                matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
+                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_send | localizedDate }})"
                 matTooltipPosition="left"
             >
             </os-icon-container>

@@ -140,18 +140,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     /**
-     * Get information about the last time an invitation email was sent to a user
-     *
-     * @returns a string representation about the last time an email was sent to a user
-     */
-    public getEmailSentTime(): string {
-        if (!this.user.isLastEmailSend) {
-            return this.translate.instant(`No email sent`);
-        }
-        return this.userController.getLastEmailSentTimeString(this.user);
-    }
-
-    /**
      * Handler for the generate Password button.
      */
     public getRandomPasswordFn(): () => string {

@@ -107,7 +107,7 @@
             <mat-icon
                 inline
                 *ngIf="user.isLastEmailSend"
-                matTooltip="{{ 'Email sent' | translate }} ({{ getEmailSentTime(user) }})"
+                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_send | localizedDate }})"
             >
                 mail
             </mat-icon>

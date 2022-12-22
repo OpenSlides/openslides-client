@@ -133,7 +133,13 @@
         <div *ngIf="user?.isLastEmailSend">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
-                <span>{{ getEmailSentTime() }}</span>
+                <span>{{ user.last_email_send | localizedDate }}</span>
+            </div>
+        </div>
+        <div>
+            <div *ngIf="user?.isLastLogin">
+                <h4>{{ 'Last login' | translate }}</h4>
+                <span>{{ user.last_login | localizedDate }}</span>
             </div>
         </div>
     </ng-template>
