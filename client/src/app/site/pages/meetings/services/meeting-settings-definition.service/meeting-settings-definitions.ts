@@ -105,7 +105,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 settings: [
                     {
                         key: `name`,
-                        label: _(`Meeting titel`)
+                        label: _(`Meeting title`)
                     },
                     {
                         key: `description`,
