@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
@@ -44,6 +45,13 @@ export class OrganizationMediafileListComponent
 
     public newDirectoryForm: UntypedFormGroup;
 
+    public types = [`orga`, `global`];
+
+    public logoPlaces: { orga: LogoPlace[]; global: LogoPlace[] } = { orga: [], global: [`web_header`] };
+    public logoDisplayNames = LogoDisplayNames;
+
+    public updatingLogoAndFontSettings = false;
+
     /**
      * @return true if the user can manage media files
      */
@@ -66,6 +74,9 @@ export class OrganizationMediafileListComponent
      * The form to edit Files
      */
     public fileEditForm: UntypedFormGroup | null = null;
+
+    public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(`logo`, file);
+    public isUsedAsFontFn = (file: ViewMediafile) => false;
 
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
@@ -112,6 +123,50 @@ export class OrganizationMediafileListComponent
         super.ngOnDestroy();
         this.clearSubscriptions();
         this.cd.detach();
+    }
+
+    public isMediafileUsed(file: ViewMediafile, place: LogoPlace, type: `orga` | `global`): boolean {
+        const mediafile = this.repo.getViewModel(file.id)!;
+        if (file.isImage() && !Object.keys(LogoDisplayNames).includes(place)) {
+            return false;
+        }
+        return mediafile.token?.includes(`${type}-${place}`) ?? false;
+    }
+
+    public async toggleMediafileUsage(
+        event: Event,
+        mediafile: ViewMediafile,
+        place: LogoPlace,
+        type: `orga` | `global`
+    ): Promise<void> {
+        // prohibits automatic closing
+        event.stopPropagation();
+        this.updatingLogoAndFontSettings = true;
+        const file = this.repo.getViewModel(mediafile.id);
+        if (!file || (file.isImage() && !Object.keys(LogoDisplayNames).includes(place))) {
+            throw new Error(!file ? `File has been deleted` : `Invalid mediafile type for place.`);
+        }
+        const fullPlace = `${type}-${place}`;
+        if (!file.token?.includes(fullPlace)) {
+            for (let filteredFile of this.repo
+                .getViewModelList()
+                .filter(filterFile => filterFile.token?.includes(fullPlace) && filterFile.id !== file.id)) {
+                await this.repo.update(
+                    { token: filteredFile.token?.replace(fullPlace, ``).trim() || null },
+                    filteredFile
+                );
+            }
+            await this.repo.update({ token: file.token ? `${file.token} ${fullPlace}` : fullPlace }, file);
+        } else {
+            await this.repo.update({ token: file.token?.replace(fullPlace, ``).trim() || null }, file);
+        }
+        this.updatingLogoAndFontSettings = false;
+        this.cd.markForCheck();
+    }
+
+    public getDisplayNameForPlace(place: LogoPlace, type: `orga` | `global`): string {
+        const prefix = type === `orga` ? `Organization` : `Global default`;
+        return `${prefix} ${LogoDisplayNames[place]}`;
     }
 
     public override selectAll(): void {
@@ -227,5 +282,12 @@ export class OrganizationMediafileListComponent
             this.directorySubscription.unsubscribe();
             this.directorySubscription = null;
         }
+    }
+
+    private isUsedAs(use: `logo`, file: ViewMediafile): boolean {
+        const places = this.logoPlaces;
+        return ([`orga`, `global`] as (`orga` | `global`)[]).some(type =>
+            places[type].some(place => this.isMediafileUsed(file, place, type))
+        );
     }
 }

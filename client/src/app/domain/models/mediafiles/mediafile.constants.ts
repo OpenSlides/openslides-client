@@ -1,5 +1,8 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
+/**
+ * Acceptable values are different places where logos can be placed.
+ */
 export type LogoPlace =
     | 'projector_main'
     | 'projector_header'
@@ -20,6 +23,9 @@ export const LogoDisplayNames: { [place in LogoPlace]: string } = {
     pdf_ballot_paper: _(`PDF ballot paper logo`)
 };
 
+/**
+ * Acceptable values are different places where fonts can be placed.
+ */
 export type FontPlace =
     | 'regular'
     | 'italic'
