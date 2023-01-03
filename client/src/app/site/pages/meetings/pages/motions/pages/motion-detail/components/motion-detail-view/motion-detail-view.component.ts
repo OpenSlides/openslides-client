@@ -14,6 +14,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
+import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
@@ -22,7 +23,10 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { ViewSpeaker } from '../../../../../agenda';
+import { SpeakerControllerService } from '../../../../../agenda/modules/list-of-speakers/services';
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
+import { InteractionService } from '../../../../../interaction/services/interaction.service';
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
@@ -102,6 +106,14 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         return this._previousMotion;
     }
 
+    public get canAddDueToPresence(): boolean {
+        return !this.onlyPresentUsers || this.operator.user.isPresentInMeeting();
+    }
+
+    private get onlyPresentUsers(): boolean {
+        return this.meetingSettingsService.instant(`list_of_speakers_present_users_only`) ?? false;
+    }
+
     private _nextMotion: ViewMotion | null = null;
 
     private _previousMotion: ViewMotion | null = null;
@@ -157,7 +169,9 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
         private cd: ChangeDetectorRef,
-        private pdfExport: MotionPdfExportService
+        private pdfExport: MotionPdfExportService,
+        private speakerRepo: SpeakerControllerService,
+        private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
 
@@ -306,6 +320,31 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
             // export all comment fields as well as personal note
             comments: this.motion.usedCommentSectionIds.concat([PERSONAL_NOTE_ID])
         });
+    }
+
+    public async addOperatorToLoS(): Promise<void> {
+        if (!this.operator?.operatorId) {
+            throw new Error(`Couldn't find operator ID`);
+        }
+        await this.speakerRepo.create(this.motion.list_of_speakers, this.operator.operatorId);
+    }
+
+    public async removeOperatorFromLoS(): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to remove yourself from this list of speakers?`);
+        const speakerToDelete = this.findOperatorSpeakerInWaitlist();
+        if (speakerToDelete && (await this.promptService.open(title))) {
+            await this.speakerRepo.delete(speakerToDelete.id);
+            this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
+        }
+    }
+
+    public findOperatorSpeakerInWaitlist(): ViewSpeaker {
+        return this.motion.list_of_speakers?.speakers?.find(
+            speaker =>
+                speaker.user_id === this.operator.operatorId &&
+                speaker.state === SpeakerState.WAITING &&
+                speaker.point_of_order === undefined
+        );
     }
 
     /**
