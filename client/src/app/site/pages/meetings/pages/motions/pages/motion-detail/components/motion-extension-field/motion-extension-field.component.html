@@ -41,10 +41,11 @@
     <mat-form-field *ngFor="let list of searchLists; let i = index" [formGroup]="extensionFieldForm">
         <os-list-search-selector
             formControlName="{{ 'list' + i + '' }}"
-            [inputListValues]="list"
-            placeholder="{{ searchListLabels[i] | translate }}"
-            [keepOpen]="searchListsKeepOpen[i]"
+            [inputListValues]="list.observable"
+            placeholder="{{ list.label ?? '' | translate }}"
+            [keepOpen]="list.keepOpen"
             (openedChange)="openedChange($event, i)"
+            [wider]="list.wider"
         ></os-list-search-selector>
     </mat-form-field>
 

@@ -4,6 +4,13 @@ import { NavigationEnd, Router } from '@angular/router';
 import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 
+export interface SearchListDefinition {
+    observable: Observable<Selectable[]>;
+    label?: string;
+    keepOpen?: boolean;
+    wider?: boolean;
+}
+
 @Component({
     selector: `os-motion-extension-field`,
     templateUrl: `./motion-extension-field.component.html`,
@@ -41,22 +48,10 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     public extensionLabel!: string;
 
     /**
-     * Optional labels for the search-lists.
+     * Definitions for the search-lists.
      */
     @Input()
-    public searchListLabels!: string[];
-
-    /**
-     * BehaviourSubjects for the search-lists.
-     */
-    @Input()
-    public searchLists: Observable<Selectable[]>[] = [];
-
-    /**
-     * Whether or not to keep the search lists open after a selection.
-     */
-    @Input()
-    public searchListsKeepOpen: boolean[] = [];
+    public searchLists: SearchListDefinition[] = [];
 
     /**
      * Boolean, whether the input and the search-list can be changed.
@@ -135,9 +130,6 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         const lists = {};
         for (let i = 0; i < this.searchLists.length; i++) {
             lists[`list${i}`] = [[]];
-            if (this.searchListLabels.length <= i) {
-                this.searchListLabels.push(``);
-            }
             if (this.listValueTransformFns.length <= i) {
                 this.listValueTransformFns.push(value => value.getTitle());
             }
@@ -148,7 +140,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
 
         for (let i = 0; i < this.searchLists.length; i++) {
             this.searchListSubscriptions.concat(
-                this.searchLists[i].subscribe(list => (this.searchListValues[i] = list))
+                this.searchLists[i].observable.subscribe(list => (this.searchListValues[i] = list))
             );
 
             this.searchValueSubscription = this.extensionFieldForm

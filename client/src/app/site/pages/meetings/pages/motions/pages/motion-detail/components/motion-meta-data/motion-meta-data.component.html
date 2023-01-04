@@ -110,9 +110,7 @@
         [chipValue]="recommendationLabel | translate"
         [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
         extensionLabel="{{ 'Extension' | translate }}"
-        [searchLists]="[motionObserver, committeeObservable]"
-        [searchListLabels]="['Motions', 'Committees']"
-        [searchListsKeepOpen]="[false, true]"
+        [searchLists]="searchLists"
         [listValueTransformFns]="[motionTransformFn]"
         (succeeded)="setRecommendationExtension($event)"
     >
