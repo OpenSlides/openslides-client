@@ -112,6 +112,7 @@
         extensionLabel="{{ 'Extension' | translate }}"
         [searchLists]="[motionObserver, committeeObservable]"
         [searchListLabels]="['Motions', 'Committees']"
+        [searchListsKeepOpen]="[false, true]"
         [listValueTransformFns]="[motionTransformFn]"
         (succeeded)="setRecommendationExtension($event)"
     >

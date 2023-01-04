@@ -43,6 +43,8 @@
             formControlName="{{ 'list' + i + '' }}"
             [inputListValues]="list"
             placeholder="{{ searchListLabels[i] | translate }}"
+            [keepOpen]="searchListsKeepOpen[i]"
+            (openedChange)="openedChange($event, i)"
         ></os-list-search-selector>
     </mat-form-field>
 

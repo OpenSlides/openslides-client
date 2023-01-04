@@ -69,6 +69,7 @@
             [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
+            (click)="keepOpen ? matSelect.open() : null"
         >
             {{ selectableItem.getTitle() | translate }} {{ getItemAdditionalInfoFn(selectableItem) }}
         </mat-option>

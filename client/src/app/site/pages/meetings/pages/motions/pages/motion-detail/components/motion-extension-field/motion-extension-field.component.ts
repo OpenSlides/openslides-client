@@ -53,6 +53,12 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     public searchLists: Observable<Selectable[]>[] = [];
 
     /**
+     * Whether or not to keep the search lists open after a selection.
+     */
+    @Input()
+    public searchListsKeepOpen: boolean[] = [];
+
+    /**
      * Boolean, whether the input and the search-list can be changed.
      */
     @Input()
@@ -100,6 +106,8 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
 
     private searchListValues?: Selectable[][] = [];
     private searchListSubscriptions?: Subscription[] = [];
+
+    private searchListConsecutiveSelections: boolean[] = [];
 
     /**
      * Constructor
@@ -151,7 +159,10 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
                     if (value && typeof value === `number`) {
                         if (!this.inputControl) {
                             this.inputControl = ``;
+                        } else if (this.searchListConsecutiveSelections[i]) {
+                            this.inputControl += ` · `;
                         }
+                        this.searchListConsecutiveSelections[i] = true;
                         this.inputControl += transformFn(this.searchListValues[i].find(entry => entry.id === value));
                     }
                     this.extensionFieldForm.reset();
@@ -207,5 +218,11 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      */
     public sendSuccess(): void {
         this.succeeded.emit(this.inputControl);
+    }
+
+    public openedChange(opened: boolean, i: number): void {
+        if (!opened) {
+            this.searchListConsecutiveSelections[i] = false;
+        }
     }
 }
