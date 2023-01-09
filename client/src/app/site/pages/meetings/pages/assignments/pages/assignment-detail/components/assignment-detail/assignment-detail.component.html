@@ -105,9 +105,7 @@
 
 <ng-template #metaInfoTemplate>
     <mat-card class="os-card spacer-bottom-60" *ngIf="assignment">
-        <div *ngIf="!isEditing && assignment.getTitle">
-            <h1>{{ assignment.getTitle() }}</h1>
-        </div>
+        <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
         <div *ngIf="assignment">
             <div
                 *ngIf="assignment.assignment.description"

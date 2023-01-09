@@ -1,0 +1,33 @@
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
+
+@Component({
+    selector: `os-projectable-title`,
+    templateUrl: `./projectable-title.component.html`,
+    styleUrls: [`./projectable-title.component.scss`],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ProjectableTitleComponent {
+
+    @Input()
+    public model: BaseProjectableViewModel;
+
+    @Input()
+    public getTitleFn: (model: BaseProjectableViewModel) => string = (model) => model.getTitle();
+
+    @Input()
+    public titleStyle: `h1` | `h2` = `h1`;
+
+    constructor(private projectorService: ProjectorControllerService) {}
+
+    public isBeingProjected(): boolean {
+        if (!this.model) {
+            return false;
+        }
+
+        return this.projectorService.isProjected(this.model);
+    }
+
+}
