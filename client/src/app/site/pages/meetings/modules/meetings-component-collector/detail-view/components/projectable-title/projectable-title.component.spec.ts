@@ -2,22 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectableTitleComponent } from './projectable-title.component';
 
-xdescribe('ProjectableTitleComponent', () => {
-  let component: ProjectableTitleComponent;
-  let fixture: ComponentFixture<ProjectableTitleComponent>;
+xdescribe(`ProjectableTitleComponent`, () => {
+    let component: ProjectableTitleComponent;
+    let fixture: ComponentFixture<ProjectableTitleComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ProjectableTitleComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [ProjectableTitleComponent]
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(ProjectableTitleComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(ProjectableTitleComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it(`should create`, () => {
+        expect(component).toBeTruthy();
+    });
 });

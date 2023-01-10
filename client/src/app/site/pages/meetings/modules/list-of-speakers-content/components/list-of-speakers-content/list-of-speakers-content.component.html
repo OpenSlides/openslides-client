@@ -3,12 +3,6 @@
     <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
         <mat-icon append *ngIf="closed" style="margin-top: 8px" class="primary-accent-by-theme" matTooltip="{{ 'The list of speakers is closed.' | translate }}">lock</mat-icon>
     </os-projectable-title>
-    <h1 class="los-title" *ngIf="!explicitTitleContent">
-        <span>
-            {{ title }}
-        </span>
-        <mat-icon *ngIf="closed" matTooltip="{{ 'The list of speakers is closed.' | translate }}">lock</mat-icon>
-    </h1>
     <span *ngIf="explicitTitleContent">
         <ng-container *ngTemplateOutlet="explicitTitleContent"></ng-container>
     </span>

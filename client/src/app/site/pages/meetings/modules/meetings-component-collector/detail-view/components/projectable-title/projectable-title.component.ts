@@ -10,12 +10,11 @@ import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-model
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectableTitleComponent {
-
     @Input()
     public model: BaseProjectableViewModel;
 
     @Input()
-    public getTitleFn: (model: BaseProjectableViewModel) => string = (model) => model.getTitle();
+    public getTitleFn: (model: BaseProjectableViewModel) => string = model => model.getTitle();
 
     @Input()
     public titleStyle: `h1` | `h2` = `h1`;
@@ -29,5 +28,4 @@ export class ProjectableTitleComponent {
 
         return this.projectorService.isProjected(this.model);
     }
-
 }
