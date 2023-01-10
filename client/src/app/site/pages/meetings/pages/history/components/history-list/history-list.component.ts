@@ -28,6 +28,7 @@ import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
+import { ViewMotionState } from '../../../motions';
 import { Position } from '../../definitions';
 import { HistoryService } from '../../services/history.service';
 
@@ -285,7 +286,8 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         const informations = [...position.information];
         const result = [];
         while (informations.length) {
-            let baseString: string = this.translate.instant(informations.shift());
+            const originalBaseString = informations.shift();
+            let baseString: string = this.translate.instant(originalBaseString);
             while (baseString.includes(`{}`)) {
                 let argumentString = informations.shift();
                 if (isFqid(argumentString)) {
@@ -293,7 +295,13 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                     const [collection, id] = collectionIdFromFqid(argumentString);
                     const model = this.viewModelStore.get(collection, id);
                     if (model) {
-                        argumentString = this.translate.instant(model.getTitle());
+                        // special handling of recommendation change: show `recommendation_label`
+                        // instead of the state's normal title
+                        if (originalBaseString === `Recommendation set to {}` && model instanceof ViewMotionState) {
+                            argumentString = this.translate.instant(model.recommendation_label);
+                        } else {
+                            argumentString = this.translate.instant(model.getTitle());
+                        }
                     }
                 }
                 baseString = baseString.replace(`{}`, argumentString);
