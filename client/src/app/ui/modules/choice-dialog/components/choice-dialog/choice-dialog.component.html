@@ -20,6 +20,7 @@
         <!-- Custom Actions -->
         <div *ngIf="data.actions as actions">
             <button
+                class="custom-actions-button"
                 *ngFor="let button of actions"
                 mat-button
                 (click)="closeDialog(true, button)"
