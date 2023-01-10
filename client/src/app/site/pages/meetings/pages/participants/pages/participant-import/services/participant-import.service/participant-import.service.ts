@@ -140,6 +140,10 @@ export class ParticipantImportService extends BaseUserImportService {
         const result = await this.presenter.call({
             permissionRelatedId: this.activeMeetingId,
             searchCriteria: entries.map(entry => {
+                if (entry.username) {
+                    return { username: entry.username };
+                }
+
                 const username = !!entry.username ? entry.username : `${entry.first_name} ${entry.last_name}`;
                 return { username, email: entry.email };
             })
