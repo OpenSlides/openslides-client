@@ -38,7 +38,8 @@ const motionHeadersAndVerboseNames: { [key in keyof ViewMotion]?: any } = {
     tags: `Tags`,
     block: `Motion block`,
     recommendation: `Recommendation`,
-    state: `State`
+    state: `State`,
+    id: `Sequential number`
 };
 
 /**
