@@ -144,7 +144,7 @@ export class ParticipantImportService extends BaseUserImportService {
                     return { username: entry.username };
                 }
 
-                return { username: `${entry.first_name} ${entry.last_name}`, email: entry.email };
+                return { username: `${entry.first_name}${entry.last_name}`, email: entry.email };
             })
         });
         return result;
