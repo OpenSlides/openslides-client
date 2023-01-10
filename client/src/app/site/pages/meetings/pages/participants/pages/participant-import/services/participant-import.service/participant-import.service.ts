@@ -144,8 +144,7 @@ export class ParticipantImportService extends BaseUserImportService {
                     return { username: entry.username };
                 }
 
-                const username = !!entry.username ? entry.username : `${entry.first_name} ${entry.last_name}`;
-                return { username, email: entry.email };
+                return { username: `${entry.first_name} ${entry.last_name}`, email: entry.email };
             })
         });
         return result;
