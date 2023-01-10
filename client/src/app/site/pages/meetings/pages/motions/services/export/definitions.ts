@@ -3,6 +3,7 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
  * Type declaring which strings are valid options for metainfos to be exported into a pdf
  */
 export type InfoToExport =
+    | 'number'
     | 'submitters'
     | 'supporters'
     | 'state'
@@ -50,7 +51,7 @@ export const motionImportExportHeaderOrder: (keyof ViewMotion)[] = Object.keys(m
  * hints the metaData. This data will be excluded from the meta-data list in the export dialog.
  * Order of this does not matter
  */
-export const noMetaData: (keyof ViewMotion)[] = [`number`, `title`, `text`, `reason`];
+export const noMetaData: (keyof ViewMotion)[] = [`title`, `text`, `reason`];
 
 /**
  * Subset of {@link motionImportExportHeaderOrder} properties that are
