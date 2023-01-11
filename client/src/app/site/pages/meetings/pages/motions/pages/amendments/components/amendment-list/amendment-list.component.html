@@ -38,7 +38,7 @@
 >
     <!-- Meta -->
     <div *osScrollingTableCell="'meta'; row as motion" class="cell-slot fill">
-        <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+        <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
         <div class="innerTable">
             <!-- number and line -->
             <div class="title-line one-line">
@@ -82,7 +82,7 @@
 
     <!-- Summary -->
     <div *osScrollingTableCell="'summary'; row as motion" class="cell-slot fill">
-        <os-detail-view-navigator [model]="motion"></os-detail-view-navigator>
+        <os-detail-view-navigator *ngIf="!isMultiSelect" [model]="motion"></os-detail-view-navigator>
         <div class="innerTable">
             <div class="motion-text" [innerHtml]="getAmendmentSummary(motion) | trust: 'html'"></div>
         </div>
