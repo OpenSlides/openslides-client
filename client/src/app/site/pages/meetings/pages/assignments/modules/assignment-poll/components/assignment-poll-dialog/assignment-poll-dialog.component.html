@@ -36,14 +36,16 @@
 
         <!-- Sum Values -->
         <div *ngFor="let value of sumValues" class="votes-grid">
-            <os-check-input
-                class="amount"
-                [placeholder]="generalValueVerbose[value] | translate"
-                [checkboxValue]="-1"
-                inputType="number"
-                [checkboxLabel]="'majority' | translate"
-                [formControlName]="value"
-            ></os-check-input>
+            <div class="assignment-dialog-input--container">
+                <mat-form-field class="amount">
+                    <input
+                        matInput
+                        type="number"
+                        [formControlName]="value"
+                        [placeholder]="generalValueVerbose[value] | translate"
+                    />
+                </mat-form-field>
+            </div>
         </div>
     </form>
 
