@@ -37,9 +37,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     }
 
     @Input()
-    public text: string | null = null;
-
-    @Input()
     public menuItem = false;
 
     @Output()
