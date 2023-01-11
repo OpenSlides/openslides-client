@@ -75,8 +75,8 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         if (toMeetingIds) {
             try {
                 const forwardMotions = toForward.map(motion => this.formatService.formatMotionForForward(motion));
-                await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
-                this.snackbar.open(this.createForwardingSuccessMessage(toForward.length, motions.length), `Ok`);
+                const result = await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
+                this.snackbar.open(this.createForwardingSuccessMessage(motions.length, result), `Ok`);
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
             }
@@ -104,12 +104,26 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         }
     }
 
-    private createForwardingSuccessMessage(toForwardLength: number, selectedMotionsLength: number): string {
+    private createForwardingSuccessMessage(
+        selectedMotionsLength: number,
+        result: { success: number; partial: number }
+    ): string {
         const ofTranslated = this.translate.instant(`of`);
         const successfulMessage = this.translate.instant(`successfully forwarded`);
+        const partialMessage = this.translate.instant(`partially forwarded`);
         const verboseName = this.translate.instant(this.repo.getVerboseName(selectedMotionsLength !== 1));
         const additionalInfo = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
 
-        return `${toForwardLength} ${additionalInfo}${verboseName} ${successfulMessage}`;
+        let resultString = ``;
+        if (result.success || !result.partial) {
+            resultString = `${result.success} ${additionalInfo}${verboseName} ${successfulMessage}`;
+        }
+        if (result.partial) {
+            resultString = `${resultString}${result.success && result.partial ? `, ` : ``}${
+                result.partial
+            } ${additionalInfo}${!result.success ? verboseName : ``} ${partialMessage}`;
+        }
+
+        return resultString;
     }
 }
