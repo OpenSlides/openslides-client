@@ -115,7 +115,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         const additionalInfo = selectedMotionsLength !== 1 ? `${ofTranslated} ${selectedMotionsLength} ` : ``;
 
         let resultString = ``;
-        if (result.success) {
+        if (result.success || !result.partial) {
             resultString = `${result.success} ${additionalInfo}${verboseName} ${successfulMessage}`;
         }
         if (result.partial) {

@@ -81,7 +81,14 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             let failure = false;
             for (let payload of meetingPayloads) {
                 try {
-                    await this.createAction(MotionAction.CREATE_FORWARDED, payload).resolve();
+                    await Promise.race([
+                        this.createAction(MotionAction.CREATE_FORWARDED, payload).resolve(),
+                        new Promise(() =>
+                            setTimeout(() => {
+                                failure = true;
+                            }, 5000)
+                        ) // Wait at most 5 seconds before sending the next request
+                    ]);
                     partialSuccess = true;
                 } catch (e) {
                     failure = true;
