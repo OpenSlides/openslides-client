@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-import { combineLatest, filter, Subscription } from 'rxjs';
+import { combineLatest, filter, startWith, Subscription } from 'rxjs';
 import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { OverlayInstance, OverlayService } from 'src/app/ui/modules/openslides-overlay';
-import { SpinnerComponent } from 'src/app/ui/modules/spinner/components/spinner/spinner.component';
 
+import { GlobalSpinnerComponent } from '../components/global-spinner/global-spinner.component';
 import { SpinnerConfig } from '../definitions';
 import { GlobalSpinnerModule } from '../global-spinner.module';
 
@@ -14,13 +14,21 @@ import { GlobalSpinnerModule } from '../global-spinner.module';
     providedIn: GlobalSpinnerModule
 })
 export class SpinnerService {
-    private overlayInstance: OverlayInstance<SpinnerComponent> | null = null;
+    public get isOffline(): boolean {
+        return this._isOffline;
+    }
+
+    private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;
 
     private isOperatorReady = false;
     private isStable = false;
-    private isOffline = false;
+    private _isOffline = false;
     private isOnLoginMask = false;
     private isOnErrorPage = false;
+
+    private set isOffline(isOffline: boolean) {
+        this._isOffline = isOffline;
+    }
 
     private isStableSubscription: Subscription | null = null;
 
@@ -32,11 +40,11 @@ export class SpinnerService {
         private router: Router
     ) {}
 
-    public show(text?: string, config: SpinnerConfig = {}): OverlayInstance<SpinnerComponent> {
+    public show(text?: string, config: SpinnerConfig = {}): OverlayInstance<GlobalSpinnerComponent> {
         if (this.overlayInstance) {
             return this.overlayInstance; // Prevent multiple instances at the same time.
         }
-        this.overlayInstance = this.overlay.open(SpinnerComponent, {
+        this.overlayInstance = this.overlay.open(GlobalSpinnerComponent, {
             ...config,
             onCloseFn: () => (this.overlayInstance = null),
             data: {
@@ -83,13 +91,16 @@ export class SpinnerService {
             this.operator.isReadyObservable,
             this.offlineService.isOfflineObservable,
             this.openslidesStatus.isStableObservable,
-            this.router.events.pipe(filter(event => event instanceof RoutesRecognized))
+            this.router.events.pipe(filter(event => event instanceof RoutesRecognized)).pipe(startWith(null))
         ]).subscribe(([isReady, isOffline, isStable, event]) => {
             this.isOperatorReady = isReady;
             this.isOffline = isOffline;
             this.isStable = isStable;
-            this.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
-            this.isOnErrorPage = (event as RoutesRecognized).url.includes(`error`);
+            if (event) {
+                this.isOnLoginMask = (event as RoutesRecognized).url.includes(`login`);
+                this.isOnErrorPage = (event as RoutesRecognized).url.includes(`error`);
+            }
+
             this.checkConnection();
         });
     }
