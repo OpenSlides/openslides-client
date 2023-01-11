@@ -102,7 +102,16 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     private searchListValues?: Selectable[][] = [];
     private searchListSubscriptions?: Subscription[] = [];
 
-    private searchListConsecutiveSelections: boolean[] = [];
+    /**
+     * The index of the search list that was last selected from, or -1 if something was written in
+     * the input field afterwards.
+     */
+    private searchListLastSelected: number = -1;
+
+    /**
+     * Prevent selecting the same value twice while a selection box is open.
+     */
+    private searchListDisabledIds: number[][] = [];
 
     /**
      * Constructor
@@ -151,11 +160,17 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
                     if (value && typeof value === `number`) {
                         if (!this.inputControl) {
                             this.inputControl = ``;
-                        } else if (this.searchListConsecutiveSelections[i]) {
+                        } else if (this.searchListLastSelected == i) {
                             this.inputControl += ` · `;
                         }
-                        this.searchListConsecutiveSelections[i] = true;
                         this.inputControl += transformFn(this.searchListValues[i].find(entry => entry.id === value));
+                        this.searchListLastSelected = i;
+
+                        if (!this.searchListDisabledIds[i]) {
+                            this.searchListDisabledIds[i] = [value];
+                        } else {
+                            this.searchListDisabledIds[i].push(value);
+                        }
                     }
                     this.extensionFieldForm.reset();
                 });
@@ -182,6 +197,14 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         if (event.key === `Enter`) {
             this.changeEditMode(true);
         }
+    }
+
+    public inputChanged(): void {
+        this.searchListLastSelected = -1;
+    }
+
+    public getIsDisabled(i: number): (value: Selectable) => boolean {
+        return (value: Selectable) => this.searchListDisabledIds[i]?.includes(value.id);
     }
 
     /**
@@ -214,7 +237,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
 
     public openedChange(opened: boolean, i: number): void {
         if (!opened) {
-            this.searchListConsecutiveSelections[i] = false;
+            this.searchListDisabledIds[i] = [];
         }
     }
 }

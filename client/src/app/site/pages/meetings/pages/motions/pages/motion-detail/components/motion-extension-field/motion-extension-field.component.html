@@ -36,12 +36,14 @@
             [(ngModel)]="inputControl"
             placeholder="{{ extensionLabel }}"
             (keydown)="keyDownFunction($event)"
+            (change)="inputChanged()"
         />
     </mat-form-field>
     <mat-form-field *ngFor="let list of searchLists; let i = index" [formGroup]="extensionFieldForm">
         <os-list-search-selector
             formControlName="{{ 'list' + i + '' }}"
             [inputListValues]="list.observable"
+            [disableOptionWhenFn]="getIsDisabled(i)"
             placeholder="{{ list.label ?? '' | translate }}"
             [keepOpen]="list.keepOpen"
             (openedChange)="openedChange($event, i)"
