@@ -83,7 +83,19 @@ export interface SettingsGroup {
     }[];
 }
 
-export const meetingSettings: SettingsGroup[] = [
+function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
+    settingsGroups.forEach(group =>
+        group.subgroups.forEach(
+            subgroup =>
+                (subgroup.settings = subgroup.settings.map(setting =>
+                    setting.type ? setting : { ...setting, type: `string` }
+                ))
+        )
+    );
+    return settingsGroups;
+}
+
+export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
     {
         label: _(`General`),
         icon: `home`,
@@ -93,7 +105,7 @@ export const meetingSettings: SettingsGroup[] = [
                 settings: [
                     {
                         key: `name`,
-                        label: _(`Meeting titel`)
+                        label: _(`Meeting title`)
                     },
                     {
                         key: `description`,
@@ -1011,4 +1023,4 @@ export const meetingSettings: SettingsGroup[] = [
             }
         ]
     }
-];
+]);
