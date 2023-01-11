@@ -203,6 +203,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         );
         this.registerAfterImportHandler(MEETING, {
             useArray: true,
+            nameDelimiter: `;`,
             fixedChunkSize: 1,
             verboseNameFn: plural => meetingRepo.getVerboseName(plural),
             findFn: (name, committee) => ({ name: name === `1` ? committee.name : name }),
