@@ -12,7 +12,6 @@ import { ViewResource } from '../pages/resources';
 
 export class ViewOrganization extends BaseViewModel<Organization> {
     public static COLLECTION = Organization.COLLECTION;
-    protected _collection = Organization.COLLECTION;
 
     public get organization(): Organization {
         return this._model;

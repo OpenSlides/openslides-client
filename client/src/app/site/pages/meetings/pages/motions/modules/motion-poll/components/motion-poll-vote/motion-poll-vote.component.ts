@@ -10,6 +10,7 @@ import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -41,15 +42,16 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
     ];
 
     public constructor(
+        private promptService: PromptService,
         operator: OperatorService,
         votingService: VotingService,
-        pollRepo: PollControllerService,
         cd: ChangeDetectorRef,
-        private translate: TranslateService,
-        private promptService: PromptService,
-        meetingSettingsService: MeetingSettingsService
+        pollRepo: PollControllerService,
+        meetingSettingsService: MeetingSettingsService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService);
+        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {

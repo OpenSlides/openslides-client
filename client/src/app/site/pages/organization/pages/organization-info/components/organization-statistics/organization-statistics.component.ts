@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 @Component({
     selector: `os-organization-statistics`,
     templateUrl: `./organization-statistics.component.html`,
     styleUrls: [`./organization-statistics.component.scss`]
 })
-export class OrganizationStatisticsComponent extends BaseUiComponent implements OnInit {
+export class OrganizationStatisticsComponent extends BaseComponent implements OnInit {
     public activeMeetingsText = _(`Active meetings`);
     public activeUsersText = _(`Active accounts`);
 
@@ -24,9 +26,11 @@ export class OrganizationStatisticsComponent extends BaseUiComponent implements 
     public constructor(
         private orgaService: OrganizationService,
         private orgaSettings: OrganizationSettingsService,
-        private userController: UserControllerService
+        private userController: UserControllerService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super();
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {

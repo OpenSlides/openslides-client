@@ -97,26 +97,6 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     /**
-     * @returns the creation date as Date object
-     */
-    public get creationDate(): Date | null {
-        if (!this.motion.created) {
-            return null;
-        }
-        return new Date(this.motion.created);
-    }
-
-    /**
-     * @returns the date of the last change as Date object, null if empty
-     */
-    public get lastChangeDate(): Date | null {
-        if (!this.motion.last_modified) {
-            return null;
-        }
-        return new Date(this.motion.last_modified);
-    }
-
-    /**
      * @returns the current state extension if the workwlof allows for extenstion fields
      */
     public get stateExtension(): string | null {
