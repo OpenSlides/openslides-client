@@ -230,23 +230,16 @@
     <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.block">
         {{ 'Motion block' | translate }}
     </h4>
-    <mat-menu #blockMenu="matMenu">
-        <button mat-menu-item *ngFor="let block of motionBlocks" (click)="setBlock(block.id)">
+    <os-chip-select 
+        *ngIf="perms.isAllowed('change_metadata', motion) || motion.block"
+        [canOpen]="perms.isAllowed('change_metadata', motion)">
+        <button menu mat-menu-item *ngFor="let block of motionBlocks" (click)="setBlock(block.id)">
             <mat-icon *ngIf="motion.block_id === block.id">check</mat-icon>
             {{ block }}
         </button>
-    </mat-menu>
-    <mat-basic-chip
-        *ngIf="perms.isAllowed('change_metadata', motion)"
-        [matMenuTriggerFor]="blockMenu"
-        class="grey"
-        disableRipple
-    >
+
         {{ motion.block || '–' }}
-    </mat-basic-chip>
-    <mat-basic-chip *ngIf="!perms.isAllowed('change_metadata', motion) && motion.block" class="grey" disableRipple>
-        {{ motion.block }}
-    </mat-basic-chip>
+    </os-chip-select>
 </div>
 
 <!-- Created timestamp -->

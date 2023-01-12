@@ -1,0 +1,21 @@
+<mat-basic-chip
+    *ngIf="!canOpen"
+    class="grey"
+    disableRipple
+>
+    <ng-content></ng-content>
+</mat-basic-chip>
+
+<mat-basic-chip
+    *ngIf="canOpen"
+    [matMenuTriggerFor]="menu"
+    class="grey"
+    disableRipple
+>
+    <ng-content></ng-content>
+</mat-basic-chip>
+
+<mat-menu #menu="matMenu">
+    <ng-content select="[menu]">
+    </ng-content>
+</mat-menu>
