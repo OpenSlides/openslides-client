@@ -171,9 +171,7 @@
                                 class="current-element backgroundColorAccent"
                             >
                                 <div class="emelent-grid">
-                                    <button type="button" mat-icon-button (click)="unprojectCurrent(projection)">
-                                        <mat-icon>videocam</mat-icon>
-                                    </button>
+                                    <os-projector-button [object]="projection.getProjectionBuildDescriptor()" [blendIn]="true" [projector]="projector"></os-projector-button>
 
                                     <!-- Slide title and subtitle -->
                                     <span class="ellipsis-overflow current-element-text">
@@ -223,9 +221,10 @@
                                         <mat-icon>drag_indicator</mat-icon>
                                     </div>
                                     <div class="drag-handle no-drag" *ngIf="!editQueue">
-                                        <button type="button" mat-icon-button (click)="projectPreview(projection)">
+                                        <os-projector-button [object]="projection.getProjectionBuildDescriptor()" [blendIn]="true" [projector]="projector"></os-projector-button>
+                                        <!-- <button type="button" mat-icon-button (click)="projectPreview(projection)">
                                             <mat-icon>videocam</mat-icon>
-                                        </button>
+                                        </button> -->
                                     </div>
                                     <!-- Slide title ans subtitle -->
                                     <div class="name">

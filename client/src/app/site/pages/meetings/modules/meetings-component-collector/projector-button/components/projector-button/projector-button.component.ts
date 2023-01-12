@@ -48,6 +48,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public projector: ViewProjector | null = null;
 
+    @Input()
+    public blendIn = false;
+
     private projectorRepoSub: Subscription | null = null;
 
     /**

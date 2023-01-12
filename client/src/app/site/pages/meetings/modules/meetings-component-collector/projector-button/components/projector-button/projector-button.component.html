@@ -1,9 +1,17 @@
 <ng-container *osPerms="permission.projectorCanManage">
     <button
-        *ngIf="!menuItem"
+        *ngIf="!menuItem && !blendIn"
         mat-mini-fab
         (click)="onClick($event)"
         [ngClass]="{ 'projector-inactive': !isProjected() }"
+    >
+        <ng-container *ngTemplateOutlet="content"></ng-container>
+    </button>
+    <button
+        *ngIf="!menuItem && blendIn"
+        mat-icon-button
+        (click)="onClick($event)"
+        class="blend-in"
     >
         <ng-container *ngTemplateOutlet="content"></ng-container>
     </button>
