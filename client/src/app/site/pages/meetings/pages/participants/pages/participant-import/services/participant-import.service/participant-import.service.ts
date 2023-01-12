@@ -127,7 +127,8 @@ export class ParticipantImportService extends BaseUserImportService {
     }): Promise<ImportModel<User>> {
         const username = input.username ? input.username : `${input.first_name} ${input.last_name}`;
         const userEmailUsername = `${username}/${input.email}`;
-        const duplicates = this._existingUserMap[userEmailUsername] ?? [];
+        const userUsername = `${username}/`;
+        const duplicates = this._existingUserMap[userUsername] ?? this._existingUserMap[userEmailUsername] ?? [];
         const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...input } : input;
         const hasDuplicates =
             duplicates.length > 1 ||
