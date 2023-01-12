@@ -19,7 +19,7 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
     }
 
     public get zoom(): number {
-        return Math.pow(1.1, this.data.options[`zoom`] || 0);
+        return Math.pow(1.1, this.projector?.scale || 0);
     }
 
     public get page(): number {

@@ -79,17 +79,6 @@ export class PresentationControlsComponent {
         this.updateProjectionOptions(projection);
     }
 
-    public zoom(projection: ViewProjection, direction: 'in' | 'out' | 'reset'): void {
-        if (direction === `reset`) {
-            projection.options[`zoom`] = 0;
-        } else if (direction === `in`) {
-            projection.options[`zoom`] = (projection.options[`zoom`] || 0) + 1;
-        } else if (direction === `out`) {
-            projection.options[`zoom`] = (projection.options[`zoom`] || 0) - 1;
-        }
-        this.updateProjectionOptions(projection);
-    }
-
     public fullscreen(projection: ViewProjection): void {
         projection.options[`fullscreen`] = !projection.options[`fullscreen`];
         this.updateProjectionOptions(projection);
