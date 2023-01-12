@@ -123,7 +123,9 @@ export class ActiveMeetingService {
     }
 
     private async setupModelSubscription(id: number | null): Promise<void> {
-        this.modelRequestBuilder.setRootViewModel(!!this.meetingId ? ViewMeeting.name : ViewOrganization.name);
+        this.modelRequestBuilder.setRootViewModel(
+            !!this.meetingId ? ViewMeeting.COLLECTION : ViewOrganization.COLLECTION
+        );
 
         if (!!this.meetingId) {
             await this.refreshAutoupdateSubscription();

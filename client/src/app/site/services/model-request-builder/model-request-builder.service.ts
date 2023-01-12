@@ -114,7 +114,7 @@ export class ModelRequestBuilderService {
 
     private loaded = new Deferred();
 
-    private rootViewModel: string = ViewOrganization.name;
+    private rootCollection: string = ViewOrganization.COLLECTION;
 
     public constructor(
         private relationManager: RelationManagerService,
@@ -129,8 +129,8 @@ export class ModelRequestBuilderService {
         console.log(`apps loaded!`);
     }
 
-    public setRootViewModel(rootViewModel: string) {
-        this.rootViewModel = rootViewModel;
+    public setRootViewModel(rootCollection: string) {
+        this.rootCollection = rootCollection;
     }
 
     public async build(simplifiedModelRequest: SimplifiedModelRequest<any>): Promise<ModelRequestObject> {
@@ -265,7 +265,7 @@ export class ModelRequestBuilderService {
     ): DescriptorResponse<RelationFieldDescriptor> {
         const foreignCollection = relation.foreignViewModel!.COLLECTION;
         const modelRequestObject = new ModelRequestObject(foreignCollection, follow, {});
-        if (relation.isFullList && relation.ownViewModels[0].name === this.rootViewModel) {
+        if (relation.isFullList && relation.ownViewModels[0].COLLECTION === this.rootCollection) {
             modelRequestObject.addCollectionToFullListUpdate(
                 foreignCollection,
                 follow.idField as string,
