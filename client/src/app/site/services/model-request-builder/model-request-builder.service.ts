@@ -6,6 +6,7 @@ import { Relation } from '../../../infrastructure/definitions/relations';
 import { Deferred } from '../../../infrastructure/utils/promises';
 import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
 import { BaseViewModel, ViewModelConstructor } from '../../base/base-view-model';
+import { ViewOrganization } from '../../pages/organization/view-models/view-organization';
 import {
     FieldDescriptor,
     Fields,
@@ -113,6 +114,8 @@ export class ModelRequestBuilderService {
 
     private loaded = new Deferred();
 
+    private rootViewModel: string = ViewOrganization.name;
+
     public constructor(
         private relationManager: RelationManagerService,
         private collectionMapper: CollectionMapperService
@@ -124,6 +127,10 @@ export class ModelRequestBuilderService {
         }
         this.loaded.resolve();
         console.log(`apps loaded!`);
+    }
+
+    public setRootViewModel(rootViewModel: string) {
+        this.rootViewModel = rootViewModel;
     }
 
     public async build(simplifiedModelRequest: SimplifiedModelRequest<any>): Promise<ModelRequestObject> {
@@ -258,7 +265,7 @@ export class ModelRequestBuilderService {
     ): DescriptorResponse<RelationFieldDescriptor> {
         const foreignCollection = relation.foreignViewModel!.COLLECTION;
         const modelRequestObject = new ModelRequestObject(foreignCollection, follow, {});
-        if (relation.isFullList) {
+        if (relation.isFullList && relation.ownViewModels[0].name === this.rootViewModel) {
             modelRequestObject.addCollectionToFullListUpdate(
                 foreignCollection,
                 follow.idField as string,
