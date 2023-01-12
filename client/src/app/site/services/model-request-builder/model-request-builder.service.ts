@@ -129,7 +129,7 @@ export class ModelRequestBuilderService {
         console.log(`apps loaded!`);
     }
 
-    public setRootViewModel(rootCollection: string) {
+    public setRootViewModel(rootCollection: string): void {
         this.rootCollection = rootCollection;
     }
 
