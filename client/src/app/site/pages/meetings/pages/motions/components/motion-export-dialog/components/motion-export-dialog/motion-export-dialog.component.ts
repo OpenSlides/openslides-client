@@ -308,7 +308,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
                 return `Motion block`;
             }
             default: {
-                return metaDataName.charAt(0).toUpperCase() + metaDataName.slice(1);
+                return metaDataName.charAt(0).toUpperCase() + metaDataName.slice(1).replace(`_`, ` `);
             }
         }
     }
