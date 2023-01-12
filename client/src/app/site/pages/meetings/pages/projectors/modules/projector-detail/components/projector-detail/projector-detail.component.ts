@@ -10,6 +10,7 @@ import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meet
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { GridTileDimension } from 'src/app/ui/modules/grid';
@@ -189,6 +190,10 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.repo.projectPreview(projection);
     }
 
+    public getProjectPreviewFunction(projection: ViewProjection): () => void {
+        return () => this.projectPreview(projection);
+    }
+
     public unprojectCurrent(projection: ViewProjection): void {
         this.repo.toggle(projection.getProjectionBuildDescriptor(), [this.projector!]);
     }
@@ -201,8 +206,16 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.currentListOfSpeakersSlideService.toggleOn(this.projector, overlay);
     }
 
+    public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
+        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    }
+
     public isChyronProjected(): boolean {
         return this.currentSpeakerChyronService.isProjectedOn(this.projector);
+    }
+
+    public getChyronBuildDesc(): ProjectionBuildDescriptor {
+        return this.currentSpeakerChyronService.getProjectionBuildDescriptor();
     }
 
     public toggleChyron(): void {

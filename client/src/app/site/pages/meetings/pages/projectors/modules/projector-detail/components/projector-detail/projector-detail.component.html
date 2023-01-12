@@ -221,10 +221,7 @@
                                         <mat-icon>drag_indicator</mat-icon>
                                     </div>
                                     <div class="drag-handle no-drag" *ngIf="!editQueue">
-                                        <os-projector-button [object]="projection.getProjectionBuildDescriptor()" [blendIn]="true" [projector]="projector"></os-projector-button>
-                                        <!-- <button type="button" mat-icon-button (click)="projectPreview(projection)">
-                                            <mat-icon>videocam</mat-icon>
-                                        </button> -->
+                                        <os-projector-button [object]="projection.getProjectionBuildDescriptor()" [blendIn]="true" [onClickFn]="getProjectPreviewFunction(projection)"></os-projector-button>
                                     </div>
                                     <!-- Slide title ans subtitle -->
                                     <div class="name">
@@ -325,14 +322,15 @@
                             <!-- Slide-->
                             <mat-list *ngIf="projectorCount > 1">
                                 <mat-list-item>
-                                    <button
+                                    <os-projector-button [object]="getCurrentLoSBuildDesc(false)" [projector]="projector"></os-projector-button>
+                                    <!-- <button
                                         type="button"
                                         mat-mini-fab
                                         (click)="toggleClos(false)"
                                         [ngClass]="isClosProjected(false) ? 'projector-active' : 'projector-inactive'"
                                     >
                                         <mat-icon>videocam</mat-icon>
-                                    </button>
+                                    </button> -->
                                     <span class="spacer-left-10">{{ 'Slide' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
@@ -340,14 +338,15 @@
                             <!-- Overlay -->
                             <mat-list>
                                 <mat-list-item>
-                                    <button
+                                    <os-projector-button [object]="getCurrentLoSBuildDesc(true)" [projector]="projector"></os-projector-button>
+                                    <!-- <button
                                         type="button"
                                         mat-mini-fab
                                         (click)="toggleClos(true)"
                                         [ngClass]="isClosProjected(true) ? 'projector-active' : 'projector-inactive'"
                                     >
                                         <mat-icon>videocam</mat-icon>
-                                    </button>
+                                    </button> -->
                                     <span class="spacer-left-10">{{ 'Overlay' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
@@ -355,14 +354,15 @@
                             <!-- Chyron -->
                             <mat-list>
                                 <mat-list-item>
-                                    <button
+                                    <os-projector-button [object]="getChyronBuildDesc()" [projector]="projector"></os-projector-button>
+                                    <!-- <button
                                         type="button"
                                         mat-mini-fab
                                         (click)="toggleChyron()"
                                         [ngClass]="isChyronProjected() ? 'projector-active' : 'projector-inactive'"
                                     >
                                         <mat-icon>videocam</mat-icon>
-                                    </button>
+                                    </button> -->
                                     <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
