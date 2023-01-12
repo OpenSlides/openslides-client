@@ -23,7 +23,8 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: `gender`, label: `Gender` },
         { property: `id`, label: `Sequential number` },
         { property: `numberOfMeetings`, label: `Amount of meetings` },
-        { property: `last_email_send`, label: `Last email sent` }
+        { property: `last_email_send`, label: `Last email sent` },
+        { property: `last_login`, label: `Last login` }
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {

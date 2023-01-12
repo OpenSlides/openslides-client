@@ -83,6 +83,14 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
+                property: `isLastLogin`,
+                label: this.translate.instant(`Last login`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has logged in`) },
+                    { condition: [false, null], label: this.translate.instant(`Has not logged in yet`) }
+                ]
+            },
+            {
                 property: `isVoteWeightOne`,
                 label: this.translate.instant(`Vote weight`),
                 options: [

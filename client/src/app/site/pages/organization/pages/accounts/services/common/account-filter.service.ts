@@ -59,6 +59,14 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
+                property: `isLastLogin`,
+                label: this.translate.instant(`Last login`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has logged in`) },
+                    { condition: [false, null], label: this.translate.instant(`Has not logged in yet`) }
+                ]
+            },
+            {
                 property: `organization_management_level`,
                 label: this.translate.instant(`Administration roles`),
                 options: [

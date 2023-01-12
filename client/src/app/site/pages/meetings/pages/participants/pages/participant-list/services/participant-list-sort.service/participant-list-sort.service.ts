@@ -34,8 +34,9 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         { property: `number`, label: `Participant number` },
         { property: `structure_level`, label: `Structure level` },
         { property: `voteWeight`, label: `Vote weight` },
-        { property: `comment` }
-        // TODO email send?
+        { property: `comment` },
+        { property: `last_email_send`, label: `Last email sent` },
+        { property: `last_login`, label: `Last login` }
     ];
 
     private _voteWeightEnabled: boolean;

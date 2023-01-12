@@ -29,7 +29,11 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get isLastEmailSend(): boolean {
-        return !!this.user.last_email_send;
+        return !!this.last_email_send;
+    }
+
+    public get isLastLogin(): boolean {
+        return !!this.last_login;
     }
 
     public get hasEmail(): boolean {
