@@ -131,7 +131,7 @@ export class MotionPdfService {
         if (!continuousText) {
             const title = this.createTitle(motion, crMode, lineLength);
             const sequential =
-                infoToExport?.includes(`id`) ??
+                infoToExport?.includes(`sequential_number`) ??
                 (this.meetingSettingsService.instant(`motions_show_sequential_number`) as boolean);
             const subtitle = this.createSubtitle(motion, sequential);
 
