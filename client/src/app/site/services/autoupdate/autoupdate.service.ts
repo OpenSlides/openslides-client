@@ -184,7 +184,7 @@ export class AutoupdateService {
             streamId,
             description,
             request,
-            Object.assign(this._currentQueryParams, customParams || {})
+            Object.assign({}, this._currentQueryParams, customParams || {})
         );
 
         let rejectReceivedData: any;
