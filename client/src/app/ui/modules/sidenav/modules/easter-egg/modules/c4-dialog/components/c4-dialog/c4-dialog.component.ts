@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { Subscription } from 'rxjs';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';

@@ -10,13 +10,6 @@ import {
 
 import { overloadJsFunctions } from './app/infrastructure/utils/overload-js-functions';
 
-declare const require: {
-  context(path: string, deep?: boolean, filter?: RegExp): {
-    <T>(id: string): T;
-    keys(): string[];
-  };
-};
-
 overloadJsFunctions();
 
 if (!window.requestAnimationFrame) {
@@ -32,8 +25,3 @@ getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(),
 );
-
-// Then we find all the tests.
-const context = require.context(`./`, true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().map(context);

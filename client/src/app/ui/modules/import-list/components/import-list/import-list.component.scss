@@ -29,6 +29,7 @@ pbl-ngrid-cell {
 
 .import-list-summary {
     .import-list-icon {
+        // TODO: Check if `rotation` needs to be renamed
         animation: rotation 1s infinite linear;
     }
 }

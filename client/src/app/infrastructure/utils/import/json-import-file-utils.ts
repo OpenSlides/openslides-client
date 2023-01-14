@@ -1,4 +1,4 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';
 

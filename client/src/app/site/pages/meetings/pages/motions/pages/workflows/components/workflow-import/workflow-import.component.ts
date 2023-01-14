@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { getUploadFileJson } from 'src/app/infrastructure/utils/import/json-import-file-utils';
 import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';

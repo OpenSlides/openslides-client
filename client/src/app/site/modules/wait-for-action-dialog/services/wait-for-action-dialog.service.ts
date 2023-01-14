@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerWatchService } from 'src/app/gateways/action-worker-watch/action-worker-watch.service';

@@ -20,6 +20,7 @@
         border-radius: 100%;
         opacity: 0.2;
 
+        // TODO: Check if `rotation` needs to be renamed
         animation: rotation 1s infinite linear;
 
         &:before {
