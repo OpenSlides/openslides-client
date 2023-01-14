@@ -131,10 +131,12 @@ export class SlideContainerComponent {
     /**
      * Styles for scaling and scrolling.
      */
+    /* eslint-disable @typescript-eslint/naming-convention */
     public slideStyle: { 'font-size': string; 'margin-top': string } = {
         'font-size': `100%`,
         'margin-top': `50px`
     };
+    /* eslint-enable @typescript-eslint/naming-convention */
 
     public constructor(private slideManager: SlideManagerService) {}
 

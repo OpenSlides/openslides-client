@@ -11,7 +11,10 @@ import {
 } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatLegacyOption as MatOption, MatLegacyOptionSelectionChange as MatOptionSelectionChange } from '@angular/material/legacy-core';
+import {
+    MatLegacyOption as MatOption,
+    MatLegacyOptionSelectionChange as MatOptionSelectionChange
+} from '@angular/material/legacy-core';
 import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable } from 'rxjs';

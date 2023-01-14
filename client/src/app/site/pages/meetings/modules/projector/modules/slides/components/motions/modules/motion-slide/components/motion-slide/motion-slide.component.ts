@@ -132,11 +132,13 @@ export class MotionSlideComponent
         return recommendation;
     }
 
+    /* eslint-disable @typescript-eslint/naming-convention */
     public textDivStyles: {
         width?: string;
         'margin-top'?: string;
         'font-size'?: string;
     } = {};
+    /* eslint-enable @typescript-eslint/naming-convention */
 
     private get submitters(): string[] {
         return this._submittersSubject.value;
