@@ -13,8 +13,8 @@ import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 export class AutoupdateStream {
     public failedCounter: number = 0;
 
-    private abortCtrl: AbortController = undefined;
-    private activeSubscriptions: AutoupdateSubscription[] = null;
+    private abortCtrl: AbortController = null;
+    private activeSubscriptions: AutoupdateSubscription[] = [];
     private active: boolean = false;
     private error: any | ErrorDescription = null;
     private restarting: boolean = false;
@@ -151,12 +151,9 @@ export class AutoupdateStream {
     private async doRequest(): Promise<void> {
         this.active = true;
 
-        if (this.activeSubscriptions === null) {
-            this.activeSubscriptions = [];
-            for (let subscription of this.subscriptions) {
-                this.activeSubscriptions.push(subscription);
-                subscription.stream = this;
-            }
+        for (let subscription of this.subscriptions) {
+            this.activeSubscriptions.push(subscription);
+            subscription.stream = this;
         }
 
         const headers: any = {
@@ -179,7 +176,7 @@ export class AutoupdateStream {
 
         const LINE_BREAK = `\n`.charCodeAt(0);
         const reader = response.body.getReader();
-        let next: Uint8Array = null;
+        let next: Uint8Array | null = null;
         let result: any;
         while (!(result = await reader.read()).done) {
             const lines = splitTypedArray(LINE_BREAK, result.value);

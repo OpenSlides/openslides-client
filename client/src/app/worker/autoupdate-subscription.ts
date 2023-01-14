@@ -10,14 +10,14 @@ export class AutoupdateSubscription {
     /**
      * The stream handling this subscription
      */
-    public stream: AutoupdateStream;
+    public stream: AutoupdateStream | null = null;
 
     public get request(): Object {
         return this._request;
     }
 
     constructor(
-        public id: number,
+        public id: number | null | undefined,
         public url: string,
         public requestHash: string,
         private _request: any,

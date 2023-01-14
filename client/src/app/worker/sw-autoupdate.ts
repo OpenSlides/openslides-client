@@ -19,7 +19,7 @@ let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     sequentialnumbermapping: [],
     other: []
 };
-let openTimeouts = {
+let openTimeouts: { [key: string]: ReturnType<typeof setTimeout> | null } = {
     required: null,
     sequentialnumbermapping: null,
     other: null
@@ -58,21 +58,25 @@ function openConnection(
         return;
     }
 
-    const category = getRequestCategory(description, request);
-    const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description, [ctx]);
+    const category = getRequestCategory(description || ``, request);
+    const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description || ``, [ctx]);
     subscriptionQueues[category].push(subscription);
 
-    clearTimeout(openTimeouts[category]);
+    clearTimeout(<any>openTimeouts[category]);
     openTimeouts[category] = setTimeout(() => {
         const queue = subscriptionQueues[category];
         subscriptionQueues[category] = [];
-        openTimeouts[category] = undefined;
+        openTimeouts[category] = null;
 
         autoupdatePool.openNewStream(queue, queryParams);
     }, 5);
 }
 
 function closeConnection(ctx: MessagePort, params: AutoupdateCloseStreamParams): void {
+    if (!params.streamId) {
+        return;
+    }
+
     const subscription = autoupdatePool.getSubscriptionById(params.streamId);
     if (!subscription) {
         return;
@@ -92,7 +96,7 @@ function updateOnlineStatus(): void {
 }
 
 export function addAutoupdateListener(context: any): void {
-    context.addEventListener(`message`, e => {
+    context.addEventListener(`message`, (e: MessageEvent) => {
         const receiver = e.data?.receiver;
         if (!receiver || receiver !== `autoupdate`) {
             return;
