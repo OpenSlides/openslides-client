@@ -59,7 +59,9 @@ function openConnection(
     }
 
     const category = getRequestCategory(description || ``, request);
-    const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description || ``, [ctx]);
+    const subscription = new AutoupdateSubscription(streamId, queryParams, requestHash, request, description || ``, [
+        ctx
+    ]);
     subscriptionQueues[category].push(subscription);
 
     clearTimeout(<any>openTimeouts[category]);
