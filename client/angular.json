@@ -39,6 +39,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+                "includePaths": [
+                    ""
+                ]
+            },
             "scripts": [
               "src/assets/jitsi/external_api.js"
             ],

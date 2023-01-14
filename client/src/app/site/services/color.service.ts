@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as tinycolor from 'tinycolor2';
+import { TinyColor, RGBA } from '@ctrl/tinycolor';
 
 import { HtmlColor } from '../../domain/definitions/key-types';
 
@@ -51,43 +51,44 @@ export class ColorService {
     }
 
     public generateColorPaletteByHex(colorHex: string): ColorDefinition[] {
-        const baseLight = tinycolor(`#ffffff`);
-        const baseDark = this.multiplyColors(tinycolor(colorHex).toRgb(), tinycolor(colorHex).toRgb());
+        const color = new TinyColor(colorHex);
+        const baseLight = new TinyColor(`#ffffff`);
+        const baseDark = this.multiplyColors(new TinyColor(colorHex).toRgb(), new TinyColor(colorHex).toRgb());
         return [
-            this.createColorObject(tinycolor.mix(baseLight, colorHex, 12), `50`),
-            this.createColorObject(tinycolor.mix(baseLight, colorHex, 30), `100`),
-            this.createColorObject(tinycolor.mix(baseLight, colorHex, 50), `200`),
-            this.createColorObject(tinycolor.mix(baseLight, colorHex, 70), `300`),
-            this.createColorObject(tinycolor.mix(baseLight, colorHex, 85), `400`),
-            this.createColorObject(tinycolor.mix(baseLight, colorHex, 100), `500`),
-            this.createColorObject(tinycolor.mix(baseDark, colorHex, 87), `600`),
-            this.createColorObject(tinycolor.mix(baseDark, colorHex, 70), `700`),
-            this.createColorObject(tinycolor.mix(baseDark, colorHex, 54), `800`),
-            this.createColorObject(tinycolor.mix(baseDark, colorHex, 25), `900`),
+            this.createColorObject(baseLight.mix(color, 12), `50`),
+            this.createColorObject(baseLight.mix(colorHex, 30), `100`),
+            this.createColorObject(baseLight.mix(colorHex, 50), `200`),
+            this.createColorObject(baseLight.mix(colorHex, 70), `300`),
+            this.createColorObject(baseLight.mix(colorHex, 85), `400`),
+            this.createColorObject(baseLight.mix(colorHex, 100), `500`),
+            this.createColorObject(baseDark.mix(colorHex, 87), `600`),
+            this.createColorObject(baseDark.mix(colorHex, 70), `700`),
+            this.createColorObject(baseDark.mix(colorHex, 54), `800`),
+            this.createColorObject(baseDark.mix(colorHex, 25), `900`),
             this.createColorObject(
-                tinycolor
-                    .mix(baseDark, undefined as any, 15)
+                new TinyColor(baseDark)
+                    .mix(undefined as any, 15)
                     .saturate(80)
                     .lighten(65),
                 `A100`
             ),
             this.createColorObject(
-                tinycolor
-                    .mix(baseDark, undefined as any, 15)
+                new TinyColor(baseDark)
+                    .mix(undefined as any, 15)
                     .saturate(80)
                     .lighten(55),
                 `A200`
             ),
             this.createColorObject(
-                tinycolor
-                    .mix(baseDark, undefined as any, 15)
+                new TinyColor(baseDark)
+                    .mix(undefined as any, 15)
                     .saturate(100)
                     .lighten(45),
                 `A400`
             ),
             this.createColorObject(
-                tinycolor
-                    .mix(baseDark, undefined as any, 15)
+                new TinyColor(baseDark)
+                    .mix(undefined as any, 15)
                     .saturate(100)
                     .lighten(40),
                 `A700`
@@ -95,8 +96,8 @@ export class ColorService {
         ];
     }
 
-    public createColorObject(colorHexRepresentation: tinycolor.Instance | string, name: string): ColorDefinition {
-        const color = tinycolor(colorHexRepresentation);
+    public createColorObject(colorHexRepresentation: TinyColor | string, name: string): ColorDefinition {
+        const color = new TinyColor(colorHexRepresentation);
         return {
             name,
             hex: color.toHexString(),
@@ -104,10 +105,10 @@ export class ColorService {
         };
     }
 
-    private multiplyColors(rgbA: tinycolor.ColorFormats.RGBA, rgbB: tinycolor.ColorFormats.RGBA): tinycolor.Instance {
-        rgbA.b = Math.floor((rgbA.b * rgbB.b) / 255);
-        rgbA.g = Math.floor((rgbA.g * rgbB.g) / 255);
-        rgbA.r = Math.floor((rgbA.r * rgbB.r) / 255);
-        return tinycolor(`rgb ` + rgbA.r + ` ` + rgbA.g + ` ` + rgbA.b);
+    private multiplyColors(rgbA: RGBA, rgbB: RGBA): TinyColor {
+        rgbA.b = Math.floor((<number>rgbA.b * <number>rgbB.b) / 255);
+        rgbA.g = Math.floor((<number>rgbA.g * <number>rgbB.g) / 255);
+        rgbA.r = Math.floor((<number>rgbA.r * <number>rgbB.r) / 255);
+        return new TinyColor(`rgb ` + rgbA.r + ` ` + rgbA.g + ` ` + rgbA.b);
     }
 }
