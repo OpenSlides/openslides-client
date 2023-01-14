@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
+import { DeviceDetectorService, DeviceInfo } from '@yberion/ngx-device-detector_tmp';
 
 const SmallestSupportedBrowserVersion: any = {
     Chrome: 80,
