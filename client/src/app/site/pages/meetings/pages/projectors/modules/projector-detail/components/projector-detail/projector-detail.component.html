@@ -320,7 +320,7 @@
                             </mat-expansion-panel-header>
 
                             <!-- Slide-->
-                            <mat-list *ngIf="projectorCount > 1">
+                            <mat-list *ngIf="projectorCount > 1 && !projector.isReferenceProjector">
                                 <mat-list-item>
                                     <os-projector-button [object]="getCurrentLoSBuildDesc(false)" [projector]="projector"></os-projector-button>
                                     <span class="spacer-left-10">{{ 'Slide' | translate }}</span>
@@ -340,6 +340,14 @@
                                 <mat-list-item>
                                     <os-projector-button [object]="getChyronBuildDesc()" [projector]="projector"></os-projector-button>
                                     <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
+                                </mat-list-item>
+                            </mat-list>
+
+                            <!-- Toggle -->
+                            <mat-list *ngIf="getCurrentProjectionLoSToggleBuildDesc()">
+                                <mat-list-item>
+                                    <os-projector-button [object]="getCurrentProjectionLoSToggleBuildDesc()" [projector]="projector"></os-projector-button>
+                                    <span class="spacer-left-10">{{ 'Toggle between slide and list of speakers' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
                         </mat-expansion-panel>

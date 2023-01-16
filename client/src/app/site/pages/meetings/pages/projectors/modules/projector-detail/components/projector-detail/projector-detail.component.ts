@@ -9,13 +9,15 @@ import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/p
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { MeetingCollectionMapperService } from 'src/app/site/pages/meetings/services/meeting-collection-mapper.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import { Projectable, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { GridTileDimension } from 'src/app/ui/modules/grid';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { hasListOfSpeakers, ViewListOfSpeakers } from '../../../../../agenda';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
@@ -86,7 +88,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private route: ActivatedRoute,
         private durationService: DurationService,
         private promptService: PromptService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private meetingCollectionMapper: MeetingCollectionMapperService
     ) {
         super(componentServiceCollector, translate);
 
@@ -208,6 +211,29 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
         return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    }
+
+    public getCurrentProjectionLoSToggleBuildDesc(): ProjectionBuildDescriptor | Projectable | null {
+        try {
+            for (let projection of this.projector.current_projections) {
+                if (hasListOfSpeakers(projection.content_object)) {
+                    return projection.content_object.list_of_speakers ?? null;
+                } else if (projection.content_object.collection === `list_of_speakers`) {
+                    return (
+                        this.meetingCollectionMapper.getViewModelByFqid(
+                            (projection.content_object as ViewListOfSpeakers).content_object_id
+                        ) ?? null
+                    );
+                } else if (String(projection.content_object[`content_object_id`]).split(`/`)[0] === `meeting`) {
+                    for (const projection of this.repo.getReferenceProjector()?.current_projections || []) {
+                        if (hasListOfSpeakers(projection.content_object)) {
+                            return projection.content_object?.getProjectionBuildDescriptor() ?? null;
+                        }
+                    }
+                }
+            }
+        } catch (e) {}
+        return null;
     }
 
     public isChyronProjected(): boolean {

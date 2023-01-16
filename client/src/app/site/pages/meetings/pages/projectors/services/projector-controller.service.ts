@@ -103,6 +103,10 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.getReferenceProjectorObservable();
     }
 
+    public getReferenceProjector(): ViewProjector | undefined {
+        return this.repo.getReferenceProjector();
+    }
+
     public ensureDescriptor(obj: ProjectionBuildDescriptor | Projectable): ProjectionBuildDescriptor {
         return (
             isProjectable(obj) ? obj.getProjectionBuildDescriptor(this.meetingSettingsService) : obj
