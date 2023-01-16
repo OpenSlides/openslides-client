@@ -113,7 +113,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private _isVoteWeightEnabled = false;
     private _isVoteDelegationEnabled = false;
     private _isElectronicVotingEnabled = false;
-    private _hasFormChanged = false;
 
     private _accountId: Id | null = null;
     private _suitableAccountList: Partial<User>[] = [];
@@ -148,7 +147,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         this.groupsObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
 
         this.subscriptions.push(
-            this.createUserForm.valueChanges.subscribe(() => (this._hasFormChanged = true)),
             this.organizationSettingsService
                 .get(`enable_electronic_voting`)
                 .subscribe(is => (this._isElectronicVotingEnabled = is)),
@@ -174,41 +172,36 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public onStepChanged(event: StepperSelectionEvent): void {
         if (event.selectedIndex === this.CHOOSE_PARTICIPANT_STEP) {
-            this.onChooseAccount();
+            this.onChooseAccount(event.previouslySelectedIndex === this.CREATE_PARTICIPANT_STEP);
         }
         if (event.selectedIndex === this.CREATE_PARTICIPANT_STEP && !!this._accountId) {
             this.checkScope();
         }
         this._currentStepIndexSubject.next(event.selectedIndex);
-        this._hasFormChanged = false;
     }
 
-    public async onChooseAccount(): Promise<void> {
-        if (this._hasFormChanged) {
-            const { username, first_name, last_name, email } = this.createUserForm.value;
-            let searchCriteria: any = [{ username: `${first_name}${last_name}`, email: email }];
-            if (username) {
-                searchCriteria = [{ username: username }];
-            }
-
-            const result = await this.presenter.call({
-                searchCriteria,
-                permissionRelatedId: this.activeMeetingId!
-            });
-            this._suitableAccountList = Object.values(result).flat();
-            if (this._suitableAccountList.length === 0) {
-                this.goToStep(this.CREATE_PARTICIPANT_STEP);
-            } else {
-                this.goToStep(this.CHOOSE_PARTICIPANT_STEP);
-            }
+    public async onChooseAccount(reverse = false): Promise<void> {
+        const { username, first_name, last_name, email } = this.createUserForm.value;
+        let searchCriteria: any = [{ username: `${first_name}${last_name}`, email: email }];
+        if (username) {
+            searchCriteria = [{ username: username }];
         }
-        this._hasFormChanged = false;
+
+        const result = await this.presenter.call({
+            searchCriteria,
+            permissionRelatedId: this.activeMeetingId!
+        });
+        this._suitableAccountList = Object.values(result).flat();
+        if (this._suitableAccountList.length === 0) {
+            this.goToStep(reverse ? this.FILL_FORM_PARTICIPANT_STEP : this.CREATE_PARTICIPANT_STEP);
+        } else {
+            this.goToStep(this.CHOOSE_PARTICIPANT_STEP);
+        }
     }
 
     public onAccountSelected(account: Partial<User>): void {
         this.createUserForm.patchValue(account);
         this._accountId = account.id || null;
-        this._hasFormChanged = false;
         this._stepper.next();
         this.checkScope();
     }
