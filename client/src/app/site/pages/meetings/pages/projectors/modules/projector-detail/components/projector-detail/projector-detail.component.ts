@@ -69,6 +69,21 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      */
     public editQueue = false;
 
+    public get hasSlide(): boolean {
+        return !!this.projector.current_projections.filter(projection => projection.stable === false).length;
+    }
+
+    public get currentProjectionIsLoS(): boolean {
+        for (let projection of this.projector.current_projections.filter(projection => projection.stable === false)) {
+            if (hasListOfSpeakers(projection.content_object)) {
+                return false;
+            } else if (projection.content_object.collection === `list_of_speakers`) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private _projectorId: Id | null = null;
 
     private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
@@ -215,7 +230,9 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public getCurrentProjectionLoSToggleBuildDesc(): ProjectionBuildDescriptor | Projectable | null {
         try {
-            for (let projection of this.projector.current_projections) {
+            for (let projection of this.projector.current_projections.filter(
+                projection => projection.stable === false
+            )) {
                 if (hasListOfSpeakers(projection.content_object)) {
                     return projection.content_object.list_of_speakers ?? null;
                 } else if (projection.content_object.collection === `list_of_speakers`) {
@@ -224,12 +241,6 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                             (projection.content_object as ViewListOfSpeakers).content_object_id
                         ) ?? null
                     );
-                } else if (String(projection.content_object[`content_object_id`]).split(`/`)[0] === `meeting`) {
-                    for (const projection of this.repo.getReferenceProjector()?.current_projections || []) {
-                        if (hasListOfSpeakers(projection.content_object)) {
-                            return projection.content_object?.getProjectionBuildDescriptor() ?? null;
-                        }
-                    }
                 }
             }
         } catch (e) {}

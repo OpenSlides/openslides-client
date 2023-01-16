@@ -342,12 +342,19 @@
                                     <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
+                        </mat-expansion-panel>
+
+                        <!-- Current slide -->
+                        <mat-expansion-panel *ngIf="hasSlide">
+                            <mat-expansion-panel-header>
+                                <span>{{ 'Current slide' | translate }}</span>
+                            </mat-expansion-panel-header>
 
                             <!-- Toggle -->
                             <mat-list *ngIf="getCurrentProjectionLoSToggleBuildDesc()">
                                 <mat-list-item>
                                     <os-projector-button [object]="getCurrentProjectionLoSToggleBuildDesc()" [projector]="projector"></os-projector-button>
-                                    <span class="spacer-left-10">{{ 'Toggle between slide and list of speakers' | translate }}</span>
+                                    <span class="spacer-left-10">{{ currentProjectionIsLoS ? 'Toggle to list of speakers' : 'Toggle to parent' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
                         </mat-expansion-panel>
