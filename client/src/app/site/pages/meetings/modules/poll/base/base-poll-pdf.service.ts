@@ -1,6 +1,8 @@
 import { Directive } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
+import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -8,6 +10,7 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ExportFileFormat, InfoToExport } from '../../../pages/motions/services/export/definitions';
 
 /**
  * Workaround data definitions. The implementation for the different model's classes might have different needs,
@@ -59,7 +62,8 @@ export abstract class BasePollPdfService {
         protected userRepo: ParticipantControllerService,
         protected activeMeetingService: ActiveMeetingService,
         protected mediaManageService: MediaManageService,
-        protected pdfExport: MeetingPdfExportService
+        protected pdfExport: MeetingPdfExportService,
+        protected translate: TranslateService
     ) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
@@ -277,6 +281,165 @@ export abstract class BasePollPdfService {
             styles: this.getBlankPaperStyles()
         };
         return result;
+    }
+
+    /**
+     * Downloads a pdf with the result export page definitions.
+     *
+     * @param docDefinition the structure of the PDF document
+     * @param filename the name of the file to use
+     * @param logo (optional) url of a logo to be placed as ballot logo
+     */
+    public downloadWithResultPdf(poll: ViewPoll, docDefinition: object, filename: string, logo?: string): void {
+        this.pdfExport.downloadWaitableDoc(filename, () => this.getResultPdf(poll, docDefinition, logo));
+    }
+
+    /**
+     * @param documentContent the content of the pdf as object
+     * @param imageUrl an optional image to insert into the ballot
+     * @returns the pdf document definition ready to export
+     */
+    private async getResultPdf(poll: ViewPoll, documentContent: object, imageUrl?: string): Promise<object> {
+        // this.imageUrls = imageUrl ? [imageUrl] : [];
+        const result = {
+            pageSize: `A4`,
+            pageMargins: [0, 0, 0, 0],
+            defaultStyle: {
+                font: `PdfFont`,
+                fontSize: 10
+            },
+            content: documentContent,
+            styles: this.getBlankPaperStyles()
+        };
+        return result;
+    }
+
+    /**
+     * Exports a single motions to PDFnumberOrTitle
+     *
+     * @param motion The motion to export
+     */
+    public exportSingleMotion(poll: ViewPoll, exportInfo?: {
+        format?: ExportFileFormat;
+        lnMode?: LineNumberingMode;
+        crMode?: ChangeRecoMode;
+        content?: string[];
+        metaInfo?: InfoToExport[];
+        pdfOptions?: string[];
+        comments?: number[];
+    }): void {
+        const doc = this.pollToDocDef( poll, exportInfo );
+        const filename = `${this.translate.instant(`Poll result`)} ${poll.getTitle()}`;
+        const metadata = {
+            title: filename
+        };
+        this.pdfService.download({ docDefinition: doc, filename, metadata });
+    }
+
+    /**
+     * Converts a motion to PdfMake doc definition
+     *
+     * @param motion the motion to convert to pdf
+     * @returns doc def for the motion
+     */
+    public pollToDocDef(poll: ViewPoll, exportInfo?: {
+        format?: ExportFileFormat;
+        lnMode?: LineNumberingMode;
+        crMode?: ChangeRecoMode;
+        content?: string[];
+        metaInfo?: InfoToExport[];
+        pdfOptions?: string[];
+        comments?: number[];
+    }): object {
+        let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
+        let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
+        const infoToExport = exportInfo ? exportInfo.metaInfo : null;
+        const contentToExport = exportInfo ? exportInfo.content : null;
+        let commentsToExport = exportInfo ? exportInfo.comments : null;
+
+        // get the line length from the config
+        const lineLength = 85;
+        // whether to append checkboxes to follow the recommendation or not
+        const optionToFollowRecommendation = false;
+
+        let motionPdfContent: any[] = [];
+
+        // Enforces that statutes should always have Diff Mode and no line numbers
+        // if (motion.isStatuteAmendment()) {
+        //     lnMode = LineNumberingMode.None;
+        //     crMode = ChangeRecoMode.Diff;
+        // }
+
+        // determine the default lnMode if not explicitly given
+        if (!lnMode) {
+            lnMode = LineNumberingMode.Outside;
+        }
+
+        // determine the default crMode if not explicitly given
+        // if (!crMode) {
+        //     crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
+        // }
+        // if (!continuousText) {
+            const title = {
+                text: `Result for ${poll.getTitle()}`,
+                style: `title`
+            }
+            // const sequential =
+            //     infoToExport?.includes(`sequential_number`) ??
+            //     (this.meetingSettingsService.instant(`motions_show_sequential_number`) as boolean);
+            const subtitle = this.createSubtitle(motion, sequential);
+
+            motionPdfContent = [title, subtitle];
+        // }
+        if (((infoToExport && infoToExport.length > 0) || !infoToExport) && !continuousText) {
+            const metaInfo = this.createMetaInfoTable(
+                motion,
+                lineLength,
+                crMode,
+                infoToExport,
+                optionToFollowRecommendation
+            );
+            motionPdfContent.push(metaInfo);
+        }
+
+        if (!contentToExport || contentToExport.includes(`text`)) {
+            if (motion.showPreamble && !continuousText) {
+                const preamble = this.createPreamble();
+                motionPdfContent.push(preamble);
+            }
+            const lineHeight = this.meetingSettingsService.instant(`export_pdf_line_height`)!;
+            const text = this.createText({
+                motion,
+                lineLength,
+                lnMode,
+                crMode,
+                lineHeight
+            });
+            motionPdfContent.push(text);
+        }
+
+        if (!contentToExport || contentToExport.includes(`reason`)) {
+            const reason = this.createReason(motion);
+            motionPdfContent.push(reason);
+        }
+
+        if (
+            exportInfo &&
+            exportInfo.pdfOptions &&
+            exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) &&
+            motion.attachments.length > 0
+        ) {
+            motionPdfContent.push(this.createAttachments(motion));
+        }
+
+        if (infoToExport && infoToExport.includes(`allcomments`)) {
+            commentsToExport = this.commentRepo.getViewModelList().map(vm => vm.id);
+        }
+        if (commentsToExport) {
+            motionPdfContent.push(this.createComments(motion, commentsToExport));
+        }
+
+        return motionPdfContent;
     }
 
     /**
