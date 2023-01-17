@@ -15,6 +15,10 @@ export class ViewMotionState extends BaseViewModel<MotionState> {
     public get isFinalState(): boolean {
         return !this.next_state_ids || !this.next_state_ids.length;
     }
+
+    public override canAccess(): boolean {
+        return (this.meeting_id ?? this.workflow?.meeting_id) === this.getActiveMeetingId();
+    }
 }
 interface IStateRelations {
     next_states: ViewMotionState[];

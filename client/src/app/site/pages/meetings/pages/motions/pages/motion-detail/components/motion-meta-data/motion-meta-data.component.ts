@@ -6,6 +6,7 @@ import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
 import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
+import { MotionStateRepositoryService } from 'src/app/gateways/repositories/motions';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -105,7 +106,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService
+        private meetingController: MeetingControllerService,
+        private states: MotionStateRepositoryService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
 
@@ -116,6 +118,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         } else {
             this._forwardingAvailable = false;
         }
+    }
+
+    /**
+     * @returns the current state label (with extension)
+     */
+    public getDerivedStateLabel(derived: ViewMotion): string {
+        console.log(`DERIVED STATES`, this.states.getViewModelList(), this.states.getViewModelListUnsafe());
+        return this.repo.getExtendedStateLabel(derived);
     }
 
     /**

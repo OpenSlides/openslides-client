@@ -267,7 +267,14 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
 
     public override getFieldsets(): Fieldsets<Motion> {
         const routingFields: TypedFieldset<Motion> = [`sequential_number`, `meeting_id`];
-        const titleFields: TypedFieldset<Motion> = routingFields.concat([`title`, `number`, `created`, `forwarded`]);
+        const titleFields: TypedFieldset<Motion> = routingFields.concat([
+            `title`,
+            `number`,
+            `created`,
+            `forwarded`,
+            `state_extension`,
+            `state_id`
+        ]);
         const detailFields: TypedFieldset<Motion> = titleFields.concat([
             `sort_weight`,
             `start_line_number`,
@@ -286,7 +293,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `lead_motion_id`,
             `comment_ids`,
             `modified_final_version`,
-            `state_extension`,
             `recommendation_extension`,
             `list_of_speakers_id`,
             `agenda_item_id`, // for add/remove from agenda,
@@ -299,7 +305,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `poll_ids`,
             `sort_weight`,
             `sort_parent_id`,
-            `state_id`,
             `text`,
             `change_recommendation_ids`,
             `attachment_ids`,
@@ -307,6 +312,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         ]);
         return {
             [DEFAULT_FIELDSET]: detailFields,
+            titleFields: titleFields,
             [ROUTING_FIELDSET]: routingFields
         };
     }

@@ -18,9 +18,8 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
     }
 
     public override getFieldsets(): Fieldsets<MotionState> {
-        const detailFields: (keyof MotionState)[] = [
-            `name`,
-            `css_class`,
+        const appearanceFields: (keyof MotionState)[] = [`name`, `css_class`, `show_state_extension_field`];
+        const detailFields: (keyof MotionState)[] = appearanceFields.concat([
             `recommendation_label`,
             `restrictions`,
             `allow_support`,
@@ -29,7 +28,6 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
             `allow_motion_forwarding`,
             `set_number`,
             `set_created_timestamp`,
-            `show_state_extension_field`,
             `merge_amendment_into_final`,
             `show_recommendation_extension_field`,
             `weight`,
@@ -38,9 +36,10 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
             `previous_state_ids`,
             `submitter_withdraw_state_id`,
             `submitter_withdraw_back_ids`
-        ];
+        ]);
         return {
-            [DEFAULT_FIELDSET]: detailFields
+            [DEFAULT_FIELDSET]: detailFields,
+            appearanceFields: appearanceFields
         };
     }
 

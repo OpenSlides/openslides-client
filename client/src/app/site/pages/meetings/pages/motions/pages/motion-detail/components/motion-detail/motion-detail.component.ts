@@ -56,10 +56,17 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
             modelRequest: {
                 ids: [this._currentMotionId!],
                 viewModelCtor: ViewMotion,
+                follow: [
+                    {
+                        idField: `derived_motion_ids`,
+                        fieldset: `titleFields`,
+                        follow: [{ idField: `state_id`, fieldset: `appearanceFields` }]
+                    }
+                ],
                 additionalFields: [
                     `all_origin_ids`,
                     `origin_meeting_id`,
-                    `derived_motion_ids`,
+                    // `derived_motion_ids`,
                     `amendment_ids`,
                     { templateField: `amendment_paragraph_$` }
                 ]
