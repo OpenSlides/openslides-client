@@ -95,9 +95,10 @@ export class HttpService {
                     this.snackBar.open(cleanError, this.translate.instant(`Ok`));
                     return null;
                 } else if (!navigator.onLine) {
-                    throw new ProcessError(
-                        this.translate.instant(`The request could not be sent. Check your connection.`)
-                    );
+                    const cleanError = this.translate.instant(`The request could not be sent. Check your connection.`);
+                    this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+
+                    throw new ProcessError(cleanError);
                 }
             }
 
