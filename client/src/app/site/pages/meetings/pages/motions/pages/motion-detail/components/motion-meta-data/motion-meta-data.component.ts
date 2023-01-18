@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -16,6 +16,7 @@ import { MotionForwardDialogService } from '../../../../components/motion-forwar
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
 import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
+import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
 
 @Component({
     selector: `os-motion-meta-data`,
@@ -67,11 +68,20 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
      */
     public recommender: string | null = null;
 
-    public motionObserver: Observable<ViewMotion[]> = of([]);
+    public searchLists: SearchListDefinition[] = [
+        {
+            observable: this.repo.getViewModelListObservable(),
+            label: `Motions`
+        },
+        {
+            observable: this.motionForwardingService.forwardingCommitteesObservable,
+            label: `Committees`,
+            keepOpen: true,
+            wider: true
+        }
+    ];
 
     public motionTransformFn = (value: ViewMotion) => `[${value.fqid}]`;
-
-    public committeeObservable = this.motionForwardingService.forwardingCommitteesObservable;
 
     /**
      * All amendments to this motion
@@ -289,7 +299,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     }
 
     protected override onAfterInit(): void {
-        this.motionObserver = this.repo.getViewModelListObservable();
         this.setupRecommender();
     }
 
