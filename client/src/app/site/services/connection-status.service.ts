@@ -58,6 +58,10 @@ export class ConnectionStatusService {
         fromEvent(window, `offline`).subscribe(() => this.goOffline(DEFAULT_OFFLINE_REASON));
     }
 
+    public getReason(): string {
+        return this._config?.reason || null;
+    }
+
     public isOffline(): boolean {
         return this._isOfflineSubject.value;
     }

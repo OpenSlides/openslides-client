@@ -232,7 +232,7 @@ export class AutoupdateCommunicationService {
         if (this.autoupdateEndpointStatus === `unhealthy`) {
             this.unhealtyTimeout = setTimeout(() => {
                 this.connectionStatusService.goOffline({
-                    reason: `Autoupdate unhealthy`,
+                    reason: this.translate.instant(`Autoupdate unhealthy`),
                     isOnlineFn: () => {
                         return this.autoupdateEndpointStatus === `healthy`;
                     }

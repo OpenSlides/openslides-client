@@ -13,6 +13,7 @@ export type InfoToExport =
     | 'polls'
     | 'speakers'
     | 'id'
+    | 'sequential_number'
     | 'allcomments';
 
 /**
@@ -38,7 +39,8 @@ const motionHeadersAndVerboseNames: { [key in keyof ViewMotion]?: any } = {
     tags: `Tags`,
     block: `Motion block`,
     recommendation: `Recommendation`,
-    state: `State`
+    state: `State`,
+    sequential_number: `Sequential number`
 };
 
 /**
@@ -56,7 +58,7 @@ export const noMetaData: (keyof ViewMotion)[] = [`number`, `title`, `text`, `rea
  * Subset of {@link motionImportExportHeaderOrder} properties that are
  * restricted to export only due to database or workflow limitations
  */
-const motionExportOnly: (keyof ViewMotion)[] = [`id`, `recommendation`, `state`];
+const motionExportOnly: (keyof ViewMotion)[] = [`id`, `sequential_number`, `recommendation`, `state`];
 
 export const motionExpectedHeaders: (keyof ViewMotion)[] = motionImportExportHeaderOrder.filter(
     header => !motionExportOnly.includes(header)

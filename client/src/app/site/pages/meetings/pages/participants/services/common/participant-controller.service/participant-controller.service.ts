@@ -205,10 +205,6 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         await this.update(user => ({ id: user.id, [field]: value }), ...users).resolve();
     }
 
-    public getLastSentEmailTimeString(user: ViewUser): string {
-        return this.userController.getLastEmailSentTimeString(user);
-    }
-
     public getViewModelByNumber(participantNumber: string): ViewUser | null {
         return this.getViewModelList().find(user => user.number() === participantNumber) || null;
     }

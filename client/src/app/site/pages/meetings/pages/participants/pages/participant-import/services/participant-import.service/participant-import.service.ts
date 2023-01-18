@@ -127,7 +127,8 @@ export class ParticipantImportService extends BaseUserImportService {
     }): Promise<ImportModel<User>> {
         const username = input.username ? input.username : `${input.first_name} ${input.last_name}`;
         const userEmailUsername = `${username}/${input.email}`;
-        const duplicates = this._existingUserMap[userEmailUsername] ?? [];
+        const userUsername = `${username}/`;
+        const duplicates = this._existingUserMap[userUsername] ?? this._existingUserMap[userEmailUsername] ?? [];
         const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...input } : input;
         const hasDuplicates =
             duplicates.length > 1 ||
@@ -140,8 +141,11 @@ export class ParticipantImportService extends BaseUserImportService {
         const result = await this.presenter.call({
             permissionRelatedId: this.activeMeetingId,
             searchCriteria: entries.map(entry => {
-                const username = !!entry.username ? entry.username : `${entry.first_name} ${entry.last_name}`;
-                return { username, email: entry.email };
+                if (entry.username) {
+                    return { username: entry.username };
+                }
+
+                return { username: `${entry.first_name}${entry.last_name}`, email: entry.email };
             })
         });
         return result;

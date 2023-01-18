@@ -14,8 +14,12 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
         return `/system/media/get/${this.data.data.id}`;
     }
 
+    public get scroll(): number {
+        return (this.projector?.scroll || 0) * 100;
+    }
+
     public get zoom(): number {
-        return Math.pow(1.1, this.data.options[`zoom`] || 0);
+        return Math.pow(1.1, this.projector?.scale || 0);
     }
 
     public get page(): number {

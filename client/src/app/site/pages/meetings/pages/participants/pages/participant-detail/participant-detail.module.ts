@@ -41,7 +41,8 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
         MatDividerModule,
         MatFormFieldModule,
         ReactiveFormsModule,
-        DirectivesModule
+        DirectivesModule,
+        PipesModule
     ]
 })
 export class ParticipantDetailModule {}

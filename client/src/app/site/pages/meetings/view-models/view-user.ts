@@ -19,7 +19,7 @@ import { ViewMeeting } from './view-meeting';
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
-export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`, `pronoun`];
+export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
 
 export class ViewUser extends BaseProjectableViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;
@@ -29,7 +29,11 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
     }
 
     public get isLastEmailSend(): boolean {
-        return !!this.user.last_email_send;
+        return !!this.last_email_send;
+    }
+
+    public get isLastLogin(): boolean {
+        return !!this.last_login;
     }
 
     public get hasEmail(): boolean {

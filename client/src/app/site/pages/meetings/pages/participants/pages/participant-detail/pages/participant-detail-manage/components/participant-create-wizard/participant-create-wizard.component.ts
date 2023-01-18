@@ -186,9 +186,13 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public async onChooseAccount(): Promise<void> {
         if (this._hasFormChanged) {
             const { username, first_name, last_name, email } = this.createUserForm.value;
-            const _username = username ? username : `${first_name}${last_name}`;
+            let searchCriteria: any = [{ username: `${first_name}${last_name}`, email: email }];
+            if (username) {
+                searchCriteria = [{ username: username }];
+            }
+
             const result = await this.presenter.call({
-                searchCriteria: [{ username: _username, email }],
+                searchCriteria,
                 permissionRelatedId: this.activeMeetingId!
             });
             this._suitableAccountList = Object.values(result).flat();

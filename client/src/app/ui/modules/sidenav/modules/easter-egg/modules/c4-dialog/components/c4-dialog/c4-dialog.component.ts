@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 /**
@@ -59,6 +60,11 @@ type StateMachine = { [state in State]?: { [event in StateEvent]?: SMAction } };
     styleUrls: [`./c4-dialog.component.scss`]
 })
 export class C4DialogComponent implements OnInit, OnDestroy {
+    /**
+     * Contains if the user is currently within a meeting
+     */
+    public inMeeting: boolean = false;
+
     /**
      * The dialogs caption
      */
@@ -195,11 +201,13 @@ export class C4DialogComponent implements OnInit, OnDestroy {
     };
 
     public constructor(
+        private activeMeetingService: ActiveMeetingService,
         public dialogRef: MatDialogRef<C4DialogComponent>,
         private notifyService: NotifyService,
         private op: OperatorService
     ) {
         this.resetBoard();
+        this.inMeeting = !!this.activeMeetingService.meetingId;
     }
 
     public ngOnInit(): void {

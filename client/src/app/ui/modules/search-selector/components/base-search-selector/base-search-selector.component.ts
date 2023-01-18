@@ -106,7 +106,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
      * Allows for the definition of additional strings that should be checked against the search value for a given item
      */
     @Input()
-    public getAdditionalySearchedValuesFn: (item: Selectable) => string[] = item => [];
+    public getAdditionallySearchedValuesFn: (item: Selectable) => string[] = item => [];
 
     @Input()
     public set sortFn(fn: false | ((valueA: Selectable, valueB: Selectable) => number)) {
@@ -369,7 +369,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
                 }
             }
 
-            return this.getAdditionalySearchedValuesFn(item)
+            return this.getAdditionallySearchedValuesFn(item)
                 .concat(item.toString())
                 .some(value => value.toLowerCase().indexOf(searchValue) > -1);
         });

@@ -94,6 +94,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `default_vote_weight`,
             `email`,
             `last_email_send`,
+            `last_login`,
             `organization_management_level`,
             `meeting_ids`
         ];

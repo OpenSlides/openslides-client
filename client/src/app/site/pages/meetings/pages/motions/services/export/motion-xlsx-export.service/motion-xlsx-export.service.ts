@@ -114,7 +114,7 @@ export class MotionXlsxExportService {
                         propertyHeader = `Open requests to speak`;
                         break;
                     default:
-                        propertyHeader = property.charAt(0).toUpperCase() + property.slice(1);
+                        propertyHeader = property.charAt(0).toUpperCase() + property.slice(1).replace(`_`, ` `);
                 }
                 return {
                     header: this.translate.instant(propertyHeader)

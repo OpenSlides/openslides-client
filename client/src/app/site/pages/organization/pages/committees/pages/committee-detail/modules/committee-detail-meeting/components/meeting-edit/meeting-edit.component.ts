@@ -269,7 +269,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private onAfterCreateForm(): void {
         this.enableFormControls();
-        if (!this.isMeetingAdmin && !this.isCreateView) {
+        if (!this.operator.isSuperAdmin && !this.isMeetingAdmin && !this.isCreateView) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
                     this.meetingForm.get(controlName)!.disable();

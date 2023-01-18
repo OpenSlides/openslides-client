@@ -101,19 +101,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         }
     }
 
-    /**
-     * Get information about the last time an invitation email was sent to a user
-     *
-     * @param user
-     * @returns a string representation about the last time an email was sent to a user
-     */
-    public getEmailSentTime(user: ViewUser): string {
-        if (!user.isLastEmailSend) {
-            return this.translate.instant(`No email sent`);
-        }
-        return this.userController.getLastEmailSentTimeString(user);
-    }
-
     public csvExportMemberList(): void {
         this.exporter.downloadAccountCsvFile(this.listComponent.source);
     }

@@ -227,7 +227,10 @@ _(`Delegates`);
 _(`Staff`);
 _(`Committees`);
 
-// history strings
+// ** History **
+// meta
+_(`OpenSlides is temporarily reset to following timestamp`);
+// actual history entries
 _(`Motion created`);
 _(`Motion deleted`);
 _(`Origin motion deleted`);
@@ -237,19 +240,13 @@ _(`Forwarding created`);
 _(`Submitters changed`);
 _(`Supporters changed`);
 _(`State set to {}`);
-_(`State changed`);
 _(`Recommendation set to {}`);
-_(`Recommendation changed`);
 _(`Recommendation reset`);
 _(`Category set to {}`);
 _(`Category removed`);
-_(`Category changed`);
 _(`Motion block set to {}`);
 _(`Motion block removed`);
-_(`Motion block changed`);
-_(`Recommendation changed`);
 _(`Recommendation reset`);
-_(`anonymized`);
 _(`Voting created`);
 _(`Voting started`);
 _(`Voting stopped`);
@@ -259,18 +256,11 @@ _(`Voting deleted`);
 _(`Voting reset`);
 _(`Voting anonymized`);
 _(`Number set`);
-_(`OpenSlides is temporarily reset to following timestamp`);
 _(`Motion change recommendation created`);
 _(`Motion change recommendation updated`);
 _(`Motion change recommendation deleted`);
 _(`Forwarded to {}`);
 _(`Motion created (forwarded)`);
-_(`created`);
-_(`updated`);
-_(`deleted`);
-_(`reset`);
-_(`started`);
-_(`stopped`);
 _(`Ballot started`);
 _(`Ballot updated`);
 _(`Ballot created`);
@@ -292,7 +282,10 @@ _(`Password changed`);
 _(`Set present in meeting {}`);
 _(`Set not present in meeting {}`);
 _(`Personal data changed`);
+_(`Participant created`);
 _(`Participant created in meeting {}`);
+_(`Participant deleted`);
+_(`Participant deleted in meeting {}`);
 _(`Participant data updated in meeting {}`);
 _(`Participant data updated in multiple meetings`);
 _(`Participant added to group {} in meeting {}`);
@@ -300,11 +293,26 @@ _(`Participant added to multiple groups in meeting {}`);
 _(`Participant added to multiple groups in multiple meetings`);
 _(`Participant removed from group {} in meeting {}`);
 _(`Participant removed from multiple groups in meeting {}`);
+_(`Participant removed from multiple groups in multiple meetings`);
+_(`Groups changed in meeting {}`);
 _(`Groups changed in multiple meetings`);
 _(`Committee Management Level changed`);
 _(`Organization Management Level changed`);
 _(`Set active`);
 _(`Set inactive`);
+// deprecated
+_(`State changed`);
+_(`Recommendation changed`);
+_(`Category changed`);
+_(`Motion block changed`);
+_(`Recommendation changed`);
+_(`created`);
+_(`updated`);
+_(`deleted`);
+_(`reset`);
+_(`started`);
+_(`stopped`);
+_(`anonymized`);
 
 // core misc strings
 _(`items per page`);

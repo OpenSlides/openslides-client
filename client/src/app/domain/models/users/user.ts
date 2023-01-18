@@ -38,6 +38,7 @@ export class User extends BaseDecimalModel<User> {
     public readonly structure_level_$!: string[];
     public readonly email!: string;
     public readonly last_email_send!: number; // comes in seconds
+    public readonly last_login!: number; // comes in seconds
     public readonly vote_weight_$!: number[];
     public readonly default_vote_weight!: number;
     public readonly is_demo_user!: boolean;

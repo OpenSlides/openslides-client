@@ -16,6 +16,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { PipesModule } from 'src/app/ui/pipes';
 
 import { CommitteeCommonServiceModule } from '../../../committees/services/committee-common-service.module';
 import { AccountCommonServiceModule } from '../../services/common/account-common-service.module';
@@ -53,7 +54,8 @@ import { AccountPasswordComponent } from './components/account-password/account-
         DirectivesModule,
         UserComponentsModule,
         SearchSelectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule.forChild(),
+        PipesModule
     ]
 })
 export class AccountDetailModule {}

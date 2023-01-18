@@ -294,18 +294,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         }
     }
 
-    /**
-     * Fetches a localized string for the time the last email was sent.
-     *
-     * @returns a translated string with either the localized date/time; of 'No email sent'
-     */
-    public getEmailSentTime(): string {
-        if (!this.user?.isLastEmailSend) {
-            return this.translate.instant(`No email sent`);
-        }
-        return this.repo.getLastSentEmailTimeString(this.user);
-    }
-
     private async createUser(): Promise<void> {
         const partialUser = { ...this.personalInfoFormValue };
 
