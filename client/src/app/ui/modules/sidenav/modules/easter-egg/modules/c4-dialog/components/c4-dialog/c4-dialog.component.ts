@@ -172,7 +172,9 @@ export class C4DialogComponent implements OnInit, OnDestroy {
             },
             recievedRagequit: {
                 handle: () => {
-                    this.caption = this.translate.instant(`Your partner couldn't stand it anymore... You are the winner!`);
+                    this.caption = this.translate.instant(
+                        `Your partner couldn't stand it anymore... You are the winner!`
+                    );
                     return `start`;
                 }
             }
@@ -194,7 +196,9 @@ export class C4DialogComponent implements OnInit, OnDestroy {
             },
             recievedRagequit: {
                 handle: () => {
-                    this.caption = this.translate.instant(`Your partner couldn't stand it anymore... You are the winner!`);
+                    this.caption = this.translate.instant(
+                        `Your partner couldn't stand it anymore... You are the winner!`
+                    );
                     return `start`;
                 }
             }
