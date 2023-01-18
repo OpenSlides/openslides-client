@@ -802,11 +802,15 @@ button.mat-menu-item.selected {
 
 .flex-vertical-center {
     display: flex;
-    align-items: center;
     flex-direction: row;
 
     &.align-left {
         justify-content: flex-start;
+    }
+
+    & > * {
+        margin-top: auto;
+        margin-bottom: auto;
     }
 }
 
