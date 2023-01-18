@@ -1,7 +1,7 @@
 @mixin icon-container($iconSize, $contentSize, $fontWeight) {
     line-height: $iconSize;
 
-    & mat-icon {
+    & .mat-icon {
         font-size: $iconSize;
         width: $iconSize;
         min-width: $iconSize;

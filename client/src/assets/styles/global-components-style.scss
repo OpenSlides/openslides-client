@@ -363,7 +363,7 @@
     }
 
     .foreground-icon {
-        mat-icon {
+        .mat-icon {
             color: mat.get-color-from-palette($foreground, icon);
         }
         * {
