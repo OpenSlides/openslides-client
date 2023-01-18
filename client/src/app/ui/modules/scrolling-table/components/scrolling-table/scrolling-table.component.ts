@@ -204,6 +204,10 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         return this._currentSelection[row.id] !== undefined;
     }
 
+    public calculateContainerHeight(): string {
+        return this.rowHeight * this._dataSource.getValue().length + `px`;
+    }
+
     private buildDataTable(): void {
         const source = [...this._source].sort((a, b) => a.id - b.id);
         const sourceMapKeys = Object.keys(this._dataSourceMap)
