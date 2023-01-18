@@ -22,6 +22,7 @@ import { GroupControllerService } from '../../../pages/participants/modules/grou
 import { EntitledUsersTableEntry } from '../definitions';
 import { PollService } from '../services/poll.service';
 import { VoteControllerService } from '../services/vote-controller.service';
+import { BasePollPdfService } from './base-poll-pdf.service';
 
 export interface BaseVoteData extends Identifiable {
     user?: ViewUser;
@@ -129,7 +130,8 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
         protected operator: OperatorService,
         protected cd: ChangeDetectorRef,
         protected userRepo: ParticipantControllerService,
-        private scrollTableManage: ScrollingTableManageService
+        private scrollTableManage: ScrollingTableManageService,
+        private pollPdfService: BasePollPdfService
     ) {
         super(componentServiceCollector, translate);
 
@@ -176,6 +178,10 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
             this._pollId = id;
             this.loadComponentById();
         }
+    }
+
+    public exportPollResults(): void {
+        this.pollPdfService.downloadWithResultPdf(this.poll, `Results`)
     }
 
     protected onStateChanged(): void {}

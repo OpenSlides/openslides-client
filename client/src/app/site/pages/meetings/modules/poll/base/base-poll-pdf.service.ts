@@ -10,7 +10,9 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ExportFileFormat, InfoToExport } from '../../../pages/motions/services/export/definitions';
+
+import { ExportFileFormat } from '../../../pages/motions/services/export/definitions';
+import { BaseVoteData } from './base-poll-detail.component';
 
 /**
  * Workaround data definitions. The implementation for the different model's classes might have different needs,
@@ -290,8 +292,8 @@ export abstract class BasePollPdfService {
      * @param filename the name of the file to use
      * @param logo (optional) url of a logo to be placed as ballot logo
      */
-    public downloadWithResultPdf(poll: ViewPoll, docDefinition: object, filename: string, logo?: string): void {
-        this.pdfExport.downloadWaitableDoc(filename, () => this.getResultPdf(poll, docDefinition, logo));
+    public downloadWithResultPdf(poll: ViewPoll, /**docDefinition: object,*/ filename: string, logo?: string): void {
+        this.pdfExport.downloadWaitableDoc(filename, () => this.getResultPdf(poll/**, docDefinition */, logo));
     }
 
     /**
@@ -299,7 +301,7 @@ export abstract class BasePollPdfService {
      * @param imageUrl an optional image to insert into the ballot
      * @returns the pdf document definition ready to export
      */
-    private async getResultPdf(poll: ViewPoll, documentContent: object, imageUrl?: string): Promise<object> {
+    private async getResultPdf(poll: ViewPoll, /**documentContent: object, */imageUrl?: string): Promise<object> {
         // this.imageUrls = imageUrl ? [imageUrl] : [];
         const result = {
             pageSize: `A4`,
@@ -308,7 +310,7 @@ export abstract class BasePollPdfService {
                 font: `PdfFont`,
                 fontSize: 10
             },
-            content: documentContent,
+            // content: documentContent,
             styles: this.getBlankPaperStyles()
         };
         return result;
@@ -319,12 +321,13 @@ export abstract class BasePollPdfService {
      *
      * @param motion The motion to export
      */
-    public exportSingleMotion(poll: ViewPoll, exportInfo?: {
+    public exportSinglePoll(poll: ViewPoll, exportInfo?: {
         format?: ExportFileFormat;
         lnMode?: LineNumberingMode;
         crMode?: ChangeRecoMode;
         content?: string[];
-        metaInfo?: InfoToExport[];
+        votesData?: BaseVoteData[],
+        // metaInfo?: InfoToExport[];
         pdfOptions?: string[];
         comments?: number[];
     }): void {
@@ -333,7 +336,7 @@ export abstract class BasePollPdfService {
         const metadata = {
             title: filename
         };
-        this.pdfService.download({ docDefinition: doc, filename, metadata });
+        this.pdfExport.download({ docDefinition: doc, filename, metadata });
     }
 
     /**
@@ -347,22 +350,23 @@ export abstract class BasePollPdfService {
         lnMode?: LineNumberingMode;
         crMode?: ChangeRecoMode;
         content?: string[];
-        metaInfo?: InfoToExport[];
+        votesData?: BaseVoteData[],
+        // metaInfo?: InfoToExport[];
         pdfOptions?: string[];
         comments?: number[];
     }): object {
         let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
-        let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
-        const infoToExport = exportInfo ? exportInfo.metaInfo : null;
-        const contentToExport = exportInfo ? exportInfo.content : null;
-        let commentsToExport = exportInfo ? exportInfo.comments : null;
+        // let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
+        // const infoToExport = exportInfo ? exportInfo.metaInfo : null;
+        // const contentToExport = exportInfo ? exportInfo.content : null;
+        // let commentsToExport = exportInfo ? exportInfo.comments : null;
 
-        // get the line length from the config
-        const lineLength = 85;
-        // whether to append checkboxes to follow the recommendation or not
-        const optionToFollowRecommendation = false;
+        // // get the line length from the config
+        // const lineLength = 85;
+        // // whether to append checkboxes to follow the recommendation or not
+        // const optionToFollowRecommendation = false;
 
-        let motionPdfContent: any[] = [];
+        let pollResultPdfContent: any[] = [];
 
         // Enforces that statutes should always have Diff Mode and no line numbers
         // if (motion.isStatuteAmendment()) {
@@ -380,66 +384,140 @@ export abstract class BasePollPdfService {
         //     crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
         // }
         // if (!continuousText) {
-            const title = {
-                text: `Result for ${poll.getTitle()}`,
-                style: `title`
-            }
+        const title = {
+            text: `${this.translate.instant(`Result for`)} ${poll.getTitle()}`,
+            style: `title`
+        }
             // const sequential =
             //     infoToExport?.includes(`sequential_number`) ??
             //     (this.meetingSettingsService.instant(`motions_show_sequential_number`) as boolean);
-            const subtitle = this.createSubtitle(motion, sequential);
+        const subtitle = `${this.translate.instant(`In`)} ${poll.content_object?.getTitle()}`;
 
-            motionPdfContent = [title, subtitle];
+        pollResultPdfContent = [title, subtitle];
         // }
-        if (((infoToExport && infoToExport.length > 0) || !infoToExport) && !continuousText) {
-            const metaInfo = this.createMetaInfoTable(
-                motion,
-                lineLength,
-                crMode,
-                infoToExport,
-                optionToFollowRecommendation
-            );
-            motionPdfContent.push(metaInfo);
+        // if (((infoToExport && infoToExport.length > 0) || !infoToExport) && !continuousText) {
+        //     const metaInfo = this.createMetaInfoTable(
+        //         motion,
+        //         lineLength,
+        //         crMode,
+        //         infoToExport,
+        //         optionToFollowRecommendation
+        //     );
+        //     motionPdfContent.push(metaInfo);
+        // }
+
+        if (exportInfo.votesData) {
+            const votesData = this.createVotesTable(poll, exportInfo.votesData);
+            pollResultPdfContent.push(votesData);
         }
 
-        if (!contentToExport || contentToExport.includes(`text`)) {
-            if (motion.showPreamble && !continuousText) {
-                const preamble = this.createPreamble();
-                motionPdfContent.push(preamble);
+        // if (!contentToExport || contentToExport.includes(`text`)) {
+        //     if (motion.showPreamble && !continuousText) {
+        //         const preamble = this.createPreamble();
+        //         motionPdfContent.push(preamble);
+        //     }
+        //     const lineHeight = this.meetingSettingsService.instant(`export_pdf_line_height`)!;
+        //     const text = this.createText({
+        //         motion,
+        //         lineLength,
+        //         lnMode,
+        //         crMode,
+        //         lineHeight
+        //     });
+        //     motionPdfContent.push(text);
+        // }
+
+        // if (!contentToExport || contentToExport.includes(`reason`)) {
+        //     const reason = this.createReason(motion);
+        //     motionPdfContent.push(reason);
+        // }
+
+        // if (
+        //     exportInfo &&
+        //     exportInfo.pdfOptions &&
+        //     exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) &&
+        //     motion.attachments.length > 0
+        // ) {
+        //     motionPdfContent.push(this.createAttachments(motion));
+        // }
+
+        // if (infoToExport && infoToExport.includes(`allcomments`)) {
+        //     commentsToExport = this.commentRepo.getViewModelList().map(vm => vm.id);
+        // }
+        // if (commentsToExport) {
+        //     motionPdfContent.push(this.createComments(motion, commentsToExport));
+        // }
+
+        return pollResultPdfContent;
+    }
+
+    /**
+     * Creates the poll result table for all published polls
+     *
+     * @param assignment the ViewAssignment to create the document for
+     * @returns the table as pdfmake object
+     */
+    private createVotesTable(poll: ViewPoll, votesData: BaseVoteData[]): object {
+        const resultBody = [];
+        // for (const poll of assignment.polls) {
+            if (poll.isPublished) {
+                const pollTableBody = [];
+
+                // resultBody.push({
+                //     text: poll.title,
+                //     bold: true,
+                //     style: `textItem`,
+                //     margin: [0, 15, 0, 0]
+                // });
+
+                pollTableBody.push([
+                    {
+                        text: ``,
+                        style: `tableHeader`
+                    },
+                    {
+                        text: this.translate.instant(`Participant`),
+                        style: `tableHeader`
+                    },
+                    {
+                        text: this.translate.instant(`Votes`),
+                        style: `tableHeader`
+                    }
+                ]);
+
+                // const tableData = this.getPollService(poll).generateTableData(poll);
+                let index = 1;
+                for (const date of votesData) {
+                    // const voteOption = this.translate.instant(this.pollKeyVerbose.transform(pollResult.votingOption));
+                    // const resultLine = this.getPollResult(pollResult, poll);
+                    const tableLine = [
+                        {
+                            text: index
+                        },
+                        {
+                            text: date.user.getShortName()
+                        },
+                        {
+                            text: `text` //date.valueVerbose ?? JSON.stringify(vote.votes)
+                        }
+                    ];
+
+                    pollTableBody.push(tableLine);
+                    index++;
+                }
+
+                resultBody.push({
+                    table: {
+                        widths: [`3%`, `61%`, `33%`],
+                        headerRows: 1,
+                        body: pollTableBody
+                    },
+                    layout: `switchColorTableLayout`
+                });
             }
-            const lineHeight = this.meetingSettingsService.instant(`export_pdf_line_height`)!;
-            const text = this.createText({
-                motion,
-                lineLength,
-                lnMode,
-                crMode,
-                lineHeight
-            });
-            motionPdfContent.push(text);
-        }
+        // }
 
-        if (!contentToExport || contentToExport.includes(`reason`)) {
-            const reason = this.createReason(motion);
-            motionPdfContent.push(reason);
-        }
-
-        if (
-            exportInfo &&
-            exportInfo.pdfOptions &&
-            exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) &&
-            motion.attachments.length > 0
-        ) {
-            motionPdfContent.push(this.createAttachments(motion));
-        }
-
-        if (infoToExport && infoToExport.includes(`allcomments`)) {
-            commentsToExport = this.commentRepo.getViewModelList().map(vm => vm.id);
-        }
-        if (commentsToExport) {
-            motionPdfContent.push(this.createComments(motion, commentsToExport));
-        }
-
-        return motionPdfContent;
+        return resultBody;
     }
 
     /**

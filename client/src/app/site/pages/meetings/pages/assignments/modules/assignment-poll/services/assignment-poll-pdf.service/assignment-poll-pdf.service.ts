@@ -25,10 +25,10 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         activeMeetingService: ActiveMeetingService,
         mediaManageService: MediaManageService,
         pdfService: MeetingPdfExportService,
-        private translate: TranslateService,
+        protected override translate: TranslateService,
         private assignmentRepo: AssignmentControllerService
     ) {
-        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService, pdfService);
+        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService, pdfService, translate);
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));

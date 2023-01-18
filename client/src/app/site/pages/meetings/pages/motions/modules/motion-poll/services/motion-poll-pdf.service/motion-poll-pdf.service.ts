@@ -24,10 +24,10 @@ export class MotionPollPdfService extends BasePollPdfService {
         activeMeetingService: ActiveMeetingService,
         mediaManageService: MediaManageService,
         pdfService: MeetingPdfExportService,
-        private translate: TranslateService,
+        protected override translate: TranslateService,
         private motionRepo: MotionControllerService
     ) {
-        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService, pdfService);
+        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService, pdfService, translate);
         this.meetingSettingsService
             .get(`motion_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));
