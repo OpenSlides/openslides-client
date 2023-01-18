@@ -23,6 +23,8 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return this.motion.lead_motion!;
     }
 
+    public getTitleFn = () => this.getTitleWithChanges();
+
     private get personalNote(): PersonalNote | null {
         return this.motion.getPersonalNote();
     }
