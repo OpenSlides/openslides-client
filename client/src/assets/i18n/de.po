@@ -1,11 +1,11 @@
 # 
 # Translators:
 # jsangmeister <joshua.sangmeister@gmail.com>, 2022
-# Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022
+# Emanuel Schütze <emanuel.schuetze@intevation.de>, 2023
 # 
 msgid ""
 msgstr ""
-"Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2022\n"
+"Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2023\n"
 "Language-Team: German (https://www.transifex.com/openslides/teams/14270/de/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -356,6 +356,18 @@ msgstr "Sollen wirklich alle Nachrichten in diesem Chat gelöscht werden?"
 msgid "Are you sure you want to clear all speakers of all lists?"
 msgstr "Sollen wirklich alle Redner*innen von allen Listen entfernt werden?"
 
+msgid ""
+"Are you sure you want to delete all next speakers from this list of "
+"speakers?"
+msgstr ""
+"Sollen wirklich alle nächsten Redner*innen von dieser Liste entfernt werden?"
+
+msgid ""
+"Are you sure you want to delete all previous speakers from this list of "
+"speakers?"
+msgstr ""
+"Sollen wirklich alle letzten Redner*innen von dieser Liste entfernt werden?"
+
 msgid "Are you sure you want to delete all selected elections?"
 msgstr "Sollen alle ausgewählten Wahlen wirklich gelöscht werden?"
 
@@ -567,6 +579,9 @@ msgstr "Kamera automatisch öffnen beim Eintreten in die Livekonferenz"
 
 msgid "Autopilot"
 msgstr "Autopilot"
+
+msgid "Autoupdate unhealthy"
+msgstr "Autoupdate nicht in Ordnung"
 
 msgid "Available sizes are 10, 11 and 12"
 msgstr "Verfügbaren Größen sind 10, 11 und 12"
@@ -914,9 +929,6 @@ msgstr "Schlagwörter entfernen"
 msgid "Click here to vote!"
 msgstr "Zur Stimmabgabe hier klicken!"
 
-msgid "Close"
-msgstr "Schließen"
-
 msgid "Close list of speakers"
 msgstr "Redeliste schließen"
 
@@ -991,6 +1003,9 @@ msgstr "Neues Passwort bestätigen"
 
 msgid "Congratuations! Your browser is supported by OpenSlides."
 msgstr "Glückwunsch! Ihr Browser wird von OpenSlides unterstützt. "
+
+msgid "Connect 4"
+msgstr "Vier gewinnt"
 
 msgid "Connect all users to live conference automatically."
 msgstr "Alle Nutzer automatisch mit der Livekonferenz verbinden"
@@ -1656,6 +1671,9 @@ msgstr "Vollständiger Name"
 msgid "Fullscreen"
 msgstr "Vollbild"
 
+msgid "Game draw!"
+msgstr "Unentschieden!"
+
 msgid "Gender"
 msgstr "Geschlecht"
 
@@ -1706,6 +1724,9 @@ msgstr "Gruppe nicht gefunden - an Standardgruppe zugewiesen"
 msgid "Groups"
 msgstr "Gruppen"
 
+msgid "Groups changed in meeting {}"
+msgstr "Gruppen in Veranstaltung {} geändert"
+
 msgid "Groups changed in multiple meetings"
 msgstr "Gruppen in mehreren Veranstaltungen geändert"
 
@@ -1730,11 +1751,17 @@ msgstr "Stimmgewicht verändert"
 msgid "Has forwardings"
 msgstr "Hat Weiterleitungen"
 
+msgid "Has logged in"
+msgstr "Hat sich angemeldet"
+
 msgid "Has no email address"
 msgstr "Hat keine E-Mail-Adresse"
 
 msgid "Has no speakers"
 msgstr "Keine Wortmeldungen vorhanden"
+
+msgid "Has not logged in yet"
+msgstr "Hat sich noch nicht angemeldet"
 
 msgid "Has notes"
 msgstr "Hat Notizen"
@@ -1896,6 +1923,9 @@ msgstr "ist bereits projiziert"
 msgid "Is amendment"
 msgstr "Ist ein Änderungsantrag"
 
+msgid "Is being projected"
+msgstr "wird projiziert"
+
 msgid "Is candidate"
 msgstr "ist Kandidat*in"
 
@@ -1941,6 +1971,12 @@ msgstr ""
 "Countdowns, die für Redelisten oder elektronische Stimmabgaben verwendet "
 "werden, dürfen nicht gelöscht werden."
 
+msgid "It's your partners turn"
+msgstr "Dein Partner ist am Zug!"
+
+msgid "It's your turn!"
+msgstr "Du bist dran!"
+
 msgid "Item number"
 msgstr "Tagesordnungspunkt-Nummer"
 
@@ -1961,6 +1997,9 @@ msgstr "Beschriftungsfarbe"
 
 msgid "Last email sent"
 msgstr "Letzte gesendete E-Mail"
+
+msgid "Last login"
+msgstr "Letzte Anmeldung"
 
 msgid "Last modified"
 msgstr "Zuletzt geändert"
@@ -2110,7 +2149,7 @@ msgstr ""
 "Veranstaltungsvorlagen und die darin enthaltenen Daten sind für alle "
 "Gremienadmins öffentlich einsehbar."
 
-msgid "Meeting titel"
+msgid "Meeting title"
 msgstr "Veranstaltungstitel"
 
 msgid "Meetings"
@@ -2391,9 +2430,6 @@ msgstr "Keine Entscheidung"
 msgid "No delegation of vote"
 msgstr "Keine Stimmrechtsübertragungen"
 
-msgid "No email sent"
-msgstr "Keine E-Mail gesendet"
-
 msgid "No encryption"
 msgstr "Keine Verschlüsselung"
 
@@ -2569,6 +2605,9 @@ msgstr "Nur Ampel"
 msgid "Open Jitsi in new tab"
 msgstr "Jitsi im neuen Tab öffnen"
 
+msgid "Open a meeting to play \"Connect 4\""
+msgstr "Öffnen Sie eine Veranstaltung um \"Vier gewinnt\" zu spielen."
+
 msgid "Open items"
 msgstr "Offene Einträge"
 
@@ -2705,6 +2744,9 @@ msgid "Participant added to multiple groups in multiple meetings"
 msgstr ""
 "Teilnehmer*in hinzugefügt zu mehreren Gruppen in mehreren Veranstaltungen"
 
+msgid "Participant created"
+msgstr "Teilnehmer*in erstellt"
+
 msgid "Participant created in meeting {}"
 msgstr "Teilnehmer*in erstellt in Veranstaltung {}"
 
@@ -2714,6 +2756,12 @@ msgstr "Teilnehmendendaten aktualisiert in Veranstaltung {}"
 msgid "Participant data updated in multiple meetings"
 msgstr "Teilnehmendendaten aktualisiert in mehreren Veranstaltungen"
 
+msgid "Participant deleted"
+msgstr "Teilnehmer*in gelöscht"
+
+msgid "Participant deleted in meeting {}"
+msgstr "Teilnehmer*in gelöscht in Veranstaltung {}"
+
 msgid "Participant number"
 msgstr "Teilnehmernummer"
 
@@ -2722,6 +2770,10 @@ msgstr "Teilnehmer*in entfernt aus der Gruppe {} in Veranstaltung {}"
 
 msgid "Participant removed from multiple groups in meeting {}"
 msgstr "Teilnehmer*in entfernt aus mehreren Gruppen in Veranstaltung {}"
+
+msgid "Participant removed from multiple groups in multiple meetings"
+msgstr ""
+"Teilnehmer*in entfernt aus mehreren Gruppen in mehreren Veranstaltungen"
 
 msgid "Participants"
 msgstr "Teilnehmende"
@@ -2998,6 +3050,12 @@ msgstr ""
 "Um den Livestream zu deaktivieren entfernen Sie die URL. Prüfen Sie die "
 "extra Gruppenberechtigung um den Livestream zu sehen."
 
+msgid "Remove all next speakers"
+msgstr "Alle nächsten Redner*innen entfernen"
+
+msgid "Remove all previous speakers"
+msgstr "Alle letzten Redner*innen entfernen"
+
 msgid "Remove all speakers"
 msgstr "Alle Redner*innen entfernen"
 
@@ -3033,6 +3091,9 @@ msgstr "Antwortadresse"
 
 msgid "Request"
 msgstr "Anliegen"
+
+msgid "Request \"WhoAmI\" failed"
+msgstr "Anfrage \"WhoAmI\" fehlgeschlagen"
 
 msgid "Requests to speak"
 msgstr "Wortmeldungen"
@@ -3124,6 +3185,9 @@ msgstr "Spieler suchen"
 
 msgid "Searching for candidates"
 msgstr "Auf Kandidatensuche"
+
+msgid "Searching for players ..."
+msgstr "Auf der Suche nach Spielern ..."
 
 msgid "Secret voting can not be guaranteed"
 msgstr "Geheime Stimmabgaben können nicht garantiert werden"
@@ -3634,6 +3698,10 @@ msgstr "Der Eltern-Antrag wurde gelöscht."
 msgid "The reason field may not be blank."
 msgstr "Die Begründung darf nicht leer sein."
 
+msgid "The request could not be sent. Check your connection."
+msgstr ""
+"Die Anfrage konnte nicht gesendet werden. Überprüfen Sie Ihre Verbindung."
+
 msgid ""
 "The sender address is defined in the OpenSlides server settings and should "
 "modified by administrator only."
@@ -3672,6 +3740,13 @@ msgstr ""
 
 msgid "There is an unknown voting problem."
 msgstr "Es gibt ein unbekanntes Problem bei der elektronischen Stimmabgabe."
+
+msgid ""
+"There seems to be a problem connecting to our services. Check your "
+"connection or try again later."
+msgstr ""
+"Es scheint ein Problem bei der Verbindung zu unseren Diensten zu geben. "
+"Überprüfen Sie Ihre Verbindung oder versuchen Sie es später noch einmal."
 
 msgid "There should be at least 2 options."
 msgstr "Es müssen mindestens 2 Optionen vorhanden sein."
@@ -3893,6 +3968,14 @@ msgid "Uses leading zeros to sort motions correctly by number."
 msgstr ""
 "Es werden führende Nullen verwendet, um die Bezeichner korrekt zu sortieren."
 
+msgid ""
+"Using OpenSlides over HTTP 1.1 or lower is not supported. Make sure you can "
+"use HTTP 2 to continue."
+msgstr ""
+"Die Verwendung von OpenSlides über HTTP 1.1 oder niedriger wird nicht "
+"unterstützt. Stellen Sie sicher, dass Sie HTTP 2 verwenden können, um "
+"fortzufahren."
+
 msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
 msgstr ""
 "Die Verwendung von OpenSlides über HTTP wird nicht unterstützt. Aktivieren "
@@ -4000,6 +4083,9 @@ msgstr "WLAN-Name (SSID)"
 
 msgid "WLAN password"
 msgstr "WLAN-Passwort"
+
+msgid "Wait for response ..."
+msgstr "Warten auf Antwort ..."
 
 msgid ""
 "Warning: Amendments exist for this motion. Editing this text will likely "
@@ -4173,7 +4259,7 @@ msgid "You have already voted."
 msgstr "Sie haben bereits Ihre Stimme abgegeben."
 
 msgid "You have to be logged in to be able to vote."
-msgstr "Sie müssen sich einloggen um Ihre Stimme abgeben zu können."
+msgstr "Sie müssen sich anmelden um Ihre Stimme abgeben zu können."
 
 msgid "You have to be present to vote."
 msgstr "Sie müssen \"anwesend\" sein um Ihre Stimme abgeben zu können."
@@ -4203,6 +4289,9 @@ msgstr ""
 "Sie haben die maximale Anzahl von Stimmen erreicht. Deselektieren Sie zuerst"
 " eine Auswahl."
 
+msgid "You won!"
+msgstr "Du hast gewonnen!"
+
 msgid "Your browser"
 msgstr "Ihr Browser"
 
@@ -4217,6 +4306,12 @@ msgstr "Es wurde kein Mikrofon an ihrem Gerät gefunden."
 
 msgid "Your input does not match the following structure: \"hh:mm\""
 msgstr "Ihre Eingabe entspricht nicht der folgenden Struktur: \"hh:mm\""
+
+msgid "Your partner couldn't stand it anymore... You are the winner!"
+msgstr "Dein Partner konnte es nicht mehr aushalten... Du bist der Gewinner!"
+
+msgid "Your partner has won!"
+msgstr "Dein Partner hat gewonnen!"
 
 msgid "Your password was resetted successfully!"
 msgstr "Ihr Passwort wurde erfolgreich zurückgesetzt!"
@@ -4449,6 +4544,9 @@ msgstr "oder"
 
 msgid "outside"
 msgstr "außerhalb"
+
+msgid "partially forwarded"
+msgstr "teilweise weitergeleitet"
 
 msgid "participants"
 msgstr "Teilnehmende"

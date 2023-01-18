@@ -28,7 +28,7 @@ export class OpenSlidesService {
         const online = await this.authService.doWhoAmIRequest();
         if (!online) {
             this.offlineService.goOffline({
-                reason: this.translate.instant(`WhoAmI failed`),
+                reason: this.translate.instant(`Request "WhoAmI" failed`),
                 isOnlineFn: async () => this.authService.doWhoAmIRequest()
             });
             return;
