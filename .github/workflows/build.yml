@@ -20,7 +20,7 @@ jobs:
           ref: main
           submodules: true
       - name: Checkout latest commits
-        run: ./dev-commands/submodules-do.sh 'git checkout main && git pull origin main'
+        run: git submodule foreach 'git checkout main && git pull origin main'
       - name: Delete the client folder
         run: rm -r openslides-client
       - name: Clone openslides-client
