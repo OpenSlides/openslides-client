@@ -39,7 +39,7 @@ export class ViewProjection extends BaseProjectableViewModel<Projection> {
         if (this.content_object?.getProjectiondefault) {
             return this.content_object?.getProjectiondefault();
         }
-        return undefined;
+        return null;
     }
 
     public override getProjectionBuildDescriptor(): ProjectionBuildDescriptor {

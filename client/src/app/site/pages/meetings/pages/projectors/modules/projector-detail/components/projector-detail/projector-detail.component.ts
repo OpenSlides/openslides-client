@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
@@ -70,7 +71,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     public editQueue = false;
 
     public get hasSlide(): boolean {
-        return !!this.projector.current_projections.filter(projection => projection.stable === false).length;
+        return !!this.projector.nonStableCurrentProjections;
     }
 
     public get currentProjectionIsLoS(): boolean {
@@ -236,11 +237,9 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 if (hasListOfSpeakers(projection.content_object)) {
                     return projection.content_object.list_of_speakers ?? null;
                 } else if (projection.content_object.collection === `list_of_speakers`) {
-                    return (
-                        this.meetingCollectionMapper.getViewModelByFqid(
-                            (projection.content_object as ViewListOfSpeakers).content_object_id
-                        ) ?? null
-                    );
+                    return (this.meetingCollectionMapper.getViewModelByFqid(
+                        (projection.content_object as ViewListOfSpeakers).content_object_id
+                    ) ?? null) as BaseViewModel<any> & Projectable;
                 }
             }
         } catch (e) {}
