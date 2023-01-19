@@ -1,0 +1,20 @@
+---
+name: Set project
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  set-project:
+    name: 'Set project'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set project
+        uses: actions/add-to-project@v0.4.0
+        with:
+          project-url: https://github.com/orgs/OpenSlides/projects/2
+          github-token: ${{ secrets.ISSUE_AND_PR_PAT }}
