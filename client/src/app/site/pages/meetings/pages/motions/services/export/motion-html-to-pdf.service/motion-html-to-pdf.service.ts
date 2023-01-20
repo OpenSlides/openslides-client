@@ -232,8 +232,9 @@ export class MotionHtmlToPdfService {
                 const children = this.parseChildren(element, styles);
 
                 if (
-                    (this.lineNumberingMode === LineNumberingMode.Outside && !classes.includes(`insert`)) ||
-                    nodeName === `li`
+                    this.lineNumberingMode === LineNumberingMode.Outside &&
+                    !classes.includes(`insert`) &&
+                    nodeName !== `li`
                 ) {
                     newParagraph = this.create(`stack`);
                     newParagraph.stack = children;
@@ -344,10 +345,9 @@ export class MotionHtmlToPdfService {
             }
             case `br`: {
                 newParagraph = this.create(`text`);
-                if (!this.isInsideAList(element)) {
-                    newParagraph.text = `\n`;
-                    newParagraph.lineHeight = this.lineHeight;
-                }
+                // yep thats all
+                newParagraph.text = `\n`;
+                newParagraph.lineHeight = this.lineHeight;
                 break;
             }
             case `ul`:
@@ -386,9 +386,7 @@ export class MotionHtmlToPdfService {
                         }
 
                         for (const line of lines) {
-                            if (line.lineNumber) {
-                                listCol.columns[0].stack.push(this.getLineNumberObject(line));
-                            }
+                            listCol.columns[0].stack.push(this.getLineNumberObject(line));
                         }
 
                         list[nodeName] = cleanedChildren;
