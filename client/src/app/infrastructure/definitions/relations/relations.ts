@@ -52,7 +52,6 @@ const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>
     ViewMotionBlock,
     ViewAssignment,
     ViewAgendaItem,
-    ViewUser,
     ViewPoll,
     ViewProjectorMessage,
     ViewProjectorCountdown
