@@ -216,6 +216,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
                     }
 
                     // Check, if this motion has the motionId in it's recommendation
+                    REFERENCED_MOTION_REGEX.lastIndex = 0;
                     let match;
                     while ((match = REFERENCED_MOTION_REGEX.exec(motion.recommendationExtension))) {
                         if (parseInt(match[1]) === motionId) {
