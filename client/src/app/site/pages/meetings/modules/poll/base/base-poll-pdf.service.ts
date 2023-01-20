@@ -2,7 +2,7 @@ import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { VoteValuesVerbose } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -11,7 +11,6 @@ import { MediaManageService } from 'src/app/site/pages/meetings/services/media-m
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-import { ExportFileFormat } from '../../../pages/motions/services/export/definitions';
 import { BaseVoteData } from './base-poll-detail.component';
 
 /**
@@ -286,52 +285,17 @@ export abstract class BasePollPdfService {
     }
 
     /**
-     * Downloads a pdf with the result export page definitions.
+     * Exports a single poll
      *
-     * @param docDefinition the structure of the PDF document
-     * @param filename the name of the file to use
-     * @param logo (optional) url of a logo to be placed as ballot logo
+     * @param poll The poll to export
      */
-    public downloadWithResultPdf(poll: ViewPoll, /**docDefinition: object,*/ filename: string, logo?: string): void {
-        this.pdfExport.downloadWaitableDoc(filename, () => this.getResultPdf(poll/**, docDefinition */, logo));
-    }
-
-    /**
-     * @param documentContent the content of the pdf as object
-     * @param imageUrl an optional image to insert into the ballot
-     * @returns the pdf document definition ready to export
-     */
-    private async getResultPdf(poll: ViewPoll, /**documentContent: object, */imageUrl?: string): Promise<object> {
-        // this.imageUrls = imageUrl ? [imageUrl] : [];
-        const result = {
-            pageSize: `A4`,
-            pageMargins: [0, 0, 0, 0],
-            defaultStyle: {
-                font: `PdfFont`,
-                fontSize: 10
-            },
-            // content: documentContent,
-            styles: this.getBlankPaperStyles()
-        };
-        return result;
-    }
-
-    /**
-     * Exports a single motions to PDFnumberOrTitle
-     *
-     * @param motion The motion to export
-     */
-    public exportSinglePoll(poll: ViewPoll, exportInfo?: {
-        format?: ExportFileFormat;
-        lnMode?: LineNumberingMode;
-        crMode?: ChangeRecoMode;
-        content?: string[];
-        votesData?: BaseVoteData[],
-        // metaInfo?: InfoToExport[];
-        pdfOptions?: string[];
-        comments?: number[];
-    }): void {
-        const doc = this.pollToDocDef( poll, exportInfo );
+    public exportSinglePoll(
+        poll: ViewPoll,
+        exportInfo?: {
+            votesData?: BaseVoteData[];
+        }
+    ): void {
+        const doc = this.pollToDocDef(poll, exportInfo);
         const filename = `${this.translate.instant(`Poll result`)} ${poll.getTitle()}`;
         const metadata = {
             title: filename
@@ -340,113 +304,27 @@ export abstract class BasePollPdfService {
     }
 
     /**
-     * Converts a motion to PdfMake doc definition
+     * Converts a poll to PdfMake doc definition
      *
-     * @param motion the motion to convert to pdf
-     * @returns doc def for the motion
+     * @param motion the poll to convert to pdf
+     * @returns doc def for the poll
      */
-    public pollToDocDef(poll: ViewPoll, exportInfo?: {
-        format?: ExportFileFormat;
-        lnMode?: LineNumberingMode;
-        crMode?: ChangeRecoMode;
-        content?: string[];
-        votesData?: BaseVoteData[],
-        // metaInfo?: InfoToExport[];
-        pdfOptions?: string[];
-        comments?: number[];
-    }): object {
-        let lnMode = exportInfo && exportInfo.lnMode ? exportInfo.lnMode : null;
-        // let crMode = exportInfo && exportInfo.crMode ? exportInfo.crMode : null;
-        // const infoToExport = exportInfo ? exportInfo.metaInfo : null;
-        // const contentToExport = exportInfo ? exportInfo.content : null;
-        // let commentsToExport = exportInfo ? exportInfo.comments : null;
-
-        // // get the line length from the config
-        // const lineLength = 85;
-        // // whether to append checkboxes to follow the recommendation or not
-        // const optionToFollowRecommendation = false;
-
+    public pollToDocDef(
+        poll: ViewPoll,
+        exportInfo?: {
+            votesData?: BaseVoteData[];
+        }
+    ): object {
         let pollResultPdfContent: any[] = [];
+        const title = this.getTitle(`${poll.content_object?.getTitle()} · ${poll.getTitle()}`);
+        const subtitle = this.getSubtitle(this.translate.instant(`Vote results`));
 
-        // Enforces that statutes should always have Diff Mode and no line numbers
-        // if (motion.isStatuteAmendment()) {
-        //     lnMode = LineNumberingMode.None;
-        //     crMode = ChangeRecoMode.Diff;
-        // }
-
-        // determine the default lnMode if not explicitly given
-        if (!lnMode) {
-            lnMode = LineNumberingMode.Outside;
-        }
-
-        // determine the default crMode if not explicitly given
-        // if (!crMode) {
-        //     crMode = this.meetingSettingsService.instant(`motions_recommendation_text_mode`)!;
-        // }
-        // if (!continuousText) {
-        const title = {
-            text: `${this.translate.instant(`Result for`)} ${poll.getTitle()}`,
-            style: `title`
-        }
-            // const sequential =
-            //     infoToExport?.includes(`sequential_number`) ??
-            //     (this.meetingSettingsService.instant(`motions_show_sequential_number`) as boolean);
-        const subtitle = `${this.translate.instant(`In`)} ${poll.content_object?.getTitle()}`;
-
-        pollResultPdfContent = [title, subtitle];
-        // }
-        // if (((infoToExport && infoToExport.length > 0) || !infoToExport) && !continuousText) {
-        //     const metaInfo = this.createMetaInfoTable(
-        //         motion,
-        //         lineLength,
-        //         crMode,
-        //         infoToExport,
-        //         optionToFollowRecommendation
-        //     );
-        //     motionPdfContent.push(metaInfo);
-        // }
+        pollResultPdfContent = [title, subtitle, ``];
 
         if (exportInfo.votesData) {
             const votesData = this.createVotesTable(poll, exportInfo.votesData);
             pollResultPdfContent.push(votesData);
         }
-
-        // if (!contentToExport || contentToExport.includes(`text`)) {
-        //     if (motion.showPreamble && !continuousText) {
-        //         const preamble = this.createPreamble();
-        //         motionPdfContent.push(preamble);
-        //     }
-        //     const lineHeight = this.meetingSettingsService.instant(`export_pdf_line_height`)!;
-        //     const text = this.createText({
-        //         motion,
-        //         lineLength,
-        //         lnMode,
-        //         crMode,
-        //         lineHeight
-        //     });
-        //     motionPdfContent.push(text);
-        // }
-
-        // if (!contentToExport || contentToExport.includes(`reason`)) {
-        //     const reason = this.createReason(motion);
-        //     motionPdfContent.push(reason);
-        // }
-
-        // if (
-        //     exportInfo &&
-        //     exportInfo.pdfOptions &&
-        //     exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Attachments) &&
-        //     motion.attachments.length > 0
-        // ) {
-        //     motionPdfContent.push(this.createAttachments(motion));
-        // }
-
-        // if (infoToExport && infoToExport.includes(`allcomments`)) {
-        //     commentsToExport = this.commentRepo.getViewModelList().map(vm => vm.id);
-        // }
-        // if (commentsToExport) {
-        //     motionPdfContent.push(this.createComments(motion, commentsToExport));
-        // }
 
         return pollResultPdfContent;
     }
@@ -454,70 +332,63 @@ export abstract class BasePollPdfService {
     /**
      * Creates the poll result table for all published polls
      *
-     * @param assignment the ViewAssignment to create the document for
+     * @param poll the ViewPoll to create the document for
      * @returns the table as pdfmake object
      */
     private createVotesTable(poll: ViewPoll, votesData: BaseVoteData[]): object {
         const resultBody = [];
-        // for (const poll of assignment.polls) {
-            if (poll.isPublished) {
-                const pollTableBody = [];
-
-                // resultBody.push({
-                //     text: poll.title,
-                //     bold: true,
-                //     style: `textItem`,
-                //     margin: [0, 15, 0, 0]
-                // });
-
-                pollTableBody.push([
-                    {
-                        text: ``,
-                        style: `tableHeader`
-                    },
-                    {
-                        text: this.translate.instant(`Participant`),
-                        style: `tableHeader`
-                    },
-                    {
-                        text: this.translate.instant(`Votes`),
-                        style: `tableHeader`
-                    }
-                ]);
-
-                // const tableData = this.getPollService(poll).generateTableData(poll);
-                let index = 1;
-                for (const date of votesData) {
-                    // const voteOption = this.translate.instant(this.pollKeyVerbose.transform(pollResult.votingOption));
-                    // const resultLine = this.getPollResult(pollResult, poll);
-                    const tableLine = [
-                        {
-                            text: index
-                        },
-                        {
-                            text: date.user.getShortName()
-                        },
-                        {
-                            text: `text` //date.valueVerbose ?? JSON.stringify(vote.votes)
-                        }
-                    ];
-
-                    pollTableBody.push(tableLine);
-                    index++;
+        if (poll.isPublished) {
+            const pollTableBody = [];
+            pollTableBody.push([
+                {
+                    text: this.translate.instant(`Participant`),
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Votes`),
+                    style: `tableHeader`
                 }
+            ]);
 
-                resultBody.push({
-                    table: {
-                        widths: [`3%`, `61%`, `33%`],
-                        headerRows: 1,
-                        body: pollTableBody
+            for (const date of votesData) {
+                const tableLine = [
+                    {
+                        text: date.user?.getShortName() ?? this.translate.instant(`Anonymous`)
                     },
-                    layout: `switchColorTableLayout`
-                });
+                    {
+                        text: this.parseSingleResult(date[`votes`] ?? date[`value`])
+                    }
+                ];
+
+                pollTableBody.push(tableLine);
             }
-        // }
+
+            resultBody.push({
+                table: {
+                    widths: [`50%`, `50%`],
+                    headerRows: 1,
+                    body: pollTableBody
+                },
+                layout: `switchColorTableLayout`
+            });
+        }
 
         return resultBody;
+    }
+
+    private parseSingleResult(resultData: any, indent = 0): string {
+        const indentation = `  `.repeat(indent);
+        if (Array.isArray(resultData)) {
+            return resultData.map(value => this.parseSingleResult(value, indent)).join(`\n`);
+        } else if (typeof resultData === `object`) {
+            return Object.keys(resultData)
+                .map(value => `${indentation}${value}:\n${this.parseSingleResult(resultData[value], indent + 1)}`)
+                .join(`\n`);
+        } else if (typeof resultData === `string` && Object.keys(VoteValuesVerbose).includes(resultData)) {
+            return indentation + this.translate.instant(VoteValuesVerbose[resultData]);
+        } else {
+            return indentation + this.translate.instant(String(resultData));
+        }
     }
 
     /**
