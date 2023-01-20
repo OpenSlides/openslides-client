@@ -384,17 +384,7 @@ export abstract class BasePollPdfService {
 
             pollTableBody.push(tableLine);
         }
-
-        return [
-            {
-                table: {
-                    widths: [`50%`, `50%`],
-                    headerRows: 1,
-                    body: pollTableBody
-                },
-                layout: `switchColorTableLayout`
-            }
-        ];
+        return this.generateTableObject(pollTableBody);
     }
 
     /**
@@ -435,7 +425,10 @@ export abstract class BasePollPdfService {
 
             pollTableBody.push(tableLine);
         }
+        return this.generateTableObject(pollTableBody);
+    }
 
+    private generateTableObject(pollTableBody: any[]): object {
         return [
             {
                 table: {
