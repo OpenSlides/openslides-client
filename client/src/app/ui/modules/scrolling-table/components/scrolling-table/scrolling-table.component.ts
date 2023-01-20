@@ -43,6 +43,9 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     public scrollViewport: CdkVirtualScrollViewport | undefined;
 
     @Input()
+    public tableHeight: string | undefined = undefined;
+
+    @Input()
     public rowHeight = 70;
 
     @Input()
@@ -205,6 +208,10 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     public calculateContainerHeight(): string {
+        if (this.tableHeight) {
+            return this.tableHeight;
+        }
+
         return this.rowHeight * this._dataSource.getValue().length + `px`;
     }
 
