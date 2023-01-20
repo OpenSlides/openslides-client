@@ -5,10 +5,9 @@ import { BehaviorSubject, first, firstValueFrom, map, Observable, Subscription }
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { DEFAULT_FIELDSET, ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { LifecycleService } from '../../../services/lifecycle.service';
-import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { getParticipantMinimalSubscriptionConfig } from '../pages/participants/config/model-subscription';
 import { getProjectorListSubscriptionConfig } from '../pages/projectors/config/model-subscription';
 import { ViewMeeting } from '../view-models/view-meeting';
@@ -98,7 +97,6 @@ export class ActiveMeetingService {
         private bannerService: BannerService,
         private archiveService: ArchiveStatusService,
         private modelRequestService: ModelRequestService,
-        private modelRequestBuilder: ModelRequestBuilderService,
         private router: Router,
         private translate: TranslateService
     ) {
@@ -123,10 +121,6 @@ export class ActiveMeetingService {
     }
 
     private async setupModelSubscription(id: number | null): Promise<void> {
-        this.modelRequestBuilder.setRootViewModel(
-            !!this.meetingId ? ViewMeeting.COLLECTION : ViewOrganization.COLLECTION
-        );
-
         if (!!this.meetingId) {
             await this.refreshAutoupdateSubscription();
             this.refreshRepoSubscription();
