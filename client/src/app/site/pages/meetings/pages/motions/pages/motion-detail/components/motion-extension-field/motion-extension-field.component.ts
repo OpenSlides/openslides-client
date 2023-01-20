@@ -4,6 +4,13 @@ import { NavigationEnd, Router } from '@angular/router';
 import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 
+export interface SearchListDefinition {
+    observable: Observable<Selectable[]>;
+    label?: string;
+    keepOpen?: boolean;
+    wider?: boolean;
+}
+
 @Component({
     selector: `os-motion-extension-field`,
     templateUrl: `./motion-extension-field.component.html`,
@@ -41,16 +48,10 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     public extensionLabel!: string;
 
     /**
-     * Optional labels for the search-lists.
+     * Definitions for the search-lists.
      */
     @Input()
-    public searchListLabels!: string[];
-
-    /**
-     * BehaviourSubjects for the search-lists.
-     */
-    @Input()
-    public searchLists: Observable<Selectable[]>[] = [];
+    public searchLists: SearchListDefinition[] = [];
 
     /**
      * Boolean, whether the input and the search-list can be changed.
@@ -102,6 +103,17 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     private searchListSubscriptions?: Subscription[] = [];
 
     /**
+     * The index of the search list that was last selected from, or -1 if something was written in
+     * the input field afterwards.
+     */
+    private searchListLastSelected: number = -1;
+
+    /**
+     * Prevent selecting the same value twice while a selection box is open.
+     */
+    private searchListDisabledIds: number[][] = [];
+
+    /**
      * Constructor
      *
      * @param formBuilder The FormBuilder
@@ -127,9 +139,6 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         const lists = {};
         for (let i = 0; i < this.searchLists.length; i++) {
             lists[`list${i}`] = [[]];
-            if (this.searchListLabels.length <= i) {
-                this.searchListLabels.push(``);
-            }
             if (this.listValueTransformFns.length <= i) {
                 this.listValueTransformFns.push(value => value.getTitle());
             }
@@ -140,7 +149,7 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
 
         for (let i = 0; i < this.searchLists.length; i++) {
             this.searchListSubscriptions.concat(
-                this.searchLists[i].subscribe(list => (this.searchListValues[i] = list))
+                this.searchLists[i].observable.subscribe(list => (this.searchListValues[i] = list))
             );
 
             this.searchValueSubscription = this.extensionFieldForm
@@ -151,8 +160,17 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
                     if (value && typeof value === `number`) {
                         if (!this.inputControl) {
                             this.inputControl = ``;
+                        } else if (this.searchListLastSelected == i) {
+                            this.inputControl += ` · `;
                         }
                         this.inputControl += transformFn(this.searchListValues[i].find(entry => entry.id === value));
+                        this.searchListLastSelected = i;
+
+                        if (!this.searchListDisabledIds[i]) {
+                            this.searchListDisabledIds[i] = [value];
+                        } else {
+                            this.searchListDisabledIds[i].push(value);
+                        }
                     }
                     this.extensionFieldForm.reset();
                 });
@@ -181,6 +199,14 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
         }
     }
 
+    public inputChanged(): void {
+        this.searchListLastSelected = -1;
+    }
+
+    public getIsDisabled(i: number): (value: Selectable) => boolean {
+        return (value: Selectable) => this.searchListDisabledIds[i]?.includes(value.id);
+    }
+
     /**
      * Function to switch to or from editing-mode.
      *
@@ -207,5 +233,11 @@ export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
      */
     public sendSuccess(): void {
         this.succeeded.emit(this.inputControl);
+    }
+
+    public openedChange(opened: boolean, i: number): void {
+        if (!opened) {
+            this.searchListDisabledIds[i] = [];
+        }
     }
 }

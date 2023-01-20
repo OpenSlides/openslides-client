@@ -60,8 +60,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
-            const canManageUsers = this.userService.isAllowed(`manage`, true);
-            if (canManageUsers && this._isUserInScope) {
+            if (this._isUserInScope) {
                 return true;
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
@@ -165,6 +164,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     }
 
     private async updateIsUserInScope(): Promise<void> {
-        this._isUserInScope = await this.userService.isUserInSameScope(this.operator.operatorId);
+        this._isUserInScope = await this.userService.hasScopeManagePerms(this.operator.operatorId);
     }
 }

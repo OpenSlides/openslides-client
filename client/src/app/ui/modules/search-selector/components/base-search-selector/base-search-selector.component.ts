@@ -123,6 +123,18 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Input()
     public excludeIds: boolean = false;
 
+    /**
+     * If true, the dialog will not close when a value is selected.
+     */
+    @Input()
+    public keepOpen: boolean = false;
+
+    /**
+     * If true, the dialog will be opened with double width.
+     */
+    @Input()
+    public wider: boolean = false;
+
     public itemSizeInPx = 50;
 
     public get panelHeight(): number {

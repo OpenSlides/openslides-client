@@ -328,6 +328,16 @@ msgstr ""
 msgid "Are you sure you want to clear all speakers of all lists?"
 msgstr ""
 
+msgid ""
+"Are you sure you want to delete all next speakers from this list of "
+"speakers?"
+msgstr ""
+
+msgid ""
+"Are you sure you want to delete all previous speakers from this list of "
+"speakers?"
+msgstr ""
+
 msgid "Are you sure you want to delete all selected elections?"
 msgstr ""
 
@@ -518,6 +528,9 @@ msgid "Automatically open the web cam for new conference speakers"
 msgstr ""
 
 msgid "Autopilot"
+msgstr ""
+
+msgid "Autoupdate unhealthy"
 msgstr ""
 
 msgid "Available sizes are 10, 11 and 12"
@@ -865,9 +878,6 @@ msgstr ""
 msgid "Click here to vote!"
 msgstr ""
 
-msgid "Close"
-msgstr ""
-
 msgid "Close list of speakers"
 msgstr ""
 
@@ -941,6 +951,9 @@ msgid "Confirm new password"
 msgstr ""
 
 msgid "Congratuations! Your browser is supported by OpenSlides."
+msgstr ""
+
+msgid "Connect 4"
 msgstr ""
 
 msgid "Connect all users to live conference automatically."
@@ -1563,6 +1576,9 @@ msgstr ""
 msgid "Fullscreen"
 msgstr ""
 
+msgid "Game draw!"
+msgstr ""
+
 msgid "Gender"
 msgstr ""
 
@@ -1611,6 +1627,9 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
+msgid "Groups changed in meeting {}"
+msgstr ""
+
 msgid "Groups changed in multiple meetings"
 msgstr ""
 
@@ -1635,10 +1654,16 @@ msgstr ""
 msgid "Has forwardings"
 msgstr ""
 
+msgid "Has logged in"
+msgstr ""
+
 msgid "Has no email address"
 msgstr ""
 
 msgid "Has no speakers"
+msgstr ""
+
+msgid "Has not logged in yet"
 msgstr ""
 
 msgid "Has notes"
@@ -1799,6 +1824,9 @@ msgstr ""
 msgid "Is amendment"
 msgstr ""
 
+msgid "Is being projected"
+msgstr ""
+
 msgid "Is candidate"
 msgstr ""
 
@@ -1841,6 +1869,12 @@ msgstr ""
 msgid "It is not allowed to delete countdowns used for list of speakers or polls"
 msgstr ""
 
+msgid "It's your partners turn"
+msgstr ""
+
+msgid "It's your turn!"
+msgstr ""
+
 msgid "Item number"
 msgstr ""
 
@@ -1860,6 +1894,9 @@ msgid "Label color"
 msgstr ""
 
 msgid "Last email sent"
+msgstr ""
+
+msgid "Last login"
 msgstr ""
 
 msgid "Last modified"
@@ -2005,7 +2042,7 @@ msgid ""
 "committee administrators."
 msgstr ""
 
-msgid "Meeting titel"
+msgid "Meeting title"
 msgstr ""
 
 msgid "Meetings"
@@ -2284,9 +2321,6 @@ msgstr ""
 msgid "No delegation of vote"
 msgstr ""
 
-msgid "No email sent"
-msgstr ""
-
 msgid "No encryption"
 msgstr ""
 
@@ -2454,6 +2488,9 @@ msgstr ""
 msgid "Open Jitsi in new tab"
 msgstr ""
 
+msgid "Open a meeting to play \"Connect 4\""
+msgstr ""
+
 msgid "Open items"
 msgstr ""
 
@@ -2589,6 +2626,9 @@ msgstr ""
 msgid "Participant added to multiple groups in multiple meetings"
 msgstr ""
 
+msgid "Participant created"
+msgstr ""
+
 msgid "Participant created in meeting {}"
 msgstr ""
 
@@ -2598,6 +2638,12 @@ msgstr ""
 msgid "Participant data updated in multiple meetings"
 msgstr ""
 
+msgid "Participant deleted"
+msgstr ""
+
+msgid "Participant deleted in meeting {}"
+msgstr ""
+
 msgid "Participant number"
 msgstr ""
 
@@ -2605,6 +2651,9 @@ msgid "Participant removed from group {} in meeting {}"
 msgstr ""
 
 msgid "Participant removed from multiple groups in meeting {}"
+msgstr ""
+
+msgid "Participant removed from multiple groups in multiple meetings"
 msgstr ""
 
 msgid "Participants"
@@ -2868,6 +2917,12 @@ msgid ""
 "livestream."
 msgstr ""
 
+msgid "Remove all next speakers"
+msgstr ""
+
+msgid "Remove all previous speakers"
+msgstr ""
+
 msgid "Remove all speakers"
 msgstr ""
 
@@ -2902,6 +2957,9 @@ msgid "Reply address"
 msgstr ""
 
 msgid "Request"
+msgstr ""
+
+msgid "Request \"WhoAmI\" failed"
 msgstr ""
 
 msgid "Requests to speak"
@@ -2991,6 +3049,9 @@ msgid "Search player"
 msgstr ""
 
 msgid "Searching for candidates"
+msgstr ""
+
+msgid "Searching for players ..."
 msgstr ""
 
 msgid "Secret voting can not be guaranteed"
@@ -3484,6 +3545,9 @@ msgstr ""
 msgid "The reason field may not be blank."
 msgstr ""
 
+msgid "The request could not be sent. Check your connection."
+msgstr ""
+
 msgid ""
 "The sender address is defined in the OpenSlides server settings and should "
 "modified by administrator only."
@@ -3517,6 +3581,11 @@ msgid "There is an error with this amendment. Please edit it manually."
 msgstr ""
 
 msgid "There is an unknown voting problem."
+msgstr ""
+
+msgid ""
+"There seems to be a problem connecting to our services. Check your "
+"connection or try again later."
 msgstr ""
 
 msgid "There should be at least 2 options."
@@ -3711,6 +3780,11 @@ msgstr ""
 msgid "Uses leading zeros to sort motions correctly by number."
 msgstr ""
 
+msgid ""
+"Using OpenSlides over HTTP 1.1 or lower is not supported. Make sure you can "
+"use HTTP 2 to continue."
+msgstr ""
+
 msgid "Using OpenSlides over HTTP is not supported. Enable HTTPS to continue."
 msgstr ""
 
@@ -3813,6 +3887,9 @@ msgid "WLAN name (SSID)"
 msgstr ""
 
 msgid "WLAN password"
+msgstr ""
+
+msgid "Wait for response ..."
 msgstr ""
 
 msgid ""
@@ -3989,6 +4066,9 @@ msgstr ""
 msgid "You reached the maximum amount of votes. Deselect somebody first."
 msgstr ""
 
+msgid "You won!"
+msgstr ""
+
 msgid "Your browser"
 msgstr ""
 
@@ -4002,6 +4082,12 @@ msgid "Your device has no microphone"
 msgstr ""
 
 msgid "Your input does not match the following structure: \"hh:mm\""
+msgstr ""
+
+msgid "Your partner couldn't stand it anymore... You are the winner!"
+msgstr ""
+
+msgid "Your partner has won!"
 msgstr ""
 
 msgid "Your password was resetted successfully!"
@@ -4233,6 +4319,9 @@ msgid "or"
 msgstr ""
 
 msgid "outside"
+msgstr ""
+
+msgid "partially forwarded"
 msgstr ""
 
 msgid "participants"

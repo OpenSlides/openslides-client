@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -171,7 +172,9 @@ export class C4DialogComponent implements OnInit, OnDestroy {
             },
             recievedRagequit: {
                 handle: () => {
-                    this.caption = `Your partner couldn't stand it anymore... You are the winner!`;
+                    this.caption = this.translate.instant(
+                        `Your partner couldn't stand it anymore... You are the winner!`
+                    );
                     return `start`;
                 }
             }
@@ -193,7 +196,9 @@ export class C4DialogComponent implements OnInit, OnDestroy {
             },
             recievedRagequit: {
                 handle: () => {
-                    this.caption = `Your partner couldn't stand it anymore... You are the winner!`;
+                    this.caption = this.translate.instant(
+                        `Your partner couldn't stand it anymore... You are the winner!`
+                    );
                     return `start`;
                 }
             }
@@ -204,7 +209,8 @@ export class C4DialogComponent implements OnInit, OnDestroy {
         private activeMeetingService: ActiveMeetingService,
         public dialogRef: MatDialogRef<C4DialogComponent>,
         private notifyService: NotifyService,
-        private op: OperatorService
+        private op: OperatorService,
+        private translate: TranslateService
     ) {
         this.resetBoard();
         this.inMeeting = !!this.activeMeetingService.meetingId;
@@ -213,7 +219,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         // Setup initial values.
         this.state = `start`;
-        this.caption = `Connect 4`;
+        this.caption = this.translate.instant(`Connect 4`);
         this.disableBoard = true;
 
         // Setup all subscription for needed notify messages
@@ -297,13 +303,13 @@ export class C4DialogComponent implements OnInit, OnDestroy {
     private getStateFromBoardStatus(): State | null {
         switch (this.boardStatus()) {
             case BoardStatus.Draw:
-                this.caption = `Game draw!`;
+                this.caption = this.translate.instant(`Game draw!`);
                 return `start`;
             case BoardStatus.thisPlayer:
-                this.caption = `You won!`;
+                this.caption = this.translate.instant(`You won!`);
                 return `start`;
             case BoardStatus.partner:
-                this.caption = `Your partner has won!`;
+                this.caption = this.translate.instant(`Your partner has won!`);
                 return `start`;
             case BoardStatus.NotDecided:
                 return null;
@@ -356,7 +362,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      * Sends a search request for other players.
      */
     public enter_search(): void {
-        this.caption = `Searching for players...`;
+        this.caption = this.translate.instant(`Searching for players ...`);
         this.notifyService.sendToAllUsers(`c4_search_request`, { name: this.getPlayerName() });
     }
 
@@ -365,7 +371,7 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      * Also sets up a timeout to go back into the search state.
      */
     public enter_waitForResponse(): void {
-        this.caption = `Wait for response...`;
+        this.caption = this.translate.instant(`Wait for response ...`);
         this.notifyService.sendToChannels(`c4_search_response`, { name: this.getPlayerName() }, this.replyChannel!);
         if (this.waitTimout) {
             clearTimeout(<any>this.waitTimout);
@@ -379,14 +385,14 @@ export class C4DialogComponent implements OnInit, OnDestroy {
      * Sets the caption.
      */
     public enter_myTurn(): void {
-        this.caption = `It's your turn!`;
+        this.caption = this.translate.instant(`It's your turn!`);
     }
 
     /**
      * Sets the caption.
      */
     public enter_foreignTurn(): void {
-        this.caption = `It's your partners turn`;
+        this.caption = this.translate.instant(`It's your partners turn`);
     }
 
     // Board function

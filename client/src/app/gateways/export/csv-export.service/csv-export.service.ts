@@ -152,7 +152,7 @@ export class CsvExportService {
      * @returns capitalized string
      */
     private capitalizeTranslate(input: string): string {
-        const temp = input.charAt(0).toUpperCase() + input.slice(1);
+        const temp = input.charAt(0).toUpperCase() + input.slice(1).replace(`_`, ` `);
         return this.translate.instant(temp);
     }
 

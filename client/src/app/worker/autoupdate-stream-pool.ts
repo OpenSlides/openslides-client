@@ -233,6 +233,8 @@ export class AutoupdateStreamPool {
             let params = new URLSearchParams(stream.queryParams);
             if (+params.get(`position`) === 0 && !params.get(`single`)) {
                 await this.handleError(stream, null);
+            } else {
+                this.removeStream(stream);
             }
         }
     }
