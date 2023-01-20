@@ -181,7 +181,10 @@ export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends
     }
 
     public exportPollResults(): void {
-        this.pollPdfService.exportSinglePoll(this.poll, { votesData: this._votesDataSubject.value });
+        this.pollPdfService.exportSinglePoll(this.poll, {
+            votesData: this._votesDataSubject.value,
+            entitledUsersData: this._entitledUsersSubject.value
+        });
     }
 
     protected onStateChanged(): void {}

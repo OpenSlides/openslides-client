@@ -11,6 +11,8 @@ import { MediaManageService } from 'src/app/site/pages/meetings/services/media-m
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
+import { ViewUser } from '../../../view-models/view-user';
+import { EntitledUsersTableEntry } from '../definitions';
 import { BaseVoteData } from './base-poll-detail.component';
 
 /**
@@ -293,8 +295,13 @@ export abstract class BasePollPdfService {
         poll: ViewPoll,
         exportInfo?: {
             votesData?: BaseVoteData[];
+            entitledUsersData?: EntitledUsersTableEntry[];
         }
     ): void {
+        if (!exportInfo.votesData && !exportInfo.entitledUsersData) {
+            throw Error(`Can't export due to missing data`);
+        }
+
         const doc = this.pollToDocDef(poll, exportInfo);
         const filename = `${this.translate.instant(`Poll result`)} ${poll.getTitle()}`;
         const metadata = {
@@ -313,33 +320,45 @@ export abstract class BasePollPdfService {
         poll: ViewPoll,
         exportInfo?: {
             votesData?: BaseVoteData[];
+            entitledUsersData?: EntitledUsersTableEntry[];
         }
     ): object {
         let pollResultPdfContent: any[] = [];
         const title = this.getTitle(`${poll.content_object?.getTitle()} · ${poll.getTitle()}`);
-        const subtitle = this.getSubtitle(this.translate.instant(`Vote results`));
 
-        pollResultPdfContent = [title, subtitle, ``];
+        pollResultPdfContent = [title];
 
-        if (exportInfo.votesData) {
-            const votesData = this.createVotesTable(poll, exportInfo.votesData);
+        if (exportInfo.votesData?.length) {
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Vote results`),
+                margin: [0, 0, 0, 5],
+                bold: true
+            });
+            const votesData = this.createVotesTable(exportInfo.votesData);
             pollResultPdfContent.push(votesData);
+        }
+
+        if (exportInfo.entitledUsersData?.length) {
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Entitled users`),
+                margin: [0, 20, 0, 5],
+                bold: true
+            });
+            const usersData = this.createUsersTable(exportInfo.entitledUsersData);
+            pollResultPdfContent.push(usersData);
         }
 
         return pollResultPdfContent;
     }
 
     /**
-     * Creates the poll result table for all published polls
+     * Creates the poll vote table for the given votesData
      *
-     * @param poll the ViewPoll to create the document for
      * @returns the table as pdfmake object
      */
-    private createVotesTable(poll: ViewPoll, votesData: BaseVoteData[]): object {
-        const resultBody = [];
-        if (poll.isPublished) {
-            const pollTableBody = [];
-            pollTableBody.push([
+    private createVotesTable(votesData: BaseVoteData[]): object {
+        const pollTableBody: any[] = [
+            [
                 {
                     text: this.translate.instant(`Participant`),
                     style: `tableHeader`
@@ -348,32 +367,89 @@ export abstract class BasePollPdfService {
                     text: this.translate.instant(`Votes`),
                     style: `tableHeader`
                 }
-            ]);
+            ]
+        ];
 
-            for (const date of votesData) {
-                const tableLine = [
-                    {
-                        text: date.user?.getShortName() ?? this.translate.instant(`Anonymous`)
-                    },
-                    {
-                        text: this.parseSingleResult(date[`votes`] ?? date[`value`])
-                    }
-                ];
+        for (const date of votesData.sort((entryA, entryB) =>
+            entryA.user?.getName().localeCompare(entryB.user?.getName())
+        )) {
+            const tableLine = [
+                {
+                    text: this.getUserNameForExport(date.user)
+                },
+                {
+                    text: this.parseSingleResult(date[`votes`] ?? date[`value`])
+                }
+            ];
 
-                pollTableBody.push(tableLine);
-            }
+            pollTableBody.push(tableLine);
+        }
 
-            resultBody.push({
+        return [
+            {
                 table: {
                     widths: [`50%`, `50%`],
                     headerRows: 1,
                     body: pollTableBody
                 },
                 layout: `switchColorTableLayout`
-            });
+            }
+        ];
+    }
+
+    /**
+     * Creates the poll entitled users table for the given usersData
+     *
+     * @returns the table as pdfmake object
+     */
+    private createUsersTable(usersData: EntitledUsersTableEntry[]): object {
+        const pollTableBody: any[] = [
+            [
+                {
+                    text: this.translate.instant(`Participant`),
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Has voted`),
+                    style: `tableHeader`
+                }
+            ]
+        ];
+
+        for (const date of usersData.sort((entryA, entryB) =>
+            entryA.user?.getName().localeCompare(entryB.user?.getName())
+        )) {
+            const tableLine = [
+                {
+                    text:
+                        this.getUserNameForExport(date.user) +
+                        (date.vote_delegated_to
+                            ? `\n${this.translate.instant(`represented by`)} ` +
+                              this.getUserNameForExport(date.vote_delegated_to)
+                            : ``)
+                },
+                {
+                    text: this.translate.instant(date.voted ? `Yes` : `No`)
+                }
+            ];
+
+            pollTableBody.push(tableLine);
         }
 
-        return resultBody;
+        return [
+            {
+                table: {
+                    widths: [`50%`, `50%`],
+                    headerRows: 1,
+                    body: pollTableBody
+                },
+                layout: `switchColorTableLayout`
+            }
+        ];
+    }
+
+    private getUserNameForExport(user: ViewUser | undefined): string {
+        return user?.getShortName() ?? this.translate.instant(`Anonymous`);
     }
 
     private parseSingleResult(resultData: any, indent = 0): string {
