@@ -78,6 +78,7 @@ function isAllStructuredFields<M>(obj: any): obj is AllStructuredFields<M> {
 
 export interface Follow<M = any> extends BaseSimplifiedModelRequest<M> {
     idField: IdField<M> | SpecificStructuredField<M>;
+    isFullList?: boolean | undefined;
 }
 
 export type AdditionalField<M = any> = IdField<M> | SpecificStructuredField<M> | AllStructuredFields<M>;
@@ -258,7 +259,7 @@ export class ModelRequestBuilderService {
     ): DescriptorResponse<RelationFieldDescriptor> {
         const foreignCollection = relation.foreignViewModel!.COLLECTION;
         const modelRequestObject = new ModelRequestObject(foreignCollection, follow, {});
-        if (relation.isFullList) {
+        if ((relation.isFullList && follow.isFullList !== false) || follow.isFullList === true) {
             modelRequestObject.addCollectionToFullListUpdate(
                 foreignCollection,
                 follow.idField as string,
