@@ -75,7 +75,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     }
 
     public get currentProjectionIsLoS(): boolean {
-        for (let projection of this.projector.current_projections.filter(projection => projection.stable === false)) {
+        for (let projection of this.projector.nonStableCurrentProjections) {
             if (hasListOfSpeakers(projection.content_object)) {
                 return false;
             } else if (projection.content_object.collection === `list_of_speakers`) {
@@ -231,9 +231,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public getCurrentProjectionLoSToggleBuildDesc(): ProjectionBuildDescriptor | Projectable | null {
         try {
-            for (let projection of this.projector.current_projections.filter(
-                projection => projection.stable === false
-            )) {
+            for (let projection of this.projector.nonStableCurrentProjections) {
                 if (hasListOfSpeakers(projection.content_object)) {
                     return projection.content_object.list_of_speakers ?? null;
                 } else if (projection.content_object.collection === `list_of_speakers`) {
