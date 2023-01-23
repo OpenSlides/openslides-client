@@ -248,7 +248,7 @@ export class MotionHtmlToPdfService {
                     // multiline subitems work. All subitem children are added
                     // to the stack normally.
                     for (var key in children) {
-                        // Finde subitem or subitem with lines numbers obeject.
+                        // Find subitem or subitem with line numbers object.
                         if (
                             Object.keys(children[key]).includes(`ul`) ||
                             children[key][`columns`]?.some(colum => Object.keys(colum).includes(`ul`))
