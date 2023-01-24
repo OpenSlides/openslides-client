@@ -251,7 +251,7 @@ export class MotionHtmlToPdfService {
                         // Find subitem or subitem with line numbers object.
                         if (
                             Object.keys(children[key]).includes(`ul`) ||
-                            children[key][`columns`]?.some(colum => Object.keys(colum).includes(`ul`))
+                            children[key][`columns`]?.some(column => Object.keys(column).includes(`ul`))
                         ) {
                             ul.push(children[key]);
                         } else {
