@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
+import { GetUserScopePresenterService, UserScope } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
+import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
 
 @Injectable({
     providedIn: `root`
@@ -13,7 +15,8 @@ export class UserService {
     public constructor(
         private activeMeetingService: ActiveMeetingService,
         private presenter: GetUserScopePresenterService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private meetingRepo: MeetingControllerService
     ) {}
 
     /**
@@ -76,6 +79,36 @@ export class UserService {
             .some(userId => {
                 const toCompare = result[userId];
                 return this.presenter.compareScope(ownScope, toCompare) === -1;
+            });
+    }
+
+    /**
+     * Checks, if the operator has the correct perms to edit the passed users (given by their ids) in accordance with their scopes.
+     * May not return true if a meeting scope outside of the current meeting is returned, even if the operator has the correct permission.
+     *
+     * @param userIds The id of every user to check
+     *
+     * @returns A boolean that shows whether the given users can have their orga fields edited by the operator
+     */
+    public async hasScopeManagePerms(...userIds: Id[]): Promise<boolean> {
+        const result = await this.presenter.call({ user_ids: [...userIds] });
+        return Object.keys(result)
+            .map(userId => parseInt(userId, 10))
+            .every(userId => {
+                const toCompare = result[userId];
+                let hasPerms = this.operator.hasOrganizationPermissions(OML.can_manage_users);
+                if (!hasPerms && toCompare.collection === UserScope.COMMITTEE) {
+                    hasPerms = hasPerms || this.operator.hasCommitteePermissions(toCompare.id, CML.can_manage);
+                }
+                if (!hasPerms && toCompare.collection === UserScope.MEETING) {
+                    const committee_id = this.meetingRepo.getViewModel(toCompare.id)?.committee_id;
+                    hasPerms =
+                        hasPerms ||
+                        (this.activeMeetingService.meetingId === toCompare.id &&
+                            this.operator.hasPerms(Permission.userCanManage)) ||
+                        (committee_id && this.operator.hasCommitteePermissions(committee_id, CML.can_manage));
+                }
+                return hasPerms;
             });
     }
 }

@@ -19,7 +19,7 @@ import { ViewMeeting } from './view-meeting';
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
-export const PERSONAL_FORM_CONTROLS = [`username`, `email`, `about_me`, `pronoun`];
+export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
 
 export class ViewUser extends BaseProjectableViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;

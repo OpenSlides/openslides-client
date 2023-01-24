@@ -78,6 +78,16 @@
 
     <mat-divider></mat-divider>
 
+    <button mat-menu-item (click)="clearPreviousSpeakerList()" [disabled]="isPreviousListOfSpeakersEmpty" class="red-warning-text">
+        <mat-icon>delete</mat-icon>
+        <span>{{ 'Remove all previous speakers' | translate }}</span>
+    </button>
+
+    <button mat-menu-item (click)="clearNextSpeakerList()" [disabled]="isNextListOfSpeakersEmpty" class="red-warning-text">
+        <mat-icon>delete</mat-icon>
+        <span>{{ 'Remove all next speakers' | translate }}</span>
+    </button>
+
     <button mat-menu-item (click)="clearSpeakerList()" [disabled]="isListOfSpeakersEmpty" class="red-warning-text">
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all speakers' | translate }}</span>
