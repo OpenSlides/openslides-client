@@ -170,7 +170,7 @@ export class MotionHtmlToPdfService {
         }
 
         // DEBUG: printing the following. Do not remove, just comment out
-        // console.log('MakePDF doc :\n---\n', JSON.stringify(docDef), '\n---\n');
+        // console.log(`MakePDF doc :\n---\n`, JSON.stringify(docDef), `\n---\n`);
 
         return docDef;
     }
@@ -238,6 +238,32 @@ export class MotionHtmlToPdfService {
                 ) {
                     newParagraph = this.create(`stack`);
                     newParagraph.stack = children;
+                } else if (nodeName === `li`) {
+                    newParagraph = this.create(`stack`);
+
+                    var ul = [];
+                    var text = [];
+
+                    // Collect all text children into one text object to make
+                    // multiline subitems work. All subitem children are added
+                    // to the stack normally.
+                    for (var key in children) {
+                        // Find subitem or subitem with line numbers object.
+                        if (
+                            Object.keys(children[key]).includes(`ul`) ||
+                            children[key][`columns`]?.some(column => Object.keys(column).includes(`ul`))
+                        ) {
+                            ul.push(children[key]);
+                        } else {
+                            text.push(children[key]);
+                        }
+                    }
+                    if (text.length) {
+                        newParagraph.stack.push({ text: text });
+                    }
+                    if (ul.length) {
+                        newParagraph.stack.push(ul);
+                    }
                 } else {
                     newParagraph = this.create(`text`);
                     newParagraph.text = children;
@@ -345,7 +371,6 @@ export class MotionHtmlToPdfService {
             }
             case `br`: {
                 newParagraph = this.create(`text`);
-                // yep thats all
                 newParagraph.text = `\n`;
                 newParagraph.lineHeight = this.lineHeight;
                 break;
@@ -386,7 +411,9 @@ export class MotionHtmlToPdfService {
                         }
 
                         for (const line of lines) {
-                            listCol.columns[0].stack.push(this.getLineNumberObject(line));
+                            if (line.lineNumber) {
+                                listCol.columns[0].stack.push(this.getLineNumberObject(line));
+                            }
                         }
 
                         list[nodeName] = cleanedChildren;
