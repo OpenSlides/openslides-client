@@ -188,40 +188,20 @@
 <div *ngIf="tags.length">
     <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.hasTags()">{{ 'Tags' | translate }}</h4>
 
-    <!-- For privileged users -->
-    <div *ngIf="perms.isAllowed('change_metadata', motion)">
-        <!-- Selection menu -->
-        <mat-menu #tagMenu="matMenu">
-            <button mat-menu-item *ngFor="let tag of tags" (click)="setTag($event, tag.id)">
-                <mat-icon *ngIf="motion.tags.includes(tag)">check</mat-icon>
-                {{ tag }}
-            </button>
-        </mat-menu>
+    <os-chip-select
+        *ngIf="perms.isAllowed('change_metadata', motion) || motion.hasTags()"
+        [canOpen]="perms.isAllowed('change_metadata', motion)">
+        <button menu mat-menu-item *ngFor="let tag of tags" (click)="setTag($event, tag.id)">
+            <mat-icon *ngIf="motion.tags.includes(tag)">check</mat-icon>
+            {{ tag }}
+        </button>
 
-        <!-- Make the whole container a trigger to prevent unexpected menu behavior -->
-        <div [matMenuTriggerFor]="tagMenu">
-            <!-- No selected tags -->
-            <mat-basic-chip *ngIf="!motion.hasTags()" class="grey" disabled disableRipple>
-                {{ '–' }}
-            </mat-basic-chip>
+        <os-chip-select-chip *ngFor="let tag of motion.tags" class="grey" disabled disableRipple>
+            {{ tag }}
+        </os-chip-select-chip>
 
-            <!-- Display a chip list of tags -->
-            <mat-chip-list class="mat-chip-list-stacked">
-                <mat-basic-chip *ngFor="let tag of motion.tags" class="grey" disabled disableRipple>
-                    {{ tag }}
-                </mat-basic-chip>
-            </mat-chip-list>
-        </div>
-    </div>
-
-    <!-- For non privileged users -->
-    <div *ngIf="!perms.isAllowed('change_metadata', motion)">
-        <mat-chip-list class="mat-chip-list-stacked">
-            <mat-basic-chip *ngFor="let tag of motion.tags" class="grey" disableRipple>
-                {{ tag }}
-            </mat-basic-chip>
-        </mat-chip-list>
-    </div>
+        {{ '–' }}
+    </os-chip-select>
 </div>
 
 <!-- Block -->

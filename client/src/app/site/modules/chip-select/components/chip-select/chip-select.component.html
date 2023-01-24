@@ -1,21 +1,22 @@
-<mat-basic-chip
-    *ngIf="!canOpen"
-    class="grey"
-    disableRipple
->
-    <ng-content></ng-content>
-</mat-basic-chip>
-
-<mat-basic-chip
-    *ngIf="canOpen"
-    [matMenuTriggerFor]="menu"
-    class="grey"
-    disableRipple
->
-    <ng-content></ng-content>
-</mat-basic-chip>
+<ng-container *ngIf="chips.length">
+    <mat-chip-list
+        class="mat-chip-list-stacked"
+        [matMenuTriggerFor]="canOpen ? menu : null">
+        <mat-basic-chip *ngFor="let chip of chips" class="grey" disableRipple>
+            <ng-content *ngTemplateOutlet="chip.template"></ng-content>
+        </mat-basic-chip>
+    </mat-chip-list>
+</ng-container>
+<ng-container *ngIf="chips.length < 1">
+    <mat-basic-chip
+        [matMenuTriggerFor]="canOpen ? menu : null"
+        class="grey"
+        disableRipple
+    >
+        <ng-content></ng-content>
+    </mat-basic-chip>
+</ng-container>
 
 <mat-menu #menu="matMenu">
-    <ng-content select="[menu]">
-    </ng-content>
+    <ng-content select="[menu]"></ng-content>
 </mat-menu>
