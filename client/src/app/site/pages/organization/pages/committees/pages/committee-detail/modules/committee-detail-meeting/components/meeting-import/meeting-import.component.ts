@@ -47,7 +47,7 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
 
     public getUploadFileFn(): (file: FileData) => Promise<Identifiable> {
         return async file => {
-            const meeting = await getUploadFileJson<ImportMeeting>(file, this.snackbar);
+            const meeting = await getUploadFileJson<ImportMeeting>(file, this.snackbar, this.translate);
             return this.repo.import(this._committeeId, meeting);
         };
     }

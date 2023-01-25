@@ -26,7 +26,7 @@ export class WorkflowImportComponent {
 
     public getUploadFileFn(): (file: FileData) => any {
         return async file => {
-            const workflowJson = await getUploadFileJson<any[]>(file, this.snackbar);
+            const workflowJson = await getUploadFileJson<any[]>(file, this.snackbar, this.translate);
             return this.repo.import(workflowJson);
         };
     }
