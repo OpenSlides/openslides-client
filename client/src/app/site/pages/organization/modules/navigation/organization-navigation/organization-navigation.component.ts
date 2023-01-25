@@ -17,13 +17,13 @@ export class OrganizationNavigationComponent {
         {
             route: `/`,
             displayName: `Calendar`,
-            icon: `event_available`,
+            icon: `auto_awesome_mosaic`,
             weight: 100
         },
         {
             route: `/committees`,
             displayName: `Committees`,
-            icon: `auto_awesome_mosaic`,
+            icon: `hub`,
             weight: 200
         },
         {
