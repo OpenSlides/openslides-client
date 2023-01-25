@@ -322,8 +322,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private checkForGroups(user: any): void {
+        const defaultGroupId = this.activeMeetingService.meeting!.default_group_id;
+        if (user?.group_ids.includes(defaultGroupId) && user?.group_ids.length > 1) {
+            user.group_ids = user.group_ids.filter(id => id !== defaultGroupId);
+        }
         if (!user?.group_ids.length) {
-            const defaultGroupId = this.activeMeetingService.meeting!.default_group_id;
             user.group_ids = [defaultGroupId];
         }
     }
