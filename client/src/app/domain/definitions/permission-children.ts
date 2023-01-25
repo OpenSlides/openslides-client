@@ -1,8 +1,6 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
-
 import { Permission } from './permission';
 import { PermissionsMap } from './permission.config';
-
 export const childPermissions: PermissionsMap = {
     'agenda_item.can_see': [],
     'agenda_item.can_see_internal': [Permission.agendaItemCanSee],

@@ -1,3 +1,5 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
@@ -16,9 +18,9 @@ export enum AgendaItemType {
  * Determine type for agenda items
  */
 export const ItemTypeChoices = [
-    { key: AgendaItemType.COMMON, name: `public`, csvName: `` },
-    { key: AgendaItemType.INTERNAL, name: `internal`, csvName: `internal` },
-    { key: AgendaItemType.HIDDEN, name: `hidden`, csvName: `hidden` }
+    { key: AgendaItemType.COMMON, name: _(`public`), csvName: `` },
+    { key: AgendaItemType.INTERNAL, name: _(`internal`), csvName: `internal` },
+    { key: AgendaItemType.HIDDEN, name: _(`hidden`), csvName: `hidden` }
 ];
 
 /**

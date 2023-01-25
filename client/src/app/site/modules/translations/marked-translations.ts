@@ -18,47 +18,15 @@ _(
 );
 _(`Front page text`);
 _(`[Place for your welcome text.]`);
-_(`Livestream poster image url`);
-_(`Shows if livestream is not started. Recommended image format: 500x200px, PNG or JPG`);
-_(`Number of next speakers automatically connecting to the live conference`);
 _(`Live conference has to be active. Choose 0 to disable auto connect.`);
-_(`Automatically open the microphone for new conference speakers`);
-_(`Automatically open the web cam for new conference speakers`);
+_(
+    `Dear {name},\n\nthis is your personal OpenSlides login:\n\n{url}\nUsername: {username}\nPassword: {password}\n\n\nThis email was generated automatically.`
+);
 
-// Projector config strings
-_(`Projector`);
+// Default model names
+// Projectors
 _(`Default projector`);
-_(`Projector logo`);
-_(`Projector header image`);
-_(`PDF header logo (left)`);
-_(`PDF header logo (right)`);
-_(`PDF footer logo (left)`);
-_(`PDF footer logo (right)`);
-_(`Web interface header logo`);
-_(`PDF ballot paper logo`);
-_(`Foreground color`);
-_(`Background color`);
-_(`Header background color`);
-_(`Header font color`);
-_(`Headline color`);
-_(`Chyron background color`);
-_(`Chyron font color`);
-_(`You can't delete the last projector.`);
-
-// Agenda config strings
-_(`The list of speakers is closed.`);
-_(`public`);
-_(`internal`);
-_(`hidden`);
-// agenda misc strings
-_(`Topics`);
-_(`Only main agenda items`);
-_(`Open requests to speak`);
-_(`There should be at least 2 options.`);
-
-// ** Motions **
-
-// motion workflow 1
+// Simple workflow
 _(`Simple Workflow`);
 _(`submitted`);
 _(`accepted`);
@@ -70,7 +38,7 @@ _(`Rejection`);
 _(`not decided`);
 _(`Do not decide`);
 _(`No decision`);
-// motion workflow 2
+// Complex workflow
 _(`Complex Workflow`);
 _(`in progress`);
 _(`published`);
@@ -98,138 +66,36 @@ _(`Needs review`);
 _(`rejected (not authorized)`);
 _(`Reject (not authorized)`);
 _(`Rejection (not authorized)`);
-// motion workflow manager
-_(`Recommendation label`);
-_(`Allow support`);
-_(`Allow create poll`);
-_(`Allow forwarding of motions`);
-_(`Allow submitter edit`);
-_(`Set number`);
-_(`Set timestamp of creation`);
-_(`Show state extension field`);
-_(`Show recommendation extension field`);
-_(`Show amendment in parent motion`);
-_(`Restrictions`);
-_(`Label color`);
-_(`Next states`);
-_(`grey`);
-_(`red`);
-_(`green`);
-_(`lightblue`);
-_(`yellow`);
-_(`You cannot delete the first state of the workflow.`);
-_(`You cannot delete the last workflow.`);
-_(`Submitter may set state to`);
-// misc for motions
-_(`Amendment`);
-_(`Statute amendment for`);
-_(`Statute paragraphs`);
-_(`Called`);
-_(`Called with`);
-_(`Recommendation`);
-_(`Motion block`);
-_(`The text field may not be blank.`);
-_(`The reason field may not be blank.`);
-
-// ** Assignments **
-// misc for assignments
-_(`Searching for candidates`);
-_(`In the election process`);
-_(`Finished`);
-_(`Ballot opened`);
-
-// Voting strings
-_(`Motion votes`);
-_(`Ballots`);
-_(`You cannot delegate a vote to a user who has already delegated his vote.`);
-_(`You cannot delegate a delegation of vote to another user (cascading not allowed).`);
-_(`You cannot delegate a vote to yourself.`);
-
-// ** Users **
-// permission strings (see models.py of each Django app)
-// agenda
-_(`Can see agenda`);
-_(`Can manage agenda`);
-_(`Can see list of speakers`);
-_(`Can manage list of speakers`);
-_(`Can see internal items and time scheduling of agenda`);
-_(`Can put oneself on the list of speakers`);
-_(`Can manage polls`);
-// assignments
-_(`Can see elections`);
-_(`Can nominate another participant`);
-_(`Can nominate oneself`);
-_(`Can manage elections`);
-_(`Electronic voting is disabled. Only analog polls are allowed`);
-_(`Anonymizing can only be done after finishing a poll.`);
-_(`You can just anonymize named polls`);
-_(`You cannot vote since your vote right is delegated.`);
-// core
-_(`Can see the projector`);
-_(`Can manage the projector`);
-_(`Can see the autopilot`);
-_(`Can see the front page`);
-_(`Can manage tags`);
-_(`Can manage settings`);
-_(`Can manage logos and fonts`);
-_(`Can see history`);
-_(`Can see the live stream`);
-_(`Can manage the chat`);
-// mediafiles
-_(`Can see the list of files`);
-_(`Can upload files`);
-_(`Can manage files`);
-_(`Can see hidden files`);
-_(`A file with this title or filename already exists in this directory.`);
-_(`The name contains invalid characters: "/"`);
-_(`The directory does not exist`);
-// motions
-_(`Can see motions`);
-_(`Can see motions in internal state`);
-_(`Can create motions`);
-_(`Can support motions`);
-_(`Can manage motions`);
-_(`Can forward motions into this meeting`);
-_(`Can see comments`);
-_(`Can manage comments`);
-_(`Can manage motion metadata`);
-_(`Can create amendments`);
-_(`Can manage motion polls`);
-
-// users
-_(`Can see participants`);
-_(`Can manage presence of others`);
-_(`Can manage participants`);
-
-// users config
-_(`Email body`);
-_(
-    `Dear {name},\n\nthis is your personal OpenSlides login:\n\n{url}\nUsername: {username}\nPassword: {password}\n\n\nThis email was generated automatically.`
-);
-
-// users misc
-_(`Username or password is not correct.`);
-_(`Please login via your identity provider`);
-_(`You are not authenticated.`);
-_(`Guest`);
-_(`Participant`);
-_(`No users with email {0} found.`);
-_(`You can not delete yourself.`);
-_(`You can not deactivate yourself.`);
-_(`Natural person`);
-_(`No.`);
-_(`Full name`);
-
-// default groups
+// Default groups
 _(`Default`);
 _(`Admin`);
 _(`Delegates`);
 _(`Staff`);
 _(`Committees`);
+// Default users
+_(`Administrator`);
+// Countdowns
+_(`Voting`);
+_(`Speaking time`);
+
+// Backend error messages
+// Workflows
+_(`You cannot delete the last workflow of a meeting.`);
+_(
+    `You cannot delete the workflow as long as it is selected as default workflow for new motions in the settings. Please set another workflow as default in the settings and try to delete the workflow again.`
+);
+// Motions
+_(`Reason is required`);
+// Polls
+_(`Anonymizing can only be done after finishing a poll.`);
+_(`You can only anonymize named polls.`);
+_(`You cannot vote since your vote right is delegated.`);
+// Users
+_(`Username or password is incorrect.`);
+_(`The account is deactivated.`);
+_(`You cannot delete yourself.`);
 
 // ** History **
-// meta
-_(`OpenSlides is temporarily reset to following timestamp`);
 // actual history entries
 _(`Motion created`);
 _(`Motion deleted`);
@@ -300,7 +166,7 @@ _(`Committee Management Level changed`);
 _(`Organization Management Level changed`);
 _(`Set active`);
 _(`Set inactive`);
-// deprecated
+// Deprecated entries, might still be in the database
 _(`State changed`);
 _(`Recommendation changed`);
 _(`Category changed`);
@@ -314,32 +180,8 @@ _(`started`);
 _(`stopped`);
 _(`anonymized`);
 
-// core misc strings
-_(`items per page`);
-_(`Tag`);
-_(`Not allowed in demo mode`);
-
 // strings which are not extracted as translateable strings from client code
-_(`Foreground color`);
-_(`Background color`);
-_(`Header background color`);
-_(`Header font color`);
-_(`Headline color`);
-_(`Chyron background color`);
-_(`Chyron font color`);
-_(`Show full text`);
-_(`Hide more text`);
-_(`Show password`);
-_(`Hide password`);
-_(`result`);
-_(`results`);
-_(`Voting`);
-_(`Speaking time`);
 
 // organization strings
-_(`Administrator`);
-_(`Default committee`);
-_(`Default meeting`);
-_(`Assigned accounts`);
 _(`Amount of meetings`);
 _(`Amount of accounts`);

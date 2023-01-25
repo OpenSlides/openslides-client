@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
@@ -24,8 +25,8 @@ export class TopicImportService extends BaseImportService<Topic> {
      * List of possible errors and their verbose explanation
      */
     public override errorList = {
-        NoTitle: `A Topic needs a title`,
-        ParsingErrors: `Some csv values could not be read correctly.`
+        NoTitle: _(`A topic needs a title`),
+        ParsingErrors: _(`Some csv values could not be read correctly.`)
     };
 
     /**
@@ -88,13 +89,6 @@ export class TopicImportService extends BaseImportService<Topic> {
     public parseType(input: string | number): AgendaItemType {
         if (typeof input === `string`) {
             const visibility = ItemTypeChoices.find(choice => choice.csvName === input);
-            if (visibility) {
-                return visibility.key;
-            }
-        }
-        if (input === 1) {
-            // Compatibility with the old client's isInternal column
-            const visibility = ItemTypeChoices.find(choice => choice.name === `Internal item`);
             if (visibility) {
                 return visibility.key;
             }
