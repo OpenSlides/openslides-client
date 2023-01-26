@@ -21,6 +21,12 @@ export class OrganizationNavigationComponent {
             weight: 100
         },
         {
+            route: `/meetings`,
+            displayName: `Meetings`,
+            icon: `event_available`,
+            weight: 150
+        },
+        {
             route: `/committees`,
             displayName: `Committees`,
             icon: `layers`,

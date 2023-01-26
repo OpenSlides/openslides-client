@@ -18,4 +18,11 @@ export class MeetingTimeComponent {
 
     @Input()
     public cssClass: string | string[] = [];
+
+    /**
+     * Splits up into multiple lines if true.
+     * Use if it is supposed to fit into a slim element
+     */
+    @Input()
+    public breakLines?: boolean = false;
 }

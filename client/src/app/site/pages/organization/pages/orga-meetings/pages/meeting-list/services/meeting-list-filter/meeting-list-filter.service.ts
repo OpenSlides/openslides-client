@@ -1,0 +1,42 @@
+import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { BaseFilterListService } from 'src/app/site/base/base-filter.service';
+import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
+import { OsFilter } from 'src/app/ui/modules/list';
+
+import { MeetingListServiceModule } from '../meeting-list-service.module';
+
+@Injectable({
+    providedIn: MeetingListServiceModule
+})
+export class MeetingListFilterService extends BaseFilterListService<ViewMeeting> {
+    protected storageKey = `MeetingList`;
+
+    public constructor(store: ActiveFiltersService) {
+        super(store);
+    }
+
+    protected getFilterDefinitions(): OsFilter<ViewMeeting>[] {
+        return [
+            {
+                property: `isArchived`,
+                label: _(`Archived`),
+                options: [
+                    { label: _(`Is Archived`), condition: true },
+                    { label: _(`Is not archived`), condition: [false, null] }
+                ]
+            },
+            {
+                property: `relatedTime`,
+                label: _(`Time`),
+                options: [
+                    { label: _(`Today`), condition: RelatedTime.Current },
+                    { label: _(`Ended`), condition: RelatedTime.Past },
+                    { label: _(`Future`), condition: RelatedTime.Future },
+                    { label: _(`Dateless`), condition: RelatedTime.Dateless }
+                ]
+            }
+        ];
+    }
+}

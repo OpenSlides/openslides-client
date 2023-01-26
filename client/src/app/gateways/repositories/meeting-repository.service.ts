@@ -61,7 +61,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `user_ids`,
             `description`,
             `location`,
-            `organization_tag_ids`
+            `organization_tag_ids`,
+            `motion_ids`
         ]);
         const listFields: TypedFieldset<Meeting> = sharedFields.concat([
             `default_group_id`,

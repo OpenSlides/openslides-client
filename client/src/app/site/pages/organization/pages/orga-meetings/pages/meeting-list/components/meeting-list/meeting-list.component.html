@@ -1,0 +1,161 @@
+<os-head-bar
+    [multiSelectMode]="isMultiSelect"
+>
+    <!-- Title -->
+    <div class="title-slot">
+        <h2>{{ 'Meetings' | translate }}</h2>
+    </div>
+
+    <!-- Menu -->
+    <!-- Only organization managers can do something -->
+    <div class="menu-slot" *osOmlPerms="OML.superadmin">
+        <button type="button" mat-icon-button [matMenuTriggerFor]="meetingMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+
+    <!-- Multiselect info -->
+    <div class="central-info-slot">
+        <button mat-icon-button (click)="toggleMultiSelect()"><mat-icon>arrow_back</mat-icon></button>
+        <span>{{ selectedRows.length }}&nbsp;</span>
+        <span>{{ 'selected' | translate }}</span>
+    </div>
+</os-head-bar>
+
+<os-list
+    [listObservable]="meetingsObservable"
+    [multiSelect]="isMultiSelect"
+    [alwaysShowMenu]="true"
+    [filterProps]="['name']"
+    [hiddenInMobile]="['archived', 'description', 'meta']"
+    [sortService]="sortService"
+    [filterService]="filterService"
+    [(selectedRows)]="selectedRows"
+    [vScrollFixed]="70"
+>
+    <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot">
+        <a
+            class="stretch-to-fill-parent"
+            [routerLink]="'/' + meeting.id + ''"
+            *ngIf="!isMultiSelect && meeting.canAccess()"
+        ></a>
+        <div>
+            <div class="title-line ellipsis-overflow">
+                {{ meeting.name | translate }}
+
+                <div class="subtitle" *ngIf="meeting.committee?.name">
+                    {{ 'Committee' | translate }}: {{ meeting.committee?.name | translate }}
+                </div>
+
+                <div class="subtitle" *ngIf="meeting.location">
+                    {{ 'Location' | translate }}: {{ meeting.location | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *osScrollingTableCell="'archived'; row as meeting; config: { width: 30 }">
+        <div *ngIf="meeting.isArchived">
+            <os-icon-container iconTooltip="{{ 'This meeting is archived' | translate }}" icon="archive"></os-icon-container>
+        </div>
+    </div>
+
+    <div *osScrollingTableCell="'description'; row as meeting">
+        <div *ngIf="meeting.description?.trim()">
+            {{ meeting.description }}
+        </div>
+    </div>
+
+    <div *osScrollingTableCell="'time'; row as meeting; config: { width: 70 }" class="cell-slot">
+        <div>
+            <div class="ellipsis-overflow">
+                <os-meeting-time [meeting]="meeting" [breakLines]="true"></os-meeting-time>
+            </div>
+        </div>
+    </div>
+
+    <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }">
+        <div>
+            <div *ngIf="meeting.userAmount">
+                <os-icon-container iconTooltip="{{ 'Participants' | translate }}" icon="group">
+                    {{ meeting.userAmount }}
+                </os-icon-container>
+            </div>
+            <div *ngIf="meeting.motionsAmount">
+                <os-icon-container iconTooltip="{{ 'Motions' | translate }}" icon="assignment">
+                    {{ meeting.motionsAmount }}
+                </os-icon-container>
+            </div>
+        </div>
+    </div>
+
+    <div *osScrollingTableCell="'menu'; row as meeting; config: { width: 40 }">
+        <button
+            *osCmlPerms="CML.can_manage; committeeId: meeting.committee?.id; nonAdminCheck: true"
+            mat-icon-button
+            [disabled]="isMultiSelect"
+            [matMenuTriggerFor]="singleMeetingMenu"
+            [matMenuTriggerData]="{ meeting: meeting }"
+            (click)="$event.stopPropagation()"
+            data-cy="meetingListSingleMenuTrigger"
+        >
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+</os-list>
+
+<mat-menu #singleMeetingMenu="matMenu">
+    <ng-template matMenuContent let-meeting="meeting">
+        <button
+            mat-menu-item
+            type="button"
+            data-cy="meetingListSingleEditButton"
+            (click)="editSingle(meeting)"
+        >
+            <mat-icon>edit</mat-icon>
+            <span>
+                {{ 'Edit' | translate }}
+            </span>
+        </button>
+        <button
+            mat-menu-item
+            type="button"
+            data-cy="meetingListSingleDeleteButton"
+            class="red-warning-text"
+            (click)="doDelete(meeting)"
+        >
+            <mat-icon>delete</mat-icon>
+            <span>
+                {{ 'Delete' | translate }}
+            </span>
+        </button>
+    </ng-template>
+</mat-menu>
+
+<mat-menu #meetingMenu="matMenu">
+    <div *ngIf="!isMultiSelect">
+        <button mat-menu-item (click)="toggleMultiSelect()">
+            <mat-icon>library_add</mat-icon>
+            <span>{{ 'Multiselect' | translate }}</span>
+        </button>
+    </div>
+    <div *ngIf="isMultiSelect">
+        <button mat-menu-item (click)="selectAll()">
+            <mat-icon>done_all</mat-icon>
+            <span>{{ 'Select all' | translate }}</span>
+        </button>
+        <button mat-menu-item [disabled]="!selectedRows.length" (click)="deselectAll()">
+            <mat-icon>clear</mat-icon>
+            <span>{{ 'Deselect all' | translate }}</span>
+        </button>
+
+        <ng-container *osOmlPerms="OML.superadmin">
+            <mat-divider></mat-divider>
+
+            <button mat-menu-item [disabled]="!selectedRows.length" class="red-warning-text" (click)="doDelete()">
+                <mat-icon>delete</mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+            </button>
+        </ng-container>
+    </div>
+</mat-menu>
