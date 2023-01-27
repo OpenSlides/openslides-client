@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
-    selector: `[trimOnPaste]`
+    selector: `[osTrimOnPaste]`
 })
 export class TrimOnPasteDirective {
     constructor(private el: ElementRef) {}
