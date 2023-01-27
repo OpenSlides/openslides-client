@@ -2,7 +2,7 @@ import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
-import { VoteValuesVerbose } from 'src/app/domain/models/poll';
+import { PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -13,6 +13,8 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 
 import { ViewUser } from '../../../view-models/view-user';
 import { EntitledUsersTableEntry } from '../definitions';
+import { PollKeyVerbosePipe } from '../pipes';
+import { PollService } from '../services/poll.service';
 import { BaseVoteData } from './base-poll-detail.component';
 
 /**
@@ -66,7 +68,9 @@ export abstract class BasePollPdfService {
         protected activeMeetingService: ActiveMeetingService,
         protected mediaManageService: MediaManageService,
         protected pdfExport: MeetingPdfExportService,
-        protected translate: TranslateService
+        protected translate: TranslateService,
+        protected pollService: PollService,
+        private pollKeyVerbose: PollKeyVerbosePipe
     ) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
@@ -252,6 +256,8 @@ export abstract class BasePollPdfService {
         };
     }
 
+    protected abstract getPollResultFileNamePrefix(poll: ViewPoll): string;
+
     /**
      * Downloads a pdf with the ballot papet page definitions.
      *
@@ -303,7 +309,7 @@ export abstract class BasePollPdfService {
         }
 
         const doc = this.pollToDocDef(poll, exportInfo);
-        const filename = `${this.translate.instant(`Poll result`)} ${poll.getTitle()}`;
+        const filename = `${this.getPollResultFileNamePrefix(poll)}-${poll.getTitle()}`;
         const metadata = {
             title: filename
         };
@@ -328,10 +334,22 @@ export abstract class BasePollPdfService {
 
         pollResultPdfContent = [title];
 
+        const resultsTable = this.pollService.generateTableData(poll);
+
+        if (resultsTable) {
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Poll results`),
+                margin: [0, 0, 0, 5],
+                bold: true
+            });
+            const resultsData = this.createResultsTable(poll, resultsTable);
+            pollResultPdfContent.push(resultsData);
+        }
+
         if (exportInfo.votesData?.length) {
             pollResultPdfContent.push({
-                text: this.translate.instant(`Vote results`),
-                margin: [0, 0, 0, 5],
+                text: this.translate.instant(`Single votes`),
+                margin: [0, 20, 0, 5],
                 bold: true
             });
             const votesData = this.createVotesTable(exportInfo.votesData);
@@ -352,6 +370,87 @@ export abstract class BasePollPdfService {
     }
 
     /**
+     * Creates the poll result table for the given poll
+     *
+     * @returns the table as pdfmake object
+     */
+    private createResultsTable(poll: ViewPoll, resultsTableData: PollTableData[]): object {
+        const resultsTable = (JSON.parse(JSON.stringify(resultsTableData)) as PollTableData[]).map(date => {
+            const forbidden = [`yes`, `no`, `abstain`].filter(
+                option => !poll.pollmethod.includes(option.charAt(0).toUpperCase())
+            );
+            date.value = date.value?.filter(val => !forbidden.includes(val.vote));
+            return date;
+        });
+        const amountColumns = Math.max(...resultsTable.map(row => row.value.length));
+        const template = resultsTable.find(row => row.value.length === amountColumns);
+        const pollTableBody: any[] = [
+            [
+                {
+                    text: this.translate.instant(`Option`),
+                    style: `tableHeader`
+                },
+                ...template.value.map(value => {
+                    return {
+                        text: this.translate.instant(value.vote ? this.pollKeyVerbose.transform(value.vote) : `Votes`),
+                        style: `tableHeader`
+                    };
+                })
+            ]
+        ];
+
+        let i = 0;
+        for (const date of resultsTable) {
+            const tableLine = [
+                {
+                    text: this.translate.instant(this.pollKeyVerbose.transform(date.votingOption))
+                },
+                ...Array.from({ length: amountColumns }, () => 0)
+                    .map((_, index) => {
+                        const hasValue = index < date.value.length;
+                        const currentValue: VotingResult = hasValue
+                            ? date.value[date.value.length - (index + 1)]
+                            : undefined;
+                        return hasValue
+                            ? {
+                                  text: `${currentValue.amount}${
+                                      [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption)
+                                          ? ` (${this.pollService.getVoteValueInPercent(
+                                                currentValue.amount,
+                                                currentValue.vote ? { poll, row: resultsTableData[i] } : { poll }
+                                            )})`
+                                          : ``
+                                  }`
+                              }
+                            : { text: `` };
+                    })
+                    .reverse()
+            ];
+
+            pollTableBody.push(tableLine);
+            i++;
+        }
+
+        return this.generateResultsTableObject(pollTableBody, amountColumns);
+    }
+
+    private generateResultsTableObject(pollTableBody: any[], amountColumns: number): object {
+        return [
+            {
+                table: {
+                    widths: [
+                        `${50 + (50 % amountColumns)}%`,
+                        ...Array.from({ length: amountColumns }, () => `${Math.floor(50 / amountColumns)}%`)
+                    ],
+                    headerRows: 1,
+                    body: pollTableBody
+                },
+                layout: `switchColorTableLayout`
+            }
+        ];
+    }
+
+    /**
      * Creates the poll vote table for the given votesData
      *
      * @returns the table as pdfmake object
@@ -359,6 +458,10 @@ export abstract class BasePollPdfService {
     private createVotesTable(votesData: BaseVoteData[]): object {
         const pollTableBody: any[] = [
             [
+                {
+                    text: ``,
+                    style: `tableHeader`
+                },
                 {
                     text: this.translate.instant(`Participant`),
                     style: `tableHeader`
@@ -370,10 +473,14 @@ export abstract class BasePollPdfService {
             ]
         ];
 
+        let index = 1;
         for (const date of votesData.sort((entryA, entryB) =>
             entryA.user?.getName().localeCompare(entryB.user?.getName())
         )) {
             const tableLine = [
+                {
+                    text: index
+                },
                 {
                     text: this.getUserNameForExport(date.user)
                 },
@@ -383,6 +490,7 @@ export abstract class BasePollPdfService {
             ];
 
             pollTableBody.push(tableLine);
+            index++;
         }
         return this.generateTableObject(pollTableBody);
     }
@@ -396,6 +504,10 @@ export abstract class BasePollPdfService {
         const pollTableBody: any[] = [
             [
                 {
+                    text: ``,
+                    style: `tableHeader`
+                },
+                {
                     text: this.translate.instant(`Participant`),
                     style: `tableHeader`
                 },
@@ -406,10 +518,14 @@ export abstract class BasePollPdfService {
             ]
         ];
 
+        let index = 1;
         for (const date of usersData.sort((entryA, entryB) =>
             entryA.user?.getName().localeCompare(entryB.user?.getName())
         )) {
             const tableLine = [
+                {
+                    text: index
+                },
                 {
                     text:
                         this.getUserNameForExport(date.user) +
@@ -424,6 +540,7 @@ export abstract class BasePollPdfService {
             ];
 
             pollTableBody.push(tableLine);
+            index++;
         }
         return this.generateTableObject(pollTableBody);
     }
@@ -432,7 +549,7 @@ export abstract class BasePollPdfService {
         return [
             {
                 table: {
-                    widths: [`50%`, `50%`],
+                    widths: [`4%`, `48%`, `48%`],
                     headerRows: 1,
                     body: pollTableBody
                 },
