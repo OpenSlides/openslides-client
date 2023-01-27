@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Id, Ids } from '../../../domain/definitions/key-types';
+import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
 import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
@@ -83,6 +83,7 @@ class AutoupdateEndpoint extends EndpointConfiguration {
 }
 
 const COLLECTION_INDEX = 0;
+const ID_INDEX = 1;
 const FIELD_INDEX = 2;
 
 @Injectable({
@@ -213,25 +214,43 @@ export class AutoupdateService {
 
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
-        const fullListUpdateCollections: { [collection: string]: Ids } = {};
-        for (const key of Object.keys(autoupdateData)) {
-            const data = key.split(`/`);
-            const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
-            const { modelRequest } = this._activeRequestObjects[id];
-            if (!modelRequest) {
-                continue;
-            }
-            if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
-                fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
-                    autoupdateData[key];
+        const fullListUpdateCollections: {
+            [collection: string]: Ids;
+        } = {};
+        const exclusiveListUpdateCollections: {
+            [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
+        } = {};
+
+        const { modelRequest } = this._activeRequestObjects[id];
+        if (modelRequest) {
+            for (const key of Object.keys(autoupdateData)) {
+                const data = key.split(`/`);
+                const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
+                if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
+                    fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
+                        autoupdateData[key];
+                } else if (modelRequest.getExclusiveListUpdateCollectionRelations().includes(collectionRelation)) {
+                    exclusiveListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] = {
+                        ids: autoupdateData[key],
+                        parentCollection: data[COLLECTION_INDEX],
+                        parentField: data[FIELD_INDEX],
+                        parentId: +data[ID_INDEX]
+                    };
+                }
             }
         }
-        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, id);
+
+        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, exclusiveListUpdateCollections, id);
     }
 
     private async prepareCollectionUpdates(
         modelData: ModelData,
-        fullListUpdateCollections: { [collection: string]: Id[] },
+        fullListUpdateCollections: {
+            [collection: string]: Ids;
+        },
+        exclusiveListUpdateCollections: {
+            [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
+        },
         requestId: number
     ): Promise<void> {
         const unlock = await this._mutex.lock();
@@ -239,7 +258,8 @@ export class AutoupdateService {
         this.viewmodelStoreUpdate
             .triggerUpdate({
                 patch: modelData,
-                changedModels: fullListUpdateCollections,
+                changedModels: exclusiveListUpdateCollections,
+                changedFullListModels: fullListUpdateCollections,
                 deletedModels: {}
             })
             .then(() => {
