@@ -17,7 +17,7 @@ export class OrganizationNavigationComponent {
         {
             route: `/`,
             displayName: `Calendar`,
-            icon: `auto_awesome_mosaic`,
+            icon: `apps`,
             weight: 100
         },
         {
