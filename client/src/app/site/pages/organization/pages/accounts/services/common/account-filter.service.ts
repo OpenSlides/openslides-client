@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Injectable({
     providedIn: `root`
@@ -10,11 +12,37 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 export class AccountFilterService extends BaseFilterListService<ViewUser> {
     protected storageKey = `MemberList`;
 
-    public constructor(store: ActiveFiltersService, private translate: TranslateService) {
+    public constructor(
+        store: ActiveFiltersService,
+        private translate: TranslateService,
+        private operator: OperatorService
+    ) {
         super(store);
     }
 
     protected getFilterDefinitions(): OsFilter<ViewUser>[] {
+        const nonStaticFilterDefinitions = [
+            ...((this.operator.hasOrganizationPermissions(OML.can_manage_organization)
+                ? [
+                      {
+                          property: `isInActiveMeeting`,
+                          label: this.translate.instant(`Active meetings`),
+                          options: [
+                              { condition: true, label: this.translate.instant(`Is in active meetings`) },
+                              { condition: [false, null], label: this.translate.instant(`Is not in active meetings`) }
+                          ]
+                      },
+                      {
+                          property: `isInArchivedMeeting`,
+                          label: this.translate.instant(`Archived meetings`),
+                          options: [
+                              { condition: true, label: this.translate.instant(`Is in archived meetings`) },
+                              { condition: [false, null], label: this.translate.instant(`Is not in archived meetings`) }
+                          ]
+                      }
+                  ]
+                : []) as OsFilter<ViewUser>[])
+        ];
         const staticFilterDefinitions: OsFilter<ViewUser>[] = [
             {
                 property: `is_active`,
@@ -93,6 +121,6 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             }
         ];
-        return staticFilterDefinitions;
+        return staticFilterDefinitions.concat(nonStaticFilterDefinitions);
     }
 }

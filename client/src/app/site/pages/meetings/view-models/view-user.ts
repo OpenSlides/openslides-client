@@ -84,6 +84,14 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.user.meeting_ids || [];
     }
 
+    public get isInActiveMeeting(): boolean {
+        return this.meetings.some(meeting => meeting.isActive);
+    }
+
+    public get isInArchivedMeeting(): boolean {
+        return this.meetings.some(meeting => meeting.isArchived);
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
