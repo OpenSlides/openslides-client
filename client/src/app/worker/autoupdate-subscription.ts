@@ -3,11 +3,6 @@ import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } 
 
 export class AutoupdateSubscription {
     /**
-     * Full data object received by autoupdate
-     */
-    public currentData: Object | null = null;
-
-    /**
      * The stream handling this subscription
      */
     public stream: AutoupdateStream;
@@ -48,18 +43,11 @@ export class AutoupdateSubscription {
     }
 
     /**
-     * Updates the internal data state and sends the given data
-     * to all registered MessagePorts.
+     * Sends the given data to all registered MessagePorts.
      *
      * @param data The data to be processed
      */
     public updateData(data: Object): void {
-        if (this.currentData === null) {
-            this.currentData = data;
-        } else {
-            this.currentData = Object.assign(this.currentData, data);
-        }
-
         for (let port of this.ports) {
             port.postMessage({
                 sender: `autoupdate`,
@@ -131,13 +119,13 @@ export class AutoupdateSubscription {
      * @param port The MessagePort the data should be send to
      */
     public resendTo(port: MessagePort): void {
-        if (this.currentData !== null) {
+        if (this.stream.currentData !== null) {
             port.postMessage({
                 sender: `autoupdate`,
                 action: `receive-data`,
                 content: {
                     streamId: this.id,
-                    data: this.currentData,
+                    data: this.stream.currentData,
                     description: this.description
                 }
             } as AutoupdateReceiveData);
