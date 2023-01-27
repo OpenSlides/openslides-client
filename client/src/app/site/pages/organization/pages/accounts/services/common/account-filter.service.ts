@@ -31,6 +31,14 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                               { condition: true, label: this.translate.instant(`Is in active meetings`) },
                               { condition: [false, null], label: this.translate.instant(`Is not in active meetings`) }
                           ]
+                      },
+                      {
+                          property: `isInArchivedMeeting`,
+                          label: this.translate.instant(`Archived meetings`),
+                          options: [
+                              { condition: true, label: this.translate.instant(`Is in archived meetings`) },
+                              { condition: [false, null], label: this.translate.instant(`Is not in archived meetings`) }
+                          ]
                       }
                   ]
                 : []) as OsFilter<ViewUser>[])
