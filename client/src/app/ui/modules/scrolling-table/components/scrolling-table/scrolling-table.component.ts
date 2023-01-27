@@ -2,7 +2,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
-import { BehaviorSubject, map, Observable, window } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mapable, Mutable } from 'src/app/infrastructure/utils';
 import { KeyCode } from 'src/app/infrastructure/utils/key-code';
