@@ -1,44 +1,16 @@
 <ng-container *ngIf="cellDefinitionsObservable | async as definitions">
     <ng-container *ngIf="hasDataObservable | async; else noDataTemplate">
-        <cdk-virtual-scroll-viewport class="virtual-scroll-viewport background-card" [itemSize]="rowHeight">
-            <div
-                *ngIf="showHeader"
-                class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
-                [ngStyle]="ngStyle"
-            >
-                <ng-container *ngFor="let definition of definitions; let first = first">
-                    <div
-                        class="scrolling-table-cell flex-vertical-center subtitle"
-                        [ngClass]="{ 'divider-left': !first }"
-                        [ngStyle]="{
-                            flexBasis: definition.width || defaultColumnWidth,
-                            width: definition.width || defaultColumnWidth,
-                            minWidth: definition.minWidth || defaultColumnWidth,
-                            maxWidth: definition.maxWidth || defaultColumnWidth
-                        }"
-                    >
-                        <ng-template [ngIf]="definition.labelTemplate">
-                            <ng-template [cdkPortalOutlet]="definition.labelTemplate"></ng-template>
-                        </ng-template>
-                        <ng-template [ngIf]="!definition.labelTemplate">
-                            <ng-template>{{ definition.labelString }}</ng-template>
-                        </ng-template>
-                    </div>
-                </ng-container>
-            </div>
-            <ng-container *cdkVirtualFor="let item of dataSource">
+        <div [style.height]="calculateContainerHeight()">
+            <cdk-virtual-scroll-viewport class="virtual-scroll-viewport background-card" [itemSize]="rowHeight">
                 <div
-                    class="scrolling-table-row divider-bottom flex-center"
-                    [ngClass]="rowClass"
+                    *ngIf="showHeader"
+                    class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
                     [ngStyle]="ngStyle"
-                    (click)="onRowClick($event, item)"
                 >
-                    <div *ngIf="isSelectionMode" class="selection-cell scrolling-table-cell flex-vertical-center">
-                        <mat-checkbox [class.mat-checkbox-disabled]="false" [checked]="isSelected(item)" disabled></mat-checkbox>
-                    </div>
-                    <ng-container *ngFor="let definition of definitions">
+                    <ng-container *ngFor="let definition of definitions; let first = first">
                         <div
-                            class="scrolling-table-cell flex-vertical-center"
+                            class="scrolling-table-cell flex-vertical-center subtitle"
+                            [ngClass]="{ 'divider-left': !first }"
                             [ngStyle]="{
                                 flexBasis: definition.width || defaultColumnWidth,
                                 width: definition.width || defaultColumnWidth,
@@ -46,21 +18,51 @@
                                 maxWidth: definition.maxWidth || defaultColumnWidth
                             }"
                         >
-                            <ng-container
-                                *ngTemplateOutlet="
-                                    definition.template;
-                                    context: {
-                                        row: item,
-                                        value: item[definition.property],
-                                        definition: definition.property
-                                    }
-                                "
-                            ></ng-container>
+                            <ng-template [ngIf]="definition.labelTemplate">
+                                <ng-template [cdkPortalOutlet]="definition.labelTemplate"></ng-template>
+                            </ng-template>
+                            <ng-template [ngIf]="!definition.labelTemplate">
+                                <ng-template>{{ definition.labelString }}</ng-template>
+                            </ng-template>
                         </div>
                     </ng-container>
                 </div>
-            </ng-container>
-        </cdk-virtual-scroll-viewport>
+                <ng-container *cdkVirtualFor="let item of dataSource">
+                    <div
+                        class="scrolling-table-row divider-bottom flex-center"
+                        [ngClass]="rowClass"
+                        [ngStyle]="ngStyle"
+                        (click)="onRowClick($event, item)"
+                    >
+                        <div *ngIf="isSelectionMode" class="selection-cell scrolling-table-cell flex-vertical-center">
+                            <mat-checkbox [class.mat-checkbox-disabled]="false" [checked]="isSelected(item)" disabled></mat-checkbox>
+                        </div>
+                        <ng-container *ngFor="let definition of definitions">
+                            <div
+                                class="scrolling-table-cell flex-vertical-center"
+                                [ngStyle]="{
+                                    flexBasis: definition.width || defaultColumnWidth,
+                                    width: definition.width || defaultColumnWidth,
+                                    minWidth: definition.minWidth || defaultColumnWidth,
+                                    maxWidth: definition.maxWidth || defaultColumnWidth
+                                }"
+                            >
+                                <ng-container
+                                    *ngTemplateOutlet="
+                                        definition.template;
+                                        context: {
+                                            row: item,
+                                            value: item[definition.property],
+                                            definition: definition.property
+                                        }
+                                    "
+                                ></ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </cdk-virtual-scroll-viewport>
+        </div>
     </ng-container>
 </ng-container>
 
