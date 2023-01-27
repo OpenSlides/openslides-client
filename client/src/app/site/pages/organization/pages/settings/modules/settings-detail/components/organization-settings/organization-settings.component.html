@@ -40,7 +40,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>{{ 'Reply address' | translate }}</mat-label>
-                <input matInput formControlName="users_email_replyto" />
+                <input matInput formControlName="users_email_replyto" trimOnPaste />
                 <mat-error>
                     {{ 'Please enter a valid email address' | translate }}
                 </mat-error>
