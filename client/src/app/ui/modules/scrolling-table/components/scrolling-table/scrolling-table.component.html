@@ -67,7 +67,7 @@
 </ng-container>
 
 <ng-template #noDataTemplate>
-    <div class="scrolling-table--no-data-wrapper background-card">
+    <div class="scrolling-table--no-data-wrapper" [style.height]="calculateContainerHeight()">
         <ng-template [cdkPortalOutlet]="noDataTemplateObservable | async"></ng-template>
     </div>
 </ng-template>

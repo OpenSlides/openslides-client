@@ -212,6 +212,10 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             return this.tableHeight;
         }
 
+        if (!this._dataSource.getValue().length) {
+            return `50vh`;
+        }
+
         return this.rowHeight * this._dataSource.getValue().length + `px`;
     }
 
