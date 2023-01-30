@@ -439,8 +439,8 @@ export abstract class BasePollPdfService {
             {
                 table: {
                     widths: [
-                        `${50 + (50 % amountColumns)}%`,
-                        ...Array.from({ length: amountColumns }, () => `${Math.floor(50 / amountColumns)}%`)
+                        `54%`,
+                        ...Array.from({ length: amountColumns }, () => `${Math.floor(46 / amountColumns)}%`)
                     ],
                     headerRows: 1,
                     body: pollTableBody
