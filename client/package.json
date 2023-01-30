@@ -91,7 +91,7 @@
     "@angular/cli": "^14.2.6",
     "@angular/compiler-cli": "^14.2.6",
     "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
-    "@jsangmeister/ngx-translate-extract": "github:jsangmeister/ngx-translate-extract#openslides",
+    "@jsangmeister/ngx-translate-extract": "github:OpenSlides/ngx-translate-extract",
     "@types/file-saver": "^2.0.5",
     "@types/jasmine": "~3.10.0",
     "@types/js-yaml": "^4.0.5",
