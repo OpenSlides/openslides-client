@@ -47,6 +47,10 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
         return this.repo.update(update, group);
     }
 
+    public bulkUpdate(...update: Partial<Group>[]): Promise<any> {
+        return this.repo.bulkUpdate(...update);
+    }
+
     public delete(group: Identifiable): Promise<void> {
         return this.repo.delete(group);
     }

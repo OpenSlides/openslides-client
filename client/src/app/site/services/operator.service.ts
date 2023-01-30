@@ -7,7 +7,7 @@ import { ModelRequestBuilderService } from 'src/app/site/services/model-request-
 import { Id } from '../../domain/definitions/key-types';
 import { CML, cmlNameMapping, OML, omlNameMapping } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
-import { childPermissions } from '../../domain/definitions/permission-children';
+import { permissionChildren } from '../../domain/definitions/permission-relations';
 import { Committee } from '../../domain/models/comittees/committee';
 import { Group } from '../../domain/models/users/group';
 import { Deferred } from '../../infrastructure/utils/promises';
@@ -473,8 +473,8 @@ export class OperatorService {
         // add implicitly given children
         // copy set beforehand to not iterate over the newly added members
         for (const permission of new Set(permissionSet)) {
-            for (const childPermission of childPermissions[permission]!) {
-                permissionSet.add(childPermission);
+            for (const permissionChild of permissionChildren[permission]!) {
+                permissionSet.add(permissionChild);
             }
         }
         return Array.from(permissionSet.values());

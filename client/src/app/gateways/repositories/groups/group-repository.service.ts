@@ -57,6 +57,10 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
         return this.sendActionToBackend(GroupAction.UPDATE, payload);
     }
 
+    public bulkUpdate(...update: Partial<Group>[]): Promise<any> {
+        return this.createAction(GroupAction.UPDATE, update).resolve();
+    }
+
     public delete(group: Identifiable): Promise<void> {
         return this.sendActionToBackend(GroupAction.DELETE, { id: group.id });
     }
