@@ -84,6 +84,12 @@ _(`You cannot delete the last workflow of a meeting.`);
 _(
     `You cannot delete the workflow as long as it is selected as default workflow for new motions in the settings. Please set another workflow as default in the settings and try to delete the workflow again.`
 );
+_(
+    `You cannot delete the workflow as long as it is selected as default workflow for new amendments in the settings. Please set another workflow as default in the settings and try to delete the workflow again.`
+);
+_(
+    `You cannot delete the workflow as long as it is selected as default workflow for new statute amendments in the settings. Please set another workflow as default in the settings and try to delete the workflow again.`
+);
 // Motions
 _(`Reason is required`);
 // Polls
