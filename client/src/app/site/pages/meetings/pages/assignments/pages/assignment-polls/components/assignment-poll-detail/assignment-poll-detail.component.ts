@@ -117,6 +117,15 @@ export class AssignmentPollDetailComponent
                 }
             }
         }
+        for (const vote of this.poll.global_option.votes) {
+            if (vote.weight > 0) {
+                // global vote must be the only vote, so we can just ignore any previous value
+                votes[vote.user_token] = {
+                    user: vote.user,
+                    votes: [`${this.translate.instant(`General`)}: ${this.voteValueToLabel(vote.value)}`]
+                };
+            }
+        }
         return Object.values(votes);
     }
 
