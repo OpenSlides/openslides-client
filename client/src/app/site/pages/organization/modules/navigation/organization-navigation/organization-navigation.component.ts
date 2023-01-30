@@ -23,7 +23,7 @@ export class OrganizationNavigationComponent {
         {
             route: `/committees`,
             displayName: `Committees`,
-            icon: `hub`,
+            icon: `layers`,
             weight: 200
         },
         {
