@@ -1,21 +1,18 @@
-import { Directive, OnDestroy } from '@angular/core';
+import { Directive } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
+import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
-import { BaseModel } from '../../domain/models/base/base-model';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
 import { ModelRequestService } from '../services/model-request.service';
 
 @Directive()
-export abstract class BaseComponent implements OnDestroy {
+export abstract class BaseComponent extends BaseUiComponent {
     /**
      * To check permissions in templates using permission.[...]
      */
@@ -58,11 +55,6 @@ export abstract class BaseComponent implements OnDestroy {
      */
     private messageSnackBar: MatSnackBarRef<SimpleSnackBar> | null = null;
 
-    /**
-     * Subscriptions added to this list will be cleared 'on destroy'
-     */
-    protected subscriptions = new SubscriptionMap();
-
     protected get titleService(): Title {
         return this.componentServiceCollector.titleService;
     }
@@ -86,27 +78,19 @@ export abstract class BaseComponent implements OnDestroy {
     public constructor(
         protected componentServiceCollector: ComponentServiceCollectorService,
         protected translate: TranslateService
-    ) {}
+    ) {
+        super();
+    }
 
     /**
      * automatically dismisses the error snack bar and clears subscriptions
      * if the component is destroyed.
      */
-    public ngOnDestroy(): void {
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
         if (this.messageSnackBar) {
             this.messageSnackBar.dismiss();
         }
-
-        this.cleanSubscriptions();
-    }
-
-    public updateSubscription(name: string, subscription: Subscription): void {
-        this.clearSubscription(name);
-        this.subscriptions.updateSubscription(name, subscription);
-    }
-
-    private clearSubscription(name: string): void {
-        this.subscriptions.delete(name);
     }
 
     /**
@@ -116,22 +100,6 @@ export abstract class BaseComponent implements OnDestroy {
     public setTitle(prefix: string): void {
         const translatedPrefix = this.translate.instant(prefix);
         this.titleService.setTitle(translatedPrefix + this.titleSuffix);
-    }
-
-    /**
-     * Helper for indexed *ngFor components
-     *
-     * @param index
-     */
-    public trackByIndex(index: number): number {
-        return index;
-    }
-
-    /**
-     * Helper for *ngFor => tracked items by their corresponding id.
-     */
-    public trackById(_index: number, item: Id | BaseModel): Id {
-        return typeof item === `number` ? item : item.id;
     }
 
     /**
@@ -184,16 +152,6 @@ export abstract class BaseComponent implements OnDestroy {
         if (this.matSnackBar) {
             this.matSnackBar.dismiss();
         }
-    }
-
-    /**
-     * Manually clears all stored subscriptions.
-     * Necessary for manual routing control, since the Angular
-     * life cycle does not accept that navigation to the same URL
-     * executes the life cycle again
-     */
-    protected cleanSubscriptions(): void {
-        this.subscriptions.clear();
     }
 
     /**

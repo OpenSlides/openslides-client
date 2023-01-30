@@ -10,11 +10,6 @@ import { getDesignListSubscriptionConfig } from '../pages/designs/config/model-s
 import { ViewOrganization } from '../view-models/view-organization';
 
 /**
- * Token to get a resource dedicated to the `logo_web_header` of an organization.
- */
-export const WEB_HEADER_TOKEN = `web_header`;
-
-/**
  * The organization_id is always the 1.
  */
 export const ORGANIZATION_ID = 1;

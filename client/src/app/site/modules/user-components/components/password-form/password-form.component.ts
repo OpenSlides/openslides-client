@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { TranslateService } from '@ngx-translate/core';
+import { BaseComponent } from 'src/app/site/base/base.component';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 
 import { PasswordForm } from '../../definitions';
 import { PasswordValidator } from '../../validators';
@@ -24,7 +26,7 @@ const UndesiredPasswordFeedback = `ಠ_ಠ`;
     templateUrl: `./password-form.component.html`,
     styleUrls: [`./password-form.component.scss`]
 })
-export class PasswordFormComponent extends BaseUiComponent implements OnInit {
+export class PasswordFormComponent extends BaseComponent implements OnInit {
     @Output()
     public changeEvent = new EventEmitter<PasswordForm>();
 
@@ -38,8 +40,12 @@ export class PasswordFormComponent extends BaseUiComponent implements OnInit {
     public hideNewPassword = true;
     public hideConfirmPassword = true;
 
-    public constructor(private fb: UntypedFormBuilder) {
-        super();
+    public constructor(
+        private fb: UntypedFormBuilder,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
+    ) {
+        super(componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {

@@ -1,13 +1,12 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import { NotifyService } from 'src/app/gateways/notify.service';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 /**
  * Enum to define different types of notifications.
@@ -72,7 +71,7 @@ interface EditObject {
 @Directive({
     selector: `[osListenEditing]`
 })
-export class ListenEditingDirective extends BaseUiComponent implements OnDestroy {
+export class ListenEditingDirective extends BaseComponent implements OnDestroy {
     @Input()
     public set osListenEditing(editObject: EditObject) {
         this.isEditing = editObject.editMode;
@@ -107,27 +106,13 @@ export class ListenEditingDirective extends BaseUiComponent implements OnDestroy
 
     private isEditing = false;
 
-    private get matSnackBar(): MatSnackBar {
-        return this.componentServiceCollector.matSnackBar;
-    }
-
     public constructor(
-        private componentServiceCollector: ComponentServiceCollectorService,
-        private translate: TranslateService,
         private notifyService: NotifyService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super();
-
-        this.raiseWarning = (warn: string) => {
-            this.matSnackBar.open(warn, this.translate.instant(`OK`), {
-                duration: 0
-            });
-        };
-
-        this.closeSnackbar = (): void => {
-            this.matSnackBar.dismiss();
-        };
+        super(componentServiceCollector, translate);
     }
 
     public override ngOnDestroy(): void {
@@ -230,7 +215,7 @@ export class ListenEditingDirective extends BaseUiComponent implements OnDestroy
     private recognizeOtherWorkerOnMotion(senderName: string): void {
         this.otherWorkOnBaseModel = this.otherWorkOnBaseModel.filter(value => value !== senderName);
         if (this.otherWorkOnBaseModel.length === 0) {
-            this.closeSnackbar();
+            this.closeSnackBar();
         }
     }
 
@@ -243,7 +228,7 @@ export class ListenEditingDirective extends BaseUiComponent implements OnDestroy
     private unsubscribeEditNotifications(unsubscriptionReason: EditNotificationType): void {
         if (this.editNotificationSubscription && !this.editNotificationSubscription.closed) {
             this.sendEditNotification(unsubscriptionReason);
-            this.closeSnackbar();
+            this.closeSnackBar();
             this.editNotificationSubscription.unsubscribe();
         }
     }
