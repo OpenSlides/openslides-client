@@ -14,6 +14,7 @@ import { ScrollingTableManageService } from '../../services/scrolling-table-mana
 
 const SELECTION_MODE_SUBSCRIPTION = `selection_mode`;
 const DATA_SOURCE_SUBSCRIPTION = `data_source`;
+const FULL_DATA_SOURCE_SUBSCRIPTION = `full_data_source`;
 
 export interface ScrollingTableRowClickEvent {}
 
@@ -66,13 +67,24 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             DATA_SOURCE_SUBSCRIPTION,
             source.subscribe(items => {
                 this._source = items;
-                this.buildDataTable();
+                this.refresh();
             })
         );
     }
 
     public get dataSource(): Observable<T[]> {
         return this._dataSource;
+    }
+
+    @Input()
+    public set fullDataSource(source: Observable<T[]>) {
+        this.updateSubscription(
+            FULL_DATA_SOURCE_SUBSCRIPTION,
+            source.subscribe(items => {
+                this._fullSource = items;
+                this.buildDataTable();
+            })
+        );
     }
 
     @Input()
@@ -127,6 +139,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     private _isHoldingShiftKey = false;
     private _isSelectionMode = false;
     private _source: T[] = [];
+    private _fullSource: T[] = [];
     private _dataSource = new BehaviorSubject<T[]>([]);
     private _dataSourceMap: Mapable<DataSourceProvider<T>> = {};
 
@@ -211,7 +224,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     private buildDataTable(): void {
-        const source = [...this._source].sort((a, b) => a.id - b.id);
+        const source = [...this._fullSource].sort((a, b) => a.id - b.id);
         const sourceMapKeys = Object.keys(this._dataSourceMap)
             .map(key => Number(key))
             .sort((a, b) => a - b);
@@ -230,7 +243,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             toDelete = toDelete.concat(sourceMapKeys.slice(currentId));
         }
         this.deleteFromDataSourceMap(toDelete);
-        this.refresh();
     }
 
     private addOrChangeItemInDataSourceMap(item: T): void {
