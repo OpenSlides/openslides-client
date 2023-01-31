@@ -319,6 +319,9 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
+msgid "Archived meetings"
+msgstr ""
+
 msgid "Are you sure you want to activate this meeting?"
 msgstr ""
 
@@ -1040,6 +1043,12 @@ msgstr ""
 msgid "Current list of speakers"
 msgstr ""
 
+msgid "Current list of speakers (as slide)"
+msgstr ""
+
+msgid "Current slide"
+msgstr ""
+
 msgid "Current speaker chyron"
 msgstr ""
 
@@ -1693,6 +1702,9 @@ msgstr ""
 msgid "Has unchanged vote weight"
 msgstr ""
 
+msgid "Has voted"
+msgstr ""
+
 msgid "Header"
 msgstr ""
 
@@ -1854,6 +1866,12 @@ msgstr ""
 msgid "Is favorite"
 msgstr ""
 
+msgid "Is in active meetings"
+msgstr ""
+
+msgid "Is in archived meetings"
+msgstr ""
+
 msgid "Is manager"
 msgstr ""
 
@@ -1870,6 +1888,12 @@ msgid "Is not active"
 msgstr ""
 
 msgid "Is not favorite"
+msgstr ""
+
+msgid "Is not in active meetings"
+msgstr ""
+
+msgid "Is not in archived meetings"
 msgstr ""
 
 msgid "Is not present"
@@ -2885,9 +2909,6 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-msgid "Reason is required"
-msgstr ""
-
 msgid "Reason required for creating new motion"
 msgstr ""
 
@@ -3049,6 +3070,9 @@ msgid "Restart livestream"
 msgstr ""
 
 msgid "Restrictions"
+msgstr ""
+
+msgid "Result"
 msgstr ""
 
 msgid "Results"
@@ -3754,6 +3778,12 @@ msgstr ""
 msgid "Title for access data and welcome PDF"
 msgstr ""
 
+msgid "Toggle to list of speakers"
+msgstr ""
+
+msgid "Toggle to parent item"
+msgstr ""
+
 msgid "Too many votes on one option."
 msgstr ""
 
@@ -4054,8 +4084,20 @@ msgstr ""
 
 msgid ""
 "You cannot delete the workflow as long as it is selected as default "
+"workflow for new amendments in the settings. Please set another workflow as "
+"default in the settings and try to delete the workflow again."
+msgstr ""
+
+msgid ""
+"You cannot delete the workflow as long as it is selected as default "
 "workflow for new motions in the settings. Please set another workflow as "
 "default in the settings and try to delete the workflow again."
+msgstr ""
+
+msgid ""
+"You cannot delete the workflow as long as it is selected as default "
+"workflow for new statute amendments in the settings. Please set another "
+"workflow as default in the settings and try to delete the workflow again."
 msgstr ""
 
 msgid "You cannot delete yourself."
@@ -4317,6 +4359,9 @@ msgid "majority"
 msgstr ""
 
 msgid "male"
+msgstr ""
+
+msgid "modified"
 msgstr ""
 
 msgid "motions"
