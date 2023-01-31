@@ -1,6 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { AfterViewInit, Component, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ChangeDetectorRef, EventEmitter, HostListener, OnDestroy } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -41,6 +41,8 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 {
     @ViewChild(CdkVirtualScrollViewport)
     public scrollViewport: CdkVirtualScrollViewport | undefined;
+
+    @ViewChild(`cdkContainer`) cdkContainer: ElementRef;
 
     @Input()
     public tableHeight: string | undefined = undefined;
@@ -212,7 +214,12 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
             return this.tableHeight;
         }
 
-        return this.rowHeight * this._dataSource.getValue().length + `px`;
+        if (this.cdkContainer) {
+            const distTop = this.cdkContainer.nativeElement.getBoundingClientRect().top;
+            return `calc(100vh - ${distTop}px)`;
+        }
+
+        return Math.min(this.rowHeight * this._dataSource.getValue().length, (<any>window).innerHeight - 150) + `px`;
     }
 
     private buildDataTable(): void {
