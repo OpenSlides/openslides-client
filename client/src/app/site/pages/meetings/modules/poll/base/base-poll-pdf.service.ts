@@ -1,6 +1,8 @@
 import { Directive } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
+import { PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -8,6 +10,12 @@ import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/ex
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+
+import { ViewUser } from '../../../view-models/view-user';
+import { EntitledUsersTableEntry } from '../definitions';
+import { PollKeyVerbosePipe } from '../pipes';
+import { PollService } from '../services/poll.service';
+import { BaseVoteData } from './base-poll-detail.component';
 
 /**
  * Workaround data definitions. The implementation for the different model's classes might have different needs,
@@ -59,7 +67,10 @@ export abstract class BasePollPdfService {
         protected userRepo: ParticipantControllerService,
         protected activeMeetingService: ActiveMeetingService,
         protected mediaManageService: MediaManageService,
-        protected pdfExport: MeetingPdfExportService
+        protected pdfExport: MeetingPdfExportService,
+        protected translate: TranslateService,
+        protected pollService: PollService,
+        private pollKeyVerbose: PollKeyVerbosePipe
     ) {
         this.meetingSettingsService.get(`name`).subscribe(name => (this.eventName = name));
         this.mediaManageService.getLogoUrlObservable(`pdf_ballot_paper`).subscribe(url => (this.logoUrl = url));
@@ -245,6 +256,8 @@ export abstract class BasePollPdfService {
         };
     }
 
+    protected abstract getPollResultFileNamePrefix(poll: ViewPoll): string;
+
     /**
      * Downloads a pdf with the ballot papet page definitions.
      *
@@ -277,6 +290,291 @@ export abstract class BasePollPdfService {
             styles: this.getBlankPaperStyles()
         };
         return result;
+    }
+
+    /**
+     * Exports a single poll
+     *
+     * @param poll The poll to export
+     */
+    public exportSinglePoll(
+        poll: ViewPoll,
+        exportInfo?: {
+            votesData?: BaseVoteData[];
+            entitledUsersData?: EntitledUsersTableEntry[];
+        }
+    ): void {
+        if (!exportInfo.votesData && !exportInfo.entitledUsersData) {
+            throw Error(`Can't export due to missing data`);
+        }
+
+        const doc = this.pollToDocDef(poll, exportInfo);
+        const filename = `${this.getPollResultFileNamePrefix(poll)}-${poll.getTitle()}`;
+        const metadata = {
+            title: filename
+        };
+        this.pdfExport.download({ docDefinition: doc, filename, metadata });
+    }
+
+    /**
+     * Converts a poll to PdfMake doc definition
+     *
+     * @param motion the poll to convert to pdf
+     * @returns doc def for the poll
+     */
+    public pollToDocDef(
+        poll: ViewPoll,
+        exportInfo?: {
+            votesData?: BaseVoteData[];
+            entitledUsersData?: EntitledUsersTableEntry[];
+        }
+    ): object {
+        let pollResultPdfContent: any[] = [];
+        const title = this.getTitle(`${poll.content_object?.getTitle()} · ${poll.getTitle()}`);
+
+        pollResultPdfContent = [title];
+
+        const resultsTable = this.pollService.generateTableData(poll);
+
+        if (resultsTable) {
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Poll results`),
+                margin: [0, 0, 0, 5],
+                bold: true
+            });
+            const resultsData = this.createResultsTable(poll, resultsTable);
+            pollResultPdfContent.push(resultsData);
+        }
+
+        if (exportInfo.votesData?.length) {
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Single votes`),
+                margin: [0, 20, 0, 5],
+                bold: true
+            });
+            const votesData = this.createVotesTable(exportInfo.votesData);
+            pollResultPdfContent.push(votesData);
+        }
+
+        if (exportInfo.entitledUsersData?.length) {
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Entitled users`),
+                margin: [0, 20, 0, 5],
+                bold: true
+            });
+            const usersData = this.createUsersTable(exportInfo.entitledUsersData);
+            pollResultPdfContent.push(usersData);
+        }
+
+        return pollResultPdfContent;
+    }
+
+    /**
+     * Creates the poll result table for the given poll
+     *
+     * @returns the table as pdfmake object
+     */
+    private createResultsTable(poll: ViewPoll, resultsTableData: PollTableData[]): object {
+        const resultsTable = (JSON.parse(JSON.stringify(resultsTableData)) as PollTableData[]).map(date => {
+            const forbidden = [`yes`, `no`, `abstain`].filter(
+                option => !poll.pollmethod.includes(option.charAt(0).toUpperCase())
+            );
+            date.value = date.value?.filter(val => !forbidden.includes(val.vote));
+            return date;
+        });
+        const amountColumns = Math.max(...resultsTable.map(row => row.value.length));
+        const template = resultsTable.find(row => row.value.length === amountColumns);
+        const pollTableBody: any[] = [
+            [
+                {
+                    text: this.translate.instant(`Option`),
+                    style: `tableHeader`
+                },
+                ...template.value.map(value => {
+                    return {
+                        text: this.translate.instant(value.vote ? this.pollKeyVerbose.transform(value.vote) : `Votes`),
+                        style: `tableHeader`
+                    };
+                })
+            ]
+        ];
+
+        let i = 0;
+        for (const date of resultsTable) {
+            const tableLine = [
+                {
+                    text: this.translate.instant(this.pollKeyVerbose.transform(date.votingOption))
+                },
+                ...Array.from({ length: amountColumns }, () => 0)
+                    .map((_, index) => {
+                        const hasValue = index < date.value.length;
+                        const currentValue: VotingResult = hasValue
+                            ? date.value[date.value.length - (index + 1)]
+                            : undefined;
+                        return hasValue
+                            ? {
+                                  text: `${currentValue.amount}${
+                                      [`yes`, `no`, `abstain`].includes(currentValue.vote ?? date.votingOption)
+                                          ? ` (${this.pollService.getVoteValueInPercent(
+                                                currentValue.amount,
+                                                currentValue.vote ? { poll, row: resultsTableData[i] } : { poll }
+                                            )})`
+                                          : ``
+                                  }`
+                              }
+                            : { text: `` };
+                    })
+                    .reverse()
+            ];
+
+            pollTableBody.push(tableLine);
+            i++;
+        }
+
+        return this.generateResultsTableObject(pollTableBody, amountColumns);
+    }
+
+    private generateResultsTableObject(pollTableBody: any[], amountColumns: number): object {
+        return [
+            {
+                table: {
+                    widths: [
+                        `54%`,
+                        ...Array.from({ length: amountColumns }, () => `${Math.floor(46 / amountColumns)}%`)
+                    ],
+                    headerRows: 1,
+                    body: pollTableBody
+                },
+                layout: `switchColorTableLayout`
+            }
+        ];
+    }
+
+    /**
+     * Creates the poll vote table for the given votesData
+     *
+     * @returns the table as pdfmake object
+     */
+    private createVotesTable(votesData: BaseVoteData[]): object {
+        const pollTableBody: any[] = [
+            [
+                {
+                    text: ``,
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Participant`),
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Votes`),
+                    style: `tableHeader`
+                }
+            ]
+        ];
+
+        let index = 1;
+        for (const date of votesData.sort((entryA, entryB) =>
+            entryA.user?.getName().localeCompare(entryB.user?.getName())
+        )) {
+            const tableLine = [
+                {
+                    text: index
+                },
+                {
+                    text: this.getUserNameForExport(date.user)
+                },
+                {
+                    text: this.parseSingleResult(date[`votes`] ?? date[`value`])
+                }
+            ];
+
+            pollTableBody.push(tableLine);
+            index++;
+        }
+        return this.generateTableObject(pollTableBody);
+    }
+
+    /**
+     * Creates the poll entitled users table for the given usersData
+     *
+     * @returns the table as pdfmake object
+     */
+    private createUsersTable(usersData: EntitledUsersTableEntry[]): object {
+        const pollTableBody: any[] = [
+            [
+                {
+                    text: ``,
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Participant`),
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Has voted`),
+                    style: `tableHeader`
+                }
+            ]
+        ];
+
+        let index = 1;
+        for (const date of usersData.sort((entryA, entryB) =>
+            entryA.user?.getName().localeCompare(entryB.user?.getName())
+        )) {
+            const tableLine = [
+                {
+                    text: index
+                },
+                {
+                    text:
+                        this.getUserNameForExport(date.user) +
+                        (date.vote_delegated_to
+                            ? `\n${this.translate.instant(`represented by`)} ` +
+                              this.getUserNameForExport(date.vote_delegated_to)
+                            : ``)
+                },
+                {
+                    text: this.translate.instant(date.voted ? `Yes` : `No`)
+                }
+            ];
+
+            pollTableBody.push(tableLine);
+            index++;
+        }
+        return this.generateTableObject(pollTableBody);
+    }
+
+    private generateTableObject(pollTableBody: any[]): object {
+        return [
+            {
+                table: {
+                    widths: [`4%`, `48%`, `48%`],
+                    headerRows: 1,
+                    body: pollTableBody
+                },
+                layout: `switchColorTableLayout`
+            }
+        ];
+    }
+
+    private getUserNameForExport(user: ViewUser | undefined): string {
+        return user?.getShortName() ?? this.translate.instant(`Anonymous`);
+    }
+
+    private parseSingleResult(resultData: any, indent = 0): string {
+        const indentation = `  `.repeat(indent);
+        if (Array.isArray(resultData)) {
+            return resultData.map(value => this.parseSingleResult(value, indent)).join(`\n`);
+        } else if (typeof resultData === `object`) {
+            return Object.keys(resultData)
+                .map(value => `${indentation}${value}:\n${this.parseSingleResult(resultData[value], indent + 1)}`)
+                .join(`\n`);
+        } else if (typeof resultData === `string` && Object.keys(VoteValuesVerbose).includes(resultData)) {
+            return indentation + this.translate.instant(VoteValuesVerbose[resultData]);
+        } else {
+            return indentation + this.translate.instant(String(resultData));
+        }
     }
 
     /**
