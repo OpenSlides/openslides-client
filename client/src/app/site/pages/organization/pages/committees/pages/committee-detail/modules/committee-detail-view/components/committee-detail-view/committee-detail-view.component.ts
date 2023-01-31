@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -14,9 +13,6 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models/view-committee';
 
-const FORWARD_LABEL = _(`Forward motions to`);
-const RECEIVE_LABEL = _(`Receive motions from`);
-
 @Component({
     selector: `os-committee-detail-view`,
     templateUrl: `./committee-detail-view.component.html`,
@@ -24,9 +20,6 @@ const RECEIVE_LABEL = _(`Receive motions from`);
 })
 export class CommitteeDetailViewComponent extends BaseUiComponent {
     public readonly OML = OML;
-
-    public forwardLabel = FORWARD_LABEL;
-    public receiveLabel = RECEIVE_LABEL;
 
     public committeeId: Id | null = null;
 
