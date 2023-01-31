@@ -338,7 +338,7 @@ export abstract class BasePollPdfService {
 
         if (resultsTable) {
             pollResultPdfContent.push({
-                text: this.translate.instant(`Poll results`),
+                text: this.translate.instant(`Result`),
                 margin: [0, 0, 0, 5],
                 bold: true
             });
@@ -387,7 +387,7 @@ export abstract class BasePollPdfService {
         const pollTableBody: any[] = [
             [
                 {
-                    text: this.translate.instant(`Option`),
+                    text: this.translate.instant(`Candidate`),
                     style: `tableHeader`
                 },
                 ...template.value.map(value => {

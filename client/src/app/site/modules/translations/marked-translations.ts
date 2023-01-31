@@ -90,8 +90,6 @@ _(
 _(
     `You cannot delete the workflow as long as it is selected as default workflow for new statute amendments in the settings. Please set another workflow as default in the settings and try to delete the workflow again.`
 );
-// Motions
-_(`Reason is required`);
 // Polls
 _(`Anonymizing can only be done after finishing a poll.`);
 _(`You can only anonymize named polls.`);
