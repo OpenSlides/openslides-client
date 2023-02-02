@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
 import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
