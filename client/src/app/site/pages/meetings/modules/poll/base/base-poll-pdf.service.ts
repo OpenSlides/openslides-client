@@ -108,7 +108,7 @@ export abstract class BasePollPdfService {
     protected createBallotOption(decision: string): { margin: number[]; columns: object[] } {
         const BallotCircleDimensions = { yDistance: 6, size: 8 };
         return {
-            margin: [40 + BallotCircleDimensions.size, 10, 0, 0],
+            margin: [21 + BallotCircleDimensions.size, 10, 0, 0],
             columns: [
                 {
                     width: 15,
@@ -224,7 +224,7 @@ export abstract class BasePollPdfService {
         return {
             color: `#555`,
             fontSize: 10,
-            margin: [30, 10, 10, -10], // [left, top, right, bottom]
+            margin: [20, 10, 10, -10], // [left, top, right, bottom]
             columns,
             columnGap: 5
         };
@@ -263,10 +263,9 @@ export abstract class BasePollPdfService {
      *
      * @param docDefinition the structure of the PDF document
      * @param filename the name of the file to use
-     * @param logo (optional) url of a logo to be placed as ballot logo
      */
-    public downloadWithBallotPaper(docDefinition: object, filename: string, logo?: string): void {
-        this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition, logo));
+    public downloadWithBallotPaper(docDefinition: object, filename: string): void {
+        this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition));
     }
 
     /**
@@ -274,11 +273,9 @@ export abstract class BasePollPdfService {
      * (e.g. ballots)
      *
      * @param documentContent the content of the pdf as object
-     * @param imageUrl an optional image to insert into the ballot
      * @returns the pdf document definition ready to export
      */
-    private async getBallotPaper(documentContent: object, imageUrl?: string): Promise<object> {
-        // this.imageUrls = imageUrl ? [imageUrl] : [];
+    private async getBallotPaper(documentContent: object): Promise<object> {
         const result = {
             pageSize: `A4`,
             pageMargins: [0, 0, 0, 0],
@@ -588,11 +585,11 @@ export abstract class BasePollPdfService {
             title: {
                 fontSize: 14,
                 bold: true,
-                margin: [30, 30, 0, 0]
+                margin: [20, 30, 0, 0]
             },
             description: {
                 fontSize: 11,
-                margin: [30, 0, 0, 0]
+                margin: [20, 0, 0, 0]
             }
         };
     }

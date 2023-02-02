@@ -69,10 +69,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
             title = assignment.getTitle();
         }
         if (!subtitle) {
-            subtitle = ``;
-        }
-        if (assignment.polls.length > 1) {
-            subtitle = `${this.translate.instant(`Ballot`)} ${assignment.polls.length} ${subtitle}`;
+            subtitle = poll.getTitle();
         }
         if (subtitle.length > 90) {
             subtitle = subtitle.substring(0, 90) + `...`;
@@ -103,8 +100,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         const sheetEnd = Math.floor(417 / rowsPerPage);
         this.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: sheetEnd, title, subtitle, poll }),
-            fileName,
-            this.logoUrl
+            fileName
         );
     }
 
@@ -183,7 +179,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         return [
             {
                 text: option,
-                margin: [40, 10, 0, 0]
+                margin: [21, 10, 0, 0]
             },
             {
                 width: `auto`,
