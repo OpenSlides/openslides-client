@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, debounceTime, map, Observable, Subject } from 'rxjs';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -19,6 +19,7 @@ import { AuthService } from './auth.service';
 import { AutoupdateService, ModelSubscription } from './autoupdate';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
+import { ModelRequestService } from './model-request.service';
 import { SimplifiedModelRequest } from './model-request-builder/model-request-builder.service';
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
@@ -39,6 +40,19 @@ function getUserCML(user: ViewUser): { [id: number]: string } | null {
     }
     return committeeManagementLevel;
 }
+
+const POLL_VOTE_COUNT_SUBSCRIPTION = `poll_vote_count`;
+
+const getPollVoteCountSubscriptionConfig = (id: Id, getNextMeetingIdObservable: () => Observable<Id | null>) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        fieldset: `access`,
+        follow: [{ idField: `poll_ids`, fieldset: `voteCount` }]
+    },
+    subscriptionName: POLL_VOTE_COUNT_SUBSCRIPTION,
+    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
+});
 
 @Injectable({
     providedIn: `root`
@@ -209,6 +223,8 @@ export class OperatorService {
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
     private _CML: { [id: number]: string } | undefined = undefined;
 
+    private _lastRestrictedSubscriptionsCheck: { [meetingId: number]: { [key: string]: boolean } } = {};
+
     public constructor(
         private activeMeetingService: ActiveMeetingService,
         private DS: DataStoreService,
@@ -217,7 +233,8 @@ export class OperatorService {
         private userRepo: UserRepositoryService,
         private groupRepo: GroupControllerService,
         private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService
+        private modelRequestBuilder: ModelRequestBuilderService,
+        private modelRequestService: ModelRequestService
     ) {
         this.setNotReady();
         // General environment in which the operator moves
@@ -453,6 +470,29 @@ export class OperatorService {
     }
 
     /**
+     * Place for subscribing to meeting-AU-subscriptions that should only be requested by users with specific perms for efficiency reasons.
+     */
+    private makeRestrictedAutoupdateSubscriptions(meetingId: Id): void {
+        const voteCount =
+            this.hasPerms(Permission.motionCanManagePolls, Permission.assignmentCanManage, Permission.pollCanManage) ||
+            this.hasPermsAll(Permission.userCanSee, Permission.listOfSpeakersCanManage);
+        if (
+            !this._lastRestrictedSubscriptionsCheck[meetingId] ||
+            this._lastRestrictedSubscriptionsCheck[meetingId][`voteCount`] !== voteCount
+        ) {
+            if (voteCount) {
+                this.modelRequestService.updateSubscribeTo(
+                    getPollVoteCountSubscriptionConfig(meetingId, () => this.activeMeetingService.meetingIdObservable)
+                );
+            } else {
+                this.modelRequestService.closeSubscription(POLL_VOTE_COUNT_SUBSCRIPTION);
+            }
+            this._lastRestrictedSubscriptionsCheck[meetingId] = this._lastRestrictedSubscriptionsCheck[meetingId] ?? {};
+            this._lastRestrictedSubscriptionsCheck[meetingId][`voteCount`] = voteCount;
+        }
+    }
+
+    /**
      * Update the operators permissions and publish the operator afterwards.
      * Saves the current WhoAmI to storage with the updated permissions
      */
@@ -477,6 +517,9 @@ export class OperatorService {
                 permissionSet.add(childPermission);
             }
         }
+        if (this.activeMeetingId) {
+            this.makeRestrictedAutoupdateSubscriptions(this.activeMeetingId);
+        }
         return Array.from(permissionSet.values());
     }
 
@@ -486,27 +529,16 @@ export class OperatorService {
      * @param checkPerms The permissions to check, if at least one matches.
      */
     public hasPerms(...checkPerms: Permission[]): boolean {
-        if (!this._ready) {
-            // console.warn(`has perms: Operator is not ready!`);
-            return false;
-        }
-        if (!this.activeMeetingId) {
-            // console.warn(`has perms: Usage outside of meeting!`);
-            return false;
-        }
-        if (this.isSuperAdmin) {
-            return true;
-        }
+        return this.hasPermsHelper(checkPerms, false);
+    }
 
-        let result: boolean;
-        if (!this._groupIds) {
-            result = false;
-        } else if (this.isAuthenticated && this._groupIds.find(id => id === this.adminGroupId)) {
-            result = true;
-        } else {
-            result = checkPerms.some(permission => this._permissions?.includes(permission));
-        }
-        return result;
+    /**
+     * Checks, if the operator has every one of the given permissions.
+     * Only works in the current meeting.
+     * @param checkPerms The permissions to check for.
+     */
+    public hasPermsAll(...checkPerms: Permission[]): boolean {
+        return this.hasPermsHelper(checkPerms, true);
     }
 
     /**
@@ -648,6 +680,31 @@ export class OperatorService {
             return !!groupIds.find(id => id === this.defaultGroupId); // any anonymous is in the default group.
         }
         return groupIds.some(id => this._groupIds?.includes(id));
+    }
+
+    private hasPermsHelper(checkPerms: Permission[], all: boolean): boolean {
+        if (!this._ready) {
+            // console.warn(`has perms: Operator is not ready!`);
+            return false;
+        }
+        if (!this.activeMeetingId) {
+            // console.warn(`has perms: Usage outside of meeting!`);
+            return false;
+        }
+        if (this.isSuperAdmin) {
+            return true;
+        }
+
+        let result: boolean;
+        if (!this._groupIds) {
+            result = false;
+        } else if (this.isAuthenticated && this._groupIds.find(id => id === this.adminGroupId)) {
+            result = true;
+        } else {
+            const hasPermFn = (permission: Permission) => this._permissions?.includes(permission);
+            result = all ? checkPerms.every(hasPermFn) : checkPerms.some(hasPermFn);
+        }
+        return result;
     }
 
     /**

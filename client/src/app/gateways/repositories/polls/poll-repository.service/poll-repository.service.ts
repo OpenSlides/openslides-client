@@ -67,13 +67,14 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             `max_votes_amount`,
             `max_votes_per_option`,
             `entitled_users_at_stop`,
-            `vote_count`,
             `backend`
         );
+        const voteCountFieldset: (keyof Poll)[] = [`vote_count`];
         return {
             [DEFAULT_FIELDSET]: detailFieldset,
             [ROUTING_FIELDSET]: routingFields,
-            list: listFieldset
+            list: listFieldset,
+            voteCount: voteCountFieldset
         };
     }
 

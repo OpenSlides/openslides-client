@@ -90,7 +90,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             detailEdit: detailEditFields,
             list: listFields,
             settings: this.meetingSettingsDefinitionProvider.getSettingsKeys(),
-            group: groupFields
+            group: groupFields,
+            access: accessField
         };
     }
 
