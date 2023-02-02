@@ -435,6 +435,15 @@ export class PdfDocumentService {
         createVfs: () => Promise<PdfVirtualFileSystem>
     ): void {
         this.showProgress();
+
+        var logoBallotPaperUrl = this.mediaManageService.getLogoUrl(`pdf_ballot_paper`);
+        if (logoBallotPaperUrl) {
+            if (logoBallotPaperUrl.indexOf(`/`) === 0) {
+                logoBallotPaperUrl = logoBallotPaperUrl.substr(1); // remove trailing /
+            }
+            this.imageUrls.push(logoBallotPaperUrl);
+        }
+
         buildDocFn().then(document =>
             new PdfCreator({
                 document,
