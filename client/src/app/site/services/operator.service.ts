@@ -47,7 +47,7 @@ const getPollVoteCountSubscriptionConfig = (id: Id, getNextMeetingIdObservable: 
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        fieldset: `access`,
+        fieldset: [],
         follow: [{ idField: `poll_ids`, fieldset: `voteCount` }]
     },
     subscriptionName: POLL_VOTE_COUNT_SUBSCRIPTION,
