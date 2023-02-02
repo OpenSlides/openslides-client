@@ -69,10 +69,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
             title = assignment.getTitle();
         }
         if (!subtitle) {
-            subtitle = ``;
-        }
-        if (assignment.polls.length > 1) {
-            subtitle = `${this.translate.instant(`Ballot`)} ${assignment.polls.length} ${subtitle}`;
+            subtitle = poll.getTitle();
         }
         if (subtitle.length > 90) {
             subtitle = subtitle.substring(0, 90) + `...`;
