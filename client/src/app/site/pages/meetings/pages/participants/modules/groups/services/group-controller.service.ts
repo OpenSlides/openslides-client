@@ -55,10 +55,6 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
         return this.repo.delete(group);
     }
 
-    public togglePermission(group: ViewGroup, permission: Permission): Promise<void> {
-        return this.repo.togglePermission(group, permission);
-    }
-
     public getGeneralViewModelObservable(): Observable<ViewGroup> {
         return this.repo.getGeneralViewModelObservable();
     }

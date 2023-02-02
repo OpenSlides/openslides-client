@@ -229,7 +229,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
     }
 
     /**
-     * Clicking escape while in #newGroupForm should toggle newGroup.
+     * Clicking escape while in #newGroupForm should cancel editing.
      */
     public keyDownFunction(event: KeyboardEvent): void {
         if (event.key === `Escape`) {

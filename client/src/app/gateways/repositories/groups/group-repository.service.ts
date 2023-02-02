@@ -65,21 +65,6 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
         return this.sendActionToBackend(GroupAction.DELETE, { id: group.id });
     }
 
-    /**
-     * Toggles the given permisson.
-     *
-     * @param group The group
-     * @param permission The permission to toggle
-     */
-    public async togglePermission(group: ViewGroup, permission: Permission): Promise<void> {
-        const payload = {
-            id: group.id,
-            permission,
-            set: !group.hasPermission(permission)
-        };
-        return this.sendActionToBackend(GroupAction.SET_PERMISSION, payload);
-    }
-
     private getCreatePayload(partialGroup: Partial<Group>): Partial<Group> {
         return {
             meeting_id: this.activeMeetingId!,
