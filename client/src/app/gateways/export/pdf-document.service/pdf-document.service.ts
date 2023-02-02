@@ -256,6 +256,19 @@ export class PdfDocumentService {
     ) {}
 
     /**
+     * Removes leading slash from url.
+     *
+     * @returns Url without leading slash
+     */
+
+    private removeLeadingSlash(url: string) {
+        if (url.indexOf(`/`) === 0) {
+            url = url.substr(1); // remove leading `/`
+        }
+        return url;
+    }
+
+    /**
      * Creates the title for the list as pdfmake doc definition
      *
      * @returns The list title for the PDF document
@@ -438,9 +451,7 @@ export class PdfDocumentService {
 
         var logoBallotPaperUrl = this.mediaManageService.getLogoUrl(`pdf_ballot_paper`);
         if (logoBallotPaperUrl) {
-            if (logoBallotPaperUrl.indexOf(`/`) === 0) {
-                logoBallotPaperUrl = logoBallotPaperUrl.substr(1); // remove trailing /
-            }
+            logoBallotPaperUrl = this.removeLeadingSlash(logoBallotPaperUrl);
             this.imageUrls.push(logoBallotPaperUrl);
         }
 
@@ -510,9 +521,7 @@ export class PdfDocumentService {
 
         // add the left logo to the header column
         if (logoHeaderLeftUrl) {
-            if (logoHeaderLeftUrl.indexOf(`/`) === 0) {
-                logoHeaderLeftUrl = logoHeaderLeftUrl.substr(1); // remove trailing /
-            }
+            logoHeaderLeftUrl = this.removeLeadingSlash(logoHeaderLeftUrl);
             columns.push({
                 image: logoHeaderLeftUrl,
                 fit: [180, 40],
@@ -547,9 +556,7 @@ export class PdfDocumentService {
 
         // add the logo to the right
         if (logoHeaderRightUrl) {
-            if (logoHeaderRightUrl.indexOf(`/`) === 0) {
-                logoHeaderRightUrl = logoHeaderRightUrl.substr(1); // remove trailing /
-            }
+            logoHeaderRightUrl = this.removeLeadingSlash(logoHeaderRightUrl);
             columns.push({
                 image: logoHeaderRightUrl,
                 fit: [180, 40],
