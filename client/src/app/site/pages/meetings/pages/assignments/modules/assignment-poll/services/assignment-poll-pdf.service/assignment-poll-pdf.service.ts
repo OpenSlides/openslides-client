@@ -179,7 +179,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         return [
             {
                 text: option,
-                margin: [40, 10, 0, 0]
+                margin: [21, 10, 0, 0]
             },
             {
                 width: `auto`,
