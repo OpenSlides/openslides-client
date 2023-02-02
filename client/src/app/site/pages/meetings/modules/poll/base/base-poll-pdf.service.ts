@@ -108,7 +108,7 @@ export abstract class BasePollPdfService {
     protected createBallotOption(decision: string): { margin: number[]; columns: object[] } {
         const BallotCircleDimensions = { yDistance: 6, size: 8 };
         return {
-            margin: [40 + BallotCircleDimensions.size, 10, 0, 0],
+            margin: [31 + BallotCircleDimensions.size, 10, 0, 0],
             columns: [
                 {
                     width: 15,

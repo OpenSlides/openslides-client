@@ -130,7 +130,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
                         this.createPollHint(data.poll),
                         this.createCandidateFields(data.poll)
                     ],
-                    margin: [0, 0, 0, 0]
+                    margin: [-10, 0, 0, 0]
                 }
             ]
         };
