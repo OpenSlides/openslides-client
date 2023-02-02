@@ -100,8 +100,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         const sheetEnd = Math.floor(417 / rowsPerPage);
         this.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: sheetEnd, title, subtitle, poll }),
-            fileName,
-            this.logoUrl
+            fileName
         );
     }
 

@@ -263,10 +263,9 @@ export abstract class BasePollPdfService {
      *
      * @param docDefinition the structure of the PDF document
      * @param filename the name of the file to use
-     * @param logo (optional) url of a logo to be placed as ballot logo
      */
-    public downloadWithBallotPaper(docDefinition: object, filename: string, logo?: string): void {
-        this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition, logo));
+    public downloadWithBallotPaper(docDefinition: object, filename: string): void {
+        this.pdfExport.downloadWaitableDoc(filename, () => this.getBallotPaper(docDefinition));
     }
 
     /**
@@ -274,11 +273,9 @@ export abstract class BasePollPdfService {
      * (e.g. ballots)
      *
      * @param documentContent the content of the pdf as object
-     * @param imageUrl an optional image to insert into the ballot
      * @returns the pdf document definition ready to export
      */
-    private async getBallotPaper(documentContent: object, imageUrl?: string): Promise<object> {
-        // this.imageUrls = imageUrl ? [imageUrl] : [];
+    private async getBallotPaper(documentContent: object): Promise<object> {
         const result = {
             pageSize: `A4`,
             pageMargins: [0, 0, 0, 0],
