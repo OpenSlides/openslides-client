@@ -230,7 +230,7 @@ class PdfCreator {
             });
         } else if (doc && typeof doc === `object`) {
             for (let key of Object.keys(doc)) {
-                if (key === `image` && doc[key] === url) {
+                if (key === `image` && (doc[key] === url || doc[key] === `/` + url)) {
                     delete doc[key];
                     doc.svg = image;
                 } else {
