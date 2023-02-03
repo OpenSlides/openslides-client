@@ -35,27 +35,3 @@ export class UploadFileJsonProcessorService {
         return json;
     }
 }
-export async function getUploadFileJson<ExpectType>(
-    file: FileData,
-    snackbar: MatSnackBar,
-    translate: TranslateService
-): Promise<ExpectType> {
-    const json = await new Promise<ExpectType>(resolve => {
-        const reader = new FileReader();
-        reader.addEventListener(`load`, progress => {
-            let result;
-            try {
-                result = JSON.parse(progress.target!.result as string);
-            } catch (e) {
-                snackbar.open(
-                    `${translate.instant(`Error`)}: ${translate.instant(WRONG_JSON_IMPORT_FORMAT_ERROR_MSG)}`,
-                    `OK`
-                );
-                throw new Error(WRONG_JSON_IMPORT_FORMAT_ERROR_MSG);
-            }
-            resolve(result);
-        });
-        reader.readAsText(file.mediafile);
-    });
-    return json;
-}

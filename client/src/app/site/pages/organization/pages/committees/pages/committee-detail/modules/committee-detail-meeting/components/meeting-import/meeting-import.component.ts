@@ -1,6 +1,5 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
@@ -22,11 +21,10 @@ export class MeetingImportComponent extends BaseComponent implements OnInit {
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
-        protected override translate: TranslateService,
+        translate: TranslateService,
         private repo: MeetingControllerService,
         private osRouter: OpenSlidesRouterService,
         private location: Location,
-        private snackbar: MatSnackBar,
         private uploadFileProcessor: UploadFileJsonProcessorService
     ) {
         super(componentServiceCollector, translate);
