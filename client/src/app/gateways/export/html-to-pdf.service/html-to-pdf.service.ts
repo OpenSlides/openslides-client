@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ExportServiceModule } from 'src/app/gateways/export';
 
+export interface ChildNodeParagraphPayload {
+    child: Element;
+    parent: Element;
+    styles?: string[]
+}
+
+export interface CreateSpecificParagraphPayload {
+    element: Element;
+    nodeName: string;
+    children: Element[];
+    classes: any[];
+    styles: string[]
+}
+
 /**
  * Converts HTML strings to pdfmake compatible document definition.
  *
@@ -21,22 +35,22 @@ export class HtmlToPdfService {
     /**
      * Normal line height for paragraphs
      */
-    private LINE_HEIGHT = 1.25;
+    protected LINE_HEIGHT = 1.25;
 
     /**
      * space between paragraphs
      */
-    private P_MARGIN_BOTTOM = 4.0;
+    protected P_MARGIN_BOTTOM = 4.0;
 
     /**
      * Space above H
      */
-    private H_MARGIN_TOP = 10.0;
+    protected H_MARGIN_TOP = 10.0;
 
     /**
      * Conversion of HTML tags into pdfmake directives
      */
-    private elementStyles: any = {
+    protected elementStyles: any = {
         // should be the same for most HTML code
         b: [`font-weight:bold`],
         strong: [`font-weight:bold`],
@@ -60,7 +74,7 @@ export class HtmlToPdfService {
      * Treatment of required CSS-Classes
      * Checking CSS is not possible
      */
-    private classStyles: any = {
+    protected classStyles: any = {
         delete: [`color:red`, `text-decoration:line-through`],
         insert: [`color:green`, `text-decoration:underline`],
         paragraphcontext: [`color:grey`]
@@ -72,7 +86,7 @@ export class HtmlToPdfService {
      * @param nodeName the node to parse
      * @returns the margin tip as number
      */
-    private getMarginTop(nodeName: string): number {
+    protected getMarginTop(nodeName: string): number {
         switch (nodeName) {
             case `h1`:
             case `h2`:
@@ -94,7 +108,7 @@ export class HtmlToPdfService {
      * @param nodeName the node to parse
      * @returns the margin bottom as number
      */
-    private getMarginBottom(nodeName: string): number {
+    protected getMarginBottom(nodeName: string): number {
         switch (nodeName) {
             case `h1`:
             case `h2`:
@@ -122,7 +136,7 @@ export class HtmlToPdfService {
      */
     public addPlainText(text: string): object {
         return {
-            columns: [{ stack: this.convertHtml(text /* , LineNumberingMode.None */) }]
+            columns: [{ stack: this.convertHtml({ htmlText: text }) }]
         };
     }
 
@@ -133,10 +147,8 @@ export class HtmlToPdfService {
      * @param htmlText the html text to translate as string
      * @returns pdfmake doc definition as object
      */
-    public convertHtml(htmlText: string /* lnMode?: LineNumberingMode */): object {
+    public convertHtml({ htmlText }: { htmlText: string }): object {
         const docDef = [];
-
-        // Cleanup of dirty html would happen here
 
         // Create a HTML DOM tree out of html string
         const parser = new DOMParser();
@@ -210,8 +222,7 @@ export class HtmlToPdfService {
             case `div`: {
                 const children = this.parseChildren(element, styles);
 
-                newParagraph = this.create(`text`);
-                newParagraph.text = children;
+                newParagraph = this.createDivParagraph({ element, nodeName, children, classes, styles });
 
                 newParagraph.margin = [0, 0, 0, 0];
 
@@ -263,36 +274,19 @@ export class HtmlToPdfService {
             }
             case `span`: {
                 const children = this.parseChildren(element, styles);
-
-                newParagraph = {
-                    ...this.create(`text`),
-                    ...this.computeStyle(styles)
-                };
-
-                newParagraph.text = children;
+                newParagraph = this.createSpanParagraph({element, nodeName, children, classes, styles});
                 break;
             }
             case `br`: {
                 newParagraph = this.create(`text`);
-                // yep thats all
                 newParagraph.text = `\n`;
                 newParagraph.lineHeight = this.LINE_HEIGHT;
                 break;
             }
             case `ul`:
             case `ol`: {
-                const list = this.create(nodeName);
-
-                // keep the numbers of the ol list
-                if (nodeName === `ol`) {
-                    const start = element.getAttribute(`start`);
-                    if (start) {
-                        list.start = parseInt(start, 10);
-                    }
-                }
                 const children = this.parseChildren(element, styles);
-                newParagraph = list;
-                newParagraph[nodeName] = children;
+                newParagraph = this.createUlOlParagraph({element, nodeName, children, classes, styles});
                 break;
             }
             default: {
@@ -307,25 +301,72 @@ export class HtmlToPdfService {
     }
 
     /**
+     * Used by parseElement to create a specific type of paragraph.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createDivParagraph(data: CreateSpecificParagraphPayload): any {
+        let newParagraph = this.create(`text`);
+        newParagraph.text = data.children;
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create a specific type of paragraph.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createSpanParagraph(data: CreateSpecificParagraphPayload): any {
+        let newParagraph = {
+            ...this.create(`text`),
+            ...this.computeStyle(data.styles)
+        };
+
+        newParagraph.text = data.children;
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create a specific type of paragraph.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createUlOlParagraph(data: CreateSpecificParagraphPayload): any {
+        const list = this.create(data.nodeName);
+
+        // keep the numbers of the ol list
+        if (data.nodeName === `ol`) {
+            const start = data.element.getAttribute(`start`);
+            if (start) {
+                list.start = parseInt(start, 10);
+            }
+        }
+        let newParagraph = list;
+        newParagraph[data.nodeName] = data.children;
+        return newParagraph;
+    }
+
+    /**
      * Helper routine to parse an elements children and return the children as parsed pdfmake doc string
      *
      * @param element the parent element to parse
      * @param styles the styles array, usually just to parse back into the `parseElement` function
      * @returns an array of parsed children
      */
-    private parseChildren(element: Element, styles?: string[]): Element[] {
+    protected parseChildren(element: Element, styles?: string[]): Element[] {
         const childNodes = Array.from(element.childNodes) as Element[];
         const paragraph: any[] = [];
         if (childNodes.length > 0) {
             for (const child of childNodes) {
                 // skip empty child nodes
                 if (!(child.nodeName === `#text` && child.textContent?.trim() === ``)) {
-                    const parsedElement = this.parseElement(child, styles);
-                    paragraph.push(parsedElement);
+                    this.addChildNodeIntoParagraphs(paragraph, {child, parent: element, styles});
                 }
             }
         }
         return paragraph;
+    }
+
+    protected addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload) {
+        const parsedElement = this.parseElement(data.child, data.styles);
+        paragraph.push(parsedElement);
     }
 
     /**
@@ -334,7 +375,7 @@ export class HtmlToPdfService {
      * @param styles an array of inline css styles (i.e. `style="margin: 10px"`)
      * @returns an object with style pdfmake compatible style information
      */
-    private computeStyle(styles: string[]): any {
+    protected computeStyle(styles: string[]): any {
         const styleObject: any = {};
         if (styles && styles.length > 0) {
             for (const style of styles) {
@@ -373,13 +414,16 @@ export class HtmlToPdfService {
                             break;
                         }
                         case `text-decoration`: {
+                            if (!styleObject.decoration) {
+                                styleObject.decoration = [];
+                            }
                             switch (value) {
                                 case `underline`: {
-                                    styleObject.decoration = `underline`;
+                                    styleObject.decoration.push(`underline`);
                                     break;
                                 }
                                 case `line-through`: {
-                                    styleObject.decoration = `lineThrough`;
+                                    styleObject.decoration.push(`lineThrough`);
                                     break;
                                 }
                             }
@@ -416,7 +460,7 @@ export class HtmlToPdfService {
      * @param color color as string representation
      * @returns color as hex values for pdfmake
      */
-    private parseColor(color: string): string {
+    protected parseColor(color: string): string {
         const haxRegex = new RegExp(`^#([0-9a-f]{3}|[0-9a-f]{6})$`);
 
         // e.g. `#fff` or `#ff0048`
@@ -453,7 +497,7 @@ export class HtmlToPdfService {
      * @param name should be a pdfMake container element, like 'text' or 'stack'
      * @param content
      */
-    private create(name: string, content?: any): any {
+    protected create(name: string, content?: any): any {
         const container: any = {};
         const docDef = content ? content : [];
         container[name] = docDef;
