@@ -117,7 +117,12 @@ export interface PdfVirtualFileSystem {
 }
 
 export interface PdfImageDescription {
-    [url: string]: string;
+    images?: {
+        [url: string]: string;
+    };
+    svgs?: {
+        [url: string]: string;
+    }
 }
 
 export interface PdfFontDescription {
@@ -195,20 +200,54 @@ class PdfCreator {
     }
 
     private async sendDocumentToPdfWorker(): Promise<void> {
+        const fonts = typeof this._loadFonts === `function` ? await this._loadFonts() : this._loadFonts;
+        const images = typeof this._loadImages === `function` ? await this._loadImages() : this._loadImages;
+
+        let doc = JSON.parse(JSON.stringify(this._document));
+        if (images.svgs) {
+            doc = this.replaceSvgImages(doc, images.svgs);
+        }
+
         this._pdfWorker!.postMessage({
-            doc: JSON.parse(JSON.stringify(this._document)),
+            doc,
             fonts: typeof this._loadFonts === `function` ? await this._loadFonts() : this._loadFonts,
-            vfs: await this.createVfs()
+            vfs: await this.createVfs(fonts, images)
         });
     }
 
-    private async createVfs(): Promise<PdfVirtualFileSystem> {
-        const fonts = typeof this._loadFonts === `function` ? await this._loadFonts() : this._loadFonts;
-        const images = typeof this._loadImages === `function` ? await this._loadImages() : this._loadImages;
+    private replaceSvgImages(doc: any, images: object): any {
+        for (let url of Object.keys(images)) {
+            doc = this.replaceSvgRecursive(doc, url, images[url]);
+        }
+
+        return doc;
+    }
+
+    private replaceSvgRecursive(doc: any, url: string, image: string): any {
+        if (Array.isArray(doc)) {
+            return doc.map(el => {
+                return this.replaceSvgRecursive(el, url, image);
+            });
+        } else if (doc && typeof doc === 'object') {
+            for (let key of Object.keys(doc)) {
+                if (key === `image` && doc[key] === url) {
+                    delete doc[key];
+                    doc.svg = image;
+                } else {
+                    doc[key] = this.replaceSvgRecursive(doc[key], url, image);
+                }
+            }
+
+        }
+
+        return doc;
+    }
+
+    private async createVfs(fonts: PdfFontDescription, images: PdfImageDescription): Promise<PdfVirtualFileSystem> {
         const initialVfs = typeof this._createVfs === `function` ? await this._createVfs() : this._createVfs;
         return {
             ...fonts,
-            ...images,
+            ...images?.images,
             ...initialVfs
         };
     }
@@ -521,13 +560,13 @@ export class PdfDocumentService {
 
         // add the left logo to the header column
         if (logoHeaderLeftUrl) {
-            logoHeaderLeftUrl = this.removeLeadingSlash(logoHeaderLeftUrl);
-            columns.push({
-                image: logoHeaderLeftUrl,
-                fit: [180, 40],
-                width: `20%`
-            });
-            this.imageUrls.push(logoHeaderLeftUrl);
+            columns.push(
+                this.getImage({
+                    image: logoHeaderLeftUrl,
+                    fit: [180, 40],
+                    width: `20%`
+                })
+            );
         }
 
         // Add no heading text if there are logos on the right and left.
@@ -556,14 +595,14 @@ export class PdfDocumentService {
 
         // add the logo to the right
         if (logoHeaderRightUrl) {
-            logoHeaderRightUrl = this.removeLeadingSlash(logoHeaderRightUrl);
-            columns.push({
-                image: logoHeaderRightUrl,
-                fit: [180, 40],
-                alignment: `right`,
-                width: `20%`
-            });
-            this.imageUrls.push(logoHeaderRightUrl);
+            columns.push(
+                this.getImage({
+                    image: logoHeaderRightUrl,
+                    fit: [180, 40],
+                    alignment: `right`,
+                    width: `20%`
+                })
+            );
         }
         const margin = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
         // pdfmake order: [left, top, right, bottom]
@@ -633,13 +672,14 @@ export class PdfDocumentService {
 
         // add the left footer logo, if any
         if (logoFooterLeftUrl) {
-            columns.push({
-                image: logoFooterLeftUrl,
-                fit: logoContainerSize,
-                width: logoContainerWidth,
-                alignment: `left`
-            });
-            this.imageUrls.push(logoFooterLeftUrl);
+            columns.push(
+                this.getImage({
+                    image: logoFooterLeftUrl,
+                    fit: logoContainerSize,
+                    width: logoContainerWidth,
+                    alignment: `left`
+                })
+            );
         }
 
         // add the page number
@@ -651,13 +691,14 @@ export class PdfDocumentService {
 
         // add the right footer logo, if any
         if (logoFooterRightUrl) {
-            columns.push({
-                image: logoFooterRightUrl,
-                fit: logoContainerSize,
-                width: logoContainerWidth,
-                alignment: `right`
-            });
-            this.imageUrls.push(logoFooterRightUrl);
+            columns.push(
+                this.getImage({
+                    image: logoFooterRightUrl,
+                    fit: logoContainerSize,
+                    width: logoContainerWidth,
+                    alignment: `right`
+                })
+            );
         }
 
         const margin = [lrMargin ? lrMargin[0] : 75, 0, lrMargin ? lrMargin[0] : 75, 10];
@@ -666,6 +707,18 @@ export class PdfDocumentService {
             columns,
             columnGap: 10
         };
+    }
+
+    private getImage(data: { image: string; fit?: number[]; width?: string; alignment?: string }): object {
+        this.imageUrls.push(data.image);
+        const obj = {
+            image: this.removeLeadingSlash(data.image),
+            fit: data.fit,
+            width: data.width,
+            alignment: data.alignment
+        };
+
+        return obj;
     }
 
     /**
@@ -818,6 +871,13 @@ export class PdfDocumentService {
             return image.indexOf(`/`) === 0 ? image.slice(1) : image;
         });
         const images = await Promise.all(urls.map(url => this.httpService.downloadAsBase64(url)));
-        return urls.mapToObject((url, index) => ({ [url]: images[index] }));
+        return {
+            images: urls
+                .filter((_, index) => images[index].type !== `image/svg+xml`)
+                .mapToObject((url, index) => ({ [url]: images[index].data })),
+            svgs: urls
+                .filter((_, index) => images[index].type === `image/svg+xml`)
+                .mapToObject((url, index) => ({ [url]: atob(images[index].data) }))
+        };
     }
 }
