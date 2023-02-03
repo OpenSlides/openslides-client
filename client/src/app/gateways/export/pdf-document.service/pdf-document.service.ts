@@ -122,7 +122,7 @@ export interface PdfImageDescription {
     };
     svgs?: {
         [url: string]: string;
-    }
+    };
 }
 
 export interface PdfFontDescription {
@@ -228,7 +228,7 @@ class PdfCreator {
             return doc.map(el => {
                 return this.replaceSvgRecursive(el, url, image);
             });
-        } else if (doc && typeof doc === 'object') {
+        } else if (doc && typeof doc === `object`) {
             for (let key of Object.keys(doc)) {
                 if (key === `image` && doc[key] === url) {
                     delete doc[key];
@@ -237,7 +237,6 @@ class PdfCreator {
                     doc[key] = this.replaceSvgRecursive(doc[key], url, image);
                 }
             }
-
         }
 
         return doc;
