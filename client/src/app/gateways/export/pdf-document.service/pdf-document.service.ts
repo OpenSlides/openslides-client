@@ -870,14 +870,17 @@ export class PdfDocumentService {
         const urls = this.imageUrls.map(image => {
             return image.indexOf(`/`) === 0 ? image.slice(1) : image;
         });
-        const images = await Promise.all(urls.map(url => this.httpService.downloadAsBase64(url)));
+        const downloads = await Promise.all(urls.map(url => this.httpService.downloadAsBase64(url)));
+        const images = downloads.filter(image => image.type !== `image/svg+xml`);
+        const svgs = downloads.filter(image => image.type === `image/svg+xml`);
+
         return {
             images: urls
-                .filter((_, index) => images[index].type !== `image/svg+xml`)
+                .filter((_, index) => downloads[index].type !== `image/svg+xml`)
                 .mapToObject((url, index) => ({ [url]: images[index].data })),
             svgs: urls
-                .filter((_, index) => images[index].type === `image/svg+xml`)
-                .mapToObject((url, index) => ({ [url]: atob(images[index].data) }))
+                .filter((_, index) => downloads[index].type === `image/svg+xml`)
+                .mapToObject((url, index) => ({ [url]: atob(svgs[index].data) }))
         };
     }
 }
