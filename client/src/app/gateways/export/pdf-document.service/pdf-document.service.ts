@@ -710,14 +710,12 @@ export class PdfDocumentService {
 
     private getImage(data: { image: string; fit?: number[]; width?: string; alignment?: string }): object {
         this.imageUrls.push(data.image);
-        const obj = {
+        return {
             image: this.removeLeadingSlash(data.image),
             fit: data.fit,
             width: data.width,
             alignment: data.alignment
         };
-
-        return obj;
     }
 
     /**
