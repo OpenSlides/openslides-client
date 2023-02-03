@@ -9,6 +9,7 @@ import { CmlPermsDirective } from './perms/cml-perms.directive';
 import { OmlPermsDirective } from './perms/oml-perms.directive';
 import { PermsDirective } from './perms/perms.directive';
 import { ResizedDirective } from './resized/resized.directive';
+import { TrimOnPasteDirective } from './trim-on-paste/trim-on-paste.directive';
 
 const DIRECTIVES = [
     OnlyNumberDirective,
@@ -18,7 +19,8 @@ const DIRECTIVES = [
     AutofocusDirective,
     ResizedDirective,
     MeetingSettingDirective,
-    PaperDirective
+    PaperDirective,
+    TrimOnPasteDirective
 ];
 
 @NgModule({
