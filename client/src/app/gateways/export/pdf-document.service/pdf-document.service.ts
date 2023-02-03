@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { Functionable } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
@@ -127,11 +128,14 @@ export interface PdfFontDescription {
     bolditalics: string;
 }
 
+const additionalPdfSettingsKeys: (keyof Settings)[] = [`export_pdf_pagenumber_alignment`];
+
 interface PdfCreatorConfig {
     document: object;
     filename: string;
     progressService: ProgressSnackBarControlService;
     progressSnackBarService: ProgressSnackBarService;
+    settings?: Partial<Settings>;
     loadFonts: Functionable<PdfFontDescription>;
     loadImages?: Functionable<PdfImageDescription>;
     createVfs?: Functionable<PdfVirtualFileSystem>;
@@ -145,6 +149,7 @@ class PdfCreator {
     private readonly _createVfs: Functionable<PdfVirtualFileSystem>;
     private readonly _progressService: ProgressSnackBarControlService;
     private readonly _progressSnackBarService: ProgressSnackBarService;
+    private readonly _settings: Partial<Settings>;
 
     private _pdfWorker: Worker | null = null;
 
@@ -156,6 +161,7 @@ class PdfCreator {
         this._createVfs = config.createVfs || (() => ({}));
         this._progressService = config.progressService;
         this._progressSnackBarService = config.progressSnackBarService;
+        this._settings = config.settings;
     }
 
     public download(): void {
@@ -198,7 +204,8 @@ class PdfCreator {
         this._pdfWorker!.postMessage({
             doc: JSON.parse(JSON.stringify(this._document)),
             fonts: typeof this._loadFonts === `function` ? await this._loadFonts() : this._loadFonts,
-            vfs: await this.createVfs()
+            vfs: await this.createVfs(),
+            settings: this._settings
         });
     }
 
@@ -244,6 +251,8 @@ export class PdfDocumentService {
 
     private pdfWorker: Worker | null = null;
 
+    private settings: Partial<Settings> = {};
+
     public constructor(
         private translate: TranslateService,
         private httpService: HttpService,
@@ -253,7 +262,17 @@ export class PdfDocumentService {
         private pdfImagesService: PdfImagesService,
         private mediaManageService: MediaManageService,
         private meetingSettingsService: MeetingSettingsService
-    ) {}
+    ) {
+        this.makeSettingsSubscriptions();
+    }
+
+    private makeSettingsSubscriptions(): void {
+        additionalPdfSettingsKeys.forEach(key =>
+            this.meetingSettingsService
+                .get(key)
+                .subscribe(value => (this.settings = Object.assign(this.settings, { [key]: value })))
+        );
+    }
 
     /**
      * Removes leading slash from url.
@@ -415,6 +434,7 @@ export class PdfDocumentService {
                 imageUrls: imageUrls
             }),
             filename: `${filetitle}.pdf`,
+            settings: this.settings,
             loadImages: () => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
@@ -435,6 +455,7 @@ export class PdfDocumentService {
                 landscape: true
             }),
             filename: `${filetitle}.pdf`,
+            settings: this.settings,
             loadImages: () => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
@@ -459,6 +480,7 @@ export class PdfDocumentService {
             new PdfCreator({
                 document,
                 filename: `${filetitle}.pdf`,
+                settings: this.settings,
                 loadFonts,
                 createVfs: createVfs,
                 loadImages: () => this.loadImages(),
