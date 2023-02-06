@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { ChildNodeParagraphPayload, CreateSpecificParagraphPayload, HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
+import {
+    ChildNodeParagraphPayload,
+    CreateSpecificParagraphPayload,
+    HtmlToPdfService
+} from 'src/app/gateways/export/html-to-pdf.service';
 
 import { MotionsExportModule } from '../motions-export.module';
 
@@ -53,15 +57,13 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
     }
 
     protected override createDivParagraph(data: CreateSpecificParagraphPayload): any {
-        const { element, nodeName, children, classes, styles } = data;
+        const { element, nodeName, classes, styles } = data;
+        const children = this.parseChildren(element, styles);
         let newParagraph: any;
-        if (
-            this.lineNumberingMode === LineNumberingMode.Outside &&
-            !classes.includes(`insert`) &&
-            nodeName !== `li`
-        ) {
+        if (this.lineNumberingMode === LineNumberingMode.Outside && !classes.includes(`insert`) && nodeName !== `li`) {
             newParagraph = this.create(`stack`);
             newParagraph.stack = children;
+            newParagraph = this.formatDivParagraph(newParagraph, data);
         } else if (nodeName === `li`) {
             newParagraph = this.create(`stack`);
 
@@ -88,9 +90,9 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
             if (ul.length) {
                 newParagraph.stack.push(ul);
             }
+            newParagraph = this.formatDivParagraph(newParagraph, data);
         } else {
-            newParagraph = this.create(`text`);
-            newParagraph.text = children;
+            newParagraph = super.createDivParagraph(data);
         }
         if (this.lineNumberingMode === LineNumberingMode.Outside && classes.includes(`insert`)) {
             // that is usually the case for inserted change which should appear
@@ -118,7 +120,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
     }
 
     protected override createSpanParagraph(data: CreateSpecificParagraphPayload): any {
-        const { element, nodeName, children, classes, styles } = data;
+        const element = data.element;
         if (element.getAttribute(`data-line-number`) && !this.isInsideAList(element)) {
             if (this.lineNumberingMode === LineNumberingMode.Inside) {
                 // TODO: algorithm for "inline" line numbers is not yet implemented
@@ -140,8 +142,12 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         }
     }
 
-    protected override createUlOlParagraph(data: CreateSpecificParagraphPayload): any {
-        const { element, nodeName, children, classes, styles } = data;
+    protected override createListParagraph(data: CreateSpecificParagraphPayload): any {
+        if (!(this.lineNumberingMode === LineNumberingMode.Outside)) {
+            return super.createListParagraph(data);
+        }
+
+        const { element, nodeName, classes, styles } = data;
         const list = this.create(nodeName);
 
         // keep the numbers of the ol list
@@ -154,47 +160,41 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         let newParagraph = list;
 
         // in case of line numbers and only of the list is not nested in another list.
-        if (this.lineNumberingMode === LineNumberingMode.Outside) {
-            const lines = this.extractLineNumbers(element);
+        const lines = this.extractLineNumbers(element);
 
-            const cleanedChildDom = this.cleanLineNumbers(element);
-            const cleanedChildren = this.parseChildren(cleanedChildDom, styles);
+        const cleanedChildDom = this.cleanLineNumbers(element);
+        const cleanedChildren = this.parseChildren(cleanedChildDom, styles);
 
-            if (lines.length > 0) {
-                const listCol: any = {
-                    columns: [
-                        {
-                            width: 20,
-                            stack: []
-                        }
-                    ],
-                    margin: [0, 0, 0, 0]
-                };
-
-                // if this is a "fake list" lower put it close to the element above
-                if (this.isFakeList(element)) {
-                    listCol.margin[3] = -this.P_MARGIN_BOTTOM;
-                }
-
-                for (const line of lines) {
-                    if (line.lineNumber) {
-                        listCol.columns[0].stack.push(this.getLineNumberObject(line));
+        if (lines.length > 0) {
+            const listCol: any = {
+                columns: [
+                    {
+                        width: 20,
+                        stack: []
                     }
-                }
+                ],
+                margin: [0, 0, 0, 0]
+            };
 
-                list[nodeName] = cleanedChildren;
-                listCol.columns.push(list);
-                newParagraph = listCol;
-            } else {
-                // that is usually the case for "inserted" lists during change recomendations
-                list.margin = [20, 0, 0, 0];
-                newParagraph = list;
-                newParagraph[nodeName] = cleanedChildren;
+            // if this is a "fake list" lower put it close to the element above
+            if (this.isFakeList(element)) {
+                listCol.margin[3] = -this.P_MARGIN_BOTTOM;
             }
+
+            for (const line of lines) {
+                if (line.lineNumber) {
+                    listCol.columns[0].stack.push(this.getLineNumberObject(line));
+                }
+            }
+
+            list[nodeName] = cleanedChildren;
+            listCol.columns.push(list);
+            newParagraph = listCol;
         } else {
-            const children = this.parseChildren(element, styles);
+            // that is usually the case for "inserted" lists during change recomendations
+            list.margin = [20, 0, 0, 0];
             newParagraph = list;
-            newParagraph[nodeName] = children;
+            newParagraph[nodeName] = cleanedChildren;
         }
         return newParagraph;
     }
@@ -388,14 +388,5 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
             return parseInt(element.getAttribute(`data-line-number`)!, 10);
         }
         return 0;
-    }
-
-    /**
-     * Detect if the given element is a change recommendation exclusive node
-     */
-    private isCrElement(element: Element): boolean {
-        const nodeName = element.nodeName.toLowerCase();
-        const crNodeNames = [`ins`, `del`];
-        return crNodeNames.includes(nodeName);
     }
 }
