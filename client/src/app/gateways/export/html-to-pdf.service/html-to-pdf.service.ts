@@ -34,17 +34,17 @@ export class HtmlToPdfService {
     /**
      * Normal line height for paragraphs
      */
-    protected LINE_HEIGHT = 1.25;
+    private lineHeight = 1.25;
 
     /**
      * space between paragraphs
      */
-    protected P_MARGIN_BOTTOM = 4.0;
+    protected readonly P_MARGIN_BOTTOM = 4.0;
 
     /**
      * Space above H
      */
-    protected H_MARGIN_TOP = 10.0;
+    protected readonly H_MARGIN_TOP = 10.0;
 
     /**
      * Conversion of HTML tags into pdfmake directives
@@ -196,7 +196,7 @@ export class HtmlToPdfService {
             case `br`: {
                 newParagraph = this.create(`text`);
                 newParagraph.text = `\n`;
-                newParagraph.lineHeight = this.LINE_HEIGHT;
+                newParagraph.lineHeight = this.lineHeight;
                 break;
             }
             case `ul`:
@@ -232,7 +232,7 @@ export class HtmlToPdfService {
         paragraph.margin[1] = this.getMarginTop(nodeName);
         paragraph.margin[3] = this.getMarginBottom(nodeName);
 
-        paragraph.lineHeight = this.LINE_HEIGHT;
+        paragraph.lineHeight = this.lineHeight;
         paragraph = {
             ...paragraph,
             ...this.computeStyle(styles),
@@ -363,50 +363,28 @@ export class HtmlToPdfService {
     }
 
     /**
-     * Determine the ideal top margin for a given node
+     * Determine the ideal top margin for a given node.
+     * May be overwritten in subclasses.
      *
      * @param nodeName the node to parse
      * @returns the margin tip as number
      */
-    private getMarginTop(nodeName: string): number {
-        switch (nodeName) {
-            case `h1`:
-            case `h2`:
-            case `h3`:
-            case `h4`:
-            case `h5`:
-            case `h6`: {
-                return this.H_MARGIN_TOP;
-            }
-            default: {
-                return 0;
-            }
+    protected getMarginTop(nodeName: string): number {
+        if (nodeName.match(/^h[1-6]$/)) {
+            return this.H_MARGIN_TOP;
         }
+        return 0;
     }
 
     /**
-     * Determine the ideal margin for a given node
+     * Determine the ideal margin for a given node.
+     * May be overwritten in subclasses.
      *
      * @param nodeName the node to parse
      * @returns the margin bottom as number
      */
-    private getMarginBottom(nodeName: string): number {
-        switch (nodeName) {
-            case `h1`:
-            case `h2`:
-            case `h3`:
-            case `h4`:
-            case `h5`:
-            case `h6`: {
-                return this.P_MARGIN_BOTTOM;
-            }
-            case `li`: {
-                return this.P_MARGIN_BOTTOM;
-            }
-            default: {
-                return this.P_MARGIN_BOTTOM;
-            }
-        }
+    protected getMarginBottom(nodeName: string): number {
+        return this.P_MARGIN_BOTTOM;
     }
 
     /**
