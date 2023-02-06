@@ -146,6 +146,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
      * Observable to the raw data
      */
     public dataListObservable: Observable<V[]> = of([]);
+    public dataFullListObservable: Observable<V[]> = of([]);
 
     private _source: Observable<V[]> = of([]);
 
@@ -178,6 +179,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
                 dataListObservable = this.searchService.outputObservable;
             }
             this.dataListObservable = dataListObservable;
+            this.dataFullListObservable = this._source;
         }
     }
 
