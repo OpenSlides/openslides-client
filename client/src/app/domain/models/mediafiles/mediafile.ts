@@ -73,7 +73,7 @@ export class Mediafile extends BaseModel<Mediafile> {
             return null;
         }
 
-        if (this.used_as_logo_$_in_meeting_id.indexOf(place) === -1) {
+        if (this[`used_as_${type}_$_in_meeting_id`].indexOf(place) === -1) {
             return null;
         }
 
