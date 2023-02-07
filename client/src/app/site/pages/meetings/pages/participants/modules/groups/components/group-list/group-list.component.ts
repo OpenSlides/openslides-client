@@ -171,10 +171,13 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
         this.selectedGroup = null;
     }
 
-    public discardChanges(): void {
-        this.currentPermissions = {};
-        this.updateRowDef();
-        this.updatedGroupIds.clear();
+    public async discardChanges(): Promise<void> {
+        const title = this.translate.instant(`Do you really want to discard all your changes?`);
+        if (await this.promptService.open(title)) {
+            this.currentPermissions = {};
+            this.updateRowDef();
+            this.updatedGroupIds.clear();
+        }
     }
 
     public onChange(group: ViewGroup, permission: string, checked: boolean): void {
