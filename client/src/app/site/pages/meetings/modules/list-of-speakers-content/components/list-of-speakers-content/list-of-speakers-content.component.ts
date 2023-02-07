@@ -386,7 +386,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
      * @param speaker
      */
     public isFirstContribution(speaker: ViewSpeaker): boolean {
-        return this.hasSpokenCount(speaker) === 0;
+        return this.listOfSpeakersRepo.isFirstContribution(speaker);
     }
 
     /**

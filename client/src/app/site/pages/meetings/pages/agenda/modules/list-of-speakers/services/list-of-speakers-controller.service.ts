@@ -49,6 +49,10 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
         return this.repo.deleteAllPreviousSpeakers(listOfSpeakers);
     }
 
+    public isFirstContribution(speaker: ViewSpeaker): boolean {
+        return !this.getViewModelList().some(list => list.hasUserSpoken(speaker.userId));
+    }
+
     /**
      * Maps structure-level to speaker.
      *
