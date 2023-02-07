@@ -101,7 +101,7 @@
 
                     <span>
                         <span *ngIf="motion.submitters.length || showSequential">&middot;&nbsp;</span>
-                        <span>{{ motion.last_modified && motion.last_modified !== motion.created ? 'modified' : 'created' | translate }}</span>
+                        <span>{{ motion.last_modified && motion.last_modified !== motion.created ? ('modified' | translate) : ('created' | translate) }}</span>
                         {{ motion.last_modified ?? motion.created | localizedDate }}
                     </span>
                 </div>

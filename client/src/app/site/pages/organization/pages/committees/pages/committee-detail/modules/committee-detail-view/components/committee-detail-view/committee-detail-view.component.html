@@ -38,7 +38,7 @@
         <!-- forward motions to -->
         <os-committee-meta-info
             icon="file_upload"
-            [title]="forwardLabel"
+            title="{{ 'Forward motions to' | translate }}"
             *ngIf="committee.forward_to_committees.length > 0 && isOrgaAdmin()"
         >
             <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
@@ -58,7 +58,7 @@
         <!-- receive motions from -->
         <os-committee-meta-info
             icon="file_download"
-            [title]="receiveLabel"
+            title="{{ 'Receive motions from' | translate }}"
             *ngIf="committee.receive_forwardings_from_committees.length > 0 && isOrgaAdmin()"
         >
             <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
@@ -76,11 +76,11 @@
         </os-committee-meta-info>
 
         <!-- Member amount -->
-        <os-committee-meta-info *ngIf="canManageUsers" icon="group" title="Assigned accounts">
+        <os-committee-meta-info *ngIf="canManageUsers" icon="group" title="{{ 'Assigned accounts' | translate }}">
             {{ getMemberAmount(committee) }}
         </os-committee-meta-info>
 
-        <os-committee-meta-info icon="engineering" title="Committee admin" *ngIf="canManageCommittee">
+        <os-committee-meta-info icon="engineering" title="{{ 'Committee admin' | translate }}" *ngIf="canManageCommittee">
             <ng-container *ngIf="committee.getManagers() as managers">
                 <span *ngFor="let manager of managers; let last = last">
                     <ng-container *osOmlPerms="OML.can_manage_users">

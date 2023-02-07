@@ -14,6 +14,7 @@ import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/ass
 
 export type SettingsType =
     | 'string'
+    | 'email'
     | 'text'
     | 'markupText'
     | 'integer'
@@ -866,7 +867,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `users_email_replyto`,
-                        label: _(`Reply address`)
+                        label: _(`Reply address`),
+                        type: `email`,
+                        validators: [Validators.email]
                     },
                     {
                         key: `users_email_subject`,

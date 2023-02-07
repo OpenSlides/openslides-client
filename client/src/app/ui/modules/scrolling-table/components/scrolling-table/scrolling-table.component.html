@@ -1,6 +1,6 @@
 <ng-container *ngIf="cellDefinitionsObservable | async as definitions">
     <ng-container *ngIf="hasDataObservable | async; else noDataTemplate">
-        <div [style.height]="calculateContainerHeight()">
+        <div #cdkContainer [style.height]="calculateContainerHeight()">
             <cdk-virtual-scroll-viewport class="virtual-scroll-viewport background-card" [itemSize]="rowHeight">
                 <div
                     *ngIf="showHeader"
@@ -67,7 +67,7 @@
 </ng-container>
 
 <ng-template #noDataTemplate>
-    <div class="scrolling-table--no-data-wrapper background-card">
+    <div #cdkContainer class="scrolling-table--no-data-wrapper" [style.height]="calculateContainerHeight()">
         <ng-template [cdkPortalOutlet]="noDataTemplateObservable | async"></ng-template>
     </div>
 </ng-template>

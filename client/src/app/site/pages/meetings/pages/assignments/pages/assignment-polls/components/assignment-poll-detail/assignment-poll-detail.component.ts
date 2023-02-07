@@ -25,6 +25,7 @@ import {
     UnknownUserLabel
 } from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';
+import { AssignmentPollPdfService } from '../../../../modules/assignment-poll/services/assignment-poll-pdf.service/assignment-poll-pdf.service';
 
 @Component({
     selector: `os-assignment-poll-detail`,
@@ -64,7 +65,8 @@ export class AssignmentPollDetailComponent
         cd: ChangeDetectorRef,
         participantRepo: ParticipantControllerService,
         private pollDialog: AssignmentPollDialogService,
-        scrollTableManage: ScrollingTableManageService
+        scrollTableManage: ScrollingTableManageService,
+        pollPdfService: AssignmentPollPdfService
     ) {
         super(
             componentServiceCollector,
@@ -78,7 +80,8 @@ export class AssignmentPollDetailComponent
             operator,
             cd,
             participantRepo,
-            scrollTableManage
+            scrollTableManage,
+            pollPdfService
         );
     }
 

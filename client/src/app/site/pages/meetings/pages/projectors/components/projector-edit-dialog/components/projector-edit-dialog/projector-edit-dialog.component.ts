@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
 import { Projectiondefault, ProjectiondefaultVerbose } from 'src/app/domain/models/projector/projection-default';
@@ -89,6 +90,16 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * Options for the `Projection defaults`-selector
      */
     public readonly projectiondefaultVerbose = ProjectiondefaultVerbose;
+
+    public readonly colorFields = {
+        color: _(`Foreground color`),
+        background_color: _(`Background color`),
+        header_background_color: _(`Header background color`),
+        header_font_color: _(`Header font color`),
+        header_h1_color: _(`Headline color`),
+        chyron_background_color: _(`Chyron background color`),
+        chyron_font_color: _(`Chyron font color`)
+    };
 
     private get _aspectRatioControl(): AbstractControl {
         return this.updateForm.get(ASPECT_RATIO_FORM_KEY)!;

@@ -32,7 +32,7 @@ const FILE_TEMPLATE = dedent`
             provider.validateDefault(key, defaultValue);
             content += `    "${key}": `;
             const defaultString = JSON.stringify(defaultValue);
-            if ((!value.type || value.type === 'string') && !value.dontTranslateDefault) {
+            if (value.type === 'string' && !value.dontTranslateDefault) {
                 content += `_(${defaultString}),\n`;
             } else {
                 content += `${defaultString},\n`;
