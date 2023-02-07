@@ -32,6 +32,10 @@ export class AutoupdateStreamPool {
     private _updateAuthPromise: Promise<void> | undefined;
     private _waitingForUpdateAuthPromise: boolean = false;
 
+    public get activeStreams(): AutoupdateStream[] {
+        return this.streams.filter(stream => stream.active);
+    }
+
     constructor(private endpoint: AutoupdateSetEndpointParams) {
         this.updateAuthentication();
     }
