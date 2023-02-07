@@ -172,8 +172,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
     }
 
     public async discardChanges(): Promise<void> {
-        const title = this.translate.instant(`Do you really want to discard all your changes?`);
-        if (await this.promptService.open(title)) {
+        if (await this.promptService.discardChangesConfirmation()) {
             this.currentPermissions = {};
             this.updateRowDef();
             this.updatedGroupIds.clear();

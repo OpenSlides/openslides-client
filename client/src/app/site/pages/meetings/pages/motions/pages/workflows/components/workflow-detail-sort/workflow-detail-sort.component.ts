@@ -91,9 +91,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     public async onCancel(): Promise<void> {
         let resetList = true;
         if (this.hasChanges) {
-            const title = this.translate.instant(_(`Do you really want to discard all your changes?`));
-            const content = this.translate.instant(_(`Unsaved changes will not be applied.`));
-            resetList = (await this.promptService.open(title, content)) as boolean;
+            resetList = await this.promptService.discardChangesConfirmation();
         }
         if (resetList) {
             this.sortingList.restore();
