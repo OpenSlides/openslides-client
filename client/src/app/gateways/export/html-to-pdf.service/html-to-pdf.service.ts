@@ -34,7 +34,7 @@ export class HtmlToPdfService {
     /**
      * Normal line height for paragraphs
      */
-    private lineHeight = 1.25;
+    protected lineHeight = 1.25;
 
     /**
      * space between paragraphs

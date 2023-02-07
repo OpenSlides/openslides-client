@@ -47,7 +47,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         this.lineNumberingMode = lnMode || LineNumberingMode.None;
 
         if (lineHeight) {
-            this.LINE_HEIGHT = lineHeight;
+            this.lineHeight = lineHeight;
         }
 
         // Cleanup of dirty html would happen here
@@ -251,7 +251,7 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                 }
             ],
             marginBottom: line.marginBottom,
-            lineHeight: this.LINE_HEIGHT
+            lineHeight: this.lineHeight
         };
     }
 
