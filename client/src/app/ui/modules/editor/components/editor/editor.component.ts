@@ -5,6 +5,8 @@ import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import { RawEditorSettings } from 'tinymce';
 
+import { SidenavService } from '../../../sidenav/services/sidenav.service';
+
 @Component({
     selector: `os-editor`,
     templateUrl: `./editor.component.html`,
@@ -40,6 +42,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         lists link paste searchreplace`,
         menubar: false,
         contextmenu: false,
+        setup: editor => {
+            editor.on(`FullscreenStateChanged`, event => {
+                this.onFullscreenChanged(event);
+            });
+        },
         toolbar: `styleselect | bold italic underline strikethrough |
             forecolor backcolor removeformat | bullist numlist |
             link image charmap | code fullscreen`,
@@ -50,7 +57,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         paste_preprocess: this.onPastePreprocess
     };
 
-    public constructor(fb: UntypedFormBuilder, translate: TranslateService) {
+    public constructor(fb: UntypedFormBuilder, translate: TranslateService, private sidenavService: SidenavService) {
         super(fb);
         this.tinyMceSettings.language_url = `/assets/tinymce/langs/` + translate.currentLang + `.js`;
         this.tinyMceSettings.language = translate.currentLang;
@@ -65,6 +72,14 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             ...this.tinyMceSettings,
             ...this.customSettings
         };
+    }
+
+    public onFullscreenChanged(event: any): void {
+        if (event[`state`]) {
+            this.sidenavService.lowerSidebar();
+        } else {
+            this.sidenavService.raiseSidebar();
+        }
     }
 
     protected createForm(): UntypedFormControl {
