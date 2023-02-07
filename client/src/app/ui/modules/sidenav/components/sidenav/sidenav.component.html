@@ -49,7 +49,7 @@
             ></ng-container>
         </div>
     </mat-sidenav>
-    <mat-sidenav-content [ngClass]="{ 'optional-z-index-2': raisedContent }">
+    <mat-sidenav-content>
         <ng-container
             *ngIf="!sideNav.opened"
             [ngTemplateOutlet]="sideNavToggleButton"

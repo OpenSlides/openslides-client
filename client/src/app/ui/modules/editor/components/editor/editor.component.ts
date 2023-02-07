@@ -5,8 +5,6 @@ import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 import { RawEditorSettings } from 'tinymce';
 
-import { SidenavService } from '../../../sidenav/services/sidenav.service';
-
 @Component({
     selector: `os-editor`,
     templateUrl: `./editor.component.html`,
@@ -57,7 +55,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         paste_preprocess: this.onPastePreprocess
     };
 
-    public constructor(fb: UntypedFormBuilder, translate: TranslateService, private sidenavService: SidenavService) {
+    public constructor(fb: UntypedFormBuilder, translate: TranslateService) {
         super(fb);
         this.tinyMceSettings.language_url = `/assets/tinymce/langs/` + translate.currentLang + `.js`;
         this.tinyMceSettings.language = translate.currentLang;
@@ -75,10 +73,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     }
 
     public onFullscreenChanged(event: any): void {
+        const element = document.querySelector(`mat-sidenav`) as HTMLElement;
         if (event[`state`]) {
-            this.sidenavService.lowerSidebar();
+            element.style.zIndex = `0`;
         } else {
-            this.sidenavService.raiseSidebar();
+            element.style.zIndex = null;
         }
     }
 
