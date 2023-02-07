@@ -27,12 +27,6 @@ export class SidenavComponent {
         return this.vp.isMobile;
     }
 
-    public get raisedContent(): boolean {
-        return this._raisedContent;
-    }
-
-    private _raisedContent: boolean = false;
-
     public constructor(private vp: ViewPortService) {}
 
     public close(): void {
