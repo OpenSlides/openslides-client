@@ -45,9 +45,7 @@ export class OrganizationMediafileListComponent
 
     public newDirectoryForm: UntypedFormGroup;
 
-    public types = [`orga`, `global`];
-
-    public logoPlaces: { orga: LogoPlace[]; global: LogoPlace[] } = { orga: [], global: [`web_header`] };
+    public logoPlaces: LogoPlace[] = [`web_header`];
     public logoDisplayNames = LogoDisplayNames;
 
     public updatingLogoAndFontSettings = false;
@@ -75,7 +73,7 @@ export class OrganizationMediafileListComponent
      */
     public fileEditForm: UntypedFormGroup | null = null;
 
-    public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(`logo`, file);
+    public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(file);
     public isUsedAsFontFn = (file: ViewMediafile) => false;
 
     private folderSubscription: Subscription | null = null;
@@ -125,20 +123,15 @@ export class OrganizationMediafileListComponent
         this.cd.detach();
     }
 
-    public isMediafileUsed(file: ViewMediafile, place: LogoPlace, type: `orga` | `global`): boolean {
+    public isMediafileUsed(file: ViewMediafile, place: LogoPlace): boolean {
         const mediafile = this.repo.getViewModel(file.id)!;
         if (file.isImage() && !Object.keys(LogoDisplayNames).includes(place)) {
             return false;
         }
-        return mediafile.token?.includes(`${type}-${place}`) ?? false;
+        return mediafile.token === `global-${place}`;
     }
 
-    public async toggleMediafileUsage(
-        event: Event,
-        mediafile: ViewMediafile,
-        place: LogoPlace,
-        type: `orga` | `global`
-    ): Promise<void> {
+    public async toggleMediafileUsage(event: Event, mediafile: ViewMediafile, place: LogoPlace): Promise<void> {
         // prohibits automatic closing
         event.stopPropagation();
         this.updatingLogoAndFontSettings = true;
@@ -146,26 +139,23 @@ export class OrganizationMediafileListComponent
         if (!file || (file.isImage() && !Object.keys(LogoDisplayNames).includes(place))) {
             throw new Error(!file ? `File has been deleted` : `Invalid mediafile type for place.`);
         }
-        const fullPlace = `${type}-${place}`;
-        if (!file.token?.includes(fullPlace)) {
+        const fullPlace = `global-${place}`;
+        if (!(file.token === fullPlace)) {
             for (let filteredFile of this.repo
                 .getViewModelList()
-                .filter(filterFile => filterFile.token?.includes(fullPlace) && filterFile.id !== file.id)) {
-                await this.repo.update(
-                    { token: filteredFile.token?.replace(fullPlace, ``).trim() || null },
-                    filteredFile
-                );
+                .filter(filterFile => filterFile.token === fullPlace && filterFile.id !== file.id)) {
+                await this.repo.update({ token: null }, filteredFile);
             }
-            await this.repo.update({ token: file.token ? `${file.token} ${fullPlace}` : fullPlace }, file);
+            await this.repo.update({ token: fullPlace }, file);
         } else {
-            await this.repo.update({ token: file.token?.replace(fullPlace, ``).trim() || null }, file);
+            await this.repo.update({ token: null }, file);
         }
         this.updatingLogoAndFontSettings = false;
         this.cd.markForCheck();
     }
 
-    public getDisplayNameForPlace(place: LogoPlace, type: `orga` | `global`): string {
-        const prefix = type === `orga` ? `Organization` : `Global default`;
+    public getDisplayNameForPlace(place: LogoPlace): string {
+        const prefix = `Global default`;
         return `${prefix} ${LogoDisplayNames[place]}`;
     }
 
@@ -284,10 +274,8 @@ export class OrganizationMediafileListComponent
         }
     }
 
-    private isUsedAs(use: `logo`, file: ViewMediafile): boolean {
+    private isUsedAs(file: ViewMediafile): boolean {
         const places = this.logoPlaces;
-        return ([`orga`, `global`] as (`orga` | `global`)[]).some(type =>
-            places[type].some(place => this.isMediafileUsed(file, place, type))
-        );
+        return places[`global`].some(place => this.isMediafileUsed(file, place));
     }
 }

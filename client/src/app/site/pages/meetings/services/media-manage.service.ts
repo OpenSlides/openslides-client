@@ -5,8 +5,10 @@ import {
     FontDefaults,
     FontDisplayNames,
     FontPlace,
+    FontPlaces,
     LogoDisplayNames,
-    LogoPlace
+    LogoPlace,
+    LogoPlaces
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { MeetingMediaAdapterService } from 'src/app/gateways/meeting-media-adapter.service';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
@@ -19,29 +21,11 @@ import { ActiveMeetingService } from './active-meeting.service';
 })
 export class MediaManageService {
     public get allLogoPlaces(): LogoPlace[] {
-        return [
-            `projector_main`,
-            `projector_header`,
-            `web_header`,
-            `pdf_header_l`,
-            `pdf_header_r`,
-            `pdf_footer_l`,
-            `pdf_footer_r`,
-            `pdf_ballot_paper`
-        ];
+        return LogoPlaces;
     }
 
     public get allFontPlaces(): FontPlace[] {
-        return [
-            `regular`,
-            `italic`,
-            `bold`,
-            `bold_italic`,
-            `monospace`,
-            `chyron_speaker_name`,
-            `projector_h1`,
-            `projector_h2`
-        ];
+        return FontPlaces;
     }
 
     private readonly logoUrlSubjects: { [place in LogoPlace]?: BehaviorSubject<string | null> } = {};
@@ -73,13 +57,14 @@ export class MediaManageService {
 
     public getLogoUrl(place: LogoPlace): string | null {
         // Note: we are not fetching the mediafile view model at any place except when filtering for the defaults.
-        const mediafileId =
-            (this.activeMeetingService.meetingId
-                ? this.activeMeetingService.meeting?.logo_id(place)
-                : this.getGeneralMediafileIdByToken(`orga`, place)) ??
-            this.getGeneralMediafileIdByToken(`global`, place);
+        const mediafileId = this.activeMeetingService.meetingId
+            ? this.activeMeetingService.meeting?.logo_id(place)
+            : null;
+        const generalMediafileId = this.getGlobalMediafileIdByToken(place);
         if (mediafileId) {
             return this.getUrlForId(mediafileId);
+        } else if (generalMediafileId) {
+            return this.getUrlForId(generalMediafileId);
         } else {
             return null;
         }
@@ -125,13 +110,11 @@ export class MediaManageService {
         await this.mediaAdapter.unsetFont(place, this.activeMeetingService.meetingId!);
     }
 
-    private getGeneralMediafileIdByToken(type: `orga` | `global`, place: LogoPlace | FontPlace): number {
+    private getGlobalMediafileIdByToken(place: LogoPlace | FontPlace): number {
         return (
             this.mediaRepo.getViewModelListUnsafe().find(file => {
                 return (
-                    file.isImage() &&
-                    Object.keys(LogoDisplayNames).includes(place) &&
-                    file.token?.includes(`${type}-${place}`)
+                    file.isImage() && Object.keys(LogoDisplayNames).includes(place) && file.token === `global-${place}`
                 );
             })?.id ?? null
         );
