@@ -10,7 +10,7 @@ export class ChatMessage extends BaseModel<ChatMessage> implements HasMeetingId 
     public readonly created!: number; // in seconds
     public readonly content!: UnsafeHtml;
 
-    public readonly user_id!: Id; // (user/chat_message_ids)
+    public readonly meeting_user_id!: Id; // (meeting_user/chat_message_ids)
     public readonly chat_group_id!: Id; // (chat_group/chat_message_ids)
 
     public constructor(input?: Partial<ChatMessage>) {

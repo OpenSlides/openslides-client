@@ -27,7 +27,7 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
             `speech_state`,
             `weight`,
             `note`,
-            `user_id`
+            `meeting_user_id`
         ];
         return { [DEFAULT_FIELDSET]: defaultSet };
     }

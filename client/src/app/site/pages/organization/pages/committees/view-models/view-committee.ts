@@ -1,6 +1,5 @@
 import { Observable, of } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { CML } from 'src/app/domain/definitions/organization-permission';
 import { Committee } from 'src/app/domain/models/comittees/committee';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -42,7 +41,7 @@ export class ViewCommittee extends BaseViewModel<Committee> {
     }
 
     public getManagers(): ViewUser[] {
-        return this.user_management_levels(CML.can_manage);
+        return this.managers;
     }
 
     // Functions injected by the committee-repo
@@ -56,6 +55,6 @@ interface ICommitteeRelations {
     forward_to_committees: ViewCommittee[];
     receive_forwardings_from_committees: ViewCommittee[];
     organization: ViewOrganization;
-    user_management_levels: (cml: CML) => ViewUser[];
+    managers: ViewUser[];
 }
 export interface ViewCommittee extends Committee, ICommitteeRelations, HasOrganizationTags {}

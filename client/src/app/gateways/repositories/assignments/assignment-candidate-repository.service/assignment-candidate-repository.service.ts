@@ -24,7 +24,7 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
 
     public override getFieldsets(): Fieldsets<AssignmentCandidate> {
         return {
-            [DEFAULT_FIELDSET]: [`weight`, `user_id`, `assignment_id`]
+            [DEFAULT_FIELDSET]: [`weight`, `meeting_user_id`, `assignment_id`]
         };
     }
 

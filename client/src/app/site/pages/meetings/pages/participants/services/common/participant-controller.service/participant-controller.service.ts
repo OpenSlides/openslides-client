@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { User } from 'src/app/domain/models/users/user';
 import { Action, ActionService } from 'src/app/gateways/actions';
 import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
 import {
+    ExtendedUserPatchFn,
     FullNameInformation,
     RawUser,
     UserPatchFn,
@@ -89,11 +91,11 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this._participantListSubject.asObservable();
     }
 
-    public create(...participants: Partial<User>[]): Promise<Identifiable[]> {
+    public create(...participants: Partial<User & MeetingUser>[]): Promise<Identifiable[]> {
         return this.repo.create(...participants.map(participant => this.validatePayload(participant)));
     }
 
-    public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
+    public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
         if (typeof patch === `function`) {
             const updatePatch = (user: ViewUser) => {
                 const participantPayload = patch(user);
@@ -101,7 +103,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             };
             return this.repo.update(updatePatch, ...users);
         }
-        return this.repo.update(this.validatePayload(patch as Partial<User>), ...users);
+        return this.repo.update(this.validatePayload(patch as Partial<ViewUser>), ...users);
     }
 
     public updateSelf(patch: UserPatchFn, participant: ViewUser): Promise<void> {
@@ -185,7 +187,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const prompt = await this.userDeleteDialog.open({ toDelete: toDeleteUsers, toRemove: toRemoveUsers });
         const answer = await firstValueFrom(prompt.afterClosed());
         if (answer) {
-            const patch = { group_$_ids: { [this.activeMeetingId!]: [] } };
+            const patch = { group_ids: [] };
             await this.delete(toDeleteUsers, true)
                 .concat(this.update(patch, ...toRemoveUsers))
                 .resolve();
@@ -245,31 +247,21 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         this._participantListSubject.next([]);
     }
 
-    private validatePayload(participant: Partial<User>): any {
+    private validatePayload(participant: Partial<User & MeetingUser> | Partial<ViewUser>): any {
         return {
             ...participant,
-            structure_level_$: participant.structure_level_$ || {
-                [this.activeMeetingId!]: participant.structure_level
-            },
-            group_$_ids: participant.group_$_ids || {
-                [this.activeMeetingId!]: participant.group_ids
-            },
-            number_$: participant.number_$ || { [this.activeMeetingId!]: participant.number },
-            vote_weight_$: participant.vote_weight_$ || {
-                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any, false)
-            },
-            vote_delegated_$_to_id: participant.vote_delegated_$_to_id || {
-                [this.activeMeetingId!]: participant.vote_delegated_to_id
-            },
-            vote_delegations_$_from_ids: participant.vote_delegations_$_from_ids || {
-                [this.activeMeetingId!]: participant.vote_delegations_from_ids
-            },
-            about_me_$: participant.about_me_$ || {
-                [this.activeMeetingId!]: participant.about_me
-            },
-            comment_$: participant.comment_$ || {
-                [this.activeMeetingId!]: participant.comment
-            }
+            group_ids: this.validateField(participant, `group_ids`),
+            structure_level: this.validateField(participant, `structure_level`),
+            number: this.validateField(participant, `number`),
+            vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
+            vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),
+            vote_delegations_from_ids: this.validateField(participant, `vote_delegations_from_ids`),
+            about_me: this.validateField(participant, `about_me`),
+            comment: this.validateField(participant, `comment`)
         };
+    }
+
+    private validateField(participant: Partial<ViewUser> | Partial<User & MeetingUser>, fieldname: string): any {
+        return typeof participant[fieldname] === `function` ? participant[fieldname]() : participant[fieldname];
     }
 }

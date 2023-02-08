@@ -58,7 +58,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `is_active_in_organization_id`,
             `is_archived_organization_id`,
             `template_for_organization_id`,
-            `user_ids`,
+            `meeting_user_ids`,
             `description`,
             `location`,
             `organization_tag_ids`
@@ -177,7 +177,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 action: UserAction.UPDATE,
                 data: Object.keys(userUpdate).map(userId => ({
                     id: parseInt(userId, 10),
-                    group_$_ids: { [meeting!.id]: userUpdate[parseInt(userId, 10)] }
+                    meeting_id: meeting!.id,
+                    group_ids: userUpdate[parseInt(userId, 10)]
                 }))
             });
         }

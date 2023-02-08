@@ -21,7 +21,7 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
     }
 
     public override getFieldsets(): Fieldsets<MotionSubmitter> {
-        const listFields: (keyof MotionSubmitter)[] = [`user_id`, `weight`];
+        const listFields: (keyof MotionSubmitter)[] = [`meeting_user_id`, `weight`];
 
         return {
             [DEFAULT_FIELDSET]: listFields

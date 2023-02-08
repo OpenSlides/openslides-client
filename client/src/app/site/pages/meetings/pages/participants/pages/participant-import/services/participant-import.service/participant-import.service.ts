@@ -3,8 +3,9 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
-import { User } from 'src/app/domain/models/users/user';
+import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
+import { GeneralUser } from 'src/app/gateways/repositories/users';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
@@ -13,7 +14,6 @@ import { BaseUserImportService } from 'src/app/site/base/base-user-import.servic
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
@@ -23,16 +23,18 @@ import { ParticipantImportServiceModule } from '../participant-import-service.mo
 
 const GROUP_PROPERTY = `group_ids`;
 
-const MEETING_SPECIFIC_USER_PROPERTIES: (keyof User)[] = [
+const MEETING_USER_PROPERTIES: (keyof MeetingUser)[] = [
     `about_me`,
-    `group_ids`,
     `comment`,
     `structure_level`,
     `number`,
     `vote_weight`,
     `vote_delegated_to_id`,
-    `vote_delegations_from_ids`
+    `vote_delegations_from_ids`,
+    `group_ids`
 ];
+
+const MEETING_SPECIFIC_USER_PROPERTIES: (keyof GeneralUser)[] = MEETING_USER_PROPERTIES;
 
 @Injectable({
     providedIn: ParticipantImportServiceModule
@@ -55,7 +57,7 @@ export class ParticipantImportService extends BaseUserImportService {
         return this.activeMeetingIdService.meetingId!;
     }
 
-    private _existingUserMap: { [userEmailUsername: string]: Partial<User>[] } = {};
+    private _existingUserMap: { [userEmailUsername: string]: Partial<GeneralUser>[] } = {};
 
     public constructor(
         importServiceCollector: ImportServiceCollectorService,
@@ -105,7 +107,7 @@ export class ParticipantImportService extends BaseUserImportService {
         this.exporter.exportCsvExample();
     }
 
-    protected getConfig(): ImportConfig<User> {
+    protected getConfig(): ImportConfig<GeneralUser> {
         return {
             modelHeadersAndVerboseNames: participantHeadersAndVerboseNames,
             verboseNameFn: plural => this.repo.getVerboseName(plural),
@@ -114,7 +116,7 @@ export class ParticipantImportService extends BaseUserImportService {
         };
     }
 
-    protected override async onBeforeCreatingImportModels(_entries: User[]): Promise<void> {
+    protected override async onBeforeCreatingImportModels(_entries: GeneralUser[]): Promise<void> {
         this._existingUserMap = await this.getDuplicates(_entries);
     }
 
@@ -124,7 +126,7 @@ export class ParticipantImportService extends BaseUserImportService {
     }: {
         input: any;
         importTrackId: number;
-    }): Promise<ImportModel<User>> {
+    }): Promise<ImportModel<GeneralUser>> {
         const username = input.username ? input.username : `${input.first_name} ${input.last_name}`;
         const userEmailUsername = `${username}/${input.email}`;
         const userUsername = `${username}/`;
@@ -134,10 +136,12 @@ export class ParticipantImportService extends BaseUserImportService {
             duplicates.length > 1 ||
             !!this.repo.getViewModelList().find(existingUser => existingUser.username === username);
         const status = !hasDuplicates && duplicates.length === 1 ? `merge` : `new`;
-        return new ImportModel<User>({ model: newEntry, importTrackId, duplicates, hasDuplicates, status });
+        return new ImportModel<GeneralUser>({ model: newEntry, importTrackId, duplicates, hasDuplicates, status });
     }
 
-    private async getDuplicates(entries: Partial<User>[]): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
+    private async getDuplicates(
+        entries: Partial<GeneralUser>[]
+    ): Promise<{ [userEmailUsername: string]: Partial<GeneralUser>[] }> {
         const result = await this.presenter.call({
             permissionRelatedId: this.activeMeetingId,
             searchCriteria: entries.map(entry => {
@@ -160,6 +164,6 @@ export class ParticipantImportService extends BaseUserImportService {
 
     private async updateUsers(users: any[]): Promise<void> {
         const updates = users.map(user => copy(user, MEETING_SPECIFIC_USER_PROPERTIES.concat(`id`)));
-        await this.repo.update((user: ViewUser) => user, ...updates).resolve();
+        await this.repo.update((user: GeneralUser) => user, ...updates).resolve();
     }
 }

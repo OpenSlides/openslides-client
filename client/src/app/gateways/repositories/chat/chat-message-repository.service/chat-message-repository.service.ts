@@ -23,7 +23,7 @@ export class ChatMessageRepositoryService extends BaseMeetingRelatedRepository<V
     public getVerboseName = (plural?: boolean) => (plural ? `Chat messages` : `Chat message`);
     public getTitle = () => `No name`;
     public override getFieldsets(): Fieldsets<ChatMessage> {
-        const detailFields: (keyof ChatMessage)[] = [`chat_group_id`, `content`, `created`, `user_id`];
+        const detailFields: (keyof ChatMessage)[] = [`chat_group_id`, `content`, `created`, `meeting_user_id`];
         return {
             [DEFAULT_FIELDSET]: detailFields
         };

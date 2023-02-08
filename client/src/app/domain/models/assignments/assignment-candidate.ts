@@ -11,7 +11,7 @@ export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
     public weight!: number;
 
     public assignment_id!: Id; // assignment/candidate_ids;
-    public user_id!: Id; // user/assignment_candidate_$<meeting_id>_ids;
+    public meeting_user_id!: Id; // meeting_user/assignment_candidate_$<meeting_id>_ids;
 
     public constructor(input?: any) {
         super(AssignmentCandidate.COLLECTION, input);

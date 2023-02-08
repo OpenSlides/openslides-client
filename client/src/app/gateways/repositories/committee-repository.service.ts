@@ -39,7 +39,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `receive_forwardings_from_committee_ids`,
             `organization_tag_ids`,
             `user_ids`,
-            { templateField: `user_$_management_level` }
+            `manager_ids`
         ];
         const detailFields: TypedFieldset<Committee> = [`default_meeting_id`];
         return {
@@ -114,7 +114,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
         return {
             description: committee.description,
             organization_tag_ids: committee.organization_tag_ids === null ? [] : committee.organization_tag_ids,
-            user_$_management_level: committee.user_$_management_level,
+            manager_ids: committee.manager_ids,
             forward_to_committee_ids:
                 committee.forward_to_committee_ids === null ? [] : committee.forward_to_committee_ids,
             receive_forwardings_from_committee_ids:

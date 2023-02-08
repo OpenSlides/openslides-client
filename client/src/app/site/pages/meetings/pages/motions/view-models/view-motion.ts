@@ -12,6 +12,7 @@ import { BaseProjectableViewModel } from '../../../view-models/base-projectable-
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
 import { ViewMeeting } from '../../../view-models/view-meeting';
+import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
@@ -210,6 +211,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return status;
     }
 
+    public get supporter_users(): ViewUser[] {
+        return this.supporter_meeting_users?.flatMap(user => user.user ?? []);
+    }
+
+    public get supporter_user_ids(): number[] {
+        return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
+    }
+
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
 
@@ -272,7 +281,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasSupporters(): boolean {
-        return !!(this.supporters && this.supporters.length > 0);
+        return !!(this.supporter_meeting_users && this.supporter_meeting_users.length > 0);
     }
 
     public hasAttachments(): boolean {
@@ -353,7 +362,7 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     category?: ViewMotionCategory;
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
-    supporters: ViewUser[];
+    supporter_meeting_users: ViewMeetingUser[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];

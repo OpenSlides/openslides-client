@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { CML } from 'src/app/domain/definitions/organization-permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Committee } from 'src/app/domain/models/comittees/committee';
 import {
@@ -107,7 +106,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
                 property: MANAGER_IDS,
                 searchService: userSearchService,
                 useDefault: [operator.operatorId!],
-                mapPropertyToFn: (committee, ids) => (committee.user_$_management_level = { [CML.can_manage]: ids })
+                mapPropertyToFn: (committee, ids) => (committee.manager_ids = ids)
             })
         );
         this.registerBeforeImportHandler(
