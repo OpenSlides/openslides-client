@@ -11,6 +11,9 @@ export class ChipSelectComponent implements AfterContentInit {
     constructor() {}
 
     @Input()
+    public chipClass: string | null;
+
+    @Input()
     public canOpen: boolean;
 
     @ContentChildren(ChipSelectChipComponent) inputChips: QueryList<ChipSelectChipComponent>;

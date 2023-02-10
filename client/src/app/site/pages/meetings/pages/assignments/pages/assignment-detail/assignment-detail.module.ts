@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AttachmentControlModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/attachment-control';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -58,7 +59,8 @@ import { AssignmentDetailServiceModule } from './services/assignment-detail-serv
         SortingListModule,
         OpenSlidesTranslationModule.forChild(),
         ParticipantSearchSelectorModule,
-        AgendaItemCommonServiceModule
+        AgendaItemCommonServiceModule,
+        ChipSelectModule
     ]
 })
 export class AssignmentDetailModule {}

@@ -4,7 +4,7 @@
         [ngClass]="{'menu-handle': canOpen}">
         <mat-basic-chip
             *ngFor="let chip of chips"
-            class="grey"
+            [class]="chipClass || 'grey'"
             disableRipple>
             <ng-content *ngTemplateOutlet="chip.template"></ng-content>
         </mat-basic-chip>
@@ -12,9 +12,9 @@
 </ng-container>
 <ng-container *ngIf="chips.length < 1">
     <mat-basic-chip
-        class="grey"
         disableRipple
         [matMenuTriggerFor]="canOpen ? menu : null"
+        [class]="chipClass || 'grey'"
         [ngClass]="{'menu-handle': canOpen}"
     >
         <ng-content></ng-content>

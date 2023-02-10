@@ -153,6 +153,7 @@
 
     <os-chip-select
         *ngIf="perms.isAllowed('change_metadata', motion) || motion.category"
+        chipClass="grey multi-line-chip"
         [canOpen]="perms.isAllowed('change_metadata', motion)">
         <button menu mat-menu-item *ngFor="let category of categories" (click)="setCategory(category.id)">
             <mat-icon *ngIf="motion.category_id === category.id">check</mat-icon>
@@ -184,7 +185,7 @@
             {{ tag }}
         </button>
 
-        <os-chip-select-chip *ngFor="let tag of motion.tags" class="grey" disabled disableRipple>
+        <os-chip-select-chip *ngFor="let tag of motion.tags" disabled disableRipple>
             {{ tag }}
         </os-chip-select-chip>
 
