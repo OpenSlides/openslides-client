@@ -1,32 +1,20 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import {
-    multiActionVerbose,
-    titleVerbose,
-    WaitForActionData,
-    WaitForActionReason,
-    waitForActionReason
-} from '../../definitions';
-import { WaitForActionDialogService } from '../../services/wait-for-action-dialog.service';
+import { titleVerbose, WaitForActionData, WaitForActionReason, waitForActionReason } from '../../definitions';
+import { WaitForActionDialogService } from '../../services';
 
 @Component({
-    selector: `os-wait-for-action-dialog`,
-    templateUrl: `./wait-for-action-dialog.component.html`,
-    styleUrls: [`./wait-for-action-dialog.component.scss`]
+    selector: `os-wait-for-action-banner`,
+    templateUrl: `./wait-for-action-banner.component.html`,
+    styleUrls: [`./wait-for-action-banner.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WaitForActionDialogComponent extends BaseUiComponent {
+export class WaitForActionBannerComponent extends BaseUiComponent {
     public get currentTitle(): string {
         return titleVerbose[this.waitService.currentReason];
-    }
-
-    public get currentWorkerId(): number {
-        if (this.sameTypeArrayLength) {
-            return this._dataArraySubject.value[0]?.workerId;
-        }
-        return undefined;
     }
 
     public get currentWorkerName(): string {
@@ -36,29 +24,12 @@ export class WaitForActionDialogComponent extends BaseUiComponent {
         return ``;
     }
 
-    public get isPastInactivityThreshold(): boolean {
-        return this.sameTypeArrayLength && this.waitService.currentReason === waitForActionReason.inactive;
-    }
-
-    public get lastActivity(): string {
-        const worker = this.repo.getViewModel(this.currentWorkerId);
-        return !!worker?.timestamp ? new Date(worker?.timestamp).toLocaleString() : ` - `;
+    public get isInactive(): boolean {
+        return this.waitService.currentReason === waitForActionReason.inactive;
     }
 
     public get sameTypeArrayLength(): number {
         return this._dataArraySubject.value?.length;
-    }
-
-    public get multiButtonNumber(): string {
-        return this.sameTypeArrayLength > 1 ? `(${this.sameTypeArrayLength})` : ``;
-    }
-
-    public get multiWaitButtonLabel(): string {
-        return multiActionVerbose[this.waitService.currentReason]?.wait;
-    }
-
-    public get multiStopButtonLabel(): string {
-        return multiActionVerbose[this.waitService.currentReason]?.stop;
     }
 
     private _dataArraySubject = new BehaviorSubject<WaitForActionData[]>([]);

@@ -99,15 +99,6 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
     public vScrollFixed = 110;
 
     /**
-     * The actual height of the ListComponent. You can pass only a string to adjust the height,
-     * because it is passed to the [ngStyle] of the underlying template.
-     * The viewport height is decreased by `90px`. This is almost the summary of the height of the global
-     * and local headbar.
-     */
-    @Input()
-    public componentHeight: string;
-
-    /**
      * Determines whether the table should have a fixed 100vh height or not.
      * If not, the height must be set by the component
      */
@@ -155,6 +146,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
      * Observable to the raw data
      */
     public dataListObservable: Observable<V[]> = of([]);
+    public dataFullListObservable: Observable<V[]> = of([]);
 
     private _source: Observable<V[]> = of([]);
 
@@ -187,6 +179,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
                 dataListObservable = this.searchService.outputObservable;
             }
             this.dataListObservable = dataListObservable;
+            this.dataFullListObservable = this._source;
         }
     }
 

@@ -215,4 +215,8 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
             map(projectors => projectors.find(projector => projector.isReferenceProjector))
         );
     }
+
+    public getReferenceProjector(): ViewProjector | undefined {
+        return this.getViewModelList().find(projector => projector.isReferenceProjector);
+    }
 }

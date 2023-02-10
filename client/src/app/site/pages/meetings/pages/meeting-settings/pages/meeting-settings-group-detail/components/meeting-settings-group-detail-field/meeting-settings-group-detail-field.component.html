@@ -50,6 +50,16 @@
 
                 <ng-template #input ngProjectAs="[matInput]">
                     <input
+                        *ngIf="setting.type === 'email'"
+                        matInput
+                        osTrimOnPaste
+                        formControlName="value"
+                        [value]="translatedValue"
+                        [errorStateMatcher]="matcher"
+                        [type]="formType(setting.type!)"
+                    />
+                    <input
+                        *ngIf="setting.type !== 'email'"
                         matInput
                         formControlName="value"
                         [value]="translatedValue"

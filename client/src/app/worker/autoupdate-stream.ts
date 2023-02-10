@@ -18,6 +18,14 @@ export class AutoupdateStream {
     private active: boolean = false;
     private error: any | ErrorDescription = null;
     private restarting: boolean = false;
+    private _currentData: Object | null = null;
+
+    /**
+     * Full data object received by autoupdate
+     */
+    public get currentData(): Object | null {
+        return this._currentData;
+    }
 
     public get subscriptions(): AutoupdateSubscription[] {
         return this._subscriptions;
@@ -139,9 +147,7 @@ export class AutoupdateStream {
     }
 
     public clearSubscriptions(): void {
-        for (let subscription of this.subscriptions) {
-            subscription.currentData = null;
-        }
+        this._currentData = null;
     }
 
     public setAuthToken(token: string): void {
@@ -238,6 +244,12 @@ export class AutoupdateStream {
             this.error = data;
             this.sendErrorToSubscriptions(data);
         } else {
+            if (this._currentData !== null) {
+                Object.assign(this._currentData, data);
+            } else {
+                this._currentData = data;
+            }
+
             this.failedCounter = 0;
             this.sendToSubscriptions(data);
         }

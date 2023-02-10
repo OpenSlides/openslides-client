@@ -18,11 +18,11 @@
         />
     </mat-form-field>
     <button mat-button (click)="changePresence()">{{ 'Change presence' | translate }}</button>
-    <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUser.isPresentInMeeting() ? 'success' : 'warning'">
+    <mat-card *ngIf="lastChangedUser" [ngClass]="lastChangedUserPresent ? 'success' : 'warning'">
         <span>{{ lastChangedUser.full_name }}&nbsp;</span>
         <span>{{ 'is now' | translate }}</span>
         :
-        <span>&nbsp;{{ lastChangedUser.isPresentInMeeting() ? ('present' | translate) : ('absent' | translate) }}</span>
+        <span>&nbsp;{{ lastChangedUserPresent ? ('present' | translate) : ('absent' | translate) }}</span>
     </mat-card>
     <mat-card *ngIf="errorMsg" class="error">{{ errorMsg | translate }}</mat-card>
 </mat-card>

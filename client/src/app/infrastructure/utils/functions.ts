@@ -1,5 +1,4 @@
 import { Decimal } from '../../domain/definitions/key-types';
-import { deepCopy } from './transform-functions';
 
 export function toBase64(data: File | Blob): Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
@@ -35,18 +34,6 @@ export function reconvertChars(text: string): string {
         .replace(/&szlig;|&#223;/g, `ß`);
 }
 
-export function shuffle<T>(items: T[], times: number = 1000): T[] {
-    const copy = deepCopy(items);
-    for (let i = 0; i < times; ++i) {
-        const oldItem = Math.floor(Math.random() * items.length);
-        const newItem = Math.floor(Math.random() * items.length);
-        const tmp = copy[oldItem];
-        copy[oldItem] = copy[newItem];
-        copy[newItem] = tmp;
-    }
-    return copy;
-}
-
 /**
  * Helper to remove html tags from a string.
  * CAUTION: It is just a basic "don't show distracting html tags in a
@@ -59,7 +46,7 @@ export function stripHtmlTags(inputString: string): string {
     return inputString.replace(regexp, ``).trim();
 }
 
-const VERBOSE_TRUE_FIELDS = [`1`, `y`, `yes`, `true`, `on`];
+const VERBOSE_TRUE_FIELDS = [`1`, `on`, `true`];
 
 export function toBoolean(value: string): boolean {
     return VERBOSE_TRUE_FIELDS.includes(value.toLowerCase());

@@ -37,9 +37,6 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     }
 
     @Input()
-    public text: string | null = null;
-
-    @Input()
     public menuItem = false;
 
     @Output()
@@ -50,6 +47,26 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
      */
     @Input()
     public projector: ViewProjector | null = null;
+
+    @Input()
+    public blendIn = false;
+
+    /**
+     * If this is re-defined, it will replace the usual click functionality.
+     */
+    @Input()
+    public onClickFn: null | (() => void) = () => {
+        if (!this.object) {
+            return;
+        }
+        const descriptor = this.projectorService.ensureDescriptor(this.object);
+        if (this.projector) {
+            this.projectorService.toggle(descriptor, [this.projector]);
+        } else {
+            // open the projection dialog
+            this.projectionDialogService.openProjectDialogFor(descriptor);
+        }
+    };
 
     private projectorRepoSub: Subscription | null = null;
 
@@ -89,15 +106,8 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
         if (event) {
             event.stopPropagation();
         }
-        if (!this.object) {
-            return;
-        }
-        const descriptor = this.projectorService.ensureDescriptor(this.object);
-        if (this.projector) {
-            this.projectorService.toggle(descriptor, [this.projector]);
-        } else {
-            // open the projection dialog
-            this.projectionDialogService.openProjectDialogFor(descriptor);
+        if (this.onClickFn) {
+            this.onClickFn();
         }
     }
 

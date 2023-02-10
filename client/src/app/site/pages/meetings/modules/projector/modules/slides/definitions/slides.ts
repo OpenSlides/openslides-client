@@ -1,3 +1,5 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { SlideManifest } from './slide-manifest';
 
 /**
@@ -16,7 +18,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/agenda-item-list-slide/agenda-item-list-slide.module`).then(
                 m => m.AgendaItemListSlideModule
             ),
-        verboseName: `Agenda`,
+        verboseName: _(`Agenda`),
         scaleable: true,
         scrollable: true
     },
@@ -24,7 +26,7 @@ export const Slides: SlideManifest[] = [
         path: `assignment`,
         loadChildren: () =>
             import(`../components/assignment-slide/assignment-slide.module`).then(m => m.AssignmentSlideModule),
-        verboseName: `Election`,
+        verboseName: _(`Election`),
         scaleable: true,
         scrollable: true
     },
@@ -34,7 +36,7 @@ export const Slides: SlideManifest[] = [
             import(
                 `../components/list-of-speakers/modules/current-list-of-speakers-slide/current-list-of-speakers-slide.module`
             ).then(m => m.CurrentListOfSpeakersSlideModule),
-        verboseName: `Current list of speakers`,
+        verboseName: _(`Current list of speakers`),
         scaleable: true,
         scrollable: true
     },
@@ -44,7 +46,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/current-speaker-chyron-slide/current-speaker-chyron-slide.module`).then(
                 m => m.CurrentSpeakerChyronSlideModule
             ),
-        verboseName: `Current speaker chyron`,
+        verboseName: _(`Current speaker chyron`),
         scaleable: false,
         scrollable: false
     },
@@ -54,7 +56,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/list-of-speakers/modules/list-of-speakers-slide/list-of-speakers-slide.module`).then(
                 m => m.ListOfSpeakersSlideModule
             ),
-        verboseName: `List of speakers`,
+        verboseName: _(`List of speakers`),
         scaleable: true,
         scrollable: true
     },
@@ -62,7 +64,7 @@ export const Slides: SlideManifest[] = [
         path: `mediafile`,
         loadChildren: () =>
             import(`../components/mediafile-slide/mediafile-slide.module`).then(m => m.MediafileSlideModule),
-        verboseName: `File`,
+        verboseName: _(`File`),
         scaleable: true,
         scrollable: true
     },
@@ -70,7 +72,7 @@ export const Slides: SlideManifest[] = [
         path: `motion`,
         loadChildren: () =>
             import(`../components/motions/modules/motion-slide/motion-slide.module`).then(m => m.MotionSlideModule),
-        verboseName: `Motion`,
+        verboseName: _(`Motion`),
         scaleable: true,
         scrollable: true
     },
@@ -80,14 +82,14 @@ export const Slides: SlideManifest[] = [
             import(`../components/motions/modules/motion-block-slide/motion-block-slide.module`).then(
                 m => m.MotionBlockSlideModule
             ),
-        verboseName: `Motion block`,
+        verboseName: _(`Motion block`),
         scaleable: true,
         scrollable: true
     },
     {
         path: `poll`,
         loadChildren: () => import(`../components/poll-slide/poll-slide.module`).then(m => m.PollSlideModule),
-        verboseName: `Vote`,
+        verboseName: _(`Vote`),
         scaleable: true,
         scrollable: true
     },
@@ -97,7 +99,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/projector-countdown-slide/projector-countdown-slide.module`).then(
                 m => m.ProjectorCountdownSlideModule
             ),
-        verboseName: `Countdown`,
+        verboseName: _(`Countdown`),
         scaleable: false,
         scrollable: false
     },
@@ -107,21 +109,21 @@ export const Slides: SlideManifest[] = [
             import(`../components/projector-message-slide/projector-message-slide.module`).then(
                 m => m.ProjectorMessageSlideModule
             ),
-        verboseName: `Message`,
+        verboseName: _(`Message`),
         scaleable: false,
         scrollable: false
     },
     {
         path: `topic`,
         loadChildren: () => import(`../components/topic-slide/topic-slide.module`).then(m => m.TopicSlideModule),
-        verboseName: `Topic`,
+        verboseName: _(`Topic`),
         scaleable: true,
         scrollable: true
     },
     {
         path: `user`,
         loadChildren: () => import(`../components/user-slide/user-slide.module`).then(m => m.UserSlideModule),
-        verboseName: `Participant`,
+        verboseName: _(`Participant`),
         scaleable: true,
         scrollable: true
     }
