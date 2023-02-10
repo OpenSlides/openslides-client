@@ -80,6 +80,9 @@ function openConnection(
     const existingSubscription = autoupdatePool.getMatchingSubscription(queryParams, request);
     if (existingSubscription) {
         existingSubscription.addPort(ctx);
+        if (!existingSubscription.stream.active) {
+            autoupdatePool.reconnect(existingSubscription.stream);
+        }
         return;
     }
 

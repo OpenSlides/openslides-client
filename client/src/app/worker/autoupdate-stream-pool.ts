@@ -59,6 +59,19 @@ export class AutoupdateStreamPool {
     }
 
     /**
+     * Resets fail counter and reconnect a stream
+     * @throws if stream not in pool
+     */
+    public reconnect(stream: AutoupdateStream): void {
+        if (!this.streams.includes(stream)) {
+            throw new Error(`Stream not found`);
+        }
+
+        stream.failedCounter = 0;
+        this.connectStream(stream, true);
+    }
+
+    /**
      * Resets fail counts and reconnects all streams
      */
     public reconnectAll(onlyInactive?: boolean): void {
@@ -323,14 +336,14 @@ export class AutoupdateStreamPool {
             await this.waitUntilEndpointHealthy();
         }
 
-        if (stream.failedConnects <= 3 && error?.reason !== ErrorType.CLIENT) {
+        if (stream.failedConnects <= POOL_CONFIG.RETRY_AMOUNT && error?.reason !== ErrorType.CLIENT) {
             if (error?.error.content?.type === `auth`) {
                 await this.updateAuthentication();
             }
 
             await this.connectStream(stream);
         } else if (
-            stream.failedConnects === 4 &&
+            stream.failedConnects === POOL_CONFIG.RETRY_AMOUNT + 1 &&
             !(error instanceof ErrorDescription) &&
             (isCommunicationError(error) || isCommunicationErrorWrapper(error)) &&
             stream.subscriptions.length > 1

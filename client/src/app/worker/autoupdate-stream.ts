@@ -20,7 +20,7 @@ export class AutoupdateStream {
     private restarting: boolean = false;
     private _currentData: Object | null = null;
 
-    public get active(): Object | null {
+    public get active(): boolean {
         return this._active;
     }
 
@@ -148,6 +148,7 @@ export class AutoupdateStream {
     public restart(): void {
         this.restarting = true;
         this.abort();
+        this.clearSubscriptions();
     }
 
     public clearSubscriptions(): void {
