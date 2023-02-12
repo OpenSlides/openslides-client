@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -127,6 +128,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
 
         // Detail view
         ScrollingModule,
+        ChipSelectModule,
         MatBadgeModule,
 
         // Amendment create wizard

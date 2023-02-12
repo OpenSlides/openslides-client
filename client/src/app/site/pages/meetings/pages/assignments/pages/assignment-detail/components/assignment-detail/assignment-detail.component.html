@@ -119,22 +119,14 @@
             </div>
             <div class="current-phase">
                 <h4>{{ 'Phase' | translate }}</h4>
-                <mat-basic-chip
-                    *ngIf="hasPerms('manage')"
-                    [matMenuTriggerFor]="phaseMenu"
-                    class="bluegrey"
-                    disableRipple
-                >
-                    {{ assignment.phaseString | translate }}
-                </mat-basic-chip>
-                <mat-basic-chip *ngIf="!hasPerms('manage')" class="bluegrey" disableRipple>
-                    {{ assignment.phaseString | translate }}
-                </mat-basic-chip>
-                <mat-menu #phaseMenu="matMenu">
-                    <button *ngFor="let option of phaseOptions" mat-menu-item (click)="onSetPhaseButton(option.value)">
+
+                <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
+                    <button menu mat-menu-item *ngFor="let option of phaseOptions" (click)="onSetPhaseButton(option.value)">
                         {{ option.display_name | translate }}
                     </button>
-                </mat-menu>
+
+                    {{ assignment.phaseString | translate }}
+                </os-chip-select>
             </div>
         </div>
 
