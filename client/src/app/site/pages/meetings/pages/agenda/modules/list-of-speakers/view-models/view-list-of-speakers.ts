@@ -49,6 +49,12 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
         return checkSpeaker.state === SpeakerState.FINISHED;
     }
 
+    public hasUserSpoken(userId: Id): boolean {
+        return !!this.speakers.find(
+            speaker => speaker.speaker.user_id === userId && speaker.state === SpeakerState.FINISHED
+        );
+    }
+
     public findUserIndexOnList(userId: number): number {
         const viewSpeaker: ViewSpeaker | undefined = this.getSpeakerByUserId(userId);
         if (!viewSpeaker) {
