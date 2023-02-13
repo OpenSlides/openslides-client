@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import {
+    FONT_PLACES,
     FontDefaults,
     FontDisplayNames,
     FontPlace,
-    FontPlaces,
+    LOGO_PLACES,
     LogoDisplayNames,
-    LogoPlace,
-    LogoPlaces
+    LogoPlace
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { MeetingMediaAdapterService } from 'src/app/gateways/meeting-media-adapter.service';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
@@ -20,13 +20,9 @@ import { ActiveMeetingService } from './active-meeting.service';
     providedIn: `root`
 })
 export class MediaManageService {
-    public get allLogoPlaces(): LogoPlace[] {
-        return LogoPlaces;
-    }
+    public allLogoPlaces = LOGO_PLACES;
 
-    public get allFontPlaces(): FontPlace[] {
-        return FontPlaces;
-    }
+    public allFontPlaces = FONT_PLACES;
 
     private readonly logoUrlSubjects: { [place in LogoPlace]?: BehaviorSubject<string | null> } = {};
     private readonly fontUrlSubjects: { [place in FontPlace]?: BehaviorSubject<string> } = {};
@@ -39,10 +35,10 @@ export class MediaManageService {
         merge(this.activeMeetingService.meetingObservable, this.mediaRepo.getViewModelListUnsafeObservable()).subscribe(
             _ => {
                 for (const place of Object.keys(this.logoUrlSubjects)) {
-                    (<any>this.logoUrlSubjects)[place].next(this.getLogoUrl(place as LogoPlace));
+                    this.logoUrlSubjects[place].next(this.getLogoUrl(place as LogoPlace));
                 }
                 for (const place of Object.keys(this.fontUrlSubjects)) {
-                    (<any>this.fontUrlSubjects)[place].next(this.getFontUrl(place as FontPlace));
+                    this.fontUrlSubjects[place].next(this.getFontUrl(place as FontPlace));
                 }
             }
         );
@@ -57,13 +53,12 @@ export class MediaManageService {
 
     public getLogoUrl(place: LogoPlace): string | null {
         // Note: we are not fetching the mediafile view model at any place except when filtering for the defaults.
-        const mediafileId = this.activeMeetingService.meetingId
-            ? this.activeMeetingService.meeting?.logo_id(place)
-            : null;
-        const generalMediafileId = this.getGlobalMediafileIdByToken(place);
+        const mediafileId = this.activeMeetingService.meeting?.logo_id(place);
         if (mediafileId) {
             return this.getUrlForId(mediafileId);
-        } else if (generalMediafileId) {
+        }
+        const generalMediafileId = this.getGlobalMediafileIdByToken(place);
+        if (generalMediafileId) {
             return this.getUrlForId(generalMediafileId);
         } else {
             return null;
@@ -111,13 +106,9 @@ export class MediaManageService {
     }
 
     private getGlobalMediafileIdByToken(place: LogoPlace | FontPlace): number {
-        return (
-            this.mediaRepo.getViewModelListUnsafe().find(file => {
-                return (
-                    file.isImage() && Object.keys(LogoDisplayNames).includes(place) && file.token === `global-${place}`
-                );
-            })?.id ?? null
-        );
+        return this.mediaRepo.getViewModelListUnsafe().find(file => {
+            return file.isImage() && Object.keys(LogoDisplayNames).includes(place) && file.token === place;
+        })?.id;
     }
 
     private getUrlForId(id: Id): string {

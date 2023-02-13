@@ -128,7 +128,7 @@ export class OrganizationMediafileListComponent
         if (file.isImage() && !Object.keys(LogoDisplayNames).includes(place)) {
             return false;
         }
-        return mediafile.token === `global-${place}`;
+        return mediafile.token === place;
     }
 
     public async toggleMediafileUsage(event: Event, mediafile: ViewMediafile, place: LogoPlace): Promise<void> {
@@ -139,8 +139,8 @@ export class OrganizationMediafileListComponent
         if (!file || (file.isImage() && !Object.keys(LogoDisplayNames).includes(place))) {
             throw new Error(!file ? `File has been deleted` : `Invalid mediafile type for place.`);
         }
-        const fullPlace = `global-${place}`;
-        if (!(file.token === fullPlace)) {
+        const fullPlace = place;
+        if (file.token !== fullPlace) {
             for (let filteredFile of this.repo
                 .getViewModelList()
                 .filter(filterFile => filterFile.token === fullPlace && filterFile.id !== file.id)) {
@@ -276,6 +276,6 @@ export class OrganizationMediafileListComponent
 
     private isUsedAs(file: ViewMediafile): boolean {
         const places = this.logoPlaces;
-        return places[`global`].some(place => this.isMediafileUsed(file, place));
+        return places.some(place => this.isMediafileUsed(file, place));
     }
 }
