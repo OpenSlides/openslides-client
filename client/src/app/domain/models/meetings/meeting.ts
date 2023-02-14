@@ -234,6 +234,8 @@ export class Meeting extends BaseModel<Meeting> {
     public assignment_candidate_ids!: Id[]; // (assignment_candidate/meeting_id)[];
     public chat_group_ids!: Id[]; // (chat_group/meeting_id)[];
     public chat_message_ids!: Id[]; // (chat_message/meeting_id)[];
+    public poll_candidate_list_ids!: Id[]; // (poll_candidate_list/meeting_id)[];
+    public poll_candidate_ids!: Id[]; // (poll_candidate/meeting_id)[];
 
     // Logos and Fonts
     public logo_$_id!: string[]; // mediafile/used_as_logo_$<place>_in_meeting_id;

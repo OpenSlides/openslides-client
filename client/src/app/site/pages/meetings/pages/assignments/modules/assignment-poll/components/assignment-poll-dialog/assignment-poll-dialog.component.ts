@@ -61,7 +61,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     }
 
     public getOptionAmount(): number {
-        return this.getContentObjectsForOptions()?.length;
+        return this._options?.length;
     }
 
     protected getContentObjectsForOptions(): BaseModel[] {
@@ -85,7 +85,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
             if (pollmethod !== PollMethod.Y) {
                 analogPollValues.push(`N`);
             }
-            if (pollmethod === PollMethod.YNA) {
+            if ((pollmethod as string).toUpperCase() === PollMethod.YNA) {
                 analogPollValues.push(`A`);
             }
         }

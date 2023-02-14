@@ -8,8 +8,9 @@ import {
     Validators
 } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, startWith } from 'rxjs';
+import { combineLatest, map, Observable, startWith } from 'rxjs';
 import {
+    FormPollMethod,
     PollBackendDurationChoices,
     PollClassType,
     PollMethod,
@@ -139,6 +140,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     public abstract get hideSelects(): PollFormHideSelectsData;
 
+    public get pollMethodChangedToListObservable(): Observable<boolean> {
+        return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA))
+    }
+
     /**
      * Constructor. Retrieves necessary metadata from the pollService,
      * injects the poll itself
@@ -235,12 +240,12 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     public showMinMaxVotes(data: any): boolean {
-        const selectedPollMethod: PollMethod = this.pollMethodControl.value;
+        const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
         return (selectedPollMethod === `Y` || selectedPollMethod === `N`) && (!data || !data.state || data.isCreated);
     }
 
     public showMaxVotesPerOption(data: any): boolean {
-        const selectedPollMethod: PollMethod = this.pollMethodControl.value;
+        const selectedPollMethod: FormPollMethod = this.pollMethodControl.value;
         return selectedPollMethod === `Y` && (!data || !data.state || data.isCreated);
     }
 
@@ -249,7 +254,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      * @param method the currently chosen pollmethod
      */
     private updatePercentBases(): void {
-        const method = this.pollMethodControl.value;
+        const method = this.pollMethodControl.value.toUpperCase();
         const type = this.pollTypeControl.value;
         if (!method && !type) {
             return;
@@ -308,7 +313,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         }
     }
 
-    public getValues(): Partial<ViewPoll> {
+    public getValues(): Partial<{[place in keyof ViewPoll]: any}> {
         return { ...this.data, ...this.serializeForm(this.contentForm) };
     }
 
@@ -329,7 +334,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
      */
     protected updatePollValues(data: { [key: string]: any }, additionalPollValues?: PollPropertyVerboseKey[]): void {
         if (this.data) {
-            const pollMethod: PollMethod = data[`pollmethod`];
+            const pollMethod: FormPollMethod = data[`pollmethod`];
             const pollType: PollType = data[`type`];
             this.pollValues = [
                 [
@@ -355,7 +360,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 ]);
             }
 
-            if (pollMethod === PollMethod.Y || pollMethod === PollMethod.N) {
+            if (pollMethod === FormPollMethod.Y || pollMethod === FormPollMethod.N) {
                 this.pollValues.push([this.pollService.getVerboseNameForKey(`global_yes`), data[`global_yes`]]);
                 this.pollValues.push([this.pollService.getVerboseNameForKey(`global_no`), data[`global_no`]]);
                 this.pollValues.push([this.pollService.getVerboseNameForKey(`global_abstain`), data[`global_abstain`]]);
@@ -370,7 +375,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 ]);
             }
 
-            if (pollMethod === PollMethod.Y || pollMethod === PollMethod.N) {
+            if (pollMethod === FormPollMethod.Y || pollMethod === FormPollMethod.N) {
                 this.pollValues.push([
                     this.pollService.getVerboseNameForKey(`max_votes_per_option`),
                     data[`max_votes_per_option`]
@@ -438,11 +443,11 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 emitEvent: false
             };
             this.enableGlobalVoteControls();
-            if (pollMethod.includes(PollMethod.Y)) {
+            if (pollMethod.includes(FormPollMethod.Y)) {
                 this.globalYesControl.disable(suppressEvent);
                 this.globalYesControl.setValue(false, suppressEvent);
             }
-            if (pollMethod.includes(PollMethod.N)) {
+            if (pollMethod.includes(FormPollMethod.N)) {
                 this.globalNoControl.disable(suppressEvent);
                 this.globalNoControl.setValue(false, suppressEvent);
             }
