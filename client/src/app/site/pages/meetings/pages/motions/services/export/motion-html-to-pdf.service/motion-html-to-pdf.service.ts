@@ -262,7 +262,9 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
      */
     private withSublist(element: Element): boolean {
         if (element.nodeName.toLowerCase() === `li`) {
-            const hasUl = Array.from(element.children).some(child => [`ul`, `ol`].includes(child.nodeName.toLowerCase()));
+            const hasUl = Array.from(element.children).some(child =>
+                [`ul`, `ol`].includes(child.nodeName.toLowerCase())
+            );
             return hasUl;
         }
         return false;
