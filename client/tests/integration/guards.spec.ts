@@ -165,6 +165,6 @@ test.describe(`Testing permission- and auth-guards`, () => {
         await page.goto(`/${meetingId}/settings`);
         await expect(page).not.toHaveURL(/.*(login|error).*/);
         await expect(page).toHaveURL(/.*\/settings/);
-        await expect(page).toHaveURL(new RegExp(`.*${DEFAULT_MEETING_ID}.*`));
+        await expect(page).toHaveURL(new RegExp(`.*${meetingId}.*`));
     });
 });
