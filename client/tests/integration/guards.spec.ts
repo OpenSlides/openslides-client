@@ -148,7 +148,7 @@ test.describe(`Testing permission- and auth-guards`, () => {
         await login(context, DELEGATE_NAME);
         await page.goto(`/${DEFAULT_MEETING_ID}/settings`);
         await expect(page).not.toHaveURL(/.*(login|error).*/);
-        await expect(page).not.toHaveURL(/.*settings/);
+        await expect(page).not.toHaveURL(/.*\/settings/);
         await expect(page).toHaveURL(new RegExp(`.*${DEFAULT_MEETING_ID}.*`));
     });
 
@@ -156,13 +156,15 @@ test.describe(`Testing permission- and auth-guards`, () => {
         await login(context, ADMIN_NAME);
         await page.goto(`/${DEFAULT_MEETING_ID}/settings`);
         await expect(page).not.toHaveURL(/.*(login|error).*/);
-        await expect(page).toHaveURL(/.*settings/);
+        await expect(page).toHaveURL(/.*\/settings/);
+        await expect(page).toHaveURL(new RegExp(`.*${DEFAULT_MEETING_ID}.*`));
     });
 
     test(`visit meeting settings as meeting admin`, async ({ context, page }) => {
         await login(context, username);
         await page.goto(`/${meetingId}/settings`);
         await expect(page).not.toHaveURL(/.*(login|error).*/);
-        await expect(page).toHaveURL(/.*settings/);
+        await expect(page).toHaveURL(/.*\/settings/);
+        await expect(page).toHaveURL(new RegExp(`.*${DEFAULT_MEETING_ID}.*`));
     });
 });
