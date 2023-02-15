@@ -15,8 +15,6 @@ export const PROJECTOR_CONTENT_FOLLOW: Follow = {
     fieldset: `content`
 };
 
-export const PROJECTOR_DETAIL_SUBSCRIPTION = `projector_detail`;
-
 export class ViewProjector extends BaseViewModel<Projector> {
     public static COLLECTION = Projector.COLLECTION;
     protected _collection = Projector.COLLECTION;
