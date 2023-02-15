@@ -28,11 +28,11 @@
 }
 
 #overlay {
-    position: absolute;
-    right: 0;
-    bottom: 100px;
+    position: fixed;
+    right: 50px;
+    bottom: 10px;
     background-color: #d3d3d3;
-    width: 40%;
+    width: 37%;
     height: 210px;
     margin: 10px;
     z-index: 20;
