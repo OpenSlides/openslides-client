@@ -178,6 +178,8 @@ export class HtmlToPdfService {
                 break;
             }
             case `a`:
+                newParagraph = this.createHyperlinkParagraph(createPayload);
+                break;
             case `b`:
             case `strong`:
             case `u`:
@@ -259,6 +261,21 @@ export class HtmlToPdfService {
             }
         }
         return paragraph;
+    }
+
+    /**
+     * Used by parseElement to create a paragraph corresponding to a formatted element.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createHyperlinkParagraph(data: CreateSpecificParagraphPayload): any {
+        let newParagraph = this.createFormattedParagraph(data);
+
+        const href = (<HTMLAnchorElement>data.element).href;
+        if (href) {
+            newParagraph = this.addPropertyToTexts(newParagraph, `link`, href);
+        }
+
+        return newParagraph;
     }
 
     /**
@@ -363,6 +380,26 @@ export class HtmlToPdfService {
     }
 
     /**
+     * Helper function to recursivly add a property to all text objects
+     *
+     * @param node A node containing a text property
+     * @param propName
+     * @param propValue
+     */
+    protected addPropertyToTexts(node: any, propName: string, propValue: any): object {
+        if (node.text instanceof Array) {
+            node.text = node.text.map((val: any) => this.addPropertyToTexts(val, propName, propValue));
+            return node;
+        } else if (node.text instanceof Object) {
+            node.text = this.addPropertyToTexts(node.text, propName, propValue);
+            return node;
+        }
+
+        node[propName] = propValue;
+        return node;
+    }
+
+    /**
      * Determine the ideal top margin for a given node.
      * May be overwritten in subclasses.
      *
@@ -437,11 +474,15 @@ export class HtmlToPdfService {
                             }
                             switch (value) {
                                 case `underline`: {
-                                    styleObject.decoration.push(`underline`);
+                                    if (!styleObject.decoration.includes(`underline`)) {
+                                        styleObject.decoration.push(`underline`);
+                                    }
                                     break;
                                 }
                                 case `line-through`: {
-                                    styleObject.decoration.push(`lineThrough`);
+                                    if (!styleObject.decoration.includes(`lineThrough`)) {
+                                        styleObject.decoration.push(`lineThrough`);
+                                    }
                                     break;
                                 }
                             }
