@@ -603,9 +603,9 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewProjector,
-        ownField: `default_projector`,
-        ownIdField: `default_projector_$_id`,
-        many: false,
+        ownField: `default_projectors`,
+        ownIdField: `default_projector_$_ids`,
+        many: true,
         generic: false,
         structured: true
     },
