@@ -92,7 +92,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     }
 
     private isList = false;
-    public reloading = false;
 
     public constructor(
         public dialogRef: MatDialogRef<BasePollDialogComponent>,
@@ -176,12 +175,10 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
 
     protected triggerUpdate(createOptions = false): void {
         if (createOptions) {
-            this.reloading = true;
             this.createOptions();
         }
         this.analogVoteFields = this.getAnalogVoteFields();
         this.createDialog();
-        this.reloading = false;
     }
 
     /**
@@ -230,7 +227,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     private getOptions(options: any, is_list_poll = false): (Partial<Option> & Identifiable)[] {
         const result: any[] = [];
         const optionKeys = Object.keys(options);
-        console.log(`GET OPTIONS`, options);
+        console.log(`GET OPTIONS`, options, is_list_poll);
         if (is_list_poll) {
             result.push({
                 ...options[optionKeys[0]],

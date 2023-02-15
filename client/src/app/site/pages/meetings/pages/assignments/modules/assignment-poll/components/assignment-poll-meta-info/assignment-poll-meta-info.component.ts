@@ -40,6 +40,6 @@ export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComp
     }
 
     public getVerbosePollMethod(): string {
-        return AssignmentPollMethodVerbose[this.poll.pollmethod];
+        return AssignmentPollMethodVerbose[this.poll.isListPoll ? this.poll.pollmethod.toLowerCase() : this.poll.pollmethod];
     }
 }

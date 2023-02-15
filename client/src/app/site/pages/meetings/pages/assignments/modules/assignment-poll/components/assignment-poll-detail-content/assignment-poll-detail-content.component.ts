@@ -12,6 +12,7 @@ import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/c
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 @Component({
@@ -110,6 +111,14 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         return this.pollService;
     }
 
+    private get assignment(): ViewAssignment {
+        return this.poll.content_object as ViewAssignment;
+    }
+
+    public get enumerateCandidates(): boolean {
+        return this.assignment?.number_poll_candidates || false;
+    }
+
     public constructor(
         private pollService: AssignmentPollService,
         private cd: ChangeDetectorRef,
@@ -145,7 +154,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     public getVoteAmount(vote: VotingResult, row: PollTableData): number {
         vote.amount = vote.amount ?? 0;
-        if (this.isMethodN && row.class === `user`) {
+        if (this.isMethodN && [`user`, `list`].includes(row.class)) {
             if (vote.amount < 0) {
                 return vote.amount;
             } else {
@@ -174,7 +183,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     public getReformedTableData(): PollTableData[] {
         const tableData = [];
         this.tableData.forEach(tableDate => {
-            if (tableDate.class === `user`) {
+            if ([`user`, `list`].includes(tableDate.class)) {
                 tableDate.value.forEach(value => {
                     if (this.voteFitsMethod(value)) {
                         tableData.push({

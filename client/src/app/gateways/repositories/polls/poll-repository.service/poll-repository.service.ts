@@ -268,6 +268,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
                 id: option.id,
                 content_object_id: option.content_object_id,
                 text: option.text,
+                poll_candidate_user_ids: option.poll_candidate_user_ids,
                 Y: toDecimal(option.Y, false),
                 A: toDecimal(option.A, false),
                 N: toDecimal(option.N, false)

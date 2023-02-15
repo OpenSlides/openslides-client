@@ -72,7 +72,7 @@
 
     <!-- Table with Chart -->
     <div *ngIf="hasResults && canSeeResults && shouldShowChart" class="result-wrapper">
-        <h3 class="result-title">
+        <h3 class="result-title" *ngIf="tableData[0].class === 'user'">
             <span class="candidate-name">
                 {{ tableData[0].votingOption | pollKeyVerbose | translate }}
             </span>
@@ -80,6 +80,33 @@
             <span class="user-subtitle" *ngIf="tableData[0].votingOptionSubtitle">
                 ({{ tableData[0].votingOptionSubtitle }})
             </span>
+        </h3>
+        <div class="result-title" *ngIf="tableData[0].class === 'list'">
+            <ul *ngIf="!enumerateCandidates">
+                <li *ngFor="let date of tableData[0].votingOptions">
+                    <span class="candidate-name">
+                        {{ date.title }}
+                    </span>
+                    <br>
+                    <span class="user-subtitle" *ngIf="date.subtitle">
+                        ({{ date.subtitle }})
+                    </span>
+                </li>
+            </ul>
+            <ol *ngIf="!enumerateCandidates">
+                <li *ngFor="let date of tableData[0].votingOptions">
+                    <span class="candidate-name">
+                        {{ date.title }}
+                    </span>
+                    <br>
+                    <span class="user-subtitle" *ngIf="date.subtitle">
+                        ({{ date.subtitle }})
+                    </span>
+                </li>
+            </ol>
+        </div>
+        <h3 class="result-title" *ngIf="tableData[0].class === 'list'">
+            {{ 'Results' | translate }}
         </h3>
 
         <ng-container *ngIf="hasResults && canSeeResults">

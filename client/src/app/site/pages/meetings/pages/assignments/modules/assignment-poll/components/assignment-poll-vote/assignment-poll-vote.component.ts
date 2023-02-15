@@ -67,6 +67,14 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return this.poll.min_votes_amount;
     }
 
+    private get assignment(): ViewAssignment {
+        return this.poll.content_object;
+    }
+
+    public get enumerateCandidates(): boolean {
+        return this.assignment?.number_poll_candidates || false;
+    }
+
     public constructor(
         private promptService: PromptService,
         operator: OperatorService,

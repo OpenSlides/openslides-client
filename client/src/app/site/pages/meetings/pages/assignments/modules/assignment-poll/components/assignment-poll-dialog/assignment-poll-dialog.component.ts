@@ -7,10 +7,11 @@ import {
     GeneralValueVerbose,
     GlobalOptionKey,
     PollMethod,
+    PollPercentBaseVerbose,
     PollPropertyVerbose,
     VoteValue
 } from 'src/app/domain/models/poll';
-import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { BasePollDialogComponent, OptionsObject } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
@@ -35,7 +36,9 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public PollPropertyVerbose = PollPropertyVerbose;
 
     public AssignmentPollMethodVerbose = AssignmentPollMethodVerbose;
-    public AssignmentPollPercentBaseVerbose = AssignmentPollPercentBaseVerbose;
+    public get AssignmentPollPercentBaseVerbose(): { [key: string]: string } {
+        return this.pollData.isListPoll ? PollPercentBaseVerbose : AssignmentPollPercentBaseVerbose;
+    }
 
     public readonly globalValues: GlobalOptionKey[] = [`global_yes`, `global_no`, `global_abstain`];
 
@@ -62,6 +65,10 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public getOptionAmount(): number {
         return this._options?.length;
+    }
+
+    public optionIsList(option: OptionsObject): boolean {
+        return !!option.poll_candidate_user_ids?.length
     }
 
     protected getContentObjectsForOptions(): BaseModel[] {

@@ -44,6 +44,10 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.content_object?.collection === PollClassType.Assignment;
     }
 
+    public get isListPoll(): boolean {
+        return this.options[0]?.isListOption;
+    }
+
     public get isMotionPoll(): boolean {
         return this.content_object?.collection === PollClassType.Motion;
     }

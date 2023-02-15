@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { EntitledUsersEntry, PollClassType, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
 
@@ -20,6 +21,7 @@ export interface PollData {
     options: OptionData[];
     options_as_observable: Observable<OptionData[]>;
     global_option: OptionData;
+    content_object?: BaseViewModel<any>;
     getContentObjectTitle: () => string | null;
 }
 
@@ -42,6 +44,7 @@ export interface OptionData {
     amount_global_yes?: number;
     amount_global_no?: number;
     amount_global_abstain?: number;
+    content_object?: BaseViewModel<any>;
 }
 
 export type OptionDataKey = keyof OptionData;

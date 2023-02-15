@@ -28,7 +28,7 @@ export class PollCandidateRepositoryService extends BaseMeetingRelatedRepository
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidates` : `PollCandidate`);
-    public getTitle = (viewModel: ViewPollCandidate): string => viewModel.user?.getTitle();
+    public getTitle = (viewModel: ViewPollCandidate): string => viewModel.user?.getShortName();
 
     public override getFieldsets(): Fieldsets<PollCandidate> {
         const detailFieldset: (keyof PollCandidate)[] = [

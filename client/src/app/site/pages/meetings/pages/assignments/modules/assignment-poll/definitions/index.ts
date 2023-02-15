@@ -13,7 +13,7 @@ export const AssignmentPollMethodVerbose = {
 export const AssignmentPollPercentBaseVerbose = {
     Y: _(`Sum of votes without general options`),
     YN: _(`Yes/No per candidate`),
-    YNA: _(`Yes/No/Abstain per option`),
+    YNA: _(`Yes/No/Abstain per candidate`),
     valid: _(`All valid ballots`),
     cast: _(`All casted ballots`),
     entitled: _(`All entitled users`),

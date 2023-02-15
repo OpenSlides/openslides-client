@@ -26,6 +26,7 @@ import { compareNumber } from 'src/app/infrastructure/utils';
 import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
+import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
 import { PollServiceModule } from '../poll-service.module';
 
@@ -87,7 +88,7 @@ export abstract class PollService {
             .map(option => {
                 const title = option.getOptionTitle();
                 const pollTableEntry: PollTableData = {
-                    class: `user`,
+                    class: isSortedList(option.content_object) ? `list` : `user`,
                     value: this.getVoteTableKeys(poll).map(
                         key =>
                             ({
@@ -102,6 +103,9 @@ export abstract class PollService {
                 };
                 if (title.subtitle) {
                     pollTableEntry.votingOptionSubtitle = title.subtitle;
+                }
+                if (isSortedList(option.content_object)) {
+                    pollTableEntry.votingOptions = option.content_object.entries.map(entry => ({ title: entry.getTitle(), subtitle: entry.getSubtitle()}));
                 }
 
                 return pollTableEntry;

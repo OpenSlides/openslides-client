@@ -15,6 +15,7 @@ import {
     PollClassType,
     PollMethod,
     PollPercentBase,
+    PollPercentBaseVerbose,
     PollPropertyVerbose,
     PollPropertyVerboseKey,
     PollType,
@@ -68,8 +69,28 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     @Input()
     public percentBases: { [key: string]: string };
 
+    public alternativePercentBases = PollPercentBaseVerbose;
+
     @Input()
-    public data: Partial<ViewPoll>;
+    public set data(data: Partial<ViewPoll>) {
+        this._data = data;
+        this.isCreatedList = data.isListPoll;
+    }
+
+    public get data(): Partial<ViewPoll> {
+        return this._data;
+    }
+
+    public isCreatedList: boolean;
+
+    public get filteredPollMethods():  { [key: string]: string } {
+        if (!this.isCreatedList || !this.pollMethods) {
+            return this.pollMethods;
+        }
+        return Object.keys(this.pollMethods).reduce((obj, key) => (key === key.toUpperCase() ? { ...obj, [key]: this.pollMethods[key] } : obj), {});
+    }
+
+    private _data: Partial<ViewPoll>;
 
     @Input()
     public pollOptionAmount: number;
@@ -120,6 +141,10 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private get pollMethodControl(): AbstractControl {
         return this.contentForm.get(`pollmethod`);
+    }
+
+    public get pollMethod(): FormPollMethod {
+        return this.pollMethodControl.value as FormPollMethod;
     }
 
     private get globalYesControl(): AbstractControl {

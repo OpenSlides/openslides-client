@@ -176,7 +176,7 @@ export class AssignmentPdfService {
 
                 const tableData = this.assignmentPollService.generateTableData(poll);
                 for (const [index, pollResult] of tableData.entries()) {
-                    const rank = pollResult.class === `user` ? index + 1 : ``;
+                    const rank = [`user`, `list`].includes(pollResult.class) ? index + 1 : ``;
                     const voteOption = this.translate.instant(this.pollKeyVerbose.transform(pollResult.votingOption));
                     const resultLine = this.getPollResult(pollResult, poll);
                     const tableLine = [

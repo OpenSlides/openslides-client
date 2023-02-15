@@ -129,7 +129,7 @@ export class SingleOptionChartTableComponent {
 
     public getVoteAmount(amount: number, row: PollTableData): number {
         amount = amount ?? 0;
-        if (this.isMethodN && row.class === `user`) {
+        if (this.isMethodN && [`user`, `list`].includes(row.class)) {
             if (amount < 0) {
                 return amount;
             } else {

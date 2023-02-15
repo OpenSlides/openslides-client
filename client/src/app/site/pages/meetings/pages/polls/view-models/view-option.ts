@@ -6,11 +6,23 @@ import { BaseViewModel } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewUser } from '../../../view-models/view-user';
 import { UnknownUserLabel } from '../../assignments/modules/assignment-poll/services/assignment-poll.service';
+import { isSortedList, SortedList } from './sorted-list';
 import { ViewPoll } from './view-poll';
 import { ViewVote } from './view-vote';
 export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Option> implements OptionData {
     public static COLLECTION = Option.COLLECTION;
     protected _collection = Option.COLLECTION;
+
+    public get isListOption(): boolean {
+        return isSortedList(this.content_object);
+    }
+
+    public get contentTitlesAsSortedArray(): OptionTitle[] {
+        if (!this.isListOption) {
+            return [this.getOptionTitle()];
+        }
+        return (this.content_object as SortedList).entries.sort((a, b) => a.weight - b.weight).map(entry => ({ title: entry.getTitle() ?? `No data`, subtitle: entry.getSubtitle() ?? `` }));
+    }
 
     public getContentObject(): C | undefined {
         return this.content_object;
@@ -20,7 +32,11 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
         if (this.text) {
             return { title: this.text };
         } else {
-            if (this.content_object instanceof ViewUser) {
+            if (this.isListOption){
+                return {
+                    title: this.content_object.getTitle()
+                }
+            } else if (this.content_object instanceof ViewUser) {
                 return {
                     title: this.content_object.getShortName(),
                     subtitle: this.content_object.getLevelAndNumber()

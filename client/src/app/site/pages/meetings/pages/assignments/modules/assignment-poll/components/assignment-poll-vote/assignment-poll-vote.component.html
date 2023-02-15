@@ -56,7 +56,7 @@
                             'single-vote-grid': poll.isMethodY || poll.isMethodN
                         }"
                     >
-                        <div class="vote-candidate-name">
+                        <div class="vote-candidate-name" *ngIf="!option.isListOption">
                             <span *ngIf="option.content_object">
                                 <span>{{ option.content_object.short_name }}</span>
                                 <div class="user-subtitle" *ngIf="option.content_object.getLevelAndNumber()">
@@ -64,6 +64,25 @@
                                 </div>
                             </span>
                             <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
+                        </div>
+                        <div class="vote-candidate-name" *ngIf="option.isListOption">
+                            <ol *ngIf="option.content_object && enumerateCandidates">
+                                <li *ngFor="let title of option.contentTitlesAsSortedArray">
+                                    <span>{{ title.title }}</span>
+                                    <div class="user-subtitle" *ngIf="title.subtitle">
+                                        {{ title.subtitle }}
+                                    </div>
+                                </li>
+                            </ol>
+                            <ul *ngIf="option.content_object && !enumerateCandidates">
+                                <li *ngFor="let title of option.contentTitlesAsSortedArray">
+                                    <span>{{ title.title }}</span>
+                                    <div class="user-subtitle" *ngIf="title.subtitle">
+                                        {{ title.subtitle }}
+                                    </div>
+                                </li>
+                            </ul>
+                            <i *ngIf="!option.content_object">{{ 'No list available' | translate }}</i>
                         </div>
 
                         <ng-container *ngIf="!poll.max_votes_per_option || poll.max_votes_per_option <= 1">

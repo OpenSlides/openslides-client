@@ -28,6 +28,10 @@
                 <span>
                     {{ poll.stateVerbose | translate }}
                 </span>
+                <ng-container *ngIf="poll.isListPoll">
+                    &nbsp;&middot;&nbsp;
+                    <span translate>List election</span>
+                </ng-container>
             </div>
 
             <!-- Menu -->

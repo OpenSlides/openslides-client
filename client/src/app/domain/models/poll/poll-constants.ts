@@ -199,6 +199,7 @@ export const VoteValuesVerbose = {
 export interface PollTableData {
     votingOption: string;
     votingOptionSubtitle?: string;
+    votingOptions?: { title: string, subtitle: string }[];           //only if class === `list`
     class?: string;
     value: VotingResult[];
 }
