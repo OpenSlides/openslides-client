@@ -22,11 +22,11 @@ describe(`HtmlToPdfService`, () => {
         it(`create a simple text node`, () => {
             const result = service.addPlainText(`foo`);
             expect(result).toEqual({
-                "columns": [
+                columns: [
                     {
-                        "stack": [
+                        stack: [
                             {
-                                "text": "foo"
+                                text: `foo`
                             }
                         ]
                     }
@@ -43,7 +43,9 @@ describe(`HtmlToPdfService`, () => {
 
         it(`should handle single main nodes`, () => {
             const result = service.convertHtml({ htmlText: `<p>Row 1</p>` });
-            expect(result).toEqual([{ text: [{ text: `Row 1` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] }]);
+            expect(result).toEqual([
+                { text: [{ text: `Row 1` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] }
+            ]);
         });
 
         it(`should handle multiple main nodes`, () => {
@@ -59,25 +61,33 @@ describe(`HtmlToPdfService`, () => {
         it(`should handle single main nodes`, () => {
             const result = service.convertHtml({ htmlText: `<ul><li>Line 1</li><li>Line 2</li></ul>` });
             expect(result).toEqual([
-                { ul: [
-                    { text: [{ text: `Line 1` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] },
-                    { text: [{ text: `Line 2` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] }
-                ] }
+                {
+                    ul: [
+                        { text: [{ text: `Line 1` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] },
+                        { text: [{ text: `Line 2` }], lineHeight: LINE_HEIGHT, margin: [0, 0, 0, P_MARGIN_BOTTOM] }
+                    ]
+                }
             ]);
         });
     });
 
     describe(`convert styling`, () => {
         it(`underlined span`, () => {
-            const result = service.convertHtml({ htmlText: `<span style="text-decoration: underline">Underlined</span>` });
-            expect(result).toEqual([{ text: [{ text: `Underlined`, decoration: [`underline`] }], decoration: [`underline`] }]);
+            const result = service.convertHtml({
+                htmlText: `<span style="text-decoration: underline">Underlined</span>`
+            });
+            expect(result).toEqual([
+                { text: [{ text: `Underlined`, decoration: [`underline`] }], decoration: [`underline`] }
+            ]);
         });
     });
 
     describe(`convert format tags`, () => {
         it(`url`, () => {
             const result = service.convertHtml({ htmlText: `<a href="http://example.test">Link</a>` });
-            expect(result).toEqual([{ text: [{ text: `Underlined`, decoration: [`underline`], color: `blue`, link: `http://example.test` }] }]);
+            expect(result).toEqual([
+                { text: [{ text: `Link`, decoration: [`underline`], color: `blue`, link: `http://example.test/` }] }
+            ]);
         });
     });
 });
