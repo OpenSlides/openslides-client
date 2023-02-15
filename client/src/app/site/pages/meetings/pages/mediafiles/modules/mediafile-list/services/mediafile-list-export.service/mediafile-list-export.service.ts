@@ -19,8 +19,8 @@ export class MediafileListExportService {
     private async addFileToZip(mediafiles: ViewMediafile[], zip: JSZip, http: HttpService): Promise<void> {
         for (const mediafile of mediafiles) {
             if (!mediafile.is_directory) {
-                const base64Data = await http.downloadAsBase64(mediafile.url);
-                zip.file(mediafile.title, base64Data, { base64: true });
+                const download = await http.downloadAsBase64(mediafile.url);
+                zip.file(mediafile.title, download.data, { base64: true });
             }
         }
     }
