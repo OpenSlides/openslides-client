@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { ComponentServiceCollectorService } from '../services/component-service-
 import { ModelRequestService } from '../services/model-request.service';
 
 @Directive()
-export abstract class BaseComponent extends BaseUiComponent {
+export abstract class BaseComponent extends BaseUiComponent implements OnDestroy {
     /**
      * To check permissions in templates using permission.[...]
      */
