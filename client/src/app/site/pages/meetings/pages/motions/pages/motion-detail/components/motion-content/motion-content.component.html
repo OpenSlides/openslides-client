@@ -81,6 +81,7 @@
         <div *ngIf="editMotion && !newMotion && canChangeMetadata" class="content-field form-number">
             <mat-form-field *ngIf="editMotion">
                 <input matInput osAutofocus placeholder="{{ 'Number' | translate }}" formControlName="number" />
+                <mat-error>{{ 'This number already exists' | translate }}</mat-error>
             </mat-form-field>
         </div>
 
