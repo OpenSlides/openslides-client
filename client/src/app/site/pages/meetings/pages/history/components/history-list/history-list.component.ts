@@ -14,7 +14,6 @@ import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assig
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { langToLocale } from 'src/app/infrastructure/utils/lang-to-locale';
 import {
     collectionIdFromFqid,
     fqidFromCollectionAndId,
@@ -267,10 +266,6 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
             const message = this.translate.instant(`Cannot navigate to the selected history element.`);
             this.raiseError(message);
         }
-    }
-
-    public getTimestamp(position: Position): string {
-        return position.getLocaleString(langToLocale(this.translate.currentLang));
     }
 
     public refresh(): void {

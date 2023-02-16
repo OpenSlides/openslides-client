@@ -1,0 +1,8 @@
+<div class="wait-for-action-banner">
+    <span>
+        {{ currentTitle | translate }}
+    </span>
+    <span>({{ currentWorkerName }})</span>
+    <a (click)="wait()">{{ 'Wait' | translate }}</a>
+    <a *ngIf="isInactive" (click)="stop()">{{ 'Stop waiting' | translate }}</a>
+</div>

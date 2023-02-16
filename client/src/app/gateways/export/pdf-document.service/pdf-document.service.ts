@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
 import { Functionable } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
@@ -117,7 +118,12 @@ export interface PdfVirtualFileSystem {
 }
 
 export interface PdfImageDescription {
-    [url: string]: string;
+    images?: {
+        [url: string]: string;
+    };
+    svgs?: {
+        [url: string]: string;
+    };
 }
 
 export interface PdfFontDescription {
@@ -127,11 +133,14 @@ export interface PdfFontDescription {
     bolditalics: string;
 }
 
+const additionalPdfSettingsKeys: (keyof Settings)[] = [`export_pdf_pagenumber_alignment`];
+
 interface PdfCreatorConfig {
     document: object;
     filename: string;
     progressService: ProgressSnackBarControlService;
     progressSnackBarService: ProgressSnackBarService;
+    settings?: Partial<Settings>;
     loadFonts: Functionable<PdfFontDescription>;
     loadImages?: Functionable<PdfImageDescription>;
     createVfs?: Functionable<PdfVirtualFileSystem>;
@@ -145,6 +154,7 @@ class PdfCreator {
     private readonly _createVfs: Functionable<PdfVirtualFileSystem>;
     private readonly _progressService: ProgressSnackBarControlService;
     private readonly _progressSnackBarService: ProgressSnackBarService;
+    private readonly _settings: Partial<Settings>;
 
     private _pdfWorker: Worker | null = null;
 
@@ -156,6 +166,7 @@ class PdfCreator {
         this._createVfs = config.createVfs || (() => ({}));
         this._progressService = config.progressService;
         this._progressSnackBarService = config.progressSnackBarService;
+        this._settings = config.settings;
     }
 
     public download(): void {
@@ -195,20 +206,54 @@ class PdfCreator {
     }
 
     private async sendDocumentToPdfWorker(): Promise<void> {
+        const fonts = typeof this._loadFonts === `function` ? await this._loadFonts() : this._loadFonts;
+        const images = typeof this._loadImages === `function` ? await this._loadImages() : this._loadImages;
+
+        let doc = JSON.parse(JSON.stringify(this._document));
+        if (images.svgs) {
+            doc = this.replaceSvgImages(doc, images.svgs);
+        }
+
         this._pdfWorker!.postMessage({
-            doc: JSON.parse(JSON.stringify(this._document)),
+            doc,
             fonts: typeof this._loadFonts === `function` ? await this._loadFonts() : this._loadFonts,
-            vfs: await this.createVfs()
+            vfs: await this.createVfs(fonts, images),
+            settings: this._settings
         });
     }
 
-    private async createVfs(): Promise<PdfVirtualFileSystem> {
-        const fonts = typeof this._loadFonts === `function` ? await this._loadFonts() : this._loadFonts;
-        const images = typeof this._loadImages === `function` ? await this._loadImages() : this._loadImages;
+    private replaceSvgImages(doc: any, images: object): any {
+        for (let url of Object.keys(images)) {
+            doc = this.replaceSvgRecursive(doc, url, images[url]);
+        }
+
+        return doc;
+    }
+
+    private replaceSvgRecursive(doc: any, url: string, image: string): any {
+        if (Array.isArray(doc)) {
+            return doc.map(el => {
+                return this.replaceSvgRecursive(el, url, image);
+            });
+        } else if (doc && typeof doc === `object`) {
+            for (let key of Object.keys(doc)) {
+                if (key === `image` && (doc[key] === url || doc[key] === `/` + url)) {
+                    delete doc[key];
+                    doc.svg = image;
+                } else {
+                    doc[key] = this.replaceSvgRecursive(doc[key], url, image);
+                }
+            }
+        }
+
+        return doc;
+    }
+
+    private async createVfs(fonts: PdfFontDescription, images: PdfImageDescription): Promise<PdfVirtualFileSystem> {
         const initialVfs = typeof this._createVfs === `function` ? await this._createVfs() : this._createVfs;
         return {
             ...fonts,
-            ...images,
+            ...images?.images,
             ...initialVfs
         };
     }
@@ -244,6 +289,8 @@ export class PdfDocumentService {
 
     private pdfWorker: Worker | null = null;
 
+    private settings: Partial<Settings> = {};
+
     public constructor(
         private translate: TranslateService,
         private httpService: HttpService,
@@ -253,7 +300,30 @@ export class PdfDocumentService {
         private pdfImagesService: PdfImagesService,
         private mediaManageService: MediaManageService,
         private meetingSettingsService: MeetingSettingsService
-    ) {}
+    ) {
+        this.makeSettingsSubscriptions();
+    }
+
+    private makeSettingsSubscriptions(): void {
+        additionalPdfSettingsKeys.forEach(key =>
+            this.meetingSettingsService
+                .get(key)
+                .subscribe(value => (this.settings = Object.assign(this.settings, { [key]: value })))
+        );
+    }
+
+    /**
+     * Removes leading slash from url.
+     *
+     * @returns Url without leading slash
+     */
+
+    private removeLeadingSlash(url: string) {
+        if (url.indexOf(`/`) === 0) {
+            url = url.substr(1); // remove leading `/`
+        }
+        return url;
+    }
 
     /**
      * Creates the title for the list as pdfmake doc definition
@@ -402,6 +472,7 @@ export class PdfDocumentService {
                 imageUrls: imageUrls
             }),
             filename: `${filetitle}.pdf`,
+            settings: this.settings,
             loadImages: () => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
@@ -422,6 +493,7 @@ export class PdfDocumentService {
                 landscape: true
             }),
             filename: `${filetitle}.pdf`,
+            settings: this.settings,
             loadImages: () => this.loadImages(),
             progressService: this.progressService,
             progressSnackBarService: this.progressSnackBarService
@@ -435,10 +507,18 @@ export class PdfDocumentService {
         createVfs: () => Promise<PdfVirtualFileSystem>
     ): void {
         this.showProgress();
+
+        var logoBallotPaperUrl = this.mediaManageService.getLogoUrl(`pdf_ballot_paper`);
+        if (logoBallotPaperUrl) {
+            logoBallotPaperUrl = this.removeLeadingSlash(logoBallotPaperUrl);
+            this.imageUrls.push(logoBallotPaperUrl);
+        }
+
         buildDocFn().then(document =>
             new PdfCreator({
                 document,
                 filename: `${filetitle}.pdf`,
+                settings: this.settings,
                 loadFonts,
                 createVfs: createVfs,
                 loadImages: () => this.loadImages(),
@@ -501,15 +581,13 @@ export class PdfDocumentService {
 
         // add the left logo to the header column
         if (logoHeaderLeftUrl) {
-            if (logoHeaderLeftUrl.indexOf(`/`) === 0) {
-                logoHeaderLeftUrl = logoHeaderLeftUrl.substr(1); // remove trailing /
-            }
-            columns.push({
-                image: logoHeaderLeftUrl,
-                fit: [180, 40],
-                width: `20%`
-            });
-            this.imageUrls.push(logoHeaderLeftUrl);
+            columns.push(
+                this.getImage({
+                    image: logoHeaderLeftUrl,
+                    fit: [180, 40],
+                    width: `20%`
+                })
+            );
         }
 
         // Add no heading text if there are logos on the right and left.
@@ -538,16 +616,14 @@ export class PdfDocumentService {
 
         // add the logo to the right
         if (logoHeaderRightUrl) {
-            if (logoHeaderRightUrl.indexOf(`/`) === 0) {
-                logoHeaderRightUrl = logoHeaderRightUrl.substr(1); // remove trailing /
-            }
-            columns.push({
-                image: logoHeaderRightUrl,
-                fit: [180, 40],
-                alignment: `right`,
-                width: `20%`
-            });
-            this.imageUrls.push(logoHeaderRightUrl);
+            columns.push(
+                this.getImage({
+                    image: logoHeaderRightUrl,
+                    fit: [180, 40],
+                    alignment: `right`,
+                    width: `20%`
+                })
+            );
         }
         const margin = [lrMargin ? lrMargin[0] : 75, 30, lrMargin ? lrMargin[0] : 75, 10];
         // pdfmake order: [left, top, right, bottom]
@@ -617,13 +693,14 @@ export class PdfDocumentService {
 
         // add the left footer logo, if any
         if (logoFooterLeftUrl) {
-            columns.push({
-                image: logoFooterLeftUrl,
-                fit: logoContainerSize,
-                width: logoContainerWidth,
-                alignment: `left`
-            });
-            this.imageUrls.push(logoFooterLeftUrl);
+            columns.push(
+                this.getImage({
+                    image: logoFooterLeftUrl,
+                    fit: logoContainerSize,
+                    width: logoContainerWidth,
+                    alignment: `left`
+                })
+            );
         }
 
         // add the page number
@@ -635,13 +712,14 @@ export class PdfDocumentService {
 
         // add the right footer logo, if any
         if (logoFooterRightUrl) {
-            columns.push({
-                image: logoFooterRightUrl,
-                fit: logoContainerSize,
-                width: logoContainerWidth,
-                alignment: `right`
-            });
-            this.imageUrls.push(logoFooterRightUrl);
+            columns.push(
+                this.getImage({
+                    image: logoFooterRightUrl,
+                    fit: logoContainerSize,
+                    width: logoContainerWidth,
+                    alignment: `right`
+                })
+            );
         }
 
         const margin = [lrMargin ? lrMargin[0] : 75, 0, lrMargin ? lrMargin[0] : 75, 10];
@@ -649,6 +727,16 @@ export class PdfDocumentService {
             margin,
             columns,
             columnGap: 10
+        };
+    }
+
+    private getImage(data: { image: string; fit?: number[]; width?: string; alignment?: string }): object {
+        this.imageUrls.push(data.image);
+        return {
+            image: this.removeLeadingSlash(data.image),
+            fit: data.fit,
+            width: data.width,
+            alignment: data.alignment
         };
     }
 
@@ -801,7 +889,17 @@ export class PdfDocumentService {
         const urls = this.imageUrls.map(image => {
             return image.indexOf(`/`) === 0 ? image.slice(1) : image;
         });
-        const images = await Promise.all(urls.map(url => this.httpService.downloadAsBase64(url)));
-        return urls.mapToObject((url, index) => ({ [url]: images[index] }));
+        const downloads = await Promise.all(urls.map(url => this.httpService.downloadAsBase64(url)));
+        const images = downloads.filter(image => image.type !== `image/svg+xml`);
+        const svgs = downloads.filter(image => image.type === `image/svg+xml`);
+
+        return {
+            images: urls
+                .filter((_, index) => downloads[index].type !== `image/svg+xml`)
+                .mapToObject((url, index) => ({ [url]: images[index].data })),
+            svgs: urls
+                .filter((_, index) => downloads[index].type === `image/svg+xml`)
+                .mapToObject((url, index) => ({ [url]: atob(svgs[index].data) }))
+        };
     }
 }

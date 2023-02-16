@@ -27,10 +27,6 @@ export class SidenavComponent {
         return this.vp.isMobile;
     }
 
-    // public get meeting(): ViewMeeting | undefined {
-    //     return this.activeMeetingService.meeting;
-    // }
-
     public constructor(private vp: ViewPortService) {}
 
     public close(): void {

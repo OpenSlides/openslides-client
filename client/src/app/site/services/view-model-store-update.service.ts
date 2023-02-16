@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Collection, Ids } from 'src/app/domain/definitions/key-types';
+import { Collection, Id, Ids } from 'src/app/domain/definitions/key-types';
 import { BaseModel, BaseModelTemplate } from 'src/app/domain/models/base/base-model';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { DataStoreService } from 'src/app/site/services/data-store.service';
@@ -20,7 +20,15 @@ interface UpdatePatch {
     /**
      * Changed collections. The service will iterate over every collection and check if ids are removed.
      */
-    changedModels: { [collection: string]: Ids };
+    changedModels: {
+        [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
+    };
+    /**
+     * Changed collections. The service will iterate over every collection and check if ids are removed.
+     */
+    changedFullListModels: {
+        [collection: string]: Ids;
+    };
     /**
      * Definitely deleted models.
      */
@@ -43,7 +51,12 @@ export class ViewModelStoreUpdateService {
         private collectionMapper: CollectionMapperService
     ) {}
 
-    public async triggerUpdate({ changedModels, deletedModels, patch }: UpdatePatch): Promise<void> {
+    public async triggerUpdate({
+        changedModels,
+        changedFullListModels,
+        deletedModels,
+        patch
+    }: UpdatePatch): Promise<void> {
         const _deletedModels: DeletedModels = {};
         const _changedModels: ChangedModels = {};
 
@@ -52,8 +65,17 @@ export class ViewModelStoreUpdateService {
         }
 
         for (const collection of Object.keys(changedModels)) {
+            const modelIds =
+                this.DS.get(changedModels[collection].parentCollection, changedModels[collection].parentId)[
+                    changedModels[collection].parentField
+                ] || [];
+            const ids = modelIds.difference(changedModels[collection].ids);
+            _deletedModels[collection] = (_deletedModels[collection] || []).concat(ids);
+        }
+
+        for (const collection of Object.keys(changedFullListModels)) {
             const modelIds = this.DS.getIdsFor(collection);
-            const ids = modelIds.difference(changedModels[collection]);
+            const ids = modelIds.difference(changedFullListModels[collection]);
             _deletedModels[collection] = (_deletedModels[collection] || []).concat(ids);
         }
 

@@ -52,7 +52,6 @@ const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>
     ViewMotionBlock,
     ViewAssignment,
     ViewAgendaItem,
-    ViewUser,
     ViewPoll,
     ViewProjectorMessage,
     ViewProjectorCountdown
@@ -161,19 +160,22 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `active_meetings`,
-        MField: `is_active_in_organization`
+        MField: `is_active_in_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `archived_meetings`,
-        MField: `is_archived_in_organization`
+        MField: `is_archived_in_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `template_meetings`,
-        MField: `template_for_organization`
+        MField: `template_for_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
@@ -601,9 +603,9 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewProjector,
-        ownField: `default_projector`,
-        ownIdField: `default_projector_$_id`,
-        many: false,
+        ownField: `default_projectors`,
+        ownIdField: `default_projector_$_ids`,
+        many: true,
         generic: false,
         structured: true
     },

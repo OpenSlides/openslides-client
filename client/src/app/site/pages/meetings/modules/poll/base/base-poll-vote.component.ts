@@ -1,13 +1,15 @@
 import { ChangeDetectorRef, Directive, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { IdentifiedVotingData, PollPropertyVerbose, VoteValue, VotingData } from 'src/app/domain/models/poll';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { VotingProhibition, VotingService } from '../services/voting.service';
@@ -20,7 +22,7 @@ export interface VoteOption {
 }
 
 @Directive()
-export abstract class BasePollVoteComponent<C extends BaseViewModel = any> extends BaseUiComponent {
+export abstract class BasePollVoteComponent<C extends BaseViewModel = any> extends BaseComponent {
     @Input()
     public set poll(value: ViewPoll<C>) {
         this._poll = value;
@@ -66,9 +68,11 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
         protected votingService: VotingService,
         protected cd: ChangeDetectorRef,
         private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super();
+        super(componentServiceCollector, translate);
         this.subscriptions.push(
             operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (user) {

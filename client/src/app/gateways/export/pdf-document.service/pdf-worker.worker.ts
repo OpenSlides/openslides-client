@@ -65,12 +65,15 @@ function addPageNumbers(data: any): void {
         const footer = data.doc.tmpfooter;
 
         // if the tmpfooter starts with an image, the pagenumber will be found in column 1
-        const pageNumberColIndex = !!footer.columns[0].image ? 1 : 0;
+        const pageNumberColIndex = !!(footer.columns[0].image || footer.columns[0].svg) ? 1 : 0;
 
         // "%PAGENR% needs to be found once. After that, the same position should always update page numbers"
         if (footer.columns[pageNumberColIndex]?.stack[0] === `%PAGENR%` || countPageNumbers) {
             countPageNumbers = true;
-            footer.columns[pageNumberColIndex].stack[0] = `${currentPage} / ${pageCount}`;
+            footer.columns[pageNumberColIndex].stack[0] = {
+                text: `${currentPage} / ${pageCount}`,
+                alignment: data.settings?.export_pdf_pagenumber_alignment ?? `center`
+            };
         }
         return footer;
     };

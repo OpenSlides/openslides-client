@@ -50,7 +50,7 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
     }
 
     public isFirstContribution(speaker: ViewSpeaker): boolean {
-        return !this.getViewModelList().some(list => list.hasSpeakerSpoken(speaker));
+        return !this.getViewModelList().some(list => list.hasUserSpoken(speaker.userId));
     }
 
     /**

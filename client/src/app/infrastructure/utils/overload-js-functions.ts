@@ -43,6 +43,10 @@ declare global {
 
     interface Set<T> {
         equals(other: Set<T>): boolean;
+        /**
+         * Adds all elements of `other` to this set.
+         */
+        update(other: Set<T>): void;
     }
 
     /**
@@ -168,6 +172,14 @@ function overloadSetFunctions(): void {
                 }
             }
             return !difference.size;
+        },
+        enumerable: false
+    });
+    Object.defineProperty(Set.prototype, `update`, {
+        value<T>(other: Set<T>): void {
+            for (const elem of other) {
+                this.add(elem);
+            }
         },
         enumerable: false
     });

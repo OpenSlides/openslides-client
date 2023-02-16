@@ -224,7 +224,7 @@ export class ActionWorkerWatchService {
                     map(data => data[0]),
                     filter(data => {
                         const date = data.find(worker => worker.id === id);
-                        if (date && watchActivity) {
+                        if (date && watchActivity && !date.hasPassedDeathThreshold) {
                             let reason: WaitForActionReason;
                             if (!hasReportedSlowness && date.isSlow) {
                                 hasReportedSlowness = true;
@@ -248,6 +248,10 @@ export class ActionWorkerWatchService {
                                 this.openWaitingPrompt(id, reason, date.name);
                             }
                         }
+                        if (date && date.hasPassedDeathThreshold) {
+                            this.showClosingPrompt(date);
+                            throw new Error(`Process has been assumed to be dead`);
+                        }
                         return date && date.state !== ActionWorkerState.running;
                     })
                 )
@@ -256,7 +260,20 @@ export class ActionWorkerWatchService {
         return actionWorker;
     }
 
-    private openWaitingPrompt(workerId: number, reason: WaitForActionReason, workerName?: string) {
+    private showClosingPrompt(worker: ViewActionWorker): void {
+        const snapshot = {
+            id: worker.id,
+            name: worker.name,
+            state: worker.state,
+            created: worker.created,
+            timestamp: worker.timestamp,
+            closed: Date.now()
+        };
+        this.dialogService.removeAllDates(snapshot.id);
+        this.dialogService.openClosingPrompt(snapshot);
+    }
+
+    private openWaitingPrompt(workerId: number, reason: WaitForActionReason, workerName?: string): void {
         const name = workerName || this.actionWorkerRepo.getViewModel(workerId)?.name;
         if (!this._noDialogActionNames.find(actionName => actionName === name)) {
             this.dialogService.addNewDialog(reason, { workerId, workerName: name });

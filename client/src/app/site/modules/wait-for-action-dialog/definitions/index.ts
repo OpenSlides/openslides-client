@@ -14,9 +14,9 @@ export type WaitForActionReasonKeys = keyof typeof waitForActionReason;
 export type WaitForActionReason = typeof waitForActionReason[WaitForActionReasonKeys];
 
 export const titleVerbose: { [key: number]: string } = {
-    [waitForActionReason.notWritten]: `A server action could not be written to the database`,
-    [waitForActionReason.inactive]: `A server action may have stopped working`,
-    [waitForActionReason.slow]: `A server action seems to be slow`
+    [waitForActionReason.notWritten]: `The process will be started in the future, please wait.`,
+    [waitForActionReason.slow]: `The process is running, please wait.`,
+    [waitForActionReason.inactive]: `The process may have stopped running`
 };
 
 export const multiActionVerbose: { [key: number]: { wait: string; stop: string } } = {

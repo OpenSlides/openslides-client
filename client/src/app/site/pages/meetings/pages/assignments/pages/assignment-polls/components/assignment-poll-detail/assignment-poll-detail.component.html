@@ -83,6 +83,13 @@
         <span>{{ 'Anonymize votes' | translate }}</span>
     </button>
     <mat-divider></mat-divider>
+
+    <!-- Export -->
+    <button mat-menu-item (click)="exportPollResults()">
+        <mat-icon>archive</mat-icon>
+        <span>{{ 'Export' | translate }}</span>
+    </button>
+
     <button *osPerms="permission.assignmentCanManage" mat-menu-item (click)="deletePoll()">
         <mat-icon color="warn">delete</mat-icon>
         <span>{{ 'Delete' | translate }}</span>

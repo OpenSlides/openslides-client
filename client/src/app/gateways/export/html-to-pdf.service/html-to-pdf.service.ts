@@ -1,6 +1,19 @@
 import { Injectable } from '@angular/core';
 import { ExportServiceModule } from 'src/app/gateways/export';
 
+export interface ChildNodeParagraphPayload {
+    child: Element;
+    parent: Element;
+    styles?: string[];
+}
+
+export interface CreateSpecificParagraphPayload {
+    element: Element;
+    nodeName: string;
+    classes: any[];
+    styles: string[];
+}
+
 /**
  * Converts HTML strings to pdfmake compatible document definition.
  *
@@ -21,17 +34,17 @@ export class HtmlToPdfService {
     /**
      * Normal line height for paragraphs
      */
-    private LINE_HEIGHT = 1.25;
+    protected lineHeight = 1.25;
 
     /**
      * space between paragraphs
      */
-    private P_MARGIN_BOTTOM = 4.0;
+    protected readonly P_MARGIN_BOTTOM = 4.0;
 
     /**
      * Space above H
      */
-    private H_MARGIN_TOP = 10.0;
+    protected readonly H_MARGIN_TOP = 10.0;
 
     /**
      * Conversion of HTML tags into pdfmake directives
@@ -67,53 +80,6 @@ export class HtmlToPdfService {
     };
 
     /**
-     * Determine the ideal top margin for a given node
-     *
-     * @param nodeName the node to parse
-     * @returns the margin tip as number
-     */
-    private getMarginTop(nodeName: string): number {
-        switch (nodeName) {
-            case `h1`:
-            case `h2`:
-            case `h3`:
-            case `h4`:
-            case `h5`:
-            case `h6`: {
-                return this.H_MARGIN_TOP;
-            }
-            default: {
-                return 0;
-            }
-        }
-    }
-
-    /**
-     * Determine the ideal margin for a given node
-     *
-     * @param nodeName the node to parse
-     * @returns the margin bottom as number
-     */
-    private getMarginBottom(nodeName: string): number {
-        switch (nodeName) {
-            case `h1`:
-            case `h2`:
-            case `h3`:
-            case `h4`:
-            case `h5`:
-            case `h6`: {
-                return this.P_MARGIN_BOTTOM;
-            }
-            case `li`: {
-                return this.P_MARGIN_BOTTOM;
-            }
-            default: {
-                return this.P_MARGIN_BOTTOM;
-            }
-        }
-    }
-
-    /**
      * Function to convert plain html text without linenumbering.
      *
      * @param text The html text that should be converted to PDF.
@@ -122,7 +88,7 @@ export class HtmlToPdfService {
      */
     public addPlainText(text: string): object {
         return {
-            columns: [{ stack: this.convertHtml(text /* , LineNumberingMode.None */) }]
+            columns: [{ stack: this.convertHtml({ htmlText: text }) }]
         };
     }
 
@@ -133,10 +99,8 @@ export class HtmlToPdfService {
      * @param htmlText the html text to translate as string
      * @returns pdfmake doc definition as object
      */
-    public convertHtml(htmlText: string /* lnMode?: LineNumberingMode */): object {
+    public convertHtml({ htmlText }: { htmlText: string }): object {
         const docDef = [];
-
-        // Cleanup of dirty html would happen here
 
         // Create a HTML DOM tree out of html string
         const parser = new DOMParser();
@@ -198,6 +162,8 @@ export class HtmlToPdfService {
             }
         }
 
+        const createPayload = { element, nodeName, classes, styles };
+
         switch (nodeName) {
             case `h1`:
             case `h2`:
@@ -208,46 +174,12 @@ export class HtmlToPdfService {
             case `li`:
             case `p`:
             case `div`: {
-                const children = this.parseChildren(element, styles);
-
-                newParagraph = this.create(`text`);
-                newParagraph.text = children;
-
-                newParagraph.margin = [0, 0, 0, 0];
-
-                // determine the "normal" top and button margins
-                newParagraph.margin[1] = this.getMarginTop(nodeName);
-                newParagraph.margin[3] = this.getMarginBottom(nodeName);
-
-                newParagraph.lineHeight = this.LINE_HEIGHT;
-                newParagraph = {
-                    ...newParagraph,
-                    ...this.computeStyle(styles),
-                    ...this.computeStyle(this.elementStyles[nodeName])
-                };
-                // if the ol list has specific list type
-                if (nodeName === `li` && element.parentNode?.nodeName === `OL`) {
-                    const type = element.parentElement!.getAttribute(`type`);
-                    switch (type) {
-                        case `a`:
-                            newParagraph.listType = `lower-alpha`;
-                            break;
-                        case `A`:
-                            newParagraph.listType = `upper-alpha`;
-                            break;
-                        case `i`:
-                            newParagraph.listType = `lower-roman`;
-                            break;
-                        case `I`:
-                            newParagraph.listType = `upper-roman`;
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                newParagraph = this.createDivParagraph(createPayload);
                 break;
             }
             case `a`:
+                newParagraph = this.createHyperlinkParagraph(createPayload);
+                break;
             case `b`:
             case `strong`:
             case `u`:
@@ -256,53 +188,151 @@ export class HtmlToPdfService {
             case `ins`:
             case `del`:
             case `strike`: {
-                const children = this.parseChildren(element, styles.concat(this.elementStyles[nodeName]));
-                newParagraph = this.create(`text`);
-                newParagraph.text = children;
+                newParagraph = this.createFormattedParagraph(createPayload);
                 break;
             }
             case `span`: {
-                const children = this.parseChildren(element, styles);
-
-                newParagraph = {
-                    ...this.create(`text`),
-                    ...this.computeStyle(styles)
-                };
-
-                newParagraph.text = children;
+                newParagraph = this.createSpanParagraph(createPayload);
                 break;
             }
             case `br`: {
                 newParagraph = this.create(`text`);
-                // yep thats all
                 newParagraph.text = `\n`;
-                newParagraph.lineHeight = this.LINE_HEIGHT;
+                newParagraph.lineHeight = this.lineHeight;
                 break;
             }
             case `ul`:
             case `ol`: {
-                const list = this.create(nodeName);
-
-                // keep the numbers of the ol list
-                if (nodeName === `ol`) {
-                    const start = element.getAttribute(`start`);
-                    if (start) {
-                        list.start = parseInt(start, 10);
-                    }
-                }
-                const children = this.parseChildren(element, styles);
-                newParagraph = list;
-                newParagraph[nodeName] = children;
+                newParagraph = this.createListParagraph(createPayload);
                 break;
             }
             default: {
-                newParagraph = {
-                    ...this.create(`text`, element.textContent!.replace(/\n/g, ``)),
-                    ...this.computeStyle(styles)
-                };
+                newParagraph = this.createDefaultParagraph(createPayload);
                 break;
             }
         }
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create a paragraph corresponding to a div or a similar element.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createDivParagraph(data: CreateSpecificParagraphPayload): any {
+        const children = this.parseChildren(data.element, data.styles);
+        let newParagraph = this.create(`text`);
+        newParagraph.text = children;
+        newParagraph = this.formatDivParagraph(newParagraph, data);
+        return newParagraph;
+    }
+
+    protected formatDivParagraph(paragraph: any, data: CreateSpecificParagraphPayload): any {
+        const { element, nodeName, classes, styles } = data;
+        paragraph.margin = [0, 0, 0, 0];
+
+        // determine the "normal" top and button margins
+        paragraph.margin[1] = this.getMarginTop(nodeName);
+        paragraph.margin[3] = this.getMarginBottom(nodeName);
+
+        paragraph.lineHeight = this.lineHeight;
+        paragraph = {
+            ...paragraph,
+            ...this.computeStyle(styles),
+            ...this.computeStyle(this.elementStyles[nodeName])
+        };
+        // if the ol list has specific list type
+        if (nodeName === `li` && element.parentNode?.nodeName === `OL`) {
+            const type = element.parentElement!.getAttribute(`type`);
+            switch (type) {
+                case `a`:
+                    paragraph.listType = `lower-alpha`;
+                    break;
+                case `A`:
+                    paragraph.listType = `upper-alpha`;
+                    break;
+                case `i`:
+                    paragraph.listType = `lower-roman`;
+                    break;
+                case `I`:
+                    paragraph.listType = `upper-roman`;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return paragraph;
+    }
+
+    /**
+     * Used by parseElement to create a paragraph corresponding to a formatted element.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createHyperlinkParagraph(data: CreateSpecificParagraphPayload): any {
+        let newParagraph = this.createFormattedParagraph(data);
+
+        const href = (<HTMLAnchorElement>data.element).href;
+        if (href) {
+            newParagraph = this.addPropertyToTexts(newParagraph, `link`, href);
+        }
+
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create a paragraph corresponding to a formatted element.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createFormattedParagraph(data: CreateSpecificParagraphPayload): any {
+        const children = this.parseChildren(data.element, data.styles.concat(this.elementStyles[data.nodeName]));
+        let newParagraph = this.create(`text`);
+        newParagraph.text = children;
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create a paragraph corresponding to a span or a similar element.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createSpanParagraph(data: CreateSpecificParagraphPayload): any {
+        const children = this.parseChildren(data.element, data.styles);
+        let newParagraph = {
+            ...this.create(`text`),
+            ...this.computeStyle(data.styles)
+        };
+
+        newParagraph.text = children;
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create  a paragraph corresponding to a list.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createListParagraph(data: CreateSpecificParagraphPayload): any {
+        const children = this.parseChildren(data.element, data.styles);
+        const list = this.create(data.nodeName);
+
+        // keep the numbers of the ol list
+        if (data.nodeName === `ol`) {
+            const start = data.element.getAttribute(`start`);
+            if (start) {
+                list.start = parseInt(start, 10);
+            }
+        }
+        let newParagraph = list;
+        newParagraph[data.nodeName] = children;
+        return newParagraph;
+    }
+
+    /**
+     * Used by parseElement to create a paragraph corresponding to a type of element that was unaccounted for.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected createDefaultParagraph(data: CreateSpecificParagraphPayload): any {
+        let newParagraph = {
+            ...this.create(`text`, data.element.textContent!.replace(/\n/g, ``)),
+            ...this.computeStyle(data.styles)
+        };
         return newParagraph;
     }
 
@@ -313,19 +343,85 @@ export class HtmlToPdfService {
      * @param styles the styles array, usually just to parse back into the `parseElement` function
      * @returns an array of parsed children
      */
-    private parseChildren(element: Element, styles?: string[]): Element[] {
+    protected parseChildren(element: Element, styles?: string[]): Element[] {
         const childNodes = Array.from(element.childNodes) as Element[];
         const paragraph: any[] = [];
         if (childNodes.length > 0) {
             for (const child of childNodes) {
                 // skip empty child nodes
                 if (!(child.nodeName === `#text` && child.textContent?.trim() === ``)) {
-                    const parsedElement = this.parseElement(child, styles);
-                    paragraph.push(parsedElement);
+                    this.addChildNodeIntoParagraphs(paragraph, { child, parent: element, styles });
                 }
             }
         }
         return paragraph;
+    }
+
+    /**
+     * Takes a list of paragraphs and the data from which to calculate the next paragraph and appends the child node.
+     * Can be overwritten by subclasses for more specific functionality.
+     */
+    protected addChildNodeIntoParagraphs(paragraph: any[], data: ChildNodeParagraphPayload) {
+        const parsedElement = this.parseElement(data.child, data.styles);
+        paragraph.push(parsedElement);
+    }
+
+    /**
+     * Helper function to create valid doc definitions container elements for pdfmake
+     *
+     * @param name should be a pdfMake container element, like 'text' or 'stack'
+     * @param content
+     */
+    protected create(name: string, content?: any): any {
+        const container: any = {};
+        const docDef = content ? content : [];
+        container[name] = docDef;
+        return container;
+    }
+
+    /**
+     * Helper function to recursivly add a property to all text objects
+     *
+     * @param node A node containing a text property
+     * @param propName
+     * @param propValue
+     */
+    protected addPropertyToTexts(node: any, propName: string, propValue: any): object {
+        if (node.text instanceof Array) {
+            node.text = node.text.map((val: any) => this.addPropertyToTexts(val, propName, propValue));
+            return node;
+        } else if (node.text instanceof Object) {
+            node.text = this.addPropertyToTexts(node.text, propName, propValue);
+            return node;
+        }
+
+        node[propName] = propValue;
+        return node;
+    }
+
+    /**
+     * Determine the ideal top margin for a given node.
+     * May be overwritten in subclasses.
+     *
+     * @param nodeName the node to parse
+     * @returns the margin tip as number
+     */
+    protected getMarginTop(nodeName: string): number {
+        if (nodeName.match(/^h[1-6]$/)) {
+            return this.H_MARGIN_TOP;
+        }
+        return 0;
+    }
+
+    /**
+     * Determine the ideal margin for a given node.
+     * May be overwritten in subclasses.
+     *
+     * @param nodeName the node to parse
+     * @returns the margin bottom as number
+     */
+    protected getMarginBottom(nodeName: string): number {
+        return this.P_MARGIN_BOTTOM;
     }
 
     /**
@@ -373,13 +469,20 @@ export class HtmlToPdfService {
                             break;
                         }
                         case `text-decoration`: {
+                            if (!styleObject.decoration) {
+                                styleObject.decoration = [];
+                            }
                             switch (value) {
                                 case `underline`: {
-                                    styleObject.decoration = `underline`;
+                                    if (!styleObject.decoration.includes(`underline`)) {
+                                        styleObject.decoration.push(`underline`);
+                                    }
                                     break;
                                 }
                                 case `line-through`: {
-                                    styleObject.decoration = `lineThrough`;
+                                    if (!styleObject.decoration.includes(`lineThrough`)) {
+                                        styleObject.decoration.push(`lineThrough`);
+                                    }
                                     break;
                                 }
                             }
@@ -445,18 +548,5 @@ export class HtmlToPdfService {
             console.error(`Could not parse color "` + color + `"`);
             return color;
         }
-    }
-
-    /**
-     * Helper function to create valid doc definitions container elements for pdfmake
-     *
-     * @param name should be a pdfMake container element, like 'text' or 'stack'
-     * @param content
-     */
-    private create(name: string, content?: any): any {
-        const container: any = {};
-        const docDef = content ? content : [];
-        container[name] = docDef;
-        return container;
     }
 }

@@ -56,7 +56,7 @@
         <!-- Timestamp -->
         <ng-container matColumnDef="time">
             <mat-header-cell *matHeaderCellDef>{{ 'Timestamp' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let position">{{ getTimestamp(position) }}</mat-cell>
+            <mat-cell *matCellDef="let position">{{ position.timestamp | localizedDate }}</mat-cell>
         </ng-container>
 
         <!-- Info -->

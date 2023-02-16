@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Fqid } from 'src/app/domain/definitions/key-types';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import {
     CollectionMappedTypes,
     CollectionMapperService,
@@ -31,6 +33,17 @@ export class MeetingCollectionMapperService extends CollectionMapperService impl
             return false;
         }
         return repo instanceof BaseMeetingRelatedRepository || repo instanceof MediafileRepositoryService;
+    }
+
+    public getViewModelByFqid(fqid: Fqid): BaseViewModel<any> | null {
+        const collection = fqid.split(`/`)[0];
+        const id = Number(fqid.split(`/`)[1]);
+        for (let repo of this._meetingRepositoriesSubject.value) {
+            if (repo.collection === collection) {
+                return repo.getViewModel(id);
+            }
+        }
+        return null;
     }
 
     private registerMeetingRepository(mapping: CollectionMappedTypes<any, any>): void {

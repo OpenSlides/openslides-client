@@ -5,6 +5,7 @@ import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
+import { PollKeyVerbosePipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -13,6 +14,8 @@ import { MediaManageService } from 'src/app/site/pages/meetings/services/media-m
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
+import { ViewAssignment } from '../../../../view-models';
+import { AssignmentPollService } from '../assignment-poll.service';
 import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
 
 @Injectable({
@@ -25,10 +28,21 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         activeMeetingService: ActiveMeetingService,
         mediaManageService: MediaManageService,
         pdfService: MeetingPdfExportService,
-        private translate: TranslateService,
-        private assignmentRepo: AssignmentControllerService
+        protected override translate: TranslateService,
+        private assignmentRepo: AssignmentControllerService,
+        pollService: AssignmentPollService,
+        pollKeyVerbose: PollKeyVerbosePipe
     ) {
-        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService, pdfService);
+        super(
+            meetingSettingsService,
+            userRepo,
+            activeMeetingService,
+            mediaManageService,
+            pdfService,
+            translate,
+            pollService,
+            pollKeyVerbose
+        );
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));
@@ -55,10 +69,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
             title = assignment.getTitle();
         }
         if (!subtitle) {
-            subtitle = ``;
-        }
-        if (assignment.polls.length > 1) {
-            subtitle = `${this.translate.instant(`Ballot`)} ${assignment.polls.length} ${subtitle}`;
+            subtitle = poll.getTitle();
         }
         if (subtitle.length > 90) {
             subtitle = subtitle.substring(0, 90) + `...`;
@@ -89,9 +100,12 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         const sheetEnd = Math.floor(417 / rowsPerPage);
         this.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: sheetEnd, title, subtitle, poll }),
-            fileName,
-            this.logoUrl
+            fileName
         );
+    }
+
+    protected getPollResultFileNamePrefix(poll: ViewPoll): string {
+        return (poll.content_object as ViewAssignment)?.getTitle();
     }
 
     /**
@@ -165,7 +179,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         return [
             {
                 text: option,
-                margin: [40, 10, 0, 0]
+                margin: [21, 10, 0, 0]
             },
             {
                 width: `auto`,
