@@ -27,8 +27,33 @@ let openTimeouts = {
 
 if (!environment.production) {
     (<any>self).printAutoupdateState = function () {
+        console.log(`AU POOL INFO`);
+        console.log(`Currently open:`, autoupdatePool.activeStreams.length);
+        console.group(`Streams`);
+        for (let stream of autoupdatePool.activeStreams) {
+            console.groupCollapsed(stream.subscriptions.map(s => s.description).join(`, `));
+            console.log(`Current data:`, stream.currentData);
+            console.log(`Current data size:`, JSON.stringify(stream.currentData).length);
+            console.log(`Current data keys:`, Object.keys(stream.currentData).length);
+            console.log(`Query params:`, stream.queryParams);
+            console.log(`Failed connects:`, stream.failedConnects);
+            console.groupCollapsed(`Subscriptions`);
+            for (let subscr of stream.subscriptions) {
+                console.group(subscr.description);
+                console.log(`ID:`, subscr.id);
+                console.log(`Request:`, subscr.request);
+                console.log(`Num subscribers:`, subscr.ports.length);
+                console.groupEnd();
+            }
+            console.groupEnd();
+            console.groupEnd();
+        }
+        console.groupEnd();
+
+        console.groupCollapsed(`Raw`);
         console.log(`subscriptionQueue\n`, subscriptionQueues);
-        console.log(`pool\n`, autoupdatePool);
+        console.log(`Pool\n`, autoupdatePool);
+        console.groupEnd();
     };
 }
 
@@ -55,6 +80,9 @@ function openConnection(
     const existingSubscription = autoupdatePool.getMatchingSubscription(queryParams, request);
     if (existingSubscription) {
         existingSubscription.addPort(ctx);
+        if (!existingSubscription.stream.active) {
+            autoupdatePool.reconnect(existingSubscription.stream);
+        }
         return;
     }
 

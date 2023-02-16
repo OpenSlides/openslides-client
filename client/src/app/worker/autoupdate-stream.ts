@@ -15,10 +15,14 @@ export class AutoupdateStream {
 
     private abortCtrl: AbortController = undefined;
     private activeSubscriptions: AutoupdateSubscription[] = null;
-    private active: boolean = false;
+    private _active: boolean = false;
     private error: any | ErrorDescription = null;
     private restarting: boolean = false;
     private _currentData: Object | null = null;
+
+    public get active(): boolean {
+        return this._active;
+    }
 
     /**
      * Full data object received by autoupdate
@@ -71,9 +75,9 @@ export class AutoupdateStream {
     public async start(
         force?: boolean
     ): Promise<{ stopReason: 'error' | 'aborted' | 'unused' | 'resolved' | 'in-use'; error?: any }> {
-        if (this.active && !force) {
+        if (this._active && !force) {
             return { stopReason: `in-use` };
-        } else if (this.active && force) {
+        } else if (this._active && force) {
             this.abort();
         }
 
@@ -81,9 +85,9 @@ export class AutoupdateStream {
         this.error = null;
         try {
             await this.doRequest();
-            this.active = false;
+            this._active = false;
         } catch (e) {
-            this.active = false;
+            this._active = false;
             if (e.name !== `AbortError`) {
                 console.error(e);
 
@@ -144,6 +148,7 @@ export class AutoupdateStream {
     public restart(): void {
         this.restarting = true;
         this.abort();
+        this.clearSubscriptions();
     }
 
     public clearSubscriptions(): void {
@@ -155,7 +160,7 @@ export class AutoupdateStream {
     }
 
     private async doRequest(): Promise<void> {
-        this.active = true;
+        this._active = true;
 
         if (this.activeSubscriptions === null) {
             this.activeSubscriptions = [];
