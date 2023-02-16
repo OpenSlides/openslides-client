@@ -15,7 +15,8 @@ export interface MotionFormattingRepresentation {
     start_line_number: number;
 }
 
-export interface HasReferencedMotionInRecommendationExtensionIds {
+export interface HasReferencedMotionInExtensionIds {
+    referenced_in_motion_state_extension_ids: Id[]; // (motion/state_extension_reference_ids)[];
     referenced_in_motion_recommendation_extension_ids: Id[]; // (motion/recommendation_extension_reference_ids)[];
 }
 
@@ -66,6 +67,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public all_origin_ids!: Id[]; // motion/all_derived_motion_ids;
     public state_id!: Id; // motion_state/motion_ids;
     public recommendation_id!: Id; // motion_state/motion_recommendation_ids;
+    public state_extension_reference_ids!: Fqid[]; // (*/referenced_in_motion_state_extension_ids)[];
     public recommendation_extension_reference_ids!: Fqid[]; // (*/referenced_in_motion_recommendation_extension_ids)[];
     // current option: motion
     public category_id!: Id; // category/motion_ids;
@@ -97,5 +99,5 @@ export interface Motion
         HasAttachmentIds,
         HasPersonalNoteIds,
         HasProjectionIds,
-        HasReferencedMotionInRecommendationExtensionIds,
+        HasReferencedMotionInExtensionIds,
         HasPollIds {}
