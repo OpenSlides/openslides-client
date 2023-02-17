@@ -2,7 +2,7 @@ import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
-import { PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
+import { PollMethod, PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -287,6 +287,28 @@ export abstract class BasePollPdfService {
             styles: this.getBlankPaperStyles()
         };
         return result;
+    }
+
+    protected getRowsPerPage(poll: ViewPoll): number {
+        if (poll.pollmethod === PollMethod.Y) {
+            if (poll.options.length <= 2) {
+                return 4;
+            } else if (poll.options.length <= 5) {
+                return 3;
+            } else if (poll.options.length <= 10) {
+                return 2;
+            }
+        }
+
+        if (poll.options.length <= 2) {
+            return 4;
+        } else if (poll.options.length <= 3) {
+            return 3;
+        } else if (poll.options.length <= 7) {
+            return 2;
+        }
+
+        return 1;
     }
 
     /**
