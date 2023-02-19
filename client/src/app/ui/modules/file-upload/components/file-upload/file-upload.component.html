@@ -40,7 +40,7 @@
         vScrollFixed="50"
         [showHeader]="true"
         [dataSource]="dataSource"
-        [ngStyle]="{ height: tableHeight }"
+        [tableHeight]="tableHeight"
     >
         <div *osScrollingTableCell="'remove'; row as file; config: { width: 24 }">
             <button mat-icon-button (click)="onRemoveButton(file)" matTooltip="{{ 'Remove file' | translate }}">

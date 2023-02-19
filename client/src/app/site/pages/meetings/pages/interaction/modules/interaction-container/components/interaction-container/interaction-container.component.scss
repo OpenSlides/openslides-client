@@ -23,6 +23,13 @@ $radius: 5px;
         margin-left: 1em;
         margin-top: auto;
         margin-bottom: auto;
+        flex-grow: 1;
+    }
+
+    .container-head-expand {
+        margin-right: 1em;
+        margin-top: auto;
+        margin-bottom: auto;
     }
 
     .container-head-title {

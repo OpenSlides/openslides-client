@@ -114,7 +114,7 @@ interface IMeetingRelations {
     present_users: ViewUser[];
     users: ViewUser[];
     reference_projector: ViewProjector;
-    default_projector: StructuredRelation<string, ViewProjector | null>;
+    default_projectors: StructuredRelation<string, ViewProjector[]>;
     projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;

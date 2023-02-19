@@ -27,7 +27,7 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
 
     public override getFieldsets(): Fieldsets<Projector> {
-        const routingFields: (keyof Projector)[] = [`sequential_number`];
+        const routingFields: (keyof Projector)[] = [`sequential_number`, `meeting_id`];
         const defaultFields: (keyof Projector)[] = routingFields.concat([
             `name`,
             `scale`,
@@ -214,5 +214,9 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
         return this.getViewModelListObservable().pipe(
             map(projectors => projectors.find(projector => projector.isReferenceProjector))
         );
+    }
+
+    public getReferenceProjector(): ViewProjector | undefined {
+        return this.getViewModelList().find(projector => projector.isReferenceProjector);
     }
 }

@@ -59,6 +59,14 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
      */
     public isListOfSpeakersEmpty: boolean = false;
 
+    public get isNextListOfSpeakersEmpty(): boolean {
+        return !this.viewListOfSpeakers.waitingSpeakers?.length;
+    }
+
+    public get isPreviousListOfSpeakersEmpty(): boolean {
+        return !this.viewListOfSpeakers.finishedSpeakers?.length;
+    }
+
     /**
      * filled by child component
      */
@@ -149,6 +157,24 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
         );
         if (await this.promptService.open(title)) {
             this.listOfSpeakersRepo.deleteAllSpeakers(this.viewListOfSpeakers);
+        }
+    }
+
+    public async clearPreviousSpeakerList(): Promise<void> {
+        const title = this.translate.instant(
+            `Are you sure you want to delete all previous speakers from this list of speakers?`
+        );
+        if (await this.promptService.open(title)) {
+            this.listOfSpeakersRepo.deleteAllPreviousSpeakers(this.viewListOfSpeakers);
+        }
+    }
+
+    public async clearNextSpeakerList(): Promise<void> {
+        const title = this.translate.instant(
+            `Are you sure you want to delete all next speakers from this list of speakers?`
+        );
+        if (await this.promptService.open(title)) {
+            this.listOfSpeakersRepo.deleteAllNextSpeakers(this.viewListOfSpeakers);
         }
     }
 

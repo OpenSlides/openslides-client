@@ -53,12 +53,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
             const canManageUsers = this.isAllowed(`manage`);
-            if (canManageUsers) {
-                if (this._isUserInScope || this.newUser) {
-                    return true;
-                } else {
-                    return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
-                }
+            if (this._isUserInScope || (this.newUser && canManageUsers)) {
+                return true;
+            } else if (canManageUsers) {
+                return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
@@ -157,6 +155,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         return this.userService.isAllowed(action, this.ownPage);
     }
 
+    public goToHistory(): void {
+        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.user.fqid } });
+    }
+
     private getUserByUrl(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `new`) {
             super.setTitle(`New participant`);
@@ -189,7 +191,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 }
             }),
             this.operator.operatorUpdated.subscribe(
-                async () => (this._isUserInScope = await this.userService.isUserInSameScope(this._userId!))
+                async () => (this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!))
             )
         );
     }
@@ -243,7 +245,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      */
     public async setEditMode(edit: boolean): Promise<void> {
         if (!this.newUser && edit) {
-            this._isUserInScope = await this.userService.isUserInSameScope(this._userId!);
+            this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!);
         }
 
         this.isEditingSubject.next(edit);
@@ -290,18 +292,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         }
     }
 
-    /**
-     * Fetches a localized string for the time the last email was sent.
-     *
-     * @returns a translated string with either the localized date/time; of 'No email sent'
-     */
-    public getEmailSentTime(): string {
-        if (!this.user?.isLastEmailSend) {
-            return this.translate.instant(`No email sent`);
-        }
-        return this.repo.getLastSentEmailTimeString(this.user);
-    }
-
     private async createUser(): Promise<void> {
         const partialUser = { ...this.personalInfoFormValue };
 
@@ -332,8 +322,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private checkForGroups(user: any): void {
+        const defaultGroupId = this.activeMeetingService.meeting!.default_group_id;
+        if (user?.group_ids.includes(defaultGroupId) && user?.group_ids.length > 1) {
+            user.group_ids = user.group_ids.filter(id => id !== defaultGroupId);
+        }
         if (!user?.group_ids.length) {
-            const defaultGroupId = this.activeMeetingService.meeting!.default_group_id;
             user.group_ids = [defaultGroupId];
         }
     }

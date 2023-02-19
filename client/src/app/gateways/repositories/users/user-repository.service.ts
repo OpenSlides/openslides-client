@@ -94,6 +94,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `default_vote_weight`,
             `email`,
             `last_email_send`,
+            `last_login`,
             `organization_management_level`,
             `meeting_ids`
         ];
@@ -101,14 +102,18 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `committee_ids`,
             { templateField: `committee_$_management_level` }
         ]);
-        const participantListFields: TypedFieldset<User> = shortNameFields.concat([
+
+        const participantListFieldsMinimal: TypedFieldset<User> = shortNameFields.concat([
             { templateField: `vote_delegated_$_to_id` },
             { templateField: `vote_delegations_$_from_ids` },
             { templateField: `vote_weight_$` },
             { templateField: `structure_level_$` },
             { templateField: `number_$` },
             { templateField: `comment_$` },
-            { templateField: `group_$_ids` },
+            { templateField: `group_$_ids` }
+        ]);
+
+        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal.concat([
             `is_present_in_meeting_ids`
         ]);
 
@@ -118,6 +123,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             [DEFAULT_FIELDSET]: detailFields,
             accountList: accountListFields,
             participantList: participantListFields,
+            participantListMinimal: participantListFieldsMinimal,
             all: detailFields.concat(accountListFields, participantListFields)
         };
     }

@@ -8,6 +8,12 @@
                 {{ containerHeadSubtitle | translate }}
             </div>
         </div>
+        <div class="container-head-expand">
+            <button mat-icon-button>
+                <mat-icon *ngIf="isClosed">expand_less</mat-icon>
+                <mat-icon *ngIf="!isClosed">expand_more</mat-icon>
+            </button>
+        </div>
     </div>
 
     <div

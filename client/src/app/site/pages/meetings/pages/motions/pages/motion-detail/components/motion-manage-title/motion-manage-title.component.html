@@ -1,22 +1,19 @@
 <div class="title" *ngIf="motion">
-    <div class="title-line">
-        <h1 class="motion-title">
-            <span *ngIf="titleCanBeChanged()">
-                <span
-                    class="title-change-indicator"
-                    *ngIf="titleChangeRecommendation"
-                    (click)="gotoChangeRecommendation(titleChangeRecommendation)"
-                ></span>
-                <span
-                    class="change-title"
-                    *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
-                    (click)="createTitleChangeRecommendation()"
-                ></span>
-            </span>
-
-            {{ getTitleWithChanges() }}
-        </h1>
+    <os-projectable-title [model]="motion" [getTitleFn]="getTitleFn">
+        <span class="motion-title" prepend *ngIf="titleCanBeChanged()">
+            <span
+                class="title-change-indicator"
+                *ngIf="titleChangeRecommendation"
+                (click)="gotoChangeRecommendation(titleChangeRecommendation)"
+            ></span>
+            <span
+                class="change-title"
+                *osPerms="permission.motionCanManage; and: !titleChangeRecommendation"
+                (click)="createTitleChangeRecommendation()"
+            ></span>
+        </span>
         <button
+            append
             class="primary-accent-by-theme"
             mat-icon-button
             (click)="toggleFavorite()"
@@ -24,7 +21,7 @@
         >
             <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
         </button>
-    </div>
+    </os-projectable-title>
 
     <!-- Sequential number -->
     <span class="main-nav-color title-font">

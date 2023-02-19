@@ -103,6 +103,10 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.getReferenceProjectorObservable();
     }
 
+    public getReferenceProjector(): ViewProjector | undefined {
+        return this.repo.getReferenceProjector();
+    }
+
     public ensureDescriptor(obj: ProjectionBuildDescriptor | Projectable): ProjectionBuildDescriptor {
         return (
             isProjectable(obj) ? obj.getProjectionBuildDescriptor(this.meetingSettingsService) : obj
@@ -153,9 +157,9 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         );
     }
 
-    private async updateProjectordefaults(defaultKeys: { [key: string]: any }): Promise<void> {
+    private async updateProjectordefaults(defaultKeys: { [key: string]: number[] }): Promise<void> {
         if (Object.keys(defaultKeys).length) {
-            return this.meetingRepo.update({ id: this.activeMeetingId, default_projector_$_id: defaultKeys });
+            return this.meetingRepo.update({ id: this.activeMeetingId, default_projector_$_ids: defaultKeys });
         }
         return;
     }

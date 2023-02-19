@@ -129,7 +129,7 @@ export class MotionSlideComponent
                 ` ` +
                 this.replaceReferencedMotions(
                     this.data.data.recommendation_extension,
-                    this.data.data.recommendation_referenced_motions!
+                    this.data.data.recommendation_referenced_motions
                 );
         }
         return recommendation;
@@ -411,7 +411,7 @@ export class MotionSlideComponent
      * @param {ViewUnifiedChange[]} changes
      */
     public hasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return this.motionLineNumbering.changeHasCollissions(change, changes);
+        return this.diff.changeHasCollissions(change, changes);
     }
 
     /**

@@ -81,6 +81,10 @@ const routes: Routes = [
                 path: `history`,
                 loadChildren: () => import(`./pages/history/history.module`).then(m => m.HistoryModule),
                 canLoad: [PermissionGuard]
+            },
+            {
+                path: `error`,
+                loadChildren: () => import(`../error/error.module`).then(m => m.ErrorModule)
             }
         ]
     }

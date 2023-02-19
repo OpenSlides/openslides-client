@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 
 import {
@@ -12,6 +13,7 @@ import {
 } from '../infrastructure/definitions/http';
 import { ProcessError } from '../infrastructure/errors';
 import { toBase64 } from '../infrastructure/utils/functions';
+import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
 import { ErrorMapService } from './error-mapping/error-map.service';
 
 type HttpHeadersObj = HttpHeaders | { [header: string]: string | string[] };
@@ -22,7 +24,21 @@ const defaultHeaders: HttpHeadersObj = { [`Content-Type`]: `application/json` };
     providedIn: `root`
 })
 export class HttpService {
-    public constructor(private http: HttpClient, private errorMapper: ErrorMapService, private snackBar: MatSnackBar) {}
+    private _actionWorkerWatch: ActionWorkerWatchService;
+    private get actionWorkerWatch(): ActionWorkerWatchService {
+        if (!this._actionWorkerWatch) {
+            this._actionWorkerWatch = this.injector.get(ActionWorkerWatchService);
+        }
+        return this._actionWorkerWatch;
+    }
+
+    public constructor(
+        private http: HttpClient,
+        private errorMapper: ErrorMapService,
+        private injector: Injector,
+        private snackBar: MatSnackBar,
+        private translate: TranslateService
+    ) {}
 
     /**
      * Send the a http request the the given path.
@@ -62,7 +78,10 @@ export class HttpService {
 
         try {
             const response = await firstValueFrom(this.getObservableFor<HttpResponse<T>>({ method, url, options }));
-            return response?.body as T;
+            if (response.status === 202) {
+                return (await this.actionWorkerWatch.watch<T>(response, true)).body as T;
+            }
+            return response.body as T;
         } catch (error) {
             if (error instanceof HttpErrorResponse) {
                 if (!!error.error.message) {
@@ -73,12 +92,17 @@ export class HttpService {
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
                     }
-                    this.snackBar.open(cleanError, `Ok`);
+                    this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+                    return null;
+                } else if (!navigator.onLine) {
+                    const cleanError = this.translate.instant(`The request could not be sent. Check your connection.`);
+                    this.snackBar.open(cleanError, this.translate.instant(`Ok`));
+
+                    throw new ProcessError(cleanError);
                 }
-                return null;
-            } else {
-                throw new ProcessError(error);
             }
+
+            throw new ProcessError(error);
         }
     }
 
@@ -172,10 +196,10 @@ export class HttpService {
      * @param url file url
      * @returns a promise with a base64 string
      */
-    public async downloadAsBase64(url: string): Promise<string> {
+    public async downloadAsBase64(url: string): Promise<{ data: string; type: string }> {
         const headers = new HttpHeaders();
         const file = await this.get<Blob>(url, {}, {}, headers, `blob`);
-        return await toBase64(file);
+        return { data: await toBase64(file), type: file.type };
     }
 
     /**

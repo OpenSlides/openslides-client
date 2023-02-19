@@ -131,7 +131,7 @@ export class MotionPdfService {
         if (!continuousText) {
             const title = this.createTitle(motion, crMode, lineLength);
             const sequential =
-                infoToExport?.includes(`id`) ??
+                infoToExport?.includes(`sequential_number`) ??
                 (this.meetingSettingsService.instant(`motions_show_sequential_number`) as boolean);
             const subtitle = this.createSubtitle(motion, sequential);
 
@@ -202,7 +202,7 @@ export class MotionPdfService {
         const titleChange = changes.find(change => change?.isTitleChange())!;
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
-        const number = motion.number ? ` ` + motion.number : ``;
+        const number = motion.number ? motion.number : ``;
         let title = ``;
         if (this.pdfDocumentService.pageSize === `A4`) {
             title += `${this.translate.instant(`Motion`)} `;
@@ -275,19 +275,21 @@ export class MotionPdfService {
         }
 
         // supporters
-        const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
-        if (minSupporters && motion.supporters.length > 0) {
-            const supporters = motion.supporters.map(supporter => supporter.full_name).join(`, `);
+        if (!infoToExport || infoToExport.includes(`supporters`)) {
+            const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
+            if (minSupporters && motion.supporters.length > 0) {
+                const supporters = motion.supporters.map(supporter => supporter.full_name).join(`, `);
 
-            metaTableBody.push([
-                {
-                    text: `${this.translate.instant(`Supporters`)}:`,
-                    style: `boldText`
-                },
-                {
-                    text: supporters
-                }
-            ]);
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Supporters`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: supporters
+                    }
+                ]);
+            }
         }
 
         // state
@@ -369,19 +371,6 @@ export class MotionPdfService {
                 },
                 {
                     text: motion.block.title
-                }
-            ]);
-        }
-
-        // origin
-        if (motion.origin && (!infoToExport || infoToExport.includes(`origin`))) {
-            metaTableBody.push([
-                {
-                    text: `${this.translate.instant(`Origin`)}:`,
-                    style: `boldText`
-                },
-                {
-                    text: motion.origin
                 }
             ]);
         }

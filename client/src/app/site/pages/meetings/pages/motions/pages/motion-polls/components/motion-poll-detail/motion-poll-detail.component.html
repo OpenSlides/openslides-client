@@ -67,6 +67,13 @@
         <mat-icon>warning</mat-icon>
         <span>{{ 'Anonymize votes' | translate }}</span>
     </button>
+
+    <!-- Export -->
+    <button mat-menu-item (click)="exportPollResults()">
+        <mat-icon>archive</mat-icon>
+        <span>{{ 'Export' | translate }}</span>
+    </button>
+
     <mat-divider></mat-divider>
     <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="deletePoll()">
         <mat-icon color="warn">delete</mat-icon>

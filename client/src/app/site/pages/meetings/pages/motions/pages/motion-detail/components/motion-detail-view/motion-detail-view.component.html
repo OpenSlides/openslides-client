@@ -9,7 +9,7 @@
             [saveAction]="getSaveAction()"
             (mainEvent)="createAmendment()"
             (cancelEditEvent)="leaveEditMotion()"
-            [goBack]="true"
+            [goBack]="motion?.hasLeadMotion"
         >
             <!-- Title -->
             <div class="title-slot">
@@ -95,7 +95,7 @@
                     </button>
                 </div>
                 <!-- Forward motion -->
-                <div *osPerms="permission.motionCanForward">
+                <div *osPerms="permission.motionCanForward; and: motion.state?.allow_motion_forwarding">
                     <button mat-menu-item (click)="forwardMotionToMeetings()">
                         <mat-icon>forward</mat-icon>
                         <span>{{ 'Forward' | translate }}</span>

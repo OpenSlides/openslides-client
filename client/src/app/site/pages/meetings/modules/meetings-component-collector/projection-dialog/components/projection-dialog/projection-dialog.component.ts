@@ -39,11 +39,14 @@ export class ProjectionDialogComponent {
 
         // Add default projector, if the projectable is not projected on it.
         if (this.descriptor?.projectionDefault) {
-            const defaultProjector: ViewProjector | null = this.activeMeetingService.meeting!.default_projector(
+            const defaultProjectors: ViewProjector[] = this.activeMeetingService.meeting!.default_projectors(
                 this.descriptor.projectionDefault
             );
-            if (defaultProjector && !this.selectedProjectors.includes(defaultProjector)) {
-                this.selectedProjectors.push(defaultProjector);
+
+            for (let defaultProjector of defaultProjectors) {
+                if (!this.selectedProjectors.includes(defaultProjector)) {
+                    this.selectedProjectors.push(defaultProjector);
+                }
             }
         }
 

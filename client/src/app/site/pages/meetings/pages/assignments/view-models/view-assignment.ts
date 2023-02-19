@@ -1,3 +1,4 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
@@ -13,6 +14,7 @@ import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
 import { ViewPoll } from '../../polls/view-models/view-poll';
 import { AssignmentPhases } from '../definitions';
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
+
 export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
     public static COLLECTION = Assignment.COLLECTION;
     protected _collection = Assignment.COLLECTION;
@@ -55,7 +57,7 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
     }
 
     public getVotingText(context: VotingTextContext<ViewAssignment>): string {
-        return `${this.getTitle()}: ${context.translateFn(`Ballot opened`)}`;
+        return `${this.getTitle()}: ${context.translateFn(_(`Ballot opened`))}`;
     }
 
     public override getDetailStateUrl(): string {

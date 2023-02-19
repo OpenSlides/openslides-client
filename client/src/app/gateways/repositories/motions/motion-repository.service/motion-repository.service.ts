@@ -62,14 +62,42 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
     }
 
-    public createForwarded(meetingIds: Id[], ...motions: any[]): Promise<void> {
-        const payload = meetingIds.flatMap(id =>
-            motions.map(motion => ({
-                meeting_id: id,
-                ...motion
-            }))
-        );
-        return this.sendBulkActionToBackend(MotionAction.CREATE_FORWARDED, payload);
+    public async createForwarded(meetingIds: Id[], ...motions: any[]): Promise<{ success: number; partial: number }> {
+        let payloads: any[][] = [];
+        motions.forEach(motion => {
+            payloads.push(
+                meetingIds.map(id => {
+                    return {
+                        meeting_id: id,
+                        ...motion
+                    };
+                })
+            );
+        });
+        let success = 0;
+        let partial = 0;
+        for (let meetingPayloads of payloads) {
+            let partialSuccess = false;
+            let failure = false;
+            for (let payload of meetingPayloads) {
+                try {
+                    await Promise.race([
+                        this.createAction(MotionAction.CREATE_FORWARDED, payload).resolve(),
+                        new Promise(() =>
+                            setTimeout(() => {
+                                failure = true;
+                            }, 5000)
+                        ) // Wait at most 5 seconds before sending the next request
+                    ]);
+                    partialSuccess = true;
+                } catch (e) {
+                    failure = true;
+                }
+            }
+            success = +(partialSuccess && !failure) + success;
+            partial = +(partialSuccess && failure) + partial;
+        }
+        return { success, partial };
     }
 
     public update(
@@ -184,7 +212,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids,
             supporter_ids: partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
@@ -207,7 +234,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             state_extension: partialMotion.state_extension,
             amendment_paragraph_$: partialMotion.amendment_paragraph_$,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             supporter_ids: partialMotion.supporter_ids === null ? [] : partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
@@ -230,7 +256,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             state_extension: partialMotion.state_extension,
             statute_paragraph_id: partialMotion.statute_paragraph_id,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids,
             supporter_ids: partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
@@ -238,7 +263,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     public override getFieldsets(): Fieldsets<Motion> {
-        const routingFields: TypedFieldset<Motion> = [`sequential_number`];
+        const routingFields: TypedFieldset<Motion> = [`sequential_number`, `meeting_id`];
         const titleFields: TypedFieldset<Motion> = routingFields.concat([`title`, `number`, `created`, `forwarded`]);
         const detailFields: TypedFieldset<Motion> = titleFields.concat([
             `sort_weight`,
@@ -259,7 +284,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `comment_ids`,
             `modified_final_version`,
             `state_extension`,
+            `state_extension_reference_ids`,
             `recommendation_extension`,
+            `recommendation_extension_reference_ids`,
+            `referenced_in_motion_recommendation_extension_ids`,
             `list_of_speakers_id`,
             `agenda_item_id`, // for add/remove from agenda,
             { templateField: `amendment_paragraph_$` },

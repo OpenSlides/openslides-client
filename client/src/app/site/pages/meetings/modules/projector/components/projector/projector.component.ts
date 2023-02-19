@@ -1,5 +1,14 @@
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, merge, mergeMap, Observable } from 'rxjs';
+import {
+    auditTime,
+    BehaviorSubject,
+    combineLatest,
+    distinctUntilChanged,
+    map,
+    merge,
+    mergeMap,
+    Observable
+} from 'rxjs';
 import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
@@ -143,21 +152,24 @@ export class ProjectorComponent extends BaseUiComponent implements OnDestroy {
             this.projectorSubject.pipe(mergeMap(projector => projector?.current_projections_as_observable || []))
         );
 
-        this.slides = combineLatest([this.projectorSubject, trigger$]).pipe(
-            map(([projector, _]) =>
-                (projector?.current_projections || []).map(
-                    projection =>
-                        ({
-                            collection: projection.content?.collection,
-                            data: projection.content,
-                            stable: !!projection.stable,
-                            type: projection.type || ``,
-                            options: projection.options || {},
-                            ...(!!projection.content?.[`error`] && { error: projection.content[`error`] })
-                        } as SlideData)
+        this.slides = combineLatest([this.projectorSubject, trigger$])
+            .pipe(
+                map(([projector, _]) =>
+                    (projector?.current_projections || []).map(
+                        projection =>
+                            ({
+                                collection: projection.content?.collection,
+                                data: projection.content,
+                                stable: !!projection.stable,
+                                type: projection.type || ``,
+                                options: projection.options || {},
+                                ...(!!projection.content?.[`error`] && { error: projection.content[`error`] })
+                            } as SlideData)
+                    )
                 )
             )
-        );
+            .pipe(auditTime(20))
+            .pipe(distinctUntilChanged((prev, next) => JSON.stringify(prev) === JSON.stringify(next)));
 
         this.subscriptions.push(
             this.projectorSubject.subscribe(projector => {

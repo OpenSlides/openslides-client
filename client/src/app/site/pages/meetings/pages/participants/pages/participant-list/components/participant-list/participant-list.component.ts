@@ -279,19 +279,6 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     }
 
     /**
-     * Get information about the last time an invitation email was sent to a user
-     *
-     * @param user
-     * @returns a string representation about the last time an email was sent to a user
-     */
-    public getEmailSentTime(user: ViewUser): string {
-        if (!user.isLastEmailSend) {
-            return this.translate.instant(`No email sent`);
-        }
-        return this.repo.getLastSentEmailTimeString(user);
-    }
-
-    /**
      * Sets the user present
      *
      * @param viewUser the viewUser Object

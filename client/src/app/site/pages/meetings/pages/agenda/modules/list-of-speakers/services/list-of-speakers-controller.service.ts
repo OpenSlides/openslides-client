@@ -41,8 +41,16 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
         return this.repo.deleteAllSpeakers(listOfSpeakers);
     }
 
+    public deleteAllNextSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
+        return this.repo.deleteAllNextSpeakers(listOfSpeakers);
+    }
+
+    public deleteAllPreviousSpeakers(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
+        return this.repo.deleteAllPreviousSpeakers(listOfSpeakers);
+    }
+
     public isFirstContribution(speaker: ViewSpeaker): boolean {
-        return !this.getViewModelList().some(list => list.hasSpeakerSpoken(speaker));
+        return !this.getViewModelList().some(list => list.hasUserSpoken(speaker.userId));
     }
 
     /**

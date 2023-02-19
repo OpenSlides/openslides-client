@@ -6,18 +6,39 @@
 <mat-card class="os-card spacer-bottom-60">
     <div class="history-table-header">
         <div>
-            <span [formGroup]="motionSelectForm">
+            <span [formGroup]="modelSelectForm">
                 <mat-form-field>
+                    <mat-select formControlName="collection" placeholder="{{ 'Module' | translate }}">
+                        <mat-option *ngFor="let item of modelsRepoMap | keyvalue" [value]="item.key">
+                            {{ item.value.getVerboseName() }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="spacer-left-20">
                     <os-list-search-selector
-                        formControlName="motion"
+                        formControlName="id"
                         [multiple]="false"
-                        placeholder="{{ 'Motion' | translate }}"
-                        [inputListValues]="motions"
-                    ></os-list-search-selector>
+                        placeholder="{{ modelPlaceholder | translate }}"
+                        [inputListValues]="models"
+                        [disabled]="!modelSelectForm.get('collection').value"
+                        (clickNotFound)="searchDeletedMotions($event)"
+                        (openedChange)="resetListValues($event)"
+                    >
+                        <!--
+                        <ng-template osSearchSelectorNotFoundTemplate>
+                            <div>
+                                <mat-icon class="os-not-found-button-content">delete</mat-icon>
+                                <span class="os-not-found-button-content">
+                                    {{ 'Search deleted' }} {{ (modelPlaceholder + "s").toLowerCase() | translate }}
+                                </span>
+                            </div>
+                        </ng-template>
+                        -->
+                    </os-list-search-selector>
                 </mat-form-field>
             </span>
             <span class="spacer-left-20">
-                <button mat-button (click)="refresh()" *ngIf="currentMotionId">
+                <button mat-button (click)="refresh()" *ngIf="currentFqid">
                     <mat-icon>refresh</mat-icon>
                     <span>{{ 'Refresh' | translate }}</span>
                 </button>
@@ -35,7 +56,7 @@
         <!-- Timestamp -->
         <ng-container matColumnDef="time">
             <mat-header-cell *matHeaderCellDef>{{ 'Timestamp' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let position">{{ getTimestamp(position) }}</mat-cell>
+            <mat-cell *matCellDef="let position">{{ position.timestamp | localizedDate }}</mat-cell>
         </ng-container>
 
         <!-- Info -->

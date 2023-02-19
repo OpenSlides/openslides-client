@@ -20,7 +20,9 @@ import { GroupControllerService } from '../../../../../participants';
 })
 export class MotionPollFormComponent extends BasePollFormComponent {
     public get hideSelects(): PollFormHideSelectsData {
-        return {};
+        return {
+            globalOptions: true
+        };
     }
 
     constructor(

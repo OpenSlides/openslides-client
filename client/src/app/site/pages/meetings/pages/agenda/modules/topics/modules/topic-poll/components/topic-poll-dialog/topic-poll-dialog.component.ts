@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Selectable } from 'src/app/domain/interfaces';
@@ -61,7 +62,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent implements
     public PollTypes = PollTypeVerbose;
 
     private minNumberOfOptions = 2;
-    public optionsWarning = `Warning: There should be at least ${this.minNumberOfOptions} options.`;
+    public optionsWarning = _(`There should be at least 2 options.`);
 
     public newOptions: TextOptionSelectable[] = [];
     public optionsSubject: BehaviorSubject<TextOptionSelectable[]> = new BehaviorSubject(this.newOptions);

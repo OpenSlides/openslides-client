@@ -4,11 +4,8 @@ import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-mode
 
 import { Id } from '../../../../../../domain/definitions/key-types';
 import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';
-import {
-    HasReferencedMotionInRecommendationExtensionIds,
-    Motion
-} from '../../../../../../domain/models/motions/motion';
-import { AmendmentType } from '../../../../../../domain/models/motions/motions.constants';
+import { HasReferencedMotionInExtensionIds, Motion } from '../../../../../../domain/models/motions/motion';
+import { AmendmentType, ChangeRecoMode } from '../../../../../../domain/models/motions/motions.constants';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
@@ -32,8 +29,9 @@ import { ViewMotionState } from '../modules/states/view-models/view-motion-state
 import { ViewMotionSubmitter } from '../modules/submitters';
 import { HasTags } from '../modules/tags/view-models/has-tags';
 
-export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
-    referenced_in_motion_recommendation_extension: ViewMotion[];
+export interface HasReferencedMotionsInExtension extends HasReferencedMotionInExtensionIds {
+    referenced_in_motion_state_extensions: ViewMotion[];
+    referenced_in_motion_recommendation_extensions: ViewMotion[];
 }
 
 export enum ForwardingStatus {
@@ -94,26 +92,6 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
      */
     public get hasNotes(): boolean {
         return !!this.getPersonalNote()?.note;
-    }
-
-    /**
-     * @returns the creation date as Date object
-     */
-    public get creationDate(): Date | null {
-        if (!this.motion.created) {
-            return null;
-        }
-        return new Date(this.motion.created);
-    }
-
-    /**
-     * @returns the date of the last change as Date object, null if empty
-     */
-    public get lastChangeDate(): Date | null {
-        if (!this.motion.last_modified) {
-            return null;
-        }
-        return new Date(this.motion.last_modified);
     }
 
     /**
@@ -198,14 +176,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
 
     public get changedAmendmentLines(): DiffLinesInParagraph[] | null {
         if (!this._changedAmendmentLines) {
-            this._changedAmendmentLines = this.getAmendmentParagraphLines();
+            this._changedAmendmentLines = this.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         }
         return this._changedAmendmentLines;
     }
 
     public get affectedAmendmentLines(): DiffLinesInParagraph[] | null {
         if (!this._affectedAmendmentLines) {
-            this._affectedAmendmentLines = this.getAmendmentParagraphLines();
+            this._affectedAmendmentLines = this.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         }
         return this._affectedAmendmentLines;
     }
@@ -244,7 +222,10 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     /**
      * @warning This is injected. Do not use it!
      */
-    public getAmendmentParagraphLines: (includeUnchanged?: boolean) => DiffLinesInParagraph[] = () => [];
+    public getAmendmentParagraphLines: (
+        recoMode: ChangeRecoMode,
+        includeUnchanged?: boolean
+    ) => DiffLinesInParagraph[] = () => [];
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;
@@ -366,8 +347,9 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     all_derived_motions?: ViewMotion[];
     all_origins?: ViewMotion[];
     state?: ViewMotionState;
+    state_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     recommendation?: ViewMotionState;
-    recommendation_extension_reference: (BaseViewModel & HasReferencedMotionsInRecommendationExtension)[];
+    recommendation_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     category?: ViewMotionCategory;
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
@@ -386,4 +368,4 @@ export interface ViewMotion
         HasTags,
         HasAgendaItem,
         HasListOfSpeakers,
-        HasReferencedMotionsInRecommendationExtension {}
+        HasReferencedMotionsInExtension {}

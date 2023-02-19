@@ -106,7 +106,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
      * Allows for the definition of additional strings that should be checked against the search value for a given item
      */
     @Input()
-    public getAdditionalySearchedValuesFn: (item: Selectable) => string[] = item => [];
+    public getAdditionallySearchedValuesFn: (item: Selectable) => string[] = item => [];
 
     @Input()
     public set sortFn(fn: false | ((valueA: Selectable, valueB: Selectable) => number)) {
@@ -119,6 +119,21 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     @Input()
     public showEntriesNumber: number = 4;
+
+    @Input()
+    public excludeIds: boolean = false;
+
+    /**
+     * If true, the dialog will not close when a value is selected.
+     */
+    @Input()
+    public keepOpen: boolean = false;
+
+    /**
+     * If true, the dialog will be opened with double width.
+     */
+    @Input()
+    public wider: boolean = false;
 
     public itemSizeInPx = 50;
 
@@ -147,6 +162,9 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     @Output()
     public selectionChanged = new EventEmitter<OsOptionSelectionChanged>();
+
+    @Output()
+    public openedChange = new EventEmitter<boolean>();
 
     public override contentForm!: UntypedFormControl;
     public searchValueForm!: UntypedFormControl;
@@ -248,6 +266,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public onOpenChanged(event: boolean): void {
+        this.openedChange.emit(event);
         if (event) {
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();
@@ -353,14 +372,16 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             return this.selectableItems;
         }
         const filteredItems = this.selectableItems.filter(item => {
-            const idString = `` + item.id;
-            const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
+            if (!this.excludeIds) {
+                const idString = `` + item.id;
+                const foundId = idString.trim().toLowerCase().indexOf(searchValue) !== -1;
 
-            if (foundId) {
-                return true;
+                if (foundId) {
+                    return true;
+                }
             }
 
-            return this.getAdditionalySearchedValuesFn(item)
+            return this.getAdditionallySearchedValuesFn(item)
                 .concat(item.toString())
                 .some(value => value.toLowerCase().indexOf(searchValue) > -1);
         });

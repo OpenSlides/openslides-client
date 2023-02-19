@@ -135,20 +135,6 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     }
 
     /**
-     * Get the date of the last invitation email.
-     *
-     * @param user
-     * @returns a localized string representation of the date/time the last email was sent;
-     * or an empty string
-     */
-    public getLastEmailSentTimeString(user: ViewUser): string {
-        if (!user.user || !user.user.last_email_send) {
-            return ``;
-        }
-        return new Date(user.user.last_email_send * 1000).toLocaleString(this.translate.currentLang);
-    }
-
-    /**
      * Tries to convert a given string into an user (representated by a `FullNameInformation`-object).
      * Names that don't fit the scheme given will be entered into the first_name field.
      *

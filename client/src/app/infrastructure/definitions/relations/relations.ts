@@ -13,7 +13,7 @@ import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/mee
 import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
 import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
 import {
-    HasReferencedMotionsInRecommendationExtension,
+    HasReferencedMotionsInExtension,
     HasTags,
     ViewMotion,
     ViewMotionBlock,
@@ -52,7 +52,6 @@ const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>
     ViewMotionBlock,
     ViewAssignment,
     ViewAgendaItem,
-    ViewUser,
     ViewPoll,
     ViewProjectorMessage,
     ViewProjectorCountdown
@@ -161,19 +160,22 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `active_meetings`,
-        MField: `is_active_in_organization`
+        MField: `is_active_in_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `archived_meetings`,
-        MField: `is_archived_in_organization`
+        MField: `is_archived_in_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `template_meetings`,
-        MField: `template_for_organization`
+        MField: `template_for_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
@@ -601,9 +603,9 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewProjector,
-        ownField: `default_projector`,
-        ownIdField: `default_projector_$_id`,
-        many: false,
+        ownField: `default_projectors`,
+        ownIdField: `default_projector_$_ids`,
+        many: true,
         generic: false,
         structured: true
     },
@@ -769,11 +771,17 @@ export const RELATIONS: Relation[] = [
         MField: `recommendation`,
         OField: `motions`
     }),
-    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInRecommendationExtension>({
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
         viewModel: ViewMotion,
         possibleViewModels: [ViewMotion],
-        viewModelField: `recommendation_extension_reference_ids`,
-        possibleViewModelsField: `referenced_in_motion_recommendation_extension`
+        viewModelField: `state_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_state_extensions`
+    }),
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
+        viewModel: ViewMotion,
+        possibleViewModels: [ViewMotion],
+        viewModelField: `recommendation_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_recommendation_extensions`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
@@ -847,6 +855,12 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewMotionState,
         AField: `next_states`,
         BField: `previous_states`
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionState,
+        OViewModel: ViewMotionState,
+        MField: `submitter_withdraw_state`,
+        OField: `submitter_withdraw_back_states`
     }),
     // ########## Motion workflow
     ...makeM2O({

@@ -48,58 +48,57 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
     protected sortItems(itemA: T, itemB: T, sortProperty: OsSortProperty<T>, ascending: boolean = true): number {
         const sortPropertyArray = Array.isArray(sortProperty) ? sortProperty : [sortProperty];
         const primaryProperty = sortPropertyArray[0];
-        const result = this.sortItemsHelper(itemA, itemB, primaryProperty, ascending);
+        const result = (ascending ? 1 : -1) * this.sortItemsHelper(itemA, itemB, primaryProperty);
         return result === 0 && sortPropertyArray.length > 1
             ? this.sortItems(itemA, itemB, sortPropertyArray.slice(1), ascending)
             : result;
     }
 
-    private sortItemsHelper(itemA: T, itemB: T, sortProperty: keyof T, ascending: boolean = true): number {
-        const sortPropertyArray = Array.isArray(sortProperty) ? sortProperty : [sortProperty];
+    private sortItemsHelper(itemA: T, itemB: T, sortProperty: keyof T): number {
+        const propertyA = itemA[sortProperty];
+        const propertyB = itemB[sortProperty];
+
         // always sort falsy values to the bottom
-        const property = sortProperty;
-        if (this.isFalsy(itemA[property]) && this.isFalsy(itemB[property])) {
+        if (this.isFalsy(propertyA) && this.isFalsy(propertyB)) {
             return 0;
-        } else if (this.isFalsy(itemA[property])) {
+        } else if (this.isFalsy(propertyA)) {
             return 1;
-        } else if (this.isFalsy(itemB[property])) {
+        } else if (this.isFalsy(propertyB)) {
             return -1;
         }
 
-        const firstProperty = ascending ? itemA[property] : (itemB[property] as any);
-        const secondProperty = ascending ? itemB[property] : (itemA[property] as any);
-
         if (this.sortFn) {
-            return this.sortFn(itemA, itemB, ascending, this.intl);
+            // set ascending to true because the ascension is applied in the sortItems function
+            return this.sortFn(itemA, itemB, true, this.intl);
         } else {
-            switch (typeof firstProperty) {
+            switch (typeof propertyA) {
                 case `boolean`:
-                    if (!firstProperty && secondProperty) {
+                    if (!propertyA && propertyB) {
                         return -1;
                     } else {
                         return 1;
                     }
                 case `number`:
-                    return firstProperty > secondProperty ? 1 : -1;
+                    return propertyA > propertyB ? 1 : -1;
                 case `string`:
-                    if (firstProperty && !secondProperty) {
+                    if (propertyA && !propertyB) {
                         return -1;
-                    } else if (!firstProperty && !!secondProperty) {
+                    } else if (!propertyA && !!propertyB) {
                         return 1;
-                    } else if ((!secondProperty && !secondProperty) || firstProperty === secondProperty) {
+                    } else if ((!propertyB && !propertyB) || propertyA === propertyB) {
                         return 0;
                     } else {
-                        return this.intl.compare(firstProperty, secondProperty as any);
+                        return this.intl.compare(propertyA, propertyB as any);
                     }
                 case `function`:
-                    const a = firstProperty.bind(itemA)();
-                    const b = secondProperty.bind(itemB)();
+                    const a = propertyA.bind(itemA)();
+                    const b = (propertyB as unknown as Function).bind(itemB)();
                     return this.intl.compare(a, b);
                 case `object`:
-                    if (firstProperty instanceof Date) {
-                        return firstProperty > secondProperty ? 1 : -1;
+                    if (propertyA instanceof Date) {
+                        return propertyA > propertyB ? 1 : -1;
                     } else {
-                        return this.intl.compare(firstProperty.toString(), secondProperty.toString());
+                        return this.intl.compare(propertyA.toString(), propertyB.toString());
                     }
                 case `undefined`:
                     return 1;

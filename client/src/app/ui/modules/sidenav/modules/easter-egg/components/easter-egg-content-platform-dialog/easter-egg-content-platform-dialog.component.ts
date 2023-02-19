@@ -16,7 +16,7 @@ interface EasterEggModuleDescription {
 export class EasterEggContentPlatformDialogComponent {
     public readonly choosableModules: EasterEggModuleDescription[] = [C4DialogModule];
 
-    public selectedModule: ComponentPortal<any> | null = null;
+    public selectedModule: ComponentPortal<any> | null = new ComponentPortal(C4DialogModule.getComponent());
 
     public selectModule(component: ComponentType<any>): void {
         console.log(`selectedModule`, component);

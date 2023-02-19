@@ -203,6 +203,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         );
         this.registerAfterImportHandler(MEETING, {
             useArray: true,
+            nameDelimiter: `;`,
             fixedChunkSize: 1,
             verboseNameFn: plural => meetingRepo.getVerboseName(plural),
             findFn: (name, committee) => ({ name: name === `1` ? committee.name : name }),
@@ -243,7 +244,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         this.exporter.dummyCSVExport(
             COMMITTEE_PORT_HEADERS_AND_VERBOSE_NAMES,
             COMMITTEE_CSV_EXPORT_EXAMPLE,
-            `${this.translate.instant(_(`committee-example`))}.csv`
+            `${this.translate.instant(`committee-example`)}.csv`
         );
     }
 

@@ -3,6 +3,7 @@
         <os-list-search-selector
             class="search-users"
             formControlName="userId"
+            [excludeIds]="true"
             [multiple]="false"
             placeholder="{{ placeholder | translate }}"
             [inputListValues]="filteredUsersSubject"

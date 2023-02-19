@@ -43,6 +43,12 @@
             <mat-icon>picture_as_pdf</mat-icon>
             <span>{{ 'PDF' | translate }}</span>
         </button>
+        <div *osOmlPerms="OML.can_manage_organization">
+            <button mat-menu-item (click)="goToHistory()">
+                <mat-icon>history</mat-icon>
+                <span>{{ 'History' | translate }}</span>
+            </button>
+        </div>
         <!-- delete button -->
         <div *ngIf="isAllowed('delete')">
             <mat-divider></mat-divider>
@@ -181,7 +187,14 @@
         <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSend">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
-                <span>{{ getEmailSentTime() }}</span>
+                <span>{{ user.last_email_send | localizedDate }}</span>
+            </div>
+        </div>
+
+        <div *ngIf="isAllowed('seePersonal') && user?.isLastLogin">
+            <div>
+                <h4>{{ 'Last login' | translate }}</h4>
+                <span>{{ user.last_login | localizedDate }}</span>
             </div>
         </div>
 

@@ -8,8 +8,8 @@
         <ng-container *ngIf="getSubmittersObservable() | async as submitters">
             <h3 *ngIf="submitters.length > 0">{{ 'Submitters' | translate }}</h3>
             <span *ngFor="let submitter of submitters; let last = last">
-                {{ submitter }}
-                <span *ngIf="!last">,</span>
+                <span>{{ submitter }}</span>
+                <span *ngIf="!last">, </span>
             </span>
         </ng-container>
 
@@ -30,11 +30,10 @@
             </h1>
             <!-- recommendation referencing motions -->
             <h2 *ngIf="data.data.show_sidebox && data.data.recommendation_referencing_motions" class="projector_h2">
-                <span>{{ 'Referring motions' | translate }}</span>
-                :
+                <span>{{ 'Referring motions' | translate }}</span>:
                 <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                    {{ getNumberOrTitle(titleInformation) }}
-                    <span *ngIf="!last">,</span>
+                    <span>{{ getNumberOrTitle(titleInformation) }}</span>
+                    <span *ngIf="!last">, </span>
                 </span>
             </h2>
 
@@ -48,14 +47,14 @@
                         </td>
                         <td>
                             <span *ngFor="let submitter of submitters; let last = last">
-                                {{ submitter }}
-                                <span *ngIf="!last">,</span>
+                                <span>{{ submitter }}</span>
+                                <span *ngIf="!last">, </span>
                             </span>
                         </td>
                     </tr>
                 </ng-container>
                 <!-- Recommendation -->
-                <tr *ngIf="recommender && recommendationLabel">
+                <tr *ngIf="recommender && recommendationLabel" class="topline">
                     <td class="min">
                         <b>{{ recommender }}:</b>
                     </td>
@@ -64,14 +63,14 @@
                     </td>
                 </tr>
                 <!-- recommendation referencing motions -->
-                <tr *ngIf="data.data.recommendation_referencing_motions">
+                <tr *ngIf="data.data.recommendation_referencing_motions" class="topline">
                     <td class="min">
                         <b>{{ 'Referring motions' | translate }}:</b>
                     </td>
                     <td>
                         <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                            {{ getNumberOrTitle(titleInformation) }}
-                            <span *ngIf="!last">,</span>
+                            <span>{{ getNumberOrTitle(titleInformation) }}</span>
+                            <span *ngIf="!last">, </span>
                         </span>
                     </td>
                 </tr>

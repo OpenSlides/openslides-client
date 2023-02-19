@@ -48,22 +48,19 @@
         *ngIf="viewListOfSpeakers && projectors && projectors.length > 1"
         [object]="getClosSlide()"
         [menuItem]="true"
-        text="Current list of speakers (as slide)"
-    ></os-projector-button>
+    >{{ 'Current list of speakers (as slide)' | translate }}</os-projector-button>
 
     <os-projector-button
         *ngIf="viewListOfSpeakers"
         [object]="viewListOfSpeakers"
         [menuItem]="true"
-        text="List of speakers"
-    ></os-projector-button>
+    >{{ 'List of speakers' | translate }}</os-projector-button>
 
     <os-projector-button
         *ngIf="viewListOfSpeakers"
         [object]="viewListOfSpeakers.content_object!"
         [menuItem]="true"
-        [text]="getContentObjectProjectorButtonText()"
-    ></os-projector-button>
+    >{{ getContentObjectProjectorButtonText() | translate }}</os-projector-button>
 
     <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
         <ng-container *ngIf="isListOfSpeakersClosed">
@@ -77,6 +74,16 @@
     </button>
 
     <mat-divider></mat-divider>
+
+    <button mat-menu-item (click)="clearPreviousSpeakerList()" [disabled]="isPreviousListOfSpeakersEmpty" class="red-warning-text">
+        <mat-icon>delete</mat-icon>
+        <span>{{ 'Remove all previous speakers' | translate }}</span>
+    </button>
+
+    <button mat-menu-item (click)="clearNextSpeakerList()" [disabled]="isNextListOfSpeakersEmpty" class="red-warning-text">
+        <mat-icon>delete</mat-icon>
+        <span>{{ 'Remove all next speakers' | translate }}</span>
+    </button>
 
     <button mat-menu-item (click)="clearSpeakerList()" [disabled]="isListOfSpeakersEmpty" class="red-warning-text">
         <mat-icon>delete</mat-icon>

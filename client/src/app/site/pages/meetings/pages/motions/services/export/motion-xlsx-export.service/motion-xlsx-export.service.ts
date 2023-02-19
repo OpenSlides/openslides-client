@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Workbook } from 'exceljs';
 import { Ids } from 'src/app/domain/definitions/key-types';
@@ -108,13 +109,13 @@ export class MotionXlsxExportService {
                 let propertyHeader = ``;
                 switch (property) {
                     case `block`:
-                        propertyHeader = `Motion block`;
+                        propertyHeader = _(`Motion block`);
                         break;
                     case `speakers`:
-                        propertyHeader = `Open requests to speak`;
+                        propertyHeader = _(`Open requests to speak`);
                         break;
                     default:
-                        propertyHeader = property.charAt(0).toUpperCase() + property.slice(1);
+                        propertyHeader = property.charAt(0).toUpperCase() + property.slice(1).replace(`_`, ` `);
                 }
                 return {
                     header: this.translate.instant(propertyHeader)

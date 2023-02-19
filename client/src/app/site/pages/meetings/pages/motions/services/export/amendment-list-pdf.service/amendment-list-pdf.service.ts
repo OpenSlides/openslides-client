@@ -27,7 +27,7 @@ export class AmendmentListPdfService {
     private renderDiffLines(amendment: ViewMotion): object {
         if (amendment.affectedAmendmentLines?.length) {
             const linesHtml = amendment.affectedAmendmentLines.map(line => line.text).join(`<br />[...]<br />`);
-            return this.htmlToPdfService.convertHtml(linesHtml);
+            return this.htmlToPdfService.convertHtml({ htmlText: linesHtml });
         }
         return {};
     }

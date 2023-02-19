@@ -15,6 +15,7 @@
     [columns]="generateImportColumns"
     [importer]="importer"
     [possibleFields]="possibleFields"
+    additionalInfo="{{ 'Existing accounts can be reused by entering email (with given name and surname) OR by entering the username in the csv file.' | translate }}"
     modelName="Participant"
 >
     <ng-template osImportListStatusTemplate let-row="row">

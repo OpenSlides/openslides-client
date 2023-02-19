@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Id, Ids } from '../../../domain/definitions/key-types';
+import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
 import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
@@ -41,7 +41,7 @@ export interface StructuredFieldDecriptor {
 
 export interface ModelSubscription {
     id: Id;
-    receivedData: Promise<void>;
+    receivedData: Promise<ModelData>;
     close: () => void;
 }
 
@@ -83,6 +83,7 @@ class AutoupdateEndpoint extends EndpointConfiguration {
 }
 
 const COLLECTION_INDEX = 0;
+const ID_INDEX = 1;
 const FIELD_INDEX = 2;
 
 @Injectable({
@@ -92,7 +93,7 @@ export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
-    private _resolveDataReceived: (() => void)[] = [];
+    private _resolveDataReceived: ((value: ModelData) => void)[] = [];
 
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
@@ -142,6 +143,23 @@ export class AutoupdateService {
     }
 
     /**
+     * Requests single data from autoupdate.
+     *
+     * @param modelRequest The request data for a list of models, that will be sent to the Autoupdate-Service
+     * @param description A simple description for developing. It helps tracking streams:
+     * Which component opens which stream?
+     */
+    public async single(modelRequest: ModelRequestObject, description: string): Promise<ModelData> {
+        const request = modelRequest.getModelRequest();
+        console.log(`autoupdate: new single request:`, description, modelRequest, request);
+        const modelSubscription = await this.request(request, description, null, { single: 1 });
+        this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
+        const data = await modelSubscription.receivedData;
+        modelSubscription.close();
+        return data;
+    }
+
+    /**
      * Requests a new autoupdate and listen to incoming messages. This is a heavy task.
      * It needs to be closed when it is not needed anymore.
      *
@@ -157,11 +175,21 @@ export class AutoupdateService {
         return modelSubscription;
     }
 
-    private async request(request: ModelRequest, description: string, streamId?: Id): Promise<ModelSubscription> {
-        const id = await this.communication.open(streamId, description, request, this._currentQueryParams);
+    private async request(
+        request: ModelRequest,
+        description: string,
+        streamId?: Id,
+        customParams?: QueryParams
+    ): Promise<ModelSubscription> {
+        const id = await this.communication.open(
+            streamId,
+            description,
+            request,
+            Object.assign({}, this._currentQueryParams, customParams || {})
+        );
 
         let rejectReceivedData: any;
-        const receivedData = new Promise<void>((resolve, reject) => {
+        const receivedData = new Promise<ModelData>((resolve, reject) => {
             this._resolveDataReceived[id] = resolve;
             rejectReceivedData = reject;
         });
@@ -186,25 +214,43 @@ export class AutoupdateService {
 
         const modelData = autoupdateFormatToModelData(autoupdateData);
         console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
-        const fullListUpdateCollections: { [collection: string]: Ids } = {};
-        for (const key of Object.keys(autoupdateData)) {
-            const data = key.split(`/`);
-            const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
-            const { modelRequest } = this._activeRequestObjects[id];
-            if (!modelRequest) {
-                continue;
-            }
-            if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
-                fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
-                    autoupdateData[key];
+        const fullListUpdateCollections: {
+            [collection: string]: Ids;
+        } = {};
+        const exclusiveListUpdateCollections: {
+            [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
+        } = {};
+
+        const { modelRequest } = this._activeRequestObjects[id];
+        if (modelRequest) {
+            for (const key of Object.keys(autoupdateData)) {
+                const data = key.split(`/`);
+                const collectionRelation = `${data[COLLECTION_INDEX]}/${data[FIELD_INDEX]}`;
+                if (modelRequest.getFullListUpdateCollectionRelations().includes(collectionRelation)) {
+                    fullListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] =
+                        autoupdateData[key];
+                } else if (modelRequest.getExclusiveListUpdateCollectionRelations().includes(collectionRelation)) {
+                    exclusiveListUpdateCollections[modelRequest.getForeignCollectionByRelation(collectionRelation)] = {
+                        ids: autoupdateData[key],
+                        parentCollection: data[COLLECTION_INDEX],
+                        parentField: data[FIELD_INDEX],
+                        parentId: +data[ID_INDEX]
+                    };
+                }
             }
         }
-        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, id);
+
+        await this.prepareCollectionUpdates(modelData, fullListUpdateCollections, exclusiveListUpdateCollections, id);
     }
 
     private async prepareCollectionUpdates(
         modelData: ModelData,
-        fullListUpdateCollections: { [collection: string]: Id[] },
+        fullListUpdateCollections: {
+            [collection: string]: Ids;
+        },
+        exclusiveListUpdateCollections: {
+            [collection: string]: { ids: Ids; parentCollection: Collection; parentField: string; parentId: Id };
+        },
         requestId: number
     ): Promise<void> {
         const unlock = await this._mutex.lock();
@@ -212,12 +258,13 @@ export class AutoupdateService {
         this.viewmodelStoreUpdate
             .triggerUpdate({
                 patch: modelData,
-                changedModels: fullListUpdateCollections,
+                changedModels: exclusiveListUpdateCollections,
+                changedFullListModels: fullListUpdateCollections,
                 deletedModels: {}
             })
             .then(() => {
                 if (this._resolveDataReceived[requestId]) {
-                    this._resolveDataReceived[requestId]();
+                    this._resolveDataReceived[requestId](modelData);
                     delete this._resolveDataReceived[requestId];
                 }
             });

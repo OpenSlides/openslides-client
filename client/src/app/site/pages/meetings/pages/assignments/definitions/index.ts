@@ -1,4 +1,6 @@
-import { AssignmentPhase } from '../../../../../../domain/models/assignments/assignment-phase';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
+
 /**
  * A constant containing all possible assignment phases and their different
  * representations as numerical value, string as used in server, and the display
@@ -8,16 +10,16 @@ export const AssignmentPhases: { name: string; value: AssignmentPhase; display_n
     {
         name: `PHASE_SEARCH`,
         value: AssignmentPhase.Search,
-        display_name: `Searching for candidates`
+        display_name: _(`Searching for candidates`)
     },
     {
         name: `PHASE_VOTING`,
         value: AssignmentPhase.Voting,
-        display_name: `In the election process`
+        display_name: _(`In the election process`)
     },
     {
         name: `PHASE_FINISHED`,
         value: AssignmentPhase.Finished,
-        display_name: `Finished`
+        display_name: _(`Finished`)
     }
 ];

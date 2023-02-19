@@ -7,7 +7,7 @@ import { ModelRequestBuilderService } from 'src/app/site/services/model-request-
 import { Id } from '../../domain/definitions/key-types';
 import { CML, cmlNameMapping, OML, omlNameMapping } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
-import { childPermissions } from '../../domain/definitions/permission-children';
+import { permissionChildren } from '../../domain/definitions/permission-relations';
 import { Committee } from '../../domain/models/comittees/committee';
 import { Group } from '../../domain/models/users/group';
 import { Deferred } from '../../infrastructure/utils/promises';
@@ -254,7 +254,7 @@ export class OperatorService {
                 return;
             }
             const newMeetingId = meeting?.id || null;
-            if (this._lastActiveMeetingId !== newMeetingId) {
+            if (this._lastActiveMeetingId !== newMeetingId || !this._ready) {
                 console.debug(`operator: active meeting changed from `, this._lastActiveMeetingId, `to`, newMeetingId);
                 this._lastActiveMeetingId = newMeetingId;
                 this.operatorStateChange(false);
@@ -473,8 +473,8 @@ export class OperatorService {
         // add implicitly given children
         // copy set beforehand to not iterate over the newly added members
         for (const permission of new Set(permissionSet)) {
-            for (const childPermission of childPermissions[permission]!) {
-                permissionSet.add(childPermission);
+            for (const permissionChild of permissionChildren[permission]!) {
+                permissionSet.add(permissionChild);
             }
         }
         return Array.from(permissionSet.values());
@@ -519,6 +519,8 @@ export class OperatorService {
     public hasOrganizationPermissions(...permissionsToCheck: OML[]): boolean {
         if (!this._OML) {
             return false;
+        } else if (!permissionsToCheck.length) {
+            return true;
         }
         return permissionsToCheck.some(permission => omlNameMapping[this._OML!] >= omlNameMapping[permission]);
     }

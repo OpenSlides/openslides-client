@@ -800,18 +800,37 @@ button.mat-menu-item.selected {
     display: none;
 }
 
-.flex-vertical-center {
+.flex-vertical-center-unsafe {
     display: flex;
-    align-items: center;
     flex-direction: row;
+    align-items: center;
 
     &.align-left {
         justify-content: flex-start;
     }
 }
 
+.flex-vertical-center {
+    display: flex;
+    flex-direction: row;
+
+    &.align-left {
+        justify-content: flex-start;
+    }
+
+    & > * {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
+
 .flex-center {
     @extend .flex-vertical-center;
+    justify-content: center;
+}
+
+.flex-center-unsafe {
+    @extend .flex-vertical-center-unsafe;
     justify-content: center;
 }
 

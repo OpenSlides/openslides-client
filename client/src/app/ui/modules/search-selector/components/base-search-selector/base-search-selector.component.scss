@@ -1,3 +1,11 @@
+@import 'src/assets/styles/media-queries.scss';
+
+@include set-breakpoint-upper(sm) {
+    .os-search-selector-wider {
+        min-width: calc(200% + 32px) !important;
+    }
+}
+
 .os-search-selector--no-options {
     mat-pseudo-checkbox {
         display: none;

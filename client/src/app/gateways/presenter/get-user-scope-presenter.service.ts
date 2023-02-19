@@ -4,7 +4,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
 
-enum UserScope {
+export enum UserScope {
     MEETING = `meeting`,
     COMMITTEE = `committee`,
     ORGANIZATION = `organization`

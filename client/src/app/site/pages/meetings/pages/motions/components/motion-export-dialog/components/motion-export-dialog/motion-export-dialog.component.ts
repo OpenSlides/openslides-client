@@ -70,7 +70,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
             MOTION_PDF_OPTIONS.Page,
             MOTION_PDF_OPTIONS.AddBreaks
         ],
-        metaInfo: [`submitters`, `state`, `recommendation`, `category`, `origin`, `tags`, `block`, `polls`]
+        metaInfo: [`submitters`, `state`, `recommendation`, `category`, `tags`, `block`, `polls`]
     };
 
     /**
@@ -308,7 +308,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
                 return `Motion block`;
             }
             default: {
-                return metaDataName.charAt(0).toUpperCase() + metaDataName.slice(1);
+                return metaDataName.charAt(0).toUpperCase() + metaDataName.slice(1).replace(`_`, ` `);
             }
         }
     }

@@ -12,6 +12,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
+import { PipesModule } from 'src/app/ui/pipes';
 
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantListComponent } from './components/participant-list/participant-list.component';
@@ -39,7 +40,8 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         MatMenuModule,
         MatCheckboxModule,
         MatDividerModule,
-        MatTooltipModule
+        MatTooltipModule,
+        PipesModule
     ]
 })
 export class ParticipantListModule {}

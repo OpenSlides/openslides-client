@@ -14,6 +14,7 @@ import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/ass
 
 export type SettingsType =
     | 'string'
+    | 'email'
     | 'text'
     | 'markupText'
     | 'integer'
@@ -83,7 +84,19 @@ export interface SettingsGroup {
     }[];
 }
 
-export const meetingSettings: SettingsGroup[] = [
+function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
+    settingsGroups.forEach(group =>
+        group.subgroups.forEach(
+            subgroup =>
+                (subgroup.settings = subgroup.settings.map(setting =>
+                    setting.type ? setting : { ...setting, type: `string` }
+                ))
+        )
+    );
+    return settingsGroups;
+}
+
+export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
     {
         label: _(`General`),
         icon: `home`,
@@ -93,7 +106,7 @@ export const meetingSettings: SettingsGroup[] = [
                 settings: [
                     {
                         key: `name`,
-                        label: _(`Meeting titel`)
+                        label: _(`Meeting title`)
                     },
                     {
                         key: `description`,
@@ -132,16 +145,6 @@ export const meetingSettings: SettingsGroup[] = [
                                     : currentValue;
                             }
                         }
-                    }
-                ]
-            },
-            {
-                label: _(`System`),
-                settings: [
-                    {
-                        key: `enable_anonymous`,
-                        label: _(`Allow access for anonymous guest users`),
-                        type: `boolean`
                     }
                 ]
             },
@@ -652,6 +655,17 @@ export const meetingSettings: SettingsGroup[] = [
                 ]
             },
             {
+                label: _(`Projector`),
+                settings: [
+                    {
+                        key: `motions_block_slide_columns`,
+                        label: _(`Maximum number of columns on motion block slide`),
+                        type: `integer`,
+                        validators: [Validators.min(1)]
+                    }
+                ]
+            },
+            {
                 label: _(`PDF export`),
                 settings: [
                     {
@@ -853,7 +867,9 @@ export const meetingSettings: SettingsGroup[] = [
                     },
                     {
                         key: `users_email_replyto`,
-                        label: _(`Reply address`)
+                        label: _(`Reply address`),
+                        type: `email`,
+                        validators: [Validators.email]
                     },
                     {
                         key: `users_email_subject`,
@@ -1010,4 +1026,4 @@ export const meetingSettings: SettingsGroup[] = [
             }
         ]
     }
-];
+]);

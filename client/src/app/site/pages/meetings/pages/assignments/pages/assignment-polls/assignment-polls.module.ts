@@ -13,6 +13,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
 
 import { AssignmentPollModule } from '../../modules/assignment-poll/assignment-poll.module';
+import { AssignmentPollServiceModule } from '../../modules/assignment-poll/services/assignment-poll-service.module';
 import { AssignmentPollsRoutingModule } from './assignment-polls-routing.module';
 import { AssignmentPollDetailComponent } from './components/assignment-poll-detail/assignment-poll-detail.component';
 import { AssignmentPollMainComponent } from './components/assignment-poll-main/assignment-poll-main.component';
@@ -23,6 +24,7 @@ import { AssignmentPollMainComponent } from './components/assignment-poll-main/a
         CommonModule,
         AssignmentPollsRoutingModule,
         AssignmentPollModule,
+        AssignmentPollServiceModule,
         RouterModule,
         MatCardModule,
         MatIconModule,

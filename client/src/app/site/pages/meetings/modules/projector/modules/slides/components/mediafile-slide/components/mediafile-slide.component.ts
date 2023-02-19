@@ -14,8 +14,12 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
         return `/system/media/get/${this.data.data.id}`;
     }
 
+    public get scroll(): number {
+        return (this.projector?.scroll || 0) * 100;
+    }
+
     public get zoom(): number {
-        return Math.pow(1.1, this.data.options[`zoom`] || 0);
+        return Math.pow(1.1, this.projector?.scale || 0);
     }
 
     public get page(): number {
@@ -31,11 +35,11 @@ export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideDa
     }
 
     public get isFullscreen(): boolean {
-        return this.data.options[`fullscreen`];
+        return this.data.options[`fullscreen`] ?? true;
     }
 
     public constructor() {
         super();
-        (window as any).pdfWorkerSrc = `/assets/js/pdf.worker.min.js`;
+        (window as any).pdfWorkerSrc = `/assets/pdfworker/pdf.worker.min.js`;
     }
 }

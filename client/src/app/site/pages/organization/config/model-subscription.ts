@@ -9,9 +9,21 @@ export const getMeetingListSubscriptionConfig = (getNextMeetingIdObservable: () 
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
         follow: [
-            { idField: `active_meeting_ids`, follow: [{ idField: `group_ids` }], fieldset: `list` },
-            { idField: `archived_meeting_ids`, follow: [{ idField: `group_ids` }], fieldset: `list` },
-            { idField: `template_meeting_ids`, follow: [{ idField: `group_ids` }], fieldset: `list` }
+            {
+                idField: `active_meeting_ids`,
+                follow: [{ idField: `group_ids`, isFullList: false }],
+                fieldset: `list`
+            },
+            {
+                idField: `archived_meeting_ids`,
+                follow: [{ idField: `group_ids`, isFullList: false }],
+                fieldset: `list`
+            },
+            {
+                idField: `template_meeting_ids`,
+                follow: [{ idField: `group_ids`, isFullList: false }],
+                fieldset: `list`
+            }
         ]
     },
     subscriptionName: MEETING_LIST_SUBSCRIPTION,

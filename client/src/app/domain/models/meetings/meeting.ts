@@ -131,6 +131,7 @@ export class Settings {
     public motions_amendments_text_mode!: string;
     public motions_amendments_multiple_paragraphs!: boolean;
     public motions_supporters_min_amount!: number;
+    public motions_block_slide_columns!: number;
     public motions_export_title!: string;
     public motions_export_preamble!: string;
     public motions_export_submitter_recommendation!: boolean;
@@ -242,7 +243,7 @@ export class Meeting extends BaseModel<Meeting> {
     public present_user_ids!: Id[]; // (user/is_present_in_meeting_ids)[];
     public user_ids!: Id[]; // Calculated: All ids all users assigned to groups.
     public reference_projector_id!: Id; // projector/used_as_reference_projector_meeting_id;
-    public default_projector_$_id!: string[]; // projector/used_as_default_$_in_meeting_id;
+    public default_projector_$_ids!: string[]; // projector/used_as_default_$_in_meeting_id;
 
     public default_group_id!: Id; // group/default_group_for_meeting_id;
     public admin_group_id!: Id; // group/admin_group_for_meeting_id;
@@ -270,8 +271,8 @@ export class Meeting extends BaseModel<Meeting> {
         return (this[`font_$${place}_id` as keyof Meeting] as Id) || null;
     }
 
-    public default_projector_id(place: string): Id | null {
-        return (this[`default_projector_$${place}_id` as keyof Meeting] as Id) || null;
+    public default_projector_ids(place: string): Id[] | null {
+        return (this[`default_projector_$${place}_ids` as keyof Meeting] as Id[]) || [];
     }
 }
 export interface Meeting extends Settings, HasProjectionIds {}

@@ -137,6 +137,9 @@
             }}
         </li>
     </ul>
+    <p *ngIf="additionalInfo">
+        {{ additionalInfo }}
+    </p>
     <button mat-button color="accent" (click)="downloadCsvExample()">
         {{ 'Download CSV example file' | translate }}
     </button>
@@ -224,6 +227,7 @@
     <os-scrolling-table
         style="height: 500px"
         class="import-list-preview-table"
+        tableHeight="500px"
         [rowHeight]="50"
         [dataSource]="dataSource"
         [showHeader]="true"

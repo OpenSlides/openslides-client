@@ -18,6 +18,9 @@ import { MeetingComponentServiceCollectorService } from '../../../../../meetings
 import { BrowserSupportService } from '../../../../services/browser-support.service';
 
 const HTTP_WARNING = _(`Using OpenSlides over HTTP is not supported. Enable HTTPS to continue.`);
+const HTTP_H1_WARNING = _(
+    `Using OpenSlides over HTTP 1.1 or lower is not supported. Make sure you can use HTTP 2 to continue.`
+);
 
 interface LoginValues {
     username: string;
@@ -174,8 +177,11 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     }
 
     private checkForUnsecureConnection(): void {
+        const protocol = (<any>performance.getEntriesByType(`navigation`)[0]).nextHopProtocol;
         if (location.protocol === `http:`) {
             this.raiseWarning(this.translate.instant(HTTP_WARNING));
+        } else if (protocol !== `h2` && protocol !== `h3`) {
+            this.raiseWarning(this.translate.instant(HTTP_H1_WARNING));
         }
     }
 

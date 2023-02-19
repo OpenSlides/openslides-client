@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -91,9 +90,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     public async onCancel(): Promise<void> {
         let resetList = true;
         if (this.hasChanges) {
-            const title = this.translate.instant(_(`Do you really want to discard all your changes?`));
-            const content = this.translate.instant(_(`Unsaved changes will not be applied.`));
-            resetList = (await this.promptService.open(title, content)) as boolean;
+            resetList = await this.promptService.discardChangesConfirmation();
         }
         if (resetList) {
             this.sortingList.restore();

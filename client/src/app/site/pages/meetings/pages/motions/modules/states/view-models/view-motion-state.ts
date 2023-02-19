@@ -19,6 +19,8 @@ export class ViewMotionState extends BaseViewModel<MotionState> {
 interface IStateRelations {
     next_states: ViewMotionState[];
     previous_states: ViewMotionState[];
+    submitter_withdraw_state: ViewMotionState;
+    submitter_withdraw_back_states: ViewMotionState[];
     motions: ViewMotion[];
     motion_recommendations: ViewMotion[];
     workflow: ViewMotionWorkflow;

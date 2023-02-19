@@ -15,6 +15,7 @@ import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { ListModule } from 'src/app/ui/modules/list';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
+import { PipesModule } from 'src/app/ui/pipes';
 
 import { AccountExportServiceModule } from '../../services/account-export-service.module';
 import { AccountCommonServiceModule } from '../../services/common/account-common-service.module';
@@ -45,7 +46,8 @@ import { AccountListServiceModule } from './services/account-list-service.module
         OpenSlidesTranslationModule.forChild(),
         MatFormFieldModule,
         IconContainerModule,
-        RouterModule
+        RouterModule,
+        PipesModule
     ]
 })
 export class AccountListModule {}
