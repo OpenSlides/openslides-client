@@ -121,7 +121,7 @@ export class MotionPdfCatalogService {
 
         if (categories && categories.length) {
             const catTocBody = [];
-            for (const category of categories.sort((a, b) => a.weight - b.weight)) {
+            for (const category of categories) {
                 // find out if the category has any motions
                 const motionToCurrentCat = motions.filter(motionIn => category.id === motionIn.category_id);
 
