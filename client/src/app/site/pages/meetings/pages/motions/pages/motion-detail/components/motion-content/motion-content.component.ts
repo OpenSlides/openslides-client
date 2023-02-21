@@ -491,7 +491,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             parent_id: [],
             modified_final_version: [``],
             ...(this.canChangeMetadata && {
-                number: [``, isUniqueAmong<string>(this._motionNumbersSubject)],
+                number: [
+                    ``,
+                    isUniqueAmong<string>(this._motionNumbersSubject, (a, b) => a === b, [``, null, undefined])
+                ],
                 agenda_create: [``],
                 agenda_type: [``]
             })
