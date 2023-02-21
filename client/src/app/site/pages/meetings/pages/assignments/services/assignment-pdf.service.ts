@@ -36,7 +36,7 @@ export class AssignmentPdfService {
         const preamble = this.createPreamble(assignment);
         const description = this.createDescription(assignment);
         const candidateList = this.createCandidateList(assignment);
-        const pollResult = this.createPollResultTable(assignment);
+        const pollResult = this.createPollResultTable(assignment.polls);
 
         return [title, preamble, description, candidateList, pollResult];
     }
@@ -111,7 +111,7 @@ export class AssignmentPdfService {
      * @param assignment the ViewAssignment to create the document for
      * @returns the assignment list as PDF document
      */
-    private createCandidateList(assignment: ViewAssignment): object {
+    protected createCandidateList(assignment: ViewAssignment): object {
         if (assignment.phase !== AssignmentPhase.Finished) {
             const candidatesText = `${this.translate.instant(`Candidates`)}: `;
             const userList = assignment.candidates.map(candidate => ({
@@ -142,12 +142,12 @@ export class AssignmentPdfService {
     /**
      * Creates the poll result table for all published polls
      *
-     * @param assignment the ViewAssignment to create the document for
+     * @param polls the ViewPoll objects to create the document for
      * @returns the table as pdfmake object
      */
-    private createPollResultTable(assignment: ViewAssignment): object {
+    protected createPollResultTable(polls: ViewPoll[]): object {
         const resultBody = [];
-        for (const poll of assignment.polls) {
+        for (const poll of polls) {
             if (poll.isPublished) {
                 const pollTableBody = [];
 
@@ -210,7 +210,7 @@ export class AssignmentPdfService {
     /**
      * Converts pollData to a printable string representation
      */
-    private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
+    protected getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
                 if (poll.pollmethod === PollMethod.Y) {

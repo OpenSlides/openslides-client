@@ -265,6 +265,10 @@ export class TopicDetailComponent extends BaseMeetingComponent {
         this.setEditMode(false);
     }
 
+    public onDownloadPdf() {
+
+    }
+
     /**
      * Creates a new Poll
      */

@@ -298,9 +298,7 @@ export abstract class BasePollPdfService {
             } else if (poll.options.length <= 10) {
                 return 2;
             }
-        }
-
-        if (poll.options.length <= 2) {
+        } else if (poll.options.length <= 2) {
             return 4;
         } else if (poll.options.length <= 3) {
             return 3;

@@ -5,7 +5,6 @@ import {
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
 import { PollKeyVerbosePipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -16,6 +15,7 @@ import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/mee
 import { TopicControllerService } from '../../../../services/topic-controller.service';
 import { TopicPollService } from '../topic-poll.service';
 import { TopicPollServiceModule } from '../topic-poll-service.module';
+import { ViewTopic } from '../../../../view-models';
 
 @Injectable({
     providedIn: TopicPollServiceModule
@@ -86,7 +86,7 @@ export class TopicPollPdfService extends BasePollPdfService {
     }
 
     protected getPollResultFileNamePrefix(poll: ViewPoll): string {
-        return (poll.content_object as ViewMotion)?.numberOrTitle;
+        return (poll.content_object as ViewTopic)?.title;
     }
 
     /**
