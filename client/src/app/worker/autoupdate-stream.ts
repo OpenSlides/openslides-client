@@ -41,7 +41,7 @@ export class AutoupdateStream {
 
     constructor(
         private _subscriptions: AutoupdateSubscription[],
-        public queryParams: string,
+        public queryParams: URLSearchParams,
         private endpoint: AutoupdateSetEndpointParams,
         private authToken: string
     ) {}
@@ -181,7 +181,8 @@ export class AutoupdateStream {
 
         this.abortCtrl = new AbortController();
 
-        const response = await fetch(this.endpoint.url + this.queryParams, {
+        const queryParams = this.queryParams.toString() ? `?${this.queryParams.toString()}` : ``;
+        const response = await fetch(this.endpoint.url + queryParams, {
             signal: this.abortCtrl.signal,
             method: this.endpoint.method,
             headers,
@@ -202,7 +203,7 @@ export class AutoupdateStream {
 
                     next = null;
 
-                    const data = this.decode(line);
+                    const data = this.queryParams.get(`compress`) ? this.decode(line) : new TextDecoder().decode(line);
                     const parsedData = this.parse(data);
                     this.handleContent(parsedData);
                 } else if (next) {

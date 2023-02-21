@@ -92,7 +92,20 @@ export class AutoupdateCommunicationService {
             } as AutoupdateAuthChange);
         });
 
+        if (window.localStorage.getItem(`DEBUG_MODE`)) {
+            this.enableDebugUtils();
+        }
+
         this.registerConnectionStatusListener();
+    }
+
+    /**
+     * Enable the debug utilities of the shared worker
+     */
+    public enableDebugUtils(): void {
+        this.sharedWorker.sendMessage(`autoupdate`, {
+            action: `enable-debug`
+        });
     }
 
     /**

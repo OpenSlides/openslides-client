@@ -31,6 +31,7 @@ export class AutoupdateStreamPool {
     private _authTokenRefreshTimeout: any | null = null;
     private _updateAuthPromise: Promise<void> | undefined;
     private _waitingForUpdateAuthPromise: boolean = false;
+    private _disableCompression: boolean = false;
 
     public get activeStreams(): AutoupdateStream[] {
         return this.streams.filter(stream => stream.active);
@@ -51,7 +52,12 @@ export class AutoupdateStreamPool {
             this.subscriptions[subscription.id] = subscription;
         }
 
-        const stream = new AutoupdateStream(subscriptions, queryParams, this.endpoint, this.authToken);
+        const params = new URLSearchParams(queryParams);
+        if (this._disableCompression) {
+            params.delete(`compress`);
+        }
+
+        const stream = new AutoupdateStream(subscriptions, params, this.endpoint, this.authToken);
         this.streams.push(stream);
         this.connectStream(stream);
 
@@ -200,6 +206,15 @@ export class AutoupdateStreamPool {
         });
 
         await this._updateAuthPromise;
+    }
+
+    public async disableCompression(): Promise<void> {
+        this._disableCompression = true;
+        for (let stream of this.streams) {
+            stream.queryParams.delete(`compress`);
+        }
+
+        this.reconnectAll(false);
     }
 
     private setAuthToken(token: string | null): void {
