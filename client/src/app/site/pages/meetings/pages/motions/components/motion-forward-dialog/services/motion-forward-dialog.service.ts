@@ -84,7 +84,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     }
 
     private async updateForwardMeetings(): Promise<void> {
-        if (this._forwardingMeetingsUpdateRequired) {
+        if (this._forwardingMeetingsUpdateRequired && !this.activeMeeting.meeting.isArchived) {
             const meetings = this.operator.hasPerms(Permission.motionCanManage)
                 ? await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! })
                 : [];
