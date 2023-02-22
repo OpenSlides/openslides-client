@@ -77,7 +77,9 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                 // Find subitem or subitem with line numbers object.
                 if (
                     Object.keys(children[key]).includes(`ul`) ||
-                    children[key][`columns`]?.some(column => Object.keys(column).includes(`ul`))
+                    Object.keys(children[key]).includes(`ol`) ||
+                    children[key][`columns`]?.some(column => Object.keys(column).includes(`ul`)) ||
+                    children[key][`columns`]?.some(column => Object.keys(column).includes(`ol`))
                 ) {
                     ul.push(children[key]);
                 } else {
@@ -260,7 +262,9 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
      */
     private withSublist(element: Element): boolean {
         if (element.nodeName.toLowerCase() === `li`) {
-            const hasUl = Array.from(element.children).some(child => child.nodeName.toLowerCase() === `ul`);
+            const hasUl = Array.from(element.children).some(child =>
+                [`ul`, `ol`].includes(child.nodeName.toLowerCase())
+            );
             return hasUl;
         }
         return false;

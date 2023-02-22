@@ -103,17 +103,17 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
         switch (projection.type as MeetingProjectionType) {
             case MeetingProjectionType.CurrentListOfSpeakers:
-                title = `Current list of speakers`;
+                title = this.translate.instant(`Current list of speakers`);
                 break;
             case MeetingProjectionType.CurrentSpeakerChyron:
-                title = `Current speaker chyron`;
+                title = this.translate.instant(`Current speaker chyron`);
                 break;
             case MeetingProjectionType.AgendaItemList:
-                title = `Agenda`;
+                title = this.translate.instant(`Agenda`);
                 break;
             default:
                 console.warn(`Unknown slide type for meeting:`, projection.type);
-                title = `<unknown>`;
+                title = this.translate.instant(`<unknown>`);
                 break;
         }
 

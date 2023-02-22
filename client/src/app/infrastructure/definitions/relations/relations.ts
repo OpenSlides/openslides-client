@@ -13,7 +13,7 @@ import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/mee
 import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
 import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
 import {
-    HasReferencedMotionsInRecommendationExtension,
+    HasReferencedMotionsInExtension,
     HasTags,
     ViewMotion,
     ViewMotionBlock,
@@ -603,9 +603,9 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewProjector,
-        ownField: `default_projector`,
-        ownIdField: `default_projector_$_id`,
-        many: false,
+        ownField: `default_projectors`,
+        ownIdField: `default_projector_$_ids`,
+        many: true,
         generic: false,
         structured: true
     },
@@ -771,11 +771,17 @@ export const RELATIONS: Relation[] = [
         MField: `recommendation`,
         OField: `motions`
     }),
-    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInRecommendationExtension>({
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
         viewModel: ViewMotion,
         possibleViewModels: [ViewMotion],
-        viewModelField: `recommendation_extension_reference_ids`,
-        possibleViewModelsField: `referenced_in_motion_recommendation_extension`
+        viewModelField: `state_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_state_extensions`
+    }),
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
+        viewModel: ViewMotion,
+        possibleViewModels: [ViewMotion],
+        viewModelField: `recommendation_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_recommendation_extensions`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
