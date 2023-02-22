@@ -1,139 +1,87 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
-import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll/poll-constants';
+import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
 import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import {
+    PollKeyVerbosePipe,
+    PollParseNumberPipe,
+    PollPercentBasePipe
+} from 'src/app/site/pages/meetings/modules/poll/pipes';
+import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBasePipe } from '../../../modules/poll/pipes';
-import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
-import { ViewAssignment } from '../view-models';
-import { AssignmentExportServiceModule } from './assignment-export-service.module';
+import { ViewPoll } from '../../../../../polls';
+import { TopicPollService } from '../../modules/topic-poll/services/topic-poll.service';
+import { ViewTopic } from '../../view-models';
+import { TopicCommonServiceModule } from '../topic-common-service.module';
 
 /**
- * Creates a PDF document from a single assignment
+ * Creates a PDF document from a single tpoic
  */
-@Injectable({ providedIn: AssignmentExportServiceModule })
-export class AssignmentPdfService {
+@Injectable({ providedIn: TopicCommonServiceModule })
+export class TopicPdfService {
     public constructor(
         private translate: TranslateService,
         private htmlToPdfService: HtmlToPdfService,
+        private pdfDocumentService: MeetingPdfExportService,
         private pollKeyVerbose: PollKeyVerbosePipe,
         private parsePollNumber: PollParseNumberPipe,
         private pollPercentBase: PollPercentBasePipe,
-        private assignmentPollService: AssignmentPollService
+        private pollService: TopicPollService
     ) {}
+
+    /**
+     * Generates an pdf out of a given topic and saves it as file
+     *
+     * @param topic the topic to export
+     */
+    public exportSingleTopic(topic: ViewTopic): void {
+        const doc = this.topicToDocDef(topic);
+        const filename = `${this.translate.instant(`Topic`)}_${topic.title}`;
+        const metadata = {
+            title: filename
+        };
+
+        this.pdfDocumentService.download({ docDefinition: doc, filename, metadata });
+    }
 
     /**
      * Main function to control the pdf generation.
      * Calls all other functions to generate the PDF in multiple steps
      *
-     * @param assignment the ViewAssignment to create the document for
+     * @param topic the ViewTopic to create the document for
      * @returns a pdfmake compatible document as document
      */
-    public assignmentToDocDef(assignment: ViewAssignment): object {
-        const title = this.createTitle(assignment);
-        const preamble = this.createPreamble(assignment);
-        const description = this.createDescription(assignment);
-        const candidateList = this.createCandidateList(assignment);
-        const pollResult = this.createPollResultTable(assignment.polls);
+    private topicToDocDef(topic: ViewTopic): object {
+        const title = this.createTitle(topic);
+        const text = this.createTextContent(topic);
+        const pollResult = this.createPollResultTable(topic.polls);
 
-        return [title, preamble, description, candidateList, pollResult];
+        return [title, text, pollResult];
     }
 
     /**
      * Creates the title for PDF
      * TODO: Cleanup. Should be reused from time to time. Can be in another service
      *
-     * @param assignment the ViewAssignment to create the document for
+     * @param topic the ViewTopic to create the document for
      * @returns the title part of the document
      */
-    private createTitle(assignment: ViewAssignment): object {
+    private createTitle(topic: ViewTopic): object {
         return {
-            text: assignment.title,
+            text: topic.title,
             style: `title`
         };
     }
 
     /**
-     * Creates the preamble, usually just contains "Number of persons to be elected"
+     * Creates the  description part of the document. Also converts the parts of an topic to PDF
      *
-     * @param assignment the ViewAssignment to create the document for
-     * @returns the preamble part of the pdf document
+     * @param topic the ViewTopic to create the document for
+     * @returns the description of the topic
      */
-    private createPreamble(assignment: ViewAssignment): object {
-        const preambleText = `${this.translate.instant(`Number of persons to be elected`)}: `;
-        const memberNumber = `` + assignment.open_posts;
-        const preamble = {
-            text: [
-                {
-                    text: preambleText,
-                    bold: true,
-                    style: `textItem`
-                },
-                {
-                    text: memberNumber,
-                    style: `textItem`
-                }
-            ]
-        };
-        return preamble;
-    }
-
-    /**
-     * Creates the  description part of the document. Also converts the parts of an assignment to PDF
-     *
-     * @param assignment the ViewAssignment to create the document for
-     * @returns the description of the assignment
-     */
-    private createDescription(assignment: ViewAssignment): object {
-        if (assignment.description) {
-            const descriptionDocDef = this.htmlToPdfService.addPlainText(assignment.description);
-
-            const descriptionText = `${this.translate.instant(`Description`)}: `;
-            const description = [
-                {
-                    text: descriptionText,
-                    bold: true,
-                    style: `textItem`
-                },
-                descriptionDocDef
-            ];
-            return description;
-        } else {
-            return {};
-        }
-    }
-
-    /**
-     * Creates the assignment list
-     *
-     * @param assignment the ViewAssignment to create the document for
-     * @returns the assignment list as PDF document
-     */
-    private createCandidateList(assignment: ViewAssignment): object {
-        if (assignment.phase !== AssignmentPhase.Finished) {
-            const candidatesText = `${this.translate.instant(`Candidates`)}: `;
-            const userList = assignment.candidates.map(candidate => ({
-                text: candidate.user?.full_name || UnknownUserLabel,
-                margin: [0, 0, 0, 10]
-            }));
-            const listType = assignment.number_poll_candidates ? `ol` : `ul`;
-
-            return {
-                columns: [
-                    {
-                        text: candidatesText,
-                        bold: true,
-                        width: `25%`,
-                        style: `textItem`
-                    },
-                    {
-                        [listType]: userList,
-                        style: `textItem`
-                    }
-                ]
-            };
+    private createTextContent(topic: ViewTopic): object {
+        if (topic.text) {
+            return this.htmlToPdfService.addPlainText(topic.text);
         } else {
             return {};
         }
@@ -141,7 +89,7 @@ export class AssignmentPdfService {
 
     /**
      * Creates the poll result table for all published polls
-     * TODO: Make this reusable (also used in topic-pdf.service)
+     * TODO: Make this reusable (also used in assignment-pdf.service)
      *
      * @param polls the ViewPoll objects to create the document for
      * @returns the table as pdfmake object
@@ -174,7 +122,7 @@ export class AssignmentPdfService {
                     }
                 ]);
 
-                const tableData = this.assignmentPollService.generateTableData(poll);
+                const tableData = this.pollService.generateTableData(poll);
                 for (const [index, pollResult] of tableData.entries()) {
                     const rank = pollResult.class === `user` ? index + 1 : ``;
                     const voteOption = this.translate.instant(this.pollKeyVerbose.transform(pollResult.votingOption));

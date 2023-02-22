@@ -13,9 +13,9 @@ import { MediaManageService } from 'src/app/site/pages/meetings/services/media-m
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { TopicControllerService } from '../../../../services/topic-controller.service';
+import { ViewTopic } from '../../../../view-models';
 import { TopicPollService } from '../topic-poll.service';
 import { TopicPollServiceModule } from '../topic-poll-service.module';
-import { ViewTopic } from '../../../../view-models';
 
 @Injectable({
     providedIn: TopicPollServiceModule
