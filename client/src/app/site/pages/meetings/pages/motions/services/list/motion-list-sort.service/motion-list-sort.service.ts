@@ -95,10 +95,27 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      * @returns {number} The result of comparing.
      */
     private categorySortFn(itemA: ViewMotion, itemB: ViewMotion, ascending: boolean): number {
+        let result;
         if (itemA.category_id === itemB.category_id) {
-            return itemA.category_weight < itemB.category_weight === ascending ? -1 : 1;
+            result = itemA.category_weight - itemB.category_weight;
         } else {
-            return itemA.category!.weight < itemB.category!.weight === ascending ? -1 : 1;
+            // Traverse the category trees downwards and stop when they first diverge,
+            const categoriesA = itemA.category.allParents.reverse().concat(itemA.category);
+            const categoriesB = itemB.category.allParents.reverse().concat(itemB.category);
+            let i = 0;
+            while (categoriesA[i] && categoriesB[i] && categoriesA[i] == categoriesB[i]) {
+                ++i;
+            }
+            // if either list is exhausted, the related item belongs to a supercategory of the other
+            if (!categoriesA[i]) {
+                result = -1;
+            } else if (!categoriesB[i]) {
+                result = 1;
+            } else {
+                // otherwise, compare the diverging categories by weight since they have the same parent
+                result = categoriesA[i].weight - categoriesB[i].weight;
+            }
         }
+        return ascending ? result : -result;
     }
 }
