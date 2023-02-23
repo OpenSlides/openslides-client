@@ -291,7 +291,10 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     private validateOption(option: any): void {
-        if ([option.text, option.content_object_id, option.poll_candidate_user_ids].filter(content => !!content).length !== 1) {
+        if (
+            [option.text, option.content_object_id, option.poll_candidate_user_ids].filter(content => !!content)
+                .length !== 1
+        ) {
             throw new Error(`Exactly one of text, content_object_id or poll_candidate_user_ids has to be given!`);
         }
     }

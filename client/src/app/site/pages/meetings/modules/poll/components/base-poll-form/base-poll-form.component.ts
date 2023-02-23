@@ -83,11 +83,18 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     public isCreatedList: boolean;
 
-    public get filteredPollMethods():  { [key: string]: string } {
+    public get isList(): boolean {
+        return this.pollMethod === FormPollMethod.LIST_YNA || this.isCreatedList;
+    }
+
+    public get filteredPollMethods(): { [key: string]: string } {
         if (!this.isCreatedList || !this.pollMethods) {
             return this.pollMethods;
         }
-        return Object.keys(this.pollMethods).reduce((obj, key) => (key === key.toUpperCase() ? { ...obj, [key]: this.pollMethods[key] } : obj), {});
+        return Object.keys(this.pollMethods).reduce(
+            (obj, key) => (key === key.toUpperCase() ? { ...obj, [key]: this.pollMethods[key] } : obj),
+            {}
+        );
     }
 
     private _data: Partial<ViewPoll>;
@@ -166,7 +173,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     public abstract get hideSelects(): PollFormHideSelectsData;
 
     public get pollMethodChangedToListObservable(): Observable<boolean> {
-        return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA))
+        return this.pollMethodControl.valueChanges.pipe(map(method => method === FormPollMethod.LIST_YNA));
     }
 
     /**
@@ -338,7 +345,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         }
     }
 
-    public getValues(): Partial<{[place in keyof ViewPoll]: any}> {
+    public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
         return { ...this.data, ...this.serializeForm(this.contentForm) };
     }
 
@@ -411,7 +418,7 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
 
     private enoughPollOptionsAvailable(minCtrlName: string, perOptionCtrlNam: string): ValidatorFn {
         return (formControl: AbstractControl): { [key: string]: any } | null => {
-            if (!this.pollOptionAmount) {
+            if (!this.pollOptionAmount || this.isList) {
                 return null;
             }
 

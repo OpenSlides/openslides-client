@@ -1,6 +1,6 @@
-import { Id } from "../../definitions/key-types";
-import { HasMeetingId } from "../../interfaces";
-import { BaseModel } from "../base/base-model";
+import { Id } from '../../definitions/key-types';
+import { HasMeetingId } from '../../interfaces';
+import { BaseModel } from '../base/base-model';
 
 export class PollCandidate extends BaseModel<PollCandidate> {
     public static COLLECTION = `poll_candidate`;

@@ -20,10 +20,7 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
     providedIn: `root`
 })
 export class PollCandidateRepositoryService extends BaseMeetingRelatedRepository<ViewPollCandidate, PollCandidate> {
-
-    public constructor(
-        repoServiceCollector: RepositoryMeetingServiceCollectorService
-    ) {
+    public constructor(repoServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repoServiceCollector, PollCandidate);
     }
 
@@ -31,12 +28,7 @@ export class PollCandidateRepositoryService extends BaseMeetingRelatedRepository
     public getTitle = (viewModel: ViewPollCandidate): string => viewModel.user?.getShortName();
 
     public override getFieldsets(): Fieldsets<PollCandidate> {
-        const detailFieldset: (keyof PollCandidate)[] = [
-            `poll_candidate_list_id`,
-            `user_id`,
-            `weight`,
-            `meeting_id`
-        ];
+        const detailFieldset: (keyof PollCandidate)[] = [`poll_candidate_list_id`, `user_id`, `weight`, `meeting_id`];
         return {
             [DEFAULT_FIELDSET]: detailFieldset
         };

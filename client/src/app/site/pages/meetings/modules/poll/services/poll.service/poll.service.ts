@@ -105,7 +105,9 @@ export abstract class PollService {
                     pollTableEntry.votingOptionSubtitle = title.subtitle;
                 }
                 if (isSortedList(option.content_object)) {
-                    pollTableEntry.votingOptions = option.content_object.entries.map(entry => ({ title: entry.getTitle(), subtitle: entry.getSubtitle()}));
+                    pollTableEntry.votingOptions = option.content_object.entries
+                        .sort((a, b) => a.weight - b.weight)
+                        .map(entry => ({ title: entry.getTitle(), subtitle: entry.getSubtitle() }));
                 }
 
                 return pollTableEntry;

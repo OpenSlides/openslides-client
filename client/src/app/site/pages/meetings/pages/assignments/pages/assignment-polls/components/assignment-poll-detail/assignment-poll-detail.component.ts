@@ -115,8 +115,13 @@ export class AssignmentPollDetailComponent
                     if (this.poll.isMethodY) {
                         votes[token].votes.push(this.getMethodYVoteLabel(vote, optionContent));
                     } else {
-                        const candidate_name = isSortedList(optionContent) ? optionContent?.getShortenedTitle(40): (optionContent?.getShortName() ?? this.translate.instant(`Deleted user`));
-                        votes[token].votes.push((pollOptions.length === 1 ? `` : `${candidate_name}: `) + `${this.voteValueToLabel(vote.value)}`);
+                        const candidate_name = isSortedList(optionContent)
+                            ? optionContent?.getShortenedTitle(40)
+                            : optionContent?.getShortName() ?? this.translate.instant(`Deleted user`);
+                        votes[token].votes.push(
+                            (pollOptions.length === 1 ? `` : `${candidate_name}: `) +
+                                `${this.voteValueToLabel(vote.value)}`
+                        );
                     }
                 }
             }

@@ -9,7 +9,7 @@
 ></os-assignment-poll-form>
 
 <!-- Analog voting -->
-<ng-container *ngIf="isAnalogPoll && dialogVoteForm">
+<ng-container *ngIf="isAnalogPoll && dialogVoteForm && !reloading">
     <form [formGroup]="dialogVoteForm">
         <!-- Candidates Values -->
         <div formGroupName="options">
@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="amount">
-                    <div *ngFor="let value of analogVoteFields" [formGroupName]="option.fqid ?? calculateOptionKey(option.poll_candidate_user_ids)">
+                    <div *ngFor="let value of analogVoteFields" [formGroupName]="calculateOptionKey(option)">
                         <os-check-input
                             [placeholder]="voteValueVerbose[value] | translate"
                             [checkboxValue]="-1"

@@ -19,23 +19,24 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 @Injectable({
     providedIn: `root`
 })
-export class PollCandidateListRepositoryService extends BaseMeetingRelatedRepository<ViewPollCandidateList, PollCandidateList> {
-
-    public constructor(
-        repoServiceCollector: RepositoryMeetingServiceCollectorService
-    ) {
+export class PollCandidateListRepositoryService extends BaseMeetingRelatedRepository<
+    ViewPollCandidateList,
+    PollCandidateList
+> {
+    public constructor(repoServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repoServiceCollector, PollCandidateList);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidateLists` : `PollCandidateList`);
-    public getTitle = (viewModel: ViewPollCandidateList): string => viewModel.poll_candidates.map(candidate => `${candidate.getTitle()}${candidate.getSubtitle() ? ` (${candidate.getSubtitle()})` : ``}`).join(`, `);
+    public getTitle = (viewModel: ViewPollCandidateList): string =>
+        viewModel.poll_candidates
+            .map(
+                candidate => `${candidate.getTitle()}${candidate.getSubtitle() ? ` (${candidate.getSubtitle()})` : ``}`
+            )
+            .join(`, `);
 
     public override getFieldsets(): Fieldsets<PollCandidateList> {
-        const detailFieldset: (keyof PollCandidateList)[] = [
-            `poll_candidate_ids`,
-            `option_id`,
-            `meeting_id`
-        ];
+        const detailFieldset: (keyof PollCandidateList)[] = [`poll_candidate_ids`, `option_id`, `meeting_id`];
         return {
             [DEFAULT_FIELDSET]: detailFieldset
         };

@@ -6,7 +6,7 @@
                 <th colspan="2">{{ 'Votes' | translate }}</th>
             </tr>
             <ng-container *ngFor="let row of tableData; let i = index">
-                <ng-container *ngIf="row.class === 'user'">
+                <ng-container *ngIf="['user', 'list'].includes(row.class)">
                     <tr [ngClass]="row.votingOption">
                         <td>
                             <os-icon-container *ngIf="row.value[0].icon" [icon]="row.value[0].icon" [size]="iconSize">
@@ -32,7 +32,7 @@
                         </td>
                     </tr>
                 </ng-container>
-                <ng-container *ngIf="row.class !== 'user'">
+                <ng-container *ngIf="!['user', 'list'].includes(row.class)">
                     <tr [class]="row.votingOption">
                         <!-- YNA/Valid etc -->
                         <td>

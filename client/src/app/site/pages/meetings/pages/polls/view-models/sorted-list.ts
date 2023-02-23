@@ -1,4 +1,3 @@
-
 export interface SortedListEntry {
     weight: number;
     getTitle: () => string;
@@ -16,5 +15,10 @@ export function isSortedListEntry(obj: any): obj is SortedListEntry {
 }
 
 export function isSortedList(obj: any): obj is SortedList {
-    return !!obj && Array.isArray(obj.entries) && typeof obj.getTitle === `function` && (obj.entries as Array<any>).every(entry => isSortedListEntry(entry));
+    return (
+        !!obj &&
+        Array.isArray(obj.entries) &&
+        typeof obj.getTitle === `function` &&
+        (obj.entries as Array<any>).every(entry => isSortedListEntry(entry))
+    );
 }

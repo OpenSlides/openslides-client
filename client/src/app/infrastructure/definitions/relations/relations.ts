@@ -922,7 +922,7 @@ export const RELATIONS: Relation[] = [
         AField: `poll`,
         BField: `global_option`
     }),
-    ...[
+    ...([
         // ViewOption -> ViewUser, ViewPollCandidateList
         {
             ownViewModels: [ViewOption],
@@ -950,7 +950,7 @@ export const RELATIONS: Relation[] = [
             generic: false,
             structured: false
         }
-    ] as Relation[],
+    ] as Relation[]),
     ...makeM2O({
         MViewModel: ViewVote,
         OViewModel: ViewOption,

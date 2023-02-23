@@ -21,7 +21,9 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
         if (!this.isListOption) {
             return [this.getOptionTitle()];
         }
-        return (this.content_object as SortedList).entries.sort((a, b) => a.weight - b.weight).map(entry => ({ title: entry.getTitle() ?? `No data`, subtitle: entry.getSubtitle() ?? `` }));
+        return (this.content_object as SortedList).entries
+            .sort((a, b) => a.weight - b.weight)
+            .map(entry => ({ title: entry.getTitle() ?? `No data`, subtitle: entry.getSubtitle() ?? `` }));
     }
 
     public getContentObject(): C | undefined {
@@ -32,10 +34,10 @@ export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Opt
         if (this.text) {
             return { title: this.text };
         } else {
-            if (this.isListOption){
+            if (this.isListOption) {
                 return {
                     title: this.content_object.getTitle()
-                }
+                };
             } else if (this.content_object instanceof ViewUser) {
                 return {
                     title: this.content_object.getShortName(),

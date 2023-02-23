@@ -1,1 +1,1 @@
-export * from './poll-candidate-list-repository.service'
+export * from './poll-candidate-list-repository.service';
