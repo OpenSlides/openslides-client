@@ -107,6 +107,7 @@
             type="button"
             data-cy="meetingListSingleEditButton"
             (click)="editSingle(meeting)"
+            *ngIf="!meeting.isArchived"
         >
             <mat-icon>edit</mat-icon>
             <span>
