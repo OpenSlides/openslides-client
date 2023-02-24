@@ -43,10 +43,6 @@
 
                 {{ meeting.name | translate }}
 
-                <div class="subtitle" *ngIf="meeting.description?.trim()">
-                    {{ meeting.description }}
-                </div>
-
                 <div class="subtitle" *ngIf="meeting.location || meeting.start_time || meeting.end_time">
                     <span *ngIf="meeting.location">{{ meeting.location }}</span>
                     <span
@@ -63,13 +59,8 @@
     </div>
 
     <div *osScrollingTableCell="'committee'; row as meeting">
-        <a
-            class="stretch-to-fill-parent"
-            [routerLink]="getCommitteeLink(meeting)"
-            *ngIf="getCommitteeLink(meeting)"
-        ></a>
         <div>
-            <os-icon-container icon="layers" *ngIf="meeting.committee?.name">
+            <os-icon-container [ngClass]="{'clickable-line': !this.isMultiSelect && meeting.committee?.canAccess()}" icon="layers" *ngIf="meeting.committee?.name" (click)="goToCommitteeForMeeting(meeting)">
                 {{ meeting.committee?.name | translate }}
             </os-icon-container>
             <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length">

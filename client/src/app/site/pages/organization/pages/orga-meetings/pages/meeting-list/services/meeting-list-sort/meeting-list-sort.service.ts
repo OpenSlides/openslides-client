@@ -15,10 +15,10 @@ export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
 
     private readonly staticSortOptions: OsSortingOption<ViewMeeting>[] = [
         { property: `name`, label: _(`Title`) },
-        { property: `start_time`, label: _(`Start time`) },
-        { property: `end_time`, label: _(`End time`) },
-        { property: `location`, label: _(`Location`) },
-        { property: `committeeName`, label: _(`Committee name`) },
+        { property: `start_time`, label: _(`Start date`) },
+        { property: `end_time`, label: _(`End date`) },
+        { property: `location`, label: _(`Event location`) },
+        { property: `committeeName`, label: _(`Committee`) },
         { property: `userAmount`, label: _(`Number of participants`) },
         { property: `motionsAmount`, label: _(`Number of motions`) }
     ];

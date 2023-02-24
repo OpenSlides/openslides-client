@@ -34,8 +34,14 @@
         </div>
 
         <!-- desc -->
-        <div>
+        <!-- <div>
             {{ description }}
+        </div> -->
+        <!-- tags -->
+        <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length">
+            <os-chip *ngFor="let tag of meeting.organization_tags" [color]="tag.color">
+                {{ tag.name }}
+            </os-chip>
         </div>
     </mat-card-content>
     <mat-card-actions class="prev-content">
