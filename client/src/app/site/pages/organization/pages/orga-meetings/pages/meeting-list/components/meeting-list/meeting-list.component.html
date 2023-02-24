@@ -33,7 +33,7 @@
     [(selectedRows)]="selectedRows"
     [vScrollFixed]="70"
 >
-    <div *osScrollingTableCell="'name'; row as meeting" [ngClass]="{'cell-slot' : true, 'cursor-default': !meeting.canAccess()}" (click)="goToMeeting(meeting)">
+    <div *osScrollingTableCell="'name'; row as meeting" [ngClass]="{'cell-slot' : true}" (click)="goToMeeting(meeting)">
         <div>
             <div class="title-line ellipsis-overflow">
                 <!-- Is Archived -->
@@ -62,11 +62,23 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'committee'; row as meeting" [ngClass]="{'cursor-default': !meeting.committee?.canAccess()}" (click)="goToCommittee(meeting)">
-        <div *ngIf="meeting.committee?.name">
-            <os-icon-container icon="layers">
+    <div *osScrollingTableCell="'committee'; row as meeting">
+        <a
+            class="stretch-to-fill-parent"
+            [routerLink]="getCommitteeLink(meeting)"
+            *ngIf="getCommitteeLink(meeting)"
+        ></a>
+        <div>
+            <os-icon-container icon="layers" *ngIf="meeting.committee?.name">
                 {{ meeting.committee?.name | translate }}
             </os-icon-container>
+            <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length">
+                <os-icon-container icon="local_offer">
+                    <os-chip *ngFor="let tag of meeting.organization_tags" [color]="tag.color">
+                        {{ tag.name }}
+                    </os-chip>
+                </os-icon-container>
+            </div>
         </div>
     </div>
 

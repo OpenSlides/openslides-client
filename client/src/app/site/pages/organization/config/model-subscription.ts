@@ -25,7 +25,8 @@ function getMeetingListFollowConfig(
         idField: idField,
         follow: [
             { idField: `group_ids`, isFullList: false },
-            { idField: `committee_id`, fieldset: `name` }
+            { idField: `committee_id`, fieldset: `name` },
+            `organization_tag_ids`
         ],
         fieldset: `list`
     };
