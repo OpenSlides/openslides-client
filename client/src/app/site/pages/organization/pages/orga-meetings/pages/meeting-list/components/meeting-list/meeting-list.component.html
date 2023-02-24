@@ -33,44 +33,40 @@
     [(selectedRows)]="selectedRows"
     [vScrollFixed]="70"
 >
-    <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot">
-        <a
-            class="stretch-to-fill-parent"
-            [routerLink]="'/' + meeting.id + ''"
-            *ngIf="!isMultiSelect && meeting.canAccess()"
-        ></a>
+    <div *osScrollingTableCell="'name'; row as meeting" [ngClass]="{'cell-slot' : true, 'cursor-default': !meeting.canAccess()}" (click)="goToMeeting(meeting)">
         <div>
             <div class="title-line ellipsis-overflow">
+                <!-- Is Archived -->
+                <span class="icon-prefix" *ngIf="meeting.isArchived">
+                    <mat-icon matTooltip="{{ 'This meeting is archived' | translate }}">archive</mat-icon>
+                </span>
+
                 {{ meeting.name | translate }}
 
-                <div class="subtitle" *ngIf="meeting.committee?.name">
-                    {{ 'Committee' | translate }}: {{ meeting.committee?.name | translate }}
+                <div class="subtitle" *ngIf="meeting.description?.trim()">
+                    {{ meeting.description }}
                 </div>
 
-                <div class="subtitle" *ngIf="meeting.location">
-                    {{ 'Location' | translate }}: {{ meeting.location | translate }}
+                <div class="subtitle" *ngIf="meeting.location || meeting.start_time || meeting.end_time">
+                    <span *ngIf="meeting.location">{{ meeting.location }}</span>
+                    <span
+                        *ngIf="meeting.location && (meeting.start_time || meeting.end_time)"
+                    >
+                        &nbsp;&middot;&nbsp;
+                    </span>
+                    <span *ngIf="meeting.start_time || meeting.end_time">
+                        <os-meeting-time [meeting]="meeting"></os-meeting-time>
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div *osScrollingTableCell="'archived'; row as meeting; config: { width: 30 }">
-        <div *ngIf="meeting.isArchived">
-            <os-icon-container iconTooltip="{{ 'This meeting is archived' | translate }}" icon="archive"></os-icon-container>
-        </div>
-    </div>
-
-    <div *osScrollingTableCell="'description'; row as meeting">
-        <div *ngIf="meeting.description?.trim()">
-            {{ meeting.description }}
-        </div>
-    </div>
-
-    <div *osScrollingTableCell="'time'; row as meeting; config: { width: 70 }" class="cell-slot">
-        <div>
-            <div class="ellipsis-overflow">
-                <os-meeting-time [meeting]="meeting" [breakLines]="true"></os-meeting-time>
-            </div>
+    <div *osScrollingTableCell="'committee'; row as meeting" [ngClass]="{'cursor-default': !meeting.committee?.canAccess()}" (click)="goToCommittee(meeting)">
+        <div *ngIf="meeting.committee?.name">
+            <os-icon-container icon="layers">
+                {{ meeting.committee?.name | translate }}
+            </os-icon-container>
         </div>
     </div>
 

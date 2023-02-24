@@ -16,7 +16,7 @@ export class OrganizationNavigationComponent {
     public menuEntries: OrgaMenuEntry[] = [
         {
             route: `/`,
-            displayName: `Calendar`,
+            displayName: `Dashboard`,
             icon: `apps`,
             weight: 100
         },

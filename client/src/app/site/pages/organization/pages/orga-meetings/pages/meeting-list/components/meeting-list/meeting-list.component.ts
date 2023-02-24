@@ -52,6 +52,18 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         this.router.navigate([`/committees`, meeting.committee_id, `meeting`, `edit`, meeting.id]);
     }
 
+    public goToMeeting(meeting: ViewMeeting): void {
+        if (!this.isMultiSelect && meeting.canAccess()) {
+            this.router.navigate([`/` + meeting.id + ``]);
+        }
+    }
+
+    public goToCommittee(meeting: ViewMeeting): void {
+        if (!this.isMultiSelect && meeting.committee?.canAccess()) {
+            this.router.navigate([`/committees`, meeting.committee_id]);
+        }
+    }
+
     public async doDelete(meeting?: ViewMeeting): Promise<void> {
         const toDelete = meeting ? [meeting] : this.selectedRows;
         const toTranslate = meeting

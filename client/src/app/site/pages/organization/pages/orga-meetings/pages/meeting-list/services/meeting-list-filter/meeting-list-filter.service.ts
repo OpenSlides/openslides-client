@@ -31,10 +31,10 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
                 property: `relatedTime`,
                 label: _(`Time`),
                 options: [
-                    { label: _(`Today`), condition: RelatedTime.Current },
-                    { label: _(`Ended`), condition: RelatedTime.Past },
-                    { label: _(`Future`), condition: RelatedTime.Future },
-                    { label: _(`Dateless`), condition: RelatedTime.Dateless }
+                    { label: _(`today`), condition: RelatedTime.Current },
+                    { label: _(`ended`), condition: RelatedTime.Past },
+                    { label: _(`future`), condition: RelatedTime.Future },
+                    { label: _(`dateless`), condition: RelatedTime.Dateless }
                 ]
             }
         ];
