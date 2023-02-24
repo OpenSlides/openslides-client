@@ -155,8 +155,8 @@ export class OrganizationMediafileListComponent
     }
 
     public getDisplayNameForPlace(place: LogoPlace): string {
-        const prefix = `Global default`;
-        return `${prefix} ${LogoDisplayNames[place]}`;
+        const prefix = `Global`;
+        return `${prefix} ${LogoDisplayNames[place].toLowerCase()}`;
     }
 
     public override selectAll(): void {

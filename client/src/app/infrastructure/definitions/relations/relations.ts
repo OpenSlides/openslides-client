@@ -442,7 +442,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMediafile,
         OField: `mediafiles`,
         MField: `meeting`,
-        isFullList: true
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
