@@ -58,18 +58,12 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         }
     }
 
-    public goToCommitteeForMeeting(meeting: ViewMeeting): void {
+    public goToCommitteeForMeeting(meeting: ViewMeeting, event: Event): void {
         if (!this.isMultiSelect && meeting.committee?.canAccess()) {
+            event.stopPropagation();
             this.router.navigate([`/committees`, meeting.committee_id]);
         }
     }
-
-    // public getCommitteeLink(meeting: ViewMeeting): string | null {
-    //     if (!this.isMultiSelect && meeting.committee?.canAccess()) {
-    //         return `/committees/` + meeting.committee_id + ``;
-    //     }
-    //     return null;
-    // }
 
     public async doDelete(meeting?: ViewMeeting): Promise<void> {
         const toDelete = meeting ? [meeting] : this.selectedRows;

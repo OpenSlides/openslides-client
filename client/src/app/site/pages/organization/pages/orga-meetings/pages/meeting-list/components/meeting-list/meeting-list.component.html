@@ -58,9 +58,9 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'committee'; row as meeting">
+    <div *osScrollingTableCell="'committee'; row as meeting" (click)="goToMeeting(meeting)">
         <div>
-            <os-icon-container [ngClass]="{'clickable-line': !this.isMultiSelect && meeting.committee?.canAccess()}" icon="layers" *ngIf="meeting.committee?.name" (click)="goToCommitteeForMeeting(meeting)">
+            <os-icon-container [ngClass]="{'clickable-line': !this.isMultiSelect && meeting.committee?.canAccess()}" icon="layers" *ngIf="meeting.committee?.name" (click)="goToCommitteeForMeeting(meeting, $event)">
                 {{ meeting.committee?.name | translate }}
             </os-icon-container>
             <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length">
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }">
+    <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }" (click)="goToMeeting(meeting)">
         <div>
             <div *ngIf="meeting.userAmount">
                 <os-icon-container iconTooltip="{{ 'Participants' | translate }}" icon="group">
