@@ -33,12 +33,17 @@
     [(selectedRows)]="selectedRows"
     [vScrollFixed]="70"
 >
-    <div *osScrollingTableCell="'name'; row as meeting" [ngClass]="{'cell-slot' : true}" (click)="goToMeeting(meeting)">
+    <div *osScrollingTableCell="'name'; row as meeting">
+        <a
+            class="stretch-to-fill-parent"
+            [routerLink]="getMeetingUrl(meeting)"
+            *ngIf="!isMultiSelect && meeting.canAccess()"
+        ></a>
         <div>
             <div class="title-line ellipsis-overflow">
                 <!-- Is Archived -->
                 <span class="icon-prefix" *ngIf="meeting.isArchived">
-                    <mat-icon matTooltip="{{ 'This meeting is archived' | translate }}">archive</mat-icon>
+                    <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
                 </span>
 
                 {{ meeting.name | translate }}
@@ -58,12 +63,28 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'committee'; row as meeting" (click)="goToMeeting(meeting)">
+    <div *osScrollingTableCell="'committee'; row as meeting">
+        <a
+            class="stretch-to-fill-parent"
+            [routerLink]="getMeetingUrl(meeting)"
+            *ngIf="!isMultiSelect && meeting.canAccess()"
+        ></a>
         <div>
-            <os-icon-container [ngClass]="{'clickable-line': !this.isMultiSelect && meeting.committee?.canAccess()}" icon="layers" *ngIf="meeting.committee?.name" (click)="goToCommitteeForMeeting(meeting, $event)">
-                {{ meeting.committee?.name | translate }}
-            </os-icon-container>
-            <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length">
+            <div class="ellipsis-overflow" style="position: relative" *ngIf="meeting.committee?.name">
+                <a
+                    class="stretch-to-fill-parent"
+                    [routerLink]="getCommitteeForMeetingUrl(meeting)"
+                    *ngIf="!this.isMultiSelect && meeting.committee?.canAccess()"
+                ></a>
+                <os-icon-container
+                    icon="layers"
+                    class="clickable-line"
+                    *ngIf="meeting.committee?.name"
+                >
+                    {{ meeting.committee?.name | translate }}
+                </os-icon-container>
+            </div>
+            <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length" (click)="goToMeeting(meeting)">
                 <os-icon-container icon="local_offer">
                     <os-chip *ngFor="let tag of meeting.organization_tags" [color]="tag.color">
                         {{ tag.name }}
@@ -73,7 +94,12 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }" (click)="goToMeeting(meeting)">
+    <div *osScrollingTableCell="'meta'; row as meeting; config: { width: 60 }">
+        <a
+            class="stretch-to-fill-parent"
+            [routerLink]="getMeetingUrl(meeting)"
+            *ngIf="!isMultiSelect && meeting.canAccess()"
+        ></a>
         <div>
             <div *ngIf="meeting.userAmount">
                 <os-icon-container iconTooltip="{{ 'Participants' | translate }}" icon="group">
