@@ -113,7 +113,7 @@ export class TopicPdfService {
                         style: `tableHeader`
                     },
                     {
-                        text: this.translate.instant(`Candidates`),
+                        text: this.translate.instant(`Options`),
                         style: `tableHeader`
                     },
                     {
