@@ -275,7 +275,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public canAccess(origin: ViewMotion | ViewMeeting): boolean {
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
-            return motion.meeting?.canAccess();
+            return motion.sequential_number && motion.meeting?.canAccess();
         }
         return origin?.canAccess();
     }

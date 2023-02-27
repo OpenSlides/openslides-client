@@ -263,8 +263,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     public override getFieldsets(): Fieldsets<Motion> {
-        const routingFields: TypedFieldset<Motion> = [`sequential_number`, `meeting_id`, `title`];
-        const titleFields: TypedFieldset<Motion> = routingFields.concat([`number`, `created`, `forwarded`]);
+        const routingFields: TypedFieldset<Motion> = [`sequential_number`, `meeting_id`];
+        const titleFields: TypedFieldset<Motion> = routingFields.concat([`title`, `number`, `created`, `forwarded`]);
         const detailFields: TypedFieldset<Motion> = titleFields.concat([
             `sort_weight`,
             `start_line_number`,
@@ -451,6 +451,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     private getCurrentMotions(motions: ViewMotion[]): ViewMotion[] {
-        return motions.filter(motion => motion.meeting_id === this.activeMeetingId && !!motion.title);
+        return motions.filter(motion => motion.meeting_id === this.activeMeetingId && !!motion.sequential_number);
     }
 }
