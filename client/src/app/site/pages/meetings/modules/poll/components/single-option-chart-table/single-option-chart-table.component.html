@@ -39,7 +39,7 @@
                             <os-icon-container *ngIf="row.value[0].icon" [icon]="row.value[0].icon" [size]="iconSize">
                                 {{ row.votingOption | pollKeyVerbose | translate }}
                             </os-icon-container>
-                            <span *ngIf="!row.value[0].icon">
+                            <span *ngIf="!row.value[0].icon" [class]="'label-' + iconSize">
                                 {{ row.votingOption | pollKeyVerbose | translate }}
                             </span>
                         </td>

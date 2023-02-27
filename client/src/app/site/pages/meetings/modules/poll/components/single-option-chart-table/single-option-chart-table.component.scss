@@ -25,6 +25,24 @@
                 text-align: right;
             }
         }
+
+        .label {
+            &-small {
+                font-size: 12px;
+            }
+
+            &-medium {
+                font-size: 14px;
+            }
+
+            &-large {
+                font-size: 16px;
+            }
+
+            &-gigantic {
+                font-size: 22px;
+            }
+        }
     }
 
     .doughnut-chart {
