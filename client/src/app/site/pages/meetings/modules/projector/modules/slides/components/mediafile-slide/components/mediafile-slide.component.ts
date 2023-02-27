@@ -12,7 +12,13 @@ import { MediafileSlideData } from '../mediafile-slide-data';
 })
 export class MediafileSlideComponent extends BaseSlideComponent<MediafileSlideData> {
     public get url(): string {
-        return this.slideMediafileService.getMediafile(this.data.data.id);
+        if (this.projector && this.projector.id) {
+            const url = this.slideMediafileService.getMediafileSync(this.projector.id, this.data.data.id);
+
+            return url?.data || ``;
+        }
+
+        return ``;
     }
 
     public get scroll(): number {

@@ -2,7 +2,7 @@
     <div *ngIf="isImage" [ngClass]="isFullscreen ? 'fullscreen' : 'nofullscreen'" [ngStyle]="{ 'background': isFullscreen ? '#000' : '#ffffff' }">
         <img [src]="url" alt="" />
     </div>
-    <div *ngIf="isPdf" class="fullscreen">
+    <div *ngIf="isPdf && url" class="fullscreen">
         <pdf-viewer
             [show-all]="false"
             [original-size]="false"
