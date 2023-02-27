@@ -922,35 +922,33 @@ export const RELATIONS: Relation[] = [
         AField: `poll`,
         BField: `global_option`
     }),
-    ...([
-        // ViewOption -> ViewUser, ViewPollCandidateList
-        {
-            ownViewModels: [ViewOption],
-            foreignViewModelPossibilities: [ViewUser, ViewPollCandidateList],
-            ownField: `content_object`,
-            many: false,
-            generic: true,
-            structured: false
-        },
-        // ViewUser -> ViewOption
-        {
-            ownViewModels: [ViewUser],
-            foreignViewModel: [ViewOption],
-            ownField: `options`,
-            many: true,
-            generic: false,
-            structured: false
-        },
-        // ViewPollCandidateList -> ViewUser
-        {
-            ownViewModels: [ViewPollCandidateList],
-            foreignViewModel: [ViewOption],
-            ownField: `option`,
-            many: false,
-            generic: false,
-            structured: false
-        }
-    ] as Relation[]),
+    // ViewOption -> ViewUser, ViewPollCandidateList
+    {
+        ownViewModels: [ViewOption],
+        foreignViewModelPossibilities: [ViewUser, ViewPollCandidateList],
+        ownField: `content_object`,
+        many: false,
+        generic: true,
+        structured: false
+    },
+    // ViewUser -> ViewOption
+    {
+        ownViewModels: [ViewUser],
+        foreignViewModel: ViewOption,
+        ownField: `options`,
+        many: true,
+        generic: false,
+        structured: false
+    },
+    // ViewPollCandidateList -> ViewUser
+    {
+        ownViewModels: [ViewPollCandidateList],
+        foreignViewModel: ViewOption,
+        ownField: `option`,
+        many: false,
+        generic: false,
+        structured: false
+    },
     ...makeM2O({
         MViewModel: ViewVote,
         OViewModel: ViewOption,
