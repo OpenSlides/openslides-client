@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
@@ -28,6 +28,7 @@ export class VotingBannerService {
     private subText = _(`Click here to vote!`);
 
     private pollsToVote: ViewPoll[] = [];
+    private pollsToVoteSubscriptions: Subscription[] = [];
 
     public constructor(
         pollRepo: PollControllerService,
@@ -54,6 +55,14 @@ export class VotingBannerService {
         await this.sendVotesService.updateHasVotedOnPoll(...polls);
         // display no banner if in history mode or there are no polls to vote
         this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
+
+        this.pollsToVoteSubscriptions.forEach((subscription) => subscription.unsubscribe());
+        this.pollsToVoteSubscriptions = this.pollsToVote.map(poll => poll.hasVotedObservable.subscribe(hasVoted => {
+            if (hasVoted) {
+                this.checkForVotablePolls(polls);
+            }
+        }));
+
         if ((this.historyService.isInHistoryMode() && this.currentBanner) || !this.pollsToVote.length) {
             this.sliceBanner();
             return;
