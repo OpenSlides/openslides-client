@@ -18,13 +18,13 @@
                         </td>
                         <td>
                             <div class="result-cell-definition">
-                                <span *ngIf="row.value[0].showPercent">
+                                <span *ngIf="row.value[0].showPercent" [class]="'text-' + iconSize">
                                     {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
                                 </span>
                             </div>
                         </td>
                         <td>
-                            <div class="result-cell-definition">
+                            <div class="result-cell-definition" [class]="'text-' + iconSize">
                                 <span>
                                     {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
                                 </span>
@@ -39,20 +39,20 @@
                             <os-icon-container *ngIf="row.value[0].icon" [icon]="row.value[0].icon" [size]="iconSize">
                                 {{ row.votingOption | pollKeyVerbose | translate }}
                             </os-icon-container>
-                            <span *ngIf="!row.value[0].icon" [class]="'label-' + iconSize">
+                            <span *ngIf="!row.value[0].icon" [class]="'text-' + iconSize">
                                 {{ row.votingOption | pollKeyVerbose | translate }}
                             </span>
                         </td>
 
                         <!-- Percent numbers -->
                         <td class="result-cell-definition">
-                            <span *ngIf="row.value[0].showPercent">
+                            <span *ngIf="row.value[0].showPercent" [class]="'text-' + iconSize">
                                 {{ row.value[0].amount! | pollPercentBase: poll }}
                             </span>
                         </td>
 
                         <!-- Voices -->
-                        <td class="result-cell-definition">
+                        <td class="result-cell-definition" [class]="'text-' + iconSize">
                             {{ row.value[0].amount | pollParseNumber }}
                         </td>
                     </tr>
