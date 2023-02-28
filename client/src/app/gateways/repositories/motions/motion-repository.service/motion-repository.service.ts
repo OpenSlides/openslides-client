@@ -451,6 +451,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     private getCurrentMotions(motions: ViewMotion[]): ViewMotion[] {
-        return motions.filter(motion => motion.meeting_id === this.activeMeetingId);
+        return motions.filter(motion => motion.meeting_id === this.activeMeetingId && !!motion.sequential_number);
     }
 }
