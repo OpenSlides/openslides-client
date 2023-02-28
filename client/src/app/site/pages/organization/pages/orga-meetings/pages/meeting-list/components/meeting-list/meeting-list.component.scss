@@ -1,3 +1,7 @@
-#a:hover + #b {
+.committee-link {
+    z-index: 1;
+}
+
+.committee-link:hover + .committee {
     text-decoration: underline;
 }

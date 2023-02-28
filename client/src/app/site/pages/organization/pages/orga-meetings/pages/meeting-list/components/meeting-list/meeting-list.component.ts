@@ -52,24 +52,11 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         this.router.navigate([`/committees`, meeting.committee_id, `meeting`, `edit`, meeting.id]);
     }
 
-    public goToMeeting(meeting: ViewMeeting): void {
-        if (!this.isMultiSelect && meeting.canAccess()) {
-            this.router.navigate([`/` + meeting.id + ``]);
-        }
-    }
-
-    public getMeetingUrl(meeting: ViewMeeting): string {
+    public getMeetingUrl(meeting: ViewMeeting): string | null {
         return `/` + meeting.id + ``;
     }
 
-    public goToCommitteeForMeeting(meeting: ViewMeeting, event: Event): void {
-        if (!this.isMultiSelect && meeting.committee?.canAccess()) {
-            event.stopPropagation();
-            this.router.navigate([`/committees`, meeting.committee_id]);
-        }
-    }
-
-    public getCommitteeForMeetingUrl(meeting: ViewMeeting): string {
+    public getCommitteeForMeetingUrl(meeting: ViewMeeting): string | null {
         return `/committees/` + meeting.committee_id + ``;
     }
 

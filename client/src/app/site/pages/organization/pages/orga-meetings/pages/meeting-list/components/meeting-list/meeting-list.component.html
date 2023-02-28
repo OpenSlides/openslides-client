@@ -67,15 +67,13 @@
         <div>
             <div class="ellipsis-overflow" style="position: relative" *ngIf="meeting.committee?.name">
                 <a
-                    class="stretch-to-fill-parent"
-                    style="z-index: 1"
-                    id="a"
+                    class="stretch-to-fill-parent committee-link"
                     [routerLink]="getCommitteeForMeetingUrl(meeting)"
                     *ngIf="!this.isMultiSelect && meeting.committee?.canAccess()"
                 ></a>
                 <os-icon-container
                     icon="layers"
-                    id="b"
+                    class="committee"
                     *ngIf="meeting.committee?.name"
                 >
                     {{ meeting.committee?.name | translate }}
