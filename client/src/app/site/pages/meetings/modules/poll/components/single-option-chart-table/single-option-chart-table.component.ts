@@ -86,7 +86,7 @@ export class SingleOptionChartTableComponent {
     }
 
     public get textSizeClass(): string {
-        return 'text-' + this.iconSize;
+        return `text-` + this.iconSize;
     }
 
     public get shouldShowChart(): boolean {
