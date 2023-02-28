@@ -64,27 +64,24 @@
     </div>
 
     <div *osScrollingTableCell="'committee'; row as meeting">
-        <a
-            class="stretch-to-fill-parent"
-            [routerLink]="getMeetingUrl(meeting)"
-            *ngIf="!isMultiSelect && meeting.canAccess()"
-        ></a>
         <div>
             <div class="ellipsis-overflow" style="position: relative" *ngIf="meeting.committee?.name">
                 <a
                     class="stretch-to-fill-parent"
+                    style="z-index: 1"
+                    id="a"
                     [routerLink]="getCommitteeForMeetingUrl(meeting)"
                     *ngIf="!this.isMultiSelect && meeting.committee?.canAccess()"
                 ></a>
                 <os-icon-container
                     icon="layers"
-                    class="clickable-line"
+                    id="b"
                     *ngIf="meeting.committee?.name"
                 >
                     {{ meeting.committee?.name | translate }}
                 </os-icon-container>
             </div>
-            <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length" (click)="goToMeeting(meeting)">
+            <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length">
                 <os-icon-container icon="local_offer">
                     <os-chip *ngFor="let tag of meeting.organization_tags" [color]="tag.color">
                         {{ tag.name }}
