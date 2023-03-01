@@ -3,9 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { HttpService } from 'src/app/gateways/http.service';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -77,7 +75,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
             if (!this._subscribedPolls.has(poll.id)) {
                 this._subscribedPolls.set(poll.id, {
                     users: userIds,
-                    current: new BehaviorSubject([])
+                    current: new BehaviorSubject(undefined)
                 });
                 this.updateSubscription();
             }
@@ -108,7 +106,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
         for (let pollId of Object.keys(results)) {
             const subscription = this._subscribedPolls.get(+pollId);
-            subscription.current.next(results[pollId])
+            subscription.current.next(results[pollId]);
             if (subscription.users.equals(results[pollId])) {
                 subscription.current.unsubscribe();
                 this._subscribedPolls.delete(+pollId);

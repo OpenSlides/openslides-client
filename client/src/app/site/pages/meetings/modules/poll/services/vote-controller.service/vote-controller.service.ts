@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -21,11 +21,12 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         super(controllerServiceCollector, Vote, repo);
     }
 
-    public subscribeVoted(...viewPolls: ViewPoll[]): BehaviorSubject<Id[]>[] {
-        const subscriptions: BehaviorSubject<Id[]>[] = [];
+    public subscribeVoted(...viewPolls: ViewPoll[]): { [key: Id]: BehaviorSubject<Id[]> } {
+        const subscriptions: { [key: Id]: BehaviorSubject<Id[]> } = {};
         for (const poll of viewPolls) {
-            subscriptions.push(this.repo.subscribeVoted(poll));
+            subscriptions[poll.id] = this.repo.subscribeVoted(poll);
         }
+        console.debug(subscriptions, viewPolls);
 
         return subscriptions;
     }

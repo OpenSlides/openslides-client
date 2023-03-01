@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
@@ -28,7 +29,7 @@ export class VotingBannerService {
     private subText = _(`Click here to vote!`);
 
     private pollsToVote: ViewPoll[] = [];
-    private pollsToVoteSubscription: Subscription | null;
+    private pollsToVoteSubscriptions: { [key: Id]: Subscription } = {};
 
     public constructor(
         pollRepo: PollControllerService,
@@ -44,41 +45,38 @@ export class VotingBannerService {
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
             pollRepo.getViewModelListObservable().pipe(
                 distinctUntilChanged((previous, current) => {
-                    const prevStarted = previous.filter(poll => poll.isStarted);
-                    const currStarted = current.filter(poll => poll.isStarted);
+                    const prevStarted = previous.filter(poll => poll.isStarted).map(p => p.id);
+                    const currStarted = current.filter(poll => poll.isStarted).map(p => p.id);
 
-                    return (
-                        prevStarted.length === currStarted.length &&
-                        currStarted.every((poll: ViewPoll, idx: number) => poll.hasVoted === prevStarted[idx].hasVoted)
-                    );
+                    return prevStarted.length === currStarted.length && currStarted.equals(prevStarted);
                 })
             )
-        ]).subscribe(([meetingId, polls]) => this.checkForVotablePolls(polls));
+        ]).subscribe(([_, polls]) => this.updateVotablePollSubscription(polls));
     }
 
-    /**
-     * checks all polls for votable ones and displays a banner for them
-     * @param polls the updated poll list
-     */
-    private async checkForVotablePolls(polls: ViewPoll[]): Promise<void> {
-        // refresh the voting info on all polls. This is a single request to the vote service
-        // await this.sendVotesService.updateHasVotedOnPoll(...polls);
-
-        if (this.pollsToVoteSubscription) {
-            this.pollsToVoteSubscription.unsubscribe();
-        }
-        const bs = this.sendVotesService.subscribeVoted(...polls)
-        console.debug(bs);
-
-        this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
-
-        this.pollsToVoteSubscription = combineLatest(
-            this.pollsToVote.map(poll => poll.hasVotedObservable.pipe(distinctUntilChanged()))
-        ).subscribe(hasVoted => {
-            if (hasVoted.some(val => val)) {
-                this.checkForVotablePolls(polls);
+    private async updateVotablePollSubscription(polls: ViewPoll[]): Promise<void> {
+        const votedBss = this.sendVotesService.subscribeVoted(...polls);
+        for (const pollId of new Set([...Object.keys(votedBss), ...Object.keys(this.pollsToVoteSubscriptions)])) {
+            if (this.pollsToVoteSubscriptions[pollId]) {
+                this.pollsToVoteSubscriptions[pollId].unsubscribe();
             }
-        });
+
+            if (!votedBss[pollId]) {
+                continue;
+            }
+
+            this.pollsToVoteSubscriptions[pollId] = votedBss[pollId]
+                .pipe(distinctUntilChanged())
+                .subscribe((voted: Id[] | null | undefined) => {
+                    if (voted !== undefined) {
+                        this.updateBanner(polls);
+                    }
+                });
+        }
+    }
+
+    private updateBanner(polls: ViewPoll[]) {
+        this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
 
         // display no banner if in history mode or there are no polls to vote
         if ((this.historyService.isInHistoryMode() && this.currentBanner) || !this.pollsToVote.length) {
