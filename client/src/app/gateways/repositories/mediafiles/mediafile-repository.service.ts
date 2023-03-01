@@ -116,4 +116,13 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     private getOwnerId(): string {
         return this.activeMeetingId ? `meeting/${this.activeMeetingId}` : `organization/${ORGANIZATION_ID}`;
     }
+
+    /**
+     * Adds the a meeting id function to the view mediafile.
+     */
+    protected override createViewModel(model: Mediafile): ViewMediafile {
+        const viewModel = super.createViewModel(model);
+        viewModel.getEnsuredActiveMeetingId = () => this.activeMeetingIdService.meetingId;
+        return viewModel;
+    }
 }
