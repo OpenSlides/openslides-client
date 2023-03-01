@@ -29,7 +29,7 @@ export class VotingBannerService {
     private subText = _(`Click here to vote!`);
 
     private pollsToVote: ViewPoll[] = [];
-    private pollsToVoteSubscriptions: { [key: Id]: Subscription } = {};
+    private pollsToVoteSubscription: Subscription;
 
     public constructor(
         pollRepo: PollControllerService,
@@ -55,24 +55,10 @@ export class VotingBannerService {
     }
 
     private async updateVotablePollSubscription(polls: ViewPoll[]): Promise<void> {
-        const votedBss = this.sendVotesService.subscribeVoted(...polls);
-        for (const pollId of new Set([...Object.keys(votedBss), ...Object.keys(this.pollsToVoteSubscriptions)])) {
-            if (this.pollsToVoteSubscriptions[pollId]) {
-                this.pollsToVoteSubscriptions[pollId].unsubscribe();
-            }
-
-            if (!votedBss[pollId]) {
-                continue;
-            }
-
-            this.pollsToVoteSubscriptions[pollId] = votedBss[pollId]
-                .pipe(distinctUntilChanged())
-                .subscribe((voted: Id[] | null | undefined) => {
-                    if (voted !== undefined) {
-                        this.updateBanner(polls);
-                    }
-                });
-        }
+        this.pollsToVoteSubscription?.unsubscribe();
+        this.pollsToVoteSubscription = this.sendVotesService.subscribeVoted(...polls).subscribe(() => {
+            this.updateBanner(polls);
+        });
     }
 
     private updateBanner(polls: ViewPoll[]) {

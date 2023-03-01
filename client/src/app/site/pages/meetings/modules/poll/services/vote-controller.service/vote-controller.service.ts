@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -13,6 +13,8 @@ import { ViewPoll, ViewVote } from '../../../../pages/polls';
     providedIn: `root`
 })
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {
+    private pollSubscriptions: { [key: Id]: Subscription } = {};
+
     constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: VoteRepositoryService,
@@ -21,35 +23,34 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         super(controllerServiceCollector, Vote, repo);
     }
 
-    public subscribeVoted(...viewPolls: ViewPoll[]): { [key: Id]: BehaviorSubject<Id[]> } {
-        const subscriptions: { [key: Id]: BehaviorSubject<Id[]> } = {};
-        for (const poll of viewPolls) {
-            subscriptions[poll.id] = this.repo.subscribeVoted(poll);
-        }
-        console.debug(subscriptions, viewPolls);
+    public subscribeVoted(...viewPolls: ViewPoll[]): Observable<{ [key: Id]: Id[] }> {
+        return new Observable<{ [key: Id]: Id[] }>((subscriber) => {
+            const current = {};
+            // const subscriptions: { [key: Id]: BehaviorSubject<Id[]> } = {};
+            for (let poll of viewPolls) {
+                const subscription = this.repo.subscribeVoted(poll);
 
-        return subscriptions;
-    }
+                if (this.pollSubscriptions[poll.id] || !subscription) {
+                    continue;
+                }
 
-    public async updateHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
-        // const pollIds: Id[] = viewPolls.filter(poll => poll.isStarted).map(poll => poll.id);
-        // await this.repo.updateHasVotedFor(...pollIds);
-        // await this.setHasVotedOnPoll(...viewPolls);
-    }
-
-    public async setHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
-        /*
-        const pollIds: Id[] = viewPolls.filter(poll => poll.isStarted).map(poll => poll.id);
-        const voteResp = await this.repo.hasVotedFor(...pollIds);
-
-        await this.operator.ready;
-        if (voteResp) {
-            for (const poll of viewPolls) {
-                poll.hasVoted = voteResp[poll.id]?.some(id => id === this.operator.operatorId) ?? false;
-                poll.user_has_voted_for_delegations =
-                    voteResp[poll.id]?.filter(id => id !== this.operator.operatorId) ?? [];
+                this.pollSubscriptions[poll.id] = subscription
+                    .pipe(distinctUntilChanged())
+                    .subscribe(async (voted: Id[] | null | undefined) => {
+                        if (voted !== undefined) {
+                            await this.setHasVotedOnPoll(poll, voted);
+                            current[poll.id] = voted;
+                            subscriber.next(current);
+                        }
+                    });
             }
-        }
-        */
+        });
+    }
+
+    public async setHasVotedOnPoll(poll: ViewPoll, voteResp: Id[]): Promise<void> {
+        await this.operator.ready;
+        poll.hasVoted = voteResp?.some(id => id === this.operator.operatorId) ?? false;
+        poll.user_has_voted_for_delegations =
+            voteResp?.filter(id => id !== this.operator.operatorId) ?? [];
     }
 }

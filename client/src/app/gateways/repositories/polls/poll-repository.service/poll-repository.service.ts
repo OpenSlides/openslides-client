@@ -354,7 +354,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     protected override createViewModel(model: Poll): ViewPoll {
         const viewPoll = super.createViewModel(model);
 
-        this.voteController.setHasVotedOnPoll(viewPoll).then(() => {});
+        this.voteController.subscribeVoted(viewPoll);
 
         return viewPoll;
     }

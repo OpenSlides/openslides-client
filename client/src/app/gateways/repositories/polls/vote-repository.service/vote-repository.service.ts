@@ -22,6 +22,7 @@ export interface HasVotedResponse {
 }
 
 export interface PollSubscription {
+    poll: ViewPoll;
     users: Id[];
     current: BehaviorSubject<Id[]>;
 }
@@ -74,6 +75,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         if (poll.isStarted) {
             if (!this._subscribedPolls.has(poll.id)) {
                 this._subscribedPolls.set(poll.id, {
+                    poll,
                     users: userIds,
                     current: new BehaviorSubject(undefined)
                 });
@@ -89,6 +91,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     private updateSubscription(): void {
         clearTimeout(this._fetchVotablePollsTimeout);
         this._fetchVotablePollsTimeout = setTimeout(() => {
+            this.requestHasVoted();
             clearInterval(this._fetchVotablePollsInterval);
             this._fetchVotablePollsInterval = setInterval(() => {
                 this.requestHasVoted();
@@ -107,7 +110,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         for (let pollId of Object.keys(results)) {
             const subscription = this._subscribedPolls.get(+pollId);
             subscription.current.next(results[pollId]);
-            if (subscription.users.equals(results[pollId])) {
+            if (results[pollId] && subscription.users.equals(results[pollId])) {
                 subscription.current.unsubscribe();
                 this._subscribedPolls.delete(+pollId);
             }
