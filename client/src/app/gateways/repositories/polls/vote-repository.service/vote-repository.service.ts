@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { HttpService } from 'src/app/gateways/http.service';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -21,19 +23,24 @@ export interface HasVotedResponse {
     [key: string]: Id[];
 }
 
+export interface PollSubscription {
+    users: Id[];
+    current: BehaviorSubject<Id[]>;
+}
+
 @Injectable({
     providedIn: `root`
 })
 export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
-    private _subscribedPolls: Map<Id, Deferred> = new Map();
+    private _subscribedPolls: Map<Id, PollSubscription> = new Map();
 
-    // Old
-    private _hasVotedCache: HasVotedResponse = {};
-    private _nextRequestIds: Set<Id> = new Set<Id>();
-    private _requestHasVotedPromise: Deferred<void>;
+    // Interval for workaround until long polling implemented
+    private _fetchVotablePollsInterval = null;
+    private _fetchVotablePollsTimeout = null;
 
     public constructor(
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
+        private operator: OperatorService,
         private http: HttpService
     ) {
         super(repositoryServiceCollector, Vote);
@@ -55,84 +62,57 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     }
 
     /**
-     * This method subscribes to polls and waits 
+     * This method subscribes to polls and waits until the poll got
+     * voted for or the poll finished
      *
      * @param poll The poll that should be subscribed
+     * @return the ViewPoll
      */
-    public async waitUntilVoted(poll: ViewPoll): Promise<ViewPoll> {
+    public subscribeVoted(poll: ViewPoll, userIds?: number[]): BehaviorSubject<Id[]> | null {
+        if (!userIds || !userIds.length) {
+            userIds = [this.operator.operatorId];
+        }
+
         if (poll.isStarted) {
             if (!this._subscribedPolls.has(poll.id)) {
-                this._subscribedPolls.set(poll.id, new Deferred());
-                this.restartSubscription();
+                this._subscribedPolls.set(poll.id, {
+                    users: userIds,
+                    current: new BehaviorSubject([])
+                });
+                this.updateSubscription();
             }
-
-            await this._subscribedPolls[poll.id];
-        }
-
-        return poll;
-    }
-
-    public async updateHasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
-        if (!ids.length) {
-            return undefined;
-        }
-
-        for (let id of ids) {
-            this._nextRequestIds.add(id);
-        }
-
-        await this.requestHasVoted();
-        return this.getIdsFromCache(ids);
-    }
-
-    public async hasVotedFor(...ids: Id[]): Promise<HasVotedResponse | undefined> {
-        if (!ids.length) {
-            return undefined;
-        }
-
-        const result = this.getIdsFromCache(ids);
-        if (ids.every(id => result[id] !== undefined)) {
-            return result;
         } else {
-            for (let id of ids) {
-                this._nextRequestIds.add(id);
-            }
-
-            await this.requestHasVoted();
+            return null;
         }
 
-        return this.getIdsFromCache(ids);
+        return this._subscribedPolls.get(poll.id).current;
     }
 
-    private restartSubscription(): void {
-        // TODO
+    private updateSubscription(): void {
+        clearTimeout(this._fetchVotablePollsTimeout);
+        this._fetchVotablePollsTimeout = setTimeout(() => {
+            clearInterval(this._fetchVotablePollsInterval);
+            this._fetchVotablePollsInterval = setInterval(() => {
+                this.requestHasVoted();
+            }, 8000 + Math.random() * 2000);
+        }, 500);
     }
 
-    private requestHasVoted(): Deferred<void> {
-        if (this._requestHasVotedPromise) {
-            return this._requestHasVotedPromise;
+    private async requestHasVoted(): Promise<void> {
+        const ids = Array.from(this._subscribedPolls.keys());
+
+        if (!this.activeMeetingId || !ids.length) {
+            return;
         }
 
-        const def = new Deferred();
-        this._requestHasVotedPromise = def;
-        setTimeout(async () => {
-            this._requestHasVotedPromise = null;
-            const ids = Array.from(this._nextRequestIds);
-            this._nextRequestIds.clear();
-
-            if (this.activeMeetingId) {
-                let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
-                for (let id in results) {
-                    this._hasVotedCache[id] = results[id];
-                }
-                def.resolve();
+        let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
+        for (let pollId of Object.keys(results)) {
+            const subscription = this._subscribedPolls.get(+pollId);
+            subscription.current.next(results[pollId])
+            if (subscription.users.equals(results[pollId])) {
+                subscription.current.unsubscribe();
+                this._subscribedPolls.delete(+pollId);
             }
-        }, 50);
-
-        return this._requestHasVotedPromise;
-    }
-
-    private getIdsFromCache(ids: Id[]): HasVotedResponse {
-        return Object.fromEntries(Object.entries(this._hasVotedCache).filter(entry => ids.includes(+entry[0])));
+        }
     }
 }

@@ -28,7 +28,7 @@ export class VotingBannerService {
     private subText = _(`Click here to vote!`);
 
     private pollsToVote: ViewPoll[] = [];
-    private pollsToVoteSubscription: Subscription;
+    private pollsToVoteSubscription: Subscription | null;
 
     public constructor(
         pollRepo: PollControllerService,
@@ -62,13 +62,16 @@ export class VotingBannerService {
      */
     private async checkForVotablePolls(polls: ViewPoll[]): Promise<void> {
         // refresh the voting info on all polls. This is a single request to the vote service
-        await this.sendVotesService.updateHasVotedOnPoll(...polls);
-
-        this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
+        // await this.sendVotesService.updateHasVotedOnPoll(...polls);
 
         if (this.pollsToVoteSubscription) {
             this.pollsToVoteSubscription.unsubscribe();
         }
+        const bs = this.sendVotesService.subscribeVoted(...polls)
+        console.debug(bs);
+
+        this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
+
         this.pollsToVoteSubscription = combineLatest(
             this.pollsToVote.map(poll => poll.hasVotedObservable.pipe(distinctUntilChanged()))
         ).subscribe(hasVoted => {

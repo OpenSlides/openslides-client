@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -20,13 +21,23 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         super(controllerServiceCollector, Vote, repo);
     }
 
+    public subscribeVoted(...viewPolls: ViewPoll[]): BehaviorSubject<Id[]>[] {
+        const subscriptions: BehaviorSubject<Id[]>[] = [];
+        for (const poll of viewPolls) {
+            subscriptions.push(this.repo.subscribeVoted(poll));
+        }
+
+        return subscriptions;
+    }
+
     public async updateHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
-        const pollIds: Id[] = viewPolls.filter(poll => poll.isStarted).map(poll => poll.id);
-        await this.repo.updateHasVotedFor(...pollIds);
-        await this.setHasVotedOnPoll(...viewPolls);
+        // const pollIds: Id[] = viewPolls.filter(poll => poll.isStarted).map(poll => poll.id);
+        // await this.repo.updateHasVotedFor(...pollIds);
+        // await this.setHasVotedOnPoll(...viewPolls);
     }
 
     public async setHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
+        /*
         const pollIds: Id[] = viewPolls.filter(poll => poll.isStarted).map(poll => poll.id);
         const voteResp = await this.repo.hasVotedFor(...pollIds);
 
@@ -38,5 +49,6 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
                     voteResp[poll.id]?.filter(id => id !== this.operator.operatorId) ?? [];
             }
         }
+        */
     }
 }
