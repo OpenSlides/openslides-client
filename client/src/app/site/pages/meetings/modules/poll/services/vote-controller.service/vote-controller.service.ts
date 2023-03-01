@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -24,7 +24,7 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
     }
 
     public subscribeVoted(...viewPolls: ViewPoll[]): Observable<{ [key: Id]: Id[] }> {
-        return new Observable<{ [key: Id]: Id[] }>((subscriber) => {
+        return new Observable<{ [key: Id]: Id[] }>(subscriber => {
             const current = {};
             // const subscriptions: { [key: Id]: BehaviorSubject<Id[]> } = {};
             for (let poll of viewPolls) {
@@ -50,7 +50,6 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
     public async setHasVotedOnPoll(poll: ViewPoll, voteResp: Id[]): Promise<void> {
         await this.operator.ready;
         poll.hasVoted = voteResp?.some(id => id === this.operator.operatorId) ?? false;
-        poll.user_has_voted_for_delegations =
-            voteResp?.filter(id => id !== this.operator.operatorId) ?? [];
+        poll.user_has_voted_for_delegations = voteResp?.filter(id => id !== this.operator.operatorId) ?? [];
     }
 }
