@@ -82,9 +82,8 @@
                 ({{ tableData[0].votingOptionSubtitle }})
             </span>
         </h3>
-        <ng-container [ngTemplateOutlet]="showListForRow" [ngTemplateOutletContext]="{ row: tableData[0] }"></ng-container>
         <h3 class="result-title" *ngIf="tableData[0].class === 'list'">
-            {{ 'Results' | translate }}
+            {{ 'Nomination' | translate }}
         </h3>
 
         <ng-container *ngIf="hasResults && canSeeResults">

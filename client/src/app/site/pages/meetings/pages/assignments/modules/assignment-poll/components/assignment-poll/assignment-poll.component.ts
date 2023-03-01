@@ -60,7 +60,7 @@ export class AssignmentPollComponent extends BasePollComponent implements OnInit
     }
 
     public get showCandidatesInMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && !this.votingService.canVote(this.poll);
+        return (!this.poll.stateHasVotes && !this.votingService.canVote(this.poll)) || this.poll.isListPoll;
     }
 
     public constructor(

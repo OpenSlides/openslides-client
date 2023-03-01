@@ -468,24 +468,40 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
         this.globalAbstainControl.enable(suppressEvent);
     }
 
+    /**
+     * Function for disabling and emptying the global option form constrols.
+     *
+     * The controls that should be disabled can be specified via the parameters.
+     * If no target controls are specified all three global options will be disabled.
+     */
+    private disableGlobalVoteControls(...toDisable: (`Yes` | `No` | `Abstain`)[]): void {
+        const suppressEvent = {
+            emitEvent: false
+        };
+        toDisable = toDisable.length ? toDisable : [`Yes`, `No`, `Abstain`];
+        toDisable.forEach(name => {
+            const control = this[`global${name}Control`];
+            control.disable(suppressEvent);
+            control.setValue(false, suppressEvent);
+        });
+    }
+
     private updateGlobalVoteControls(data: Partial<ViewPoll>): void {
         const pollMethod = data.pollmethod;
         if (pollMethod) {
-            const suppressEvent = {
-                emitEvent: false
-            };
+            if (this.isList) {
+                this.disableGlobalVoteControls();
+                return;
+            }
             this.enableGlobalVoteControls();
             if (pollMethod.includes(FormPollMethod.Y)) {
-                this.globalYesControl.disable(suppressEvent);
-                this.globalYesControl.setValue(false, suppressEvent);
+                this.disableGlobalVoteControls(`Yes`);
             }
             if (pollMethod.includes(FormPollMethod.N)) {
-                this.globalNoControl.disable(suppressEvent);
-                this.globalNoControl.setValue(false, suppressEvent);
+                this.disableGlobalVoteControls(`No`);
             }
             if (pollMethod.includes(`A`)) {
-                this.globalAbstainControl.disable(suppressEvent);
-                this.globalAbstainControl.setValue(false, suppressEvent);
+                this.disableGlobalVoteControls(`Abstain`);
             }
         }
     }

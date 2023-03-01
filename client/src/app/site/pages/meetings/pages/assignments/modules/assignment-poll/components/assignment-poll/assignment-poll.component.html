@@ -28,10 +28,6 @@
                 <span>
                     {{ poll.stateVerbose | translate }}
                 </span>
-                <ng-container *ngIf="poll.isListPoll">
-                    &nbsp;&middot;&nbsp;
-                    <span translate>List election</span>
-                </ng-container>
             </div>
 
             <!-- Menu -->
@@ -89,7 +85,9 @@
         <os-assignment-poll-meta-info
             [poll]="poll"
             [showCandidates]="showCandidatesInMetaInfo"
-            *ngIf="showMetaInfo"
+            [showStats]="showMetaInfo"
+            [shortenList]="poll.isListPoll && !poll.canBeVotedFor()"
+            *ngIf="showMetaInfo || poll.isListPoll"
         ></os-assignment-poll-meta-info>
     </div>
 </mat-card>

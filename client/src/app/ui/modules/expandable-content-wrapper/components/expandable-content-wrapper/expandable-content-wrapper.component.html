@@ -1,0 +1,17 @@
+<div class="expandable-content-wrapper">
+    <div
+        #contentBox
+        osResized
+        class="content"
+        (osResizedHeight)="onResizedHeight($event)"
+        [ngClass]="!isExpanded && !disableExpandControl ? 'collapsed collapsed-card-content' : ''"
+    >
+        <ng-content></ng-content>
+    </div>
+    <!-- Expanding control -->
+    <div class="small show-entire-text" *ngIf="canExpand && !disableExpandControl">
+        <a (click)="toggleExpansion()">
+            {{ isExpanded ? ('Hide more text' | translate) : ('Show full text' | translate) }}
+        </a>
+    </div>
+</div>

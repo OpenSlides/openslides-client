@@ -19,6 +19,12 @@ export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComp
     @Input()
     public showCandidates = true;
 
+    @Input()
+    public showStats = true;
+
+    @Input()
+    public shortenList = false;
+
     private get assignment(): ViewAssignment {
         return this.poll.content_object;
     }
