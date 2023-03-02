@@ -33,6 +33,10 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     }
 
     public get hasVoted(): boolean {
+        if (this._hasVotedSubject.value === undefined) {
+            throw "hasVoted not retrieved for this object";
+        }
+
         return this._hasVotedSubject.value;
     }
 
@@ -96,7 +100,7 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.results.flatMap(option => option.votes).some(vote => vote.weight > 0);
     }
 
-    public get hasVotedObservable(): Observable<boolean> {
+    public get hasVotedObservable(): Observable<boolean | undefined> {
         return this._hasVotedSubject.asObservable();
     }
 
@@ -123,7 +127,7 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return (this.options || []).concat(this.global_option).filter(option => !!option);
     }
 
-    private readonly _hasVotedSubject = new BehaviorSubject(false);
+    private readonly _hasVotedSubject = new BehaviorSubject(undefined);
 }
 
 interface IPollRelations<C extends BaseViewModel<BaseModel> = any> {

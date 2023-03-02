@@ -21,10 +21,15 @@ export interface HasVotedResponse {
     [key: string]: Id[];
 }
 
-export interface PollSubscription {
+interface PollSubscription {
     poll: ViewPoll;
     users: Id[];
     current: BehaviorSubject<Id[]>;
+}
+
+export interface VotePayload {
+    user_id: Id;
+    value: any;
 }
 
 @Injectable({
@@ -56,7 +61,12 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         };
     }
 
-    public async sendVote(pollId: Id, payload: any): Promise<void> {
+    public async sendVote(pollId: Id, payload: VotePayload): Promise<void> {
+        const subject = this._subscribedPolls.get(pollId)?.current;
+        if (subject) {
+            subject.next(subject.value ? subject.value.concat([payload.user_id]) : [payload.user_id]);
+        }
+
         return await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
     }
 
@@ -88,19 +98,36 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         return this._subscribedPolls.get(poll.id).current;
     }
 
+    public updateStartedPolls(polls: Id[]): void {
+        for (const id of this._subscribedPolls.keys()) {
+            if (polls.indexOf(id) === -1) {
+                this._subscribedPolls.get(id).current.unsubscribe();
+                this._subscribedPolls.delete(id);
+            }
+        }
+    }
+
     private updateSubscription(): void {
         clearTimeout(this._fetchVotablePollsTimeout);
         this._fetchVotablePollsTimeout = setTimeout(() => {
             this.requestHasVoted();
             clearInterval(this._fetchVotablePollsInterval);
             this._fetchVotablePollsInterval = setInterval(() => {
-                this.requestHasVoted();
+                if (this._subscribedPolls.size) {
+                    this.requestHasVoted();
+                } else {
+                    clearInterval(this._fetchVotablePollsInterval);
+                }
             }, 8000 + Math.random() * 2000);
         }, 500);
     }
 
     private async requestHasVoted(): Promise<void> {
-        const ids = Array.from(this._subscribedPolls.keys());
+        const ids = Array.from(this._subscribedPolls.keys()).filter(
+            id =>
+                !this._subscribedPolls.get(id).current.value ||
+                !this._subscribedPolls.get(id).users.equals(this._subscribedPolls.get(id).current.value)
+        );
 
         if (!this.activeMeetingId || !ids.length) {
             return;
@@ -110,10 +137,6 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         for (let pollId of Object.keys(results)) {
             const subscription = this._subscribedPolls.get(+pollId);
             subscription.current.next(results[pollId]);
-            if (results[pollId] && subscription.users.equals(results[pollId])) {
-                subscription.current.unsubscribe();
-                this._subscribedPolls.delete(+pollId);
-            }
         }
     }
 }

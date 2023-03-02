@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -13,8 +13,6 @@ import { ViewPoll, ViewVote } from '../../../../pages/polls';
     providedIn: `root`
 })
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {
-    private pollSubscriptions: { [key: Id]: Subscription } = {};
-
     constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: VoteRepositoryService,
@@ -28,22 +26,27 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
             const current = {};
             // const subscriptions: { [key: Id]: BehaviorSubject<Id[]> } = {};
             for (let poll of viewPolls) {
+                // TODO: Add delegated votes to subscription call
                 const subscription = this.repo.subscribeVoted(poll);
 
-                if (this.pollSubscriptions[poll.id] || !subscription) {
+                if (!subscription) {
                     continue;
                 }
 
-                this.pollSubscriptions[poll.id] = subscription
-                    .pipe(distinctUntilChanged())
-                    .subscribe(async (voted: Id[] | null | undefined) => {
-                        if (voted !== undefined) {
-                            await this.setHasVotedOnPoll(poll, voted);
-                            current[poll.id] = voted;
-                            subscriber.next(current);
-                        }
-                    });
+                if (subscription.value !== undefined) {
+                    current[poll.id] = subscription.value[poll.id];
+                }
+                subscription.pipe(distinctUntilChanged()).subscribe(async (voted: Id[] | null | undefined) => {
+                    if (voted !== undefined) {
+                        await this.setHasVotedOnPoll(poll, voted);
+
+                        current[poll.id] = voted;
+                        subscriber.next(current);
+                    }
+                });
             }
+
+            subscriber.next(current);
         });
     }
 
