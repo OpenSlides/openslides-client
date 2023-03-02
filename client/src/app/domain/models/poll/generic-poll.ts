@@ -45,6 +45,7 @@ export interface OptionData {
     amount_global_no?: number;
     amount_global_abstain?: number;
     content_object?: BaseViewModel<any>;
+    entries_amount?: number;
 }
 
 export type OptionDataKey = keyof OptionData;

@@ -119,6 +119,10 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         return this.assignment?.number_poll_candidates || false;
     }
 
+    public get showEntriesAmount(): boolean {
+        return !!this.poll.options[0]?.entries_amount;
+    }
+
     public constructor(
         private pollService: AssignmentPollService,
         private cd: ChangeDetectorRef,
