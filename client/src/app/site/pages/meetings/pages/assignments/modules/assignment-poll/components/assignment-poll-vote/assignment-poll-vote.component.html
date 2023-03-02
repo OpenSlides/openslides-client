@@ -67,7 +67,7 @@
                         </div>
                         <div class="vote-candidate-name" *ngIf="option.isListOption">
                             <span *ngIf="option.content_object">
-                                <span>{{ 'Nomination' | translate }}</span>
+                                <span>{{ option.content_object.getTitle() | translate }}</span>
                             </span>
                         </div>
 

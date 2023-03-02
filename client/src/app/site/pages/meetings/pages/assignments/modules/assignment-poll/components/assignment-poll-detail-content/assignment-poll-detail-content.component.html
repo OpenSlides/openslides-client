@@ -83,7 +83,7 @@
             </span>
         </h3>
         <h3 class="result-title" *ngIf="tableData[0].class === 'list'">
-            {{ 'Nomination' | translate }}
+            {{ tableData[0].votingOption | translate }}
         </h3>
 
         <ng-container *ngIf="hasResults && canSeeResults">
