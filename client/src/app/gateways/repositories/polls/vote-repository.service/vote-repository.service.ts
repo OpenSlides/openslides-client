@@ -92,6 +92,11 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
                 this.updateSubscription();
             }
         } else {
+            if (this._subscribedPolls.has(poll.id)) {
+                this._subscribedPolls.get(poll.id).current.complete();
+                this._subscribedPolls.delete(poll.id);
+            }
+
             return null;
         }
 
@@ -101,7 +106,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     public updateStartedPolls(polls: Id[]): void {
         for (const id of this._subscribedPolls.keys()) {
             if (polls.indexOf(id) === -1) {
-                this._subscribedPolls.get(id).current.unsubscribe();
+                this._subscribedPolls.get(id).current.complete();
                 this._subscribedPolls.delete(id);
             }
         }

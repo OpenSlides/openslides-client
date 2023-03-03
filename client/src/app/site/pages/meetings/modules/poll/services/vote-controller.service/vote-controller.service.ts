@@ -13,8 +13,6 @@ import { ViewPoll, ViewVote } from '../../../../pages/polls';
     providedIn: `root`
 })
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {
-    private _votedStatus: Map<Id, BehaviorSubject<Id[]>> = new Map();
-
     constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: VoteRepositoryService,
@@ -26,27 +24,28 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
     public subscribeVoted(...viewPolls: ViewPoll[]): Observable<{ [key: Id]: Id[] }> {
         return new Observable<{ [key: Id]: Id[] }>(subscriber => {
             const current = {};
-            // const subscriptions: { [key: Id]: BehaviorSubject<Id[]> } = {};
             for (let poll of viewPolls) {
-                // TODO: Add delegated votes to subscription call
-                const subscription = this.repo.subscribeVoted(poll);
+                const subscription = this.repo.subscribeVoted(poll, [this.operator.user.id, ...this.operator.user.vote_delegations_from_ids()]);
 
                 if (!subscription) {
                     continue;
                 }
 
-                this._votedStatus.set(poll.id, subscription);
-
                 if (subscription.value !== undefined) {
                     current[poll.id] = subscription.value;
                 }
 
-                subscription.pipe(distinctUntilChanged()).subscribe(async (voted: Id[] | null | undefined) => {
-                    if (voted !== undefined) {
-                        await this.setHasVotedOnPoll(poll, voted);
+                subscription.pipe(distinctUntilChanged()).subscribe({
+                    next: async (voted: Id[] | null | undefined) => {
+                        if (voted !== undefined) {
+                            await this.setHasVotedOnPoll(poll, voted);
 
-                        current[poll.id] = voted;
-                        subscriber.next(current);
+                            current[poll.id] = voted;
+                            subscriber.next(current);
+                        }
+                    },
+                    complete: () => {
+                        subscriber.complete();
                     }
                 });
             }
