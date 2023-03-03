@@ -63,8 +63,9 @@ export class VotingBannerService {
     }
 
     private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }) {
+        const checkUsers = [this.operator.user, ...this.operator.user.vote_delegations_from()];
         this.pollsToVote = polls.filter(
-            poll => this.votingService.canVote(poll) && !poll.hasVoted && voted[poll.id] !== undefined
+            poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined
         );
 
         // display no banner if in history mode or there are no polls to vote
