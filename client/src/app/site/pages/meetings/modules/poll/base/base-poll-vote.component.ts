@@ -152,9 +152,9 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     private setupDelegations(): void {
         for (const delegation of this.delegations) {
             this._delegationsMap[delegation.id] = delegation;
+            this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
             if (!this.voteRequestData[delegation.id]) {
                 this.voteRequestData[delegation.id] = { value: {} } as VotingData;
-                this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
                 this.deliveringVote[delegation.id] = false;
             }
         }
