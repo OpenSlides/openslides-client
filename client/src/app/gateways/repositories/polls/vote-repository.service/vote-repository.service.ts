@@ -62,12 +62,12 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     }
 
     public async sendVote(pollId: Id, payload: VotePayload): Promise<void> {
-        const subject = this._subscribedPolls.get(pollId)?.current;
-        if (subject) {
-            subject.next(subject.value ? subject.value.concat([payload.user_id]) : [payload.user_id]);
-        }
+        const request: Promise<void> = this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
+        request.then(() => {
+            this.updateSubscription();
+        });
 
-        return await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
+        return request;
     }
 
     /**
