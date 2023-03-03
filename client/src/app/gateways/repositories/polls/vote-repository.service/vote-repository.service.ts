@@ -141,7 +141,10 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
         for (let pollId of Object.keys(results)) {
             const subscription = this._subscribedPolls.get(+pollId);
-            subscription.current.next(results[pollId]);
+            const currentVal = subscription.current.value;
+            if (JSON.stringify(currentVal) !== JSON.stringify(results[pollId])) {
+                subscription.current.next(results[pollId]);
+            }
         }
     }
 }

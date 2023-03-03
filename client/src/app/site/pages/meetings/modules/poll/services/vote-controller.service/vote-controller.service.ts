@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { distinctUntilChanged, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -38,7 +38,7 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
                     current[poll.id] = subscription.value;
                 }
 
-                subscription.pipe(distinctUntilChanged()).subscribe({
+                subscription.subscribe({
                     next: async (voted: Id[] | null | undefined) => {
                         if (voted !== undefined) {
                             await this.setHasVotedOnPoll(poll, voted);
