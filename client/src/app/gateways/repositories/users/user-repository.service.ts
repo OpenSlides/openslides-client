@@ -84,11 +84,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         // Ensure that user view models are updated when the meeting users are updated
         this.meetingUserRepo.changedModelsUserIdsObservable.subscribe(changedIds => {
             const ids: Id[] = [];
-            changedIds.forEach(id => {
+            for (let id of changedIds) {
                 if (this.getViewModel(id)) {
                     ids.push(id);
                 }
-            });
+            }
             if (ids.length) {
                 this.changedModels(ids);
             }

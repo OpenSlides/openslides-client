@@ -28,12 +28,12 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
     public override changedModels(ids: number[]): void {
         super.changedModels(ids);
         const userIds: Id[] = [];
-        ids.forEach(id => {
+        for (let id of ids) {
             const userId = this.getViewModelUnsafe(id).user_id;
             if (userId) {
                 userIds.push(userId);
             }
-        });
+        }
         if (userIds.length) {
             this.changedModelsUserIdsSubject.next(userIds);
         }

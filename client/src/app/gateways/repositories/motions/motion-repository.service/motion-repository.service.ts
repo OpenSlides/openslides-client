@@ -408,7 +408,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return {
             id: viewMotion.id,
             ...updatePayload,
-            supporter_meeting_suer_ids:
+            supporter_meeting_user_ids:
                 update[`supporter_meeting_user_ids`] === null ? [] : update[`supporter_meeting_user_ids`],
             tag_ids: update[`tag_ids`] === null ? [] : update[`tag_ids`],
             attachment_ids: update[`attachment_ids`] === null ? [] : update[`attachment_ids`]
