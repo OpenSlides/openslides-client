@@ -1,4 +1,5 @@
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
+import { FONT_PLACES, FontPlace, LOGO_PLACES,LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { applyMixins } from 'src/app/infrastructure/utils';
 
@@ -10,7 +11,7 @@ import { ViewOrganization } from '../../organization/view-models/view-organizati
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
-import { ViewMediafile } from '../pages/mediafiles';
+import { HasProperties, ViewMediafile } from '../pages/mediafiles';
 import {
     ViewMotion,
     ViewMotionBlock,
@@ -32,6 +33,15 @@ import { HasMeetingUsers } from './view-meeting-user';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
+
+export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
+
+export const VIEW_MEETING_MEDIAFILE_USAGE_ID_KEYS = [
+    ...LOGO_PLACES.map(place => `logo_${place}` as ViewMeetingMediafileUsageKey),
+    ...FONT_PLACES.map(place => `font_${place}` as ViewMeetingMediafileUsageKey)
+];
+
+interface HasFontsAndLogos extends HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile> {}
 
 export class ViewMeeting extends BaseViewModel<Meeting> {
     public get meeting(): Meeting {
@@ -108,8 +118,6 @@ interface IMeetingRelations {
     assignment_candidates: ViewAssignmentCandidate[];
     chat_groups: ViewChatGroup[];
     chat_messages: ViewChatMessage[];
-    logo: StructuredRelation<string, ViewMediafile | null>;
-    font: StructuredRelation<string, ViewMediafile | null>;
     committee: ViewCommittee;
     template_meeting_for_committee?: ViewCommittee;
     default_meeting_for_committee?: ViewCommittee;
@@ -130,5 +138,6 @@ export interface ViewMeeting
         IMeetingRelations,
         HasProjectorTitle,
         HasOrganizationTags,
-        HasMeetingUsers {}
+        HasMeetingUsers,
+        HasFontsAndLogos {}
 applyMixins(ViewMeeting, [HasMeetingUsers]);

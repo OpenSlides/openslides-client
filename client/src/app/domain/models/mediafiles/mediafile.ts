@@ -3,11 +3,16 @@ import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasOwnerId } from '../../interfaces/has-owner-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { BaseModel } from '../base/base-model';
+import { MediafileUsageIdKey } from './mediafile.constants';
 
 interface PdfInformation {
     pages?: number;
     encrypted?: boolean;
 }
+
+export type HasIdProperties<T extends string> = { [property in T]: number };
+
+interface HasMeetingUsageIds extends HasIdProperties<MediafileUsageIdKey> {}
 
 /**
  * Representation of MediaFile. Has the nested property "File"
@@ -32,8 +37,6 @@ export class Mediafile extends BaseModel<Mediafile> {
     public parent_id!: Id; // mediafile/child_ids;
     public child_ids!: Id[]; // (mediafile/parent_id)[];
     public attachment_ids!: Fqid[]; // (*/attachment_ids)[];
-    public used_as_logo_$_in_meeting_id!: string[]; // meeting/logo_$<place>_id;
-    public used_as_font_$_in_meeting_id!: string[]; // meeting/font_$<place>_id;
 
     public constructor(input?: any) {
         super(Mediafile.COLLECTION, input);
@@ -63,9 +66,9 @@ export class Mediafile extends BaseModel<Mediafile> {
 
     private used_in_meeting(type: string, place?: string): Id | null {
         if (!place) {
-            const list = this[`used_as_${type}_$_in_meeting_id`];
+            const list = this[`used_as_${type}_in_meeting_id`];
             for (let i = 0; i < list?.length; i++) {
-                const path = `used_as_${type}_$${list[i]}_in_meeting_id` as keyof Mediafile;
+                const path = `used_as_${type}_${list[i]}_in_meeting_id` as keyof Mediafile;
                 if (path in this) {
                     return this[path] as Id;
                 }
@@ -73,11 +76,11 @@ export class Mediafile extends BaseModel<Mediafile> {
             return null;
         }
 
-        if (!this[`used_as_${type}_$_in_meeting_id`] || this[`used_as_${type}_$_in_meeting_id`].indexOf(place) === -1) {
+        if (!this[`used_as_${type}__in_meeting_id`] || this[`used_as_${type}__in_meeting_id`].indexOf(place) === -1) {
             return null;
         }
 
-        const path = `used_as_${type}_$${place}_in_meeting_id` as keyof Mediafile;
+        const path = `used_as_${type}_${place}_in_meeting_id` as keyof Mediafile;
         return (this[path] as Id) || null;
     }
 
@@ -90,4 +93,4 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 }
-export interface Mediafile extends HasOwnerId, HasProjectionIds, HasListOfSpeakersId {}
+export interface Mediafile extends HasOwnerId, HasProjectionIds, HasListOfSpeakersId, HasMeetingUsageIds {}

@@ -232,3 +232,35 @@ export function makeGenericM2M<V extends BaseViewModel, I>(args: {
         }
     ];
 }
+
+export function makeManyDynamicallyNamedO2ORelations<A extends BaseViewModel, B extends BaseViewModel>(args: {
+    AViewModel: ViewModelConstructor<A>;
+    BViewModel: ViewModelConstructor<B>;
+    config: {
+        AField: keyof A,
+        AIdField?: keyof A,
+        BField: keyof B,
+        BIdField?: keyof B,
+    }[]
+}): Relation[] {
+    return args.config.flatMap(conf => [
+        {
+            ownViewModels: [args.AViewModel],
+            foreignViewModel: args.BViewModel,
+            ownField: conf.AField,
+            ownIdField: conf.AIdField,
+            many: false,
+            generic: false,
+            structured: false
+        },
+        {
+            ownViewModels: [args.BViewModel],
+            foreignViewModel: args.AViewModel,
+            ownField: conf.BField,
+            ownIdField: conf.BIdField,
+            many: false,
+            generic: false,
+            structured: false
+        }
+    ])
+}

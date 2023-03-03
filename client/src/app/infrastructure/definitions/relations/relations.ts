@@ -1,3 +1,4 @@
+import { FONT_PLACES, LOGO_PLACES } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
 
@@ -12,7 +13,7 @@ import {
 } from '../../../site/pages/meetings/pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/meetings/pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
-import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
+import { HasAttachment, ViewMediafile, ViewMediafileUsageKey } from '../../../site/pages/meetings/pages/mediafiles';
 import {
     HasReferencedMotionsInExtension,
     HasTags,
@@ -38,13 +39,13 @@ import {
     ViewProjectorMessage
 } from '../../../site/pages/meetings/pages/projectors';
 import { Projectable } from '../../../site/pages/meetings/view-models/projectable';
-import { ViewMeeting } from '../../../site/pages/meetings/view-models/view-meeting';
+import { ViewMeeting, ViewMeetingMediafileUsageKey } from '../../../site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
 import { ViewCommittee } from '../../../site/pages/organization/pages/committees';
 import { ViewTheme } from '../../../site/pages/organization/pages/designs';
 import { HasOrganizationTags, ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags';
 import { ViewOrganization } from '../../../site/pages/organization/view-models/view-organization';
-import { makeGenericM2M, makeGenericO2M, makeGenericO2O, makeM2M, makeM2O, makeO2O, Relation } from './utils';
+import { makeGenericM2M, makeGenericO2M, makeGenericO2O, makeM2M, makeM2O, makeManyDynamicallyNamedO2ORelations, makeO2O, Relation } from './utils';
 
 const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>[] = [
     ViewMotion,
@@ -626,46 +627,20 @@ export const RELATIONS: Relation[] = [
         AField: `admin_group`,
         BField: `admin_group_for_meeting`
     }),
-    // Logo -> meeting
-    {
-        ownViewModels: [ViewMediafile],
-        foreignViewModel: ViewMeeting,
-        ownField: `used_as_logo_in_meeting`,
-        ownIdField: `used_as_logo_$_in_meeting_id`,
-        many: false,
-        generic: false,
-        structured: true
-    },
-    // Meeting -> Logo
-    {
-        ownViewModels: [ViewMeeting],
-        foreignViewModel: ViewMediafile,
-        ownField: `logo`,
-        ownIdField: `logo_$_id`,
-        many: false,
-        generic: false,
-        structured: true
-    },
-    // Font -> meeting
-    {
-        ownViewModels: [ViewMediafile],
-        foreignViewModel: ViewMeeting,
-        ownField: `used_as_font_in_meeting`,
-        ownIdField: `used_as_font_$_in_meeting_id`,
-        many: false,
-        generic: false,
-        structured: true
-    },
-    // Meeting -> Font
-    {
-        ownViewModels: [ViewMeeting],
-        foreignViewModel: ViewMediafile,
-        ownField: `font`,
-        ownIdField: `font_$_id`,
-        many: false,
-        generic: false,
-        structured: true
-    },
+    ...makeManyDynamicallyNamedO2ORelations({
+        AViewModel: ViewMeeting,
+        BViewModel: ViewMediafile,
+        config: [
+            ...LOGO_PLACES.map(place => ({
+                AField: `logo_${place}` as ViewMeetingMediafileUsageKey,
+                BField: `used_as_logo_${place}_in_meeting` as ViewMediafileUsageKey
+            })),
+            ...FONT_PLACES.map(place => ({
+                AField: `font_${place}` as ViewMeetingMediafileUsageKey,
+                BField: `used_as_font_${place}_in_meeting` as ViewMediafileUsageKey
+            }))
+        ]
+    }),
     // meeting/user_ids -> user
     {
         ownViewModels: [ViewMeeting],
