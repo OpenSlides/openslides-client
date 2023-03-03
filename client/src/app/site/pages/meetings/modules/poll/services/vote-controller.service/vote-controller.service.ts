@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
+import { distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -25,7 +25,10 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         return new Observable<{ [key: Id]: Id[] }>(subscriber => {
             const current = {};
             for (let poll of viewPolls) {
-                const subscription = this.repo.subscribeVoted(poll, [this.operator.user.id, ...this.operator.user.vote_delegations_from_ids()]);
+                const subscription = this.repo.subscribeVoted(poll, [
+                    this.operator.user.id,
+                    ...this.operator.user.vote_delegations_from_ids()
+                ]);
 
                 if (!subscription) {
                     continue;
