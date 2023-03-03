@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DetailNavigable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
@@ -23,21 +23,23 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     extends BaseProjectableViewModel<Poll>
     implements DetailNavigable, PollData
 {
+    private _hasVoted: boolean | undefined;
+
     public get poll(): Poll {
         return this._model;
     }
     public static COLLECTION = Poll.COLLECTION;
 
-    public set hasVoted(value: boolean) {
-        this._hasVotedSubject.next(value);
+    public set hasVoted(value: boolean | undefined) {
+        this._hasVoted = value;
     }
 
-    public get hasVoted(): boolean {
-        if (this._hasVotedSubject.value === undefined) {
-            throw "hasVoted not retrieved for this object";
-        }
-
-        return this._hasVotedSubject.value;
+    /**
+     * @return boolean if a hasVoted state available undefined
+     *         if the state is not set yet
+     */
+    public get hasVoted(): boolean | undefined {
+        return this._hasVoted;
     }
 
     public get pollClassType(): PollClassType | undefined {
@@ -100,10 +102,6 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.results.flatMap(option => option.votes).some(vote => vote.weight > 0);
     }
 
-    public get hasVotedObservable(): Observable<boolean | undefined> {
-        return this._hasVotedSubject.asObservable();
-    }
-
     public hasVotedForDelegations(userId?: number): boolean {
         if (!userId) {
             return false;
@@ -126,8 +124,6 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     private get results(): ViewOption[] {
         return (this.options || []).concat(this.global_option).filter(option => !!option);
     }
-
-    private readonly _hasVotedSubject = new BehaviorSubject(undefined);
 }
 
 interface IPollRelations<C extends BaseViewModel<BaseModel> = any> {

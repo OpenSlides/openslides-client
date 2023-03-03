@@ -138,6 +138,10 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     private setupHasVotedSubscription(): void {
         this.subscriptions.push(
             this.voteRepo.subscribeVoted(this.poll).subscribe(() => {
+                if (this.user) {
+                    this.createVotingDataObjects();
+                }
+
                 for (const key of Object.keys(this._canVoteForSubjectMap)) {
                     this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
                 }
@@ -158,7 +162,10 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     private canVote(user: ViewUser = this.user): boolean {
         return (
-            this.votingService.canVote(this.poll, user) && !this.isDeliveringVote(user) && !this.hasAlreadyVoted(user)
+            this.votingService.canVote(this.poll, user) &&
+            !this.isDeliveringVote(user) &&
+            !this.hasAlreadyVoted(user) &&
+            this.hasAlreadyVoted(user) !== undefined
         );
     }
 }
