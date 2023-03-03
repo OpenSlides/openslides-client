@@ -1,4 +1,4 @@
-export const IMAGE_MIMETYPES = [`image/png`, `image/jpeg`, `image/gif`];
+export const IMAGE_MIMETYPES = [`image/png`, `image/jpeg`, `image/gif`, `image/svg+xml`];
 export const FONT_MIMETYPES = [`font/ttf`, `font/woff`, `font/woff2`];
 export const PDF_MIMETYPES = [`application/pdf`];
 export const VIDEO_MIMETYPES = [

@@ -58,7 +58,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `is_active_in_organization_id`,
             `is_archived_organization_id`,
             `template_for_organization_id`,
-            `user_ids`,
+            `meeting_user_ids`,
             `description`,
             `location`,
             `organization_tag_ids`
@@ -103,17 +103,17 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
         switch (projection.type as MeetingProjectionType) {
             case MeetingProjectionType.CurrentListOfSpeakers:
-                title = `Current list of speakers`;
+                title = this.translate.instant(`Current list of speakers`);
                 break;
             case MeetingProjectionType.CurrentSpeakerChyron:
-                title = `Current speaker chyron`;
+                title = this.translate.instant(`Current speaker chyron`);
                 break;
             case MeetingProjectionType.AgendaItemList:
-                title = `Agenda`;
+                title = this.translate.instant(`Agenda`);
                 break;
             default:
                 console.warn(`Unknown slide type for meeting:`, projection.type);
-                title = `<unknown>`;
+                title = this.translate.instant(`<unknown>`);
                 break;
         }
 
@@ -177,7 +177,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 action: UserAction.UPDATE,
                 data: Object.keys(userUpdate).map(userId => ({
                     id: parseInt(userId, 10),
-                    group_$_ids: { [meeting!.id]: userUpdate[parseInt(userId, 10)] }
+                    meeting_id: meeting!.id,
+                    group_ids: userUpdate[parseInt(userId, 10)]
                 }))
             });
         }

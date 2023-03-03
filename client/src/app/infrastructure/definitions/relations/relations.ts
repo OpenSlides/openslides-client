@@ -1,3 +1,4 @@
+import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
@@ -13,7 +14,7 @@ import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/mee
 import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
 import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
 import {
-    HasReferencedMotionsInRecommendationExtension,
+    HasReferencedMotionsInExtension,
     HasTags,
     ViewMotion,
     ViewMotionBlock,
@@ -200,36 +201,6 @@ export const RELATIONS: Relation[] = [
     }),
     // ########## User
     ...makeManyStructuredUsers2MRelation({
-        otherViewModel: ViewGroup,
-        structuredField: `groups`,
-        structuredIdField: `group_$_ids`,
-        otherViewModelField: `users`
-    }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewSpeaker,
-        structuredField: `speakers`,
-        structuredIdField: `speaker_$_ids`,
-        otherViewModelField: `user`
-    }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewPersonalNote,
-        structuredField: `personal_notes`,
-        structuredIdField: `personal_note_$_ids`,
-        otherViewModelField: `user`
-    }),
-    ...makeManyStructuredUsers2MRelation({
-        otherViewModel: ViewMotion,
-        structuredField: `supported_motions`,
-        structuredIdField: `supported_motion_$_ids`,
-        otherViewModelField: `supporters`
-    }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewMotionSubmitter,
-        structuredField: `submitted_motions`,
-        structuredIdField: `submitted_motion_$_ids`,
-        otherViewModelField: `user`
-    }),
-    ...makeManyStructuredUsers2MRelation({
         otherViewModel: ViewPoll,
         structuredField: `poll_voted`,
         structuredIdField: `poll_voted_$_ids`,
@@ -248,32 +219,66 @@ export const RELATIONS: Relation[] = [
         structuredIdField: `delegated_vote_$_ids`,
         otherViewModelField: `delegated_user`
     }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewAssignmentCandidate,
-        structuredField: `assignment_candidates`,
-        structuredIdField: `assignment_candidate_$_ids`,
-        otherViewModelField: `user`
+    ...makeM2M({
+        AViewModel: ViewUser,
+        BViewModel: ViewCommittee,
+        AField: `committee_managements`,
+        BField: `managers`
     }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewChatMessage,
-        structuredField: `chat_messages`,
-        structuredIdField: `chat_message_$_ids`,
-        otherViewModelField: `user`,
-        otherViewModelIdField: `user_id`
+    ...makeM2M({
+        AViewModel: ViewGroup,
+        BViewModel: ViewMeetingUser,
+        AField: `meeting_users`,
+        BField: `groups`
     }),
-    ...makeMany2WayStructuredUsers2MRelation({
-        otherViewModel: ViewCommittee,
-        structuredField: `committee_management_levels`,
-        structuredIdField: `committee_$_management_level`,
-        otherViewModelField: `user_management_levels`,
-        otherViewModelIdField: `user_$_management_level`
+    ...makeM2O({
+        OViewModel: ViewUser,
+        MViewModel: ViewMeetingUser,
+        OField: `meeting_users`,
+        MField: `user`
     }),
-    // ...makeOneStructuredGenericUser2MRelation({
-    //     otherViewModel: ViewOption,
-    //     structuredField: `options`,
-    //     structuredIdField: `option_$_ids`,
-    //     otherViewModelField: `content_object`
-    // }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewMeetingUser,
+        OField: `meeting_users`,
+        MField: `meeting`
+    }),
+    ...makeM2O({
+        OViewModel: ViewAssignmentCandidate,
+        MViewModel: ViewMeetingUser,
+        OField: `meeting_user`,
+        MField: `assignment_candidates`
+    }),
+    ...makeM2O({
+        OViewModel: ViewChatMessage,
+        MViewModel: ViewMeetingUser,
+        OField: `meeting_user`,
+        MField: `chat_messages`
+    }),
+    ...makeM2O({
+        OViewModel: ViewSpeaker,
+        MViewModel: ViewMeetingUser,
+        OField: `meeting_user`,
+        MField: `speakers`
+    }),
+    ...makeM2O({
+        OViewModel: ViewPersonalNote,
+        MViewModel: ViewMeetingUser,
+        OField: `meeting_user`,
+        MField: `personal_notes`
+    }),
+    ...makeM2M({
+        AViewModel: ViewMotion,
+        BViewModel: ViewMeetingUser,
+        AField: `supporter_meeting_users`,
+        BField: `supported_motions`
+    }),
+    ...makeM2O({
+        MViewModel: ViewMotionSubmitter,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `submitted_motions`
+    }),
     // Vote delegations
     // vote_delegated_$_to_id -> vote_delegations_$_from_ids
     {
@@ -442,7 +447,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMediafile,
         OField: `mediafiles`,
         MField: `meeting`,
-        isFullList: true
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
@@ -603,9 +608,9 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewProjector,
-        ownField: `default_projector`,
-        ownIdField: `default_projector_$_id`,
-        many: false,
+        ownField: `default_projectors`,
+        ownIdField: `default_projector_$_ids`,
+        many: true,
         generic: false,
         structured: true
     },
@@ -771,11 +776,17 @@ export const RELATIONS: Relation[] = [
         MField: `recommendation`,
         OField: `motions`
     }),
-    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInRecommendationExtension>({
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
         viewModel: ViewMotion,
         possibleViewModels: [ViewMotion],
-        viewModelField: `recommendation_extension_reference_ids`,
-        possibleViewModelsField: `referenced_in_motion_recommendation_extension`
+        viewModelField: `state_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_state_extensions`
+    }),
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
+        viewModel: ViewMotion,
+        possibleViewModels: [ViewMotion],
+        viewModelField: `recommendation_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_recommendation_extensions`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,

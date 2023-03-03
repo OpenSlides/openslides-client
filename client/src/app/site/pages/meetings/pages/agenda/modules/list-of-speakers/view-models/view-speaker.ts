@@ -1,9 +1,11 @@
+import { applyMixins } from 'src/app/infrastructure/utils';
+import { HasMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+
 import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
 import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
 import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
-import { ViewUser } from '../../../../../view-models/view-user';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 /**
  * Provides "safe" access to a speaker with all it's components
@@ -41,7 +43,7 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
     }
 
     public get userId(): Id {
-        return this.user.user.id;
+        return this.user_id;
     }
 
     public get gender(): string {
@@ -57,7 +59,7 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
     }
 }
 interface ISpeakerRelations {
-    user: ViewUser;
     list_of_speakers: ViewListOfSpeakers;
 }
-export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}
+export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting, HasMeetingUser {}
+applyMixins(ViewSpeaker, [HasMeetingUser]);

@@ -7,7 +7,7 @@ import { ModelRequestBuilderService } from 'src/app/site/services/model-request-
 import { Id } from '../../domain/definitions/key-types';
 import { CML, cmlNameMapping, OML, omlNameMapping } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
-import { childPermissions } from '../../domain/definitions/permission-children';
+import { permissionChildren } from '../../domain/definitions/permission-relations';
 import { Committee } from '../../domain/models/comittees/committee';
 import { Group } from '../../domain/models/users/group';
 import { Deferred } from '../../infrastructure/utils/promises';
@@ -24,18 +24,13 @@ import { SimplifiedModelRequest } from './model-request-builder/model-request-bu
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
-    if (!user.committee_$_management_level) {
+    if (!user.committee_management_ids) {
         return null; // Explicit null to distinguish from undefined
     }
 
     const committeeManagementLevel: { [committeeId: number]: CML } = {};
-    for (const replacement of user.committee_$_management_level) {
-        if (!user.committee_management_level_ids(replacement)) {
-            continue;
-        }
-        for (const committeeId of user.committee_management_level_ids(replacement)) {
-            committeeManagementLevel[+committeeId] = replacement;
-        }
+    for (const id of user.committee_management_ids) {
+        committeeManagementLevel[id] = CML.can_manage;
     }
     return committeeManagementLevel;
 }
@@ -77,7 +72,7 @@ export class OperatorService {
     }
 
     private get isCommitteeManager(): boolean {
-        return (this.user.committee_$_management_level || []).includes(CML.can_manage);
+        return !!(this.user.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
@@ -329,7 +324,7 @@ export class OperatorService {
         if (user.organization_management_level !== undefined || this._OML === undefined) {
             this._OML = user.organization_management_level || null;
         }
-        this._meetingIds = (user.group_$_ids || []).map(idString => parseInt(idString, 10));
+        this._meetingIds = Array.from(new Set(user.allGroups.map(group => group.meeting_id)).values()) || [];
         this._CML = getUserCML(user);
     }
 
@@ -473,8 +468,8 @@ export class OperatorService {
         // add implicitly given children
         // copy set beforehand to not iterate over the newly added members
         for (const permission of new Set(permissionSet)) {
-            for (const childPermission of childPermissions[permission]!) {
-                permissionSet.add(childPermission);
+            for (const permissionChild of permissionChildren[permission]!) {
+                permissionSet.add(permissionChild);
             }
         }
         return Array.from(permissionSet.values());

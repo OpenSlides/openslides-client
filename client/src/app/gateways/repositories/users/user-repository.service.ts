@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Fqid } from 'src/app/domain/definitions/key-types';
+import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
+import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 
 import { Id } from '../../../domain/definitions/key-types';
 import { Displayable } from '../../../domain/interfaces/displayable';
@@ -13,9 +15,12 @@ import { toDecimal } from '../../../infrastructure/utils';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
 import { Action } from '../../actions';
+import { MeetingUserRepositoryService } from '../meeting_user';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
 export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid };
+
+export type GeneralUser = User & MeetingUser;
 
 /**
  * Unified type name for state fields like `is_active`, `is_physical_person` and `is_present_in_meetings`.
@@ -37,7 +42,13 @@ export interface ShortNameInformation extends NameInformation {
     title?: string;
 }
 
-export type UserPatchFn = { [key in keyof User]?: any } | ((user: ViewUser) => { [key in keyof User]?: any });
+export type UserPatchFn =
+    | { [key in keyof User & MeetingUser]?: any }
+    | ((user: ViewUser) => { [key in keyof User & MeetingUser]?: any });
+export type ExtendedUserPatchFn =
+    | UserPatchFn
+    | { [key in keyof User & MeetingUser]?: any }[]
+    | ((user: ViewUser) => { [key in keyof User & MeetingUser]?: any }[]);
 
 export interface EmailSentResult {
     sent: boolean;
@@ -65,9 +76,23 @@ export type FullNameInformation = ShortNameInformation & LevelAndNumberInformati
 export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private meetingUserRepo: MeetingUserRepositoryService
     ) {
         super(repositoryServiceCollector, User);
+
+        // Ensure that user view models are updated when the meeting users are updated
+        this.meetingUserRepo.changedModelsUserIdsObservable.subscribe(changedIds => {
+            const ids: Id[] = [];
+            for (let id of changedIds) {
+                if (this.getViewModel(id)) {
+                    ids.push(id);
+                }
+            }
+            if (ids.length) {
+                this.changedModels(ids);
+            }
+        });
     }
 
     /**
@@ -100,24 +125,16 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         ];
         const accountListFields: TypedFieldset<User> = shortNameFields.concat([
             `committee_ids`,
-            { templateField: `committee_$_management_level` }
+            `committee_management_ids`
         ]);
 
-        const participantListFieldsMinimal: TypedFieldset<User> = shortNameFields.concat([
-            { templateField: `vote_delegated_$_to_id` },
-            { templateField: `vote_delegations_$_from_ids` },
-            { templateField: `vote_weight_$` },
-            { templateField: `structure_level_$` },
-            { templateField: `number_$` },
-            { templateField: `comment_$` },
-            { templateField: `group_$_ids` }
-        ]);
+        const participantListFieldsMinimal: TypedFieldset<User> = shortNameFields.concat([`meeting_user_ids`]);
 
         const participantListFields: TypedFieldset<User> = participantListFieldsMinimal.concat([
             `is_present_in_meeting_ids`
         ]);
 
-        const detailFields: TypedFieldset<User> = [{ templateField: `about_me_$` }];
+        const detailFields: TypedFieldset<User> = [];
 
         return {
             [DEFAULT_FIELDSET]: detailFields,
@@ -128,12 +145,45 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         };
     }
 
-    public create(...usersToCreate: any[]): Promise<Identifiable[]> {
-        const payload: any[] = usersToCreate.map(partialUser => ({
-            ...this.sanitizePayload(this.getBaseUserPayload(partialUser)),
-            is_present_in_meeting_ids: partialUser.is_present_in_meeting_ids || []
+    public async create(...usersToCreate: any[]): Promise<Identifiable[]> {
+        const data = usersToCreate.map(user => {
+            const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
+            return {
+                user: this.sanitizePayload(this.getBaseUserPayload(user)),
+                first_meeting_user: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())),
+                rest: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers))
+            };
+        });
+        const payload: any[] = data.map(partialUser => ({
+            ...partialUser.user,
+            ...partialUser.first_meeting_user,
+            is_present_in_meeting_ids: partialUser.user.is_present_in_meeting_ids || []
         }));
-        return this.sendBulkActionToBackend(UserAction.CREATE, payload);
+        const results: Identifiable[] = await this.sendBulkActionToBackend(UserAction.CREATE, payload);
+        const ids: number[] = [];
+        const updatePayload: any[] = [];
+        for (let date of data) {
+            if (date.rest.length) {
+                const models = results.filter(user =>
+                    Object.keys(date.user).every(key => date.user[key] === user[key])
+                );
+                if (models.length !== 1 || !models[0].id || ids.includes(models[0].id)) {
+                    console.warn(
+                        `Couldn't clearly match the following to any new user:`,
+                        date.user,
+                        `\n skipping the following bits of meeting data:`,
+                        date.rest
+                    );
+                    continue;
+                }
+                ids.push(models[0].id);
+                for (let meeting_user of date.rest) {
+                    updatePayload.push({ id: models[0].id, ...meeting_user });
+                }
+            }
+        }
+        await this.createAction(UserAction.UPDATE, updatePayload).resolve();
+        return results;
     }
 
     /**
@@ -143,13 +193,16 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      * @param patch An update-payload object or a function to generate a payload. The function gets a user as argument.
      * @param users A list of users, who will be updated.
      */
-    public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
-        const updatePayload = users.map(user => {
+    public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
+        const updatePayload = users.flatMap(user => {
             const update = typeof patch === `function` ? patch(user) : patch;
-            return {
-                id: user.id,
-                ...this.sanitizePayload(this.getBaseUserPayload(update))
-            };
+            return [
+                {
+                    id: user.id,
+                    ...this.sanitizePayload(this.getBaseUserPayload(update)),
+                    ...this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(update))
+                }
+            ];
         });
         return this.createAction(UserAction.UPDATE, updatePayload);
     }
@@ -183,7 +236,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         return this.createAction(UserAction.ASSIGN_MEETINGS, payload);
     }
 
-    private getBaseUserPayload(partialUser: Partial<User>): any {
+    private getBaseUserPayload(partialUser: Partial<ViewUser>): any {
         const partialPayload: Partial<User> = {
             pronoun: partialUser.pronoun,
             title: partialUser.title,
@@ -199,15 +252,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             default_number: partialUser.default_number,
             default_vote_weight: toDecimal(partialUser.default_vote_weight, false) as any,
             organization_management_level: partialUser.organization_management_level,
-            committee_$_management_level: partialUser.committee_$_management_level,
-            group_$_ids: partialUser.group_$_ids,
-            structure_level_$: partialUser.structure_level_$,
-            number_$: partialUser.number_$,
-            about_me_$: partialUser.about_me_$,
-            vote_weight_$: partialUser.vote_weight_$,
-            comment_$: partialUser.comment_$,
-            vote_delegated_$_to_id: partialUser.vote_delegated_$_to_id,
-            vote_delegations_$_from_ids: partialUser.vote_delegations_$_from_ids
+            committee_management_ids: partialUser.committee_management_ids
         };
 
         return partialPayload;
@@ -350,9 +395,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const userPatch = users.map(user => {
             return {
                 id: user.id,
-                group_$_ids: {
-                    [meetingIdentifiable.id]: []
-                }
+                meeting_id: meetingIdentifiable.id,
+                group_ids: []
             };
         });
         return this.actions.create({ action: UserAction.UPDATE, data: userPatch });
@@ -445,10 +489,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `email`,
             `first_name`,
             `last_name`,
-            `comment_$`,
-            `about_me_$`,
-            `number_$`,
-            `structure_level_$`,
+            `comment`,
+            `about_me`,
+            `number`,
+            `structure_level`,
             `default_number`,
             `default_structure_level`
         ];

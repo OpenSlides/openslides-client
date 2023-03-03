@@ -102,6 +102,10 @@
             *osPerms="permission.projectorCanManage">
         </os-projector-button>
     </div>
+    <button mat-menu-item (click)="downloadPdf()">
+        <mat-icon>picture_as_pdf</mat-icon>
+        <span>{{ 'Ballot papers' | translate }}</span>
+    </button>
     <div *osPerms="permission.agendaItemCanManage">
 
         <mat-divider></mat-divider>

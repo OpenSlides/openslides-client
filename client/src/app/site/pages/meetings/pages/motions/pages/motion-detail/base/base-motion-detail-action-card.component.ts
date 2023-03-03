@@ -15,6 +15,8 @@ export abstract class BaseMotionDetailActionCardComponent extends BaseComponent 
     public set motion(motion: ViewMotion) {
         if (this._motion?.id !== motion.id) {
             this.onMotionChange(motion);
+        } else {
+            this._motion = motion;
         }
     }
 

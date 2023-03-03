@@ -26,7 +26,7 @@ export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<
         this.translate.instant(plural ? `Personal notes` : `Personal note`);
 
     public override getFieldsets(): Fieldsets<PersonalNote> {
-        const detailFields: (keyof PersonalNote)[] = [`id`, `star`, `note`, `content_object_id`, `user_id`];
+        const detailFields: (keyof PersonalNote)[] = [`id`, `star`, `note`, `content_object_id`, `meeting_user_id`];
         return {
             [DEFAULT_FIELDSET]: detailFields
         };

@@ -60,7 +60,8 @@ export class OrganizationService {
                     viewModelCtor: ViewOrganization,
                     ids: [ORGANIZATION_ID],
                     fieldset: `settings`,
-                    additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`, `theme_id`]
+                    additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`, `theme_id`],
+                    follow: [{ idField: `mediafile_ids`, fieldset: `organizationDetail` }]
                 },
                 subscriptionName: ORGANIZATION_SUBSCRIPTION,
                 isDelayed: false

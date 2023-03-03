@@ -30,8 +30,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     public tags: ViewTag[] = [];
 
-    public recommendationReferencingMotions: ViewMotion[] = [];
-
     /**
      * Determine if the name of supporters are visible
      */
@@ -277,7 +275,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public canAccess(origin: ViewMotion | ViewMeeting): boolean {
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
-            return motion.meeting?.canAccess();
+            return motion.sequential_number && motion.meeting?.canAccess();
         }
         return origin?.canAccess();
     }
@@ -291,10 +289,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             this.amendmentRepo.getViewModelListObservableFor(this.motion).subscribe(value => (this.amendments = value)),
             this.tagRepo.getViewModelListObservable().subscribe(value => (this.tags = value)),
             this.categoryRepo.getViewModelListObservable().subscribe(value => (this.categories = value)),
-            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
-            this.repo
-                .getRecommendationReferencingMotions(this.motion?.id)
-                ?.subscribe(motions => (this.recommendationReferencingMotions = motions))
+            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value))
         ];
     }
 

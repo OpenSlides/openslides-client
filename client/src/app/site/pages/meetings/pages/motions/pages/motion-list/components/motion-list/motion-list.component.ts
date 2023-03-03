@@ -251,9 +251,9 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             motionsWithNotes += +this.motionHasProp(motion, `hasNotes`);
         }
 
-        this.addToTileInfo(`Favorites`, `star`, true, favoriteMotions);
+        this.addToTileInfo(`Favorites`, `isFavorite`, true, favoriteMotions);
         this.addToTileInfo(`Personal notes`, `hasNotes`, true, motionsWithNotes);
-        this.addToTileInfo(`No category`, `category_id`, [], motionsWithoutCategory);
+        this.addToTileInfo(`No category`, `category_id`, null, motionsWithoutCategory);
 
         this.createCategoryTiles(Array.from(localCategories));
 

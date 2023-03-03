@@ -1,10 +1,12 @@
+import { applyMixins } from 'src/app/infrastructure/utils';
+import { HasMeetingUsers } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+
 import { Permission } from '../../../../../../../../domain/definitions/permission';
-import { childPermissions } from '../../../../../../../../domain/definitions/permission-children';
+import { permissionChildren } from '../../../../../../../../domain/definitions/permission-relations';
 import { Group } from '../../../../../../../../domain/models/users/group';
 import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../../../view-models/view-meeting';
-import { ViewUser } from '../../../../../view-models/view-user';
 import { ViewChatGroup } from '../../../../chat/view-models/view-chat-group';
 import { ViewMediafile } from '../../../../mediafiles/view-models/view-mediafile';
 import { ViewMotionCommentSection } from '../../../../motions/modules/comments/view-models/view-motion-comment-section';
@@ -18,22 +20,12 @@ export class ViewGroup extends BaseViewModel<Group> {
     }
 
     public hasPermission(perm: Permission): boolean {
-        return this.permissions?.some(permission => permission === perm || this.hasChildPermission(permission, perm));
-    }
-
-    public hasPermissionImplicitly(perm: Permission): boolean {
-        return this.permissions?.some(permission => this.hasChildPermission(permission, perm));
-    }
-
-    private hasChildPermission(permission: Permission, searchPermission: Permission): boolean {
-        if (!childPermissions[permission]) {
-            return false;
-        }
-        return childPermissions[permission]!.includes(searchPermission);
+        return this.permissions?.some(
+            permission => permission === perm || permissionChildren[permission]?.includes(perm)
+        );
     }
 }
 interface IGroupRelations {
-    users: ViewUser[];
     default_group_for_meeting: ViewMeeting;
     admin_group_for_meeting: ViewMeeting;
     mediafile_access_groups: ViewMediafile[];
@@ -46,4 +38,5 @@ interface IGroupRelations {
     used_as_motion_poll_default?: ViewMeeting;
     used_as_assignment_poll_default?: ViewMeeting;
 }
-export interface ViewGroup extends Group, IGroupRelations, HasMeeting {}
+export interface ViewGroup extends Group, IGroupRelations, HasMeeting, HasMeetingUsers {}
+applyMixins(ViewGroup, [HasMeetingUsers]);

@@ -1,12 +1,12 @@
 import { Ids } from 'src/app/domain/definitions/key-types';
-import { Motion } from 'src/app/domain/models/motions';
 import { Tag } from 'src/app/domain/models/tag/tag';
 import { BaseBeforeImportHandler } from 'src/app/infrastructure/utils/import/base-before-import-handler';
 import { CsvMapping, ImportResolveInformation } from 'src/app/infrastructure/utils/import/import-utils';
 
 import { TagControllerService } from '../../../modules/tags/services';
+import { ViewMotion } from '../../../view-models';
 
-export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
+export class TagImportHelper extends BaseBeforeImportHandler<ViewMotion, Tag> {
     public constructor(private repo: TagControllerService) {
         super({
             idProperty: `tag_ids`,
@@ -37,10 +37,10 @@ export class TagImportHelper extends BaseBeforeImportHandler<Motion, Tag> {
         return result;
     }
 
-    public doResolve(item: Motion, propertyName: string): ImportResolveInformation<Motion> {
+    public doResolve(item: ViewMotion, propertyName: string): ImportResolveInformation<ViewMotion> {
         const property = item[propertyName];
         const ids: Ids = [];
-        const result: ImportResolveInformation<Motion> = {
+        const result: ImportResolveInformation<ViewMotion> = {
             model: item,
             unresolvedModels: 0,
             verboseName: `Tags`

@@ -4,10 +4,7 @@ import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-mode
 
 import { Id } from '../../../../../../domain/definitions/key-types';
 import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';
-import {
-    HasReferencedMotionInRecommendationExtensionIds,
-    Motion
-} from '../../../../../../domain/models/motions/motion';
+import { HasReferencedMotionInExtensionIds, Motion } from '../../../../../../domain/models/motions/motion';
 import { AmendmentType, ChangeRecoMode } from '../../../../../../domain/models/motions/motions.constants';
 import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
@@ -15,6 +12,7 @@ import { BaseProjectableViewModel } from '../../../view-models/base-projectable-
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
 import { ViewMeeting } from '../../../view-models/view-meeting';
+import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
 import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
@@ -32,8 +30,9 @@ import { ViewMotionState } from '../modules/states/view-models/view-motion-state
 import { ViewMotionSubmitter } from '../modules/submitters';
 import { HasTags } from '../modules/tags/view-models/has-tags';
 
-export interface HasReferencedMotionsInRecommendationExtension extends HasReferencedMotionInRecommendationExtensionIds {
-    referenced_in_motion_recommendation_extension: ViewMotion[];
+export interface HasReferencedMotionsInExtension extends HasReferencedMotionInExtensionIds {
+    referenced_in_motion_state_extensions: ViewMotion[];
+    referenced_in_motion_recommendation_extensions: ViewMotion[];
 }
 
 export enum ForwardingStatus {
@@ -212,6 +211,14 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         return status;
     }
 
+    public get supporter_users(): ViewUser[] {
+        return this.supporter_meeting_users?.flatMap(user => user.user ?? []);
+    }
+
+    public get supporter_user_ids(): number[] {
+        return this.supporter_meeting_users?.flatMap(user => user.user_id ?? []);
+    }
+
     private _changedAmendmentLines: DiffLinesInParagraph[] | null = null;
     private _affectedAmendmentLines: DiffLinesInParagraph[] | null = null;
 
@@ -274,7 +281,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 
     public hasSupporters(): boolean {
-        return !!(this.supporters && this.supporters.length > 0);
+        return !!(this.supporter_meeting_users && this.supporter_meeting_users.length > 0);
     }
 
     public hasAttachments(): boolean {
@@ -349,12 +356,13 @@ interface IMotionRelations extends HasPolls<ViewMotion> {
     all_derived_motions?: ViewMotion[];
     all_origins?: ViewMotion[];
     state?: ViewMotionState;
+    state_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     recommendation?: ViewMotionState;
-    recommendation_extension_reference: (BaseViewModel & HasReferencedMotionsInRecommendationExtension)[];
+    recommendation_extension_references: (BaseViewModel & HasReferencedMotionsInExtension)[];
     category?: ViewMotionCategory;
     block?: ViewMotionBlock;
     submitters: ViewMotionSubmitter[];
-    supporters: ViewUser[];
+    supporter_meeting_users: ViewMeetingUser[];
     change_recommendations: ViewMotionChangeRecommendation[];
     statute_paragraph?: ViewMotionStatuteParagraph;
     comments: ViewMotionComment[];
@@ -369,4 +377,4 @@ export interface ViewMotion
         HasTags,
         HasAgendaItem,
         HasListOfSpeakers,
-        HasReferencedMotionsInRecommendationExtension {}
+        HasReferencedMotionsInExtension {}
