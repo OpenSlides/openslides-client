@@ -16,6 +16,7 @@
                         *osPerms="entry.permission"
                         mat-list-item
                         class="foreground-icon"
+                        [ngStyle]="getCustomStyleForEntry(entry)"
                         (click)="mobileAutoCloseNav()"
                         [routerLink]="entry.route"
                         routerLinkActive="active"

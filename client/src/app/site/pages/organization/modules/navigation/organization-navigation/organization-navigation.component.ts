@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseMenuEntry } from 'src/app/site/base/base-menu-entry';
+import { BaseMenuEntry, getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
 import { AuthService } from 'src/app/site/services/auth.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -18,7 +18,9 @@ export class OrganizationNavigationComponent {
             route: `/`,
             displayName: `Dashboard`,
             icon: `apps`,
-            weight: 100
+            hasDividerBelow: true,
+            weight: 100,
+            customHeight: `40px`
         },
         {
             route: `/meetings`,
@@ -58,7 +60,6 @@ export class OrganizationNavigationComponent {
             displayName: `Design`,
             icon: `palette`,
             permission: OML.can_manage_organization,
-            hasDividerBelow: true,
             weight: 350
         },
         {
@@ -72,15 +73,12 @@ export class OrganizationNavigationComponent {
 
     public constructor(
         private authService: AuthService,
-        // private dialog: MatDialog,
         private menuService: MainMenuService,
         private vp: ViewPortService
     ) {}
 
-    public openAccountDialog(): void {
-        // this.dialog.open(AccountDialogComponent, {
-        //     ...largeDialogSettings
-        // });
+    public getCustomStyleForEntry(entry: OrgaMenuEntry): { [key: string]: any } {
+        return getCustomStyleForEntry(entry);
     }
 
     public logout(): void {
