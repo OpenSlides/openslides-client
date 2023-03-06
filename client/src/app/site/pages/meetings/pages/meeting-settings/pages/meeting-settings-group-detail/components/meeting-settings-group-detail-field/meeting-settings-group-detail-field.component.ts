@@ -58,9 +58,9 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public error: string | null = null;
 
     /**
-     * Translated config value for template
+     * Current value for internal use
      */
-    public translatedValue!: any;
+    public internalValue!: any;
 
     /**
      * The settings item for this component.
@@ -182,21 +182,13 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             date: [``],
             time: [``]
         });
-        this.translatedValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
-        if (
-            (typeof this.value === `string` && this.value !== `` && this.setting.type !== `choice`) ||
-            this.setting.type === `string` ||
-            this.setting.type === `markupText` ||
-            this.setting.type === `text`
-        ) {
-            this.translatedValue = this.translate.instant(this.value);
-        }
+        this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
             this.form.patchValue(datetimeObj);
         }
         this.form.patchValue({
-            value: this.getRestrictedValue(this.translatedValue)
+            value: this.getRestrictedValue(this.internalValue)
         });
         this.form.valueChanges
             // The editor fires changes whenever content was changed. Even by AutoUpdate.
@@ -375,7 +367,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         return {
             setup: (editor: any) => {
                 editor.on(`Blur`, (ev: any) => {
-                    if (ev.target.getContent() !== this.translatedValue) {
+                    if (ev.target.getContent() !== this.internalValue) {
                         this.sendUpdate(ev.target.getContent());
                     }
                 });

@@ -213,11 +213,11 @@ export class ParticipantPdfService {
         const users_pdf_welcometext = this.meetingSettingsService.instant(`users_pdf_welcometext`)!;
         return [
             {
-                text: this.translate.instant(users_pdf_welcometitle),
+                text: users_pdf_welcometitle,
                 style: `userDataHeading`
             },
             {
-                text: this.translate.instant(users_pdf_welcometext),
+                text: users_pdf_welcometext,
                 style: `userDataTopic`
             }
         ];
