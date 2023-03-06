@@ -107,7 +107,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (!motion.state) {
             return ``;
         }
-        let state = this.translate.instant(motion.state.name);
+        let state = motion.state.name;
         if (motion.stateExtension && motion.state.show_state_extension_field) {
             state += ` ` + this.parseMotionPlaceholders(motion.stateExtension);
         }
