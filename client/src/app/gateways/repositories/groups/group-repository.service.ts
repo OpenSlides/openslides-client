@@ -23,7 +23,7 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
             `admin_group_for_meeting_id`,
             `default_group_for_meeting_id`,
             `weight`,
-            `user_ids`
+            `meeting_user_ids`
         ]);
         return {
             title: titleFields,

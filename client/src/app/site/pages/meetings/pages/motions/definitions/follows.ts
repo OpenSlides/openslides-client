@@ -15,8 +15,8 @@ export const SUBMITTER_FOLLOW: Follow = {
     idField: `submitter_ids`,
     follow: [
         {
-            idField: `user_id`,
-            fieldset: `shortName`
+            idField: `meeting_user_id`,
+            follow: [{ idField: `user_id`, fieldset: `shortName` }]
         }
     ]
 };

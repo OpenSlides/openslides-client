@@ -18,10 +18,7 @@ export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent
                     viewModelCtor: ViewUser,
                     ids: [id],
                     fieldset: `accountList`,
-                    follow: [
-                        `committee_ids`,
-                        { idField: `meeting_ids`, additionalFields: [`committee_id`] } // , `committee_$_management_level`
-                    ]
+                    follow: [`committee_ids`, { idField: `meeting_ids`, additionalFields: [`committee_id`] }]
                 },
                 subscriptionName: ACCOUNT_DETAIL_SUBSCRIPTION_NAME,
                 hideWhenDestroyed: true
