@@ -2,17 +2,14 @@ import { Fqid, Id } from '../../definitions/key-types';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasOwnerId } from '../../interfaces/has-owner-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { HasIdProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';
-import { MediafileUsageIdKey } from './mediafile.constants';
+import { MediafileMeetingUsageIdKey } from './mediafile.constants';
 
 interface PdfInformation {
     pages?: number;
     encrypted?: boolean;
 }
-
-export type HasIdProperties<T extends string> = { [property in T]: number };
-
-interface HasMeetingUsageIds extends HasIdProperties<MediafileUsageIdKey> {}
 
 /**
  * Representation of MediaFile. Has the nested property "File"
@@ -93,4 +90,8 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 }
-export interface Mediafile extends HasOwnerId, HasProjectionIds, HasListOfSpeakersId, HasMeetingUsageIds {}
+export interface Mediafile
+    extends HasOwnerId,
+        HasProjectionIds,
+        HasListOfSpeakersId,
+        HasIdProperties<MediafileMeetingUsageIdKey> {}

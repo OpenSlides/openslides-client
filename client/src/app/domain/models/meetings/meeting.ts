@@ -1,33 +1,12 @@
 import { Id } from '../../definitions/key-types';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { HasIdProperties } from '../../interfaces/has-properties';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
-import { HasIdProperties } from '../mediafiles/mediafile';
-import { FONT_PLACES, FontPlace, LOGO_PLACES,LogoPlace } from '../mediafiles/mediafile.constants';
 import { ChangeRecoMode, LineNumberingMode } from '../motions/motions.constants';
 import { PollBackendDurationType, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
 import { ApplauseType } from './applause';
-
-export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
-
-/**
- * Server side ballot choice definitions.
- * Server-defined methods to determine the number of ballots to print
- * Options are:
- * - NUMBER_OF_DELEGATES Amount of users belonging to the predefined 'delegates' group (group id 2)
- * - NUMBER_OF_ALL_PARTICIPANTS The amount of all registered users
- * - CUSTOM_NUMBER a given number of ballots
- */
-export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
-
-export type MeetingMediafileUsageIdKey = `logo_${LogoPlace}_id` | `font_${FontPlace}_id`;
-
-export const MEETING_MEDIAFILE_USAGE_ID_KEYS = [
-    ...LOGO_PLACES.map(place => `logo_${place}_id` as MeetingMediafileUsageIdKey),
-    ...FONT_PLACES.map(place => `font_${place}_id` as MeetingMediafileUsageIdKey)
-];
-
-interface HasMediafileUsageIds extends HasIdProperties<MeetingMediafileUsageIdKey> {}
+import { BallotPaperSelection, ExportCsvEncoding, MeetingMediafileUsageIdKey } from './meeting.constants';
 
 export class Settings {
     // Old "general_*" configs
@@ -282,4 +261,4 @@ export class Meeting extends BaseModel<Meeting> {
         return (this[`default_projector_$${place}_ids` as keyof Meeting] as Id[]) || [];
     }
 }
-export interface Meeting extends Settings, HasProjectionIds, HasMediafileUsageIds {}
+export interface Meeting extends Settings, HasProjectionIds, HasIdProperties<MeetingMediafileUsageIdKey> {}

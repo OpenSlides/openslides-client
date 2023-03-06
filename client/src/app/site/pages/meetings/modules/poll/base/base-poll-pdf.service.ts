@@ -1,7 +1,7 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
+import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting.constants';
 import { PollMethod, PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';

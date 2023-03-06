@@ -1,5 +1,12 @@
 import { Id } from 'src/app/domain/definitions/key-types';
-import { FONT_PLACES, FontPlace, LOGO_PLACES,LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { HasProperties } from 'src/app/domain/interfaces/has-properties';
+import {
+    FONT_PLACES,
+    FontPlace,
+    LOGO_PLACES,
+    LogoPlace,
+    ViewMediafileMeetingUsageKey
+} from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
@@ -15,17 +22,6 @@ import { ViewGroup } from '../../participants/modules/groups/view-models/view-gr
 import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
 import { VIDEO_MIMETYPES } from '../definitions/index';
 import { HasAttachment } from './has-attachment';
-
-export type ViewMediafileUsageKey = `used_as_logo_${LogoPlace}_in_meeting` | `used_as_font_${FontPlace}_in_meeting`;
-
-export type HasProperties<KeyType extends string, ValueType> = { [property in KeyType]: ValueType };
-
-export const VIEW_MEETING_MEDIAFILE_USAGE_ID_KEYS = [
-    ...LOGO_PLACES.map(place => `used_as_logo_${place}_in_meeting` as ViewMediafileUsageKey),
-    ...FONT_PLACES.map(place => `used_as_font_${place}_in_meeting` as ViewMediafileUsageKey)
-];
-
-interface HasMeetingUsage extends HasProperties<ViewMediafileUsageKey, ViewMeeting> {}
 
 export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public static COLLECTION = Mediafile.COLLECTION;
@@ -138,6 +134,18 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
             return `insert_drive_file`;
         }
     }
+
+    public getFontPlaces(): FontPlace[] {
+        return FONT_PLACES.filter(place => !!this.used_as_font_in_meeting_id(place));
+    }
+
+    public getLogoPlaces(): LogoPlace[] {
+        return LOGO_PLACES.filter(place => !!this.used_as_logo_in_meeting_id(place));
+    }
+
+    public getPlaces(): (LogoPlace | FontPlace)[] {
+        return [...this.getFontPlaces(), ...this.getLogoPlaces()];
+    }
 }
 interface IMediafileRelations {
     access_groups: ViewGroup[];
@@ -152,4 +160,4 @@ export interface ViewMediafile
         IMediafileRelations,
         /*  Searchable, */ HasMeeting,
         HasListOfSpeakers,
-        HasMeetingUsage {}
+        HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}

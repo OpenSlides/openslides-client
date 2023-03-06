@@ -36,9 +36,20 @@ export const FontDefaults: { [place in FontPlace]: string } = {
 };
 export const FONT_PLACES = Object.keys(FontDisplayNames) as FontPlace[];
 
-export type MediafileUsageIdKey = `used_as_logo_${LogoPlace}_in_meeting_id` | `used_as_font_${FontPlace}_in_meeting_id`;
+export type MediafileMeetingUsageIdKey =
+    | `used_as_logo_${LogoPlace}_in_meeting_id`
+    | `used_as_font_${FontPlace}_in_meeting_id`;
 
-export const MEDIAFILE_USAGE_ID_KEYS = [
-    ...LOGO_PLACES.map(place => `used_as_logo_${place}_in_meeting_id` as MediafileUsageIdKey),
-    ...FONT_PLACES.map(place => `used_as_font_${place}_in_meeting_id` as MediafileUsageIdKey)
+export const MEDIAFILE_MEETING_USAGE_ID_KEYS = [
+    ...LOGO_PLACES.map(place => `used_as_logo_${place}_in_meeting_id` as MediafileMeetingUsageIdKey),
+    ...FONT_PLACES.map(place => `used_as_font_${place}_in_meeting_id` as MediafileMeetingUsageIdKey)
+];
+
+export type ViewMediafileMeetingUsageKey =
+    | `used_as_logo_${LogoPlace}_in_meeting`
+    | `used_as_font_${FontPlace}_in_meeting`;
+
+export const VIEW_MEDIAFILE_MEETING_USAGE_KEYS = [
+    ...LOGO_PLACES.map(place => `used_as_logo_${place}_in_meeting` as ViewMediafileMeetingUsageKey),
+    ...FONT_PLACES.map(place => `used_as_font_${place}_in_meeting` as ViewMediafileMeetingUsageKey)
 ];

@@ -54,7 +54,7 @@ export class MediaManageService {
     public getLogoUrl(place: LogoPlace): string | null {
         // Note: we are not fetching the mediafile view model at any place except when filtering for the defaults.
         const mediafileId = this.activeMeetingService.meeting?.logo_id(place);
-        if (mediafileId && this.activeMeetingService.meeting?.logo_$_id.indexOf(place) !== -1) {
+        if (mediafileId && this.activeMeetingService.meeting?.getSpecifiedLogoPlaces().indexOf(place) !== -1) {
             return this.getUrlForId(mediafileId);
         }
         const generalMediafileId = this.getGlobalMediafileIdByToken(place);
@@ -75,7 +75,7 @@ export class MediaManageService {
     public getFontUrl(place: FontPlace): string {
         // Note: we are not fetching the mediafile view model at any place.
         const mediafileId = this.activeMeetingService.meeting?.font_id(place);
-        if (mediafileId && this.activeMeetingService.meeting?.font_$_id.indexOf(place) !== -1) {
+        if (mediafileId && this.activeMeetingService.meeting?.getSpecifiedFontPlaces().indexOf(place) !== -1) {
             return this.getUrlForId(mediafileId);
         } else {
             return FontDefaults[place];
@@ -84,8 +84,8 @@ export class MediaManageService {
 
     public getPlacesDisplayNames(mediafile: ViewMediafile): string[] {
         let uses: string[] = [];
-        uses = uses.concat((mediafile.used_as_logo_$_in_meeting_id || []).map(place => (<any>LogoDisplayNames)[place]));
-        uses = uses.concat((mediafile.used_as_font_$_in_meeting_id || []).map(place => (<any>FontDisplayNames)[place]));
+        uses = uses.concat(mediafile.getLogoPlaces().map(place => (<any>LogoDisplayNames)[place]));
+        uses = uses.concat(mediafile.getFontPlaces().map(place => (<any>FontDisplayNames)[place]));
         return uses;
     }
 

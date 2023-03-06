@@ -1,6 +1,8 @@
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
-import { FONT_PLACES, FontPlace, LOGO_PLACES,LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { HasProperties } from 'src/app/domain/interfaces/has-properties';
+import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import { ViewMeetingMediafileUsageKey } from 'src/app/domain/models/meetings/meeting.constants';
 import { applyMixins } from 'src/app/infrastructure/utils';
 
 import { StructuredRelation } from '../../../../infrastructure/definitions/relations';
@@ -11,7 +13,7 @@ import { ViewOrganization } from '../../organization/view-models/view-organizati
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
-import { HasProperties, ViewMediafile } from '../pages/mediafiles';
+import { ViewMediafile } from '../pages/mediafiles';
 import {
     ViewMotion,
     ViewMotionBlock,
@@ -33,15 +35,6 @@ import { HasMeetingUsers } from './view-meeting-user';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
-
-export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
-
-export const VIEW_MEETING_MEDIAFILE_USAGE_ID_KEYS = [
-    ...LOGO_PLACES.map(place => `logo_${place}` as ViewMeetingMediafileUsageKey),
-    ...FONT_PLACES.map(place => `font_${place}` as ViewMeetingMediafileUsageKey)
-];
-
-interface HasFontsAndLogos extends HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile> {}
 
 export class ViewMeeting extends BaseViewModel<Meeting> {
     public get meeting(): Meeting {
@@ -79,6 +72,18 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
 
     public override canAccess(): boolean {
         return this[ViewMeeting.ACCESSIBILITY_FIELD] !== undefined && this[ViewMeeting.ACCESSIBILITY_FIELD] !== null;
+    }
+
+    public getSpecifiedLogoPlaces(): LogoPlace[] {
+        return LOGO_PLACES.filter(place => !!this.logo_id(place));
+    }
+
+    public getSpecifiedFontPlaces(): FontPlace[] {
+        return FONT_PLACES.filter(place => !!this.font_id(place));
+    }
+
+    public getSpecifiedPlaces(): (LogoPlace | FontPlace)[] {
+        return [...this.getSpecifiedLogoPlaces(), ...this.getSpecifiedFontPlaces()];
     }
 }
 interface IMeetingRelations {
@@ -139,5 +144,5 @@ export interface ViewMeeting
         HasProjectorTitle,
         HasOrganizationTags,
         HasMeetingUsers,
-        HasFontsAndLogos {}
+        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile> {}
 applyMixins(ViewMeeting, [HasMeetingUsers]);
