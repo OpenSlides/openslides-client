@@ -32,7 +32,7 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
             {
                 idField: `user_ids`,
                 fieldset: `accountList`,
-                additionalFields: [{ templateField: `group_$_ids` }]
+                follow: [{ idField: `meeting_user_ids`, additionalFields: [`group_ids`] }]
             }
         ]
     },

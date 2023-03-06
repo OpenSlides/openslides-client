@@ -28,10 +28,12 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         const patchFn = (user: ViewUser) => {
             return {
                 id: user.id,
-                group_$_ids: meetings.mapToObject(meeting => {
+                group_ids: meetings.map(meeting => {
                     const groupIds: number[] = user.group_ids(meeting.id);
                     return {
-                        [meeting.id]: groupIds.includes(meeting.default_group_id)
+                        id: user.id,
+                        meeting_id: meeting.id,
+                        group_ids: groupIds.includes(meeting.default_group_id)
                             ? groupIds
                             : groupIds.concat(meeting.default_group_id)
                     };
@@ -43,10 +45,7 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
 
     public bulkRemoveUserFromMeeting(users: ViewUser[], ...meetings: Identifiable[]): Action<void> {
         const patchFn = (user: ViewUser) => {
-            return {
-                id: user.id,
-                group_$_ids: meetings.mapToObject(meeting => ({ [meeting.id]: [] }))
-            };
+            return meetings.map(meeting => ({ id: user.id, meeting_id: meeting.id, group_ids: [] }));
         };
         return this.repo.update(patchFn, ...users);
     }

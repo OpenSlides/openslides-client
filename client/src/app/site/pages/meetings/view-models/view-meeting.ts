@@ -1,6 +1,7 @@
 import { unix } from 'moment';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import { applyMixins } from 'src/app/infrastructure/utils';
 
 import { StructuredRelation } from '../../../../infrastructure/definitions/relations';
 import { BaseViewModel } from '../../../base/base-view-model';
@@ -30,6 +31,7 @@ import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
+import { HasMeetingUsers } from './view-meeting-user';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
@@ -55,7 +57,7 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     }
 
     public get userAmount(): number {
-        return this.user_ids?.length || 0;
+        return this.meeting_user_ids?.length || 0;
     }
 
     public get motionsAmount(): number {
@@ -152,7 +154,6 @@ interface IMeetingRelations {
     template_meeting_for_committee?: ViewCommittee;
     default_meeting_for_committee?: ViewCommittee;
     present_users: ViewUser[];
-    users: ViewUser[];
     reference_projector: ViewProjector;
     default_projectors: StructuredRelation<string, ViewProjector[]>;
     projections: ViewProjection[];
@@ -164,4 +165,10 @@ interface IMeetingRelations {
     poll_countdown: ViewProjectorCountdown;
     list_of_speakers_countdown: ViewProjectorCountdown;
 }
-export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle, HasOrganizationTags {}
+export interface ViewMeeting
+    extends Meeting,
+        IMeetingRelations,
+        HasProjectorTitle,
+        HasOrganizationTags,
+        HasMeetingUsers {}
+applyMixins(ViewMeeting, [HasMeetingUsers]);

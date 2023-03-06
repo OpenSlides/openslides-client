@@ -50,9 +50,7 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
     }
 
     public hasUserSpoken(userId: Id): boolean {
-        return !!this.speakers.find(
-            speaker => speaker.speaker.user_id === userId && speaker.state === SpeakerState.FINISHED
-        );
+        return !!this.speakers.find(speaker => speaker.user_id === userId && speaker.state === SpeakerState.FINISHED);
     }
 
     public findUserIndexOnList(userId: number): number {
@@ -69,12 +67,12 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
     }
 
     public getSpeakerByUserId(userId: Id): ViewSpeaker | undefined {
-        return this.speakers.find(speaker => speaker.speaker.user_id === userId);
+        return this.speakers.find(speaker => speaker.user_id === userId);
     }
 
     public isUserOnList(userId: Id): boolean {
         return !!this.speakers.find(speaker => {
-            return speaker.speaker.user_id === userId;
+            return speaker.user_id === userId;
         });
     }
 

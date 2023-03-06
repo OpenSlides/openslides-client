@@ -243,7 +243,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     // Other relations
     public present_user_ids!: Id[]; // (user/is_present_in_meeting_ids)[];
-    public user_ids!: Id[]; // Calculated: All ids all users assigned to groups.
+    public meeting_user_ids!: Id[]; // Calculated: All ids all users assigned to groups.
     public reference_projector_id!: Id; // projector/used_as_reference_projector_meeting_id;
     public default_projector_$_ids!: string[]; // projector/used_as_default_$_in_meeting_id;
 
@@ -381,6 +381,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_default_backend`,
         `poll_candidate_list_ids`,
         `poll_candidate_ids`,
+        `meeting_user_ids`,
         `users_enable_presence_view`,
         `users_enable_vote_weight`,
         `users_allow_self_set_present`,
@@ -414,6 +415,7 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_default_100_percent_base`,
         `poll_default_group_ids`,
         `poll_default_backend`,
+        `topic_poll_default_group_ids`,
         `projector_ids`,
         `all_projection_ids`,
         `projector_message_ids`,
@@ -444,17 +446,13 @@ export class Meeting extends BaseModel<Meeting> {
         `personal_note_ids`,
         `chat_group_ids`,
         `chat_message_ids`,
-        { templateField: `logo_$_id` },
-        { templateField: `font_$_id` },
         `committee_id`,
         `default_meeting_for_committee_id`,
         `organization_tag_ids`,
         `present_user_ids`,
-        `user_ids`,
         `reference_projector_id`,
         `list_of_speakers_countdown_id`,
         `poll_countdown_id`,
-        { templateField: `default_projector_$_ids` },
         `projection_ids`,
         `default_group_id`,
         `admin_group_id`

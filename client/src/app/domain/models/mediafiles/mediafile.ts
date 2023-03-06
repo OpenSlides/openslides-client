@@ -107,9 +107,7 @@ export class Mediafile extends BaseModel<Mediafile> {
         `list_of_speakers_id`,
         `projection_ids`,
         `attachment_ids`,
-        `owner_id`,
-        { templateField: `used_as_logo_$_in_meeting_id` },
-        { templateField: `used_as_font_$_in_meeting_id` }
+        `owner_id`
     ];
 }
 export interface Mediafile extends HasOwnerId, HasProjectionIds, HasListOfSpeakersId {}

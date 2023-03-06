@@ -47,7 +47,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         default_number: [``],
         default_vote_weight: [``],
         organization_management_level: [],
-        committee_$_management_level: []
+        committee_management_ids: []
     };
 
     public isFormValid = false;
@@ -100,7 +100,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public getTransformSetFn(): (value?: string[]) => Id[] {
-        return () => (this.user ? this.user.committee_management_level_ids(CML.can_manage) : []);
+        return () => (this.user ? this.user.committee_management_ids : []);
     }
 
     public getTransformPropagateFn(): (value?: Id[]) => any {
@@ -164,9 +164,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public getUserCommitteeManagementLevels(): ViewCommittee[] {
-        const committeesToManage: (ViewCommittee | null)[] = this.user!.committee_management_level_ids(
-            CML.can_manage
-        ).map(committeeId => this.committeeController.getViewModel(committeeId));
+        const committeesToManage: (ViewCommittee | null)[] = this.user!.committee_management_ids.map(committeeId =>
+            this.committeeController.getViewModel(committeeId)
+        );
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
     }
 
@@ -273,7 +273,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     private getPartialUserPayload(): any {
         const payload = this.personalInfoFormValue;
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
-            payload[`committee_$_management_level`] = { [CML.can_manage]: [] };
+            payload[`committee_management_ids`] = undefined;
         }
         return payload;
     }

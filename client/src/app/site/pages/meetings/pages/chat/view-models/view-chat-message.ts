@@ -1,7 +1,9 @@
+import { applyMixins } from 'src/app/infrastructure/utils';
+
 import { ChatMessage } from '../../../../../../domain/models/chat/chat-message';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
-import { ViewUser } from '../../../view-models/view-user';
+import { HasMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewChatGroup } from './view-chat-group';
 
 export class ViewChatMessage extends BaseViewModel<ChatMessage> {
@@ -12,9 +14,9 @@ export class ViewChatMessage extends BaseViewModel<ChatMessage> {
     }
 }
 
-export interface ViewChatMessage extends ChatMessage, ViewChatMessageRelations {}
+export interface ViewChatMessage extends ChatMessage, ViewChatMessageRelations, HasMeetingUser {}
+applyMixins(ViewChatMessage, [HasMeetingUser]);
 
 interface ViewChatMessageRelations extends HasMeeting {
-    user: ViewUser;
     chat_group: ViewChatGroup;
 }

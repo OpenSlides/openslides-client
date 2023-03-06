@@ -94,7 +94,6 @@ export class Projector extends BaseModel<Projector> {
         `preview_projection_ids`,
         `history_projection_ids`,
         `used_as_reference_projector_meeting_id`,
-        { templateField: `used_as_default_$_in_meeting_id` },
         `meeting_id`
     ];
 }

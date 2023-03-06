@@ -40,7 +40,12 @@ export const getParticipantIsPresentSubscriptionConfig: SubscriptionConfigGenera
         viewModelCtor: ViewMeeting,
         fieldset: [],
         ids: [id],
-        follow: [{ idField: `user_ids`, additionalFields: [`is_present_in_meeting_ids`] }]
+        follow: [
+            {
+                idField: `meeting_user_ids`,
+                follow: [{ idField: `user_ids`, additionalFields: [`is_present_in_meeting_ids`] }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION
 });
@@ -49,7 +54,13 @@ export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `user_ids`, fieldset: `participantList` }]
+        follow: [
+            {
+                idField: `meeting_user_ids`,
+                fieldset: `participantListMinimal`,
+                follow: [{ idField: `user_id`, fieldset: `participantList` }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION
 });
@@ -58,7 +69,13 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `user_ids`, fieldset: `participantListMinimal` }]
+        follow: [
+            {
+                idField: `meeting_user_ids`,
+                fieldset: `participantListMinimal`,
+                follow: [{ idField: `user_id`, fieldset: `participantListMinimal` }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 });

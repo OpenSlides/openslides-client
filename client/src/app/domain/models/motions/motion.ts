@@ -73,7 +73,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public category_id!: Id; // category/motion_ids;
     public block_id!: Id; // block/motion_ids;
     public submitter_ids!: Id[]; // (motion_submitter/motion_id)[];
-    public supporter_ids!: Id[]; // (user/supported_motion_$<meeting_id>_ids)[];
+    public supporter_meeting_user_ids!: Id[]; // (_meeting_user/supported_motion_ids)[];
     public poll_ids!: Id[]; // (motion_poll/motion_id)[];
     public change_recommendation_ids!: Id[]; // (motion_change_recommendation/motion_id)[];
     public statute_paragraph_id!: Id; // motion_statute_paragraph/motion_ids;
@@ -97,7 +97,6 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `sequential_number`,
         `title`,
         `text`,
-        { templateField: `amendment_paragraph_$` },
         `modified_final_version`,
         `reason`,
         `category_weight`,
@@ -126,7 +125,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `category_id`,
         `block_id`,
         `submitter_ids`,
-        `supporter_ids`,
+        `supporter_meeting_user_ids`,
         `poll_ids`,
         `change_recommendation_ids`,
         `statute_paragraph_id`,

@@ -8,7 +8,7 @@ export class PersonalNote extends BaseModel<PersonalNote> {
     public note!: string;
     public star!: boolean;
 
-    public user_id!: Id; // user/personal_note_$<meeting_id>_ids;
+    public meeting_user_id!: Id; // meeting_user/personal_note_ids;
     public content_object_id!: Fqid; // */personal_note_ids;
 
     public constructor(input: Partial<PersonalNote>) {
@@ -19,7 +19,7 @@ export class PersonalNote extends BaseModel<PersonalNote> {
         `id`,
         `note`,
         `star`,
-        `user_id`,
+        `meeting_user_id`,
         `content_object_id`,
         `meeting_id`
     ];
