@@ -1,12 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
-import {
-    FONT_PLACES,
-    FontPlace,
-    LOGO_PLACES,
-    LogoPlace,
-    ViewMediafileMeetingUsageKey
-} from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
@@ -133,18 +127,6 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         } else {
             return `insert_drive_file`;
         }
-    }
-
-    public getFontPlaces(): FontPlace[] {
-        return FONT_PLACES.filter(place => !!this.used_as_font_in_meeting_id(place));
-    }
-
-    public getLogoPlaces(): LogoPlace[] {
-        return LOGO_PLACES.filter(place => !!this.used_as_logo_in_meeting_id(place));
-    }
-
-    public getPlaces(): (LogoPlace | FontPlace)[] {
-        return [...this.getFontPlaces(), ...this.getLogoPlaces()];
     }
 }
 interface IMediafileRelations {
