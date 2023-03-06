@@ -36,6 +36,7 @@ export class Settings {
     // in the committee-list-view is finished.
     public is_template!: boolean; // Unique within a committee
     public enable_anonymous!: boolean;
+    public language!: boolean;
 
     // Jitsi/Livestream settings
     public jitsi_domain!: string;

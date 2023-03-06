@@ -22,6 +22,7 @@ export class OrganizationSetting {
     public enable_chat!: boolean;
     public limit_of_meetings!: number;
     public limit_of_users!: number;
+    public default_language!: string;
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data

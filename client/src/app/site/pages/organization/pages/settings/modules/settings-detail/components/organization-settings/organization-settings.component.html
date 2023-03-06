@@ -28,6 +28,18 @@
                 <mat-label>{{ 'Show this text on the login page' | translate }}</mat-label>
                 <input matInput formControlName="login_text" />
             </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'Default language' | translate }}</mat-label>
+                <mat-select formControlName="default_language">
+                    <mat-option
+                        *ngFor="let choice of translations | keyvalue"
+                        [value]="choice.key"
+                    >
+                        {{ choice.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
     </mat-card>
 
