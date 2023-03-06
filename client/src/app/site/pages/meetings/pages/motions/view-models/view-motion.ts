@@ -308,7 +308,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
      * specified by -array
      */
     public isParagraphBasedAmendment(): boolean {
-        return this.amendment_paragraph_$?.length > 0;
+        return this.amendment_paragraph_numbers?.length > 0;
     }
 
     public override getProjectionBuildDescriptor(

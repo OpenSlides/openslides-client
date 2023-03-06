@@ -134,7 +134,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     public set paragraphBasedAmendmentContent(content: {
-        amendment_paragraph_$: { [paragraph_number: number]: UnsafeHtml };
+        amendment_paragraph: { [paragraph_number: number]: UnsafeHtml };
     }) {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
