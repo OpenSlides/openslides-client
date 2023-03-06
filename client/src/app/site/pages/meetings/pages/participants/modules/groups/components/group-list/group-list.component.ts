@@ -154,7 +154,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
      */
     public async deleteSelectedGroup(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this group?`);
-        const content = this.translate.instant(this.selectedGroup!.name);
+        const content = this.selectedGroup!.name;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.selectedGroup!);
             this.cancelEditing();
