@@ -293,7 +293,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
                         // special handling of recommendation change: show `recommendation_label`
                         // instead of the state's normal title
                         if (originalBaseString === `Recommendation set to {}` && model instanceof ViewMotionState) {
-                            argumentString = this.translate.instant(model.recommendation_label);
+                            argumentString = model.recommendation_label;
                         } else {
                             argumentString = this.translate.instant(model.getTitle());
                         }

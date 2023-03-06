@@ -195,7 +195,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (!motion.recommendation) {
             return ``;
         }
-        let rec = this.translate.instant(motion.recommendation.recommendation_label);
+        let rec = motion.recommendation.recommendation_label;
         if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
             rec += ` ` + this.parseMotionPlaceholders(motion.recommendationExtension);
         }
