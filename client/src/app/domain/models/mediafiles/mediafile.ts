@@ -4,7 +4,7 @@ import { HasOwnerId } from '../../interfaces/has-owner-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasIdProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';
-import { MediafileMeetingUsageIdKey } from './mediafile.constants';
+import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace, MediafileMeetingUsageIdKey } from './mediafile.constants';
 
 interface PdfInformation {
     pages?: number;
@@ -46,7 +46,7 @@ export class Mediafile extends BaseModel<Mediafile> {
      * @param place The places the image can be used
      * @returns the meeting id or `null` if the image is not used.
      */
-    public used_as_logo_in_meeting_id(place?: string): Id | null {
+    public used_as_logo_in_meeting_id(place?: LogoPlace): Id | null {
         return this.used_in_meeting(`logo`, place);
     }
 
@@ -57,13 +57,13 @@ export class Mediafile extends BaseModel<Mediafile> {
      * @param place The text parts the font can be used
      * @returns the meeting id or `null` if the font is not used.
      */
-    public used_as_font_in_meeting_id(place?: string): Id | null {
+    public used_as_font_in_meeting_id(place?: FontPlace): Id | null {
         return this.used_in_meeting(`font`, place);
     }
 
-    private used_in_meeting(type: string, place?: string): Id | null {
+    private used_in_meeting(type: string, place?: LogoPlace | FontPlace): Id | null {
         if (!place) {
-            const list = this[`used_as_${type}_in_meeting_id`];
+            const list = this.getPlaces();
             for (let i = 0; i < list?.length; i++) {
                 const path = `used_as_${type}_${list[i]}_in_meeting_id` as keyof Mediafile;
                 if (path in this) {
@@ -73,12 +73,24 @@ export class Mediafile extends BaseModel<Mediafile> {
             return null;
         }
 
-        if (!this[`used_as_${type}_in_meeting_id`] || this[`used_as_${type}_in_meeting_id`].indexOf(place) === -1) {
+        if (!(this.getPlaces().indexOf(place) === -1)) {
             return null;
         }
 
         const path = `used_as_${type}_${place}_in_meeting_id` as keyof Mediafile;
         return (this[path] as Id) || null;
+    }
+
+    public getFontPlaces(): FontPlace[] {
+        return FONT_PLACES.filter(place => !!this.used_as_font_in_meeting_id(place));
+    }
+
+    public getLogoPlaces(): LogoPlace[] {
+        return LOGO_PLACES.filter(place => !!this.used_as_logo_in_meeting_id(place));
+    }
+
+    public getPlaces(): (LogoPlace | FontPlace)[] {
+        return [...this.getFontPlaces(), ...this.getLogoPlaces()];
     }
 
     /**
