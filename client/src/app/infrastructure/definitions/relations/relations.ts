@@ -222,12 +222,20 @@ export const RELATIONS: Relation[] = [
         viewModelIdField: `tagged_ids`
     }),
     // ########## User
-    ...makeManyStructuredUsers2MRelation({
-        otherViewModel: ViewPoll,
-        structuredField: `poll_voted`,
-        structuredIdField: `poll_voted_$_ids`,
-        otherViewModelField: `voted`,
-        otherViewModelIdField: `voted_ids`
+    // ...makeManyStructuredUsers2MRelation({
+    //     otherViewModel: ViewPoll,
+    //     structuredField: `poll_voted`,
+    //     structuredIdField: `poll_voted_ids`,
+    //     otherViewModelField: `voted`,
+    //     otherViewModelIdField: `voted_ids`
+    // }),
+    ...makeM2M({
+        AViewModel: ViewUser,
+        BViewModel: ViewPoll,
+        AField: `poll_voted`,
+        AIdField: `poll_voted_ids`,
+        BField: `voted`,
+        BIdField: `voted_ids`
     }),
     ...makeOneStructuredUser2MRelation({
         otherViewModel: ViewVote,
@@ -302,27 +310,25 @@ export const RELATIONS: Relation[] = [
         OField: `submitted_motions`
     }),
     // Vote delegations
-    // vote_delegated_$_to_id -> vote_delegations_$_from_ids
+    // vote_delegated_to_id -> vote_delegations_from_ids
     {
-        ownViewModels: [ViewUser],
-        foreignViewModel: ViewUser,
+        ownViewModels: [ViewMeetingUser],
+        foreignViewModel: ViewMeetingUser,
         ownField: `vote_delegated_to`,
-        ownIdField: `vote_delegated_$_to_id`,
+        ownIdField: `vote_delegated_to_id`,
         many: false,
         generic: false,
-        structured: true,
-        ownIdFieldDefaultAttribute: `active-meeting`
+        structured: false
     },
-    // vote_delegations_$_from_ids -> vote_delegated_$_to_id
+    // vote_delegations_from_ids -> vote_delegated_to_id
     {
-        ownViewModels: [ViewUser],
-        foreignViewModel: ViewUser,
+        ownViewModels: [ViewMeetingUser],
+        foreignViewModel: ViewMeetingUser,
         ownField: `vote_delegations_from`,
-        ownIdField: `vote_delegations_$_from_ids`,
+        ownIdField: `vote_delegations_from_ids`,
         many: true,
         generic: false,
-        structured: true,
-        ownIdFieldDefaultAttribute: `active-meeting`
+        structured: false
     },
     // ########## Committees
     ...makeM2O({

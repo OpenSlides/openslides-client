@@ -54,5 +54,7 @@ interface IMeetingUserRelations {
     personal_notes: ViewPersonalNote[];
     supported_motions: ViewMotion[];
     submitted_motions: ViewMotionSubmitter[];
+    vote_delegated_to: ViewMeetingUser;
+    vote_delegations_from: ViewMeetingUser[];
 }
 export interface ViewMeetingUser extends MeetingUser, IMeetingUserRelations {}

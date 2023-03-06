@@ -35,7 +35,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get isCommitteeManager(): boolean {
-        return !!this.committee_managements();
+        return !!this.committee_managements.length;
     }
 
     public get numberOfMeetings(): number {
@@ -244,6 +244,22 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public getMeetingUser(meetingId?: Id): ViewMeetingUser {
         return this.meeting_users.find(user => user.meeting_id === (meetingId || this.getEnsuredActiveMeetingId()));
     }
+
+    public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to;
+    }
+
+    public vote_delegated_to(meetingId?: number): ViewUser {
+        return this.vote_delegated_to_meeting_user(meetingId)?.user;
+    }
+
+    public vote_delegations_from_meeting_users(meetingId?: number): ViewMeetingUser[] {
+        return this.getMeetingUser(meetingId)?.vote_delegations_from;
+    }
+
+    public vote_delegations_from(meetingId?: number): ViewUser[] {
+        return this.vote_delegations_from_meeting_users(meetingId)?.map(meeting_user => meeting_user.user);
+    }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
@@ -252,13 +268,10 @@ interface IUserRelations {
     meetings: ViewMeeting[];
     organization: ViewOrganization;
     meeting_users: ViewMeetingUser[];
-    committee_managements: UserManyStructuredRelation<ViewCommittee>;
-    // groups: UserManyStructuredRelation<ViewGroup>;
-    poll_voted: UserManyStructuredRelation<ViewPoll>;
+    poll_voted: ViewPoll[];
+    committee_managements: ViewCommittee[];
     options: UserManyStructuredRelation<ViewOption>;
     votes: UserManyStructuredRelation<ViewVote>;
-    vote_delegated_to: (arg?: number) => ViewUser;
-    vote_delegations_from: UserManyStructuredRelation<ViewUser>;
 }
 
 export interface ViewUser extends User, IUserRelations {}
