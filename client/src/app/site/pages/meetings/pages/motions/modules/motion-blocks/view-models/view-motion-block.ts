@@ -1,5 +1,6 @@
+import { PROJECTIONDEFAULT, Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+
 import { MotionBlock } from '../../../../../../../../domain/models/motions/motion-block';
-import { Projectiondefault } from '../../../../../../../../domain/models/projector/projection-default';
 import { BaseProjectableViewModel } from '../../../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { HasAgendaItem } from '../../../../agenda';
@@ -31,7 +32,7 @@ export class ViewMotionBlock extends BaseProjectableViewModel<MotionBlock> {
     }
 
     public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.motionBlock;
+        return PROJECTIONDEFAULT.motionBlock;
     }
 }
 interface IMotionBlockRelations {

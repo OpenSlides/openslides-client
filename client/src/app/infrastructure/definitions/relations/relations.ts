@@ -3,7 +3,13 @@ import {
     LOGO_PLACES,
     ViewMediafileMeetingUsageKey
 } from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { ViewMeetingMediafileUsageKey } from 'src/app/domain/models/meetings/meeting.constants';
+import {
+    MeetingDefaultProjectorIdsKey,
+    ViewMeetingDefaultProjectorsKey,
+    ViewMeetingMediafileUsageKey
+} from 'src/app/domain/models/meetings/meeting.constants';
+import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
+import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
 
@@ -56,7 +62,8 @@ import {
     makeGenericO2O,
     makeM2M,
     makeM2O,
-    makeManyDynamicallyNamedO2ORelations,
+    makeManyDynamicallyNamedM2O,
+    makeManyDynamicallyNamedO2O,
     makeO2O,
     Relation
 } from './utils';
@@ -629,6 +636,15 @@ export const RELATIONS: Relation[] = [
         generic: false,
         structured: true
     },
+    ...makeManyDynamicallyNamedM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewProjector,
+        config: PROJECTIONDEFAULTS.map(place => ({
+            OField: `default_projectors_${place}` as ViewMeetingDefaultProjectorsKey,
+            OIdField: `default_projector_${place}_ids` as MeetingDefaultProjectorIdsKey,
+            MField: `used_as_default_${place}_in_meeting` as ViewProjectorMeetingUsageKey
+        }))
+    }),
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewGroup,
@@ -641,7 +657,7 @@ export const RELATIONS: Relation[] = [
         AField: `admin_group`,
         BField: `admin_group_for_meeting`
     }),
-    ...makeManyDynamicallyNamedO2ORelations({
+    ...makeManyDynamicallyNamedO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewMediafile,
         config: [

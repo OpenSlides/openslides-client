@@ -1,4 +1,5 @@
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from '../mediafiles/mediafile.constants';
+import { Projectiondefault, PROJECTIONDEFAULTS } from '../projector/projection-default';
 
 export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
 
@@ -21,7 +22,10 @@ export const MEETING_MEDIAFILE_USAGE_ID_KEYS = [
 
 export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
 
-export const VIEW_MEETING_MEDIAFILE_USAGE_KEYS = [
-    ...LOGO_PLACES.map(place => `logo_${place}` as ViewMeetingMediafileUsageKey),
-    ...FONT_PLACES.map(place => `font_${place}` as ViewMeetingMediafileUsageKey)
-];
+export type MeetingDefaultProjectorIdsKey = `default_projector_${Projectiondefault}_ids`;
+
+export const MEETING_DEFAULT_PROJECTOR_IDS_KEYS = PROJECTIONDEFAULTS.map(
+    place => `default_projector_${place}_ids`
+) as MeetingDefaultProjectorIdsKey[];
+
+export type ViewMeetingDefaultProjectorsKey = `default_projectors_${Projectiondefault}`;

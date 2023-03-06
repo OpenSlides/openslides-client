@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
+import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
-import { StructuredRelation } from 'src/app/infrastructure/definitions/relations';
+import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
@@ -30,6 +31,10 @@ export class ViewProjector extends BaseViewModel<Projector> {
     public get nonStableCurrentProjections(): ViewProjection[] {
         return this.current_projections.filter(projection => !projection.stable);
     }
+
+    public used_as_default_in_meeting(place: Projectiondefault): ViewMeeting {
+        return this[`used_as_default_${place}_in_meeting`];
+    }
 }
 interface IProjectorRelations {
     current_projections: ViewProjection[];
@@ -37,6 +42,9 @@ interface IProjectorRelations {
     preview_projections: ViewProjection[];
     history_projections: ViewProjection[];
     used_as_reference_projector_in_meeting?: ViewMeeting;
-    used_as_default_in_meeting: StructuredRelation<Projectiondefault, ViewMeeting | null>;
 }
-export interface ViewProjector extends Projector, IProjectorRelations, HasMeeting {}
+export interface ViewProjector
+    extends Projector,
+        IProjectorRelations,
+        HasMeeting,
+        HasProperties<ViewProjectorMeetingUsageKey, ViewMeeting> {}

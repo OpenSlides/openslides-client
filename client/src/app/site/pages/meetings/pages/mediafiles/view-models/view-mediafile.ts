@@ -2,11 +2,11 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import { PROJECTIONDEFAULT, Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
-import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
@@ -64,7 +64,7 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     }
 
     public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.mediafile;
+        return PROJECTIONDEFAULT.mediafile;
     }
 
     public getDirectoryChain(): ViewMediafile[] {

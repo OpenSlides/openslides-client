@@ -2,7 +2,7 @@ import { Fqid, Id } from '../../definitions/key-types';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasOwnerId } from '../../interfaces/has-owner-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
-import { HasIdProperties } from '../../interfaces/has-properties';
+import { HasProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace, MediafileMeetingUsageIdKey } from './mediafile.constants';
 
@@ -106,4 +106,4 @@ export interface Mediafile
     extends HasOwnerId,
         HasProjectionIds,
         HasListOfSpeakersId,
-        HasIdProperties<MediafileMeetingUsageIdKey> {}
+        HasProperties<MediafileMeetingUsageIdKey, number> {}

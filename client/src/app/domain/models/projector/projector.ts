@@ -1,8 +1,10 @@
 import { Id } from '../../definitions/key-types';
 import { HasSequentialNumber } from '../../interfaces';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { HasProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';
 import { Projectiondefault } from './projection-default';
+import { ProjectorMeetingUsageIdKey } from './projector.constants';
 
 /**
  * Representation of a projector.
@@ -32,7 +34,6 @@ export class Projector extends BaseModel<Projector> {
     public preview_projection_ids!: Id[]; // (projection/preview_projector_id)[];
     public history_projection_ids!: Id[]; // (projection/history_projector_id)[];
     public used_as_reference_projector_meeting_id!: Id; // meeting/reference_projector_id;
-    public used_as_default_$_in_meeting_id!: Projectiondefault[]; // meeting/default_projector_$_id;
 
     /**
      * @returns Calculate the height of the projector
@@ -67,7 +68,10 @@ export class Projector extends BaseModel<Projector> {
     }
 
     public used_as_default_in_meeting_id(projectiondefault: Projectiondefault): Id | null {
-        return (this[`used_as_default_$${projectiondefault}_in_meeting_id` as keyof Projector] as Id) || null;
+        return (this[`used_as_default_${projectiondefault}_in_meeting_id` as keyof Projector] as Id) || null;
     }
 }
-export interface Projector extends HasMeetingId, HasSequentialNumber {}
+export interface Projector
+    extends HasMeetingId,
+        HasSequentialNumber,
+        HasProperties<ProjectorMeetingUsageIdKey, number> {}

@@ -233,34 +233,33 @@ export function makeGenericM2M<V extends BaseViewModel, I>(args: {
     ];
 }
 
-export function makeManyDynamicallyNamedO2ORelations<A extends BaseViewModel, B extends BaseViewModel>(args: {
+export function makeManyDynamicallyNamedO2O<A extends BaseViewModel, B extends BaseViewModel>(args: {
     AViewModel: ViewModelConstructor<A>;
     BViewModel: ViewModelConstructor<B>;
     config: {
-        AField: keyof A;
-        AIdField?: keyof A;
-        BField: keyof B;
-        BIdField?: keyof B;
+        AField: keyof A & string;
+        AIdField?: keyof A & string;
+        BField: keyof B & string;
+        BIdField?: keyof B & string;
     }[];
 }): Relation[] {
-    return args.config.flatMap(conf => [
-        {
-            ownViewModels: [args.AViewModel],
-            foreignViewModel: args.BViewModel,
-            ownField: conf.AField,
-            ownIdField: conf.AIdField,
-            many: false,
-            generic: false,
-            structured: false
-        },
-        {
-            ownViewModels: [args.BViewModel],
-            foreignViewModel: args.AViewModel,
-            ownField: conf.BField,
-            ownIdField: conf.BIdField,
-            many: false,
-            generic: false,
-            structured: false
-        }
-    ]);
+    const { config, ...info } = args;
+    return config.flatMap(conf => makeO2O({ ...info, ...conf }));
+}
+
+export function makeManyDynamicallyNamedM2O<O extends BaseViewModel, M extends BaseViewModel>(args: {
+    OViewModel: ViewModelConstructor<O>;
+    MViewModel: ViewModelConstructor<M>;
+    config: {
+        OField: keyof O & string;
+        OIdField?: keyof O & string;
+        MField: keyof M & string;
+        MIdField?: keyof M & string;
+    }[];
+    order?: keyof M & string;
+    isFullList?: boolean;
+    isExclusiveList?: boolean;
+}): Relation[] {
+    const { config, ...info } = args;
+    return config.flatMap(conf => makeM2O({ ...info, ...conf }));
 }
