@@ -2,10 +2,13 @@ import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
-import { ViewMeetingMediafileUsageKey } from 'src/app/domain/models/meetings/meeting.constants';
+import {
+    ViewMeetingDefaultProjectorsKey,
+    ViewMeetingMediafileUsageKey
+} from 'src/app/domain/models/meetings/meeting.constants';
+import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { applyMixins } from 'src/app/infrastructure/utils';
 
-import { StructuredRelation } from '../../../../infrastructure/definitions/relations';
 import { BaseViewModel } from '../../../base/base-view-model';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';
@@ -85,6 +88,10 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     public getSpecifiedPlaces(): (LogoPlace | FontPlace)[] {
         return [...this.getSpecifiedLogoPlaces(), ...this.getSpecifiedFontPlaces()];
     }
+
+    public default_projectors(place: Projectiondefault): ViewProjector[] {
+        return this[`default_projectors_${place}`];
+    }
 }
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
@@ -128,7 +135,6 @@ interface IMeetingRelations {
     default_meeting_for_committee?: ViewCommittee;
     present_users: ViewUser[];
     reference_projector: ViewProjector;
-    default_projectors: StructuredRelation<string, ViewProjector[]>;
     projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;
@@ -144,5 +150,6 @@ export interface ViewMeeting
         HasProjectorTitle,
         HasOrganizationTags,
         HasMeetingUsers,
-        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile> {}
+        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
+        HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}
 applyMixins(ViewMeeting, [HasMeetingUsers]);

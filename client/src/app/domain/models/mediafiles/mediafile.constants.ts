@@ -48,8 +48,3 @@ export const MEDIAFILE_MEETING_USAGE_ID_KEYS = [
 export type ViewMediafileMeetingUsageKey =
     | `used_as_logo_${LogoPlace}_in_meeting`
     | `used_as_font_${FontPlace}_in_meeting`;
-
-export const VIEW_MEDIAFILE_MEETING_USAGE_KEYS = [
-    ...LOGO_PLACES.map(place => `used_as_logo_${place}_in_meeting` as ViewMediafileMeetingUsageKey),
-    ...FONT_PLACES.map(place => `used_as_font_${place}_in_meeting` as ViewMediafileMeetingUsageKey)
-];

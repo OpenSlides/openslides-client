@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { MEETING_DEFAULT_PROJECTOR_IDS_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 const PROJECTOR_SUBSCRIPTION = `projector_list`;
@@ -22,7 +23,7 @@ export const getProjectorListSubscriptionConfig = (
             },
             `projector_countdown_ids`,
             `projector_message_ids`,
-            `default_projector_$_ids`,
+            ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS,
             { idField: `speaker_ids`, additionalFields: [`meeting_user_id`] },
             `list_of_speakers_ids`
         ],
