@@ -237,11 +237,11 @@ export function makeManyDynamicallyNamedO2ORelations<A extends BaseViewModel, B 
     AViewModel: ViewModelConstructor<A>;
     BViewModel: ViewModelConstructor<B>;
     config: {
-        AField: keyof A,
-        AIdField?: keyof A,
-        BField: keyof B,
-        BIdField?: keyof B,
-    }[]
+        AField: keyof A;
+        AIdField?: keyof A;
+        BField: keyof B;
+        BIdField?: keyof B;
+    }[];
 }): Relation[] {
     return args.config.flatMap(conf => [
         {
@@ -262,5 +262,5 @@ export function makeManyDynamicallyNamedO2ORelations<A extends BaseViewModel, B 
             generic: false,
             structured: false
         }
-    ])
+    ]);
 }

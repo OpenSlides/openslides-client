@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { isMoment, Moment } from 'moment';
+import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 import { Action } from 'src/app/gateways/actions';
 
 import { Id } from '../../domain/definitions/key-types';
@@ -73,8 +74,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `welcome_title`,
             `welcome_text`,
             `enable_anonymous`,
-            { templateField: `logo_$_id` },
-            { templateField: `font_$_id` }
+            ...MEETING_MEDIAFILE_USAGE_ID_KEYS
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `is_template`,

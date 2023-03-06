@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MEDIAFILE_USAGE_ID_KEYS } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { MEDIAFILE_MEETING_USAGE_ID_KEYS } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
@@ -47,7 +47,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             `has_inherited_access_groups`,
             `access_group_ids`,
             `inherited_access_group_ids`,
-            ...MEDIAFILE_USAGE_ID_KEYS
+            ...MEDIAFILE_MEETING_USAGE_ID_KEYS
         ]);
         const organizationListFields: TypedFieldset<Mediafile> = baseListFields.concat([`token`]);
         return {
