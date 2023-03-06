@@ -8,6 +8,8 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { LifecycleService } from '../../../services/lifecycle.service';
+import { ORGANIZATION_ID } from '../../organization/services/organization.service';
+import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { getParticipantMinimalSubscriptionConfig } from '../pages/participants/config/model-subscription';
 import { getProjectorListSubscriptionConfig } from '../pages/projectors/config/model-subscription';
 import { ViewMeeting } from '../view-models/view-meeting';
@@ -24,6 +26,16 @@ const getMediafilesSubscriptionConfig = (id: Id, getNextMeetingIdObservable: () 
         viewModelCtor: ViewMeeting,
         ids: [id],
         follow: [`mediafile_ids`]
+    },
+    subscriptionName: MEETING_DETAIL_MEDIAFILES_SUBSCRIPTION,
+    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
+});
+
+const getGeneralMediafilesSubscriptionConfig = (getNextMeetingIdObservable: () => Observable<Id | null>) => ({
+    modelRequest: {
+        viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
+        follow: [{ idField: `mediafile_ids`, fieldset: `organizationDetail` }]
     },
     subscriptionName: MEETING_DETAIL_MEDIAFILES_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
@@ -184,6 +196,7 @@ export class ActiveMeetingService {
             ),
             getMeetingDetailSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
             getMediafilesSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
+            getGeneralMediafilesSubscriptionConfig(() => this.activeMeetingIdService.meetingIdObservable),
             getProjectorListSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable()),
             getParticipantMinimalSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable())
         );

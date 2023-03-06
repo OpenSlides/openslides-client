@@ -13,6 +13,7 @@ import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewTopic } from '../../../../view-models';
+import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic-poll-pdf.service';
 
 @Component({
     selector: `os-topic-poll`,
@@ -72,7 +73,8 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         private formBuilder: UntypedFormBuilder,
         private operator: OperatorService,
         private votingService: VotingService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
+        private votingPrivacyDialog: VotingPrivacyWarningDialogService,
+        private pdfService: TopicPollPdfService
     ) {
         super(componentServiceCollector, translate, promptService, choiceService, repo);
     }
@@ -93,6 +95,10 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
             console.error(e);
             this.raiseError(e);
         }
+    }
+
+    public downloadPdf(): void {
+        this.pdfService.printBallots(this.poll);
     }
 
     public openVotingWarning(): void {

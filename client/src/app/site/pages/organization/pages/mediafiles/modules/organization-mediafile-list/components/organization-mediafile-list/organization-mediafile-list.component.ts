@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
@@ -44,6 +45,11 @@ export class OrganizationMediafileListComponent
 
     public newDirectoryForm: UntypedFormGroup;
 
+    public logoPlaces: LogoPlace[] = [`web_header`];
+    public logoDisplayNames = LogoDisplayNames;
+
+    public updatingLogoAndFontSettings = false;
+
     /**
      * @return true if the user can manage media files
      */
@@ -66,6 +72,9 @@ export class OrganizationMediafileListComponent
      * The form to edit Files
      */
     public fileEditForm: UntypedFormGroup | null = null;
+
+    public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(file);
+    public isUsedAsFontFn = (file: ViewMediafile) => false;
 
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
@@ -112,6 +121,42 @@ export class OrganizationMediafileListComponent
         super.ngOnDestroy();
         this.clearSubscriptions();
         this.cd.detach();
+    }
+
+    public isMediafileUsed(file: ViewMediafile, place: LogoPlace): boolean {
+        const mediafile = this.repo.getViewModel(file.id)!;
+        if (file.isImage() && !Object.keys(LogoDisplayNames).includes(place)) {
+            return false;
+        }
+        return mediafile.token === place;
+    }
+
+    public async toggleMediafileUsage(event: Event, mediafile: ViewMediafile, place: LogoPlace): Promise<void> {
+        // prohibits automatic closing
+        event.stopPropagation();
+        this.updatingLogoAndFontSettings = true;
+        const file = this.repo.getViewModel(mediafile.id);
+        if (!file || (file.isImage() && !Object.keys(LogoDisplayNames).includes(place))) {
+            throw new Error(!file ? `File has been deleted` : `Invalid mediafile type for place.`);
+        }
+        const fullPlace = place;
+        if (file.token !== fullPlace) {
+            for (let filteredFile of this.repo
+                .getViewModelList()
+                .filter(filterFile => filterFile.token === fullPlace && filterFile.id !== file.id)) {
+                await this.repo.update({ token: null }, filteredFile);
+            }
+            await this.repo.update({ token: fullPlace }, file);
+        } else {
+            await this.repo.update({ token: null }, file);
+        }
+        this.updatingLogoAndFontSettings = false;
+        this.cd.markForCheck();
+    }
+
+    public getDisplayNameForPlace(place: LogoPlace): string {
+        const prefix = `Global`;
+        return `${prefix} ${LogoDisplayNames[place].toLowerCase()}`;
     }
 
     public override selectAll(): void {
@@ -227,5 +272,10 @@ export class OrganizationMediafileListComponent
             this.directorySubscription.unsubscribe();
             this.directorySubscription = null;
         }
+    }
+
+    private isUsedAs(file: ViewMediafile): boolean {
+        const places = this.logoPlaces;
+        return places.some(place => this.isMediafileUsed(file, place));
     }
 }

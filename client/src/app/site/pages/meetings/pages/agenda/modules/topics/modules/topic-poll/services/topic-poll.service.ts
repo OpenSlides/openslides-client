@@ -99,10 +99,6 @@ export class TopicPollService extends PollService {
         );
     }
 
-    public override generateTableData(poll: PollData): PollTableData[] {
-        return this.createTableData(poll, poll.options);
-    }
-
     private createTableData(poll: PollData, options: OptionData[]): PollTableData[] {
         let tableData: PollTableData[] = options.flatMap(option =>
             super.getVoteTableKeys(poll).map(key => this.createTableDataEntry(poll, key, option))
