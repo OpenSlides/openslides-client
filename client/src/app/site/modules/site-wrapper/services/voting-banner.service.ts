@@ -63,10 +63,14 @@ export class VotingBannerService {
     }
 
     private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }) {
-        const checkUsers = [this.operator.user, ...this.operator.user.vote_delegations_from()];
-        this.pollsToVote = polls.filter(
-            poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined
-        );
+        if (this.activeMeeting.meetingId) {
+            const checkUsers = [this.operator.user, ...this.operator.user.vote_delegations_from()];
+            this.pollsToVote = polls.filter(
+                poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined
+            );
+        } else {
+            this.pollsToVote = [];
+        }
 
         // display no banner if in history mode or there are no polls to vote
         if ((this.historyService.isInHistoryMode() && this.currentBanner) || !this.pollsToVote.length) {
