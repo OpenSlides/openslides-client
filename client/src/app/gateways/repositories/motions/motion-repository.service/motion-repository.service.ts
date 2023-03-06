@@ -232,7 +232,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             number: partialMotion.number,
             block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
-            amendment_paragraph_$: partialMotion.amendment_paragraph_$,
+            amendment_paragraph: partialMotion.amendment_paragraph,
             sort_parent_id: partialMotion.sort_parent_id,
             supporter_meeting_user_ids:
                 partialMotion.supporter_meeting_user_ids === null ? [] : partialMotion.supporter_meeting_user_ids,
@@ -291,7 +291,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             `referenced_in_motion_recommendation_extension_ids`,
             `list_of_speakers_id`,
             `agenda_item_id`, // for add/remove from agenda,
-            { templateField: `amendment_paragraph_$` },
+            `amendment_paragraph`,
             `origin_id`,
             `origin_meeting_id`,
             `all_origin_ids`,
