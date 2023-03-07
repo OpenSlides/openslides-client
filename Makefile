@@ -20,7 +20,6 @@ run-cleanup:
 
 run-tests: | build-dev
 	docker run -t openslides-client-dev npm run lint
-	docker run -t openslides-client-dev npm run prettify-check
 	docker run -t openslides-client-dev npm run test-silently
 	docker run -t openslides-client-dev npm run build-debug
 
@@ -29,9 +28,6 @@ run-karma-tests:
 
 run-check-linting:
 	docker run -t openslides-client-dev npm run lint
-
-run-check-prettifying:
-	docker run -t openslides-client-dev npm run prettify-check
 
 run-playwright:
 	docker-compose -f client/tests/docker-compose.test.yml build
