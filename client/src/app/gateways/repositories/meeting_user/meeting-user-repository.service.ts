@@ -81,9 +81,4 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getVerboseName = (plural: boolean = false): string =>
         this.translate.instant(plural ? `Participants` : `Participant`);
-
-    public isFieldAllowedToBeEmpty(field: string): boolean {
-        const fields: string[] = [`comment`, `about_me`, `number`, `structure_level`];
-        return fields.includes(field);
-    }
 }
