@@ -36,7 +36,7 @@ export class Poll extends BaseDecimalModel<Poll> {
 
     public pollmethod!: PollMethod;
 
-    public voted_ids!: Id[]; // (user/poll_voted_$<meeting_id>_ids)[];
+    public voted_ids!: Id[]; // (user/poll_voted_ids)[];
 
     public entitled_group_ids!: Id[]; // (group/(assignment|motion)_poll_ids)[];
     public option_ids!: Id[]; // ((assignment|motion)_option/poll_id)[];

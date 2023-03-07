@@ -260,6 +260,14 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public vote_delegations_from(meetingId?: number): ViewUser[] {
         return this.vote_delegations_from_meeting_users(meetingId)?.map(meeting_user => meeting_user.user);
     }
+
+    /**
+     * Returns all votes given by the user in a given meeting.
+     */
+    public getAllVotes(meetingId?: number): ViewVote[] {
+        const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
+        return this.votes.filter(vote => vote.meeting_id === meetingID).concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? [])
+    }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
@@ -270,8 +278,8 @@ interface IUserRelations {
     meeting_users: ViewMeetingUser[];
     poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
-    options: UserManyStructuredRelation<ViewOption>;
-    votes: UserManyStructuredRelation<ViewVote>;
+    options: ViewOption[];
+    votes: ViewVote[];
 }
 
 export interface ViewUser extends User, IUserRelations {}

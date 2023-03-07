@@ -237,17 +237,17 @@ export const RELATIONS: Relation[] = [
         BField: `voted`,
         BIdField: `voted_ids`
     }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewVote,
-        structuredField: `votes`,
-        structuredIdField: `vote_$_ids`,
-        otherViewModelField: `user`
+    ...makeM2O({
+        OViewModel: ViewUser,
+        MViewModel: ViewVote,
+        OField: `votes`,
+        MField: `user`
     }),
-    ...makeOneStructuredUser2MRelation({
-        otherViewModel: ViewVote,
-        structuredField: `votes`,
-        structuredIdField: `delegated_vote_$_ids`,
-        otherViewModelField: `delegated_user`
+    ...makeM2O({
+        OViewModel: ViewMeetingUser,
+        MViewModel: ViewVote,
+        OField: `vote_delegated_votes`,
+        MField: `delegated_user`
     }),
     ...makeM2M({
         AViewModel: ViewUser,
@@ -622,26 +622,6 @@ export const RELATIONS: Relation[] = [
         AField: `poll_countdown`,
         BField: `used_as_poll_countdown_meeting`
     }),
-    // Projector -> Meeting
-    {
-        ownViewModels: [ViewProjector],
-        foreignViewModel: ViewMeeting,
-        ownField: `used_as_default_in_meeting`,
-        ownIdField: `used_as_default_$_in_meeting_id`,
-        many: false,
-        generic: false,
-        structured: true
-    },
-    // Meeting -> Projector
-    {
-        ownViewModels: [ViewMeeting],
-        foreignViewModel: ViewProjector,
-        ownField: `default_projectors`,
-        ownIdField: `default_projector_$_ids`,
-        many: true,
-        generic: false,
-        structured: true
-    },
     ...makeManyDynamicallyNamedM2O({
         OViewModel: ViewMeeting,
         MViewModel: ViewProjector,

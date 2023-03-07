@@ -10,8 +10,8 @@ export class Vote extends BaseModel<Vote> {
     public value!: VoteValue;
 
     public option_id!: Id; // (assignment|motion)_option/vote_ids;
-    public user_id!: Id; // user/(assignment|motion)_vote_$<meeting_id>_ids;
-    public delegated_user_id!: Id; // user/(assignment|motion)_delegated_vote_$_ids;
+    public user_id!: Id; // user/vote_ids;
+    public delegated_user_id!: Id; // meeting_user/vote_delegated_vote_ids;
     public user_token!: string;
 
     public get valueVerbose(): string {

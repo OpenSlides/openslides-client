@@ -6,6 +6,7 @@ import { ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatMessage } from '../pages/chat';
 import { ViewMotion, ViewMotionSubmitter, ViewPersonalNote } from '../pages/motions';
 import { ViewGroup } from '../pages/participants';
+import { ViewVote } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 
@@ -56,5 +57,6 @@ interface IMeetingUserRelations {
     submitted_motions: ViewMotionSubmitter[];
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
+    vote_delegated_votes: ViewVote[];
 }
 export interface ViewMeetingUser extends MeetingUser, IMeetingUserRelations {}

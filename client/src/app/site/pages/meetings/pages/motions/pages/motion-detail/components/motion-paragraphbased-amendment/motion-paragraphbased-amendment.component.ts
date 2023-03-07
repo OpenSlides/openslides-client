@@ -162,7 +162,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
             `contentForm`,
             this.contentForm!.valueChanges.subscribe(value => {
                 if (value) {
-                    this.formChanged.emit({ amendment_paragraph_$: value });
+                    this.formChanged.emit({ amendment_paragraph: value });
                     this.validStateChanged.emit(this.contentForm!.valid);
                     this.cd.markForCheck();
                 }
