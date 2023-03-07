@@ -151,7 +151,10 @@ export class AutoupdateService {
      */
     public async single(modelRequest: ModelRequestObject, description: string): Promise<ModelData> {
         const request = modelRequest.getModelRequest();
-        console.log(`autoupdate: new single request:`, description, modelRequest, request);
+        console.groupCollapsed(`[autoupdate] new single request:`, description);
+        console.debug(modelRequest);
+        console.debug(request);
+        console.groupEnd();
         const modelSubscription = await this.request(request, description, null, { single: 1 });
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
         const data = await modelSubscription.receivedData;
@@ -169,7 +172,10 @@ export class AutoupdateService {
      */
     public async subscribe(modelRequest: ModelRequestObject, description: string): Promise<ModelSubscription> {
         const request = modelRequest.getModelRequest();
-        console.log(`autoupdate: new request:`, description, modelRequest, request);
+        console.groupCollapsed(`[autoupdate] new request:`, description);
+        console.debug(modelRequest);
+        console.debug(request);
+        console.groupEnd();
         const modelSubscription = await this.request(request, description);
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
         return modelSubscription;
@@ -213,7 +219,10 @@ export class AutoupdateService {
         }
 
         const modelData = autoupdateFormatToModelData(autoupdateData);
-        console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
+        console.groupCollapsed(`[autoupdate] from stream:`, description, id);
+        console.debug(modelData);
+        console.debug(autoupdateData);
+        console.groupEnd();
         const fullListUpdateCollections: {
             [collection: string]: Ids;
         } = {};
