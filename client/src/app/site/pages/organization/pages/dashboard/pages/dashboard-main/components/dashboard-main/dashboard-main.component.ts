@@ -3,7 +3,8 @@ import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
-import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/config/model-subscription';
+
+import { getDashboardMeetingListSubscriptionConfig } from '../../../../config/model-subscription';
 
 @Component({
     selector: `os-dashboard-main`,
@@ -12,6 +13,6 @@ import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organizatio
 })
 export class DashboardMainComponent extends BaseModelRequestHandlerComponent {
     protected override onCreateModelRequests(): void | ModelRequestConfig[] {
-        return [getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())];
+        return [getDashboardMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())];
     }
 }
