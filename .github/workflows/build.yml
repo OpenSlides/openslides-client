@@ -58,6 +58,9 @@ jobs:
       - name: Check linting
         run: make run-check-linting
 
+      - name: Check prettifying
+        run: make run-check-prettifying
+
       - name: Run karma tests
         run: make run-karma-tests
 
