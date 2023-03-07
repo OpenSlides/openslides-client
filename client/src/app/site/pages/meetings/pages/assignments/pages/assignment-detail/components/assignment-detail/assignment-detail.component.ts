@@ -20,6 +20,7 @@ import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
@@ -148,7 +149,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         private pdfService: AssignmentExportService,
         private pollDialog: AssignmentPollDialogService,
         private assignmentPollService: AssignmentPollService,
-        private pollController: PollControllerService
+        private pollController: PollControllerService,
+        private userRepo: UserControllerService
     ) {
         super(componentServiceCollector, translate);
         this.assignmentForm = formBuilder.group({
@@ -320,7 +322,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async addCandidate(data: UserSelectionData): Promise<void> {
         if (data.userId && typeof data.userId === `number`) {
-            await this.assignmentCandidateRepo.create(this.assignment, data.userId);
+            const meetingUserId = this.userRepo.getViewModel(data.userId)?.getMeetingUser()?.id;
+            if (!meetingUserId) {
+                throw new Error(`Failed to add candidate: Couldn't find meeting user id`)
+            }
+            await this.assignmentCandidateRepo.create(this.assignment, meetingUserId);
             this.updateCandidatesArray();
         }
     }
