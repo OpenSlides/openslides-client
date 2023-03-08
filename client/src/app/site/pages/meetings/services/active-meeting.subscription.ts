@@ -2,7 +2,6 @@ import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
-import { ViewPoll } from '../pages/polls';
 import { ViewMeeting } from '../view-models/view-meeting';
 
 export const ACTIVE_MEETING_SUBSCRIPTION = `active_meeting`;

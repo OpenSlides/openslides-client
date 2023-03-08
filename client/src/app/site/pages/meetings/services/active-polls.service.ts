@@ -5,8 +5,8 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 
 import { PollControllerService } from '../modules/poll/services/poll-controller.service';
 import { ViewPoll } from '../pages/polls';
-import { ACTIVE_POLLS_SUBSCRIPTION, getActivePollsSubscriptionConfig } from './active-polls.subscription';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
+import { ACTIVE_POLLS_SUBSCRIPTION, getActivePollsSubscriptionConfig } from './active-polls.subscription';
 
 @Injectable({
     providedIn: `root`
