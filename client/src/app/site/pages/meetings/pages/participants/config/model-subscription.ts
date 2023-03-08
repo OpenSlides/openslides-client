@@ -3,8 +3,22 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 const PARTICIPANT_LIST_SUBSCRIPTION = `participant_list`;
+const PARTICIPANT_VOTE_INFO_SUBSCRIPTION = `participant_vote_info_list`;
 const PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION = `participant_is_present_list`;
 const PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL = `participant_list_minimal`;
+
+export const getParticipantVoteInfoSubscriptionConfig = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        fieldset: [],
+        ids: [id],
+        follow: [{
+            idField: `user_ids`,
+            fieldset: `participantList`
+        }]
+    },
+    subscriptionName: PARTICIPANT_VOTE_INFO_SUBSCRIPTION
+});
 
 export const getParticipantIsPresentSubscriptionConfig = (id: Id) => ({
     modelRequest: {
