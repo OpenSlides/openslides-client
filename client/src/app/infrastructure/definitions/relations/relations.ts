@@ -902,7 +902,7 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeGenericO2M({
         OViewModel: ViewOption,
-        MPossibleViewModels: [ViewUser],
+        MPossibleViewModels: [ViewUser, ViewMotion],
         OViewModelField: `content_object`,
         MPossibleViewModelsField: `options`
     }),
