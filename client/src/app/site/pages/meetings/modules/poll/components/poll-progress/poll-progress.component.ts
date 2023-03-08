@@ -8,7 +8,7 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
-import { getParticipantIsPresentSubscriptionConfig } from '../../../../pages/participants/config/model-subscription';
+import { getParticipantVoteInfoSubscriptionConfig } from '../../../../pages/participants/config/model-subscription';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 
 @Component({
@@ -87,7 +87,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
             );
 
             if (this.canSeeProgressBar) {
-                const subscriptionConfig = getParticipantIsPresentSubscriptionConfig(this.activeMeeting.meetingId);
+                const subscriptionConfig = getParticipantVoteInfoSubscriptionConfig(this.activeMeeting.meetingId);
                 this.modelRequestBuilder.build(subscriptionConfig.modelRequest).then(modelRequest => {
                     this.autoupdate.subscribe(modelRequest, subscriptionConfig.subscriptionName);
                 });
