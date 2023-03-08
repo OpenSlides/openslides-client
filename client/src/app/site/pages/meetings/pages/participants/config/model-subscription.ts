@@ -12,10 +12,12 @@ export const getParticipantVoteInfoSubscriptionConfig = (id: Id) => ({
         viewModelCtor: ViewMeeting,
         fieldset: [],
         ids: [id],
-        follow: [{
-            idField: `user_ids`,
-            fieldset: `participantList`
-        }]
+        follow: [
+            {
+                idField: `user_ids`,
+                fieldset: `participantList`
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_VOTE_INFO_SUBSCRIPTION
 });

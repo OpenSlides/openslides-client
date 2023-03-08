@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getAgendaSubscriptionConfig } from '../../../agenda/config/model-subscription';
-import { getAssignmentSubscriptionConfig } from '../../config/model-subscription';
-
-const ASSIGNMENT_SUBSCRIPTION = `assignment`;
+import { getAssignmentSubscriptionConfig } from '../../assignments.subscription';
 
 @Component({
     selector: `os-assignment-main`,
@@ -15,8 +12,8 @@ export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
             this.subscribeTo(
-                getAssignmentSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
-                getAgendaSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
+                getAssignmentSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
+                // getAgendaSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
             );
         }
     }
