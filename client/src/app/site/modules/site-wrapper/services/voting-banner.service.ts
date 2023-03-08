@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, distinctUntilChanged } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { HistoryService } from 'src/app/site/pages/meetings/pages/history/services/history.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ActivePollsService } from 'src/app/site/pages/meetings/services/active-polls.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BannerDefinition, BannerService } from './banner.service';
@@ -30,18 +30,18 @@ export class VotingBannerService {
     private pollsToVote: ViewPoll[] = [];
 
     public constructor(
-        pollRepo: PollControllerService,
         private banner: BannerService,
         private translate: TranslateService,
         private historyService: HistoryService,
         private votingService: VotingService,
         private activeMeeting: ActiveMeetingService,
         private sendVotesService: VoteControllerService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private activePolls: ActivePollsService
     ) {
         combineLatest([
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
-            pollRepo.getViewModelListObservable().pipe(distinctUntilChanged(), debounceTime(500))
+            this.activePolls.activePollsObservable
         ]).subscribe(([meetingId, polls]) => this.checkForVotablePolls(polls));
     }
 

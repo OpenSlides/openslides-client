@@ -20,22 +20,43 @@ export const getAutopilotSubscriptionConfig = (id: Id, hasMeetingIdChangedObserv
                                 idField: `content_object_id`,
                                 follow: [
                                     {
-                                        idField: `list_of_speakers_ids`,
-                                        follow: [{ idField: `speaker_ids`, follow: [`user_id`] }]
+                                        idField: `list_of_speakers_id`,
+                                        follow: [
+                                            {
+                                                idField: `speaker_ids`,
+                                                follow: [
+                                                    {
+                                                        idField: `user_id`,
+                                                        fieldset: [
+                                                            `pronoun`,
+                                                            `first_name`,
+                                                            `last_name`,
+                                                            `username`,
+                                                            { templateField: `number_$` },
+                                                            { templateField: `structure_level_$` }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        idField: `poll_ids`,
+                                        follow: [
+                                            { idField: `content_object_id` },
+                                            {
+                                                idField: `option_ids`,
+                                                follow: [`content_object_id`],
+                                                additionalFields: [`text`]
+                                            }
+                                        ]
                                     }
                                 ]
                             }
                         ]
                     }
                 ]
-            },
-            // { idField: `speaker_ids`, additionalFields: [`user_id`] },
-            // { idField: `option_ids`, follow: [`content_object_id`], additionalFields: [`text`] },
-            {
-                idField: `poll_ids`,
-                follow: [{ idField: `content_object_id` }, { idField: `option_ids` }]
-            },
-            `vote_ids`
+            }
         ]
     },
     subscriptionName: AUTOPILOT_SUBSCRIPTION,
