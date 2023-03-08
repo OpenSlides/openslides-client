@@ -1,7 +1,13 @@
 import { Observable } from 'rxjs';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
+import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
+import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
+import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { EntitledUsersEntry, PollClassType, PollMethod, PollPercentBase, PollState, PollType } from './poll-constants';
+
+export type PollContentObject = ViewAssignment | ViewMotion | ViewTopic;
 
 /**
  * The main interface to describe everything related to polls
@@ -21,7 +27,7 @@ export interface PollData {
     options: OptionData[];
     options_as_observable: Observable<OptionData[]>;
     global_option: OptionData;
-    content_object?: BaseViewModel<any>;
+    content_object?: PollContentObject;
     getContentObjectTitle: () => string | null;
 }
 
@@ -44,7 +50,7 @@ export interface OptionData {
     amount_global_yes?: number;
     amount_global_no?: number;
     amount_global_abstain?: number;
-    content_object?: BaseViewModel<any>;
+    content_object?: ViewUser | ViewMotion | ViewPollCandidateList;
     entries_amount?: number;
 }
 
