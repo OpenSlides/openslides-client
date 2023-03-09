@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Motion } from 'src/app/domain/models/motions/motion';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
@@ -24,13 +21,10 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     private _watchingMap: { [field in keyof Motion]?: Ids } = {};
 
     public constructor(
-        modelRequestService: ModelRequestService,
-        router: Router,
-        openslidesRouter: OpenSlidesRouterService,
         private sequentialNumberMapping: SequentialNumberMappingService,
         private repo: MotionControllerService
     ) {
-        super(modelRequestService, router, openslidesRouter);
+        super();
     }
 
     protected override onParamsChanged(params: any, oldParams: any): void {

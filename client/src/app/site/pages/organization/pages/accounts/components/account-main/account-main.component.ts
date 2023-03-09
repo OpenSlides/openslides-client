@@ -1,17 +1,14 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { map } from 'rxjs';
 import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component';
-import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/config/model-subscription';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 
+import { getMeetingListSubscriptionConfig } from '../../../../organization.subscription';
 import { ORGANIZATION_ID } from '../../../../services/organization.service';
 import { ViewOrganization } from '../../../../view-models/view-organization';
-import { getCommitteeListSubscriptionConfig } from '../../../committees/config/model-subscription';
+import { getCommitteeListSubscriptionConfig } from '../../../committees/committees.subscription';
 
 const ACCOUNT_LIST_SUBSCRIPTION = `account_list`;
 
@@ -23,12 +20,8 @@ let uniqueSubscriptionNumber = 0;
     styleUrls: [`./account-main.component.scss`]
 })
 export class AccountMainComponent extends BaseModelRequestHandlerComponent {
-    public constructor(
-        modelRequestService: ModelRequestService,
-        router: Router,
-        openslidesRouter: OpenSlidesRouterService
-    ) {
-        super(modelRequestService, router, openslidesRouter);
+    public constructor() {
+        super();
     }
 
     protected override onCreateModelRequests(firstCreation = true): ModelRequestConfig[] {

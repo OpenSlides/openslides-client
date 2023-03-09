@@ -5,7 +5,7 @@ import {
 } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
 import { getOrganizationTagListSubscriptionConfig } from '../../../../../organization-tags/config/model-subscription';
-import { getCommitteeListSubscriptionConfig } from '../../../../config/model-subscription';
+import { getCommitteeListSubscriptionConfig } from '../../../../committees.subscription';
 
 @Component({
     selector: `os-committee-main`,

@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Directive, EventEmitter, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -37,12 +37,16 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     private _currentMeetingId: Id | null | undefined = undefined; //This is to ensure that the if-check in ngOnInit also fires if the application isn't in a meeting
     private _currentParams: any = {};
 
-    public constructor(
-        protected modelRequestService: ModelRequestService,
-        protected router: Router,
-        protected openslidesRouter: OpenSlidesRouterService
-    ) {
+    protected modelRequestService: ModelRequestService;
+    protected router: Router;
+    protected openslidesRouter: OpenSlidesRouterService;
+
+    public constructor() {
         super();
+
+        this.modelRequestService = inject(ModelRequestService);
+        this.router = inject(Router);
+        this.openslidesRouter = inject(OpenSlidesRouterService);
     }
 
     public ngOnInit(): void {
