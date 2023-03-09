@@ -5,10 +5,9 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
+import { getMotionDetailSubscriptionConfig, MOTION_DETAIL_SUBSCRIPTION } from '../../../../motions.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
-const MOTION_DETAIL_SEQUENTIAL_NUMBER_MAPPING = `motion_detail_sequential_number_mapping`;
-const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
 const MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION = `motion_detail_additional`;
 
 @Component({
@@ -46,21 +45,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     }
 
     private loadMotionDetail(): void {
-        this.updateSubscribeTo({
-            modelRequest: {
-                ids: [this._currentMotionId!],
-                viewModelCtor: ViewMotion,
-                additionalFields: [
-                    `all_origin_ids`,
-                    `origin_meeting_id`,
-                    `derived_motion_ids`,
-                    `amendment_ids`,
-                    { templateField: `amendment_paragraph_$` }
-                ]
-            },
-            subscriptionName: MOTION_DETAIL_SUBSCRIPTION,
-            hideWhenDestroyed: true
-        });
+        this.updateSubscribeTo(getMotionDetailSubscriptionConfig(this._currentMotionId));
         this.updateSubscription(
             MOTION_DETAIL_SUBSCRIPTION,
             this.repo.getViewModelObservable(this._currentMotionId!).subscribe(motion => {
