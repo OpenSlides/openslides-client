@@ -6,7 +6,7 @@ import {
     getMotionListSubscriptionConfig,
     getMotionsSubmodelSubscriptionConfig,
     getMotionWorkflowSubscriptionConfig
-} from '../../config/model-subscription';
+} from '../../motions.subscription';
 
 @Component({
     selector: `os-motion-main`,

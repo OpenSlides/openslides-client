@@ -2,6 +2,8 @@ import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
+import { pollModelRequest } from '../polls/polls.subscription';
+
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 
 export const agendaItemFollow = [
@@ -28,15 +30,7 @@ export const agendaItemFollow = [
     },
     {
         idField: `poll_ids`,
-        follow: [
-            { idField: `content_object_id` },
-            { idField: `global_option_id` },
-            {
-                idField: `option_ids`,
-                follow: [`content_object_id`],
-                additionalFields: [`text`]
-            }
-        ]
+        ...pollModelRequest
     }
 ];
 

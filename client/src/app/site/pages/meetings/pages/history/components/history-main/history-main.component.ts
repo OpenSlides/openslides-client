@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getMotionListSubscriptionConfig } from '../../../motions/config/model-subscription';
+import { getMotionListSubscriptionConfig } from '../../../motions/motions.subscription';
 
 @Component({
     selector: `os-history-main`,

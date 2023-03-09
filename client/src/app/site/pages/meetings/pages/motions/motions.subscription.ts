@@ -2,6 +2,9 @@ import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
+import { pollModelRequest } from '../polls/polls.subscription';
+import { ViewMotion } from './view-models';
+
 const MOTION_LIST_SUBSCRIPTION = `motion_list`;
 const MOTION_BLOCK_SUBSCRIPTION = `motion_block`;
 const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow`;
@@ -62,4 +65,28 @@ export const getMotionsSubmodelSubscriptionConfig = (
     },
     subscriptionName: MOTION_SUBMODELS_SUBSCRIPTION,
     hideWhen: hasMeetingIdChangedObservable()
+});
+
+export const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
+
+export const getMotionDetailSubscriptionConfig = (id: Id) => ({
+    modelRequest: {
+        ids: [id],
+        viewModelCtor: ViewMotion,
+        follow: [
+            {
+                idField: `poll_ids`,
+                ...pollModelRequest
+            }
+        ],
+        additionalFields: [
+            `all_origin_ids`,
+            `origin_meeting_id`,
+            `derived_motion_ids`,
+            `amendment_ids`,
+            { templateField: `amendment_paragraph_$` }
+        ]
+    },
+    subscriptionName: MOTION_DETAIL_SUBSCRIPTION,
+    hideWhenDestroyed: true
 });
