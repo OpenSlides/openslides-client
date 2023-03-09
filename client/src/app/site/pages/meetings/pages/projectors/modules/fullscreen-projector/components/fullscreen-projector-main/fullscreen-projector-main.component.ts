@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
-import { getProjectorSubscriptionConfig } from '../../../../config/model-subscription';
+import { getProjectorSubscriptionConfig } from '../../../../projectors.subscription';
 import { ViewProjector } from '../../../../view-models';
 
 @Component({
