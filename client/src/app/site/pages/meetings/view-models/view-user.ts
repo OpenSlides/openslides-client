@@ -202,11 +202,12 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public groups(meetingId?: Id): ViewGroup[] {
-        return this.getMeetingUser(meetingId)?.groups;
+        return this.getMeetingUser(meetingId)?.groups ?? [];
     }
 
     public group_ids(meetingId?: Id): number[] {
-        return this.getMeetingUser(meetingId)?.group_ids;
+        console.log(`GROUP_IDS:`, meetingId, this.getMeetingUser(meetingId));
+        return this.getMeetingUser(meetingId)?.group_ids ?? [];
     }
 
     public get isVoteWeightOne(): boolean {

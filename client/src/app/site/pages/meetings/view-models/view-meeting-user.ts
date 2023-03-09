@@ -1,3 +1,4 @@
+import { filter, firstValueFrom, Observable } from 'rxjs';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
@@ -44,9 +45,14 @@ export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
     public get meeting_user(): MeetingUser {
         return this._model;
     }
+
+    public getUserSafe(): Promise<ViewUser> {
+        return firstValueFrom(this.user_as_observable.pipe(filter(user => !!user)));
+    }
 }
 interface IMeetingUserRelations {
     user: ViewUser;
+    user_as_observable: Observable<ViewUser>;
     groups: ViewGroup[];
     meeting: ViewMeeting;
     assignment_candidates: ViewAssignmentCandidate[];

@@ -155,7 +155,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                           first_meeting_user: this.sanitizePayload(
                               this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
                           ),
-                          rest: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers))
+                          rest: meetingUsers?.map(meetingUser =>
+                              this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUser))
+                          )
                       }
                     : {})
             };
@@ -169,7 +171,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const ids: number[] = [];
         const updatePayload: any[] = [];
         for (let date of data) {
-            if (date.rest.length) {
+            if (date.rest?.length) {
                 const models = results.filter(user =>
                     Object.keys(date.user).every(key => date.user[key] === user[key])
                 );
@@ -183,12 +185,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                     continue;
                 }
                 ids.push(models[0].id);
-                for (let meeting_user of date.rest) {
+                for (let meeting_user of date.rest ?? []) {
                     updatePayload.push({ id: models[0].id, ...meeting_user });
                 }
             }
         }
-        await this.createAction(UserAction.UPDATE, updatePayload).resolve();
+        if (updatePayload.length) {
+            await this.createAction(UserAction.UPDATE, updatePayload).resolve();
+        }
         return results;
     }
 
