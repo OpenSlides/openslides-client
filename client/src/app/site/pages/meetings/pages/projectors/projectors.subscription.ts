@@ -3,7 +3,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
-import { ViewProjector } from '../view-models';
+import { ViewProjector } from './view-models';
 
 export const PROJECTOR_LIST_SUBSCRIPTION = `projector_list`;
 

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getProjectorListSubscriptionConfig } from '../../config/model-subscription';
+import { getProjectorListSubscriptionConfig } from '../../projectors.subscription';
 
 @Component({
     selector: `os-projector-main`,
