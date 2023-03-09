@@ -25,7 +25,13 @@ export const getActiveMeetingSubscriptionConfig = (
             `group_ids`,
             { idField: `committee_id`, additionalFields: [`name`] }
         ],
-        additionalFields: [`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`]
+        additionalFields: [
+            `jitsi_domain`,
+            `jitsi_room_name`,
+            `jitsi_room_password`,
+            `admin_group_id`,
+            `default_group_id`
+        ]
     },
     subscriptionName: ACTIVE_MEETING_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
