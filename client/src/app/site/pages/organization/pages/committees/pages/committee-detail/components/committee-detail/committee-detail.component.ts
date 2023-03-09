@@ -5,7 +5,7 @@ import {
     BaseModelRequestHandlerComponent,
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
-import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/config/model-subscription';
+import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/organization.subscription';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewCommittee } from '../../../../view-models';

@@ -50,7 +50,6 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public content_object_id!: Fqid; // */agenda_item_id;
     public parent_id!: Id; // agenda_item/child_ids;
     public child_ids!: Id[]; // (agenda_item/parent_id)[];
-    public list_of_speakers_id!: Id; // (agenda_item/topic_ids)[];
 
     public constructor(input?: any) {
         super(AgendaItem.COLLECTION, input);

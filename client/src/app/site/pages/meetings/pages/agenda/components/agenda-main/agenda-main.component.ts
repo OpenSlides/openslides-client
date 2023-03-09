@@ -11,9 +11,7 @@ import { getAgendaListSubscriptionConfig } from '../../agenda.subscription';
 export class AgendaMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(
-                getAgendaListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
-            );
+            this.subscribeTo(getAgendaListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
         }
     }
 }
