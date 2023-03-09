@@ -324,7 +324,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         if (data.userId && typeof data.userId === `number`) {
             const meetingUserId = this.userRepo.getViewModel(data.userId)?.getMeetingUser()?.id;
             if (!meetingUserId) {
-                throw new Error(`Failed to add candidate: Couldn't find meeting user id`)
+                throw new Error(`Failed to add candidate: Couldn't find meeting user id`);
             }
             await this.assignmentCandidateRepo.create(this.assignment, meetingUserId);
             this.updateCandidatesArray();

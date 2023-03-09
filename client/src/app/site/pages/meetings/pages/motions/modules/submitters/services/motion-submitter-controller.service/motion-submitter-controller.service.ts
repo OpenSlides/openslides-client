@@ -26,7 +26,7 @@ export class MotionSubmitterControllerService extends BaseMeetingControllerServi
     }
 
     public create(motion: ViewMotion, ...users: Identifiable[]): Action<Identifiable[]> {
-        const meetingUsers = users.map(user => this.userRepo.getViewModel(user.id)?.getMeetingUser(motion.meeting_id))
+        const meetingUsers = users.map(user => this.userRepo.getViewModel(user.id)?.getMeetingUser(motion.meeting_id));
         return this.repo.create(motion, ...meetingUsers);
     }
 

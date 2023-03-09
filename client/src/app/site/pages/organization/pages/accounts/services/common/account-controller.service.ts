@@ -26,19 +26,16 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
 
     public bulkAddUserToMeeting(users: ViewUser[], ...meetings: ViewMeeting[]): Action<void> {
         const patchFn = (user: ViewUser) => {
-            return {
-                id: user.id,
-                group_ids: meetings.map(meeting => {
-                    const groupIds: number[] = user.group_ids(meeting.id);
-                    return {
-                        id: user.id,
-                        meeting_id: meeting.id,
-                        group_ids: groupIds.includes(meeting.default_group_id)
-                            ? groupIds
-                            : groupIds.concat(meeting.default_group_id)
-                    };
-                })
-            };
+            return meetings.map(meeting => {
+                const groupIds: number[] = user.group_ids(meeting.id);
+                return {
+                    id: user.id,
+                    meeting_id: meeting.id,
+                    group_ids: groupIds?.includes(meeting.default_group_id)
+                        ? groupIds
+                        : (groupIds ?? []).concat(meeting.default_group_id)
+                };
+            });
         };
         return this.repo.update(patchFn, ...users);
     }

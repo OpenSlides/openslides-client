@@ -266,7 +266,9 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
      */
     public getAllVotes(meetingId?: number): ViewVote[] {
         const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
-        return this.votes.filter(vote => vote.meeting_id === meetingID).concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? [])
+        return this.votes
+            .filter(vote => vote.meeting_id === meetingID)
+            .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
     }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];

@@ -68,7 +68,8 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
                 vote_weight: partialUser.vote_weight,
                 comment: partialUser.comment,
                 vote_delegated_to_id: partialUser.vote_delegated_to_id,
-                vote_delegations_from_ids: partialUser.vote_delegations_from_ids
+                vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
+                group_ids: partialUser.group_ids
             };
 
             if (Object.values(partialPayload).filter(val => val !== undefined).length > 1 && partialPayload.meeting_id)

@@ -150,8 +150,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
             return {
                 user: this.sanitizePayload(this.getBaseUserPayload(user)),
-                first_meeting_user: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())),
-                rest: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers))
+                ...(meetingUsers && meetingUsers.length
+                    ? {
+                          first_meeting_user: this.sanitizePayload(
+                              this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
+                          ),
+                          rest: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers))
+                      }
+                    : {})
             };
         });
         const payload: any[] = data.map(partialUser => ({
@@ -195,14 +201,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      */
     public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
         const updatePayload = users.flatMap(user => {
-            const update = typeof patch === `function` ? patch(user) : patch;
-            return [
-                {
-                    id: user.id,
-                    ...this.sanitizePayload(this.getBaseUserPayload(update)),
-                    ...this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(update))
-                }
-            ];
+            const dirtyUpdate = typeof patch === `function` ? patch(user) : patch;
+            const updates = Array.isArray(dirtyUpdate) ? dirtyUpdate : [dirtyUpdate];
+            console.log(`UPDATE`, dirtyUpdate);
+            return updates.map(update => ({
+                id: user.id,
+                ...this.sanitizePayload(this.getBaseUserPayload(update)),
+                ...this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(update))
+            }));
         });
         return this.createAction(UserAction.UPDATE, updatePayload);
     }
