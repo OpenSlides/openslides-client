@@ -13,10 +13,6 @@ export class AgendaMainComponent extends BaseModelRequestHandlerComponent {
         if (id) {
             this.subscribeTo(
                 getAgendaListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
-                // getTopicSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
-                // getMotionListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
-                // getMotionBlockSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
-                // getAssignmentSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
             );
         }
     }
