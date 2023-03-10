@@ -60,11 +60,11 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
     public isListOfSpeakersEmpty: boolean = false;
 
     public get isNextListOfSpeakersEmpty(): boolean {
-        return !this.viewListOfSpeakers.waitingSpeakers?.length;
+        return !this.viewListOfSpeakers?.waitingSpeakers?.length;
     }
 
     public get isPreviousListOfSpeakersEmpty(): boolean {
-        return !this.viewListOfSpeakers.finishedSpeakers?.length;
+        return !this.viewListOfSpeakers?.finishedSpeakers?.length;
     }
 
     /**

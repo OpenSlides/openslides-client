@@ -274,28 +274,28 @@ export const RELATIONS: Relation[] = [
         MField: `meeting`
     }),
     ...makeM2O({
-        OViewModel: ViewAssignmentCandidate,
-        MViewModel: ViewMeetingUser,
-        OField: `meeting_user`,
-        MField: `assignment_candidates`
+        MViewModel: ViewAssignmentCandidate,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `assignment_candidates`
     }),
     ...makeM2O({
-        OViewModel: ViewChatMessage,
-        MViewModel: ViewMeetingUser,
-        OField: `meeting_user`,
-        MField: `chat_messages`
+        MViewModel: ViewChatMessage,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `chat_messages`
     }),
     ...makeM2O({
-        OViewModel: ViewSpeaker,
-        MViewModel: ViewMeetingUser,
-        OField: `meeting_user`,
-        MField: `speakers`
+        MViewModel: ViewSpeaker,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `speakers`
     }),
     ...makeM2O({
-        OViewModel: ViewPersonalNote,
-        MViewModel: ViewMeetingUser,
-        OField: `meeting_user`,
-        MField: `personal_notes`
+        MViewModel: ViewPersonalNote,
+        OViewModel: ViewMeetingUser,
+        MField: `meeting_user`,
+        OField: `personal_notes`
     }),
     ...makeM2M({
         AViewModel: ViewMotion,

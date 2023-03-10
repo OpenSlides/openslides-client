@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
@@ -16,27 +14,8 @@ export type MeetingUserPatchFn =
     providedIn: `root`
 })
 export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<ViewMeetingUser, MeetingUser> {
-    private changedModelsUserIdsSubject: BehaviorSubject<Id[]> = new BehaviorSubject([]);
-    public get changedModelsUserIdsObservable(): Observable<Id[]> {
-        return this.changedModelsUserIdsSubject.asObservable();
-    }
-
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MeetingUser);
-    }
-
-    public override changedModels(ids: number[]): void {
-        super.changedModels(ids);
-        const userIds: Id[] = [];
-        for (let id of ids) {
-            const userId = this.getViewModelUnsafe(id).user_id;
-            if (userId) {
-                userIds.push(userId);
-            }
-        }
-        if (userIds.length) {
-            this.changedModelsUserIdsSubject.next(userIds);
-        }
     }
 
     public override getFieldsets(): Fieldsets<MeetingUser> {

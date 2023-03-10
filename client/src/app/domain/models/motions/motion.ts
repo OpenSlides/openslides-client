@@ -83,12 +83,12 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         return this.start_line_number || 1;
     }
 
-    public constructor(input?: any) {
-        super(Motion.COLLECTION, input);
+    public get amendment_paragraph_numbers(): number[] {
+        return this.amendment_paragraph ? Object.keys(this.amendment_paragraph).map(key => Number(key)) : [];
     }
 
-    public get amendment_paragraph_numbers(): number[] {
-        return Object.keys(this.amendment_paragraph).map(key => Number(key));
+    public constructor(input?: any) {
+        super(Motion.COLLECTION, input);
     }
 
     public amendment_paragraph_text(paragraphNumber: number): string | null {

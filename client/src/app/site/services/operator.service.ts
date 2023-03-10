@@ -276,7 +276,6 @@ export class OperatorService {
             }
             if (this.isAnonymous && group.id === this.defaultGroupId) {
                 this._groupIds = this._groupIds || [];
-                console.log(`NEW: UPDATE FROM GROUP REPO =>`, this._groupIds);
                 this._permissions = this.calcPermissions();
                 this._operatorUpdatedSubject.next();
             } else if (!this.isAnonymous) {
@@ -319,7 +318,6 @@ export class OperatorService {
     private updateUser(user: ViewUser): void {
         if (this.activeMeetingId) {
             this._groupIds = user.group_ids(this.activeMeetingId);
-            console.log(`NEW: UPDATE USER =>`, this._groupIds);
             this._permissions = this.calcPermissions();
         }
         // The OML has to be changed only if new data come in.
@@ -331,7 +329,6 @@ export class OperatorService {
     }
 
     private checkReadyState(): void {
-        console.log(`CHECK READY STATE 1:`, this._ready);
         if (this._ready) {
             return;
         }
@@ -345,19 +342,9 @@ export class OperatorService {
                 !!this.activeMeeting?.group_ids &&
                 this._groupIds !== undefined &&
                 this._permissions !== undefined;
-            console.log(
-                `CHECK READY STATE 2:`,
-                this.activeMeetingId,
-                isReady,
-                `\n`,
-                !!this.activeMeeting?.group_ids,
-                this._groupIds !== undefined,
-                this._permissions !== undefined
-            );
         }
         if (this.isAuthenticated) {
             isReady = isReady && this._OML !== undefined && this._CML !== undefined;
-            console.log(`CHECK READY STATE 3:`, isReady);
         }
         // TODO: for developing some checks
         // console.log(
@@ -380,7 +367,6 @@ export class OperatorService {
             this._ready = true;
             this._readyDeferred.resolve();
             this._operatorReadySubject.next(true);
-            console.log(`CHECK READY STATE 4: YES`);
         }
     }
 
@@ -397,7 +383,6 @@ export class OperatorService {
     private resetOperatorData(): void {
         this._meetingIds = undefined;
         this._groupIds = undefined;
-        console.log(`NEW: RESET OPERATOR DATA =>`, this._groupIds);
         this._permissions = undefined;
         this._OML = undefined;
         this._CML = undefined;

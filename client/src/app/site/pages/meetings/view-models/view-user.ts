@@ -206,7 +206,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public group_ids(meetingId?: Id): number[] {
-        console.log(`GROUP_IDS:`, meetingId, this.getMeetingUser(meetingId));
         return this.getMeetingUser(meetingId)?.group_ids ?? [];
     }
 

@@ -7,12 +7,11 @@ import {
     ViewMeetingMediafileUsageKey
 } from 'src/app/domain/models/meetings/meeting.constants';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
-import { applyMixins } from 'src/app/infrastructure/utils';
 
-import { BaseViewModel } from '../../../base/base-view-model';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
+import { BaseHasMeetingUsersViewModel } from '../base/base-has-meeting-user-view-model';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
@@ -34,12 +33,11 @@ import {
 import { ViewGroup } from '../pages/participants';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
-import { HasMeetingUsers } from './view-meeting-user';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
 
-export class ViewMeeting extends BaseViewModel<Meeting> {
+export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     public get meeting(): Meeting {
         return this._model;
     }
@@ -149,7 +147,5 @@ export interface ViewMeeting
         IMeetingRelations,
         HasProjectorTitle,
         HasOrganizationTags,
-        HasMeetingUsers,
         HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
         HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}
-applyMixins(ViewMeeting, [HasMeetingUsers]);

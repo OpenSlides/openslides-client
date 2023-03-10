@@ -80,19 +80,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         private meetingUserRepo: MeetingUserRepositoryService
     ) {
         super(repositoryServiceCollector, User);
-
-        // Ensure that user view models are updated when the meeting users are updated
-        this.meetingUserRepo.changedModelsUserIdsObservable.subscribe(changedIds => {
-            const ids: Id[] = [];
-            for (let id of changedIds) {
-                if (this.getViewModel(id)) {
-                    ids.push(id);
-                }
-            }
-            if (ids.length) {
-                this.changedModels(ids);
-            }
-        });
     }
 
     /**
@@ -207,7 +194,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const updatePayload = users.flatMap(user => {
             const dirtyUpdate = typeof patch === `function` ? patch(user) : patch;
             const updates = Array.isArray(dirtyUpdate) ? dirtyUpdate : [dirtyUpdate];
-            console.log(`UPDATE`, dirtyUpdate);
             return updates.map(update => ({
                 id: user.id,
                 ...this.sanitizePayload(this.getBaseUserPayload(update)),

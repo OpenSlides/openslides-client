@@ -86,7 +86,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 mUser.group_ids?.length &&
                 meetingUserIds.includes(mUser.id)
         );
-        const users = await Promise.all(meetingUsers.map(async mUser => mUser.getUserSafe()));
+        const users = meetingUsers.map(mUser => mUser.user);
         this._participantListSubject.next(users);
     }
 
