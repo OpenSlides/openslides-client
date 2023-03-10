@@ -15,7 +15,7 @@ export const getParticipantVoteInfoSubscriptionConfig = (id: Id) => ({
         follow: [
             {
                 idField: `user_ids`,
-                fieldset: `participantList`
+                fieldset: `participantList` // TODO: Use specialised list
             }
         ]
     },

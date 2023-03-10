@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-
-import { getParticipantSubscriptionConfig } from '../../config/model-subscription';
+import { getParticipantSubscriptionConfig } from '../../participants.subscription';
 
 @Component({
     selector: `os-participant-main`,
