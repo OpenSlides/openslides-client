@@ -84,26 +84,28 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `last_name`,
             `pronoun`,
             `username` /* Required! To getShortName */,
-            `is_active`,
-            `is_physical_person`,
-            `default_password`,
-            `can_change_own_password`,
             `gender`,
             `default_number`,
             `default_structure_level`,
-            `default_vote_weight`,
+            `default_vote_weight`
+        ];
+
+        const listFields: TypedFieldset<User> = shortNameFields.concat([
+            `is_physical_person`,
+            `is_active`,
             `email`,
             `last_email_send`,
             `last_login`,
             `organization_management_level`,
             `meeting_ids`
-        ];
-        const accountListFields: TypedFieldset<User> = shortNameFields.concat([
+        ]);
+
+        const accountListFields: TypedFieldset<User> = listFields.concat([
             `committee_ids`,
             { templateField: `committee_$_management_level` }
         ]);
 
-        const participantListFieldsMinimal: TypedFieldset<User> = shortNameFields.concat([
+        const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([
             { templateField: `vote_delegated_$_to_id` },
             { templateField: `vote_delegations_$_from_ids` },
             { templateField: `vote_weight_$` },
@@ -117,7 +119,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `is_present_in_meeting_ids`
         ]);
 
-        const detailFields: TypedFieldset<User> = [{ templateField: `about_me_$` }];
+        const detailFields: TypedFieldset<User> = [
+            `default_password`,
+            `can_change_own_password`,
+            { templateField: `about_me_$` }
+        ];
 
         return {
             [DEFAULT_FIELDSET]: detailFields,
