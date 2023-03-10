@@ -2,10 +2,10 @@ import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-const PARTICIPANT_LIST_SUBSCRIPTION = `participant_list`;
-const PARTICIPANT_VOTE_INFO_SUBSCRIPTION = `participant_vote_info_list`;
-const PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION = `participant_is_present_list`;
-const PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL = `participant_list_minimal`;
+export const PARTICIPANT_LIST_SUBSCRIPTION = `participant_list`;
+export const PARTICIPANT_VOTE_INFO_SUBSCRIPTION = `participant_vote_info_list`;
+export const PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION = `participant_is_present_list`;
+export const PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL = `participant_list_minimal`;
 
 export const getParticipantVoteInfoSubscriptionConfig = (id: Id) => ({
     modelRequest: {
@@ -45,15 +45,12 @@ export const getParticipantListSubscriptionConfig = (
     hideWhen: hasMeetingIdChangedObservable()
 });
 
-export const getParticipantMinimalSubscriptionConfig = (
-    id: Id,
-    hasMeetingIdChangedObservable: () => Observable<boolean>
-) => ({
+export const getParticipantMinimalSubscriptionConfig = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
         follow: [{ idField: `user_ids`, fieldset: `participantListMinimal` }]
     },
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL,
-    hideWhen: hasMeetingIdChangedObservable()
+    hideWhenDestroyed: true
 });

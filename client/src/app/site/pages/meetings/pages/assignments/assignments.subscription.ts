@@ -4,7 +4,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 
 import { pollModelRequest } from '../polls/polls.subscription';
 
-const ASSIGNMENT_LIST_SUBSCRIPTION = `assignment_list`;
+export const ASSIGNMENT_LIST_SUBSCRIPTION = `assignment_list`;
 
 export const getAssignmentSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
     modelRequest: {
