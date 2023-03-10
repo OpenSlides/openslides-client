@@ -93,14 +93,17 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const listFields: TypedFieldset<User> = shortNameFields.concat([
             `is_physical_person`,
             `is_active`,
-            `email`,
-            `last_email_send`,
-            `last_login`,
-            `organization_management_level`,
             `meeting_ids`
         ]);
 
-        const accountListFields: TypedFieldset<User> = listFields.concat([
+        const filterableListFields: TypedFieldset<User> = listFields.concat([
+            `email`,
+            `last_email_send`,
+            `last_login`,
+            `organization_management_level`
+        ]);
+
+        const accountListFields: TypedFieldset<User> = filterableListFields.concat([
             `committee_ids`,
             { templateField: `committee_$_management_level` }
         ]);
@@ -115,9 +118,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             { templateField: `group_$_ids` }
         ]);
 
-        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal.concat([
-            `is_present_in_meeting_ids`
-        ]);
+        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
+            .concat(filterableListFields)
+            .concat([`is_present_in_meeting_ids`]);
 
         const detailFields: TypedFieldset<User> = [
             `default_password`,
