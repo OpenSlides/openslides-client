@@ -2,15 +2,17 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { ModelSubscription } from 'src/app/site/services/autoupdate';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import {
+    getParticipantMinimalSubscriptionConfig,
+    PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
+} from '../../../../pages/participants/participants.subscription';
 import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
+import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { ViewUser } from '../../../../view-models/view-user';
 import { UserSelectionData } from '../..';
-import { getParticipantMinimalSubscriptionConfig, PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL } from '../../../../pages/participants/participants.subscription';
-import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 
 @Component({
     selector: `os-participant-search-selector`,
