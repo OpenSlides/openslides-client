@@ -1,3 +1,8 @@
+import { Observable } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
+
+import { ViewMeeting } from '../../view-models/view-meeting';
+
 export const pollModelRequest = {
     follow: [
         { idField: `content_object_id` },
@@ -23,3 +28,15 @@ export const pollModelRequest = {
         }
     ]
 };
+
+export const POLL_LIST_SUBSCRIPTION = `poll_list`;
+
+export const getPollListSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [{ idField: `poll_ids`, ...pollModelRequest }]
+    },
+    subscriptionName: POLL_LIST_SUBSCRIPTION,
+    hideWhen: hasMeetingIdChangedObservable()
+});
