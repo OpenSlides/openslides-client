@@ -95,17 +95,14 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
             this.userRepo.getViewModelListObservable().subscribe(users => {
                 this._users = users;
                 this.filterUsers();
-            }),
-            this.activeMeeting.meetingIdObservable.subscribe(meetingId => {
-                if (meetingId) {
-                    this._participantSubscription = PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL + `_${Date.now()}`;
-                    this.modelRequestService.subscribeTo({
-                        ...getParticipantMinimalSubscriptionConfig(meetingId),
-                        subscriptionName: this._participantSubscription
-                    });
-                }
             })
         );
+
+        this._participantSubscription = PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL + `_${Date.now()}`;
+        this.modelRequestService.subscribeTo({
+            ...getParticipantMinimalSubscriptionConfig(this.activeMeeting.meetingId),
+            subscriptionName: this._participantSubscription
+        });
     }
 
     public override ngOnDestroy(): void {

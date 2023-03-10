@@ -31,7 +31,8 @@ export const agendaItemFollow = [
     {
         idField: `poll_ids`,
         ...pollModelRequest
-    }
+    },
+    `attachment_ids`
 ];
 
 export const getAgendaListSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
