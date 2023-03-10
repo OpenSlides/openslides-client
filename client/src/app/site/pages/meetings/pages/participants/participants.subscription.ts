@@ -32,7 +32,10 @@ export const getParticipantIsPresentSubscriptionConfig = (id: Id) => ({
     subscriptionName: PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION
 });
 
-export const getParticipantSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
+export const getParticipantListSubscriptionConfig = (
+    id: Id,
+    hasMeetingIdChangedObservable: () => Observable<boolean>
+) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
