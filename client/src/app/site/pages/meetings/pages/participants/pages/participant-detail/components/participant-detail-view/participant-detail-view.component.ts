@@ -20,6 +20,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService } from '../../../../modules';
+import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -28,6 +29,8 @@ import { GroupControllerService } from '../../../../modules';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
+
     public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
         [controlName]: [``]
     }));
