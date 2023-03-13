@@ -166,10 +166,18 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public vote_delegated_to_id(meetingId?: Id): Id {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to?.id;
+    }
+
+    public vote_delegated_to_meeting_user_id(meetingId?: Id): Id {
         return this.getMeetingUser(meetingId)?.vote_delegated_to_id;
     }
 
     public vote_delegations_from_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.vote_delegations_from?.map(meeting_user => meeting_user?.user_id);
+    }
+
+    public vote_delegations_from_meeting_user_ids(meetingId?: Id): Id[] {
         return this.getMeetingUser(meetingId)?.vote_delegations_from_ids;
     }
 
