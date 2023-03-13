@@ -102,8 +102,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      */
     public readonly groups: Observable<ViewGroup[]>;
 
-    public readonly users: Observable<ViewUser[]>;
-
     public get showVoteWeight(): boolean {
         const isVoteWeightEnabled = this._isElectronicVotingEnabled && this._isVoteWeightEnabled;
         return this.user ? isVoteWeightEnabled && typeof this.user.vote_weight() === `number` : isVoteWeightEnabled;
@@ -150,8 +148,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 .subscribe(enabled => (this._isVoteDelegationEnabled = enabled))
         );
 
+        // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
-        this.users = this.repo.getViewModelListObservable();
     }
 
     public isAllowed(action: string): boolean {
