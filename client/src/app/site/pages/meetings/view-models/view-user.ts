@@ -182,12 +182,12 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public vote_weight(meetingId?: Id): number {
-        return this.getMeetingUser(meetingId)?.vote_weight;
+        return this.getMeetingUser(meetingId)?.vote_weight || this.default_vote_weight;
     }
 
     public number(meetingId?: Id): string {
         try {
-            return this.getMeetingUser(meetingId)?.number;
+            return this.getMeetingUser(meetingId)?.number || this.default_number;
         } catch (e) {
             return this.user.default_number;
         }
@@ -195,7 +195,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public structure_level(meetingId?: Id): string {
         try {
-            return this.getMeetingUser(meetingId)?.structure_level;
+            return this.getMeetingUser(meetingId)?.structure_level || this.default_structure_level;
         } catch (e) {
             return this.user.default_structure_level;
         }
