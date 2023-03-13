@@ -184,6 +184,8 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
                 this.updateFormControls(contentFormCh);
             })
         );
+
+        // TODO: Fetch groups for repo search selection
     }
 
     /**
