@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getMotionListSubscriptionConfig } from '../../../motions/motions.subscription';
+import { getAssignmentListMinimalSubscriptionConfig } from '../../../assignments/assignments.subscription';
+import { getMotionListMinimalSubscriptionConfig } from '../../../motions/motions.subscription';
+import { getParticipantMinimalSubscriptionConfig } from '../../../participants/participants.subscription';
 
 @Component({
     selector: `os-history-main`,
@@ -12,7 +14,11 @@ import { getMotionListSubscriptionConfig } from '../../../motions/motions.subscr
 export class HistoryMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: Id | null): void {
         if (id) {
-            this.subscribeTo(getMotionListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(
+                getMotionListMinimalSubscriptionConfig(id),
+                getParticipantMinimalSubscriptionConfig(id),
+                getAssignmentListMinimalSubscriptionConfig(id)
+            );
         }
     }
 }

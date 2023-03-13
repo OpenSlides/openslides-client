@@ -5,10 +5,11 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewMotion } from './view-models';
 
-const MOTION_LIST_SUBSCRIPTION = `motion_list`;
-const MOTION_BLOCK_SUBSCRIPTION = `motion_block`;
-const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow`;
-const MOTION_SUBMODELS_SUBSCRIPTION = `motion_submodels`;
+export const MOTION_LIST_SUBSCRIPTION = `motion_list`;
+export const MOTION_LIST_MINIMAL_SUBSCRIPTION = `motion_list_minimal`;
+export const MOTION_BLOCK_SUBSCRIPTION = `motion_block`;
+export const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow`;
+export const MOTION_SUBMODELS_SUBSCRIPTION = `motion_submodels`;
 
 export const getMotionListSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
     modelRequest: {
@@ -88,5 +89,15 @@ export const getMotionDetailSubscriptionConfig = (id: Id) => ({
         ]
     },
     subscriptionName: MOTION_DETAIL_SUBSCRIPTION,
+    hideWhenDestroyed: true
+});
+
+export const getMotionListMinimalSubscriptionConfig = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [{ idField: `motion_ids`, fieldset: [`title`, `meeting_id`, `sequential_number`] }]
+    },
+    subscriptionName: MOTION_LIST_MINIMAL_SUBSCRIPTION,
     hideWhenDestroyed: true
 });

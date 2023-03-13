@@ -18,3 +18,15 @@ export const getAssignmentSubscriptionConfig = (id: Id, hasMeetingIdChangedObser
     subscriptionName: ASSIGNMENT_LIST_SUBSCRIPTION,
     hideWhen: hasMeetingIdChangedObservable()
 });
+
+export const ASSIGNMENT_LIST_MINIMAL_SUBSCRIPTION = `assignment_list_minimal`;
+
+export const getAssignmentListMinimalSubscriptionConfig = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [{ idField: `assignment_ids`, fieldset: [`title`] }]
+    },
+    subscriptionName: ASSIGNMENT_LIST_MINIMAL_SUBSCRIPTION,
+    hideWhenDestroyed: true
+});
