@@ -80,61 +80,6 @@ const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>
     ViewProjectorCountdown
 ];
 
-interface MakeStructuredUserRelationArguments<V extends BaseViewModel> {
-    otherViewModel: ViewModelConstructor<V>;
-    structuredField: keyof ViewUser & string;
-    structuredIdField: keyof ViewUser & string;
-    otherViewModelField: keyof V & string;
-    otherViewModelIdField?: keyof V & string;
-}
-function _makeStructuredUserRelation<V extends BaseViewModel>(
-    args: MakeStructuredUserRelationArguments<V>,
-    many: boolean,
-    otherFieldStructured = false
-): Relation[] {
-    return [
-        // structured -> other
-        {
-            ownViewModels: [ViewUser],
-            foreignViewModel: args.otherViewModel,
-            ownField: args.structuredField,
-            ownIdField: args.structuredIdField,
-            many: true,
-            generic: false,
-            structured: true,
-            ownIdFieldDefaultAttribute: `active-meeting`
-        },
-        // other -> structured
-        {
-            ownViewModels: [args.otherViewModel],
-            foreignViewModel: ViewUser,
-            ownField: args.otherViewModelField,
-            ownIdField: args.otherViewModelIdField,
-            many,
-            generic: false,
-            structured: otherFieldStructured
-        }
-    ];
-}
-
-function makeOneStructuredUser2MRelation<V extends BaseViewModel>(
-    args: MakeStructuredUserRelationArguments<V>
-): Relation[] {
-    return _makeStructuredUserRelation(args, false);
-}
-
-function makeManyStructuredUsers2MRelation<V extends BaseViewModel>(
-    args: MakeStructuredUserRelationArguments<V>
-): Relation[] {
-    return _makeStructuredUserRelation(args, true);
-}
-
-function makeMany2WayStructuredUsers2MRelation<V extends BaseViewModel>(
-    args: MakeStructuredUserRelationArguments<V>
-): Relation[] {
-    return _makeStructuredUserRelation(args, true, true);
-}
-
 // Where to place relations (in this order):
 // 1) For structured relations, the relation is defined on the structured side
 // 2) For generic relations, the relation is defined on the generic side
@@ -222,13 +167,6 @@ export const RELATIONS: Relation[] = [
         viewModelIdField: `tagged_ids`
     }),
     // ########## User
-    // ...makeManyStructuredUsers2MRelation({
-    //     otherViewModel: ViewPoll,
-    //     structuredField: `poll_voted`,
-    //     structuredIdField: `poll_voted_ids`,
-    //     otherViewModelField: `voted`,
-    //     otherViewModelIdField: `voted_ids`
-    // }),
     ...makeM2M({
         AViewModel: ViewUser,
         BViewModel: ViewPoll,
@@ -317,8 +255,7 @@ export const RELATIONS: Relation[] = [
         ownField: `vote_delegated_to`,
         ownIdField: `vote_delegated_to_id`,
         many: false,
-        generic: false,
-        structured: false
+        generic: false
     },
     // vote_delegations_from_ids -> vote_delegated_to_id
     {
@@ -327,8 +264,7 @@ export const RELATIONS: Relation[] = [
         ownField: `vote_delegations_from`,
         ownIdField: `vote_delegations_from_ids`,
         many: true,
-        generic: false,
-        structured: false
+        generic: false
     },
     // ########## Committees
     ...makeM2O({
@@ -664,8 +600,7 @@ export const RELATIONS: Relation[] = [
         ownField: `users`,
         ownIdField: `user_ids`,
         many: true,
-        generic: false,
-        structured: false
+        generic: false
     },
     // user/meeting_ids -> meeting
     {
@@ -674,8 +609,7 @@ export const RELATIONS: Relation[] = [
         ownField: `meetings`,
         ownIdField: `meeting_ids`,
         many: true,
-        generic: false,
-        structured: false
+        generic: false
     },
     // ########## Personal notes
     ...makeGenericO2M<ViewPersonalNote>({
@@ -992,8 +926,7 @@ export const RELATIONS: Relation[] = [
         ownField: `content_object`,
         ownIdField: `content_object_id`,
         many: false,
-        generic: true,
-        structured: false
+        generic: true
     },
     // content_objects -> projection
     {
@@ -1002,7 +935,6 @@ export const RELATIONS: Relation[] = [
         ownField: `projections`,
         ownIdField: `projection_ids`,
         many: true,
-        generic: false,
-        structured: false
+        generic: false
     }
 ];

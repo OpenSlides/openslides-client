@@ -1,4 +1,3 @@
-import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
 import { BaseModel } from './base-model';
 
 export abstract class BaseDecimalModel<T = any> extends BaseModel<T> {
@@ -19,13 +18,7 @@ export abstract class BaseDecimalModel<T = any> extends BaseModel<T> {
 
     private parseDecimalFields(input: T, field: keyof T): void {
         if (Array.isArray(input[field])) {
-            // Assuming that field is a template-field.
-            for (const replacement of input[field] as any) {
-                this.parseDecimalFields(
-                    input,
-                    fillTemplateValueInTemplateField(field as string, replacement) as keyof T
-                );
-            }
+            throw new Error(`Decimal field '${String(field)}' should not hold array`);
         } else {
             input[field] = parseFloat(input[field] as any) as any;
         }

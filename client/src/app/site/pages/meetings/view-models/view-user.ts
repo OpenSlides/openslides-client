@@ -271,7 +271,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
     }
 }
-type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];

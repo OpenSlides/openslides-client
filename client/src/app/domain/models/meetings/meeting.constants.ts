@@ -13,14 +13,14 @@ export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
  */
 export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
 
-export type MeetingMediafileUsageIdKey = `logo_${LogoPlace}_id` | `font_${FontPlace}_id`;
+export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
+
+export type MeetingMediafileUsageIdKey = `${ViewMeetingMediafileUsageKey}_id`;
 
 export const MEETING_MEDIAFILE_USAGE_ID_KEYS = [
     ...LOGO_PLACES.map(place => `logo_${place}_id` as MeetingMediafileUsageIdKey),
     ...FONT_PLACES.map(place => `font_${place}_id` as MeetingMediafileUsageIdKey)
 ];
-
-export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
 
 export type MeetingDefaultProjectorIdsKey = `default_projector_${Projectiondefault}_ids`;
 

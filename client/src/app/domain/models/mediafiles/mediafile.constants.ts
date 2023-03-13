@@ -36,15 +36,13 @@ export const FontDefaults: { [place in FontPlace]: string } = {
 };
 export const FONT_PLACES = Object.keys(FontDisplayNames) as FontPlace[];
 
-export type MediafileMeetingUsageIdKey =
-    | `used_as_logo_${LogoPlace}_in_meeting_id`
-    | `used_as_font_${FontPlace}_in_meeting_id`;
+export type ViewMediafileMeetingUsageKey =
+    | `used_as_logo_${LogoPlace | FontPlace}_in_meeting`
+    | `used_as_font_${FontPlace}_in_meeting`;
+
+export type MediafileMeetingUsageIdKey = `${ViewMediafileMeetingUsageKey}_id`;
 
 export const MEDIAFILE_MEETING_USAGE_ID_KEYS = [
     ...LOGO_PLACES.map(place => `used_as_logo_${place}_in_meeting_id` as MediafileMeetingUsageIdKey),
     ...FONT_PLACES.map(place => `used_as_font_${place}_in_meeting_id` as MediafileMeetingUsageIdKey)
 ];
-
-export type ViewMediafileMeetingUsageKey =
-    | `used_as_logo_${LogoPlace}_in_meeting`
-    | `used_as_font_${FontPlace}_in_meeting`;
