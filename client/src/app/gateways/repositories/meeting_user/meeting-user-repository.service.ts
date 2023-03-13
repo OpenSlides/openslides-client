@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
+import { toDecimal } from 'src/app/infrastructure/utils';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
 
@@ -19,7 +20,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
     }
 
     public override getFieldsets(): Fieldsets<MeetingUser> {
-        const groupFields: TypedFieldset<MeetingUser> = [`group_ids`];
+        const groupFields: TypedFieldset<MeetingUser> = [`group_ids`, `meeting_id`];
         const participantListFieldsMinimal: TypedFieldset<MeetingUser> = groupFields.concat([
             `vote_delegated_to_id`,
             `vote_delegations_from_ids`,
@@ -27,11 +28,10 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
             `structure_level`,
             `number`,
             `comment`,
-            `user_id`,
-            `meeting_id`
+            `user_id`
         ]);
 
-        const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`];
+        const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`, `meeting_id`];
 
         return {
             [DEFAULT_FIELDSET]: detailFields,
@@ -48,7 +48,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
                 structure_level: partialUser.structure_level,
                 number: partialUser.number,
                 about_me: partialUser.about_me,
-                vote_weight: partialUser.vote_weight,
+                vote_weight: toDecimal(partialUser.vote_weight, false) as any,
                 comment: partialUser.comment,
                 vote_delegated_to_id: partialUser.vote_delegated_to_id,
                 vote_delegations_from_ids: partialUser.vote_delegations_from_ids,

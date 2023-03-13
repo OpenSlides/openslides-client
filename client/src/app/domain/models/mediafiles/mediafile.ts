@@ -65,32 +65,36 @@ export class Mediafile extends BaseModel<Mediafile> {
         if (!place) {
             const list = this.getPlaces();
             for (let i = 0; i < list?.length; i++) {
-                const path = `used_as_${type}_${list[i]}_in_meeting_id` as keyof Mediafile;
-                if (path in this) {
-                    return this[path] as Id;
+                const meetingId = this.getSpecificUsedInMeetingId(type, list[i]);
+                if (meetingId) {
+                    return meetingId;
                 }
             }
             return null;
         }
 
-        if (!(this.getPlaces().indexOf(place) === -1)) {
+        if (this.getPlaces().indexOf(place) === -1) {
             return null;
         }
 
-        const path = `used_as_${type}_${place}_in_meeting_id` as keyof Mediafile;
-        return (this[path] as Id) || null;
+        return this.getSpecificUsedInMeetingId(type, place) || null;
     }
 
     public getFontPlaces(): FontPlace[] {
-        return FONT_PLACES.filter(place => !!this.used_as_font_in_meeting_id(place));
+        return FONT_PLACES.filter(place => !!this.getSpecificUsedInMeetingId(`font`, place));
     }
 
     public getLogoPlaces(): LogoPlace[] {
-        return LOGO_PLACES.filter(place => !!this.used_as_logo_in_meeting_id(place));
+        return LOGO_PLACES.filter(place => !!this.getSpecificUsedInMeetingId(`logo`, place));
     }
 
     public getPlaces(): (LogoPlace | FontPlace)[] {
         return [...this.getFontPlaces(), ...this.getLogoPlaces()];
+    }
+
+    private getSpecificUsedInMeetingId(type: string, place: LogoPlace | FontPlace): Id {
+        const path = `used_as_${type}_${place}_in_meeting_id` as keyof Mediafile;
+        return this[path] as Id;
     }
 
     /**
