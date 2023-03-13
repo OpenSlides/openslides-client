@@ -7,7 +7,7 @@ import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
-import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
+import { ImportConfig, RawImportModel } from 'src/app/infrastructure/utils/import/import-utils';
 import { copy } from 'src/app/infrastructure/utils/transform-functions';
 import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
@@ -114,38 +114,34 @@ export class ParticipantImportService extends BaseUserImportService {
         };
     }
 
-    protected override async onBeforeCreatingImportModels(_entries: User[]): Promise<void> {
+    protected override async onBeforeCreatingImportModels(_entries: RawImportModel<User>[]): Promise<void> {
         this._existingUserMap = await this.getDuplicates(_entries);
     }
 
-    protected override async onCreateImportModel({
-        input,
-        importTrackId
-    }: {
-        input: any;
-        importTrackId: number;
-    }): Promise<ImportModel<User>> {
-        const username = input.username ? input.username : `${input.first_name} ${input.last_name}`;
-        const userEmailUsername = `${username}/${input.email}`;
+    protected override async onCreateImportModel({ model, id }: RawImportModel<User>): Promise<ImportModel<User>> {
+        const username = model.username ? model.username : `${model.first_name} ${model.last_name}`;
+        const userEmailUsername = `${username}/${model.email}`;
         const userUsername = `${username}/`;
         const duplicates = this._existingUserMap[userUsername] ?? this._existingUserMap[userEmailUsername] ?? [];
-        const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...input } : input;
+        const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...model } : model;
         const hasDuplicates =
             duplicates.length > 1 ||
             !!this.repo.getViewModelList().find(existingUser => existingUser.username === username);
         const status = !hasDuplicates && duplicates.length === 1 ? `merge` : `new`;
-        return new ImportModel<User>({ model: newEntry, importTrackId, duplicates, hasDuplicates, status });
+        return new ImportModel<User>({ model: newEntry as User, id, duplicates, hasDuplicates, status });
     }
 
-    private async getDuplicates(entries: Partial<User>[]): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
+    private async getDuplicates(
+        entries: RawImportModel<User>[]
+    ): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
         const result = await this.presenter.call({
             permissionRelatedId: this.activeMeetingId,
-            searchCriteria: entries.map(entry => {
-                if (entry.username) {
-                    return { username: entry.username };
+            searchCriteria: entries.map(({ model }) => {
+                if (model.username) {
+                    return { username: model.username };
                 }
 
-                return { username: `${entry.first_name}${entry.last_name}`, email: entry.email };
+                return { username: `${model.first_name}${model.last_name}`, email: model.email };
             })
         });
         return result;
