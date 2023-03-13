@@ -22,7 +22,10 @@ export const getActiveMeetingSubscriptionConfig = (
                 follow: [{ idField: `content_object_id`, fieldset: [`title`] }],
                 fieldset: [`title`, `state`, `entitled_group_ids`]
             },
-            `group_ids`,
+            {
+                idField: `group_ids`,
+                fields: [`admin_group_for_meeting_id`, `default_group_for_meeting_id`, `name`, `permissions`, `weight`]
+            },
             { idField: `committee_id`, additionalFields: [`name`] }
         ],
         additionalFields: [
