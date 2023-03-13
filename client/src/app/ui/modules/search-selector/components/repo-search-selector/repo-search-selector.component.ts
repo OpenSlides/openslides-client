@@ -3,6 +3,7 @@ import { Component, ElementRef, Input, OnInit, Optional, Self, ViewEncapsulation
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { map, OperatorFunction } from 'rxjs';
+import { ModelRequestService, SubscribeToConfig } from 'src/app/site/services/model-request.service';
 
 import { Settings } from '../../../../../domain/models/meetings/meeting';
 import { MeetingSettingsService } from '../../../../../site/pages/meetings/services/meeting-settings.service';
@@ -32,6 +33,9 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     public lazyLoading = true;
 
     @Input()
+    public subscriptionConfig: SubscribeToConfig = null;
+
+    @Input()
     public defaultDataConfigKey: keyof Settings | undefined;
 
     public get controlType(): string {
@@ -40,12 +44,15 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
 
     private _repo!: ViewModelListProvider<any>;
 
+    private subscriptionName: string;
+
     public constructor(
         formBuilder: UntypedFormBuilder,
         focusMonitor: FocusMonitor,
         element: ElementRef<HTMLElement>,
         @Optional() @Self() ngControl: NgControl,
-        private meetingSettingService: MeetingSettingsService
+        private meetingSettingService: MeetingSettingsService,
+        private modelRequestService: ModelRequestService
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
         this.shouldPropagateOnRegistering = false;
@@ -70,6 +77,14 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     }
 
     private initItems(): void {
+        if (this.subscriptionConfig) {
+            this.subscriptionName = this.subscriptionConfig.subscriptionName + `_${Date.now()}`;
+            this.modelRequestService.subscribeTo({
+                modelRequest: this.subscriptionConfig.modelRequest,
+                subscriptionName: this.subscriptionName
+            });
+        }
+
         const observer = this._repo!.getViewModelListObservable();
         this.subscriptions.push(
             observer.pipe(this.pipeFn).subscribe(items => {
