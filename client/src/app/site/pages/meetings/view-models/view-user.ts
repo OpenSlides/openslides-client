@@ -129,10 +129,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
     }
 
-    public get allGroups(): ViewGroup[] {
-        return this.meeting_users.flatMap(user => user.groups);
-    }
-
     public hasVoteRightFromOthers(meetingId?: Id): boolean {
         return this.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId())?.length > 0;
     }
