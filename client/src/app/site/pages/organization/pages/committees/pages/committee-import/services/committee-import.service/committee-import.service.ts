@@ -26,7 +26,7 @@ import {
 import { toBoolean } from 'src/app/infrastructure/utils';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
-import { CsvMapping, ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
+import { CsvMapping, ImportConfig, RawImportModel } from 'src/app/infrastructure/utils/import/import-utils';
 import { UserImportHelper, UserSearchService } from 'src/app/infrastructure/utils/import/users';
 import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
@@ -258,22 +258,19 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
     }
 
     protected override async onCreateImportModel({
-        input,
-        importTrackId
-    }: {
-        input: CommitteeCsvPort;
-        importTrackId: number;
-    }): Promise<ImportModel<CommitteeCsvPort>> {
+        model,
+        id
+    }: RawImportModel<CommitteeCsvPort>): Promise<ImportModel<CommitteeCsvPort>> {
         const existingCommittee = this.repo
             .getViewModelList()
-            .find(_committee => _committee.name === input[NAME]) as any;
+            .find(_committee => _committee.name === model[NAME]) as any;
         const status = !!existingCommittee ? `merge` : `new`;
         if (existingCommittee) {
-            input[ID] = existingCommittee.id;
+            model[ID] = existingCommittee.id;
         }
         return new ImportModel({
-            model: input,
-            importTrackId,
+            model: model as CommitteeCsvPort,
+            id,
             status,
             hasDuplicates: false,
             duplicates: [existingCommittee]
@@ -297,7 +294,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
 
     private getDate(dateString: string): number {
         if (dateString.length === 8) {
-            // Assuming, that it is in the format "YYYYMMDD"
+            // Assuming that it is in the format "YYYYMMDD"
             const toDate = `${dateString.slice(0, 4)}-${dateString.slice(4, 6)}-${dateString.slice(6)}`;
             return new Date(toDate).getTime() / 1000;
         } else if (!!dateString) {
