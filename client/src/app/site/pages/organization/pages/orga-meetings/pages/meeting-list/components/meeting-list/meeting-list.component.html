@@ -47,7 +47,7 @@
                 </span>
 
                 <!-- Is Template -->
-                <span class="icon-prefix" *ngIf="meeting.isTemplate">
+                <span class="icon-prefix" *osCmlPerms="CML.can_manage; committeeId: meeting.committee_id; nonAdminCheck: true; and: meeting.isTemplate">
                     <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
                 </span>
 
