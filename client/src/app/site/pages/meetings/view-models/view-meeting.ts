@@ -6,7 +6,7 @@ import {
     ViewMeetingDefaultProjectorsKey,
     ViewMeetingMediafileUsageKey
 } from 'src/app/domain/models/meetings/meeting.constants';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 
 import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';
@@ -87,7 +87,7 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
         return [...this.getSpecifiedLogoPlaces(), ...this.getSpecifiedFontPlaces()];
     }
 
-    public default_projectors(place: Projectiondefault): ViewProjector[] {
+    public default_projectors(place: ProjectiondefaultValue): ViewProjector[] {
         return this[`default_projectors_${place}`];
     }
 }

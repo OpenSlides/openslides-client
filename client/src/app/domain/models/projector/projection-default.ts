@@ -19,7 +19,7 @@ export const PROJECTIONDEFAULT = {
 
 export type ProjectiondefaultKey = keyof typeof PROJECTIONDEFAULT;
 
-export type Projectiondefault = typeof PROJECTIONDEFAULT[ProjectiondefaultKey];
+export type ProjectiondefaultValue = typeof PROJECTIONDEFAULT[ProjectiondefaultKey];
 
 export const PROJECTIONDEFAULT_VERBOSE: { [key in ProjectiondefaultKey]: string } = {
     agendaAllItems: _(`Agenda`),
@@ -38,6 +38,6 @@ export const PROJECTIONDEFAULT_VERBOSE: { [key in ProjectiondefaultKey]: string 
     poll: _(`Polls`)
 };
 
-export const PROJECTIONDEFAULTS = Object.values(PROJECTIONDEFAULT) as Projectiondefault[];
+export const PROJECTIONDEFAULTS = Object.values(PROJECTIONDEFAULT) as ProjectiondefaultValue[];
 
 export const PROJECTIONDEFAULT_KEYS = Object.values(PROJECTIONDEFAULT) as ProjectiondefaultKey[];

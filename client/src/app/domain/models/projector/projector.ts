@@ -3,7 +3,7 @@ import { HasSequentialNumber } from '../../interfaces';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';
-import { Projectiondefault } from './projection-default';
+import { ProjectiondefaultValue } from './projection-default';
 import { ProjectorMeetingUsageIdKey } from './projector.constants';
 
 /**
@@ -67,7 +67,7 @@ export class Projector extends BaseModel<Projector> {
         super(Projector.COLLECTION, input);
     }
 
-    public used_as_default_in_meeting_id(projectiondefault: Projectiondefault): Id | null {
+    public used_as_default_in_meeting_id(projectiondefault: ProjectiondefaultValue): Id | null {
         return (this[`used_as_default_${projectiondefault}_in_meeting_id` as keyof Projector] as Id) || null;
     }
 }

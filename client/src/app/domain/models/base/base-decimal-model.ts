@@ -17,10 +17,6 @@ export abstract class BaseDecimalModel<T = any> extends BaseModel<T> {
     }
 
     private parseDecimalFields(input: T, field: keyof T): void {
-        if (Array.isArray(input[field])) {
-            throw new Error(`Decimal field '${String(field)}' should not hold array`);
-        } else {
-            input[field] = parseFloat(input[field] as any) as any;
-        }
+        input[field] = parseFloat(input[field] as any) as any;
     }
 }

@@ -324,8 +324,7 @@ export class OperatorService {
         if (user.organization_management_level !== undefined || this._OML === undefined) {
             this._OML = user.organization_management_level || null;
         }
-        this._meetingIds =
-            user.meeting_users.filter(mUser => mUser.group_ids?.length).map(mUser => mUser.meeting_id) || [];
+        this._meetingIds = user.ensuredMeetingIds;
         this._CML = getUserCML(user);
     }
 

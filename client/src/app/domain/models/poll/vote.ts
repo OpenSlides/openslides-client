@@ -11,7 +11,7 @@ export class Vote extends BaseModel<Vote> {
 
     public option_id!: Id; // (assignment|motion)_option/vote_ids;
     public user_id!: Id; // user/vote_ids;
-    /** Attention: 'delegated_user_id' links to a MeetingUser, not a User */
+    /** Id of the MeetingUser the vote got delegated to */
     public delegated_user_id!: Id; // meeting_user/vote_delegated_vote_ids;
     public user_token!: string;
 

@@ -1,4 +1,4 @@
-import { PROJECTIONDEFAULT, Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 
 import { MotionBlock } from '../../../../../../../../domain/models/motions/motion-block';
 import { BaseProjectableViewModel } from '../../../../../view-models/base-projectable-model';
@@ -31,7 +31,7 @@ export class ViewMotionBlock extends BaseProjectableViewModel<MotionBlock> {
         return `/${this.getActiveMeetingId()}/motions/blocks/${this.sequential_number}`;
     }
 
-    public getProjectiondefault(): Projectiondefault {
+    public getProjectiondefault(): ProjectiondefaultValue {
         return PROJECTIONDEFAULT.motionBlock;
     }
 }

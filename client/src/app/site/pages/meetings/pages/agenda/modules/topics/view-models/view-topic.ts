@@ -1,4 +1,4 @@
-import { PROJECTIONDEFAULT, Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { HasAgendaItem, HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
@@ -31,7 +31,7 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
         return this.text;
     }
 
-    public getProjectiondefault(): Projectiondefault {
+    public getProjectiondefault(): ProjectiondefaultValue {
         return PROJECTIONDEFAULT.topics;
     }
 

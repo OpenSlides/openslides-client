@@ -1,4 +1,7 @@
-import { PROJECTIONDEFAULT, Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import {
+    PROJECTIONDEFAULT,
+    ProjectiondefaultValue
+} from '../../../../../../domain/models/projector/projection-default';
 import { ProjectorMessage } from '../../../../../../domain/models/projector/projector-message';
 import { stripHtmlTags } from '../../../../../../infrastructure/utils';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
@@ -21,7 +24,7 @@ export class ViewProjectorMessage extends BaseProjectableViewModel<ProjectorMess
         };
     }
 
-    public getProjectiondefault(): Projectiondefault {
+    public getProjectiondefault(): ProjectiondefaultValue {
         return PROJECTIONDEFAULT.projectorMessage;
     }
 

@@ -133,9 +133,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         if (!this.self) {
             return [];
         }
-        const meetingIds = this.self.meeting_users
-            .filter(mUser => mUser.group_ids?.length)
-            .map(mUser => mUser.meeting_id);
+        const meetingIds = this.self.ensuredMeetingIds;
         return meetingIds
             .map(id => this.meetingRepo.getViewModel(id) as ViewMeeting)
             .sort((meetingA, meetingB) => meetingA.name.localeCompare(meetingB.name));

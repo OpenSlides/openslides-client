@@ -129,6 +129,13 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
     }
 
+    /**
+     * Returns all meetings that the user actually has group memberships for.
+     */
+    public get ensuredMeetingIds(): number[] {
+        return this.meeting_users.filter(mUser => mUser.group_ids?.length).map(mUser => mUser.meeting_id) || [];
+    }
+
     public hasVoteRightFromOthers(meetingId?: Id): boolean {
         return this.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId())?.length > 0;
     }

@@ -9,7 +9,6 @@ export class ViewVote extends BaseViewModel<Vote> {
     protected _collection = Vote.COLLECTION;
 
     public get vote(): Vote {
-        this.delegated_user_id;
         return this._model;
     }
 }

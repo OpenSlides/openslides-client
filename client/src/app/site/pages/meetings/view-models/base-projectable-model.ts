@@ -1,7 +1,7 @@
 import { ProjectorTitle } from '../../../../domain/interfaces/has-projector-title';
 import { BaseModel } from '../../../../domain/models/base/base-model';
 import { Projection } from '../../../../domain/models/projector/projection';
-import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
+import { ProjectiondefaultValue } from '../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../base/base-view-model';
 import { MeetingSettingsService } from '../services/meeting-settings.service';
 import { Projectable } from './projectable';
@@ -20,7 +20,7 @@ export abstract class BaseProjectableViewModel<M extends BaseModel = any> extend
         };
     }
 
-    public abstract getProjectiondefault(): Projectiondefault | null;
+    public abstract getProjectiondefault(): ProjectiondefaultValue | null;
 
     /**
      * @returns the projector title used for managing projector elements.

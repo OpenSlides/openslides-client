@@ -291,7 +291,7 @@ export class AutoupdateStream {
 
             return decompressedString;
         } catch (e) {
-            console.warn(`Received uncompressed message from autoupdate.`, content);
+            console.warn(`Received uncompressed message from autoupdate.`);
         }
 
         return content;

@@ -11,7 +11,7 @@ import {
     PollTypeVerbose
 } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
-import { PROJECTIONDEFAULT, Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
@@ -80,7 +80,7 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.isStarted;
     }
 
-    public getProjectiondefault(): Projectiondefault {
+    public getProjectiondefault(): ProjectiondefaultValue {
         return PROJECTIONDEFAULT.poll;
     }
 

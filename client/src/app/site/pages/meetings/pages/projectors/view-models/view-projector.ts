@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -32,7 +32,7 @@ export class ViewProjector extends BaseViewModel<Projector> {
         return this.current_projections.filter(projection => !projection.stable);
     }
 
-    public used_as_default_in_meeting(place: Projectiondefault): ViewMeeting {
+    public used_as_default_in_meeting(place: ProjectiondefaultValue): ViewMeeting {
         return this[`used_as_default_${place}_in_meeting`];
     }
 }

@@ -142,7 +142,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                           first_meeting_user: this.sanitizePayload(
                               this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
                           ),
-                          rest: meetingUsers?.map(meetingUser =>
+                          rest: meetingUsers.map(meetingUser =>
                               this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUser))
                           )
                       }

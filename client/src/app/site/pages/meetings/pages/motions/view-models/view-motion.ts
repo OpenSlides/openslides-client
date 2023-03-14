@@ -6,7 +6,10 @@ import { Id } from '../../../../../../domain/definitions/key-types';
 import { AgendaItemType } from '../../../../../../domain/models/agenda/agenda-item';
 import { HasReferencedMotionInExtensionIds, Motion } from '../../../../../../domain/models/motions/motion';
 import { AmendmentType, ChangeRecoMode } from '../../../../../../domain/models/motions/motions.constants';
-import { PROJECTIONDEFAULT, Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import {
+    PROJECTIONDEFAULT,
+    ProjectiondefaultValue
+} from '../../../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
@@ -336,7 +339,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
         };
     }
 
-    public getProjectiondefault(): Projectiondefault {
+    public getProjectiondefault(): ProjectiondefaultValue {
         if (this.isParagraphBasedAmendment()) {
             return PROJECTIONDEFAULT.amendment;
         } else {

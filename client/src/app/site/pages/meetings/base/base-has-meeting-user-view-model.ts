@@ -20,7 +20,7 @@ export abstract class BaseHasMeetingUserViewModel<M extends BaseModel<any> = any
 /**
  * Can be extended instead of BaseViewModel if a ViewModel should contain multiple ViewMeetingUsers.
  */
-export class BaseHasMeetingUsersViewModel<M extends BaseModel<any> = any> extends BaseViewModel<M> {
+export abstract class BaseHasMeetingUsersViewModel<M extends BaseModel<any> = any> extends BaseViewModel<M> {
     public meeting_users: ViewMeetingUser[];
     public get users(): ViewUser[] {
         return this.meeting_users?.flatMap(user => user.user ?? []);
