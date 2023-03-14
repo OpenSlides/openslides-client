@@ -1,5 +1,3 @@
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
 import { Id } from '../../definitions/key-types';
 import { CML, OMLMapping } from '../../definitions/organization-permission';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
@@ -12,7 +10,7 @@ export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 /**
  * Iterable pre selection of genders (sexes)
  */
-export const GENDERS = [_(`female`), _(`male`), _(`diverse`)];
+export const GENDERS = [`female`, `male`, `diverse`];
 
 /**
  * Representation of a user in contrast to the operator.
