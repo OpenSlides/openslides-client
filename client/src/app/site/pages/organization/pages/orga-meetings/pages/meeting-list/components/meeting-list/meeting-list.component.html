@@ -46,6 +46,11 @@
                     <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
                 </span>
 
+                <!-- Is Template -->
+                <span class="icon-prefix" *ngIf="meeting.isTemplate">
+                    <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
+                </span>
+
                 {{ meeting.name | translate }}
 
                 <div class="subtitle" *ngIf="meeting.location || meeting.start_time || meeting.end_time">

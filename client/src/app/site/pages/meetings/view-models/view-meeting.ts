@@ -72,6 +72,10 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
         return !!this.is_active_in_organization_id;
     }
 
+    public get isTemplate(): boolean {
+        return this.is_template || !!this.template_for_organization_id;
+    }
+
     public get relatedTime(): RelatedTime {
         if ((this.start_time ?? this.end_time) === undefined) {
             return RelatedTime.Dateless;
