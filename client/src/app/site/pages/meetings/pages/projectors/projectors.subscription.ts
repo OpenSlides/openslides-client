@@ -35,7 +35,20 @@ export const getProjectorListSubscriptionConfig = (
     hideWhen: hasMeetingIdChangedObservable()
 });
 
-export const PROJECTOR_SUBSCRIPTION = `projector_subscription`;
+export const PROJECTOR_LIST_MINIMAL_SUBSCRIPTION = `projector_list`;
+
+export const getProjectorListMinimalSubscriptionConfig = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [`projector_ids`, `default_projector_$_ids`],
+        additionalFields: [`reference_projector_id`]
+    },
+    subscriptionName: PROJECTOR_LIST_MINIMAL_SUBSCRIPTION,
+    hideWhenDestroyed: true
+});
+
+export const PROJECTOR_SUBSCRIPTION = `projector_detail`;
 
 export const getProjectorSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
     modelRequest: {
