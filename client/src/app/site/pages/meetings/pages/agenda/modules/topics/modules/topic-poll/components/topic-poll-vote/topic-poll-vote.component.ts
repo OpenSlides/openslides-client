@@ -110,6 +110,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
     }
 
     private defineVoteOptions(): void {
+        this.voteActions = [];
         if (this.poll) {
             if (this.poll.isMethodN) {
                 this.voteActions.push(voteOptions.No);
@@ -357,6 +358,11 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             }
             this.submitVote(user);
         }
+    }
+
+    protected override updatePoll() {
+        super.updatePoll();
+        this.defineVoteOptions();
     }
 
     private enableInputs(): void {
