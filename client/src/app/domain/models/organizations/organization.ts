@@ -7,8 +7,6 @@ export class OrganizationAction {
     public static readonly UPDATE = `organization.update`;
 }
 
-export const ORGANIZATION_SUBSCRIPTION = `organization`;
-
 export class OrganizationSetting {
     public name!: string;
     public description!: string;
