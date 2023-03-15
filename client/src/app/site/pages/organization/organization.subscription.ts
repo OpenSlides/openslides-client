@@ -30,7 +30,7 @@ export const getMeetingListSubscriptionConfig = (getNextMeetingIdObservable: () 
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !!id))
 });
 
-export const ORGANIZATION_SUBSCRIPTION = `organization`;
+export const ORGANIZATION_SUBSCRIPTION = `organization_detail`;
 
 export const getOrganizationSubscriptionConfig = () => ({
     modelRequest: {

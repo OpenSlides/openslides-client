@@ -8,7 +8,7 @@ import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/serv
 import { getMotionDetailSubscriptionConfig, MOTION_DETAIL_SUBSCRIPTION } from '../../../../motions.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
-const MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION = `motion_detail_additional`;
+const MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION = `motion_additional_detail`;
 
 @Component({
     selector: `os-motion-detail`,

@@ -7,9 +7,9 @@ import { ViewMotion } from './view-models';
 
 export const MOTION_LIST_SUBSCRIPTION = `motion_list`;
 export const MOTION_LIST_MINIMAL_SUBSCRIPTION = `motion_list_minimal`;
-export const MOTION_BLOCK_SUBSCRIPTION = `motion_block`;
-export const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow`;
-export const MOTION_SUBMODELS_SUBSCRIPTION = `motion_submodels`;
+export const MOTION_BLOCK_SUBSCRIPTION = `motion_block_list`;
+export const MOTION_WORKFLOW_SUBSCRIPTION = `motion_workflow_list`;
+export const MOTION_SUBMODELS_SUBSCRIPTION = `motion_submodel_list`;
 
 export const getMotionListSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
     modelRequest: {
