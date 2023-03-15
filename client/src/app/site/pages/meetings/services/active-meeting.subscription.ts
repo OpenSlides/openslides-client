@@ -26,7 +26,12 @@ export const getActiveMeetingSubscriptionConfig = (
                 idField: `group_ids`,
                 fields: [`admin_group_for_meeting_id`, `default_group_for_meeting_id`, `name`, `permissions`, `weight`]
             },
-            { idField: `committee_id`, additionalFields: [`name`] }
+            { idField: `committee_id`, additionalFields: [`name`] },
+            {
+                idField: `projector_ids`,
+                fieldset: [`name`],
+                follow: [{ idField: `current_projection_ids`, fieldset: [`content_object_id`] }]
+            }
         ],
         additionalFields: [
             `jitsi_domain`,
