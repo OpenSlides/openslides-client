@@ -1,4 +1,4 @@
-import { ModelRequest } from 'src/app/domain/interfaces/model-request';
+import { FieldDescriptor, Fields, HasFields, ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from './interfaces-autoupdate';
@@ -9,7 +9,7 @@ export class AutoupdateSubscription {
      */
     public stream: AutoupdateStream;
 
-    public get request(): Object {
+    public get request(): ModelRequest {
         return this._request;
     }
 
@@ -17,7 +17,7 @@ export class AutoupdateSubscription {
         public id: number,
         public url: string,
         public requestHash: string,
-        private _request: any,
+        private _request: ModelRequest,
         public description: string,
         public ports: MessagePort[]
     ) {
@@ -141,7 +141,65 @@ export class AutoupdateSubscription {
      * @param request The request to be checked
      */
     public fulfills(url: string, request: ModelRequest): boolean {
-        console.log(request);
-        return this.url === url && JSON.stringify(this.request) === JSON.stringify(request);
+        // The url needs to match
+        if (this.url !== url) {
+            return false;
+        }
+
+        // Without context about relations also the requested collection
+        // and its ids have to match
+        if (request.collection !== this.request.collection || request.ids.toString() !== this.request.ids.toString()) {
+            return false;
+        }
+
+        const simpleFulfillment = JSON.stringify(this.request.fields) === JSON.stringify(request.fields);
+        if (simpleFulfillment) {
+            return true;
+        }
+
+        const checkRelation = (relation: FieldDescriptor, existingRelation: FieldDescriptor): boolean => {
+            if (relation?.type !== existingRelation?.type) {
+                return false;
+            }
+
+            if (relation.type === `template` && existingRelation.type === `template`) {
+                if (relation.values === existingRelation.values) {
+                    return true;
+                } else {
+                    return checkRelation(relation.values, existingRelation.values);
+                }
+            }
+
+            if (
+                (relation.type === `relation` && existingRelation.type === `relation`) ||
+                (relation.type === `relation-list` && existingRelation.type === `relation-list`)
+            ) {
+                if (relation.collection !== existingRelation.collection) {
+                    return false;
+                }
+            }
+
+            return checkFieldsExisting((<HasFields>relation).fields, (<HasFields>existingRelation).fields);
+        };
+
+        const checkFieldsExisting = (fields: Fields, existingFields: Fields): boolean => {
+            for (const fieldKey of Object.keys(fields)) {
+                const field = fields[fieldKey];
+                const existing = existingFields[fieldKey];
+                if (field === existing) {
+                    continue;
+                } else if (existing === undefined) {
+                    return false;
+                }
+
+                if (!checkRelation(field, existing)) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
+        return checkFieldsExisting(request.fields, this.request.fields);
     }
 }
