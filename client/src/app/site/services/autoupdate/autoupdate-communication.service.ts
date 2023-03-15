@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
 import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
 import { djb2hash } from 'src/app/infrastructure/utils';
@@ -24,7 +25,6 @@ import {
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
-import { ModelRequest } from './autoupdate.service';
 
 @Injectable({
     providedIn: `root`

@@ -1,4 +1,11 @@
 import { Injectable } from '@angular/core';
+import {
+    FieldDescriptor,
+    Fields,
+    GenericRelationFieldDecriptor,
+    RelationFieldDescriptor,
+    StructuredFieldDecriptor
+} from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Field, Id } from '../../../domain/definitions/key-types';
 import { BaseModel } from '../../../domain/models/base/base-model';
@@ -6,13 +13,6 @@ import { Relation } from '../../../infrastructure/definitions/relations';
 import { Deferred } from '../../../infrastructure/utils/promises';
 import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
 import { BaseViewModel, ViewModelConstructor } from '../../base/base-view-model';
-import {
-    FieldDescriptor,
-    Fields,
-    GenericRelationFieldDecriptor,
-    RelationFieldDescriptor,
-    StructuredFieldDecriptor
-} from '../autoupdate';
 import { CollectionMapperService } from '../collection-mapper.service';
 import { RelationManagerService } from '../relation-manager.service';
 import { ModelRequestObject } from '.';

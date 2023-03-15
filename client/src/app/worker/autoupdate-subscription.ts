@@ -1,3 +1,5 @@
+import { ModelRequest } from 'src/app/domain/interfaces/model-request';
+
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateReceiveData, AutoupdateReceiveError, AutoupdateSetStreamId } from './interfaces-autoupdate';
 
@@ -138,7 +140,8 @@ export class AutoupdateSubscription {
      * @param url The url for the request
      * @param request The request to be checked
      */
-    public fulfills(url: string, request: Object): boolean {
+    public fulfills(url: string, request: ModelRequest): boolean {
+        console.log(request);
         return this.url === url && JSON.stringify(this.request) === JSON.stringify(request);
     }
 }
