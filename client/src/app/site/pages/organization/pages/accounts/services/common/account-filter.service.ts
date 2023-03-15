@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { DuplicateStatus, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Injectable({
     providedIn: `root`
@@ -15,7 +16,8 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
     public constructor(
         store: ActiveFiltersService,
         private translate: TranslateService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private controller: UserControllerService
     ) {
         super(store);
     }
@@ -119,8 +121,29 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
                     { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
                 ]
+            },
+            {
+                property: `getDuplicateStatusInList`,
+                label: this.translate.instant(`Duplicates`),
+                options: [
+                    {
+                        condition: [DuplicateStatus.All, DuplicateStatus.SameName],
+                        label: this.translate.instant(`Same first/last name`)
+                    },
+                    {
+                        condition: [DuplicateStatus.All, DuplicateStatus.SameEmail],
+                        label: this.translate.instant(`Same email`)
+                    }
+                ]
             }
         ];
         return staticFilterDefinitions.concat(nonStaticFilterDefinitions);
+    }
+
+    protected override getFilterPropertyFunctionArguments(property: keyof ViewUser): any[] {
+        if (property === `getDuplicateStatusInList`) {
+            return [this.controller.getViewModelList()];
+        }
+        return [];
     }
 }

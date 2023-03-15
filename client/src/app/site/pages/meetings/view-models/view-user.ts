@@ -15,6 +15,13 @@ import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
 
+export enum DuplicateStatus {
+    None,
+    SameEmail,
+    SameName,
+    All
+}
+
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
@@ -265,6 +272,22 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             return false;
         }
         return this.vote_delegations_from_ids().includes(user.id);
+    }
+
+    public getDuplicateStatusInList(list: ViewUser[]): DuplicateStatus {
+        let status: number = DuplicateStatus.None;
+        for (let user of list) {
+            if (user.id === this.id) {
+                continue;
+            }
+            if (user.email && user.email === this.email) {
+                status = status === DuplicateStatus.SameName ? DuplicateStatus.All : DuplicateStatus.SameEmail;
+            }
+            if (user.getName() === this.getName()) {
+                status = status === DuplicateStatus.SameEmail ? DuplicateStatus.All : DuplicateStatus.SameName;
+            }
+        }
+        return status;
     }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
