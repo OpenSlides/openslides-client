@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { DuplicateStatus, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -7,11 +8,17 @@ import { ActiveFiltersService } from 'src/app/site/services/active-filters.servi
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
+type Email = string;
+type Name = string;
+
 @Injectable({
     providedIn: `root`
 })
 export class AccountFilterService extends BaseFilterListService<ViewUser> {
     protected storageKey = `MemberList`;
+
+    private userEmailMap = new Map<Email, Id[]>();
+    private userNameMap = new Map<Name, Id[]>();
 
     public constructor(
         store: ActiveFiltersService,
@@ -20,6 +27,19 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
         private controller: UserControllerService
     ) {
         super(store);
+
+        this.controller.getViewModelListObservable().subscribe(users => {
+            this.updateUserMaps(users);
+        });
+    }
+
+    private updateUserMaps(users: ViewUser[]): void {
+        this.userEmailMap.clear();
+        this.userNameMap.clear();
+        for (let user of users) {
+            this.userEmailMap.set(user.email, (this.userEmailMap.get(user.email) ?? []).concat(user.id));
+            this.userNameMap.set(user.getName(), (this.userNameMap.get(user.getName()) ?? []).concat(user.id));
+        }
     }
 
     protected getFilterDefinitions(): OsFilter<ViewUser>[] {
@@ -123,7 +143,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
-                property: `getDuplicateStatusInList`,
+                property: `getDuplicateStatusInMap`,
                 label: this.translate.instant(`Duplicates`),
                 options: [
                     {
@@ -141,8 +161,8 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
     }
 
     protected override getFilterPropertyFunctionArguments(property: keyof ViewUser): any[] {
-        if (property === `getDuplicateStatusInList`) {
-            return [this.controller.getViewModelList()];
+        if (property === `getDuplicateStatusInMap`) {
+            return [{ name: this.userNameMap, email: this.userEmailMap }];
         }
         return [];
     }
