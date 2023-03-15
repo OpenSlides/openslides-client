@@ -7,21 +7,10 @@ import { idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { WaitForActionReason, waitForActionReason } from 'src/app/site/modules/wait-for-action-dialog/definitions';
 import { WaitForActionDialogService } from 'src/app/site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ActionWorkerRepositoryService } from '../repositories/action-worker/action-worker-repository.service';
 import { ViewActionWorker } from '../repositories/action-worker/view-action-worker';
-
-const getActionWorkerSubscriptionConfig = (ids: Id[]) => ({
-    modelRequest: {
-        viewModelCtor: ViewActionWorker,
-        ids: ids,
-        fieldset: DEFAULT_FIELDSET
-    },
-    subscriptionName: ACTION_WORKER_SUBSCRIPTION
-});
-
-const ACTION_WORKER_SUBSCRIPTION = `action_worker`;
+import { ACTION_WORKER_SUBSCRIPTION, getActionWorkerSubscriptionConfig } from './action-worker-watch.subscription';
 
 @Injectable({
     providedIn: `root`

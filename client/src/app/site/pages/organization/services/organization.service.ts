@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ORGANIZATION_SUBSCRIPTION } from 'src/app/domain/models/organizations/organization';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
 import { ModelSubscription } from '../../../services/autoupdate';
 import { LifecycleService } from '../../../services/lifecycle.service';
+import { getOrganizationSubscriptionConfig } from '../organization.subscription';
 import { getDesignListSubscriptionConfig } from '../pages/designs/config/model-subscription';
 import { ViewOrganization } from '../view-models/view-organization';
 
@@ -55,17 +55,7 @@ export class OrganizationService {
     private async setupModelSubscription(): Promise<void> {
         if (!this._hasInitiated) {
             this._hasInitiated = true;
-            this.modelRequestService.subscribeTo({
-                modelRequest: {
-                    viewModelCtor: ViewOrganization,
-                    ids: [ORGANIZATION_ID],
-                    fieldset: `settings`,
-                    additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`, `theme_id`],
-                    follow: [{ idField: `mediafile_ids`, fieldset: `organizationDetail` }]
-                },
-                subscriptionName: ORGANIZATION_SUBSCRIPTION,
-                isDelayed: false
-            });
+            this.modelRequestService.subscribeTo(getOrganizationSubscriptionConfig());
             this.modelRequestService.subscribeTo(getDesignListSubscriptionConfig());
             this.repo
                 .getViewModelObservable(ORGANIZATION_ID)

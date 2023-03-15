@@ -29,3 +29,17 @@ export const getMeetingListSubscriptionConfig = (getNextMeetingIdObservable: () 
     subscriptionName: MEETING_LIST_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !!id))
 });
+
+export const ORGANIZATION_SUBSCRIPTION = `organization`;
+
+export const getOrganizationSubscriptionConfig = () => ({
+    modelRequest: {
+        viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
+        fieldset: `settings`,
+        additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`, `theme_id`],
+        follow: [{ idField: `mediafile_ids`, fieldset: `organizationDetail` }]
+    },
+    subscriptionName: ORGANIZATION_SUBSCRIPTION,
+    isDelayed: false
+});

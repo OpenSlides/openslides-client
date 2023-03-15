@@ -2,6 +2,10 @@ import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { ViewMeeting } from '../../../meetings/view-models/view-meeting';
+
+import { ViewCommittee } from './view-models';
 
 export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
 
@@ -15,4 +19,43 @@ export const getCommitteeListSubscriptionConfig = (getNextMeetingIdObservable: (
     },
     subscriptionName: COMMITTEE_LIST_SUBSCRIPTION,
     hideWhen: getNextMeetingIdObservable().pipe(map(id => !!id))
+});
+
+export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
+
+export const getCommitteeDetailSubscriptionConfig = (id: Id) => ({
+    hideWhenDestroyed: true,
+    modelRequest: {
+        viewModelCtor: ViewCommittee,
+        ids: [id],
+        fieldset: DEFAULT_FIELDSET,
+        follow: [
+            {
+                idField: `user_ids`,
+                fieldset: `accountList`,
+                additionalFields: [{ templateField: `group_$_ids` }]
+            }
+        ]
+    },
+    subscriptionName: COMMITTEE_DETAIL_SUBSCRIPTION
+});
+
+const MEETING_DETAIL_EDIT_SUBSCRIPTION = `committee_meeting_detail`;
+
+export const getCommitteeMeetingDetailSubscriptionConfig = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        fieldset: [],
+        additionalFields: [
+            `is_template`,
+            `default_meeting_for_committee_id`,
+            `jitsi_domain`,
+            `jitsi_room_name`,
+            `jitsi_room_password`
+        ],
+        follow: [`admin_group_id`, `default_group_id`]
+    },
+    subscriptionName: MEETING_DETAIL_EDIT_SUBSCRIPTION,
+    hideWhenDestroyed: true
 });
