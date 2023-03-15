@@ -4,7 +4,7 @@ import {
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
-import { getDashboardMeetingListSubscriptionConfig } from '../../../../config/model-subscription';
+import { getDashboardMeetingListSubscriptionConfig } from '../../../../dashboard.subscription';
 
 @Component({
     selector: `os-dashboard-main`,

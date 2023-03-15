@@ -6,7 +6,7 @@ import { OrganizationRepositoryService } from '../../../../gateways/repositories
 import { ModelSubscription } from '../../../services/autoupdate';
 import { LifecycleService } from '../../../services/lifecycle.service';
 import { getOrganizationSubscriptionConfig } from '../organization.subscription';
-import { getDesignListSubscriptionConfig } from '../pages/designs/config/model-subscription';
+import { getDesignListSubscriptionConfig } from '../pages/designs/designs.subscription';
 import { ViewOrganization } from '../view-models/view-organization';
 
 /**

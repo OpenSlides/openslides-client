@@ -9,7 +9,7 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
-import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../config/model-subscription';
+import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../dashboard.subscription';
 
 @Component({
     selector: `os-dashboard`,

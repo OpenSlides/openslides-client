@@ -4,7 +4,7 @@ import {
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
-import { getOrganizationTagListSubscriptionConfig } from '../../../../config/model-subscription';
+import { getOrganizationTagListSubscriptionConfig } from '../../../../organization-tags.subscription';
 
 @Component({
     selector: `os-organization-tag-main`,
