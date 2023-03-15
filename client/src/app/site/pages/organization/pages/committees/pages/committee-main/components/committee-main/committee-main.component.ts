@@ -4,7 +4,7 @@ import {
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
-import { getOrganizationTagListSubscriptionConfig } from '../../../../../organization-tags/config/model-subscription';
+import { getOrganizationTagListSubscriptionConfig } from '../../../../../organization-tags/organization-tags.subscription';
 import { getCommitteeListSubscriptionConfig } from '../../../../committees.subscription';
 
 @Component({

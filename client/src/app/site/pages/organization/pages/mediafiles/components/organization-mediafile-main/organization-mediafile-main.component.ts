@@ -4,7 +4,7 @@ import {
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getOrganizationMediafileListSubscriptionConfig } from '../../config/model-subscription';
+import { getOrganizationMediafileListSubscriptionConfig } from '../../mediafiles.subscription';
 
 @Component({
     selector: `os-organization-mediafile-main`,

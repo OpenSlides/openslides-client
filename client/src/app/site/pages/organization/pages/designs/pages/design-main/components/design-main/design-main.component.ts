@@ -4,7 +4,7 @@ import {
     ModelRequestConfig
 } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
-import { getDesignListSubscriptionConfig } from '../../../../config/model-subscription';
+import { getDesignListSubscriptionConfig } from '../../../../designs.subscription';
 
 @Component({
     selector: `os-design-main`,
