@@ -1,16 +1,14 @@
-import { applyMixins } from 'src/app/infrastructure/utils';
-import { HasMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';
 import { SpeakerState } from '../../../../../../../../domain/models/speakers/speaker-state';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 /**
  * Provides "safe" access to a speaker with all it's components
  */
-export class ViewSpeaker extends BaseViewModel<Speaker> {
+export class ViewSpeaker extends BaseHasMeetingUserViewModel<Speaker> {
     public static COLLECTION = Speaker.COLLECTION;
     protected _collection = Speaker.COLLECTION;
 
@@ -61,5 +59,4 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
 interface ISpeakerRelations {
     list_of_speakers: ViewListOfSpeakers;
 }
-export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting, HasMeetingUser {}
-applyMixins(ViewSpeaker, [HasMeetingUser]);
+export interface ViewSpeaker extends Speaker, ISpeakerRelations, HasMeeting {}

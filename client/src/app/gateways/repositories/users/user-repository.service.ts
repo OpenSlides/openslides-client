@@ -80,19 +80,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         private meetingUserRepo: MeetingUserRepositoryService
     ) {
         super(repositoryServiceCollector, User);
-
-        // Ensure that user view models are updated when the meeting users are updated
-        this.meetingUserRepo.changedModelsUserIdsObservable.subscribe(changedIds => {
-            const ids: Id[] = [];
-            for (let id of changedIds) {
-                if (this.getViewModel(id)) {
-                    ids.push(id);
-                }
-            }
-            if (ids.length) {
-                this.changedModels(ids);
-            }
-        });
     }
 
     /**
@@ -150,8 +137,16 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
             return {
                 user: this.sanitizePayload(this.getBaseUserPayload(user)),
-                first_meeting_user: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())),
-                rest: this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUsers))
+                ...(meetingUsers && meetingUsers.length
+                    ? {
+                          first_meeting_user: this.sanitizePayload(
+                              this.meetingUserRepo.getBaseUserPayload(meetingUsers.pop())
+                          ),
+                          rest: meetingUsers.map(meetingUser =>
+                              this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(meetingUser))
+                          )
+                      }
+                    : {})
             };
         });
         const payload: any[] = data.map(partialUser => ({
@@ -163,7 +158,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const ids: number[] = [];
         const updatePayload: any[] = [];
         for (let date of data) {
-            if (date.rest.length) {
+            if (date.rest?.length) {
                 const models = results.filter(user =>
                     Object.keys(date.user).every(key => date.user[key] === user[key])
                 );
@@ -177,12 +172,14 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                     continue;
                 }
                 ids.push(models[0].id);
-                for (let meeting_user of date.rest) {
+                for (let meeting_user of date.rest ?? []) {
                     updatePayload.push({ id: models[0].id, ...meeting_user });
                 }
             }
         }
-        await this.createAction(UserAction.UPDATE, updatePayload).resolve();
+        if (updatePayload.length) {
+            await this.createAction(UserAction.UPDATE, updatePayload).resolve();
+        }
         return results;
     }
 
@@ -195,14 +192,13 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
      */
     public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
         const updatePayload = users.flatMap(user => {
-            const update = typeof patch === `function` ? patch(user) : patch;
-            return [
-                {
-                    id: user.id,
-                    ...this.sanitizePayload(this.getBaseUserPayload(update)),
-                    ...this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(update))
-                }
-            ];
+            const dirtyUpdate = typeof patch === `function` ? patch(user) : patch;
+            const updates = Array.isArray(dirtyUpdate) ? dirtyUpdate : [dirtyUpdate];
+            return updates.map(update => ({
+                id: user.id,
+                ...this.sanitizePayload(this.getBaseUserPayload(update)),
+                ...this.sanitizePayload(this.meetingUserRepo.getBaseUserPayload(update))
+            }));
         });
         return this.createAction(UserAction.UPDATE, updatePayload);
     }

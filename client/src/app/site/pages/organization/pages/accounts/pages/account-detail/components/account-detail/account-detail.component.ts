@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -104,7 +104,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public getTransformPropagateFn(): (value?: Id[]) => any {
-        return value => ({ [CML.can_manage]: value });
+        return value => value;
     }
 
     public getSaveAction(): () => Promise<void> {

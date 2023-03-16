@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Projectable } from 'src/app/site/pages/meetings/view-models';
@@ -41,8 +41,8 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
         return this.getDetailStateUrl();
     }
 
-    public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.listOfSpeakers;
+    public getProjectiondefault(): ProjectiondefaultValue {
+        return PROJECTIONDEFAULT.listOfSpeakers;
     }
 
     public hasSpeakerSpoken(checkSpeaker: ViewSpeaker): boolean {

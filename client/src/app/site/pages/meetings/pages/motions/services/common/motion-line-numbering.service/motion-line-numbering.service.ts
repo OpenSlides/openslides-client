@@ -157,7 +157,7 @@ export class MotionLineNumberingService {
         return this.getTextParagraphs(parent!, true, lineLength).map((paragraph: string, index: number) => {
             let localParagraph: string;
             if (motion.hasLeadMotion) {
-                localParagraph = motion.amendment_paragraph(index) ?? paragraph;
+                localParagraph = motion.amendment_paragraph_text(index) ?? paragraph;
             } else {
                 localParagraph = paragraph;
             }
@@ -214,10 +214,10 @@ export class MotionLineNumberingService {
                 return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
             }
 
-            if (typeof amendment.amendment_paragraph(paraNo) === `string`) {
+            if (typeof amendment.amendment_paragraph_text(paraNo) === `string`) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
-                const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph(paraNo)!);
+                const diff = this.diffService.diff(paragraph, amendment.amendment_paragraph_text(paraNo)!);
                 paragraph = this.diffService.diffHtmlToFinalText(diff);
                 paragraphHasChanges = true;
             }
@@ -277,7 +277,7 @@ export class MotionLineNumberingService {
             ) as string[];
         } else {
             amendmentParagraphs = baseParagraphs.map(
-                (_: string, paraNo: number) => amendment.amendment_paragraph(paraNo) as string
+                (_: string, paraNo: number) => amendment.amendment_paragraph_text(paraNo) as string
             );
         }
 
@@ -412,7 +412,7 @@ export class MotionLineNumberingService {
                 throw new Error(`Inconsistent data. An amendment is probably referring to a non-existent line number.`);
             }
 
-            const newText = amendment.amendment_paragraph(paraNo);
+            const newText = amendment.amendment_paragraph_text(paraNo);
             if (!newText) {
                 return origText;
             }
@@ -436,8 +436,8 @@ export class MotionLineNumberingService {
             const parent = amendment.lead_motion as ViewMotion;
 
             return this.getTextParagraphs(parent, true, lineLength).map((paragraph: string, index: number) => {
-                const diffedParagraph = amendment.amendment_paragraph(index)
-                    ? this.diffService.diff(paragraph, amendment.amendment_paragraph(index) as string, lineLength)
+                const diffedParagraph = amendment.amendment_paragraph_text(index)
+                    ? this.diffService.diff(paragraph, amendment.amendment_paragraph_text(index) as string, lineLength)
                     : paragraph;
                 return this.extractAffectedParagraphs(diffedParagraph, index);
             });

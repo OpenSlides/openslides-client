@@ -61,7 +61,7 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
                     `origin_meeting_id`,
                     `derived_motion_ids`,
                     `amendment_ids`,
-                    { templateField: `amendment_paragraph_$` }
+                    `amendment_paragraph`
                 ]
             },
             subscriptionName: MOTION_DETAIL_SUBSCRIPTION,

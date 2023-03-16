@@ -35,7 +35,7 @@ export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {
                         {
                             idField: `user_ids`,
                             fieldset: `accountList`,
-                            follow: [{ idField: `meeting_user_ids`, additionalFields: [`group_ids`] }]
+                            follow: [{ idField: `meeting_user_ids`, fieldset: `groups` }]
                         }
                     ]
                 },

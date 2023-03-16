@@ -1,12 +1,9 @@
-import { applyMixins } from 'src/app/infrastructure/utils';
-
 import { AssignmentCandidate } from '../../../../../../domain/models/assignments/assignment-candidate';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseHasMeetingUserViewModel } from '../../../base/base-has-meeting-user-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
-import { HasMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewAssignment } from './view-assignment';
 
-export class ViewAssignmentCandidate extends BaseViewModel<AssignmentCandidate> {
+export class ViewAssignmentCandidate extends BaseHasMeetingUserViewModel<AssignmentCandidate> {
     public static COLLECTION = AssignmentCandidate.COLLECTION;
     protected _collection = AssignmentCandidate.COLLECTION;
 
@@ -18,9 +15,4 @@ export class ViewAssignmentCandidate extends BaseViewModel<AssignmentCandidate> 
 interface IAssignmentCandidateRelations {
     assignment: ViewAssignment;
 }
-export interface ViewAssignmentCandidate
-    extends AssignmentCandidate,
-        IAssignmentCandidateRelations,
-        HasMeeting,
-        HasMeetingUser {}
-applyMixins(ViewAssignmentCandidate, [HasMeetingUser]);
+export interface ViewAssignmentCandidate extends AssignmentCandidate, IAssignmentCandidateRelations, HasMeeting {}

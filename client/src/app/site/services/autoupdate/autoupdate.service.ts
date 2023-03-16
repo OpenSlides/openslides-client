@@ -10,7 +10,7 @@ import { ViewModelStoreUpdateService } from '../view-model-store-update.service'
 import { AutoupdateCommunicationService } from './autoupdate-communication.service';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
 
-export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
+export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor;
 
 export interface Fields {
     [field: string]: FieldDescriptor | null;
@@ -32,11 +32,6 @@ export interface GenericRelationFieldDecriptor extends HasFields {
 export interface RelationFieldDescriptor extends HasFields {
     type: 'relation-list' | 'relation';
     collection: string;
-}
-
-export interface StructuredFieldDecriptor {
-    type: 'template';
-    values?: RelationFieldDescriptor | GenericRelationFieldDecriptor;
 }
 
 export interface ModelSubscription {

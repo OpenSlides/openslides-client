@@ -53,7 +53,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public forwarded!: number; // It's a timestamp
     public last_modified!: number;
     public start_line_number!: number;
-    public amendment_paragraph_$!: number[];
+    public amendment_paragraph!: { [key: number]: string };
 
     public lead_motion_id!: Id; // motion/amendment_ids;
     public amendment_ids!: Id[]; // (motion/lead_motion_id)[];
@@ -83,12 +83,16 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         return this.start_line_number || 1;
     }
 
+    public get amendment_paragraph_numbers(): number[] {
+        return this.amendment_paragraph ? Object.keys(this.amendment_paragraph).map(key => Number(key)) : [];
+    }
+
     public constructor(input?: any) {
         super(Motion.COLLECTION, input);
     }
 
-    public amendment_paragraph(paragraphNumber: number): string | null {
-        return ((this as any)[`amendment_paragraph_$${paragraphNumber}`] as string) ?? null;
+    public amendment_paragraph_text(paragraphNumber: number): string | null {
+        return this.amendment_paragraph[paragraphNumber] ?? null;
     }
 }
 export interface Motion

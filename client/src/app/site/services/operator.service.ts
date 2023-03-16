@@ -324,7 +324,7 @@ export class OperatorService {
         if (user.organization_management_level !== undefined || this._OML === undefined) {
             this._OML = user.organization_management_level || null;
         }
-        this._meetingIds = Array.from(new Set(user.allGroups.map(group => group.meeting_id)).values()) || [];
+        this._meetingIds = user.ensuredMeetingIds;
         this._CML = getUserCML(user);
     }
 
@@ -656,6 +656,7 @@ export class OperatorService {
             return {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
+                follow: [{ idField: `meeting_user_ids`, fieldset: `all` }],
                 fieldset: `all`
             };
         } else {

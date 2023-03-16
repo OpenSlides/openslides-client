@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
@@ -26,7 +26,7 @@ export class CurrentSpeakerChyronSlideService {
         return {
             content_object_id: `meeting/${meetingId}`,
             type: MeetingProjectionType.CurrentSpeakerChyron,
-            projectionDefault: Projectiondefault.currentListOfSpeakers,
+            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
             stable: true,
             getDialogTitle: () => `Current speaker chyron`
         };

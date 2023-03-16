@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
@@ -159,8 +160,19 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
 
     private async updateProjectordefaults(defaultKeys: { [key: string]: number[] }): Promise<void> {
         if (Object.keys(defaultKeys).length) {
-            return this.meetingRepo.update({ id: this.activeMeetingId, default_projector_$_ids: defaultKeys });
+            return this.meetingRepo.update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) });
         }
         return;
+    }
+
+    private formatDefaultProjectors(defaultKeys: { [key: string]: number[] }): { [key: string]: number[] } {
+        let defaults = {};
+        for (let key of PROJECTIONDEFAULTS) {
+            defaults = {
+                ...defaults,
+                [`default_projector_${key}_ids`]: defaultKeys[key]
+            };
+        }
+        return defaults;
     }
 }

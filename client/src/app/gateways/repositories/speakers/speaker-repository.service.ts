@@ -38,12 +38,12 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
 
     public create(
         listOfSpeakers: ListOfSpeakers,
-        userId: Id,
+        meetingUserId: Id,
         optionalInformation: { pointOfOrder?: boolean; note?: UnsafeHtml; speechState?: SpeechState } = {}
     ): Promise<Identifiable> {
         const payload: any = {
             list_of_speakers_id: listOfSpeakers.id,
-            user_id: userId,
+            meeting_user_id: meetingUserId,
             speech_state: optionalInformation.speechState,
             point_of_order: optionalInformation.pointOfOrder,
             note: optionalInformation.note

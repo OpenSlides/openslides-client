@@ -1,7 +1,7 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { HasSequentialNumber } from 'src/app/domain/interfaces';
 import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -64,8 +64,8 @@ export class ViewAssignment extends BaseProjectableViewModel<Assignment> {
         return `/${this.getActiveMeetingId()}/assignments/${this.sequential_number}`;
     }
 
-    public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.assignment;
+    public getProjectiondefault(): ProjectiondefaultValue {
+        return PROJECTIONDEFAULT.assignment;
     }
 }
 interface IAssignmentRelations extends HasPolls<ViewAssignment> {

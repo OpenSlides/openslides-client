@@ -35,7 +35,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get isCommitteeManager(): boolean {
-        return !!this.committee_managements();
+        return !!this.committee_managements.length;
     }
 
     public get numberOfMeetings(): number {
@@ -129,8 +129,11 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
     }
 
-    public get allGroups(): ViewGroup[] {
-        return this.meeting_users.flatMap(user => user.groups);
+    /**
+     * Returns all meetings that the user actually has group memberships for.
+     */
+    public get ensuredMeetingIds(): number[] {
+        return this.meeting_users.filter(mUser => mUser.group_ids?.length).map(mUser => mUser.meeting_id) || [];
     }
 
     public hasVoteRightFromOthers(meetingId?: Id): boolean {
@@ -166,20 +169,28 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public vote_delegated_to_id(meetingId?: Id): Id {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to?.id;
+    }
+
+    public vote_delegated_to_meeting_user_id(meetingId?: Id): Id {
         return this.getMeetingUser(meetingId)?.vote_delegated_to_id;
     }
 
     public vote_delegations_from_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.vote_delegations_from?.map(meeting_user => meeting_user?.user_id);
+    }
+
+    public vote_delegations_from_meeting_user_ids(meetingId?: Id): Id[] {
         return this.getMeetingUser(meetingId)?.vote_delegations_from_ids;
     }
 
     public vote_weight(meetingId?: Id): number {
-        return this.getMeetingUser(meetingId)?.vote_weight;
+        return this.getMeetingUser(meetingId)?.vote_weight || this.default_vote_weight;
     }
 
     public number(meetingId?: Id): string {
         try {
-            return this.getMeetingUser(meetingId)?.number;
+            return this.getMeetingUser(meetingId)?.number || this.default_number;
         } catch (e) {
             return this.user.default_number;
         }
@@ -187,7 +198,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public structure_level(meetingId?: Id): string {
         try {
-            return this.getMeetingUser(meetingId)?.structure_level;
+            return this.getMeetingUser(meetingId)?.structure_level || this.default_structure_level;
         } catch (e) {
             return this.user.default_structure_level;
         }
@@ -202,11 +213,11 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public groups(meetingId?: Id): ViewGroup[] {
-        return this.getMeetingUser(meetingId)?.groups;
+        return this.getMeetingUser(meetingId)?.groups ?? [];
     }
 
     public group_ids(meetingId?: Id): number[] {
-        return this.getMeetingUser(meetingId)?.group_ids;
+        return this.getMeetingUser(meetingId)?.group_ids ?? [];
     }
 
     public get isVoteWeightOne(): boolean {
@@ -244,21 +255,43 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public getMeetingUser(meetingId?: Id): ViewMeetingUser {
         return this.meeting_users.find(user => user.meeting_id === (meetingId || this.getEnsuredActiveMeetingId()));
     }
+
+    public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to;
+    }
+
+    public vote_delegated_to(meetingId?: number): ViewUser {
+        return this.vote_delegated_to_meeting_user(meetingId)?.user;
+    }
+
+    public vote_delegations_from_meeting_users(meetingId?: number): ViewMeetingUser[] {
+        return this.getMeetingUser(meetingId)?.vote_delegations_from;
+    }
+
+    public vote_delegations_from(meetingId?: number): ViewUser[] {
+        return this.vote_delegations_from_meeting_users(meetingId)?.map(meeting_user => meeting_user.user);
+    }
+
+    /**
+     * Returns all votes given by the user in a given meeting.
+     */
+    public getAllVotes(meetingId?: number): ViewVote[] {
+        const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
+        return this.votes
+            .filter(vote => vote.meeting_id === meetingID)
+            .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
+    }
 }
-type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
     committees: ViewCommittee[];
     meetings: ViewMeeting[];
     organization: ViewOrganization;
     meeting_users: ViewMeetingUser[];
-    committee_managements: UserManyStructuredRelation<ViewCommittee>;
-    // groups: UserManyStructuredRelation<ViewGroup>;
-    poll_voted: UserManyStructuredRelation<ViewPoll>;
-    options: UserManyStructuredRelation<ViewOption>;
-    votes: UserManyStructuredRelation<ViewVote>;
-    vote_delegated_to: (arg?: number) => ViewUser;
-    vote_delegations_from: UserManyStructuredRelation<ViewUser>;
+    poll_voted: ViewPoll[];
+    committee_managements: ViewCommittee[];
+    options: ViewOption[];
+    votes: ViewVote[];
 }
 
 export interface ViewUser extends User, IUserRelations {}

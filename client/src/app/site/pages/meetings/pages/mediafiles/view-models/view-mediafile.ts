@@ -1,11 +1,12 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { HasProperties } from 'src/app/domain/interfaces/has-properties';
+import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { collectionIdFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
-import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
-import { StructuredRelation } from '../../../../../../infrastructure/definitions/relations';
 import { BaseViewModel } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
@@ -62,8 +63,8 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return this.url;
     }
 
-    public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.mediafile;
+    public getProjectiondefault(): ProjectiondefaultValue {
+        return PROJECTIONDEFAULT.mediafile;
     }
 
     public getDirectoryChain(): ViewMediafile[] {
@@ -134,12 +135,11 @@ interface IMediafileRelations {
     parent?: ViewMediafile;
     children: ViewMediafile[];
     attachments: (BaseViewModel & HasAttachment)[];
-    used_as_logo_in_meeting: StructuredRelation<string, ViewMeeting | null>;
-    used_as_font_in_meeting: StructuredRelation<string, ViewMeeting | null>;
     organization?: ViewOrganization;
 }
 export interface ViewMediafile
     extends Mediafile,
         IMediafileRelations,
         /*  Searchable, */ HasMeeting,
-        HasListOfSpeakers {}
+        HasListOfSpeakers,
+        HasProperties<ViewMediafileMeetingUsageKey, ViewMeeting> {}
