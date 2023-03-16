@@ -34,6 +34,7 @@ export interface BaseSimplifiedModelRequest<M = any> {
     fieldset?: Fieldset<M>;
     /**
      * Additional fields to be loaded. They will never be followed.
+     * @deprecated
      */
     additionalFields?: AdditionalField[];
 }

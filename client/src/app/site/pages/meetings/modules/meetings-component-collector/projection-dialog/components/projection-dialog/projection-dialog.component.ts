@@ -72,6 +72,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             })
         );
     }
+
     ngOnDestroy(): void {
         this.modelRequestService.closeSubscription(this._projectorSubscription);
         this._subscriptions.forEach(s => s.unsubscribe());
