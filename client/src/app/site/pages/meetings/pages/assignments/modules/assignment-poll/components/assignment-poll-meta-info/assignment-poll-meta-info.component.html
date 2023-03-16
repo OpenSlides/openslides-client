@@ -11,7 +11,7 @@
                     <li *ngFor="let option of poll.options">{{ getOptionTitle(option) | translate }}</li>
                 </ul>
             </div>
-            <div *ngIf="poll.isListPoll">
+            <div *ngIf="poll.isListPoll && poll.options[0]?.contentTitlesAsSortedArray.length">
                 {{ 'Nomination list' | translate }}: {{ poll.options[0]?.contentTitlesAsSortedArray.length }} {{ 'Candidates' | translate }}
                 <ol *ngIf="enumerateCandidates">
                     <li *ngFor="let title of poll.options[0]?.contentTitlesAsSortedArray">
