@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';
@@ -9,35 +10,6 @@ import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
 import { AutoupdateCommunicationService } from './autoupdate-communication.service';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
-
-export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
-
-export interface Fields {
-    [field: string]: FieldDescriptor | null;
-}
-
-export interface HasFields {
-    fields: Fields;
-}
-
-export interface ModelRequest extends HasFields {
-    ids: Id[];
-    collection: string;
-}
-
-export interface GenericRelationFieldDecriptor extends HasFields {
-    type: 'generic-relation-list' | 'generic-relation';
-}
-
-export interface RelationFieldDescriptor extends HasFields {
-    type: 'relation-list' | 'relation';
-    collection: string;
-}
-
-export interface StructuredFieldDecriptor {
-    type: 'template';
-    values?: RelationFieldDescriptor | GenericRelationFieldDecriptor;
-}
 
 export interface ModelSubscription {
     id: Id;
