@@ -10,6 +10,7 @@ import { Identifiable } from '../../interfaces/identifiable';
 
 export interface ModelConstructor<T extends BaseModel<T>> {
     COLLECTION: string;
+    DEFAULT_FIELDSET?: string[];
     new (...args: any[]): T;
 }
 

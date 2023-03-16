@@ -9,6 +9,7 @@ import { BaseModel } from '../../domain/models/base/base-model';
 
 export interface ViewModelConstructor<T extends BaseViewModel> {
     COLLECTION: string;
+    DEFAULT_FIELDSET?: string[];
     new (...args: any[]): T;
 }
 
