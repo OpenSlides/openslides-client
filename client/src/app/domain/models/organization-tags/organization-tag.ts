@@ -17,4 +17,12 @@ export class OrganizationTag extends BaseModel<OrganizationTag> implements HasCo
     public constructor(input?: any) {
         super(OrganizationTag.COLLECTION, input);
     }
+
+    public static readonly DEFAULT_FIELDSET: (keyof OrganizationTag)[] = [
+        `id`,
+        `name`,
+        `color`,
+        `tagged_ids`,
+        `organization_id`
+    ];
 }

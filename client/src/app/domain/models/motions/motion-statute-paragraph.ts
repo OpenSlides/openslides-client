@@ -18,5 +18,14 @@ export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
     public constructor(input?: any) {
         super(MotionStatuteParagraph.COLLECTION, input);
     }
+
+    public static readonly DEFAULT_FIELDSET: (keyof MotionStatuteParagraph)[] = [
+        `id`,
+        `title`,
+        `text`,
+        `weight`,
+        `motion_ids`,
+        `meeting_id`
+    ];
 }
 export interface MotionStatuteParagraph extends HasMeetingId {}

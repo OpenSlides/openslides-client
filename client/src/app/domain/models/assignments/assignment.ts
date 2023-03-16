@@ -29,6 +29,25 @@ export class Assignment extends BaseModel<Assignment> {
     public constructor(input?: any) {
         super(Assignment.COLLECTION, input);
     }
+
+    public static readonly DEFAULT_FIELDSET: (keyof Assignment)[] = [
+        `id`,
+        `title`,
+        `description`,
+        `open_posts`,
+        `phase`,
+        `default_poll_description`,
+        `number_poll_candidates`,
+        `sequential_number`,
+        `candidate_ids`,
+        `poll_ids`,
+        `agenda_item_id`,
+        `list_of_speakers_id`,
+        `tag_ids`,
+        `attachment_ids`,
+        `projection_ids`,
+        `meeting_id`
+    ];
 }
 export interface Assignment
     extends HasMeetingId,

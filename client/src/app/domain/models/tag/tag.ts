@@ -12,5 +12,7 @@ export class Tag extends BaseModel<Tag> {
     public constructor(input?: any) {
         super(Tag.COLLECTION, input);
     }
+
+    public static readonly DEFAULT_FIELDSET: (keyof Tag)[] = [`id`, `name`, `tagged_ids`, `meeting_id`];
 }
 export interface Tag extends HasMeetingId {}

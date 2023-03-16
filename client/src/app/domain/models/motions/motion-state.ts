@@ -56,5 +56,32 @@ export class MotionState extends BaseModel<MotionState> {
     public constructor(input?: any) {
         super(MotionState.COLLECTION, input);
     }
+
+    public static readonly DEFAULT_FIELDSET: (keyof MotionState)[] = [
+        `id`,
+        `name`,
+        `weight`,
+        `recommendation_label`,
+        `css_class`,
+        `restrictions`,
+        `allow_support`,
+        `allow_create_poll`,
+        `allow_submitter_edit`,
+        `set_number`,
+        `show_state_extension_field`,
+        `show_recommendation_extension_field`,
+        `merge_amendment_into_final`,
+        `allow_motion_forwarding`,
+        `set_created_timestamp`,
+        `submitter_withdraw_state_id`,
+        `submitter_withdraw_back_ids`,
+        `next_state_ids`,
+        `previous_state_ids`,
+        `motion_ids`,
+        `motion_recommendation_ids`,
+        `workflow_id`,
+        `first_state_of_workflow_id`,
+        `meeting_id`
+    ];
 }
 export interface MotionState extends HasMeetingId {}

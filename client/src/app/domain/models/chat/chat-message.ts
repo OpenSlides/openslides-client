@@ -16,4 +16,13 @@ export class ChatMessage extends BaseModel<ChatMessage> implements HasMeetingId 
     public constructor(input?: Partial<ChatMessage>) {
         super(ChatMessage.COLLECTION, input);
     }
+
+    public static readonly DEFAULT_FIELDSET: (keyof ChatMessage)[] = [
+        `id`,
+        `content`,
+        `created`,
+        `user_id`,
+        `chat_group_id`,
+        `meeting_id`
+    ];
 }

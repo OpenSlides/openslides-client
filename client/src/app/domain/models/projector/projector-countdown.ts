@@ -22,5 +22,18 @@ export class ProjectorCountdown extends BaseModel<ProjectorCountdown> {
     public constructor(input?: any) {
         super(ProjectorCountdown.COLLECTION, input);
     }
+
+    public static readonly DEFAULT_FIELDSET: (keyof ProjectorCountdown)[] = [
+        `id`,
+        `title`,
+        `description`,
+        `default_time`,
+        `countdown_time`,
+        `running`,
+        `projection_ids`,
+        `used_as_list_of_speakers_countdown_meeting_id`,
+        `used_as_poll_countdown_meeting_id`,
+        `meeting_id`
+    ];
 }
 export interface ProjectorCountdown extends HasMeetingId, HasProjectionIds {}
