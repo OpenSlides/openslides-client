@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseFilterListService } from 'src/app/site/base/base-filter.service';
+import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
 import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { OsFilter } from 'src/app/ui/modules/list';
 
+import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service';
 import { MeetingListServiceModule } from '../meeting-list-service.module';
 
 @Injectable({
@@ -15,8 +15,24 @@ import { MeetingListServiceModule } from '../meeting-list-service.module';
 export class MeetingListFilterService extends BaseFilterListService<ViewMeeting> {
     protected storageKey = `MeetingList`;
 
-    public constructor(store: ActiveFiltersService, private operator: OperatorService) {
+    private orgaTagFilterOptions: OsFilter<ViewMeeting> = {
+        property: `organization_tag_ids`,
+        label: _(`Tags`),
+        isAndConnected: true,
+        options: []
+    };
+
+    public constructor(
+        store: ActiveFiltersService,
+        private operator: OperatorService,
+        organizationTagRepo: OrganizationTagControllerService
+    ) {
         super(store);
+        this.updateFilterForRepo({
+            repo: organizationTagRepo,
+            filter: this.orgaTagFilterOptions,
+            noneOptionLabel: _(`No tags`)
+        });
     }
 
     protected getFilterDefinitions(): OsFilter<ViewMeeting>[] {
@@ -38,7 +54,8 @@ export class MeetingListFilterService extends BaseFilterListService<ViewMeeting>
                     { label: _(`future`), condition: RelatedTime.Future },
                     { label: _(`dateless`), condition: RelatedTime.Dateless }
                 ]
-            }
+            },
+            this.orgaTagFilterOptions
         ];
 
         if (this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {

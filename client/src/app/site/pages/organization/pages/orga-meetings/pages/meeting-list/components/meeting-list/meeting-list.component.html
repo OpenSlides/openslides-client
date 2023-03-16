@@ -26,34 +26,38 @@
     [listObservable]="meetingsObservable"
     [multiSelect]="isMultiSelect"
     [alwaysShowMenu]="true"
-    [filterProps]="['name']"
-    [hiddenInMobile]="['archived', 'description', 'meta']"
+    [filterProps]="['name', 'location', 'committeeName']"
+    [restricted]="restrictedColumns"
+    [toRestrictFn]="toRestrictFn"
+    [hiddenInMobile]="['archived', 'description', 'meta', 'menu', 'committee']"
     [sortService]="sortService"
     [filterService]="filterService"
     [(selectedRows)]="selectedRows"
     [vScrollFixed]="70"
 >
-    <div *osScrollingTableCell="'name'; row as meeting">
+    <div *osScrollingTableCell="'name'; row as meeting" class="cell-slot fill">
         <a
             class="stretch-to-fill-parent"
             [routerLink]="getMeetingUrl(meeting)"
             *ngIf="!isMultiSelect && meeting.canAccess()"
         ></a>
-        <div>
-            <div class="title-line ellipsis-overflow">
-                <!-- Is Archived -->
-                <span class="icon-prefix" *ngIf="meeting.isArchived">
-                    <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
-                </span>
+        <div style="overflow: hidden" class="flex-vertical-center">
+            <div style="overflow: hidden" class="nameCell">
+                <div class="title-line title-box">
+                    <!-- Is Archived -->
+                    <span class="icon-prefix" *ngIf="meeting.isArchived">
+                        <mat-icon [matTooltip]="'Archived' | translate">archive</mat-icon>
+                    </span>
 
-                <!-- Is Template -->
-                <span class="icon-prefix" *osCmlPerms="CML.can_manage; committeeId: meeting.committee_id; nonAdminCheck: true; and: meeting.isTemplate">
-                    <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
-                </span>
+                    <!-- Is Template -->
+                    <span class="icon-prefix" *osCmlPerms="CML.can_manage; committeeId: meeting.committee_id; nonAdminCheck: true; and: meeting.isTemplate">
+                        <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
+                    </span>
 
-                {{ meeting.name | translate }}
+                    <span class="ellipsis-overflow">{{ meeting.name | translate }}</span>
+                </div>
 
-                <div class="subtitle" *ngIf="meeting.location || meeting.start_time || meeting.end_time">
+                <div class="subtitle ellipsis-overflow" *ngIf="meeting.location || meeting.start_time || meeting.end_time">
                     <span *ngIf="meeting.location">{{ meeting.location }}</span>
                     <span
                         *ngIf="meeting.location && (meeting.start_time || meeting.end_time)"

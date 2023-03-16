@@ -5,3 +5,17 @@
 .committee-link:hover + .committee {
     text-decoration: underline;
 }
+
+.nameCell {
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-info {
+    font-size: 12px;
+}
+
+.title-box {
+    display: flex;
+    flex-direction: row;
+}

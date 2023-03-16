@@ -2,12 +2,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { ColumnRestriction } from 'src/app/ui/modules/list';
 
 import { MeetingListFilterService } from '../../services/meeting-list-filter/meeting-list-filter.service';
 import { MeetingListSortService } from '../../services/meeting-list-sort/meeting-list-sort.service';
@@ -22,6 +24,16 @@ const MEETING_LIST_STORAGE_INDEX = `committee_list`;
 })
 export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
     public meetingsObservable: Observable<ViewMeeting[]>;
+
+    public restrictedColumns: ColumnRestriction<OML>[] = [
+        {
+            columnName: `menu`,
+            permission: OML.can_manage_organization
+        }
+    ];
+
+    public toRestrictFn = (restriction: ColumnRestriction<OML>) =>
+        !this.operator.hasOrganizationPermissions(restriction.permission);
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
