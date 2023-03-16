@@ -1,22 +1,17 @@
 import { Id } from '../../definitions/key-types';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { HasProperties } from '../../interfaces/has-properties';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
 import { ChangeRecoMode, LineNumberingMode } from '../motions/motions.constants';
 import { PollBackendDurationType, PollMethod, PollPercentBase, PollType } from '../poll/poll-constants';
 import { ApplauseType } from './applause';
-
-export type ExportCsvEncoding = 'utf-8' | 'iso-8859-15';
-
-/**
- * Server side ballot choice definitions.
- * Server-defined methods to determine the number of ballots to print
- * Options are:
- * - NUMBER_OF_DELEGATES Amount of users belonging to the predefined 'delegates' group (group id 2)
- * - NUMBER_OF_ALL_PARTICIPANTS The amount of all registered users
- * - CUSTOM_NUMBER a given number of ballots
- */
-export type BallotPaperSelection = 'NUMBER_OF_DELEGATES' | 'NUMBER_OF_ALL_PARTICIPANTS' | 'CUSTOM_NUMBER';
+import {
+    BallotPaperSelection,
+    ExportCsvEncoding,
+    MeetingDefaultProjectorIdsKey,
+    MeetingMediafileUsageIdKey
+} from './meeting.constants';
 
 export class Settings {
     // Old "general_*" configs
@@ -237,15 +232,10 @@ export class Meeting extends BaseModel<Meeting> {
     public poll_candidate_list_ids!: Id[]; // (poll_candidate_list/meeting_id)[];
     public poll_candidate_ids!: Id[]; // (poll_candidate/meeting_id)[];
 
-    // Logos and Fonts
-    public logo_$_id!: string[]; // mediafile/used_as_logo_$<place>_in_meeting_id;
-    public font_$_id!: string[]; // mediafile/used_as_font_$<place>_in_mmeting_id;
-
     // Other relations
     public present_user_ids!: Id[]; // (user/is_present_in_meeting_ids)[];
     public meeting_user_ids!: Id[]; // Calculated: All ids all users assigned to groups.
     public reference_projector_id!: Id; // projector/used_as_reference_projector_meeting_id;
-    public default_projector_$_ids!: string[]; // projector/used_as_default_$_in_meeting_id;
 
     public default_group_id!: Id; // group/default_group_for_meeting_id;
     public admin_group_id!: Id; // group/admin_group_for_meeting_id;
@@ -266,18 +256,18 @@ export class Meeting extends BaseModel<Meeting> {
     }
 
     public logo_id(place: string): Id | null {
-        return (this[`logo_$${place}_id` as keyof Meeting] as Id) || null;
+        return (this[`logo_${place}_id` as keyof Meeting] as Id) || null;
     }
 
     public font_id(place: string): Id | null {
-        return (this[`font_$${place}_id` as keyof Meeting] as Id) || null;
+        return (this[`font_${place}_id` as keyof Meeting] as Id) || null;
     }
 
     public default_projector_ids(place: string): Id[] | null {
-        return (this[`default_projector_$${place}_ids` as keyof Meeting] as Id[]) || [];
+        return (this[`default_projector_${place}_ids` as keyof Meeting] as Id[]) || [];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Meeting | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Meeting)[] = [
         `id`,
         `welcome_title`,
         `welcome_text`,
@@ -446,6 +436,22 @@ export class Meeting extends BaseModel<Meeting> {
         `personal_note_ids`,
         `chat_group_ids`,
         `chat_message_ids`,
+        `logo_projector_main_id`,
+        `logo_projector_header_id`,
+        `logo_web_header_id`,
+        `logo_pdf_header_l_id`,
+        `logo_pdf_header_r_id`,
+        `logo_pdf_footer_l_id`,
+        `logo_pdf_footer_r_id`,
+        `logo_pdf_ballot_paper_id`,
+        `font_regular_id`,
+        `font_italic_id`,
+        `font_bold_id`,
+        `font_bold_italic_id`,
+        `font_monospace_id`,
+        `font_chyron_speaker_name_id`,
+        `font_projector_h1_id`,
+        `font_projector_h2_id`,
         `committee_id`,
         `default_meeting_for_committee_id`,
         `organization_tag_ids`,
@@ -454,8 +460,26 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_countdown_id`,
         `poll_countdown_id`,
         `projection_ids`,
+        `default_projector_agenda_all_items_ids`,
+        `default_projector_topics_ids`,
+        `default_projector_list_of_speakers_ids`,
+        `default_projector_current_list_of_speakers_ids`,
+        `default_projector_motion_ids`,
+        `default_projector_amendment_ids`,
+        `default_projector_motion_block_ids`,
+        `default_projector_assignment_ids`,
+        `default_projector_mediafile_ids`,
+        `default_projector_projector_message_ids`,
+        `default_projector_projector_countdowns_ids`,
+        `default_projector_assignment_poll_ids`,
+        `default_projector_motion_poll_ids`,
+        `default_projector_poll_ids`,
         `default_group_id`,
         `admin_group_id`
     ];
 }
-export interface Meeting extends Settings, HasProjectionIds {}
+export interface Meeting
+    extends Settings,
+        HasProjectionIds,
+        HasProperties<MeetingMediafileUsageIdKey, number>,
+        HasProperties<MeetingDefaultProjectorIdsKey, number[]> {}

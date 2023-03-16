@@ -5,6 +5,7 @@ import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { User } from 'src/app/domain/models/users/user';
 import { Action, ActionService } from 'src/app/gateways/actions';
 import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import {
     ExtendedUserPatchFn,
     FullNameInformation,
@@ -20,6 +21,7 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -49,6 +51,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
+        private meetingUserRepo: MeetingUserRepositoryService,
         public meetingController: MeetingControllerService,
         private userController: UserControllerService,
         private userDeleteDialog: UserDeleteDialogService,
@@ -65,22 +68,26 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             }
             if (newId) {
                 this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
-                    meetingUserIds = meeting?.user_ids ?? [];
-                    const meetingUsers =
-                        meeting && meeting?.user_ids
-                            ? repo.getViewModelList().filter(user => meeting?.user_ids.includes(user.id))
-                            : [];
-                    this._participantListSubject.next(meetingUsers);
+                    meetingUserIds = meeting?.meeting_user_ids ?? [];
+                    this.updateUsersFromMeetingUsers(this.meetingUserRepo.getViewModelList() ?? [], meetingUserIds);
                 });
             }
         });
 
-        repo.getViewModelListObservable().subscribe(users => {
-            const meetingUsers = users.filter(
-                user => user.group_ids(this.activeMeetingId).length && meetingUserIds.includes(user.id)
-            );
-            this._participantListSubject.next(meetingUsers);
+        this.meetingUserRepo.getViewModelListObservable().subscribe(async mUsers => {
+            this.updateUsersFromMeetingUsers(mUsers, meetingUserIds);
         });
+    }
+
+    private async updateUsersFromMeetingUsers(mUsers: ViewMeetingUser[], meetingUserIds?: number[]): Promise<void> {
+        const meetingUsers = mUsers.filter(
+            mUser =>
+                mUser.meeting_id === this.activeMeetingId &&
+                mUser.group_ids?.length &&
+                meetingUserIds.includes(mUser.id)
+        );
+        const users = meetingUsers.map(mUser => mUser.user);
+        this._participantListSubject.next(users);
     }
 
     public override getViewModelList(): ViewUser[] {
@@ -250,14 +257,18 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     private validatePayload(participant: Partial<User & MeetingUser> | Partial<ViewUser>): any {
         return {
             ...participant,
-            group_ids: this.validateField(participant, `group_ids`),
-            structure_level: this.validateField(participant, `structure_level`),
-            number: this.validateField(participant, `number`),
-            vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
-            vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),
-            vote_delegations_from_ids: this.validateField(participant, `vote_delegations_from_ids`),
-            about_me: this.validateField(participant, `about_me`),
-            comment: this.validateField(participant, `comment`)
+            meeting_users: [
+                {
+                    group_ids: this.validateField(participant, `group_ids`),
+                    structure_level: this.validateField(participant, `structure_level`),
+                    number: this.validateField(participant, `number`),
+                    vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
+                    vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),
+                    vote_delegations_from_ids: this.validateField(participant, `vote_delegations_from_ids`),
+                    about_me: this.validateField(participant, `about_me`),
+                    comment: this.validateField(participant, `comment`)
+                }
+            ]
         };
     }
 

@@ -188,7 +188,7 @@ export class MotionSlideComponent
      * @returns {AmendmentParagraphUnifiedChange[]}
      */
     public getAmendmentAmendedParagraphs(amendment: AmendmentData): AmendmentParagraphUnifiedChange[] {
-        if (!amendment.amendment_paragraphs) {
+        if (!amendment.amendment_paragraph) {
             return [];
         }
 
@@ -200,14 +200,14 @@ export class MotionSlideComponent
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
-        const paragraphNumbers = Object.keys(amendment.amendment_paragraphs)
+        const paragraphNumbers = Object.keys(amendment.amendment_paragraph)
             .map(x => +x)
             .sort();
 
         return paragraphNumbers
             .map(paraNo => {
                 const origText = baseParagraphs[paraNo];
-                const diff = this.diff.diff(origText, amendment.amendment_paragraphs[paraNo]);
+                const diff = this.diff.diff(origText, amendment.amendment_paragraph[paraNo]);
                 const affectedLines = this.diff.detectAffectedLineRange(diff);
 
                 if (affectedLines === null) {
@@ -368,7 +368,7 @@ export class MotionSlideComponent
      */
     public getAmendedParagraphs(): DiffLinesInParagraph[] {
         const motion = this.data.data;
-        if (!motion.amendment_paragraphs) {
+        if (!motion.amendment_paragraph) {
             return [];
         }
 
@@ -379,7 +379,7 @@ export class MotionSlideComponent
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
-        const paragraphNumbers = Object.keys(motion.amendment_paragraphs)
+        const paragraphNumbers = Object.keys(motion.amendment_paragraph)
             .map(x => +x)
             .sort();
         const amendmentParagraphs: DiffLinesInParagraph[] = paragraphNumbers
@@ -387,7 +387,7 @@ export class MotionSlideComponent
                 this.diff.getAmendmentParagraphsLines(
                     paraNo,
                     baseParagraphs[paraNo],
-                    motion.amendment_paragraphs[paraNo.toString()],
+                    motion.amendment_paragraph[paraNo.toString()],
                     this.lineLength,
                     this.crMode === ChangeRecoMode.Diff ? this.getAllTextChangingObjects() : undefined
                 )

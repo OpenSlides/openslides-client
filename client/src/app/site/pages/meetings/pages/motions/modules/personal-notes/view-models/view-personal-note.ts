@@ -1,12 +1,11 @@
-import { applyMixins } from 'src/app/infrastructure/utils';
-import { HasMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { PersonalNote } from '../../../../../../../../domain/models/motions/personal-note';
 import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { HasPersonalNote } from './has-personal-note';
 
-export class ViewPersonalNote extends BaseViewModel<PersonalNote> {
+export class ViewPersonalNote extends BaseHasMeetingUserViewModel<PersonalNote> {
     public static COLLECTION = PersonalNote.COLLECTION;
 
     public get personalNote(): PersonalNote {
@@ -16,5 +15,4 @@ export class ViewPersonalNote extends BaseViewModel<PersonalNote> {
 interface IPersonalNoteRelations {
     content_object?: BaseViewModel & HasPersonalNote;
 }
-export interface ViewPersonalNote extends PersonalNote, IPersonalNoteRelations, HasMeeting, HasMeetingUser {}
-applyMixins(ViewPersonalNote, [HasMeetingUser]);
+export interface ViewPersonalNote extends PersonalNote, IPersonalNoteRelations, HasMeeting {}

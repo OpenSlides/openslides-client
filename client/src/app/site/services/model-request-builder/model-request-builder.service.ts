@@ -3,23 +3,21 @@ import {
     FieldDescriptor,
     Fields,
     GenericRelationFieldDecriptor,
-    RelationFieldDescriptor,
-    StructuredFieldDecriptor
+    RelationFieldDescriptor
 } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Field, Id } from '../../../domain/definitions/key-types';
 import { BaseModel } from '../../../domain/models/base/base-model';
 import { Relation } from '../../../infrastructure/definitions/relations';
 import { Deferred } from '../../../infrastructure/utils/promises';
-import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
 import { BaseViewModel, ViewModelConstructor } from '../../base/base-view-model';
 import { CollectionMapperService } from '../collection-mapper.service';
 import { RelationManagerService } from '../relation-manager.service';
 import { ModelRequestObject } from '.';
 
-export type TypedFieldset<M> = (keyof M | { templateField: keyof M })[];
+export type TypedFieldset<M> = (keyof M)[];
 
-type Fieldset<M> = Field | (Field | AllStructuredFields<M>)[];
+type Fieldset = Field | Field[];
 type IdField<M> = keyof M & string;
 export type FollowList<M> = (IdField<M> | Follow<M>)[];
 
@@ -31,7 +29,7 @@ export interface BaseSimplifiedModelRequest<M = any> {
     /**
      * The fieldset, which should be loaded.
      */
-    fieldset?: Fieldset<M>;
+    fieldset?: Fieldset;
     /**
      * Additional fields to be loaded. They will never be followed.
      * @deprecated
@@ -50,40 +48,13 @@ export interface SimplifiedModelRequest<M extends BaseViewModel = any> extends B
     };
 }
 
-/**
- * Follows a specific structured fields to the given template field.
- * Must be used in the follow-section.
- * Usage e.g. for the user model: [..., {
- *     idField: {
- *         templateIdField: 'group_$_ids',
- *         templateValue: 5 // explicitly give 5 as the template replacement.
- *     }
- * }, ...]
- */
-interface SpecificStructuredField<M = any> {
-    templateIdField: IdField<M>;
-    templateValue: string;
-}
-
-/**
- * Resolves all structured fields to the given template field, but does not follow relations.
- * Usage e.g. in a fieldset: [..., 'default_structure_level', { templateField: 'structure_level_$' }, ...]
- */
-interface AllStructuredFields<M = any> {
-    templateField: IdField<M>;
-}
-
-function isAllStructuredFields<M>(obj: any): obj is AllStructuredFields<M> {
-    return !!obj.templateField;
-}
-
 export interface Follow<M = any> extends BaseSimplifiedModelRequest<M> {
-    idField: IdField<M> | SpecificStructuredField<M>;
+    idField: IdField<M>;
     isFullList?: boolean | undefined;
     isExclusiveList?: boolean | undefined;
 }
 
-export type AdditionalField<M = any> = IdField<M> | SpecificStructuredField<M> | AllStructuredFields<M>;
+export type AdditionalField<M = any> = IdField<M>;
 
 interface DescriptorResponse<T extends FieldDescriptor> {
     descriptor: T;
@@ -92,7 +63,7 @@ interface DescriptorResponse<T extends FieldDescriptor> {
 }
 
 export interface Fieldsets<M extends BaseModel> {
-    [name: string]: (keyof M | AllStructuredFields<M>)[];
+    [name: string]: (keyof M)[];
 }
 
 class UnknownRelationError extends Error {}
@@ -170,7 +141,7 @@ export class ModelRequestBuilderService {
                     `Unregistered fieldset ${fieldset} for collection ${modelRequestObject.collection}`
                 );
             }
-            fieldsetFields = registeredFieldsets[fieldset] as (Field | SpecificStructuredField | AllStructuredFields)[];
+            fieldsetFields = registeredFieldsets[fieldset] as Field[];
         } else {
             fieldsetFields = fieldset;
         }
@@ -186,17 +157,9 @@ export class ModelRequestBuilderService {
         for (const f of fieldsetFields) {
             if (typeof f === `string`) {
                 modelRequestObject.setFieldEntry(f, null);
-            } else if (isAllStructuredFields(f)) {
-                const fieldValue: FieldDescriptor = {
-                    type: `template`
-                    // no `values` here: Do not follow these, just resolve them.
-                };
-                modelRequestObject.setFieldEntry(f.templateField, fieldValue);
             } else {
-                // Specific structured field
-                modelRequestObject.setFieldEntry(
-                    fillTemplateValueInTemplateField(f.templateIdField, f.templateValue),
-                    null
+                throw new Error(
+                    `Fieldset ${fieldset} for collection ${modelRequestObject.collection} had wrong format`
                 );
             }
         }
@@ -217,17 +180,9 @@ export class ModelRequestBuilderService {
     }
 
     private getFollowedRelation(modelRequestObject: ModelRequestObject, follow: Follow): void {
-        let effectiveIdField: Field; // the id field of the model. For specific structured fields
-        // it is the structured field, not template field, e.g. group_$1_ids instead of group_$_ids.
-        let queryIdField: Field; // The field to query the relation for. For specific structured relations
-        // it is the template field.
-        if (typeof follow.idField === `string`) {
-            effectiveIdField = queryIdField = follow.idField;
-        } else {
-            queryIdField = follow.idField.templateIdField;
-            effectiveIdField = fillTemplateValueInTemplateField(queryIdField, follow.idField.templateValue);
-        }
-        const isSpecificStructuredField = queryIdField !== effectiveIdField;
+        let effectiveIdField: Field; // the id field of the model.
+        let queryIdField: Field; // The field to query the relation for.
+        effectiveIdField = queryIdField = follow.idField;
 
         const relation: Relation | undefined = this.relationManager.findRelation(
             modelRequestObject.collection,
@@ -239,15 +194,11 @@ export class ModelRequestBuilderService {
             );
         }
 
-        let response: DescriptorResponse<
-            RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor
-        >;
-        if (!relation.generic && (!relation.structured || isSpecificStructuredField)) {
+        let response: DescriptorResponse<RelationFieldDescriptor | GenericRelationFieldDecriptor>;
+        if (!relation.generic) {
             response = this.getRelationFieldDescriptor(relation, follow);
-        } else if (relation.generic) {
-            response = this.getGenericRelationFieldDescriptor(relation, follow);
         } else {
-            response = this.getStructuredFieldDescriptor(relation, follow);
+            response = this.getGenericRelationFieldDescriptor(relation, follow);
         }
 
         modelRequestObject.setFieldEntry(effectiveIdField, response.descriptor);
@@ -309,29 +260,6 @@ export class ModelRequestBuilderService {
         };
         this.addGenericRelation(relation.foreignViewModelPossibilities || [], descriptor.fields, follow);
         return { descriptor, collectionsToFullListUpdate: [], collectionsToExclusiveListUpdate: [] };
-    }
-
-    private getStructuredFieldDescriptor(
-        relation: Relation,
-        follow: Follow
-    ): DescriptorResponse<StructuredFieldDecriptor> {
-        const descriptor: StructuredFieldDecriptor = {
-            type: `template`
-        };
-
-        let response: DescriptorResponse<RelationFieldDescriptor | GenericRelationFieldDecriptor>;
-        if (relation.generic) {
-            response = this.getGenericRelationFieldDescriptor(relation, follow);
-        } else {
-            response = this.getRelationFieldDescriptor(relation, follow);
-        }
-        descriptor.values = response.descriptor;
-
-        return {
-            descriptor,
-            collectionsToFullListUpdate: response.collectionsToFullListUpdate,
-            collectionsToExclusiveListUpdate: response.collectionsToExclusiveListUpdate
-        };
     }
 
     private addGenericRelation(

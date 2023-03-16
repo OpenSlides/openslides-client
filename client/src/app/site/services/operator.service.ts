@@ -325,7 +325,7 @@ export class OperatorService {
         if (user.organization_management_level !== undefined || this._OML === undefined) {
             this._OML = user.organization_management_level || null;
         }
-        this._meetingIds = Array.from(new Set(user.allGroups.map(group => group.meeting_id)).values()) || [];
+        this._meetingIds = user.ensuredMeetingIds;
         this._CML = getUserCML(user);
     }
 
@@ -658,12 +658,8 @@ export class OperatorService {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
                 fieldset: `all`,
-                follow: [
-                    {
-                        idField: { templateIdField: `vote_delegations_$_from_ids`, templateValue: `` },
-                        fieldset: [{ templateField: `group_$_ids` }, ...UserFieldsets.FullNameSubscription.fieldset]
-                    }
-                ]
+                // TODO: Vote delegations
+                follow: [{ idField: `meeting_user_ids`, fieldset: `all` }]
             };
         } else {
             // not logged in and no anonymous. We are done with loading, so we have

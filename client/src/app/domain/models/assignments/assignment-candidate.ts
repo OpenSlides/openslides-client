@@ -11,13 +11,13 @@ export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
     public weight!: number;
 
     public assignment_id!: Id; // assignment/candidate_ids;
-    public meeting_user_id!: Id; // meeting_user/assignment_candidate_$<meeting_id>_ids;
+    public meeting_user_id!: Id; // meeting_user/assignment_candidate_ids;
 
     public constructor(input?: any) {
         super(AssignmentCandidate.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof AssignmentCandidate | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof AssignmentCandidate)[] = [
         `id`,
         `weight`,
         `assignment_id`,

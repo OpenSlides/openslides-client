@@ -1,8 +1,4 @@
-import {
-    fillTemplateValueInTemplateField,
-    fqidFromCollectionAndId,
-    isTemplateField
-} from '../../../infrastructure/utils/transform-functions';
+import { fqidFromCollectionAndId } from '../../../infrastructure/utils/transform-functions';
 import { Fqid, Id } from '../../definitions/key-types';
 import { Deserializable } from '../../interfaces/deserializable';
 import { HasCollection } from '../../interfaces/has-collection';
@@ -10,7 +6,7 @@ import { Identifiable } from '../../interfaces/identifiable';
 
 export interface ModelConstructor<T extends BaseModel<T>> {
     COLLECTION: string;
-    REQUESTABLE_FIELDS?: (string | { templateField: string })[];
+    REQUESTABLE_FIELDS?: string[];
     new (...args: any[]): T;
 }
 
@@ -44,12 +40,6 @@ export abstract class BaseModel<T = any> implements Identifiable, Deserializable
     public getUpdatedData(update: Partial<T>): T {
         const origin: any = Object.assign({}, this);
         const updateCopy = { ...update }; // To not modifying the original update
-        for (const key of Object.keys(update)) {
-            const value = update[key as keyof T] as unknown;
-            if (isTemplateField(key) && Array.isArray(value) && value.length === 0) {
-                this.handleRemovedTemplateFields({ origin, update: updateCopy, key: key as keyof T });
-            }
-        }
         return { ...origin, ...updateCopy };
     }
 
@@ -59,20 +49,5 @@ export abstract class BaseModel<T = any> implements Identifiable, Deserializable
 
     public toString(): string {
         return this.fqid;
-    }
-
-    private handleRemovedTemplateFields({
-        origin,
-        update,
-        key
-    }: {
-        origin: T;
-        update: Partial<T>;
-        key: keyof T;
-    }): void {
-        for (const difference of ((origin[key] as any) || []).difference(update[key])) {
-            const templateField = fillTemplateValueInTemplateField(key as string, difference) as keyof T;
-            update[templateField] = undefined;
-        }
     }
 }

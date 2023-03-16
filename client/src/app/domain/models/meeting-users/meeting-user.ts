@@ -38,7 +38,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         return [`vote_weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MeetingUser | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MeetingUser)[] = [
         `id`,
         `comment`,
         `number`,

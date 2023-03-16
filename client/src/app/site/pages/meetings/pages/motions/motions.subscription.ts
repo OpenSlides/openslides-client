@@ -174,7 +174,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             { idField: `lead_motion_id`, fieldset: [`text`] },
             {
                 idField: `amendment_ids`,
-                fieldset: [`text`, `modified_final_version`, { templateField: `amendment_paragraph_$` }]
+                fieldset: [`text`, `modified_final_version`, `amendment_paragraph`]
             },
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
             { idField: `supporter_ids`, ...UserFieldsets.FullNameSubscription }
@@ -186,7 +186,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `all_origin_ids`,
             `origin_meeting_id`,
             `derived_motion_ids`,
-            { templateField: `amendment_paragraph_$` }
+            `amendment_paragraph`
         ]
     },
     subscriptionName: MOTION_DETAIL_SUBSCRIPTION
@@ -214,7 +214,7 @@ export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (
                 follow: [
                     {
                         idField: `amendment_ids`,
-                        fieldset: [`text`, { templateField: `amendment_paragraph_$` }],
+                        fieldset: [`text`, `amendment_paragraph`],
                         follow: [{ idField: `lead_motion_id`, fieldset: [`text`, `modified_final_version`] }]
                     }
                 ]

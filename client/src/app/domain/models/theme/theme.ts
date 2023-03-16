@@ -113,7 +113,7 @@ export class Theme extends BaseModel {
         super(Theme.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Theme | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Theme)[] = [
         `id`,
         `name`,
         `accent_100`,

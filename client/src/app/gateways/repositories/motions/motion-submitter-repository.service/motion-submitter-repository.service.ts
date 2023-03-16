@@ -24,8 +24,8 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Submitters` : `Submitter`);
 
-    public create(motion: Identifiable, ...users: Identifiable[]): Action<Identifiable[]> {
-        const payload = users.map(user => ({
+    public create(motion: Identifiable, ...meetingUsers: Identifiable[]): Action<Identifiable[]> {
+        const payload = meetingUsers.map(user => ({
             user_id: user.id,
             motion_id: motion.id
         }));

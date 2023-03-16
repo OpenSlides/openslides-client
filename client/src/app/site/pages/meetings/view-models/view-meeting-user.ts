@@ -6,36 +6,9 @@ import { ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatMessage } from '../pages/chat';
 import { ViewMotion, ViewMotionSubmitter, ViewPersonalNote } from '../pages/motions';
 import { ViewGroup } from '../pages/participants';
+import { ViewVote } from '../pages/polls';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
-
-/**
- * Can be used to extend a class interface if a ViewModel should contain a single ViewUserMeeting.
- * To transfer the getters for the main user to the main ViewModel class applyMixins(<ViewModel>, [HasMeetingUser]) must be called afterwards.
- */
-export class HasMeetingUser {
-    public meeting_user: ViewMeetingUser;
-    public get user(): ViewUser {
-        return this.meeting_user?.user;
-    }
-    public get user_id(): number {
-        return this.meeting_user?.user_id;
-    }
-}
-
-/**
- * Can be used to extend a class interface if a ViewModel should contain multiple ViewUserMeeting.
- * To transfer the getters for the main users to the main ViewModel class applyMixins(<ViewModel>, [HasMeetingUsers]) must be called afterwards.
- */
-export class HasMeetingUsers {
-    public meeting_users: ViewMeetingUser[];
-    public get users(): ViewUser[] {
-        return this.meeting_users?.flatMap(user => user.user ?? []);
-    }
-    public get user_ids(): number[] {
-        return this.meeting_users?.flatMap(user => user.user_id ?? []);
-    }
-}
 
 export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
     public static COLLECTION = MeetingUser.COLLECTION;
@@ -54,5 +27,8 @@ interface IMeetingUserRelations {
     personal_notes: ViewPersonalNote[];
     supported_motions: ViewMotion[];
     submitted_motions: ViewMotionSubmitter[];
+    vote_delegated_to: ViewMeetingUser;
+    vote_delegations_from: ViewMeetingUser[];
+    vote_delegated_votes: ViewVote[];
 }
 export interface ViewMeetingUser extends MeetingUser, IMeetingUserRelations {}

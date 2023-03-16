@@ -1,13 +1,18 @@
 import { unix } from 'moment';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
+import { HasProperties } from 'src/app/domain/interfaces/has-properties';
+import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
-import { applyMixins } from 'src/app/infrastructure/utils';
+import {
+    ViewMeetingDefaultProjectorsKey,
+    ViewMeetingMediafileUsageKey
+} from 'src/app/domain/models/meetings/meeting.constants';
+import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 
-import { StructuredRelation } from '../../../../infrastructure/definitions/relations';
-import { BaseViewModel } from '../../../base/base-view-model';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
+import { BaseHasMeetingUsersViewModel } from '../base/base-has-meeting-user-view-model';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
@@ -31,7 +36,6 @@ import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
-import { HasMeetingUsers } from './view-meeting-user';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
@@ -43,7 +47,7 @@ export enum RelatedTime {
     Dateless
 }
 
-export class ViewMeeting extends BaseViewModel<Meeting> {
+export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     public get meeting(): Meeting {
         return this._model;
     }
@@ -108,6 +112,22 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     public override canAccess(): boolean {
         return this[ViewMeeting.ACCESSIBILITY_FIELD] !== undefined && this[ViewMeeting.ACCESSIBILITY_FIELD] !== null;
     }
+
+    public getSpecifiedLogoPlaces(): LogoPlace[] {
+        return LOGO_PLACES.filter(place => !!this.logo_id(place));
+    }
+
+    public getSpecifiedFontPlaces(): FontPlace[] {
+        return FONT_PLACES.filter(place => !!this.font_id(place));
+    }
+
+    public getSpecifiedPlaces(): (LogoPlace | FontPlace)[] {
+        return [...this.getSpecifiedLogoPlaces(), ...this.getSpecifiedFontPlaces()];
+    }
+
+    public default_projectors(place: ProjectiondefaultValue): ViewProjector[] {
+        return this[`default_projectors_${place}`];
+    }
 }
 interface IMeetingRelations {
     motions_default_workflow: ViewMotionWorkflow;
@@ -148,14 +168,11 @@ interface IMeetingRelations {
     assignment_candidates: ViewAssignmentCandidate[];
     chat_groups: ViewChatGroup[];
     chat_messages: ViewChatMessage[];
-    logo: StructuredRelation<string, ViewMediafile | null>;
-    font: StructuredRelation<string, ViewMediafile | null>;
     committee: ViewCommittee;
     template_meeting_for_committee?: ViewCommittee;
     default_meeting_for_committee?: ViewCommittee;
     present_users: ViewUser[];
     reference_projector: ViewProjector;
-    default_projectors: StructuredRelation<string, ViewProjector[]>;
     projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;
@@ -170,5 +187,5 @@ export interface ViewMeeting
         IMeetingRelations,
         HasProjectorTitle,
         HasOrganizationTags,
-        HasMeetingUsers {}
-applyMixins(ViewMeeting, [HasMeetingUsers]);
+        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
+        HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}

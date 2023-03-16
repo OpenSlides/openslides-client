@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { map } from 'rxjs';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
 import { getMeetingListSubscriptionConfig } from '../../../../organization.subscription';
@@ -36,12 +35,11 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                             {
                                 idField: `user_ids`,
                                 fieldset: `accountList`,
-                                follow: [{ idField: `meeting_user_ids`, additionalFields: [`group_ids`] }]
+                                follow: [{ idField: `meeting_user_ids`, fieldset: `groups` }]
                             }
                         ]
                     },
                     subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
-                    hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))
                 },
                 ...additionalRequests
             ],

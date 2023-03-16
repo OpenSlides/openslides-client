@@ -42,6 +42,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
             `create_timestamp`,
             `pdf_information`
         ]);
+
         const organizationListFields: TypedFieldset<Mediafile> = baseListFields.concat([`token`]);
         return {
             ...super.getFieldsets(),

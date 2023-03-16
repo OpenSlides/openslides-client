@@ -25,7 +25,7 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
         super(MotionChangeRecommendation.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionChangeRecommendation | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionChangeRecommendation)[] = [
         `id`,
         `rejected`,
         `internal`,

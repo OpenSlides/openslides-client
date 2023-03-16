@@ -25,8 +25,6 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `welcome_title`,
                 `welcome_text`,
                 `enable_anonymous`,
-                { templateField: `logo_$_id` },
-                { templateField: `font_$_id` },
                 ...settingsKeys
             ],
             follow: [

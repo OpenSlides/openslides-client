@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
+import { toDecimal } from 'src/app/infrastructure/utils';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
 
@@ -16,31 +15,13 @@ export type MeetingUserPatchFn =
     providedIn: `root`
 })
 export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<ViewMeetingUser, MeetingUser> {
-    private changedModelsUserIdsSubject: BehaviorSubject<Id[]> = new BehaviorSubject([]);
-    public get changedModelsUserIdsObservable(): Observable<Id[]> {
-        return this.changedModelsUserIdsSubject.asObservable();
-    }
-
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MeetingUser);
     }
 
-    public override changedModels(ids: number[]): void {
-        super.changedModels(ids);
-        const userIds: Id[] = [];
-        for (let id of ids) {
-            const userId = this.getViewModelUnsafe(id).user_id;
-            if (userId) {
-                userIds.push(userId);
-            }
-        }
-        if (userIds.length) {
-            this.changedModelsUserIdsSubject.next(userIds);
-        }
-    }
-
     public override getFieldsets(): Fieldsets<MeetingUser> {
-        const participantListFieldsMinimal: TypedFieldset<MeetingUser> = [
+        const groupFields: TypedFieldset<MeetingUser> = [`group_ids`, `meeting_id`];
+        const participantListFieldsMinimal: TypedFieldset<MeetingUser> = groupFields.concat([
             `vote_delegated_to_id`,
             `vote_delegations_from_ids`,
             `vote_weight`,
@@ -48,13 +29,15 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
             `number`,
             `comment`,
             `user_id`
-        ];
+        ]);
 
-        const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`];
+        const detailFields: TypedFieldset<MeetingUser> = [`about_me`, `user_id`, `meeting_id`];
 
         return {
             [DEFAULT_FIELDSET]: detailFields,
-            participantListMinimal: participantListFieldsMinimal
+            groups: groupFields,
+            participantListMinimal: participantListFieldsMinimal,
+            all: detailFields.concat(participantListFieldsMinimal)
         };
     }
 
@@ -65,10 +48,11 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
                 structure_level: partialUser.structure_level,
                 number: partialUser.number,
                 about_me: partialUser.about_me,
-                vote_weight: partialUser.vote_weight,
+                vote_weight: toDecimal(partialUser.vote_weight, false) as any,
                 comment: partialUser.comment,
                 vote_delegated_to_id: partialUser.vote_delegated_to_id,
-                vote_delegations_from_ids: partialUser.vote_delegations_from_ids
+                vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
+                group_ids: partialUser.group_ids
             };
 
             if (Object.values(partialPayload).filter(val => val !== undefined).length > 1 && partialPayload.meeting_id)
@@ -81,9 +65,4 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getVerboseName = (plural: boolean = false): string =>
         this.translate.instant(plural ? `Participants` : `Participant`);
-
-    public isFieldAllowedToBeEmpty(field: string): boolean {
-        const fields: string[] = [`comment`, `about_me`, `number`, `structure_level`];
-        return fields.includes(field);
-    }
 }

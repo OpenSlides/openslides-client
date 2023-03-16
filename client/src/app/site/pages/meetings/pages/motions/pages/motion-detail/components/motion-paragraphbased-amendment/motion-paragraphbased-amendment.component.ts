@@ -13,7 +13,7 @@ import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-ch
 import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 interface ParagraphBasedAmendmentContent {
-    amendment_paragraph_$: { [paragraph_number: number]: any };
+    amendment_paragraph: { [paragraph_number: number]: any };
     selected_paragraphs: ParagraphToChoose[];
     broken_paragraphs: string[];
 }
@@ -117,7 +117,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
             this.contentForm = null;
         }
         const contentPatch = this.createForm();
-        this.contentForm = this.fb.group(contentPatch.amendment_paragraph_$);
+        this.contentForm = this.fb.group(contentPatch.amendment_paragraph);
         this.selectedParagraphs = contentPatch.selected_paragraphs;
         this.brokenParagraphs = contentPatch.broken_paragraphs;
         this.propagateChanges();
@@ -126,7 +126,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
     private createForm(): ParagraphBasedAmendmentContent {
         const contentPatch: ParagraphBasedAmendmentContent = {
             selected_paragraphs: [],
-            amendment_paragraph_$: {},
+            amendment_paragraph: {},
             broken_paragraphs: []
         };
         const leadMotion = this.motion.lead_motion;
@@ -136,21 +136,21 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
             const paragraphsToChoose = this.motionLineNumbering.getParagraphsToChoose(leadMotion, this.lineLength);
 
             paragraphsToChoose.forEach((paragraph: ParagraphToChoose, paragraphNo: number): void => {
-                const amendmentParagraph = this.motion.amendment_paragraph(paragraphNo);
+                const amendmentParagraph = this.motion.amendment_paragraph_text(paragraphNo);
                 if (amendmentParagraph) {
                     contentPatch.selected_paragraphs.push(paragraph);
-                    contentPatch.amendment_paragraph_$[paragraphNo] = [amendmentParagraph, Validators.required];
+                    contentPatch.amendment_paragraph[paragraphNo] = [amendmentParagraph, Validators.required];
                 }
             });
             // If the motion has been shortened after the amendment has been created, we will show the paragraphs
             // of the amendment as read-only
             for (
                 let paragraphNo = paragraphsToChoose.length;
-                paragraphNo < this.motion.amendment_paragraph_$.length;
+                paragraphNo < this.motion.amendment_paragraph_numbers.length;
                 paragraphNo++
             ) {
-                if (this.motion.amendment_paragraph(paragraphNo) !== null) {
-                    contentPatch.broken_paragraphs.push(this.motion.amendment_paragraph(paragraphNo)!);
+                if (this.motion.amendment_paragraph_text(paragraphNo) !== null) {
+                    contentPatch.broken_paragraphs.push(this.motion.amendment_paragraph_text(paragraphNo)!);
                 }
             }
         }
@@ -162,7 +162,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
             `contentForm`,
             this.contentForm!.valueChanges.subscribe(value => {
                 if (value) {
-                    this.formChanged.emit({ amendment_paragraph_$: value });
+                    this.formChanged.emit({ amendment_paragraph: value });
                     this.validStateChanged.emit(this.contentForm!.valid);
                     this.cd.markForCheck();
                 }

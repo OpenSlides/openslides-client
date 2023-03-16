@@ -133,7 +133,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         if (!this.self) {
             return [];
         }
-        const meetingIds = Array.from(new Set(this.self.allGroups.map(group => group.meeting_id)).values());
+        const meetingIds = this.self.ensuredMeetingIds;
         return meetingIds
             .map(id => this.meetingRepo.getViewModel(id) as ViewMeeting)
             .sort((meetingA, meetingB) => meetingA.name.localeCompare(meetingB.name));

@@ -44,14 +44,11 @@ export class User extends BaseDecimalModel<User> {
     public committee_ids!: Id[]; // (committee/user_ids)[];
     public meeting_user_ids!: Id[]; // (meeting_user/user_id);
 
-    public poll_voted_$_ids!: string[]; // (poll/voted_ids)[];
-    public vote_$_ids!: string[]; // (vote/user_id)[];
-    public delegated_vote_$_ids!: string[]; // (vote/delegated_user_id)[];
-    public option_$_ids!: string[];
     public poll_candidate_ids!: Id[]; // (poll_candidate/user_id);
+    public poll_voted_ids!: string[]; // (poll/voted_ids)[];
+    public vote_ids!: string[]; // (vote/user_id)[];
+    public option_ids!: string[];
     public organization_id!: Id; // organization/committee_ids;
-
-    public current_projector_$_ids!: any[];
 
     public organization_management_level!: keyof OMLMapping;
     public committee_management_ids!: Id[];
@@ -64,7 +61,7 @@ export class User extends BaseDecimalModel<User> {
         return [`default_vote_weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof User | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
         `id`,
         `username`,
         `pronoun`,
@@ -88,6 +85,9 @@ export class User extends BaseDecimalModel<User> {
         `committee_ids`,
         `committee_management_ids`,
         `meeting_user_ids`,
+        `poll_voted_ids`,
+        `option_ids`,
+        `vote_ids`,
         `poll_candidate_ids`,
         `meeting_ids`,
         `organization_id`

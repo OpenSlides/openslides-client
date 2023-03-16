@@ -22,7 +22,7 @@ export class Committee extends BaseModel<Committee> {
         super(Committee.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Committee | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Committee)[] = [
         `id`,
         `name`,
         `description`,
