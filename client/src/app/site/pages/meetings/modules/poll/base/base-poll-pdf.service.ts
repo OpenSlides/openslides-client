@@ -357,7 +357,7 @@ export abstract class BasePollPdfService {
         if (poll.isListPoll) {
             const listOption = poll.options[0];
             pollResultPdfContent.push({
-                text: this.translate.instant(`Candidate list`),
+                text: this.translate.instant(`Nomination list`),
                 margin: [0, 0, 0, 5],
                 bold: true
             });

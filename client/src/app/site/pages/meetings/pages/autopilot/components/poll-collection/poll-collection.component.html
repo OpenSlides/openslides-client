@@ -35,6 +35,13 @@
                 [poll]="lastPublishedPoll"
                 *ngIf="last"
             ></os-assignment-poll-detail-content>
+            <os-assignment-poll-meta-info
+                [poll]="poll"
+                [shortenList]="true"
+                [showCandidates]="poll.isListPoll"
+                [showStats]="false"
+                *ngIf="poll.isListPoll"
+            ></os-assignment-poll-meta-info>
         </div>
 
         <div *ngIf="poll.isTopicPoll">

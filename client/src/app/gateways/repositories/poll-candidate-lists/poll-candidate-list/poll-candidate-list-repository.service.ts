@@ -29,7 +29,7 @@ export class PollCandidateListRepositoryService extends BaseMeetingRelatedReposi
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidateLists` : `PollCandidateList`);
-    public getTitle = (viewModel: ViewPollCandidateList): string => _(`Nomination`);
+    public getTitle = (viewModel: ViewPollCandidateList): string => _(`Confirmation of the nomination list`);
 
     public override getFieldsets(): Fieldsets<PollCandidateList> {
         const detailFieldset: (keyof PollCandidateList)[] = [`poll_candidate_ids`, `option_id`, `meeting_id`];

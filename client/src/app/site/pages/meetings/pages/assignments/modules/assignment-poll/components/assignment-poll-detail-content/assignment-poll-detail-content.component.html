@@ -75,7 +75,7 @@
     <div *ngIf="hasResults && canSeeResults && shouldShowChart" class="result-wrapper">
         <h3 class="result-title" *ngIf="tableData[0].class === 'user'">
             <span class="candidate-name">
-                {{ tableData[0].votingOption | pollKeyVerbose | translate }}{{ showEntriesAmount ? ': ' + poll.options[0].entries_amount + ' ' : ''}}{{ showEntriesAmount ? 'Candidates' : '' | translate }}
+                {{ tableData[0].votingOption | pollKeyVerbose | translate }}
             </span>
             <br>
             <span class="user-subtitle" *ngIf="tableData[0].votingOptionSubtitle">
@@ -83,7 +83,7 @@
             </span>
         </h3>
         <h3 class="result-title" *ngIf="tableData[0].class === 'list'">
-            {{ tableData[0].votingOption | translate }}{{ showEntriesAmount ? ': ' + poll.options[0].entries_amount + ' ' : ''}}{{ showEntriesAmount ? 'Candidates' : '' | translate }}
+            {{ tableData[0].votingOption | translate }}
         </h3>
 
         <ng-container *ngIf="hasResults && canSeeResults">

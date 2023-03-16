@@ -112,10 +112,10 @@
                 [innerHTML]="assignment.assignment.description | trust: 'html'"
             ></div>
         </div>
-        <div class="meta-info-grid">
-            <div class="number-of-elected">
+        <div [ngClass]="{ 'meta-info-grid': assignment.open_posts }">
+            <div class="number-of-elected" *ngIf="assignment.open_posts">
                 <h4>{{ 'Number of persons to be elected' | translate }}</h4>
-                <span>{{ assignment.assignment.open_posts }}</span>
+                <span>{{ assignment.open_posts }}</span>
             </div>
             <div class="current-phase">
                 <h4>{{ 'Phase' | translate }}</h4>
@@ -261,7 +261,6 @@
                         placeholder="{{ 'Number of persons to be elected' | translate }}"
                         formControlName="open_posts"
                         type="number"
-                        required
                     />
                     <mat-error *ngIf="assignmentForm.get('open_posts')?.hasError('required')">
                         {{ 'This field is required.' | translate }}

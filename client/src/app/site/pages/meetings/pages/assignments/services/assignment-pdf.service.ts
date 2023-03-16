@@ -62,22 +62,25 @@ export class AssignmentPdfService {
      * @returns the preamble part of the pdf document
      */
     private createPreamble(assignment: ViewAssignment): object {
-        const preambleText = `${this.translate.instant(`Number of persons to be elected`)}: `;
-        const memberNumber = `` + assignment.open_posts;
-        const preamble = {
-            text: [
-                {
-                    text: preambleText,
-                    bold: true,
-                    style: `textItem`
-                },
-                {
-                    text: memberNumber,
-                    style: `textItem`
-                }
-            ]
-        };
-        return preamble;
+        if (assignment.open_posts) {
+            const preambleText = `${this.translate.instant(`Number of persons to be elected`)}: `;
+            const memberNumber = `` + assignment.open_posts;
+            const preamble = {
+                text: [
+                    {
+                        text: preambleText,
+                        bold: true,
+                        style: `textItem`
+                    },
+                    {
+                        text: memberNumber,
+                        style: `textItem`
+                    }
+                ]
+            };
+            return preamble;
+        }
+        return {};
     }
 
     /**
@@ -165,7 +168,7 @@ export class AssignmentPdfService {
                         style: `tableHeader`
                     },
                     {
-                        text: this.translate.instant(`Candidates`),
+                        text: this.translate.instant(poll.isListPoll ? `Option` : `Candidates`),
                         style: `tableHeader`
                     },
                     {
@@ -202,10 +205,45 @@ export class AssignmentPdfService {
                     },
                     layout: `switchColorTableLayout`
                 });
+
+                if (poll.isListPoll) {
+                    resultBody.push({
+                        text: this.translate.instant(`Nomination list`) + `:`,
+                        style: `textItem`,
+                        margin: [0, 15, 0, 0]
+                    });
+
+                    resultBody.push(this.createNominationList(poll));
+                }
             }
         }
 
         return resultBody;
+    }
+
+    /**
+     * Creates the nomination list for an assignment poll
+     *
+     * @param assignment the ViewAssignment to create the document for
+     * @returns the assignment list as PDF document
+     */
+    private createNominationList(poll: ViewPoll): object {
+        if (poll.isListPoll) {
+            const userList = poll.options[0]?.contentTitlesAsSortedArray?.map(candidate => ({
+                text:
+                    `${candidate.title}${candidate.subtitle ? ` (` + candidate.subtitle + `)` : ``}` ||
+                    UnknownUserLabel,
+                margin: [0, 0, 0, 10]
+            }));
+            const listType = (poll.content_object as ViewAssignment).number_poll_candidates ? `ol` : `ul`;
+
+            return {
+                [listType]: userList,
+                style: `textItem`
+            };
+        } else {
+            return {};
+        }
     }
 
     /**
