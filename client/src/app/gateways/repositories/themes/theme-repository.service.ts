@@ -70,13 +70,12 @@ export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
             `warn_a400`,
             `warn_a700`
         ];
-        const allFields: (keyof Theme)[] = requiredFields.concat(primaryFields, accentFields, warnFields);
         return {
+            ...super.getFieldsets(),
             required: requiredFields,
             primary: primaryFields,
             accent: accentFields,
-            warn: warnFields,
-            [DEFAULT_FIELDSET]: allFields
+            warn: warnFields
         };
     }
 

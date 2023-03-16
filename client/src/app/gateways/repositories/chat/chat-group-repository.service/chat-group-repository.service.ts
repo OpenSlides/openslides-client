@@ -19,18 +19,6 @@ export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<Vie
 
     public getVerboseName = (plural?: boolean) => (plural ? `Chat groups` : `Chat group`);
     public getTitle = (viewModel: ViewChatGroup) => viewModel.name;
-    public override getFieldsets(): Fieldsets<ChatGroup> {
-        const detailFieldset: (keyof ChatGroup)[] = [
-            `chat_message_ids`,
-            `name`,
-            `weight`,
-            `read_group_ids`,
-            `write_group_ids`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: detailFieldset
-        };
-    }
 
     public create(...data: Partial<ChatGroup>[]): Promise<Identifiable[]> {
         const payload: any[] = data.map(partialChatGroup => partialChatGroup);

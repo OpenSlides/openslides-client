@@ -53,21 +53,4 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
     public delete(viewModel: Identifiable): Promise<void> {
         return this.sendActionToBackend(MotionChangeRecommendationAction.DELETE, { id: viewModel.id });
     }
-
-    public override getFieldsets(): Fieldsets<MotionChangeRecommendation> {
-        const detailFields: (keyof MotionChangeRecommendation)[] = [
-            `id`,
-            `motion_id`,
-            `line_from`,
-            `line_to`,
-            `internal`,
-            `text`,
-            `type`,
-            `other_description`,
-            `rejected`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: detailFields
-        };
-    }
 }

@@ -30,20 +30,6 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Countdowns` : `Countdown`);
 
-    public override getFieldsets(): Fieldsets<ProjectorCountdown> {
-        return {
-            [DEFAULT_FIELDSET]: [
-                `title`,
-                `description`,
-                `default_time`,
-                `countdown_time`,
-                `running`,
-                `used_as_list_of_speakers_countdown_meeting_id`,
-                `used_as_poll_countdown_meeting_id`
-            ]
-        };
-    }
-
     public async create(payload: any): Promise<Identifiable> {
         return await this.sendActionToBackend(ProjectorCountdownAction.CREATE, payload);
     }

@@ -39,13 +39,6 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Votes` : `Vote`);
 
-    public override getFieldsets(): Fieldsets<Vote> {
-        const detail: (keyof Vote)[] = [`delegated_user_id`, `option_id`, `user_id`, `value`, `weight`, `user_token`];
-        return {
-            [DEFAULT_FIELDSET]: detail
-        };
-    }
-
     public async sendVote(pollId: Id, payload: any): Promise<void> {
         return await this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
     }

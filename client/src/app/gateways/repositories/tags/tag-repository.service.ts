@@ -32,12 +32,6 @@ export class TagRepositoryService extends BaseMeetingRelatedRepository<ViewTag, 
         return this.sendBulkActionToBackend(TagAction.DELETE, payload);
     }
 
-    public override getFieldsets(): Fieldsets<Tag> {
-        return {
-            [DEFAULT_FIELDSET]: [`name`]
-        };
-    }
-
     public getTitle = (viewTag: ViewTag) => viewTag.name;
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Tags` : `Tag`);

@@ -22,12 +22,6 @@ export class ProjectorMessageRepositoryService extends BaseMeetingRelatedReposit
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Messages` : `Message`);
 
-    public override getFieldsets(): Fieldsets<ProjectorMessage> {
-        return {
-            [DEFAULT_FIELDSET]: [`message`]
-        };
-    }
-
     public async create(payload: any): Promise<Identifiable> {
         return await this.sendActionToBackend(ProjectorMessageAction.CREATE, payload);
     }

@@ -22,19 +22,6 @@ export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepositor
         super(repositoryServiceCollector, ListOfSpeakers);
     }
 
-    public override getFieldsets(): Fieldsets<ListOfSpeakers> {
-        const routingFields: (keyof ListOfSpeakers)[] = [`sequential_number`, `meeting_id`];
-        const defaultFieldset: (keyof ListOfSpeakers)[] = routingFields.concat([
-            `closed`,
-            `content_object_id`,
-            `speaker_ids`
-        ]);
-        return {
-            [DEFAULT_FIELDSET]: defaultFieldset,
-            [ROUTING_FIELDSET]: routingFields
-        };
-    }
-
     public getVerboseName = (plural: boolean = false) =>
         this.translate.instant(plural ? `Lists of speakers` : `List of speakers`);
 

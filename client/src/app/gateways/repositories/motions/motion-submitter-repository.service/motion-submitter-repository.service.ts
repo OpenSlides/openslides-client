@@ -20,14 +20,6 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
         super(repositoryServiceCollector, MotionSubmitter);
     }
 
-    public override getFieldsets(): Fieldsets<MotionSubmitter> {
-        const listFields: (keyof MotionSubmitter)[] = [`user_id`, `weight`];
-
-        return {
-            [DEFAULT_FIELDSET]: listFields
-        };
-    }
-
     public getTitle = (submitter: ViewMotionSubmitter) =>
         submitter?.user?.getTitle() || this.translate.instant(`Unknown participant`);
 

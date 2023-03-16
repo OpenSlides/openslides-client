@@ -22,12 +22,6 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
         super(repositoryServiceCollector, AssignmentCandidate);
     }
 
-    public override getFieldsets(): Fieldsets<AssignmentCandidate> {
-        return {
-            [DEFAULT_FIELDSET]: [`weight`, `user_id`, `assignment_id`]
-        };
-    }
-
     public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate) =>
         viewAssignmentCandidate.user?.getTitle() ?? UnknownUserLabel;
 

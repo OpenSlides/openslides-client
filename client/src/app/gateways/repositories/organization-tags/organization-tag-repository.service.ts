@@ -20,12 +20,6 @@ export class OrganizationTagRepositoryService extends BaseRepository<ViewOrganiz
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Tags` : `Tag`);
     public getTitle = (viewModel: ViewOrganizationTag): string => viewModel.name;
-    public override getFieldsets(): Fieldsets<OrganizationTag> {
-        const detailFieldset: (keyof OrganizationTag)[] = [`color`, `name`, `committee_ids`, `organization_id`];
-        return {
-            [DEFAULT_FIELDSET]: detailFieldset
-        };
-    }
 
     public async create(...tags: Partial<OrganizationTag>[]): Promise<Identifiable[]> {
         const payload = tags.map(tag => ({

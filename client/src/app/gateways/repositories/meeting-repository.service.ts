@@ -69,13 +69,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `committee_id`,
             `group_ids`
         ]);
-        const detailFields: TypedFieldset<Meeting> = sharedFields.concat([
-            `welcome_title`,
-            `welcome_text`,
-            `enable_anonymous`,
-            { templateField: `logo_$_id` },
-            { templateField: `font_$_id` }
-        ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `is_template`,
             `default_meeting_for_committee_id`,
@@ -86,7 +79,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         const groupFields: TypedFieldset<Meeting> = [`admin_group_id`, `default_group_id`];
 
         return {
-            [DEFAULT_FIELDSET]: detailFields.concat(this.meetingSettingsDefinitionProvider.getSettingsKeys()),
+            ...super.getFieldsets(),
             detailEdit: detailEditFields,
             list: listFields,
             settings: this.meetingSettingsDefinitionProvider.getSettingsKeys(),

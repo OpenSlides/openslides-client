@@ -42,22 +42,6 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
         return this.sendBulkActionToBackend(TopicAction.DELETE, payload);
     }
 
-    public override getFieldsets(): Fieldsets<Topic> {
-        const routingFields: (keyof Topic)[] = [`sequential_number`, `meeting_id`];
-        const titleFields: (keyof Topic)[] = routingFields.concat([`title`, `text`]);
-        return {
-            [DEFAULT_FIELDSET]: titleFields.concat([
-                `text`,
-                `attachment_ids`,
-                `tag_ids`,
-                `agenda_item_id`,
-                `list_of_speakers_id`,
-                `poll_ids`
-            ]),
-            [ROUTING_FIELDSET]: routingFields
-        };
-    }
-
     public getTitle = (topic: ViewTopic) => topic.title;
 
     public override getListTitle = (topic: ViewTopic) => {

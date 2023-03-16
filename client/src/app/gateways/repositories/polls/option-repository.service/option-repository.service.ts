@@ -17,11 +17,4 @@ export class OptionRepositoryService extends BaseMeetingRelatedRepository<ViewOp
     public getTitle = (_viewOption: ViewOption) => `Option`;
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Options` : `Option`);
-
-    public override getFieldsets(): Fieldsets<Option> {
-        const detail: (keyof Option)[] = [`vote_ids`, `poll_id`, `content_object_id`, `yes`, `no`, `abstain`];
-        return {
-            [DEFAULT_FIELDSET]: detail
-        };
-    }
 }

@@ -43,20 +43,6 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
         return this.sendBulkActionToBackend(MotionBlockAction.DELETE, payload);
     }
 
-    public override getFieldsets(): Fieldsets<MotionBlock> {
-        const listFields: (keyof MotionBlock)[] = [
-            `sequential_number`,
-            `meeting_id`,
-            `title`,
-            `internal`,
-            `agenda_item_id`,
-            `motion_ids`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: listFields
-        };
-    }
-
     public getTitle = (viewMotionBlock: ViewMotionBlock) => viewMotionBlock.title;
 
     public getVerboseName = (plural: boolean = false) =>

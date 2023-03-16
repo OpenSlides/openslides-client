@@ -20,13 +20,6 @@ export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Comments` : `Comment`);
 
-    public override getFieldsets(): Fieldsets<ViewMotionComment> {
-        const commentFields: (keyof ViewMotionComment)[] = [`motion_id`, `section_id`, `comment`];
-        return {
-            [DEFAULT_FIELDSET]: commentFields
-        };
-    }
-
     public async create(partialModel: Partial<MotionComment>): Promise<Identifiable> {
         const payload = {
             comment: partialModel.comment,

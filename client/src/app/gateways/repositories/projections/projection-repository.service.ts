@@ -25,7 +25,7 @@ export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<Vi
         viewProjection.content_object?.getProjectorTitle(viewProjection.projection).subtitle || ``;
 
     public override getFieldsets(): Fieldsets<Projection> {
-        const defaultKeys: (keyof Projection)[] = [
+        const contentKeys: (keyof Projection)[] = [
             `stable`,
             `type`,
             `options`,
@@ -34,11 +34,11 @@ export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<Vi
             `preview_projector_id`,
             `current_projector_id`,
             `history_projector_id`,
-            `current_projector_id`
+            `current_projector_id`,
+            `content`
         ];
-        const contentKeys: (keyof Projection)[] = defaultKeys.concat([`content`]);
         return {
-            [DEFAULT_FIELDSET]: defaultKeys,
+            ...super.getFieldsets(),
             content: contentKeys
         };
     }

@@ -19,19 +19,6 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
         super(repositoryServiceCollector, Speaker);
     }
 
-    public override getFieldsets(): Fieldsets<Speaker> {
-        const defaultSet: (keyof Speaker)[] = [
-            `begin_time`,
-            `end_time`,
-            `point_of_order`,
-            `speech_state`,
-            `weight`,
-            `note`,
-            `user_id`
-        ];
-        return { [DEFAULT_FIELDSET]: defaultSet };
-    }
-
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Speakers` : `Speaker`);
 
     public getTitle = (viewSpeaker: ViewSpeaker) => (viewSpeaker.user ? viewSpeaker.user.getFullName() : ``);

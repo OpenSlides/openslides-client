@@ -20,13 +20,6 @@ export class MotionStatuteParagraphRepositoryService extends BaseMeetingRelatedR
         super(repositoryServiceCollector, MotionStatuteParagraph);
     }
 
-    public override getFieldsets(): Fieldsets<MotionStatuteParagraph> {
-        const defaultFields: (keyof MotionStatuteParagraph)[] = [`title`, `text`, `weight`];
-        return {
-            [DEFAULT_FIELDSET]: defaultFields
-        };
-    }
-
     public create(partialStatuteParagraph: Partial<MotionStatuteParagraph>): Promise<Identifiable> {
         const payload = this.getCreatePayload(partialStatuteParagraph);
         return this.sendActionToBackend(MotionStatuteParagraphAction.CREATE, payload);

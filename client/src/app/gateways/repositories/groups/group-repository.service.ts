@@ -19,16 +19,10 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
     public override getFieldsets(): Fieldsets<Group> {
         const titleFields: (keyof Group)[] = [`name`];
         const listFields: (keyof Group)[] = titleFields.concat([`permissions`]);
-        const detailFields: (keyof Group)[] = listFields.concat([
-            `admin_group_for_meeting_id`,
-            `default_group_for_meeting_id`,
-            `weight`,
-            `user_ids`
-        ]);
         return {
             title: titleFields,
             list: listFields,
-            [DEFAULT_FIELDSET]: detailFields
+            ...super.getFieldsets()
         };
     }
 

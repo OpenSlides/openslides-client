@@ -41,9 +41,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `user_ids`,
             { templateField: `user_$_management_level` }
         ];
-        const detailFields: TypedFieldset<Committee> = [`default_meeting_id`];
         return {
-            [DEFAULT_FIELDSET]: detailFields,
+            ...super.getFieldsets(),
             list: listFields
         };
     }

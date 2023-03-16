@@ -26,20 +26,10 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     }
 
     public override getFieldsets(): Fieldsets<Assignment> {
-        const routingFields: (keyof Assignment)[] = [`sequential_number`, `meeting_id`];
-        const titleFields: (keyof Assignment)[] = routingFields.concat([`title`]);
+        const titleFields: (keyof Assignment)[] = [`sequential_number`, `meeting_id`, `title`];
         const listFields: (keyof Assignment)[] = titleFields.concat([`open_posts`, `phase`, `candidate_ids`]);
         return {
-            [DEFAULT_FIELDSET]: listFields.concat([
-                `description`,
-                `default_poll_description`,
-                `number_poll_candidates`,
-                `agenda_item_id`,
-                `poll_ids`,
-                `sequential_number`,
-                `list_of_speakers_id`
-            ]),
-            [ROUTING_FIELDSET]: routingFields,
+            ...super.getFieldsets(),
             list: listFields,
             title: titleFields
         };

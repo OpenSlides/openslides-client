@@ -16,6 +16,7 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionWorkflow);
     }
+
     public override getFieldsets(): Fieldsets<MotionWorkflow> {
         const routingFields: (keyof MotionWorkflow)[] = [`sequential_number`, `meeting_id`, `name`];
         const nameFields: (keyof MotionWorkflow)[] = [`name`];
@@ -23,7 +24,7 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
             .concat(routingFields)
             .concat([`first_state_id`, `state_ids`]);
         return {
-            [DEFAULT_FIELDSET]: listFields,
+            ...super.getFieldsets(),
             [ROUTING_FIELDSET]: routingFields,
             name: nameFields,
             list: listFields

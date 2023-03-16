@@ -129,7 +129,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         ];
 
         return {
-            [DEFAULT_FIELDSET]: detailFields,
+            ...super.getFieldsets(),
             accountList: accountListFields,
             participantList: participantListFields,
             participantListMinimal: participantListFieldsMinimal,

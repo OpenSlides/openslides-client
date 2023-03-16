@@ -27,20 +27,6 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
         };
     }
 
-    public override getFieldsets(): Fieldsets<ViewMotionCommentSection> {
-        const listFields: (keyof ViewMotionCommentSection)[] = [
-            `name`,
-            `weight`,
-            `read_group_ids`,
-            `write_group_ids`,
-            `submitter_can_write`,
-            `comment_ids`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: listFields
-        };
-    }
-
     public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => viewMotionCommentSection.name;
 
     public getVerboseName = (plural: boolean = false) =>

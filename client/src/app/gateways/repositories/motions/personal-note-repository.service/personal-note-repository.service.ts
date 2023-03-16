@@ -25,13 +25,6 @@ export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<
     public getVerboseName = (plural: boolean = false) =>
         this.translate.instant(plural ? `Personal notes` : `Personal note`);
 
-    public override getFieldsets(): Fieldsets<PersonalNote> {
-        const detailFields: (keyof PersonalNote)[] = [`id`, `star`, `note`, `content_object_id`, `user_id`];
-        return {
-            [DEFAULT_FIELDSET]: detailFields
-        };
-    }
-
     public create(personalNote: Partial<PersonalNote>, content_object_id: Fqid): Action<Identifiable> {
         if (personalNote.star === undefined && personalNote.note === undefined) {
             throw new Error(`At least one of note or starhas to be given!`);
