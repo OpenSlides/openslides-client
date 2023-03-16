@@ -18,6 +18,12 @@ const routes: Routes = [
                 canLoad: [PermissionGuard]
             },
             {
+                path: `meetings`,
+                loadChildren: () =>
+                    import(`./pages/orga-meetings/orga-meetings.module`).then(m => m.OrgaMeetingsModule),
+                canLoad: [PermissionGuard]
+            },
+            {
                 path: `committees`,
                 loadChildren: () => import(`./pages/committees/committees.module`).then(m => m.CommitteesModule),
                 canLoad: [PermissionGuard]

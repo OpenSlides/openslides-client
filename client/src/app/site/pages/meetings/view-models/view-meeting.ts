@@ -1,3 +1,4 @@
+import { unix } from 'moment';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 
@@ -31,6 +32,13 @@ import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
 
+export enum RelatedTime {
+    Future = 1,
+    Current,
+    Past,
+    Dateless
+}
+
 export class ViewMeeting extends BaseViewModel<Meeting> {
     public get meeting(): Meeting {
         return this._model;
@@ -48,12 +56,40 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
         return this.user_ids?.length || 0;
     }
 
+    public get motionsAmount(): number {
+        return this.motion_ids?.length || 0;
+    }
+
+    public get committeeName(): string {
+        return this.committee?.name;
+    }
+
     public get isArchived(): boolean {
         return !this.is_active_in_organization_id;
     }
 
     public get isActive(): boolean {
         return !!this.is_active_in_organization_id;
+    }
+
+    public get isTemplate(): boolean {
+        return this.is_template || !!this.template_for_organization_id;
+    }
+
+    public get relatedTime(): RelatedTime {
+        if ((this.start_time ?? this.end_time) === undefined) {
+            return RelatedTime.Dateless;
+        }
+        const current = new Date();
+        let start = unix(this.start_time).startOf(`day`).toDate() ?? unix(this.end_time).startOf(`day`).toDate();
+        const end = unix(this.end_time).endOf(`day`).toDate() ?? unix(this.start_time).endOf(`day`).toDate();
+        if (current < start) {
+            return RelatedTime.Future;
+        } else if (current <= end) {
+            return RelatedTime.Current;
+        } else {
+            return RelatedTime.Past;
+        }
     }
 
     public static COLLECTION = Meeting.COLLECTION;

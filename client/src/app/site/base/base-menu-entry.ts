@@ -28,4 +28,16 @@ export interface BaseMenuEntry<P = any> {
      * The permission to see the entry.
      */
     permission?: P;
+
+    /**
+     * Can be used to set a custom height for the menu entry.
+     */
+    customHeight?: string;
+}
+
+export function getCustomStyleForEntry(entry: BaseMenuEntry): { [key: string]: any } {
+    if (entry.customHeight) {
+        return { height: entry.customHeight, lineHeight: entry.customHeight };
+    }
+    return {};
 }

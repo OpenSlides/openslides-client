@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { NotifyService } from 'src/app/gateways/notify.service';
 import { navItemAnim } from 'src/app/infrastructure/animations';
+import { getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -79,6 +80,10 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         this.subscriptions.push(...this.getRouterSubscriptions());
         // observe the mainMenuService to receive toggle-requests
         this.mainMenuService.toggleMenuSubject.subscribe(() => this.toggleSideNav());
+    }
+
+    public getCustomStyleForEntry(entry: MainMenuEntry): { [key: string]: any } {
+        return getCustomStyleForEntry(entry);
     }
 
     /**
