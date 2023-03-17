@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as path from 'path';
-import { Project, Scope, StructureKind } from 'ts-morph';
+import { Project, Scope } from 'ts-morph';
 
 const SOURCE = `https://raw.githubusercontent.com/OpenSlides/openslides-backend/main/global/meta/models.yml`;
 
@@ -62,7 +62,7 @@ function snakeToPascal(input: string) {
             .getProperties()
             .map(p => p.getName())
             .concat(...classNode.getBaseTypes().map(t => t.getProperties().map(p => p.getName())));
-        // console.log(existingProps);
+
         const fieldset = [];
         for (const modelProp of Object.keys(models[modelName])) {
             if (!existingProps.includes(modelProp)) {
@@ -86,9 +86,5 @@ function snakeToPascal(input: string) {
         }
         defaultFieldsetProp.setInitializer(`[${fieldset.map(f => `\`${f}\``).join(`, `)}]`);
         await tsFile.save();
-        // console.log(fieldset);
-        // console.log(classNode);
-        // return;
-        // console.log(modelName, file);
     }
 })();
