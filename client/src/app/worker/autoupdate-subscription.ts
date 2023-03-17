@@ -121,7 +121,7 @@ export class AutoupdateSubscription {
      * @param port The MessagePort the data should be send to
      */
     public resendTo(port: MessagePort): void {
-        if (this.stream.currentData !== null) {
+        if (this.stream && this.stream.currentData !== null) {
             port.postMessage({
                 sender: `autoupdate`,
                 action: `receive-data`,

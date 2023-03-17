@@ -77,6 +77,14 @@ function openConnection(
         return `other`;
     }
 
+    for (const queue of Object.keys(subscriptionQueues)) {
+        const fulfillingSubscription = subscriptionQueues[queue].find(s => s.fulfills(queryParams, request));
+        if (fulfillingSubscription) {
+            fulfillingSubscription.addPort(ctx);
+            return;
+        }
+    }
+
     const existingSubscription = autoupdatePool.getMatchingSubscription(queryParams, request);
     if (existingSubscription) {
         existingSubscription.addPort(ctx);
