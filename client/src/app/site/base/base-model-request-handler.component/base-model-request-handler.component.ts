@@ -143,7 +143,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         { hideWhen, hideWhenDestroyed, hideWhenMeetingChanged, hideWhenUnauthenticated }: HidingConfig,
         ...additional: Observable<boolean>[]
     ): Observable<boolean> | null {
-        let observables: Observable<boolean>[] | null = null;
+        let observables: Observable<boolean>[] = [];
         if (additional && additional.length) {
             observables.push(...additional);
         }
@@ -164,8 +164,10 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
             observables.push(this.openslidesRouter.beforeSignoutObservable);
         }
 
-        if (observables.length) {
+        if (observables.length > 2) {
             return combineLatest(observables).pipe(map(values => values.some(source => source)));
+        } else if (observables.length === 1) {
+            return observables[0];
         }
 
         return null;
