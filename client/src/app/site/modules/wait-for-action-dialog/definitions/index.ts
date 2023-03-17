@@ -11,7 +11,7 @@ export const waitForActionReason = {
 
 export type WaitForActionReasonKeys = keyof typeof waitForActionReason;
 
-export type WaitForActionReason = typeof waitForActionReason[WaitForActionReasonKeys];
+export type WaitForActionReason = (typeof waitForActionReason)[WaitForActionReasonKeys];
 
 export const titleVerbose: { [key: number]: string } = {
     [waitForActionReason.notWritten]: `The process will be started in the future, please wait.`,
