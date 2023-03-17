@@ -11,7 +11,7 @@ import { getParticipantDetailSubscription } from '../../../../participants.subsc
 export class ParticipantDetailComponent extends BaseModelRequestHandlerComponent {
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`]) {
-            this.subscribeTo(getParticipantDetailSubscription(+params[`id`]));
+            this.subscribeTo(getParticipantDetailSubscription(+params[`id`]), { hideWhenDestroyed: true });
         }
     }
 }

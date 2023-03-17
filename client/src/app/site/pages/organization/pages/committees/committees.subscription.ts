@@ -1,5 +1,5 @@
-import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
@@ -9,7 +9,7 @@ import { ViewCommittee } from './view-models';
 
 export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
 
-export const getCommitteeListSubscriptionConfig = (getNextMeetingIdObservable: () => Observable<Id | null>) => ({
+export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
@@ -17,13 +17,12 @@ export const getCommitteeListSubscriptionConfig = (getNextMeetingIdObservable: (
             { idField: `committee_ids`, fieldset: `list`, follow: [{ idField: `user_ids`, fieldset: `accountList` }] }
         ]
     },
-    subscriptionName: COMMITTEE_LIST_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !!id))
+    subscriptionName: COMMITTEE_LIST_SUBSCRIPTION
 });
 
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 
-export const getCommitteeDetailSubscriptionConfig = (id: Id) => ({
+export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     hideWhenDestroyed: true,
     modelRequest: {
         viewModelCtor: ViewCommittee,
@@ -42,7 +41,7 @@ export const getCommitteeDetailSubscriptionConfig = (id: Id) => ({
 
 const MEETING_DETAIL_EDIT_SUBSCRIPTION = `committee_meeting_detail`;
 
-export const getCommitteeMeetingDetailSubscriptionConfig = (id: Id) => ({
+export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],

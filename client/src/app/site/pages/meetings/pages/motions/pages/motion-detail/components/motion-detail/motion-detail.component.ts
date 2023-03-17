@@ -80,6 +80,6 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     }
 
     private makeAdditionalSubscription(ids: Ids): void {
-        this.updateSubscribeTo(getMotionAdditionalDetailSubscriptionConfig(ids), { hideWhenDestroyed: true });
+        this.updateSubscribeTo(getMotionAdditionalDetailSubscriptionConfig(...ids), { hideWhenDestroyed: true });
     }
 }

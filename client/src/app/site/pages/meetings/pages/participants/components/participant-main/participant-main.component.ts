@@ -11,7 +11,7 @@ import { getParticipantListSubscriptionConfig } from '../../participants.subscri
 export class ParticipantMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getParticipantListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(getParticipantListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
         }
     }
 }

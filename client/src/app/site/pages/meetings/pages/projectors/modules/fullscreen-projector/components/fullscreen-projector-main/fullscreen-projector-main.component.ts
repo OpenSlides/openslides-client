@@ -26,9 +26,7 @@ export class FullscreenProjectorMainComponent extends BaseModelRequestHandlerCom
                     })
                     .then(id => {
                         if (id) {
-                            this.subscribeTo(
-                                getProjectorSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
-                            );
+                            this.subscribeTo(getProjectorSubscriptionConfig(id), { hideWhenMeetingChanged: true });
                         }
                     });
             }

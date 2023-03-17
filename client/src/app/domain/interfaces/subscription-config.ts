@@ -6,4 +6,4 @@ export interface SubscriptionConfig {
     subscriptionName: string;
 }
 
-export type SubscriptionConfigGenerator = (ids: Id[] | Id) => SubscriptionConfig;
+export type SubscriptionConfigGenerator = (...ids: Id[]) => SubscriptionConfig;

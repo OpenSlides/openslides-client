@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, ElementRef, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { map, OperatorFunction } from 'rxjs';
@@ -17,7 +17,7 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     providers: [{ provide: MatFormFieldControl, useExisting: RepoSearchSelectorComponent }],
     encapsulation: ViewEncapsulation.None
 })
-export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit {
+export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {
     @Input()
     public set repo(repo: ViewModelListProvider<any>) {
         this._repo = repo;
@@ -61,6 +61,13 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
     public override ngOnInit(): void {
         super.ngOnInit();
         this.init();
+    }
+
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        if (this.subscriptionName) {
+            this.modelRequestService.closeSubscription(this.subscriptionName);
+        }
     }
 
     private async init(): Promise<void> {

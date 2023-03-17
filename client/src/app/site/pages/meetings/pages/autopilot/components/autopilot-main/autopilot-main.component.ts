@@ -11,7 +11,9 @@ import { getAutopilotSubscriptionConfig } from '../../autopilot.subscription';
 export class AutopilotMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getAutopilotSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(getAutopilotSubscriptionConfig(id), {
+                hideWhenMeetingChanged: true
+            });
         }
     }
 }

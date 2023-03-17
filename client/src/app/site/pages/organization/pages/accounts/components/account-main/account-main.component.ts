@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs';
-import {
-    BaseModelRequestHandlerComponent,
-    ModelRequestConfig
-} from 'src/app/site/base/base-model-request-handler.component';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
 import { getMeetingListSubscriptionConfig } from '../../../../organization.subscription';
 import { ORGANIZATION_ID } from '../../../../services/organization.service';
@@ -24,30 +21,30 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         super();
     }
 
-    protected override onCreateModelRequests(firstCreation = true): ModelRequestConfig[] {
+    protected override onShouldCreateModelRequests(firstCreation = true): void {
         const additionalRequests = firstCreation
-            ? [
-                  getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable()),
-                  getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())
-              ]
+            ? [getCommitteeListSubscriptionConfig(), getMeetingListSubscriptionConfig()]
             : [];
-        return [
-            {
-                modelRequest: {
-                    viewModelCtor: ViewOrganization,
-                    ids: [ORGANIZATION_ID],
-                    follow: [
-                        {
-                            idField: `user_ids`,
-                            fieldset: `accountList`,
-                            additionalFields: [{ templateField: `group_$_ids` }]
-                        }
-                    ]
+        this.subscribeTo(
+            [
+                {
+                    modelRequest: {
+                        viewModelCtor: ViewOrganization,
+                        ids: [ORGANIZATION_ID],
+                        follow: [
+                            {
+                                idField: `user_ids`,
+                                fieldset: `accountList`,
+                                additionalFields: [{ templateField: `group_$_ids` }]
+                            }
+                        ]
+                    },
+                    subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
+                    hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))
                 },
-                subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
-                hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))
-            },
-            ...additionalRequests
-        ];
+                ...additionalRequests
+            ],
+            { hideWhenMeetingChanged: true }
+        );
     }
 }

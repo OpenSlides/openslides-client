@@ -79,7 +79,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     }
 
     protected onBeforeModelRequests(): void | Promise<void> {}
-    protected onCreateModelRequests(): ModelRequestConfig[] | void {}
+    protected onShouldCreateModelRequests(): void {}
     protected onNextMeetingId(id: Id | null): void {}
     protected onParamsChanged(params: any, oldParams?: any): void {}
 
@@ -88,7 +88,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         hideWhen?: HidingConfig
     ): Promise<void> {
         if (Array.isArray(config)) {
-            config.forEach(c => this.updateSubscribeTo(c, hideWhen));
+            config.forEach(c => this.subscribeTo(c, hideWhen));
         } else {
             const { modelRequest, subscriptionName } = config;
             if (!this._openedSubscriptions.includes(subscriptionName)) {
@@ -125,18 +125,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
 
     private async initModelSubscriptions(): Promise<void> {
         await this.onBeforeModelRequests();
-        const requests = this.onCreateModelRequests();
-        if (requests) {
-            for (const request of requests) {
-                this.setupSubscription(request);
-            }
-        }
-    }
-
-    private async setupSubscription(request: ModelRequestConfig): Promise<void> {
-        request.modelRequest.fieldset = request.modelRequest.fieldset ?? [];
-        const observable = this.createHideWhenObservable(request);
-        await this.modelRequestService.subscribeTo({ ...request, hideWhen: observable });
+        this.onShouldCreateModelRequests();
     }
 
     private createHideWhenObservable(

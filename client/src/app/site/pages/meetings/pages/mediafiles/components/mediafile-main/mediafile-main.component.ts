@@ -11,7 +11,7 @@ import { getMediafilesSubscriptionConfig } from '../../mediafiles.subscription';
 export class MediafileMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getMediafilesSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(getMediafilesSubscriptionConfig(id), { hideWhenMeetingChanged: true });
         }
     }
 }

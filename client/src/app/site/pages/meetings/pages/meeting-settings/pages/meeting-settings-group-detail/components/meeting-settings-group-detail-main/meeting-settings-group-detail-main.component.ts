@@ -17,9 +17,9 @@ export class MeetingSettingsGroupDetailMainComponent extends BaseModelRequestHan
             params[`group`] === MOTIONS_SETTINGS_GROUP &&
             params[`meetingId`] !== oldParams[`meetingId`]
         ) {
-            this.subscribeTo(
-                getMotionWorkflowSubscriptionConfig(+params[`meetingId`], () => this.hasMeetingIdChangedObservable())
-            );
+            this.subscribeTo(getMotionWorkflowSubscriptionConfig(+params[`meetingId`]), {
+                hideWhenMeetingChanged: true
+            });
         }
     }
 }

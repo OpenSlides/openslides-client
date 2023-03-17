@@ -6,10 +6,10 @@ import { ViewActionWorker } from '../repositories/action-worker/view-action-work
 
 export const ACTION_WORKER_SUBSCRIPTION = `action_worker_detail`;
 
-export const getActionWorkerSubscriptionConfig: SubscriptionConfigGenerator = (ids: Id[]) => ({
+export const getActionWorkerSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
         viewModelCtor: ViewActionWorker,
-        ids: ids,
+        ids,
         fieldset: DEFAULT_FIELDSET
     },
     subscriptionName: ACTION_WORKER_SUBSCRIPTION

@@ -11,7 +11,7 @@ import { getProjectorListSubscriptionConfig } from '../../projectors.subscriptio
 export class ProjectorMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getProjectorListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(getProjectorListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
         }
     }
 }

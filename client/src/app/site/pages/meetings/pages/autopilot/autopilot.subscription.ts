@@ -1,12 +1,12 @@
-import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { agendaItemFollow } from '../agenda/agenda.subscription';
 
 export const AUTOPILOT_SUBSCRIPTION = `autopilot`;
 
-export const getAutopilotSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
+export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
@@ -28,6 +28,5 @@ export const getAutopilotSubscriptionConfig = (id: Id, hasMeetingIdChangedObserv
             }
         ]
     },
-    subscriptionName: AUTOPILOT_SUBSCRIPTION,
-    hideWhen: hasMeetingIdChangedObservable()
+    subscriptionName: AUTOPILOT_SUBSCRIPTION
 });

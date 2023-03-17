@@ -13,7 +13,7 @@ import { getOrganizationMediafileListSubscriptionConfig } from '../../mediafiles
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationMediafileMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onCreateModelRequests(): void | ModelRequestConfig[] {
-        return [getOrganizationMediafileListSubscriptionConfig(() => this.getNextMeetingIdObservable())];
+    protected override onShouldCreateModelRequests(): void | ModelRequestConfig[] {
+        this.subscribeTo(getOrganizationMediafileListSubscriptionConfig(), { hideWhenMeetingChanged: true });
     }
 }
