@@ -93,7 +93,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
             const { modelRequest, subscriptionName } = config;
             if (!this._openedSubscriptions.includes(subscriptionName)) {
                 this._openedSubscriptions.push(subscriptionName);
-                const observable = this.createHideWhenObservable(hideWhen, config.hideWhen);
+                const observable = this.createHideWhenObservable(hideWhen || {}, config.hideWhen);
                 await this.modelRequestService.subscribeTo({ subscriptionName, modelRequest, hideWhen: observable });
             }
         }
@@ -144,6 +144,8 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         ...additional: Observable<boolean>[]
     ): Observable<boolean> | null {
         let observables: Observable<boolean>[] = [];
+
+        additional = additional.filter(e => !!e);
         if (additional && additional.length) {
             observables.push(...additional);
         }
