@@ -5,7 +5,11 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
-import { getMotionDetailSubscriptionConfig, MOTION_DETAIL_SUBSCRIPTION } from '../../../../motions.subscription';
+import {
+    getMotionAdditionalDetailSubscriptionConfig,
+    getMotionDetailSubscriptionConfig,
+    MOTION_DETAIL_SUBSCRIPTION
+} from '../../../../motions.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
 const MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION = `motion_additional_detail`;
@@ -76,15 +80,6 @@ export class MotionDetailComponent extends BaseModelRequestHandlerComponent {
     }
 
     private makeAdditionalSubscription(ids: Ids): void {
-        this.updateSubscribeTo({
-            modelRequest: {
-                ids,
-                viewModelCtor: ViewMotion,
-                fieldset: [`forwarded`, `created`, `sequential_number`],
-                follow: [{ idField: `meeting_id`, fieldset: [], additionalFields: [`name`, `description`] }]
-            },
-            subscriptionName: MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION,
-            hideWhenDestroyed: true
-        });
+        this.updateSubscribeTo(getMotionAdditionalDetailSubscriptionConfig(ids), { hideWhenDestroyed: true });
     }
 }

@@ -8,7 +8,7 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { SubscribeToConfig } from '../../services/model-request.service';
 import { OpenSlidesRouterService } from '../../services/openslides-router.service';
 
-export interface ModelRequestConfig extends SubscribeToConfig, HidingConfig {
+export interface ModelRequestConfig extends SubscribeToConfig {
     /**
      * If `true` it fires a request after a timeout. Defaults to `true`.
      */
@@ -24,6 +24,10 @@ interface HidingConfig {
      * If `true` a request is automatically closed when a component is going to be deleted.
      */
     hideWhenDestroyed?: boolean;
+    /**
+     * If `true` a request is automatically closed when the meeting got changed.
+     */
+    hideWhenMeetingChanged?: boolean;
     /**
      * If `true` a request is automatically closed when the operator is being signed out. Defaults to `true`.
      */
@@ -79,18 +83,29 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
     protected onNextMeetingId(id: Id | null): void {}
     protected onParamsChanged(params: any, oldParams?: any): void {}
 
-    protected async subscribeTo(...configs: ModelRequestConfig[]): Promise<void> {
-        for (const { modelRequest, subscriptionName, ...config } of configs) {
+    protected async subscribeTo(
+        config: ModelRequestConfig | ModelRequestConfig[],
+        hideWhen?: HidingConfig
+    ): Promise<void> {
+        if (Array.isArray(config)) {
+            config.forEach(c => this.updateSubscribeTo(c, hideWhen));
+        } else {
+            const { modelRequest, subscriptionName } = config;
             if (!this._openedSubscriptions.includes(subscriptionName)) {
                 this._openedSubscriptions.push(subscriptionName);
-                const observable = this.createHideWhenObservable(config);
+                const observable = this.createHideWhenObservable(hideWhen, config.hideWhen);
                 await this.modelRequestService.subscribeTo({ subscriptionName, modelRequest, hideWhen: observable });
             }
         }
     }
 
-    protected async updateSubscribeTo(...configs: ModelRequestConfig[]): Promise<void> {
-        for (const config of configs) {
+    protected async updateSubscribeTo(
+        config: ModelRequestConfig | ModelRequestConfig[],
+        hideWhen?: HidingConfig
+    ): Promise<void> {
+        if (Array.isArray(config)) {
+            config.forEach(c => this.updateSubscribeTo(c, hideWhen));
+        } else {
             const subscriptionNameIndex = this._openedSubscriptions.findIndex(name => name === config.subscriptionName);
             if (subscriptionNameIndex > -1) {
                 this._openedSubscriptions.splice(subscriptionNameIndex, 1);
@@ -124,27 +139,35 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         await this.modelRequestService.subscribeTo({ ...request, hideWhen: observable });
     }
 
-    private createHideWhenObservable({
-        hideWhen,
-        hideWhenDestroyed,
-        hideWhenUnauthenticated
-    }: HidingConfig): Observable<boolean> | null {
-        let observable: Observable<boolean> | null = null;
+    private createHideWhenObservable(
+        { hideWhen, hideWhenDestroyed, hideWhenMeetingChanged, hideWhenUnauthenticated }: HidingConfig,
+        ...additional: Observable<boolean>[]
+    ): Observable<boolean> | null {
+        let observables: Observable<boolean>[] | null = null;
+        if (additional && additional.length) {
+            observables.push(...additional);
+        }
+
         if (hideWhen) {
-            observable = hideWhen;
-        } else if (hideWhenDestroyed) {
-            observable = this._destroyed.asObservable();
+            observables.push(hideWhen);
         }
+
+        if (hideWhenDestroyed) {
+            observables.push(this._destroyed.asObservable());
+        }
+
+        if (hideWhenMeetingChanged) {
+            observables.push(this.hasMeetingIdChangedObservable());
+        }
+
         if (hideWhenUnauthenticated) {
-            if (observable) {
-                const tmp = observable;
-                observable = combineLatest([tmp, this.openslidesRouter.beforeSignoutObservable]).pipe(
-                    map(([source1, source2]) => source1 || source2)
-                );
-            } else {
-                observable = this.openslidesRouter.beforeSignoutObservable;
-            }
+            observables.push(this.openslidesRouter.beforeSignoutObservable);
         }
-        return observable;
+
+        if (observables.length) {
+            return combineLatest(observables).pipe(map(values => values.some(source => source)));
+        }
+
+        return null;
     }
 }
