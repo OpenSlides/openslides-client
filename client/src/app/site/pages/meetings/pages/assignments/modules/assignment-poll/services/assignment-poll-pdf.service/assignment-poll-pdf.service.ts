@@ -105,7 +105,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
                         this.getTitle(data.title),
                         this.getSubtitle(data.subtitle),
                         this.createPollHint(data.poll),
-                        this.createCandidateFields(data.poll)
+                        this.createOptionFields(data.poll)
                     ],
                     margin: [0, 0, 0, 0]
                 }
@@ -113,14 +113,19 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         };
     }
 
-    private createCandidateFields(poll: ViewPoll): object {
-        const candidates = poll.options.sort((a, b) => a.weight - b.weight);
-        const resultObject = candidates.map(cand => {
-            const candidateName = cand.content_object?.full_name;
-            if (candidateName) {
+    private createOptionFields(poll: ViewPoll): object {
+        const options = poll.options.sort((a, b) => a.weight - b.weight);
+        const resultObject = options.map(opt => {
+            let optionName = ``;
+            if (opt.isListOption) {
+                optionName = this.translate.instant(opt.content_object?.getTitle() ?? ``);
+            } else {
+                optionName = opt.content_object?.full_name;
+            }
+            if (optionName) {
                 return poll.pollmethod === PollMethod.Y
-                    ? this.createBallotOption(candidateName)
-                    : this.createYNBallotEntry(candidateName, poll.pollmethod);
+                    ? this.createBallotOption(optionName)
+                    : this.createYNBallotEntry(optionName, poll.pollmethod);
             } else {
                 throw new Error(this.translate.instant(`This ballot contains deleted users.`));
             }

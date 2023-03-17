@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
+import { PollContentObject } from 'src/app/domain/models/poll';
 import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -16,7 +16,7 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`]
 })
-export class PollCollectionComponent<C extends BaseViewModel> extends BaseComponent implements OnInit {
+export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit {
     public polls: ViewPoll[] = [];
 
     public lastPublishedPoll: ViewPoll | null = null;

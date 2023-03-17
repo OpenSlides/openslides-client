@@ -12,6 +12,7 @@ import { ViewMotion, ViewMotionSubmitter } from '../pages/motions';
 import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
 
@@ -293,6 +294,7 @@ interface IUserRelations {
     committees: ViewCommittee[];
     meetings: ViewMeeting[];
     organization: ViewOrganization;
+    poll_candidates: ViewPollCandidate[];
     committee_management_levels: (arg?: CML) => ViewCommittee[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;

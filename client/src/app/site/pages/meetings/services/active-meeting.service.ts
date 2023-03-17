@@ -50,6 +50,7 @@ const getMeetingDetailSubscriptionConfig = (id: Id, getNextMeetingIdObservable: 
             `chat_group_ids`,
             `chat_message_ids`,
             { idField: `poll_ids`, follow: [`content_object_id`] },
+            { idField: `poll_candidate_list_ids`, follow: [`poll_candidate_ids`] },
             `group_ids`,
             { idField: `option_ids`, follow: [`content_object_id`], additionalFields: [`text`] },
             `vote_ids`,

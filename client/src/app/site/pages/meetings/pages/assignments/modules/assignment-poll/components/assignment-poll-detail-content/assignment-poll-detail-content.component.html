@@ -27,7 +27,8 @@
                     <span *ngIf="row.class === 'user'">{{ i + 1 }}.</span>
                 </td>
                 <td class="voting-option">
-                    <div>
+                    <ng-container *ngTemplateOutlet="showListForRow; context: { row: row }"></ng-container>
+                    <div *ngIf="row.class !== 'list'">
                         <span class="candidate-name">
                             {{ row.votingOption | pollKeyVerbose | translate }}
                         </span>
@@ -43,10 +44,10 @@
                             <span *ngIf="vote.showPercent">
                                 {{ getVoteAmount(vote, row) | pollPercentBase: poll:row }}
                             </span>
-                            <span *ngIf="row.class === 'user'">
+                            <span *ngIf="['user', 'list'].includes(row.class)">
                                 {{ getVoteAmount(vote, row) | pollParseNumber }}
                             </span>
-                            <span *ngIf="row.class !== 'user'">
+                            <span *ngIf="!['user', 'list'].includes(row.class)">
                                 {{ vote.amount | pollParseNumber }}
                             </span>
                         </span>
@@ -72,7 +73,7 @@
 
     <!-- Table with Chart -->
     <div *ngIf="hasResults && canSeeResults && shouldShowChart" class="result-wrapper">
-        <h3 class="result-title">
+        <h3 class="result-title" *ngIf="tableData[0].class === 'user'">
             <span class="candidate-name">
                 {{ tableData[0].votingOption | pollKeyVerbose | translate }}
             </span>
@@ -80,6 +81,9 @@
             <span class="user-subtitle" *ngIf="tableData[0].votingOptionSubtitle">
                 ({{ tableData[0].votingOptionSubtitle }})
             </span>
+        </h3>
+        <h3 class="result-title" *ngIf="tableData[0].class === 'list'">
+            {{ tableData[0].votingOption | translate }}
         </h3>
 
         <ng-container *ngIf="hasResults && canSeeResults">
@@ -108,3 +112,28 @@
         </i>
     </div>
 </div>
+
+<ng-template #showListForRow let-row="row">
+    <div class="result-title" *ngIf="row.class === 'list'">
+        <ul *ngIf="!enumerateCandidates">
+            <li *ngFor="let date of row.votingOptions">
+                <span class="candidate-name">
+                    {{ date.title }}
+                </span>
+                <span class="user-subtitle" *ngIf="date.subtitle">
+                    ({{ date.subtitle }})
+                </span>
+            </li>
+        </ul>
+        <ol *ngIf="enumerateCandidates">
+            <li *ngFor="let date of row.votingOptions">
+                <span class="candidate-name">
+                    {{ date.title }}
+                </span>
+                <span class="user-subtitle" *ngIf="date.subtitle">
+                    ({{ date.subtitle }})
+                </span>
+            </li>
+        </ol>
+    </div>
+</ng-template>

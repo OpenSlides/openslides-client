@@ -27,6 +27,8 @@ import {
 } from '../pages/motions';
 import { ViewGroup } from '../pages/participants';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
+import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
 import { ViewUser } from './view-user';
 
@@ -136,6 +138,8 @@ interface IMeetingRelations {
     motion_statute_paragraphs: ViewMotionStatuteParagraph[];
     forwarded_motions: ViewMotion[];
     polls: ViewPoll[];
+    poll_candidates: ViewPollCandidate[];
+    poll_candidate_lists: ViewPollCandidateList[];
     options: ViewOption[];
     votes: ViewVote[];
     assignments: ViewAssignment[];

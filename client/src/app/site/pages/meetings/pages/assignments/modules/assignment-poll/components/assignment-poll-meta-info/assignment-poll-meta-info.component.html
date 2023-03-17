@@ -1,26 +1,39 @@
 <ng-container *ngIf="poll">
     <!-- Candidates -->
     <small class="meta-info-left subtitle" *ngIf="poll.options?.length && showCandidates">
-        <div>
-            {{ 'Candidates' | translate }}:
-            <ol *ngIf="enumerateCandidates">
-                <li *ngFor="let option of poll.options">{{ getOptionTitle(option) | translate }}</li>
-            </ol>
-            <ul *ngIf="!enumerateCandidates">
-                <li *ngFor="let option of poll.options">{{ getOptionTitle(option) | translate }}</li>
-            </ul>
-        </div>
-        <div *ngIf="hasGlobalOptionEnabled">
-            {{ 'Options' | translate }}:
-            <ul>
-                <li *ngIf="poll.global_yes">{{ pollPropertyVerbose.global_yes | translate }}</li>
-                <li *ngIf="poll.global_no">{{ pollPropertyVerbose.global_no | translate }}</li>
-                <li *ngIf="poll.global_abstain">{{ pollPropertyVerbose.global_abstain | translate }}</li>
-            </ul>
-        </div>
+        <os-expandable-content-wrapper [disableExpandControl]="!shortenList">
+            <div *ngIf="!poll.isListPoll">
+                {{ poll.options.length ? poll.options.length + ' ' : '' }}{{ 'Candidates' | translate }}:
+                <ol *ngIf="enumerateCandidates">
+                    <li *ngFor="let option of poll.options">{{ getOptionTitle(option) | translate }}</li>
+                </ol>
+                <ul *ngIf="!enumerateCandidates">
+                    <li *ngFor="let option of poll.options">{{ getOptionTitle(option) | translate }}</li>
+                </ul>
+            </div>
+            <div *ngIf="poll.isListPoll && poll.options[0]?.contentTitlesAsSortedArray.length">
+                {{ 'Nomination list' | translate }} ({{ poll.options[0]?.contentTitlesAsSortedArray.length }} {{ 'Candidates' | translate }}):
+                <ol *ngIf="enumerateCandidates">
+                    <li *ngFor="let title of poll.options[0]?.contentTitlesAsSortedArray">
+                        {{ title.title }}{{ title.subtitle ? ' (' + title.subtitle + ')' : ''}}</li>
+                </ol>
+                <ul *ngIf="!enumerateCandidates">
+                    <li *ngFor="let title of poll.options[0]?.contentTitlesAsSortedArray">
+                        {{ title.title }}{{ title.subtitle ? ' (' + title.subtitle + ')' : ''}}</li>
+                </ul>
+            </div>
+            <div *ngIf="hasGlobalOptionEnabled">
+                {{ 'Options' | translate }}:
+                <ul>
+                    <li *ngIf="poll.global_yes">{{ pollPropertyVerbose.global_yes | translate }}</li>
+                    <li *ngIf="poll.global_no">{{ pollPropertyVerbose.global_no | translate }}</li>
+                    <li *ngIf="poll.global_abstain">{{ pollPropertyVerbose.global_abstain | translate }}</li>
+                </ul>
+            </div>
+        </os-expandable-content-wrapper>
     </small>
 
-    <div class="meta-info-right subtitle">
+    <div class="meta-info-right subtitle" *ngIf="showStats">
         <!-- Groups who can vote -->
         <small *ngIf="poll.entitled_groups && poll.type && poll.type !== 'analog'">
             {{ 'Entitled to vote' | translate }}:

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { PollContentObject } from 'src/app/domain/models/poll';
 
 import { BasePollDetailComponent, BaseVoteData } from '../../base/base-poll-detail.component';
 import { PollService } from '../../services/poll.service';
@@ -31,7 +31,7 @@ export class VotesTableComponent {
     }
 
     @Input()
-    public parent: BasePollDetailComponent<BaseViewModel, PollService>;
+    public parent: BasePollDetailComponent<PollContentObject, PollService>;
 
     @Input()
     public templateType: string = ``;
