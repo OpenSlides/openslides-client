@@ -7,12 +7,6 @@ import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { NullablePartial } from 'src/app/infrastructure/utils';
 import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import {
-    DEFAULT_FIELDSET,
-    Fieldsets,
-    ROUTING_FIELDSET,
-    TypedFieldset
-} from 'src/app/site/services/model-request-builder';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Motion } from '../../../../domain/models/motions/motion';

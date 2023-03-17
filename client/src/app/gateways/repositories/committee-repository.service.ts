@@ -6,7 +6,7 @@ import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Identifiable } from '../../domain/interfaces';
 import { Committee } from '../../domain/models/comittees/committee';
 import { ViewCommittee } from '../../site/pages/organization/pages/committees';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
+import { Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
 import { OperatorService } from '../../site/services/operator.service';
 import { Action } from '../actions';
 import { BaseRepository } from './base-repository';

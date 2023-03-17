@@ -4,7 +4,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Theme } from 'src/app/domain/models/theme/theme';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { ViewTheme } from 'src/app/site/pages/organization/pages/designs';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { ThemeAction } from './theme.action';

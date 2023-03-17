@@ -5,7 +5,6 @@ import { Action } from 'src/app/gateways/actions';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { ViewAssignmentCandidate } from 'src/app/site/pages/meetings/pages/assignments';
 import { UnknownUserLabel } from 'src/app/site/pages/meetings/pages/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { AssignmentCandidate } from '../../../../domain/models/assignments/assignment-candidate';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

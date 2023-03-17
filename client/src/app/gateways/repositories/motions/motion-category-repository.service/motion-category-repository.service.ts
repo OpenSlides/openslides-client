@@ -4,7 +4,7 @@ import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
 import { Action } from 'src/app/gateways/actions';
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

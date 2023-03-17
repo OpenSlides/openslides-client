@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { createAgendaItem } from '../agenda';
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';

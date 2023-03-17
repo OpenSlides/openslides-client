@@ -5,7 +5,6 @@ import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-s
 import { Speaker } from 'src/app/domain/models/speakers/speaker';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
 import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

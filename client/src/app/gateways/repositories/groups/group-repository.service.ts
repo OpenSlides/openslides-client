@@ -3,7 +3,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { GroupAction } from './group.action';

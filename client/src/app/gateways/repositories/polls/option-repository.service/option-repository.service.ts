@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Option } from 'src/app/domain/models/poll/option';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

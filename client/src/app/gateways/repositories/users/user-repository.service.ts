@@ -11,7 +11,7 @@ import { User, UserSortProperty } from '../../../domain/models/users/user';
 import { PreventedInDemoError } from '../../../infrastructure/errors';
 import { toDecimal } from '../../../infrastructure/utils';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
+import { Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
 import { Action } from '../../actions';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 

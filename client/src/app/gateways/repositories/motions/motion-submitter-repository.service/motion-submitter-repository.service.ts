@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MotionSubmitter } from 'src/app/domain/models/motions/motion-submitter';
 import { Action } from 'src/app/gateways/actions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { ViewMotionSubmitter } from '../../../../site/pages/meetings/pages/motions/modules/submitters/view-models/view-motion-submitter';

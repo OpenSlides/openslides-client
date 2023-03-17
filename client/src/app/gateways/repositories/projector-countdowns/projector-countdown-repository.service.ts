@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
 import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { ServerTimePresenterService } from '../../presenter/server-time-presenter.service';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';

@@ -3,7 +3,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';

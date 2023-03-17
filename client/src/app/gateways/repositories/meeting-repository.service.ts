@@ -9,7 +9,7 @@ import { Projection } from '../../domain/models/projector/projection';
 import { MeetingSettingsDefinitionService } from '../../site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
-import { DEFAULT_FIELDSET, Fieldsets } from '../../site/services/model-request-builder';
+import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { ActionRequest } from '../actions/action-utils';
 import { BaseRepository } from './base-repository';

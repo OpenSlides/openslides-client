@@ -5,7 +5,6 @@ import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem, ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Action } from '../../actions';

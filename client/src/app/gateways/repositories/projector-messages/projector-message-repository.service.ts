@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ProjectorMessage } from 'src/app/domain/models/projector/projector-message';
 import { ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
