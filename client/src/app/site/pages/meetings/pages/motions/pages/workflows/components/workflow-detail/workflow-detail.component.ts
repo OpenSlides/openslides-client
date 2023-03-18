@@ -223,7 +223,11 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Opens a dialog to rename the workflow
      */
     public onEditWorkflowButton(): void {
-        this.openEditDialog(this.workflow.name, this.translate.instant(`Edit name`), this.translate.instant(`Please enter a new workflow name:`)).subscribe(result => {
+        this.openEditDialog(
+            this.workflow.name,
+            this.translate.instant(`Edit name`),
+            this.translate.instant(`Please enter a new workflow name:`)
+        ).subscribe(result => {
             if (result && result.action === `update`) {
                 this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow).resolve());
             }
