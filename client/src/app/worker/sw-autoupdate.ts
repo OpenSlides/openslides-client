@@ -25,7 +25,13 @@ let openTimeouts = {
     other: null
 };
 
-if (!environment.production) {
+let debugCommandsRegistered = false;
+function registerDebugCommands() {
+    if (debugCommandsRegistered) {
+        return;
+    }
+
+    debugCommandsRegistered = true;
     (<any>self).printAutoupdateState = function () {
         console.log(`AU POOL INFO`);
         console.log(`Currently open:`, autoupdatePool.activeStreams.length);
@@ -35,7 +41,7 @@ if (!environment.production) {
             console.log(`Current data:`, stream.currentData);
             console.log(`Current data size:`, JSON.stringify(stream.currentData).length);
             console.log(`Current data keys:`, Object.keys(stream.currentData).length);
-            console.log(`Query params:`, stream.queryParams);
+            console.log(`Query params:`, stream.queryParams.toString());
             console.log(`Failed connects:`, stream.failedConnects);
             console.groupCollapsed(`Subscriptions`);
             for (let subscr of stream.subscriptions) {
@@ -54,6 +60,10 @@ if (!environment.production) {
         console.log(`subscriptionQueue\n`, subscriptionQueues);
         console.log(`Pool\n`, autoupdatePool);
         console.groupEnd();
+    };
+
+    (<any>self).disableAutoupdateCompression = function () {
+        autoupdatePool.disableCompression();
     };
 }
 
@@ -119,6 +129,10 @@ function updateOnlineStatus(): void {
     autoupdatePool.updateOnlineStatus(currentlyOnline);
 }
 
+if (!environment.production) {
+    registerDebugCommands();
+}
+
 export function addAutoupdateListener(context: any): void {
     context.addEventListener(`message`, e => {
         const receiver = e.data?.receiver;
@@ -147,6 +161,9 @@ export function addAutoupdateListener(context: any): void {
                 break;
             case `reconnect-inactive`:
                 autoupdatePool.reconnectAll(true);
+                break;
+            case `enable-debug`:
+                registerDebugCommands();
                 break;
         }
     });
