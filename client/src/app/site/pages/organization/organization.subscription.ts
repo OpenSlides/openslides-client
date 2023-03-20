@@ -3,6 +3,8 @@ import { MEETING_LIST_SUBSCRIPTION } from 'src/app/site/pages/meetings/view-mode
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
+import { DEFAULT_FIELDSET } from '../../services/model-request-builder';
+
 export const getMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
@@ -35,8 +37,11 @@ export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = ()
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
         fieldset: `settings`,
-        additionalFields: [`committee_ids`, `organization_tag_ids`, `theme_ids`, `theme_id`],
-        follow: [{ idField: `mediafile_ids`, fieldset: `organizationDetail` }]
+        additionalFields: [`committee_ids`, `organization_tag_ids`],
+        follow: [
+            { idField: `mediafile_ids`, fieldset: `organizationDetail` },
+            { idField: `theme_id`, fieldset: DEFAULT_FIELDSET }
+        ]
     },
     subscriptionName: ORGANIZATION_SUBSCRIPTION,
     isDelayed: false

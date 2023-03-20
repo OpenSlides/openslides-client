@@ -56,7 +56,6 @@ export class OrganizationService {
         if (!this._hasInitiated) {
             this._hasInitiated = true;
             this.modelRequestService.subscribeTo(getOrganizationSubscriptionConfig());
-            this.modelRequestService.subscribeTo(getDesignListSubscriptionConfig());
             this.repo
                 .getViewModelObservable(ORGANIZATION_ID)
                 .subscribe(organization => this.organizationSubject.next(organization));
