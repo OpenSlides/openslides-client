@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { pollModelRequest } from '../polls/polls.subscription';
@@ -35,7 +35,7 @@ export const agendaItemFollow = [
     `attachment_ids`
 ];
 
-export const getAgendaListSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
+export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
@@ -53,6 +53,5 @@ export const getAgendaListSubscriptionConfig = (id: Id, hasMeetingIdChangedObser
             `tag_ids`
         ]
     },
-    subscriptionName: AGENDA_LIST_ITEM_SUBSCRIPTION,
-    hideWhen: hasMeetingIdChangedObservable()
+    subscriptionName: AGENDA_LIST_ITEM_SUBSCRIPTION
 });

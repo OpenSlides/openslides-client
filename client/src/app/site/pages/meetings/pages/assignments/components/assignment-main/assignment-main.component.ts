@@ -11,7 +11,7 @@ import { getAssignmentSubscriptionConfig } from '../../assignments.subscription'
 export class AssignmentMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getAssignmentSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(getAssignmentSubscriptionConfig(id), { hideWhenMeetingChanged: true });
         }
     }
 }

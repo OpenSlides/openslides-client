@@ -26,5 +26,19 @@ export class Projection extends BaseModel<Projection> {
     public constructor(input?: any) {
         super(Projection.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Projection)[] = [
+        `id`,
+        `options`,
+        `stable`,
+        `weight`,
+        `type`,
+        `content`,
+        `current_projector_id`,
+        `preview_projector_id`,
+        `history_projector_id`,
+        `content_object_id`,
+        `meeting_id`
+    ];
 }
 export interface Projection extends HasMeetingId {}

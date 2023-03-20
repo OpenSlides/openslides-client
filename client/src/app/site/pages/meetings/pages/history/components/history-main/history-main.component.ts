@@ -14,11 +14,9 @@ import { getParticipantMinimalSubscriptionConfig } from '../../../participants/p
 export class HistoryMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: Id | null): void {
         if (id) {
-            this.subscribeTo(
-                getMotionListMinimalSubscriptionConfig(id),
-                getParticipantMinimalSubscriptionConfig(id),
-                getAssignmentListMinimalSubscriptionConfig(id)
-            );
+            this.subscribeTo(getMotionListMinimalSubscriptionConfig(id), { hideWhenDestroyed: true });
+            this.subscribeTo(getParticipantMinimalSubscriptionConfig(id), { hideWhenDestroyed: true });
+            this.subscribeTo(getAssignmentListMinimalSubscriptionConfig(id), { hideWhenDestroyed: true });
         }
     }
 }

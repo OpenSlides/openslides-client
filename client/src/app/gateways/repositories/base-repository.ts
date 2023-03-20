@@ -302,7 +302,16 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     public getFieldsets(): Fieldsets<any> {
-        return {};
+        if (!this.baseModelCtor?.REQUESTABLE_FIELDS) {
+            return {};
+        }
+
+        return {
+            detail: this.baseModelCtor.REQUESTABLE_FIELDS,
+            routing: this.baseModelCtor.REQUESTABLE_FIELDS.includes(`sequential_number`)
+                ? [`meeting_id`, `sequential_number`]
+                : undefined
+        };
     }
 
     /**

@@ -175,5 +175,49 @@ export class User extends BaseDecimalModel<User> {
     protected getDecimalFields(): (keyof User)[] {
         return [`vote_weight_$`, `default_vote_weight`];
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
+        `id`,
+        `username`,
+        `pronoun`,
+        `title`,
+        `first_name`,
+        `last_name`,
+        `is_active`,
+        `is_physical_person`,
+        `default_password`,
+        `can_change_own_password`,
+        `gender`,
+        `email`,
+        `default_number`,
+        `default_structure_level`,
+        `default_vote_weight`,
+        `last_email_send`,
+        `is_demo_user`,
+        `last_login`,
+        `organization_management_level`,
+        `is_present_in_meeting_ids`,
+        `committee_ids`,
+        `committee_$_management_level`,
+        `comment_$`,
+        `number_$`,
+        `structure_level_$`,
+        `about_me_$`,
+        `vote_weight_$`,
+        `group_$_ids`,
+        `speaker_$_ids`,
+        `personal_note_$_ids`,
+        `supported_motion_$_ids`,
+        `submitted_motion_$_ids`,
+        `poll_voted_$_ids`,
+        `option_$_ids`,
+        `vote_$_ids`,
+        `assignment_candidate_$_ids`,
+        `vote_delegated_$_to_id`,
+        `vote_delegations_$_from_ids`,
+        `chat_message_$_ids`,
+        `meeting_ids`,
+        `organization_id`
+    ];
 }
 export interface User extends HasProjectionIds {}

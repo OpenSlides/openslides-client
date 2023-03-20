@@ -12,7 +12,7 @@ export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`id`] !== oldParams[`id`]) {
             const id = +params[`id`];
-            this.subscribeTo(getAccountDetailSubscriptionConfig(id));
+            this.subscribeTo(getAccountDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
         }
     }
 }

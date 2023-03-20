@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import {
-    BaseModelRequestHandlerComponent,
-    ModelRequestConfig
-} from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/organization.subscription';
 
 import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.subscription';
@@ -16,14 +13,14 @@ import { getCommitteeDetailSubscriptionConfig } from '../../../../committees.sub
 export class CommitteeDetailComponent extends BaseModelRequestHandlerComponent {
     private committeeId: Id | null = null;
 
-    protected override onCreateModelRequests(): void | ModelRequestConfig[] {
-        return [getMeetingListSubscriptionConfig(() => this.getNextMeetingIdObservable())];
+    protected override onShouldCreateModelRequests(): void {
+        this.subscribeTo(getMeetingListSubscriptionConfig(), { hideWhenMeetingChanged: true });
     }
 
     protected override onParamsChanged(params: any, oldParams: any): void {
         if (params[`committeeId`] !== oldParams[`committeeId`]) {
             this.committeeId = +params[`committeeId`] || null;
-            this.subscribeTo(getCommitteeDetailSubscriptionConfig(this.committeeId));
+            this.subscribeTo(getCommitteeDetailSubscriptionConfig(this.committeeId), { hideWhenDestroyed: true });
         }
     }
 }

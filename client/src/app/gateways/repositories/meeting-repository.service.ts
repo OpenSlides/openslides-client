@@ -9,7 +9,7 @@ import { Projection } from '../../domain/models/projector/projection';
 import { MeetingSettingsDefinitionService } from '../../site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
-import { DEFAULT_FIELDSET, Fieldsets } from '../../site/services/model-request-builder';
+import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { ActionRequest } from '../actions/action-utils';
 import { BaseRepository } from './base-repository';
@@ -69,13 +69,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `committee_id`,
             `group_ids`
         ]);
-        const detailFields: TypedFieldset<Meeting> = sharedFields.concat([
-            `welcome_title`,
-            `welcome_text`,
-            `enable_anonymous`,
-            { templateField: `logo_$_id` },
-            { templateField: `font_$_id` }
-        ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `is_template`,
             `default_meeting_for_committee_id`,
@@ -86,7 +79,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         const groupFields: TypedFieldset<Meeting> = [`admin_group_id`, `default_group_id`];
 
         return {
-            [DEFAULT_FIELDSET]: detailFields.concat(this.meetingSettingsDefinitionProvider.getSettingsKeys()),
+            ...super.getFieldsets(),
             detailEdit: detailEditFields,
             list: listFields,
             settings: this.meetingSettingsDefinitionProvider.getSettingsKeys(),

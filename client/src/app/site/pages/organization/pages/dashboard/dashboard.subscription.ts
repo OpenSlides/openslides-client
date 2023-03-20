@@ -1,5 +1,4 @@
-import { map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
@@ -19,7 +18,7 @@ export const meetingFields: (keyof Meeting)[] = [
     `organization_tag_ids`
 ];
 
-export const getDashboardMeetingListSubscriptionConfig = (getNextMeetingIdObservable: () => Observable<Id | null>) => ({
+export const getDashboardMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
@@ -38,6 +37,5 @@ export const getDashboardMeetingListSubscriptionConfig = (getNextMeetingIdObserv
             }
         ]
     },
-    subscriptionName: DASHBOARD_MEETING_LIST_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !!id))
+    subscriptionName: DASHBOARD_MEETING_LIST_SUBSCRIPTION
 });

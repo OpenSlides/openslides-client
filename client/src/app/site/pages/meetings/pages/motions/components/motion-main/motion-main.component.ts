@@ -17,10 +17,13 @@ export class MotionMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
             this.subscribeTo(
-                getMotionListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
-                getMotionBlockSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
-                getMotionWorkflowSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()),
-                getMotionsSubmodelSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable())
+                [
+                    getMotionListSubscriptionConfig(id),
+                    getMotionBlockSubscriptionConfig(id),
+                    getMotionWorkflowSubscriptionConfig(id),
+                    getMotionsSubmodelSubscriptionConfig(id)
+                ],
+                { hideWhenMeetingChanged: true }
             );
         }
     }

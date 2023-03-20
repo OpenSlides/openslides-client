@@ -13,5 +13,13 @@ export class MotionSubmitter extends BaseModel<MotionSubmitter> {
     public constructor(input?: any) {
         super(MotionSubmitter.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionSubmitter)[] = [
+        `id`,
+        `weight`,
+        `user_id`,
+        `motion_id`,
+        `meeting_id`
+    ];
 }
 export interface MotionSubmitter extends HasMeetingId {}

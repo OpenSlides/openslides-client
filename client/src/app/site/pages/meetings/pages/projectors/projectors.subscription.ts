@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
@@ -7,10 +7,7 @@ import { ViewProjector } from './view-models';
 
 export const PROJECTOR_LIST_SUBSCRIPTION = `projector_list`;
 
-export const getProjectorListSubscriptionConfig = (
-    id: Id,
-    hasMeetingIdChangedObservable: () => Observable<boolean>
-) => ({
+export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
@@ -31,32 +28,29 @@ export const getProjectorListSubscriptionConfig = (
         ],
         additionalFields: [`reference_projector_id`]
     },
-    subscriptionName: PROJECTOR_LIST_SUBSCRIPTION,
-    hideWhen: hasMeetingIdChangedObservable()
+    subscriptionName: PROJECTOR_LIST_SUBSCRIPTION
 });
 
 export const PROJECTOR_LIST_MINIMAL_SUBSCRIPTION = `projector_list`;
 
-export const getProjectorListMinimalSubscriptionConfig = (id: Id) => ({
+export const getProjectorListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
         follow: [`projector_ids`, `default_projector_$_ids`],
         additionalFields: [`reference_projector_id`]
     },
-    subscriptionName: PROJECTOR_LIST_MINIMAL_SUBSCRIPTION,
-    hideWhenDestroyed: true
+    subscriptionName: PROJECTOR_LIST_MINIMAL_SUBSCRIPTION
 });
 
 export const PROJECTOR_SUBSCRIPTION = `projector_detail`;
 
-export const getProjectorSubscriptionConfig = (id: Id, hasMeetingIdChangedObservable: () => Observable<boolean>) => ({
+export const getProjectorSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
         viewModelCtor: ViewProjector,
         ids: [id],
         fieldset: DEFAULT_FIELDSET,
         follow: [{ idField: `current_projection_ids`, fieldset: `content`, follow: [`content_object_id`] }]
     },
-    subscriptionName: PROJECTOR_SUBSCRIPTION,
-    hideWhen: hasMeetingIdChangedObservable()
+    subscriptionName: PROJECTOR_SUBSCRIPTION
 });

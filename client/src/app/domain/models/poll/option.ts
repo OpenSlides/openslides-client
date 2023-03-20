@@ -23,4 +23,16 @@ export class Option extends BaseDecimalModel<Option> {
     protected getDecimalFields(): (keyof Option)[] {
         return Option.DECIMAL_FIELDS;
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Option)[] = [
+        `id`,
+        `weight`,
+        `text`,
+        `yes`,
+        `no`,
+        `abstain`,
+        `poll_id`,
+        `vote_ids`,
+        `content_object_id`
+    ];
 }

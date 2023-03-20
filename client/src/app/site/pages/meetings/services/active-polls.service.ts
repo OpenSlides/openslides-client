@@ -64,8 +64,9 @@ export class ActivePollsService {
     }
 
     private async refreshAutoupdateSubscription(): Promise<void> {
-        await this.modelRequestService.updateSubscribeTo(
-            getActivePollsSubscriptionConfig(this.pollIds, () => this.activeMeetingIdService.meetingIdObservable)
-        );
+        await this.modelRequestService.updateSubscribeTo({
+            ...getActivePollsSubscriptionConfig(...this.pollIds),
+            hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id))
+        });
     }
 }

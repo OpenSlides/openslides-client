@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    BaseModelRequestHandlerComponent,
-    ModelRequestConfig
-} from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
 import { getDesignListSubscriptionConfig } from '../../../../designs.subscription';
 
@@ -12,7 +9,7 @@ import { getDesignListSubscriptionConfig } from '../../../../designs.subscriptio
     styleUrls: [`./design-main.component.scss`]
 })
 export class DesignMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onCreateModelRequests(): void | ModelRequestConfig[] {
-        return [getDesignListSubscriptionConfig()];
+    protected override onShouldCreateModelRequests(): void {
+        this.subscribeTo(getDesignListSubscriptionConfig());
     }
 }

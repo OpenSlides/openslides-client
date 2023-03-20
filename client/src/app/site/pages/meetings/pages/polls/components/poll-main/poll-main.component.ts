@@ -11,7 +11,7 @@ import { getPollListSubscriptionConfig } from '../../polls.subscription';
 export class PollMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getPollListSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(getPollListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
         }
     }
 }

@@ -39,5 +39,24 @@ export class Group extends BaseModel<Group> {
     public constructor(input?: Partial<Group>) {
         super(Group.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Group)[] = [
+        `id`,
+        `name`,
+        `permissions`,
+        `weight`,
+        `user_ids`,
+        `default_group_for_meeting_id`,
+        `admin_group_for_meeting_id`,
+        `mediafile_access_group_ids`,
+        `mediafile_inherited_access_group_ids`,
+        `read_comment_section_ids`,
+        `write_comment_section_ids`,
+        `read_chat_group_ids`,
+        `write_chat_group_ids`,
+        `used_as_motion_poll_default_id`,
+        `used_as_assignment_poll_default_id`,
+        `meeting_id`
+    ];
 }
 export interface Group extends HasMeetingId {}

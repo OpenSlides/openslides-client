@@ -25,6 +25,17 @@ export class Vote extends BaseModel<Vote> {
     protected getDecimalFields(): string[] {
         return [`weight`];
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Vote)[] = [
+        `id`,
+        `weight`,
+        `value`,
+        `user_token`,
+        `option_id`,
+        `user_id`,
+        `delegated_user_id`,
+        `meeting_id`
+    ];
 }
 
 export interface Vote extends HasMeetingId {}

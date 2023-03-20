@@ -12,7 +12,7 @@ import { getCommitteeMeetingDetailSubscriptionConfig } from '../../../../../../c
 export class CommitteeDetailMeetingMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: Id | null): void {
         if (id) {
-            this.subscribeTo(getCommitteeMeetingDetailSubscriptionConfig(id));
+            this.subscribeTo(getCommitteeMeetingDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
         }
     }
 }

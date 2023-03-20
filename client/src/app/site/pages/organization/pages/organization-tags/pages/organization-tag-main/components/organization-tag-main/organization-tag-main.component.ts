@@ -12,7 +12,7 @@ import { getOrganizationTagListSubscriptionConfig } from '../../../../organizati
     styleUrls: [`./organization-tag-main.component.scss`]
 })
 export class OrganizationTagMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onCreateModelRequests(): void | ModelRequestConfig[] {
-        return [getOrganizationTagListSubscriptionConfig(() => this.getNextMeetingIdObservable())];
+    protected override onShouldCreateModelRequests(): void | ModelRequestConfig[] {
+        this.subscribeTo(getOrganizationTagListSubscriptionConfig(), { hideWhenMeetingChanged: true });
     }
 }

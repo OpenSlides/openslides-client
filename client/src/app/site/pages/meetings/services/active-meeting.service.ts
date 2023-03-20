@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, first, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, first, firstValueFrom, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
@@ -125,8 +125,9 @@ export class ActiveMeetingService {
     }
 
     private async refreshAutoupdateSubscription(): Promise<void> {
-        await this.modelRequestService.updateSubscribeTo(
-            getActiveMeetingSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable)
-        );
+        await this.modelRequestService.updateSubscribeTo({
+            ...getActiveMeetingSubscriptionConfig(this.meetingId!),
+            hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id))
+        });
     }
 }

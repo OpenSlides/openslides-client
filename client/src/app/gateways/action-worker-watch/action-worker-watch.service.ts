@@ -181,7 +181,7 @@ export class ActionWorkerWatchService {
      */
     private refreshAutoupdateSubscription(oldIds?: number[]): void {
         if (this._currentWorkerIds && this._currentWorkerIds.length) {
-            this.modelRequestService.updateSubscribeTo(getActionWorkerSubscriptionConfig(this._currentWorkerIds));
+            this.modelRequestService.updateSubscribeTo(getActionWorkerSubscriptionConfig(...this._currentWorkerIds));
         } else {
             this.modelRequestService.closeSubscription(ACTION_WORKER_SUBSCRIPTION);
         }

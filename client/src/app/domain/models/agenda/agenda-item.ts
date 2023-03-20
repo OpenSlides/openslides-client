@@ -54,5 +54,24 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public constructor(input?: any) {
         super(AgendaItem.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof AgendaItem)[] = [
+        `id`,
+        `item_number`,
+        `comment`,
+        `closed`,
+        `type`,
+        `duration`,
+        `is_internal`,
+        `is_hidden`,
+        `level`,
+        `weight`,
+        `content_object_id`,
+        `parent_id`,
+        `child_ids`,
+        `tag_ids`,
+        `projection_ids`,
+        `meeting_id`
+    ];
 }
 export interface AgendaItem extends HasMeetingId, HasProjectionIds, HasTagIds {}

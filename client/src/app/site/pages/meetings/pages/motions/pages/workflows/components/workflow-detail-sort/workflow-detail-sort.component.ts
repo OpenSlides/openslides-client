@@ -11,8 +11,7 @@ import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting
 import { ViewMotionState, ViewMotionWorkflow } from '../../../../modules';
 import { MotionStateControllerService } from '../../../../modules/states/services';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
-
-const WORKFLOW_DETAIL_SORT_SUBSCRIPTION_NAME = `workflow_detail_sort`;
+import { getMotionWorkflowDetailSubscriptionConfig } from '../../../../motions.subscription';
 
 @Component({
     selector: `os-workflow-detail-sort`,
@@ -99,18 +98,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     }
 
     private initWorkflowSubscription(): void {
-        this.updateSubscribeTo({
-            modelRequest: {
-                ids: [this._workflowId],
-                viewModelCtor: ViewMotionWorkflow,
-                follow: [
-                    {
-                        idField: `state_ids`
-                    }
-                ],
-                fieldset: ``
-            },
-            subscriptionName: WORKFLOW_DETAIL_SORT_SUBSCRIPTION_NAME,
+        this.updateSubscribeTo(getMotionWorkflowDetailSubscriptionConfig(this._workflowId), {
             hideWhenDestroyed: true
         });
     }
