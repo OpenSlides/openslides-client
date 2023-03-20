@@ -25,7 +25,7 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
         super(MotionChangeRecommendation.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof MotionChangeRecommendation)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionChangeRecommendation)[] = [
         `id`,
         `rejected`,
         `internal`,

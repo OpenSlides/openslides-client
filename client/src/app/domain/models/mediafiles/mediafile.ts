@@ -90,7 +90,7 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Mediafile)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Mediafile)[] = [
         `id`,
         `title`,
         `is_directory`,

@@ -27,7 +27,7 @@ export class Committee extends BaseModel<Committee> {
         return this[`user_$${cml}_management_level` as keyof Committee] as Id[];
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Committee)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Committee)[] = [
         `id`,
         `name`,
         `description`,

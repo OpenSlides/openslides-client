@@ -35,7 +35,7 @@ export class Speaker extends BaseModel<Speaker> {
         super(Speaker.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Speaker)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Speaker)[] = [
         `id`,
         `begin_time`,
         `end_time`,

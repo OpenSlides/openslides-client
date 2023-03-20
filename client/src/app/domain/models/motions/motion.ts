@@ -91,7 +91,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         return ((this as any)[`amendment_paragraph_$${paragraphNumber}`] as string) ?? null;
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Motion)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Motion)[] = [
         `id`,
         `number`,
         `sequential_number`,

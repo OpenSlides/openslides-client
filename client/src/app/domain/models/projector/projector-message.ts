@@ -15,7 +15,7 @@ export class ProjectorMessage extends BaseModel<ProjectorMessage> {
         super(ProjectorMessage.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof ProjectorMessage)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorMessage)[] = [
         `id`,
         `message`,
         `projection_ids`,

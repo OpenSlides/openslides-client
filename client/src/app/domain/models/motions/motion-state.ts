@@ -57,7 +57,7 @@ export class MotionState extends BaseModel<MotionState> {
         super(MotionState.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof MotionState)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionState)[] = [
         `id`,
         `name`,
         `weight`,

@@ -21,7 +21,7 @@ export class MotionCommentSection extends BaseModel<MotionCommentSection> {
         super(MotionCommentSection.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof MotionCommentSection)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionCommentSection)[] = [
         `id`,
         `name`,
         `weight`,

@@ -18,7 +18,7 @@ export class ActionWorker extends BaseModel {
         super(ActionWorker.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof ActionWorker)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ActionWorker)[] = [
         `id`,
         `name`,
         `state`,

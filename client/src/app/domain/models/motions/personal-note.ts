@@ -15,7 +15,7 @@ export class PersonalNote extends BaseModel<PersonalNote> {
         super(PersonalNote.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof PersonalNote)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof PersonalNote)[] = [
         `id`,
         `note`,
         `star`,

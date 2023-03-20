@@ -176,7 +176,7 @@ export class User extends BaseDecimalModel<User> {
         return [`vote_weight_$`, `default_vote_weight`];
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof User)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
         `id`,
         `username`,
         `pronoun`,

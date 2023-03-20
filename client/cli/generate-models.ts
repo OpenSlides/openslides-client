@@ -74,13 +74,13 @@ function snakeToPascal(input: string) {
             }
         }
 
-        let defaultFieldsetProp = classNode.getProperty(`DEFAULT_FIELDSET`);
+        let defaultFieldsetProp = classNode.getProperty(`REQUESTABLE_FIELDS`);
         if (!defaultFieldsetProp) {
             defaultFieldsetProp = classNode.addProperty({
                 isStatic: true,
                 isReadonly: true,
                 scope: Scope.Public,
-                name: `DEFAULT_FIELDSET`,
+                name: `REQUESTABLE_FIELDS`,
                 type: `(keyof ${classNode.getName()})[]`
             });
         }

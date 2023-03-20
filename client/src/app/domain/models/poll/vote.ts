@@ -26,7 +26,7 @@ export class Vote extends BaseModel<Vote> {
         return [`weight`];
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Vote)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Vote)[] = [
         `id`,
         `weight`,
         `value`,

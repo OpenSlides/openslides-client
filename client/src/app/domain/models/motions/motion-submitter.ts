@@ -14,7 +14,7 @@ export class MotionSubmitter extends BaseModel<MotionSubmitter> {
         super(MotionSubmitter.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof MotionSubmitter)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionSubmitter)[] = [
         `id`,
         `weight`,
         `user_id`,

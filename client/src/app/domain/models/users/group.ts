@@ -40,7 +40,7 @@ export class Group extends BaseModel<Group> {
         super(Group.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Group)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Group)[] = [
         `id`,
         `name`,
         `permissions`,

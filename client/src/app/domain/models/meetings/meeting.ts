@@ -275,7 +275,7 @@ export class Meeting extends BaseModel<Meeting> {
         return (this[`default_projector_$${place}_ids` as keyof Meeting] as Id[]) || [];
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Meeting)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Meeting)[] = [
         `id`,
         `welcome_title`,
         `welcome_text`,

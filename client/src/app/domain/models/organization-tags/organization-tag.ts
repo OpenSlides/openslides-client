@@ -18,7 +18,7 @@ export class OrganizationTag extends BaseModel<OrganizationTag> implements HasCo
         super(OrganizationTag.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof OrganizationTag)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof OrganizationTag)[] = [
         `id`,
         `name`,
         `color`,

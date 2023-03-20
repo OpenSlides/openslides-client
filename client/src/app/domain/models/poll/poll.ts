@@ -147,7 +147,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         return Poll.DECIMAL_FIELDS;
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Poll)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Poll)[] = [
         `id`,
         `description`,
         `title`,

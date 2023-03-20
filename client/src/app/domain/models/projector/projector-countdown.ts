@@ -23,7 +23,7 @@ export class ProjectorCountdown extends BaseModel<ProjectorCountdown> {
         super(ProjectorCountdown.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof ProjectorCountdown)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorCountdown)[] = [
         `id`,
         `title`,
         `description`,

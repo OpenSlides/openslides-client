@@ -30,7 +30,7 @@ export class Assignment extends BaseModel<Assignment> {
         super(Assignment.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Assignment)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Assignment)[] = [
         `id`,
         `title`,
         `description`,

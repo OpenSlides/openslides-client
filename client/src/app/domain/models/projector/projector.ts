@@ -70,7 +70,7 @@ export class Projector extends BaseModel<Projector> {
         return (this[`used_as_default_$${projectiondefault}_in_meeting_id` as keyof Projector] as Id) || null;
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof Projector)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Projector)[] = [
         `id`,
         `name`,
         `scale`,

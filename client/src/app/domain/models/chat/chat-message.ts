@@ -17,7 +17,7 @@ export class ChatMessage extends BaseModel<ChatMessage> implements HasMeetingId 
         super(ChatMessage.COLLECTION, input);
     }
 
-    public static readonly DEFAULT_FIELDSET: (keyof ChatMessage)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ChatMessage)[] = [
         `id`,
         `content`,
         `created`,
