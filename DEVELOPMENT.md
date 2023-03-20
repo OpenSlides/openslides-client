@@ -31,27 +31,6 @@ To run angular and npm commands, you can access the docker image directly using:
 
 If your editor likes to have a `node_modules` folder, you might want to copy it from your docker image, or run `npm install` in the clients "client" directory.
 
-## Building your developing tool chain manually
-
-Get the code:
-
-`git clone git@github.com:OpenSlides/openslides-client.git` (but you will use your own fork of course)
-
-Change into the client:
-
-`cd openslides-client/client`
-
-Install the npm dependencies:
-
-`npm install`
-
-Run the angular development server:
-
-`npm start`
-
-You should now have a native Angular development server up and running on http://localhost:4200/.
-The app will automatically reload if you change any of the source files.
-
 ## Debugging autoupdate connections
 
 Autoupdate connections are running within a [SharedWorker](https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker) 
