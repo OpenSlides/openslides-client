@@ -12,8 +12,8 @@ export function getActiveMeetingSubscriptionConfig(id: Id) {
             ids: [id],
             fieldset: DEFAULT_FIELDSET,
             follow: [
-                `chat_group_ids`,
-                `chat_message_ids`,
+                { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
+                `chat_message_ids`, // TODO: Remove and count unread messages by chat_group_ids/chat_message_ids
                 {
                     idField: `poll_ids`,
                     follow: [{ idField: `content_object_id`, fieldset: [`title`] }],
@@ -21,7 +21,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id) {
                 },
                 {
                     idField: `group_ids`,
-                    fields: [
+                    fieldset: [
                         `admin_group_for_meeting_id`,
                         `default_group_for_meeting_id`,
                         `name`,
@@ -29,7 +29,6 @@ export function getActiveMeetingSubscriptionConfig(id: Id) {
                         `weight`
                     ]
                 },
-                { idField: `committee_id`, additionalFields: [`name`] },
                 {
                     idField: `projector_ids`,
                     fieldset: [`name`],

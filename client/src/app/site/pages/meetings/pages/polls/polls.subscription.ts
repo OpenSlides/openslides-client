@@ -1,4 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
@@ -12,15 +13,7 @@ export const pollModelRequest = {
             follow: [
                 {
                     idField: `content_object_id`,
-                    fieldset: [
-                        `title`,
-                        `pronoun`,
-                        `first_name`,
-                        `last_name`,
-                        `username`,
-                        { templateField: `number_$` },
-                        { templateField: `structure_level_$` }
-                    ]
+                    ...UserFieldsets.ShortNameSubscription
                 },
                 `vote_ids`
             ],
