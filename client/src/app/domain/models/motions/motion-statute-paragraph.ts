@@ -9,6 +9,7 @@ import { BaseModel } from '../base/base-model';
 export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
     public static COLLECTION = `motion_statute_paragraph`;
 
+    public sequential_number!: number;
     public title!: string;
     public text!: string;
     public weight!: number;
@@ -24,6 +25,7 @@ export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
         `title`,
         `text`,
         `weight`,
+        `sequential_number`,
         `motion_ids`,
         `meeting_id`
     ];
