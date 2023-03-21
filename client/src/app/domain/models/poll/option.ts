@@ -12,6 +12,7 @@ export class Option extends BaseDecimalModel<Option> {
 
     public poll_id!: Id; // (assignment|motion)_poll/option_ids;
     public vote_ids!: Ids; // ((assignment|motion)_vote/option_id)[];
+    public meeting_id!: Id;
 
     public weight!: number;
     public content_object_id!: Fqid;
@@ -33,6 +34,7 @@ export class Option extends BaseDecimalModel<Option> {
         `abstain`,
         `poll_id`,
         `vote_ids`,
-        `content_object_id`
+        `content_object_id`,
+        `meeting_id`
     ];
 }
