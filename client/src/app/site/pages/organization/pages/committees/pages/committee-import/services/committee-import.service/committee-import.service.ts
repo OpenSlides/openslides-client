@@ -19,21 +19,18 @@ import {
 } from 'src/app/domain/models/comittees/committee.constants';
 import { User } from 'src/app/domain/models/users/user';
 import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
-import {
-    SearchUsersByNameOrEmailPresenterScope,
-    SearchUsersByNameOrEmailPresenterService
-} from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
+import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
 import { toBoolean } from 'src/app/infrastructure/utils';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
 import { CsvMapping, ImportConfig, RawImportModel } from 'src/app/infrastructure/utils/import/import-utils';
-import { UserImportHelper, UserSearchService } from 'src/app/infrastructure/utils/import/users';
+import { UserImportHelper, UserNameMap, UserSearchService } from 'src/app/infrastructure/utils/import/users';
 import { BaseImportService } from 'src/app/site/base/base-import.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { UserScope } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../../../../export';
@@ -43,32 +40,15 @@ import { CommitteeImportServiceModule } from '../committee-import-service.module
 const COMMITTEE_CONTEXT_KEY = `mapNameModels`;
 
 class CommitteeUserSearchService implements UserSearchService {
-    public constructor(private readonly presenter: SearchUsersByNameOrEmailPresenterService) {}
+    public constructor(private readonly presenter: SearchUsersPresenterService) {}
 
-    public async getDuplicates(users: Partial<User>[]): Promise<{ [username: string]: Partial<User>[] }> {
-        return await this.presenter.call({
-            searchCriteria: users.map(user => {
-                const username = this.getUsername(user);
-                return { username, email: user.email };
-            }),
-            permissionRelatedId: ORGANIZATION_ID,
-            permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
+    public async getDuplicates(users: Partial<User>[]): Promise<UserNameMap> {
+        const validUsers = users.filter(user => !!user.username);
+        const result = await this.presenter.callForUsers({
+            users,
+            permissionScope: UserScope.ORGANIZATION
         });
-    }
-
-    private getUsername(user: Partial<User>): string | undefined {
-        if (user.username) {
-            return user.username;
-        } else {
-            let username = ``;
-            if (user.first_name) {
-                username += user.first_name;
-            }
-            if (user.last_name) {
-                username += user.last_name;
-            }
-            return !!username ? username : undefined;
-        }
+        return validUsers.mapToObject((user, i) => ({ [user.username!]: result[i] }));
     }
 }
 
@@ -90,7 +70,7 @@ export class CommitteeImportService extends BaseImportService<CommitteeCsvPort> 
         userRepo: UserControllerService,
         meetingRepo: MeetingControllerService,
         operator: OperatorService,
-        presenter: SearchUsersByNameOrEmailPresenterService
+        presenter: SearchUsersPresenterService
     ) {
         super(serviceCollector);
         const userSearchService = new CommitteeUserSearchService(presenter);

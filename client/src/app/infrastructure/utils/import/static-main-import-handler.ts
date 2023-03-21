@@ -6,7 +6,7 @@ import { ImportIdentifiable, RawImportModel } from './import-utils';
 export interface StaticMainImportConfig<ToCreate> extends MainImportHandlerConfig<ToCreate> {
     shouldCreateModelFn?: (model: ImportModel<ToCreate>) => boolean;
     /**
-     * This function can be omitted, if the function `onCreateImportModel` is overriden
+     * This function can be omitted if the function `onCreateImportModel` is overriden
      */
     getDuplicatesFn?: (newEntry: RawImportModel<ToCreate>) => any[] | Promise<any[]>;
 }

@@ -2,11 +2,17 @@ import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { CML, OML } from 'src/app/domain/definitions/organization-permission';
 import { Permission } from 'src/app/domain/definitions/permission';
-import { GetUserScopePresenterService, UserScope } from 'src/app/gateways/presenter';
+import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
+
+export enum UserScope {
+    MEETING = `meeting`,
+    COMMITTEE = `committee`,
+    ORGANIZATION = `organization`
+}
 
 @Injectable({
     providedIn: `root`
