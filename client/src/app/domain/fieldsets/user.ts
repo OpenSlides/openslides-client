@@ -1,7 +1,7 @@
 import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
 export class UserFieldsets {
-    public static readonly ShortNameSubscription: BaseSimplifiedModelRequest = {
+    public static readonly FullNameSubscription: BaseSimplifiedModelRequest = {
         fieldset: [
             `title`,
             `first_name`,

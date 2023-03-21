@@ -6,14 +6,14 @@ import { ViewMeeting } from '../../view-models/view-meeting';
 
 export const pollModelRequest = {
     follow: [
-        { idField: `content_object_id` },
+        { idField: `content_object_id`, fieldset: [`title`, `sequential_number`] },
         { idField: `global_option_id` },
         {
             idField: `option_ids`,
             follow: [
                 {
                     idField: `content_object_id`,
-                    ...UserFieldsets.ShortNameSubscription
+                    ...UserFieldsets.FullNameSubscription
                 },
                 `vote_ids`
             ],

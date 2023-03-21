@@ -16,7 +16,7 @@ export const agendaItemFollow = [
                 follow: [
                     {
                         idField: `user_id`,
-                        ...UserFieldsets.ShortNameSubscription
+                        ...UserFieldsets.FullNameSubscription
                     }
                 ]
             }

@@ -17,7 +17,7 @@ export const SUBMITTER_FOLLOW: Follow = {
     follow: [
         {
             idField: `user_id`,
-            ...UserFieldsets.ShortNameSubscription
+            ...UserFieldsets.FullNameSubscription
         }
     ]
 };
