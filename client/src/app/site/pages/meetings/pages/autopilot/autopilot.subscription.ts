@@ -1,4 +1,5 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -13,13 +14,15 @@ export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: 
         follow: [
             {
                 idField: `reference_projector_id`,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `current_projection_ids`,
-                        fieldset: `content`,
+                        fieldset: [`content`],
                         follow: [
                             {
                                 idField: `content_object_id`,
+                                fieldset: [`title`, ...MEETING_ROUTING_FIELDS],
                                 follow: [...agendaItemFollow]
                             }
                         ]

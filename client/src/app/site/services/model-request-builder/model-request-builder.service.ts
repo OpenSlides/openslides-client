@@ -160,7 +160,7 @@ export class ModelRequestBuilderService {
         const fieldset = modelRequestObject.simplifiedRequest.fieldset || DEFAULT_FIELDSET;
         let fieldsetFields: AdditionalField[];
         if (!modelRequestObject.simplifiedRequest.fieldset) {
-            console.warn(`Non explicit use of default fieldset`, modelRequestObject);
+            console.warn(`Non explicit use of default fieldset`, [modelRequestObject], modelRequestObject.collection);
         }
 
         if (typeof fieldset === `string`) {

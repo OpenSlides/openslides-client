@@ -1,23 +1,25 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
 
-export const pollModelRequest = {
+export const pollModelRequest: BaseSimplifiedModelRequest = {
     follow: [
-        { idField: `content_object_id`, fieldset: [`title`, `sequential_number`, `meeting_id`] },
-        { idField: `global_option_id` },
+        { idField: `content_object_id`, fieldset: [`title`, ...MEETING_ROUTING_FIELDS] },
+        { idField: `global_option_id`, fieldset: FULL_FIELDSET },
         {
             idField: `option_ids`,
+            fieldset: FULL_FIELDSET,
             follow: [
                 {
                     idField: `content_object_id`,
                     ...UserFieldsets.FullNameSubscription
                 },
-                `vote_ids`
-            ],
-            additionalFields: [`text`]
+                { idField: `vote_ids`, fieldset: FULL_FIELDSET }
+            ]
         }
     ]
 };
