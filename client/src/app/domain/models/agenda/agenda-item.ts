@@ -55,7 +55,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
         super(AgendaItem.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof AgendaItem)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof AgendaItem | { templateField: string })[] = [
         `id`,
         `item_number`,
         `comment`,

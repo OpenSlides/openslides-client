@@ -22,7 +22,7 @@ export class MotionBlock extends BaseModel<MotionBlock> {
         super(MotionBlock.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionBlock)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionBlock | { templateField: string })[] = [
         `id`,
         `title`,
         `internal`,

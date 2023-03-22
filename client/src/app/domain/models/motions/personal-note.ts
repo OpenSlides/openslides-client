@@ -15,7 +15,7 @@ export class PersonalNote extends BaseModel<PersonalNote> {
         super(PersonalNote.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PersonalNote)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof PersonalNote | { templateField: string })[] = [
         `id`,
         `note`,
         `star`,

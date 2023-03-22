@@ -25,7 +25,7 @@ export class Option extends BaseDecimalModel<Option> {
         return Option.DECIMAL_FIELDS;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Option)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Option | { templateField: string })[] = [
         `id`,
         `weight`,
         `text`,

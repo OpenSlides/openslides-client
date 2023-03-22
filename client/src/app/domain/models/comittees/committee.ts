@@ -27,14 +27,14 @@ export class Committee extends BaseModel<Committee> {
         return this[`user_$${cml}_management_level` as keyof Committee] as Id[];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Committee)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Committee | { templateField: string })[] = [
         `id`,
         `name`,
         `description`,
         `meeting_ids`,
         `default_meeting_id`,
         `user_ids`,
-        `user_$_management_level`,
+        { templateField: `user_$_management_level` },
         `forward_to_committee_ids`,
         `receive_forwardings_from_committee_ids`,
         `organization_tag_ids`,

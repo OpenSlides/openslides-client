@@ -47,7 +47,7 @@ export class Organization extends BaseModel<Organization> {
         super(Organization.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Organization)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Organization | { templateField: string })[] = [
         `id`,
         `name`,
         `description`,

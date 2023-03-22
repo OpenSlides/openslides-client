@@ -275,7 +275,7 @@ export class Meeting extends BaseModel<Meeting> {
         return (this[`default_projector_$${place}_ids` as keyof Meeting] as Id[]) || [];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Meeting)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Meeting | { templateField: string })[] = [
         `id`,
         `welcome_title`,
         `welcome_text`,
@@ -440,8 +440,8 @@ export class Meeting extends BaseModel<Meeting> {
         `personal_note_ids`,
         `chat_group_ids`,
         `chat_message_ids`,
-        `logo_$_id`,
-        `font_$_id`,
+        { templateField: `logo_$_id` },
+        { templateField: `font_$_id` },
         `committee_id`,
         `default_meeting_for_committee_id`,
         `organization_tag_ids`,
@@ -450,7 +450,7 @@ export class Meeting extends BaseModel<Meeting> {
         `reference_projector_id`,
         `list_of_speakers_countdown_id`,
         `poll_countdown_id`,
-        `default_projector_$_ids`,
+        { templateField: `default_projector_$_ids` },
         `projection_ids`,
         `default_group_id`,
         `admin_group_id`

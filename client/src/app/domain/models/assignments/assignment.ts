@@ -30,7 +30,7 @@ export class Assignment extends BaseModel<Assignment> {
         super(Assignment.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Assignment)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Assignment | { templateField: string })[] = [
         `id`,
         `title`,
         `description`,
