@@ -111,7 +111,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
                 this._openedSubscriptions.splice(subscriptionNameIndex, 1);
             }
             this.modelRequestService.closeSubscription(config.subscriptionName);
-            this.subscribeTo(config);
+            this.subscribeTo(config, hideWhen);
         }
     }
 

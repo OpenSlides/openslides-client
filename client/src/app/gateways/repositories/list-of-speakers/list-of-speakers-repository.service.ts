@@ -25,7 +25,7 @@ export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepositor
         this.translate.instant(plural ? `Lists of speakers` : `List of speakers`);
 
     public override getTitle = (viewListOfSpeakers: ViewListOfSpeakers) => {
-        if (viewListOfSpeakers.content_object) {
+        if (viewListOfSpeakers?.content_object) {
             return viewListOfSpeakers.content_object.getListOfSpeakersTitle();
         }
         return ``;

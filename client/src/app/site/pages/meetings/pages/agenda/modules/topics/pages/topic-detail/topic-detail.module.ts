@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { AttachmentControlModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/attachment-control';
@@ -20,10 +21,11 @@ import { PipesModule } from 'src/app/ui/pipes';
 import { TopicPollModule } from '../../modules/topic-poll/topic-poll.module';
 import { TopicCommonServiceModule } from '../../services/topic-common-service.module';
 import { TopicDetailComponent } from './components/topic-detail/topic-detail.component';
+import { TopicDetailMainComponent } from './components/topic-detail-main/topic-detail-main.component';
 import { TopicDetailRoutingModule } from './topic-detail-routing.module';
 
 @NgModule({
-    declarations: [TopicDetailComponent],
+    declarations: [TopicDetailComponent, TopicDetailMainComponent],
     imports: [
         CommonModule,
         TopicDetailRoutingModule,
@@ -44,7 +46,8 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         MatIconModule,
         MatListModule,
         MatFormFieldModule,
-        TopicPollModule
+        TopicPollModule,
+        RouterModule
     ]
 })
 export class TopicDetailModule {}

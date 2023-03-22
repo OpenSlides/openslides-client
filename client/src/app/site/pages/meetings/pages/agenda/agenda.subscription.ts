@@ -6,6 +6,7 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { FollowList } from 'src/app/site/services/model-request-builder';
 
 import { pollModelRequest } from '../polls/polls.subscription';
+import { ViewListOfSpeakers, ViewTopic } from './modules';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 
@@ -39,16 +40,79 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
         follow: [
             {
                 idField: `agenda_item_ids`,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `content_object_id`,
-                        follow: [...agendaItemFollow, `attachment_ids`]
+                        fieldset: [`title`, ...MEETING_ROUTING_FIELDS],
+                        follow: [
+                            {
+                                idField: `list_of_speakers_id`,
+                                fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+                                follow: [
+                                    {
+                                        idField: `speaker_ids`,
+                                        fieldset: [`begin_time`, `end_time`]
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             },
-
-            `tag_ids`
+            { idField: `tag_ids`, fieldset: [`name`, `meeting_id`] }
         ]
     },
     subscriptionName: AGENDA_LIST_ITEM_SUBSCRIPTION
+});
+
+export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
+
+export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewTopic,
+        ids: [id],
+        fieldset: FULL_FIELDSET,
+        follow: [
+            `attachment_ids`,
+            {
+                idField: `poll_ids`,
+                ...pollModelRequest
+            },
+            {
+                idField: `list_of_speakers_id`,
+                fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+                follow: [
+                    {
+                        idField: `speaker_ids`,
+                        fieldset: [`begin_time`, `end_time`]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: TOPIC_ITEM_SUBSCRIPTION
+});
+
+export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
+
+export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewListOfSpeakers,
+        ids: [id],
+        fieldset: FULL_FIELDSET,
+        follow: [
+            {
+                idField: `speaker_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `user_id`,
+                        ...UserFieldsets.FullNameSubscription
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: LIST_OF_SPEAKERS_SUBSCRIPTION
 });
