@@ -32,7 +32,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public optionValues: any = {};
     public options!: SlideOptions;
     private _projectorSubscription: string;
-    private _subscriptions: Subscription[];
+    private _subscriptions: Subscription[] = [];
 
     public constructor(
         public dialogRef: MatDialogRef<ProjectionDialogComponent, ProjectionDialogReturnType>,
