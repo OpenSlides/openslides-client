@@ -1,18 +1,22 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { FollowList } from 'src/app/site/services/model-request-builder';
 
 import { pollModelRequest } from '../polls/polls.subscription';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 
-export const agendaItemFollow = [
+export const agendaItemFollow: FollowList<any> = [
     {
         idField: `list_of_speakers_id`,
+        fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
         follow: [
             {
                 idField: `speaker_ids`,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `user_id`,
@@ -25,8 +29,7 @@ export const agendaItemFollow = [
     {
         idField: `poll_ids`,
         ...pollModelRequest
-    },
-    `attachment_ids`
+    }
 ];
 
 export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
@@ -39,7 +42,7 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                 follow: [
                     {
                         idField: `content_object_id`,
-                        follow: [...agendaItemFollow]
+                        follow: [...agendaItemFollow, `attachment_ids`]
                     }
                 ]
             },

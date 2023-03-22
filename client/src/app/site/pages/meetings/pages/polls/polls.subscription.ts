@@ -7,6 +7,7 @@ import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-
 import { ViewMeeting } from '../../view-models/view-meeting';
 
 export const pollModelRequest: BaseSimplifiedModelRequest = {
+    fieldset: FULL_FIELDSET,
     follow: [
         { idField: `content_object_id`, fieldset: [`title`, ...MEETING_ROUTING_FIELDS] },
         { idField: `global_option_id`, fieldset: FULL_FIELDSET },
