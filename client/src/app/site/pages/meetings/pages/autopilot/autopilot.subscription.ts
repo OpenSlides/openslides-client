@@ -18,7 +18,7 @@ export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: 
                 follow: [
                     {
                         idField: `current_projection_ids`,
-                        fieldset: [`content`],
+                        fieldset: FULL_FIELDSET,
                         follow: [
                             {
                                 idField: `content_object_id`,
