@@ -77,7 +77,7 @@ function openConnection(
             return `requiredMeeting`;
         }
 
-        if (description === `SequentialNumberMappingService:prepare`) {
+        if (description.startsWith(`SequentialNumberMappingService:prepare`)) {
             return `sequentialnumbermapping`;
         }
 
