@@ -16,11 +16,13 @@ const autoupdatePool = new AutoupdateStreamPool({
 
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
+    requiredMeeting: [],
     sequentialnumbermapping: [],
     other: []
 };
 let openTimeouts = {
     required: null,
+    requiredMeeting: [],
     sequentialnumbermapping: null,
     other: null
 };
@@ -64,10 +66,15 @@ function openConnection(
     function getRequestCategory(
         description: string,
         _request: Object
-    ): 'required' | 'other' | 'sequentialnumbermapping' {
+    ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
             return `required`;
+        }
+
+        const requiredMeeting = [`active_meeting:subscription`, `active_polls:subscription`];
+        if (requiredMeeting.indexOf(description) !== -1) {
+            return `requiredMeeting`;
         }
 
         if (description === `SequentialNumberMappingService:prepare`) {
