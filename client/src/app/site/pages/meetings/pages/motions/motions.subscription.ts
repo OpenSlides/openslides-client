@@ -2,6 +2,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
+import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
 import { ViewMotionWorkflow } from './modules';
 import { ViewMotion } from './view-models';
@@ -15,7 +16,12 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`motion_ids`],
+        follow: [
+            {
+                idField: `motion_ids`,
+                follow: [{ idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription }]
+            }
+        ],
         additionalFields: [`origin_id`, `origin_meeting_id`, `derived_motion_ids`]
     },
     subscriptionName: MOTION_LIST_SUBSCRIPTION
@@ -25,7 +31,12 @@ export const getMotionBlockSubscriptionConfig: SubscriptionConfigGenerator = (id
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `motion_block_ids`, follow: [`list_of_speakers_id`] }]
+        follow: [
+            {
+                idField: `motion_block_ids`,
+                follow: [{ idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription }]
+            }
+        ]
     },
     subscriptionName: MOTION_BLOCK_SUBSCRIPTION
 });

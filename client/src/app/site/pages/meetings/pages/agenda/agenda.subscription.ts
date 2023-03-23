@@ -48,13 +48,7 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                         follow: [
                             {
                                 idField: `list_of_speakers_id`,
-                                fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
-                                follow: [
-                                    {
-                                        idField: `speaker_ids`,
-                                        fieldset: [`begin_time`, `end_time`]
-                                    }
-                                ]
+                                ...listOfSpeakersSpeakerCountSubscription
                             }
                         ]
                     }
@@ -81,18 +75,22 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (id
             },
             {
                 idField: `list_of_speakers_id`,
-                fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
-                follow: [
-                    {
-                        idField: `speaker_ids`,
-                        fieldset: [`begin_time`, `end_time`]
-                    }
-                ]
+                ...listOfSpeakersSpeakerCountSubscription
             }
         ]
     },
     subscriptionName: TOPIC_ITEM_SUBSCRIPTION
 });
+
+export const listOfSpeakersSpeakerCountSubscription = {
+    fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+    follow: [
+        {
+            idField: `speaker_ids`,
+            fieldset: [`begin_time`, `end_time`]
+        }
+    ]
+};
 
 export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
 
