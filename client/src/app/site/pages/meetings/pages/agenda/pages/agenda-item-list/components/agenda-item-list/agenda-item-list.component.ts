@@ -17,6 +17,7 @@ import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-mo
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -311,7 +312,18 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * Export all items as CSV
      */
     public csvExportItemList(): void {
-        this.agendaItemExportService.exportAsCsv(this.listComponent.source);
+        this.modelRequestService
+            .fetch({
+                modelRequest: {
+                    viewModelCtor: ViewMeeting,
+                    ids: [this.activeMeetingId],
+                    follow: [{ idField: `topic_ids`, fieldset: [`text`] }]
+                },
+                subscriptionName: `topic_list_texts`
+            })
+            .then(() => {
+                this.agendaItemExportService.exportAsCsv(this.listComponent.source);
+            });
     }
 
     /**
