@@ -20,6 +20,10 @@ import {
     getAgendaListMinimalSubscriptionConfig
 } from '../../../../agenda/agenda.subscription';
 import { AgendaItemControllerService } from '../../../../agenda/services';
+import {
+    getParticipantMinimalSubscriptionConfig,
+    PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
+} from '../../../../participants/participants.subscription';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { PersonalNoteControllerService } from '../../../modules/personal-notes/services';
@@ -173,6 +177,16 @@ export class MotionMultiselectService {
      * @param motions The motions to add/remove the sumbitters to
      */
     public async changeSubmitters(motions: ViewMotion[]): Promise<void> {
+        if (!motions.length) {
+            return;
+        }
+
+        const subscriptionName = PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL + `_${Date.now()}`;
+        this.modelRequestService.subscribeTo({
+            ...getParticipantMinimalSubscriptionConfig(motions[0].meeting_id),
+            subscriptionName
+        });
+
         const title = this.translate.instant(
             `This will add or remove the following submitters for all selected motions:`
         );
@@ -185,6 +199,7 @@ export class MotionMultiselectService {
             true,
             choices
         );
+        this.modelRequestService.closeSubscription(subscriptionName);
         if (selectedChoice) {
             let action: Action<any> | null = null;
             const users = (selectedChoice.ids as Ids).map(userId => ({ id: userId }));
