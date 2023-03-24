@@ -151,9 +151,9 @@ export const getMotionAdditionalDetailSubscriptionConfig: SubscriptionConfigGene
 
 export const MOTION_DETAIL_SUBSCRIPTION = `motion_detail`;
 
-export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
-        ids: [id],
+        ids,
         viewModelCtor: ViewMotion,
         follow: [
             {
