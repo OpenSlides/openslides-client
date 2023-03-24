@@ -379,6 +379,8 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_default_100_percent_base`,
         `motion_poll_default_group_ids`,
         `motion_poll_default_backend`,
+        `poll_candidate_list_ids`,
+        `poll_candidate_ids`,
         `users_enable_presence_view`,
         `users_enable_vote_weight`,
         `users_allow_self_set_present`,
