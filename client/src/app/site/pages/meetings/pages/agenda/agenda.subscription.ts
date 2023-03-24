@@ -84,10 +84,10 @@ export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator
 
 export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
 
-export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
         viewModelCtor: ViewTopic,
-        ids: [id],
+        ids,
         fieldset: FULL_FIELDSET,
         follow: [
             `attachment_ids`,
@@ -100,6 +100,15 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (id
                 ...listOfSpeakersSpeakerCountSubscription
             }
         ]
+    },
+    subscriptionName: TOPIC_ITEM_SUBSCRIPTION
+});
+
+export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
+    modelRequest: {
+        viewModelCtor: ViewTopic,
+        ids,
+        fieldset: FULL_FIELDSET
     },
     subscriptionName: TOPIC_ITEM_SUBSCRIPTION
 });

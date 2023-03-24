@@ -26,6 +26,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';
+import { getTopicDuplicateSubscriptionConfig } from '../../../../agenda.subscription';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../services';
 import { AgendaItemExportService } from '../../services/agenda-item-export.service/agenda-item-export.service';
@@ -358,8 +359,13 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      *
      * @param topicAgendaItem The item to duplicte.
      */
+
     public duplicateTopic(topicAgendaItem: ViewAgendaItem): void {
-        this.topicRepo.duplicateTopics(topicAgendaItem);
+        this.modelRequestService
+            .fetch(getTopicDuplicateSubscriptionConfig(topicAgendaItem.content_object.id))
+            .then(() => {
+                this.topicRepo.duplicateTopics(topicAgendaItem);
+            });
     }
 
     /**
@@ -368,7 +374,16 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * @param selectedItems All selected items.
      */
     public duplicateMultipleTopics(selectedItems: ViewAgendaItem[]): void {
-        this.topicRepo.duplicateTopics(...selectedItems.filter(item => this.isTopic(item.content_object)));
+        const filteredItems = selectedItems.filter(item => this.isTopic(item.content_object));
+        if (!filteredItems.length) {
+            return;
+        }
+
+        this.modelRequestService
+            .fetch(getTopicDuplicateSubscriptionConfig(...filteredItems.map(el => el.content_object.id)))
+            .then(() => {
+                this.topicRepo.duplicateTopics(...filteredItems);
+            });
     }
 
     /**
