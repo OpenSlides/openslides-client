@@ -17,7 +17,14 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
             follow: [
                 {
                     idField: `content_object_id`,
-                    ...UserFieldsets.FullNameSubscription
+                    ...UserFieldsets.FullNameSubscription,
+                    follow: [
+                        {
+                            idField: `poll_candidate_ids`,
+                            fieldset: FULL_FIELDSET,
+                            follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                        }
+                    ]
                 },
                 { idField: `vote_ids`, fieldset: FULL_FIELDSET }
             ]

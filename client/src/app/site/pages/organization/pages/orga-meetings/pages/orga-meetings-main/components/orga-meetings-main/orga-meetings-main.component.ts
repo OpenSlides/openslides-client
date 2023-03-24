@@ -8,7 +8,6 @@ import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organizatio
     styleUrls: [`./orga-meetings-main.component.scss`]
 })
 export class OrgaMeetingsMainComponent extends BaseModelRequestHandlerComponent {
-
     protected override onShouldCreateModelRequests(): void {
         this.subscribeTo(getMeetingListSubscriptionConfig(), { hideWhenMeetingChanged: true });
     }
