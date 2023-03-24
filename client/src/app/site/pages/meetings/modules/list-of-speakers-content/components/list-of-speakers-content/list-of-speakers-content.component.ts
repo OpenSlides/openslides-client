@@ -12,7 +12,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
@@ -32,6 +32,10 @@ import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting
 
 import { UserSelectionData } from '../../../participant-search-selector';
 import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
+import {
+    getLosFirstContributionSubscriptionConfig,
+    LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
+} from '../../list-of-speakers-content.subscription';
 import { PointOfOrderDialogService } from '../../modules/point-of-order-dialog/services/point-of-order-dialog.service';
 
 @Component({
@@ -165,7 +169,17 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 this.updateSpeakers();
                 this.cd.markForCheck();
             }),
-            this.operator.userObservable.subscribe(user => (this._currentUser = user))
+            this.operator.userObservable.subscribe(user => (this._currentUser = user)),
+            this.showFirstContributionHintObservable.subscribe(showFirstContribution => {
+                if (showFirstContribution) {
+                    this.modelRequestService.subscribeTo({
+                        ...getLosFirstContributionSubscriptionConfig(this.activeMeetingId),
+                        hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id))
+                    });
+                } else {
+                    this.modelRequestService.closeSubscription(LOS_FIRST_CONTRIBUTION_SUBSCRIPTION);
+                }
+            })
         );
     }
 
