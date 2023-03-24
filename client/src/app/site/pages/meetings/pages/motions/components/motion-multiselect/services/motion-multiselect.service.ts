@@ -10,11 +10,20 @@ import { Action } from 'src/app/gateways/actions';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { SpinnerService } from 'src/app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
+import {
+    AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION,
+    getAgendaListMinimalSubscriptionConfig
+} from '../../../../agenda/agenda.subscription';
 import { AgendaItemControllerService } from '../../../../agenda/services';
+import {
+    getParticipantMinimalSubscriptionConfig,
+    PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
+} from '../../../../participants/participants.subscription';
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
 import { PersonalNoteControllerService } from '../../../modules/personal-notes/services';
@@ -47,7 +56,8 @@ export class MotionMultiselectService {
         private treeService: TreeService,
         private spinnerService: SpinnerService,
         private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private snackbar: MatSnackBar
+        private snackbar: MatSnackBar,
+        private modelRequestService: ModelRequestService
     ) {}
 
     /**
@@ -167,6 +177,16 @@ export class MotionMultiselectService {
      * @param motions The motions to add/remove the sumbitters to
      */
     public async changeSubmitters(motions: ViewMotion[]): Promise<void> {
+        if (!motions.length) {
+            return;
+        }
+
+        const subscriptionName = PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL + `_${Date.now()}`;
+        this.modelRequestService.subscribeTo({
+            ...getParticipantMinimalSubscriptionConfig(motions[0].meeting_id),
+            subscriptionName
+        });
+
         const title = this.translate.instant(
             `This will add or remove the following submitters for all selected motions:`
         );
@@ -179,6 +199,7 @@ export class MotionMultiselectService {
             true,
             choices
         );
+        this.modelRequestService.closeSubscription(subscriptionName);
         if (selectedChoice) {
             let action: Action<any> | null = null;
             const users = (selectedChoice.ids as Ids).map(userId => ({ id: userId }));
@@ -269,9 +290,20 @@ export class MotionMultiselectService {
      * Moves the related agenda items from the motions as childs under a selected (parent) agenda item.
      */
     public async moveInAgenda(motions: ViewMotion[]): Promise<void> {
+        if (!motions.length) {
+            return;
+        }
+
+        const subscriptionName = AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION + `_${Date.now()}`;
+        this.modelRequestService.subscribeTo({
+            ...getAgendaListMinimalSubscriptionConfig(motions[0].meeting_id),
+            subscriptionName
+        });
+
         const title = this.translate.instant(`This will move all selected motions as childs to:`);
         const choices = this.agendaRepo.getViewModelListObservable();
         const selectedChoice = await this.choiceService.open({ title, choices });
+        this.modelRequestService.closeSubscription(subscriptionName);
         if (selectedChoice) {
             const actions: Action<any>[] = [];
             const motionsNotInAgenda = motions.filter(motion => !motion.agenda_item_id);

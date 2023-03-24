@@ -60,12 +60,34 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
     subscriptionName: AGENDA_LIST_ITEM_SUBSCRIPTION
 });
 
+export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
+
+export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [
+            {
+                idField: `agenda_item_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `content_object_id`,
+                        fieldset: [`title`, ...MEETING_ROUTING_FIELDS]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION
+});
+
 export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
 
-export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
     modelRequest: {
         viewModelCtor: ViewTopic,
-        ids: [id],
+        ids,
         fieldset: FULL_FIELDSET,
         follow: [
             `attachment_ids`,
@@ -78,6 +100,15 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (id
                 ...listOfSpeakersSpeakerCountSubscription
             }
         ]
+    },
+    subscriptionName: TOPIC_ITEM_SUBSCRIPTION
+});
+
+export const getTopicDuplicateSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
+    modelRequest: {
+        viewModelCtor: ViewTopic,
+        ids,
+        fieldset: FULL_FIELDSET
     },
     subscriptionName: TOPIC_ITEM_SUBSCRIPTION
 });
