@@ -28,6 +28,9 @@ msgstr ""
 msgid "<unknown motion>"
 msgstr ""
 
+msgid "<unknown>"
+msgstr ""
+
 msgid ""
 "A change recommendation or amendment is probably referring to a "
 "non-existant line number."
@@ -209,9 +212,6 @@ msgstr ""
 msgid "All votes will be lost."
 msgstr ""
 
-msgid "All your changes are saved immediately."
-msgstr ""
-
 msgid "Allow amendments of amendments"
 msgstr ""
 
@@ -351,6 +351,9 @@ msgid "Are you sure you want to delete all selected elections?"
 msgstr ""
 
 msgid "Are you sure you want to delete all selected files and folders?"
+msgstr ""
+
+msgid "Are you sure you want to delete all selected meetings?"
 msgstr ""
 
 msgid "Are you sure you want to delete all selected motions?"
@@ -956,6 +959,9 @@ msgstr ""
 msgid "Confirm new password"
 msgstr ""
 
+msgid "Confirmation of the nomination list"
+msgstr ""
+
 msgid "Congratuations! Your browser is supported by OpenSlides."
 msgstr ""
 
@@ -978,6 +984,9 @@ msgid "Contra speech"
 msgstr ""
 
 msgid "Contribution"
+msgstr ""
+
+msgid "Copy report to clipboard"
 msgstr ""
 
 msgid "Count active users"
@@ -1071,6 +1080,9 @@ msgid "Customize design"
 msgstr ""
 
 msgid "Dark mode"
+msgstr ""
+
+msgid "Dashboard"
 msgstr ""
 
 msgid "Datastore is corrupt! See the console for errors."
@@ -1259,6 +1271,9 @@ msgstr ""
 msgid "Duplicate from"
 msgstr ""
 
+msgid "Duplicates"
+msgstr ""
+
 msgid "Duration"
 msgstr ""
 
@@ -1295,6 +1310,9 @@ msgid "Edit editorial final version"
 msgstr ""
 
 msgid "Edit meeting"
+msgstr ""
+
+msgid "Edit name"
 msgstr ""
 
 msgid "Edit projector"
@@ -1845,6 +1863,9 @@ msgstr ""
 msgid "Is a natural person"
 msgstr ""
 
+msgid "Is a template"
+msgstr ""
+
 msgid "Is active"
 msgstr ""
 
@@ -1852,6 +1873,9 @@ msgid "Is already projected"
 msgstr ""
 
 msgid "Is amendment"
+msgstr ""
+
+msgid "Is archived"
 msgstr ""
 
 msgid "Is being projected"
@@ -1884,7 +1908,13 @@ msgstr ""
 msgid "Is not a committee"
 msgstr ""
 
+msgid "Is not a template"
+msgstr ""
+
 msgid "Is not active"
+msgstr ""
+
+msgid "Is not archived"
 msgstr ""
 
 msgid "Is not favorite"
@@ -2435,6 +2465,9 @@ msgstr ""
 msgid "No."
 msgstr ""
 
+msgid "Nomination list"
+msgstr ""
+
 msgid "None"
 msgstr ""
 
@@ -2482,7 +2515,13 @@ msgstr ""
 msgid "Number of last speakers to be shown on the projector"
 msgstr ""
 
+msgid "Number of motions"
+msgstr ""
+
 msgid "Number of next speakers automatically connecting to the live conference"
+msgstr ""
+
+msgid "Number of participants"
 msgstr ""
 
 msgid "Number of persons to be elected"
@@ -2772,6 +2811,9 @@ msgstr ""
 msgid "Please enter a name for the new workflow:"
 msgstr ""
 
+msgid "Please enter a new workflow name:"
+msgstr ""
+
 msgid "Please enter a valid email address"
 msgstr ""
 
@@ -2793,9 +2835,6 @@ msgid ""
 msgstr ""
 
 msgid "Please update your browser or contact your system administration."
-msgstr ""
-
-msgid "Please wait"
 msgstr ""
 
 msgid "Point of order"
@@ -2838,9 +2877,6 @@ msgid "Privacy Policy"
 msgstr ""
 
 msgid "Privacy policy"
-msgstr ""
-
-msgid "Process type"
 msgstr ""
 
 msgid "Project"
@@ -3013,6 +3049,9 @@ msgstr ""
 msgid "Remove option"
 msgstr ""
 
+msgid "Rename state"
+msgstr ""
+
 msgid "Reopen"
 msgstr ""
 
@@ -3082,6 +3121,12 @@ msgid "Right"
 msgstr ""
 
 msgid "Roman"
+msgstr ""
+
+msgid "Same email"
+msgstr ""
+
+msgid "Same first/last name"
 msgstr ""
 
 msgid "Save"
@@ -3351,6 +3396,9 @@ msgstr ""
 msgid "Show referring motions"
 msgstr ""
 
+msgid "Show report"
+msgstr ""
+
 msgid "Show state extension field"
 msgstr ""
 
@@ -3484,6 +3532,12 @@ msgid "Stop counting"
 msgstr ""
 
 msgid "Stop voting"
+msgstr ""
+
+msgid "Stop waiting"
+msgstr ""
+
+msgid "Stopped waiting for process(es)"
 msgstr ""
 
 msgid "Structure level"
@@ -3631,7 +3685,9 @@ msgstr ""
 msgid "The server didn't respond."
 msgstr ""
 
-msgid "The server process is still running."
+msgid ""
+"The server may still be processing them, but you will probably not get a "
+"result."
 msgstr ""
 
 msgid "The title is required"
@@ -3710,6 +3766,12 @@ msgstr ""
 msgid "This paragraph does not exist in the main motion anymore:"
 msgstr ""
 
+msgid "This prefix already exists"
+msgstr ""
+
+msgid "This prefix already exists."
+msgstr ""
+
 msgid "This prefix will be set if you run the automatic agenda numbering."
 msgstr ""
 
@@ -3761,6 +3823,9 @@ msgid "Thoroughly check datastore (unsafe)"
 msgstr ""
 
 msgid "Tile view"
+msgstr ""
+
+msgid "Time"
 msgstr ""
 
 msgid "Timestamp"
@@ -3970,6 +4035,9 @@ msgstr ""
 msgid "WLAN password"
 msgstr ""
 
+msgid "Wait"
+msgstr ""
+
 msgid "Wait for response ..."
 msgstr ""
 
@@ -4047,6 +4115,9 @@ msgid "Yes/No/Abstain"
 msgstr ""
 
 msgid "Yes/No/Abstain per candidate"
+msgstr ""
+
+msgid "Yes/No/Abstain per list"
 msgstr ""
 
 msgid "You are not allowed to see all entitled users."
@@ -4209,6 +4280,9 @@ msgid "add group(s)"
 msgstr ""
 
 msgid "adjourned"
+msgstr ""
+
+msgid "already exists"
 msgstr ""
 
 msgid "analog"

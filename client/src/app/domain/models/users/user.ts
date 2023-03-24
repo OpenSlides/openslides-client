@@ -62,6 +62,7 @@ export class User extends BaseDecimalModel<User> {
     public vote_delegated_$_to_id!: string[]; // user/vote_delegated_$<meeting_id>_from_ids;
     public vote_delegations_$_from_ids!: string[]; // user/vote_delegated_$<meeting_id>_to_id;
     public chat_message_$_ids!: Id[]; // (chat_message/user_id)[];
+    public poll_candidate_ids!: Id[]; // (poll_candidate/user_id);
     public organization_id!: Id; // organization/committee_ids;
 
     public projection_$_ids!: any[];

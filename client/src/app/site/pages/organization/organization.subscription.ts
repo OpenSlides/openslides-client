@@ -10,21 +10,9 @@ export const getMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () 
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
         follow: [
-            {
-                idField: `active_meeting_ids`,
-                follow: [{ idField: `group_ids`, isFullList: false }],
-                fieldset: `list`
-            },
-            {
-                idField: `archived_meeting_ids`,
-                follow: [{ idField: `group_ids`, isFullList: false }],
-                fieldset: `list`
-            },
-            {
-                idField: `template_meeting_ids`,
-                follow: [{ idField: `group_ids`, isFullList: false }],
-                fieldset: `list`
-            }
+            getMeetingListFollowConfig(`active_meeting_ids`),
+            getMeetingListFollowConfig(`archived_meeting_ids`),
+            getMeetingListFollowConfig(`template_meeting_ids`)
         ]
     },
     subscriptionName: MEETING_LIST_SUBSCRIPTION
@@ -46,3 +34,17 @@ export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = ()
     subscriptionName: ORGANIZATION_SUBSCRIPTION,
     isDelayed: false
 });
+
+function getMeetingListFollowConfig(
+    idField: `active_meeting_ids` | `archived_meeting_ids` | `template_meeting_ids`
+): any {
+    return {
+        idField: idField,
+        follow: [
+            { idField: `group_ids`, isFullList: false },
+            { idField: `committee_id`, fieldset: `name` },
+            `organization_tag_ids`
+        ],
+        fieldset: `list`
+    };
+}

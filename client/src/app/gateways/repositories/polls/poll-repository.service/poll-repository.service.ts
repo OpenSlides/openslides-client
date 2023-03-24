@@ -244,11 +244,13 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             } else {
                 delete option.text;
                 delete option.content_object_id;
+                delete option.poll_candidate_user_ids;
             }
             result.push({
                 id: option.id,
                 content_object_id: option.content_object_id,
                 text: option.text,
+                poll_candidate_user_ids: option.poll_candidate_user_ids,
                 Y: toDecimal(option.Y, false),
                 A: toDecimal(option.A, false),
                 N: toDecimal(option.N, false)
@@ -263,15 +265,19 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             this.validateOption(option);
             result.push({
                 content_object_id: option.content_object_id,
-                text: option.text
+                text: option.text,
+                poll_candidate_user_ids: option.poll_candidate_user_ids
             });
         }
         return result;
     }
 
     private validateOption(option: any): void {
-        if ((option.text && option.content_object_id) || (!option.text && !option.content_object_id)) {
-            throw new Error(`Exactly one of text or content_object_id has to be given!`);
+        if (
+            [option.text, option.content_object_id, option.poll_candidate_user_ids].filter(content => !!content)
+                .length !== 1
+        ) {
+            throw new Error(`Exactly one of text, content_object_id or poll_candidate_user_ids has to be given!`);
         }
     }
 

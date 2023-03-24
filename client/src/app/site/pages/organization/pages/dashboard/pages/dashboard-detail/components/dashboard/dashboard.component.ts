@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
@@ -85,16 +85,14 @@ export class DashboardComponent extends BaseComponent {
                 );
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);
-                this.noDateMeetings = filteredMeetings.filter(meeting => !meeting.start_time && !meeting.end_time);
+                this.noDateMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Dateless);
                 this.previousMeetings = filteredMeetings
-                    .filter(meeting => (meeting.endDate as Date) < currentDate)
+                    .filter(meeting => meeting.relatedTime === RelatedTime.Past)
                     .sort((a, b) => b.end_time - a.end_time);
                 this.futureMeetings = filteredMeetings
-                    .filter(meeting => (meeting.startDate as Date) > currentDate)
+                    .filter(meeting => meeting.relatedTime === RelatedTime.Future)
                     .sort((a, b) => a.end_time - b.end_time);
-                this.currentMeetings = filteredMeetings.filter(
-                    meeting => (meeting.endDate as Date) >= currentDate && (meeting.startDate as Date) <= currentDate
-                );
+                this.currentMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Current);
             })
         );
     }

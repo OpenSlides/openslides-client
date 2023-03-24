@@ -2,9 +2,14 @@ import { ChangeDetectorRef, Directive, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { IdentifiedVotingData, PollPropertyVerbose, VoteValue, VotingData } from 'src/app/domain/models/poll';
+import {
+    IdentifiedVotingData,
+    PollContentObject,
+    PollPropertyVerbose,
+    VoteValue,
+    VotingData
+} from 'src/app/domain/models/poll';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -22,7 +27,7 @@ export interface VoteOption {
 }
 
 @Directive()
-export abstract class BasePollVoteComponent<C extends BaseViewModel = any> extends BaseComponent {
+export abstract class BasePollVoteComponent<C extends PollContentObject = any> extends BaseComponent {
     @Input()
     public set poll(value: ViewPoll<C>) {
         this._poll = value;

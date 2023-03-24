@@ -81,6 +81,14 @@ export enum PollMethod {
     N = `N`
 }
 
+export enum FormPollMethod {
+    Y = `Y`,
+    YN = `YN`,
+    YNA = `YNA`,
+    N = `N`,
+    LIST_YNA = `yna`
+}
+
 export enum PollPercentBase {
     Y = `Y`,
     YN = `YN`,
@@ -191,6 +199,7 @@ export const VoteValuesVerbose = {
 export interface PollTableData {
     votingOption: string;
     votingOptionSubtitle?: string;
+    votingOptions?: { title: string; subtitle: string }[]; //only if class === `list`
     class?: string;
     value: VotingResult[];
 }
