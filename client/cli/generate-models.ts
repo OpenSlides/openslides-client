@@ -81,10 +81,19 @@ function snakeToPascal(input: string) {
                 isReadonly: true,
                 scope: Scope.Public,
                 name: `REQUESTABLE_FIELDS`,
-                type: `(keyof ${classNode.getName()})[]`
+                type: `(keyof ${classNode.getName()} | { templateField: string })[]`
             });
         }
-        defaultFieldsetProp.setInitializer(`[${fieldset.map(f => `\`${f}\``).join(`, `)}]`);
+        defaultFieldsetProp.setInitializer(
+            `[${fieldset
+                .map((f: string) => {
+                    if (f.indexOf(`$`) !== -1) {
+                        return `{ templateField: \`${f}\`}`;
+                    }
+                    return `\`${f}\``;
+                })
+                .join(`, `)}]`
+        );
         await tsFile.save();
     }
 })();

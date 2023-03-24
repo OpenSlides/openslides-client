@@ -26,7 +26,7 @@ export class Vote extends BaseModel<Vote> {
         return [`weight`];
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Vote)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Vote | { templateField: string })[] = [
         `id`,
         `weight`,
         `value`,

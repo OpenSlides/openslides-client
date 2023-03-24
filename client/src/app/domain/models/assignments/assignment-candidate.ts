@@ -17,7 +17,7 @@ export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
         super(AssignmentCandidate.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof AssignmentCandidate)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof AssignmentCandidate | { templateField: string })[] = [
         `id`,
         `weight`,
         `assignment_id`,

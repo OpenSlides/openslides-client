@@ -17,7 +17,7 @@ export class ChatGroup extends BaseModel<ChatGroup> implements HasMeetingId {
         super(ChatGroup.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ChatGroup)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ChatGroup | { templateField: string })[] = [
         `id`,
         `name`,
         `weight`,

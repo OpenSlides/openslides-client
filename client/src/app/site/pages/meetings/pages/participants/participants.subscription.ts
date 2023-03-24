@@ -18,7 +18,17 @@ export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerat
         follow: [
             {
                 idField: `user_ids`,
-                fieldset: `participantList` // TODO: Use specialised list
+                fieldset: [
+                    `default_vote_weight`,
+                    `is_physical_person`,
+                    `is_active`,
+                    `meeting_ids`,
+                    { templateField: `vote_delegated_$_to_id` },
+                    { templateField: `vote_delegations_$_from_ids` },
+                    { templateField: `vote_weight_$` },
+                    { templateField: `group_$_ids` },
+                    `is_present_in_meeting_ids`
+                ]
             }
         ]
     },

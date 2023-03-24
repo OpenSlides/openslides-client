@@ -12,6 +12,7 @@ export class Option extends BaseDecimalModel<Option> {
 
     public poll_id!: Id; // (assignment|motion)_poll/option_ids;
     public vote_ids!: Ids; // ((assignment|motion)_vote/option_id)[];
+    public meeting_id!: Id;
 
     public weight!: number;
     public content_object_id!: Fqid;
@@ -24,7 +25,7 @@ export class Option extends BaseDecimalModel<Option> {
         return Option.DECIMAL_FIELDS;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Option)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Option | { templateField: string })[] = [
         `id`,
         `weight`,
         `text`,
@@ -33,6 +34,7 @@ export class Option extends BaseDecimalModel<Option> {
         `abstain`,
         `poll_id`,
         `vote_ids`,
-        `content_object_id`
+        `content_object_id`,
+        `meeting_id`
     ];
 }

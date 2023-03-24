@@ -2,6 +2,7 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
+import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
 
 export const ASSIGNMENT_LIST_SUBSCRIPTION = `assignment_list`;
@@ -11,7 +12,13 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
         viewModelCtor: ViewMeeting,
         ids: [id],
         follow: [
-            { idField: `assignment_ids`, follow: [{ idField: `poll_ids`, ...pollModelRequest }] },
+            {
+                idField: `assignment_ids`,
+                follow: [
+                    { idField: `poll_ids`, ...pollModelRequest },
+                    { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription }
+                ]
+            },
             `assignment_candidate_ids`
         ]
     },

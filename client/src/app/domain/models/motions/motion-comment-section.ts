@@ -9,6 +9,7 @@ import { BaseModel } from '../base/base-model';
 export class MotionCommentSection extends BaseModel<MotionCommentSection> {
     public static COLLECTION = `motion_comment_section`;
 
+    public sequential_number!: number;
     public name!: string;
     public weight!: number;
     public submitter_can_write: boolean;
@@ -21,10 +22,11 @@ export class MotionCommentSection extends BaseModel<MotionCommentSection> {
         super(MotionCommentSection.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionCommentSection)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionCommentSection | { templateField: string })[] = [
         `id`,
         `name`,
         `weight`,
+        `sequential_number`,
         `submitter_can_write`,
         `comment_ids`,
         `read_group_ids`,

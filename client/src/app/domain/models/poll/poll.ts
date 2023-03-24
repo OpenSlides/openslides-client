@@ -18,6 +18,7 @@ export class Poll extends BaseDecimalModel<Poll> {
     public static readonly COLLECTION = `poll`;
     public static readonly DECIMAL_FIELDS: (keyof Poll)[] = [`votesvalid`, `votesinvalid`, `votescast`];
 
+    public sequential_number!: number;
     public content_object_id!: Fqid;
     public state!: PollState;
     public type!: PollType;
@@ -147,7 +148,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         return Poll.DECIMAL_FIELDS;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Poll)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Poll | { templateField: string })[] = [
         `id`,
         `description`,
         `title`,
@@ -167,6 +168,7 @@ export class Poll extends BaseDecimalModel<Poll> {
         `votescast`,
         `entitled_users_at_stop`,
         `vote_count`,
+        `sequential_number`,
         `content_object_id`,
         `option_ids`,
         `global_option_id`,

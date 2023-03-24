@@ -23,7 +23,7 @@ export class MotionWorkflow extends BaseModel<MotionWorkflow> {
         super(MotionWorkflow.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionWorkflow)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionWorkflow | { templateField: string })[] = [
         `id`,
         `name`,
         `sequential_number`,

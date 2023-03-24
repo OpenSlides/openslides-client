@@ -90,7 +90,7 @@ export class Mediafile extends BaseModel<Mediafile> {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Mediafile)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Mediafile | { templateField: string })[] = [
         `id`,
         `title`,
         `is_directory`,
@@ -108,8 +108,8 @@ export class Mediafile extends BaseModel<Mediafile> {
         `projection_ids`,
         `attachment_ids`,
         `owner_id`,
-        `used_as_logo_$_in_meeting_id`,
-        `used_as_font_$_in_meeting_id`
+        { templateField: `used_as_logo_$_in_meeting_id` },
+        { templateField: `used_as_font_$_in_meeting_id` }
     ];
 }
 export interface Mediafile extends HasOwnerId, HasProjectionIds, HasListOfSpeakersId {}

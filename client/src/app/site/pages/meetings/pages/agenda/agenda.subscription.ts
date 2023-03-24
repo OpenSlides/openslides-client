@@ -1,28 +1,27 @@
 import { Id } from 'src/app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { FollowList } from 'src/app/site/services/model-request-builder';
 
 import { pollModelRequest } from '../polls/polls.subscription';
+import { ViewListOfSpeakers, ViewTopic } from './modules';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 
-export const agendaItemFollow = [
+export const agendaItemFollow: FollowList<any> = [
     {
         idField: `list_of_speakers_id`,
+        fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
         follow: [
             {
                 idField: `speaker_ids`,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `user_id`,
-                        fieldset: [
-                            `pronoun`,
-                            `first_name`,
-                            `last_name`,
-                            `username`,
-                            { templateField: `number_$` },
-                            { templateField: `structure_level_$` }
-                        ]
+                        ...UserFieldsets.FullNameSubscription
                     }
                 ]
             }
@@ -31,8 +30,7 @@ export const agendaItemFollow = [
     {
         idField: `poll_ids`,
         ...pollModelRequest
-    },
-    `attachment_ids`
+    }
 ];
 
 export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
@@ -42,16 +40,77 @@ export const getAgendaListSubscriptionConfig: SubscriptionConfigGenerator = (id:
         follow: [
             {
                 idField: `agenda_item_ids`,
+                fieldset: FULL_FIELDSET,
                 follow: [
                     {
                         idField: `content_object_id`,
-                        follow: [...agendaItemFollow]
+                        fieldset: [`title`, ...MEETING_ROUTING_FIELDS],
+                        follow: [
+                            {
+                                idField: `list_of_speakers_id`,
+                                ...listOfSpeakersSpeakerCountSubscription
+                            }
+                        ]
                     }
                 ]
             },
-
-            `tag_ids`
+            { idField: `tag_ids`, fieldset: [`name`, `meeting_id`] }
         ]
     },
     subscriptionName: AGENDA_LIST_ITEM_SUBSCRIPTION
+});
+
+export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;
+
+export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewTopic,
+        ids: [id],
+        fieldset: FULL_FIELDSET,
+        follow: [
+            `attachment_ids`,
+            {
+                idField: `poll_ids`,
+                ...pollModelRequest
+            },
+            {
+                idField: `list_of_speakers_id`,
+                ...listOfSpeakersSpeakerCountSubscription
+            }
+        ]
+    },
+    subscriptionName: TOPIC_ITEM_SUBSCRIPTION
+});
+
+export const listOfSpeakersSpeakerCountSubscription = {
+    fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+    follow: [
+        {
+            idField: `speaker_ids`,
+            fieldset: [`begin_time`, `end_time`]
+        }
+    ]
+};
+
+export const LIST_OF_SPEAKERS_SUBSCRIPTION = `los_detail`;
+
+export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewListOfSpeakers,
+        ids: [id],
+        fieldset: FULL_FIELDSET,
+        follow: [
+            {
+                idField: `speaker_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `user_id`,
+                        ...UserFieldsets.FullNameSubscription
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: LIST_OF_SPEAKERS_SUBSCRIPTION
 });

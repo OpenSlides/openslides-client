@@ -14,7 +14,7 @@ export class MotionComment extends BaseModel<MotionComment> {
         super(MotionComment.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionComment)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionComment | { templateField: string })[] = [
         `id`,
         `comment`,
         `motion_id`,

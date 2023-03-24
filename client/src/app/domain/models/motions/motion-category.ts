@@ -22,7 +22,7 @@ export class MotionCategory extends BaseModel<MotionCategory> {
         super(MotionCategory.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionCategory)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionCategory | { templateField: string })[] = [
         `id`,
         `name`,
         `prefix`,

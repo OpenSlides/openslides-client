@@ -1,3 +1,4 @@
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { Follow } from 'src/app/site/services/model-request-builder';
 
 export const GET_POSSIBLE_RECOMMENDATIONS: Follow = {
@@ -16,7 +17,7 @@ export const SUBMITTER_FOLLOW: Follow = {
     follow: [
         {
             idField: `user_id`,
-            fieldset: `shortName`
+            ...UserFieldsets.FullNameSubscription
         }
     ]
 };

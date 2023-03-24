@@ -159,6 +159,10 @@ export class ModelRequestBuilderService {
     private addDataFields(modelRequestObject: ModelRequestObject): void {
         const fieldset = modelRequestObject.simplifiedRequest.fieldset || DEFAULT_FIELDSET;
         let fieldsetFields: AdditionalField[];
+        if (!modelRequestObject.simplifiedRequest.fieldset) {
+            console.warn(`Non explicit use of default fieldset`, [modelRequestObject], modelRequestObject.collection);
+        }
+
         if (typeof fieldset === `string`) {
             const registeredFieldsets = this.fieldsets[modelRequestObject.collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {

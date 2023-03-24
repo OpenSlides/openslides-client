@@ -78,7 +78,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     private _demoModeUserIds: number[] | null = null;
 
     public override getFieldsets(): Fieldsets<User> {
-        const shortNameFields: TypedFieldset<User> = [
+        const listFields: TypedFieldset<User> = [
             `title`,
             `first_name`,
             `last_name`,
@@ -87,14 +87,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `gender`,
             `default_number`,
             `default_structure_level`,
-            `default_vote_weight`
-        ];
-
-        const listFields: TypedFieldset<User> = shortNameFields.concat([
+            `default_vote_weight`,
             `is_physical_person`,
             `is_active`,
             `meeting_ids`
-        ]);
+        ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
             `email`,

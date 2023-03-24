@@ -22,7 +22,7 @@ export class Topic extends BaseModel<Topic> {
         super(Topic.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Topic)[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Topic | { templateField: string })[] = [
         `id`,
         `title`,
         `text`,
