@@ -1,6 +1,6 @@
 import { Directive, EventEmitter, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -143,19 +143,19 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
             observables.push(hideWhen);
         }
 
-        if (hideWhenDestroyed) {
-            observables.push(this._destroyed.asObservable());
+        if (hideWhenDestroyed === true) {
+            observables.push(this._destroyed.asObservable().pipe(startWith(false)));
         }
 
         if (hideWhenMeetingChanged) {
-            observables.push(this.hasMeetingIdChangedObservable());
+            observables.push(this.hasMeetingIdChangedObservable().pipe(startWith(false)));
         }
 
         if (hideWhenUnauthenticated) {
-            observables.push(this.openslidesRouter.beforeSignoutObservable);
+            observables.push(this.openslidesRouter.beforeSignoutObservable.pipe(startWith(false)));
         }
 
-        if (observables.length > 2) {
+        if (observables.length >= 2) {
             return combineLatest(observables).pipe(map(values => values.some(source => source)));
         } else if (observables.length === 1) {
             return observables[0];
