@@ -217,6 +217,7 @@ export class User extends BaseDecimalModel<User> {
         { templateField: `vote_delegated_$_to_id` },
         { templateField: `vote_delegations_$_from_ids` },
         { templateField: `chat_message_$_ids` },
+        `poll_candidate_ids`,
         `meeting_ids`,
         `organization_id`
     ];
