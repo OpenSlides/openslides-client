@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
@@ -28,6 +29,7 @@ export class VotingBannerService {
     private subText = _(`Click here to vote!`);
 
     private pollsToVote: ViewPoll[] = [];
+    private pollsToVoteSubscription: Subscription;
 
     public constructor(
         pollRepo: PollControllerService,
@@ -41,19 +43,36 @@ export class VotingBannerService {
     ) {
         combineLatest([
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
-            pollRepo.getViewModelListObservable().pipe(distinctUntilChanged(), debounceTime(500))
-        ]).subscribe(([meetingId, polls]) => this.checkForVotablePolls(polls));
+            pollRepo.getViewModelListObservableOfStarted().pipe(
+                distinctUntilChanged((previous, current) => {
+                    const prevStarted = previous.map(p => p.id);
+                    const currStarted = current.map(p => p.id);
+
+                    return prevStarted.length === currStarted.length && currStarted.equals(prevStarted);
+                })
+            )
+        ]).subscribe(([_, polls]) => this.updateVotablePollSubscription(polls));
     }
 
-    /**
-     * checks all polls for votable ones and displays a banner for them
-     * @param polls the updated poll list
-     */
-    private async checkForVotablePolls(polls: ViewPoll[]): Promise<void> {
-        // refresh the voting info on all polls. This is a single request to the vote service
-        await this.sendVotesService.updateHasVotedOnPoll(...polls);
+    private async updateVotablePollSubscription(polls: ViewPoll[]): Promise<void> {
+        this.pollsToVoteSubscription?.unsubscribe();
+
+        this.pollsToVoteSubscription = this.sendVotesService.subscribeVoted(...polls).subscribe(voted => {
+            this.updateBanner(polls, voted);
+        });
+    }
+
+    private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }) {
+        if (this.activeMeeting.meetingId) {
+            const checkUsers = [this.operator.user, ...this.operator.user.vote_delegations_from()];
+            this.pollsToVote = polls.filter(
+                poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined
+            );
+        } else {
+            this.pollsToVote = [];
+        }
+
         // display no banner if in history mode or there are no polls to vote
-        this.pollsToVote = polls.filter(poll => this.votingService.canVote(poll) && !poll.hasVoted);
         if ((this.historyService.isInHistoryMode() && this.currentBanner) || !this.pollsToVote.length) {
             this.sliceBanner();
             return;
