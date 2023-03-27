@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader } from '@ngx-translate/core';
-import * as gettext from 'gettext-parser';
+import pofile from 'pofile';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -17,11 +17,6 @@ export class PruningTranslationLoader implements TranslateLoader {
      * Suffix of the translation files.
      */
     private suffix = `.po`;
-
-    /**
-     * Domain of the translation files.
-     */
-    private domain = ``;
 
     /**
      * Default language which must not be translated.
@@ -52,11 +47,11 @@ export class PruningTranslationLoader implements TranslateLoader {
     private parse(content: string): any {
         let translations: { [key: string]: string } = {};
 
-        const po = gettext.po.parse(content);
-        for (const [key, value] of Object.entries(po.translations[this.domain] || {})) {
-            const translation: string = value.msgstr.pop();
-            if (key.length > 0 && translation.length > 0) {
-                translations[key] = translation;
+        const po = pofile.parse(content);
+        for (const item of po.items) {
+            const translation: string = item.msgstr.pop();
+            if (item.msgid.length > 0 && translation.length > 0) {
+                translations[item.msgid] = translation;
             }
         }
 
