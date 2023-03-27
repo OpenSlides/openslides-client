@@ -5,7 +5,7 @@ import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
@@ -41,8 +41,9 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;
 
     public override getFieldsets(): Fieldsets<Poll> {
-        const routingFields: (keyof Poll)[] = [`sequential_number`, `meeting_id`];
-        const listFieldset: (keyof Poll)[] = routingFields.concat([
+        const listFieldset: (keyof Poll)[] = [
+            `sequential_number`,
+            `meeting_id`,
             `entitled_group_ids`,
             `state`,
             `title`,
@@ -51,28 +52,9 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             `onehundred_percent_base`,
             `backend`,
             `content_object_id`
-        ]);
-        const detailFieldset: (keyof Poll)[] = listFieldset.concat(
-            `voted_ids`,
-            `votescast`,
-            `votesinvalid`,
-            `votesvalid`,
-            `option_ids`,
-            `onehundred_percent_base`,
-            `global_option_id`,
-            `global_yes`,
-            `global_no`,
-            `global_abstain`,
-            `min_votes_amount`,
-            `max_votes_amount`,
-            `max_votes_per_option`,
-            `entitled_users_at_stop`,
-            `vote_count`,
-            `backend`
-        );
+        ];
         return {
-            [DEFAULT_FIELDSET]: detailFieldset,
-            [ROUTING_FIELDSET]: routingFields,
+            ...super.getFieldsets(),
             list: listFieldset
         };
     }

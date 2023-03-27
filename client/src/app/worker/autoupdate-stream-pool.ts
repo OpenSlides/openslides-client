@@ -1,5 +1,6 @@
 import { environment } from 'src/environments/environment';
 
+import { ModelRequest } from '../domain/interfaces/model-request';
 import {
     ErrorDescription,
     ErrorType,
@@ -157,7 +158,7 @@ export class AutoupdateStreamPool {
      * @param queryParams
      * @param modelRequest
      */
-    public getMatchingSubscription(queryParams: string, modelRequest: Object): AutoupdateSubscription | null {
+    public getMatchingSubscription(queryParams: string, modelRequest: ModelRequest): AutoupdateSubscription | null {
         for (let stream of this.streams) {
             for (let subscription of stream.subscriptions) {
                 if (subscription.fulfills(queryParams, modelRequest)) {

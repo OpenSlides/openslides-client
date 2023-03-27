@@ -925,7 +925,7 @@ export const RELATIONS: Relation[] = [
     // ViewOption -> ViewUser, ViewPollCandidateList
     {
         ownViewModels: [ViewOption],
-        foreignViewModelPossibilities: [ViewUser, ViewPollCandidateList],
+        foreignViewModelPossibilities: [ViewUser, ViewPollCandidateList, ViewMotion],
         ownField: `content_object`,
         many: false,
         generic: true,

@@ -5,7 +5,6 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
@@ -25,37 +24,6 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
     public getTitle = (viewProjector: ViewProjector) => viewProjector.name;
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
-
-    public override getFieldsets(): Fieldsets<Projector> {
-        const routingFields: (keyof Projector)[] = [`sequential_number`, `meeting_id`];
-        const defaultFields: (keyof Projector)[] = routingFields.concat([
-            `name`,
-            `scale`,
-            `scroll`,
-            `width`,
-            `aspect_ratio_numerator`,
-            `aspect_ratio_denominator`,
-            `color`,
-            `background_color`,
-            `header_background_color`,
-            `header_font_color`,
-            `header_h1_color`,
-            `chyron_background_color`,
-            `chyron_font_color`,
-            `show_header_footer`,
-            `show_title`,
-            `show_logo`,
-            `show_clock`,
-            `used_as_reference_projector_meeting_id`,
-            `preview_projection_ids`,
-            `current_projection_ids`,
-            `history_projection_ids`
-        ]);
-        return {
-            [DEFAULT_FIELDSET]: defaultFields,
-            [ROUTING_FIELDSET]: routingFields
-        };
-    }
 
     public async create(partialProjector: Partial<Projector> & { name: string }): Promise<Identifiable> {
         const payload: any = {

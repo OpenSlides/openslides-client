@@ -3,15 +3,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import {
-    MEETING_LIST_SUBSCRIPTION,
-    RelatedTime,
-    ViewMeeting
-} from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
+
+import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../dashboard.subscription';
 
 @Component({
     selector: `os-dashboard`,
@@ -57,7 +55,7 @@ export class DashboardComponent extends BaseComponent {
         this.loadMeetings();
 
         this.modelRequestService
-            .waitSubscriptionReady(MEETING_LIST_SUBSCRIPTION)
+            .waitSubscriptionReady(DASHBOARD_MEETING_LIST_SUBSCRIPTION)
             .then(() => {
                 this.ready = true;
             })

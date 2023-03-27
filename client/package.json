@@ -31,7 +31,8 @@
     "prettify-check": "prettier --list-different \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
     "prettify-write": "prettier --list-different --write \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
     "generate-defaults": "ts-node -s -r tsconfig-paths/register cli/generate-settings-defaults.ts && prettier --write src/app/domain/definitions/meeting-settings-defaults.ts",
-    "generate-permissions": "ts-node -s -r tsconfig-paths/register cli/generate-permissions.ts && prettier --write src/app/domain/definitions/permission*.ts"
+    "generate-permissions": "ts-node -s -r tsconfig-paths/register cli/generate-permissions.ts && prettier --write src/app/domain/definitions/permission*.ts",
+    "generate-models": "ts-node -s -r tsconfig-paths/register cli/generate-models.ts && ng lint --fix --lint-file-patterns=src/app/domain/models/**/*.ts"
   },
   "dependencies": {
     "@angular/animations": "^14.3.0",
@@ -118,6 +119,7 @@
     "karma-jsdom-launcher": "^13.0.0",
     "npm-license-crawler": "^0.2.1",
     "prettier": "^2.7.1",
+    "ts-morph": "^17.0.1",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^4.1.0",
     "typescript": "~4.7.3",

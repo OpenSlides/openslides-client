@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getMotionWorkflowSubscriptionConfig } from '../../../../../motions/config/model-subscription';
+import { getMotionWorkflowSubscriptionConfig } from '../../../../../motions/motions.subscription';
 
 const MOTIONS_SETTINGS_GROUP = `motions`;
 
@@ -17,9 +17,9 @@ export class MeetingSettingsGroupDetailMainComponent extends BaseModelRequestHan
             params[`group`] === MOTIONS_SETTINGS_GROUP &&
             params[`meetingId`] !== oldParams[`meetingId`]
         ) {
-            this.subscribeTo(
-                getMotionWorkflowSubscriptionConfig(+params[`meetingId`], () => this.hasMeetingIdChangedObservable())
-            );
+            this.subscribeTo(getMotionWorkflowSubscriptionConfig(+params[`meetingId`]), {
+                hideWhenMeetingChanged: true
+            });
         }
     }
 }

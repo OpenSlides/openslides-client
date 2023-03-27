@@ -4,7 +4,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { HttpService } from 'src/app/gateways/http.service';
 import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
@@ -53,13 +52,6 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     public getTitle = (viewVote: object) => `Vote`;
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Votes` : `Vote`);
-
-    public override getFieldsets(): Fieldsets<Vote> {
-        const detail: (keyof Vote)[] = [`delegated_user_id`, `option_id`, `user_id`, `value`, `weight`, `user_token`];
-        return {
-            [DEFAULT_FIELDSET]: detail
-        };
-    }
 
     public async sendVote(pollId: Id, payload: VotePayload): Promise<void> {
         const request: Promise<void> = this.http.post(`${VOTE_URL}?id=${pollId}`, payload);

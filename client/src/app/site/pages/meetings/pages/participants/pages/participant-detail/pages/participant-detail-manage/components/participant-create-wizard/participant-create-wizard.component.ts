@@ -17,6 +17,7 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
 import { UserService } from 'src/app/site/services/user.service';
 
 import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
+import { getParticipantMinimalSubscriptionConfig } from '../../../../../../participants.subscription';
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
 
 @Component({
@@ -27,6 +28,8 @@ import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common
 export class ParticipantCreateWizardComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(MatStepper)
     private readonly _stepper!: MatStepper;
+
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
         [controlName]: [``]
@@ -144,6 +147,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public ngOnInit(): void {
+        // TODO: Fetch groups for repo search selection
         this.groupsObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
 
         this.subscriptions.push(

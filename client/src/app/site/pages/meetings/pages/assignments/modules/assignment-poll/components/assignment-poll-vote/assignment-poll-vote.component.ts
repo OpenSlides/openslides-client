@@ -131,6 +131,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     private defineVoteOptions(): void {
+        this.voteActions = [];
         if (this.poll) {
             if (this.poll.isMethodN) {
                 this.voteActions.push(voteOptions.No);
@@ -367,6 +368,11 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             }
             this.submitVote(user);
         }
+    }
+
+    protected override updatePoll() {
+        super.updatePoll();
+        this.defineVoteOptions();
     }
 
     private enableInputs(): void {

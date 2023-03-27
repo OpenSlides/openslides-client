@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionCommentSection } from 'src/app/domain/models/motions/motion-comment-section';
 import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -24,20 +23,6 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
             } else {
                 return a.weight - b.weight;
             }
-        };
-    }
-
-    public override getFieldsets(): Fieldsets<ViewMotionCommentSection> {
-        const listFields: (keyof ViewMotionCommentSection)[] = [
-            `name`,
-            `weight`,
-            `read_group_ids`,
-            `write_group_ids`,
-            `submitter_can_write`,
-            `comment_ids`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: listFields
         };
     }
 

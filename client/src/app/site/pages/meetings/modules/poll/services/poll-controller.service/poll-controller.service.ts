@@ -10,9 +10,8 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewPoll } from '../../../../pages/polls';
-import { PollServiceModule } from '../poll-service.module';
 
-@Injectable({ providedIn: PollServiceModule })
+@Injectable({ providedIn: `root` })
 export class PollControllerService extends BaseMeetingControllerService<ViewPoll, Poll> {
     constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,

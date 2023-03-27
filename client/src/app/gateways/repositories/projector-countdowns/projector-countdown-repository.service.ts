@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
 import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { ServerTimePresenterService } from '../../presenter/server-time-presenter.service';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
@@ -29,20 +28,6 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
             : viewProjectorCountdown.title;
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Countdowns` : `Countdown`);
-
-    public override getFieldsets(): Fieldsets<ProjectorCountdown> {
-        return {
-            [DEFAULT_FIELDSET]: [
-                `title`,
-                `description`,
-                `default_time`,
-                `countdown_time`,
-                `running`,
-                `used_as_list_of_speakers_countdown_meeting_id`,
-                `used_as_poll_countdown_meeting_id`
-            ]
-        };
-    }
 
     public async create(payload: any): Promise<Identifiable> {
         return await this.sendActionToBackend(ProjectorCountdownAction.CREATE, payload);

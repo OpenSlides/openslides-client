@@ -32,7 +32,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     @Input()
     public set poll(value: ViewPoll<C>) {
         this._poll = value;
-        this.setupHasVotedSubscription();
+        this.updatePoll();
     }
 
     public get poll(): ViewPoll<C> {
@@ -138,6 +138,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         if (this.delegations) {
             this.setupDelegations();
         }
+    }
+
+    protected updatePoll(): void {
+        this.setupHasVotedSubscription();
     }
 
     private setupHasVotedSubscription(): void {

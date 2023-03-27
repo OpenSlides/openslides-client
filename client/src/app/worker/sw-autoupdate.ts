@@ -16,11 +16,13 @@ const autoupdatePool = new AutoupdateStreamPool({
 
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
+    requiredMeeting: [],
     sequentialnumbermapping: [],
     other: []
 };
 let openTimeouts = {
     required: null,
+    requiredMeeting: [],
     sequentialnumbermapping: null,
     other: null
 };
@@ -74,17 +76,30 @@ function openConnection(
     function getRequestCategory(
         description: string,
         _request: Object
-    ): 'required' | 'other' | 'sequentialnumbermapping' {
+    ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
             return `required`;
         }
 
-        if (description === `SequentialNumberMappingService:prepare`) {
+        const requiredMeeting = [`active_meeting:subscription`, `active_polls:subscription`];
+        if (requiredMeeting.indexOf(description) !== -1) {
+            return `requiredMeeting`;
+        }
+
+        if (description.startsWith(`SequentialNumberMappingService:prepare`)) {
             return `sequentialnumbermapping`;
         }
 
         return `other`;
+    }
+
+    for (const queue of Object.keys(subscriptionQueues)) {
+        const fulfillingSubscription = subscriptionQueues[queue].find(s => s.fulfills(queryParams, request));
+        if (fulfillingSubscription) {
+            fulfillingSubscription.addPort(ctx);
+            return;
+        }
     }
 
     const existingSubscription = autoupdatePool.getMatchingSubscription(queryParams, request);

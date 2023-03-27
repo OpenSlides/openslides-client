@@ -176,5 +176,50 @@ export class User extends BaseDecimalModel<User> {
     protected getDecimalFields(): (keyof User)[] {
         return [`vote_weight_$`, `default_vote_weight`];
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof User | { templateField: string })[] = [
+        `id`,
+        `username`,
+        `pronoun`,
+        `title`,
+        `first_name`,
+        `last_name`,
+        `is_active`,
+        `is_physical_person`,
+        `default_password`,
+        `can_change_own_password`,
+        `gender`,
+        `email`,
+        `default_number`,
+        `default_structure_level`,
+        `default_vote_weight`,
+        `last_email_send`,
+        `is_demo_user`,
+        `last_login`,
+        `organization_management_level`,
+        `is_present_in_meeting_ids`,
+        `committee_ids`,
+        { templateField: `committee_$_management_level` },
+        { templateField: `comment_$` },
+        { templateField: `number_$` },
+        { templateField: `structure_level_$` },
+        { templateField: `about_me_$` },
+        { templateField: `vote_weight_$` },
+        { templateField: `group_$_ids` },
+        { templateField: `speaker_$_ids` },
+        { templateField: `personal_note_$_ids` },
+        { templateField: `supported_motion_$_ids` },
+        { templateField: `submitted_motion_$_ids` },
+        { templateField: `poll_voted_$_ids` },
+        { templateField: `option_$_ids` },
+        { templateField: `vote_$_ids` },
+        { templateField: `assignment_candidate_$_ids` },
+        { templateField: `vote_delegated_$_to_id` },
+        { templateField: `vote_delegations_$_from_ids` },
+        { templateField: `chat_message_$_ids` },
+        `poll_candidate_ids`,
+        `meeting_ids`,
+        `organization_id`
+    ];
 }
 export interface User extends HasProjectionIds {}

@@ -1,10 +1,11 @@
-import { map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { MEETING_LIST_SUBSCRIPTION } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
-export const getMeetingListSubscriptionConfig = (getNextMeetingIdObservable: () => Observable<Id | null>) => ({
+import { DEFAULT_FIELDSET } from '../../services/model-request-builder';
+
+export const getMeetingListSubscriptionConfig: SubscriptionConfigGenerator = () => ({
     modelRequest: {
         viewModelCtor: ViewOrganization,
         ids: [ORGANIZATION_ID],
@@ -14,8 +15,24 @@ export const getMeetingListSubscriptionConfig = (getNextMeetingIdObservable: () 
             getMeetingListFollowConfig(`template_meeting_ids`)
         ]
     },
-    subscriptionName: MEETING_LIST_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !!id))
+    subscriptionName: MEETING_LIST_SUBSCRIPTION
+});
+
+export const ORGANIZATION_SUBSCRIPTION = `organization_detail`;
+
+export const getOrganizationSubscriptionConfig: SubscriptionConfigGenerator = () => ({
+    modelRequest: {
+        viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
+        fieldset: `settings`,
+        additionalFields: [`committee_ids`, `organization_tag_ids`],
+        follow: [
+            { idField: `mediafile_ids`, fieldset: `organizationDetail` },
+            { idField: `theme_id`, fieldset: DEFAULT_FIELDSET }
+        ]
+    },
+    subscriptionName: ORGANIZATION_SUBSCRIPTION,
+    isDelayed: false
 });
 
 function getMeetingListFollowConfig(

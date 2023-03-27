@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';
@@ -9,35 +10,6 @@ import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
 import { AutoupdateCommunicationService } from './autoupdate-communication.service';
 import { autoupdateFormatToModelData, AutoupdateModelData, ModelData } from './utils';
-
-export type FieldDescriptor = RelationFieldDescriptor | GenericRelationFieldDecriptor | StructuredFieldDecriptor;
-
-export interface Fields {
-    [field: string]: FieldDescriptor | null;
-}
-
-export interface HasFields {
-    fields: Fields;
-}
-
-export interface ModelRequest extends HasFields {
-    ids: Id[];
-    collection: string;
-}
-
-export interface GenericRelationFieldDecriptor extends HasFields {
-    type: 'generic-relation-list' | 'generic-relation';
-}
-
-export interface RelationFieldDescriptor extends HasFields {
-    type: 'relation-list' | 'relation';
-    collection: string;
-}
-
-export interface StructuredFieldDecriptor {
-    type: 'template';
-    values?: RelationFieldDescriptor | GenericRelationFieldDecriptor;
-}
 
 export interface ModelSubscription {
     id: Id;
@@ -151,7 +123,7 @@ export class AutoupdateService {
      */
     public async single(modelRequest: ModelRequestObject, description: string): Promise<ModelData> {
         const request = modelRequest.getModelRequest();
-        console.log(`autoupdate: new single request:`, description, modelRequest, request);
+        console.debug(`[autoupdate] new single request:`, description, [modelRequest, request]);
         const modelSubscription = await this.request(request, description, null, { single: 1 });
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
         const data = await modelSubscription.receivedData;
@@ -169,7 +141,7 @@ export class AutoupdateService {
      */
     public async subscribe(modelRequest: ModelRequestObject, description: string): Promise<ModelSubscription> {
         const request = modelRequest.getModelRequest();
-        console.log(`autoupdate: new request:`, description, modelRequest, request);
+        console.debug(`[autoupdate] new request:`, description, [modelRequest, request]);
         const modelSubscription = await this.request(request, description);
         this._activeRequestObjects[modelSubscription.id] = { modelRequest, modelSubscription, description };
         return modelSubscription;
@@ -203,6 +175,8 @@ export class AutoupdateService {
                 if (this._resolveDataReceived[id]) {
                     rejectReceivedData();
                 }
+
+                console.debug(`[autoupdate] stream closed: `, description);
             }
         };
     }
@@ -213,7 +187,7 @@ export class AutoupdateService {
         }
 
         const modelData = autoupdateFormatToModelData(autoupdateData);
-        console.log(`autoupdate: from stream ${description}`, id, modelData, `raw data:`, autoupdateData);
+        console.debug(`[autoupdate] from stream:`, description, id, [modelData, autoupdateData]);
         const fullListUpdateCollections: {
             [collection: string]: Ids;
         } = {};

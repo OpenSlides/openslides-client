@@ -17,6 +17,7 @@ import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-mo
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
@@ -26,6 +27,7 @@ import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/ser
 
 import { ViewTag } from '../../../../../motions';
 import { TagControllerService } from '../../../../../motions/modules/tags/services';
+import { getTopicDuplicateSubscriptionConfig } from '../../../../agenda.subscription';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
 import { AgendaItemControllerService } from '../../../../services';
 import { AgendaItemExportService } from '../../services/agenda-item-export.service/agenda-item-export.service';
@@ -310,7 +312,18 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * Export all items as CSV
      */
     public csvExportItemList(): void {
-        this.agendaItemExportService.exportAsCsv(this.listComponent.source);
+        this.modelRequestService
+            .fetch({
+                modelRequest: {
+                    viewModelCtor: ViewMeeting,
+                    ids: [this.activeMeetingId],
+                    follow: [{ idField: `topic_ids`, fieldset: [`text`] }]
+                },
+                subscriptionName: `topic_list_texts`
+            })
+            .then(() => {
+                this.agendaItemExportService.exportAsCsv(this.listComponent.source);
+            });
     }
 
     /**
@@ -358,8 +371,13 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      *
      * @param topicAgendaItem The item to duplicte.
      */
+
     public duplicateTopic(topicAgendaItem: ViewAgendaItem): void {
-        this.topicRepo.duplicateTopics(topicAgendaItem);
+        this.modelRequestService
+            .fetch(getTopicDuplicateSubscriptionConfig(topicAgendaItem.content_object.id))
+            .then(() => {
+                this.topicRepo.duplicateTopics(topicAgendaItem);
+            });
     }
 
     /**
@@ -368,7 +386,16 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * @param selectedItems All selected items.
      */
     public duplicateMultipleTopics(selectedItems: ViewAgendaItem[]): void {
-        this.topicRepo.duplicateTopics(...selectedItems.filter(item => this.isTopic(item.content_object)));
+        const filteredItems = selectedItems.filter(item => this.isTopic(item.content_object));
+        if (!filteredItems.length) {
+            return;
+        }
+
+        this.modelRequestService
+            .fetch(getTopicDuplicateSubscriptionConfig(...filteredItems.map(el => el.content_object.id)))
+            .then(() => {
+                this.topicRepo.duplicateTopics(...filteredItems);
+            });
     }
 
     /**

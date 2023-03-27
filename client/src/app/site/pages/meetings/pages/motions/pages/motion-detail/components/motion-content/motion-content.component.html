@@ -65,6 +65,7 @@
                     [multiple]="true"
                     placeholder="{{ 'Submitters' | translate }}"
                     [repo]="participantRepo"
+                    [subscriptionConfig]="participantSubscriptionConfig"
                     (clickNotFound)="createNewSubmitter($event)"
                 >
                     <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">
@@ -205,6 +206,7 @@
                         [multiple]="true"
                         placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"
+                        [subscriptionConfig]="participantSubscriptionConfig"
                         (clickNotFound)="createNewSupporter($event)"
                     >
                         <ng-template osNotFoundDescription>

@@ -112,6 +112,55 @@ export class Theme extends BaseModel {
     public constructor(input?: Partial<Theme>) {
         super(Theme.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Theme | { templateField: string })[] = [
+        `id`,
+        `name`,
+        `accent_100`,
+        `accent_200`,
+        `accent_300`,
+        `accent_400`,
+        `accent_50`,
+        `accent_500`,
+        `accent_600`,
+        `accent_700`,
+        `accent_800`,
+        `accent_900`,
+        `accent_a100`,
+        `accent_a200`,
+        `accent_a400`,
+        `accent_a700`,
+        `primary_100`,
+        `primary_200`,
+        `primary_300`,
+        `primary_400`,
+        `primary_50`,
+        `primary_500`,
+        `primary_600`,
+        `primary_700`,
+        `primary_800`,
+        `primary_900`,
+        `primary_a100`,
+        `primary_a200`,
+        `primary_a400`,
+        `primary_a700`,
+        `warn_100`,
+        `warn_200`,
+        `warn_300`,
+        `warn_400`,
+        `warn_50`,
+        `warn_500`,
+        `warn_600`,
+        `warn_700`,
+        `warn_800`,
+        `warn_900`,
+        `warn_a100`,
+        `warn_a200`,
+        `warn_a400`,
+        `warn_a700`,
+        `theme_for_organization_id`,
+        `organization_id`
+    ];
 }
 
 export interface Theme extends ThemeRequiredValues, ThemeOptionalValues {}

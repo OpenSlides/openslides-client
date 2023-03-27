@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getParticipantSubscriptionConfig } from '../../config/model-subscription';
+import { getParticipantListSubscriptionConfig } from '../../participants.subscription';
 
 @Component({
     selector: `os-participant-main`,
@@ -11,7 +11,7 @@ import { getParticipantSubscriptionConfig } from '../../config/model-subscriptio
 export class ParticipantMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo(getParticipantSubscriptionConfig(id, () => this.hasMeetingIdChangedObservable()));
+            this.subscribeTo(getParticipantListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
         }
     }
 }

@@ -18,15 +18,13 @@ const routes: Routes = [
                 path: `detail`,
                 loadChildren: () =>
                     import(`./modules/projector-detail/projector-detail.module`).then(m => m.ProjectorDetailModule)
-            },
-            {
-                path: ``,
-                loadChildren: () =>
-                    import(`./modules/fullscreen-projector/fullscreen-projector.module`).then(
-                        m => m.FullscreenProjectorModule
-                    )
             }
         ]
+    },
+    {
+        path: ``,
+        loadChildren: () =>
+            import(`./modules/fullscreen-projector/fullscreen-projector.module`).then(m => m.FullscreenProjectorModule)
     }
 ];
 
