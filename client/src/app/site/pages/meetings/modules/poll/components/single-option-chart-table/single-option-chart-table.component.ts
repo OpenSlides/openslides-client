@@ -85,6 +85,10 @@ export class SingleOptionChartTableComponent {
         return this.method === PollMethod.YNA;
     }
 
+    public get textSizeClass(): string {
+        return `text-` + this.iconSize;
+    }
+
     public get shouldShowChart(): boolean {
         return !this.tableData.some(option => option.value[0].amount < 0);
     }

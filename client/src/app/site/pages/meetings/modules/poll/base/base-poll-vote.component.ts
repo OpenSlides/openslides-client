@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -17,6 +17,7 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
+import { VoteControllerService } from '../services/vote-controller.service';
 import { VotingProhibition, VotingService } from '../services/voting.service';
 
 export interface VoteOption {
@@ -67,6 +68,8 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     private _poll!: ViewPoll<C>;
     private _delegationsMap: { [userId: number]: ViewUser } = {};
     private _canVoteForSubjectMap: { [userId: number]: BehaviorSubject<boolean> } = {};
+
+    private voteRepo = inject(VoteControllerService);
 
     public constructor(
         operator: OperatorService,
@@ -143,7 +146,11 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     private setupHasVotedSubscription(): void {
         this.subscriptions.push(
-            this.poll.hasVotedObservable.subscribe(() => {
+            this.voteRepo.subscribeVoted(this.poll).subscribe(() => {
+                if (this.user) {
+                    this.createVotingDataObjects();
+                }
+
                 for (const key of Object.keys(this._canVoteForSubjectMap)) {
                     this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
                 }
@@ -154,9 +161,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     private setupDelegations(): void {
         for (const delegation of this.delegations) {
             this._delegationsMap[delegation.id] = delegation;
+            this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
             if (!this.voteRequestData[delegation.id]) {
                 this.voteRequestData[delegation.id] = { value: {} } as VotingData;
-                this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
                 this.deliveringVote[delegation.id] = false;
             }
         }
@@ -164,7 +171,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     private canVote(user: ViewUser = this.user): boolean {
         return (
-            this.votingService.canVote(this.poll, user) && !this.isDeliveringVote(user) && !this.hasAlreadyVoted(user)
+            this.votingService.canVote(this.poll, user) &&
+            !this.isDeliveringVote(user) &&
+            !this.hasAlreadyVoted(user) &&
+            this.hasAlreadyVoted(user) !== undefined
         );
     }
 }
