@@ -27,7 +27,6 @@
     "doc-serve": "./node_modules/.bin/compodoc -c .compodocrc.json -s -o -r",
     "doc-build": "./node_modules/.bin/compodoc -c .compodocrc.json",
     "extract": "ngx-translate-extract -i ./src -o ./src/assets/i18n/template-en.pot --clean --sort --format pot",
-    "po2json": "./node_modules/.bin/po2json -f mf src/assets/i18n/de.po src/assets/i18n/de.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/cs.po src/assets/i18n/cs.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/it.po src/assets/i18n/it.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/es.po src/assets/i18n/es.json && ./node_modules/.bin/po2json -f mf src/assets/i18n/ru.po src/assets/i18n/ru.json",
     "cleanup": "npm run prettify-write && npm run lint-write",
     "prettify-check": "prettier --list-different \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
     "prettify-write": "prettier --list-different --write \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
@@ -72,6 +71,7 @@
     "ngx-material-timepicker": "^5.5.2",
     "ngx-papaparse": "^5.0.0",
     "pdfmake": "^0.2.6",
+    "pofile": "^1.1.4",
     "rxjs": "~7.5.7",
     "tinycolor2": "1.4.2",
     "tinymce": "^5.10.7",
@@ -117,11 +117,13 @@
     "karma-jasmine-html-reporter": "~1.7.0",
     "karma-jsdom-launcher": "^13.0.0",
     "npm-license-crawler": "^0.2.1",
-    "po2json": "^1.0.0-beta-2",
     "prettier": "^2.7.1",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^4.1.0",
     "typescript": "~4.7.3",
     "webpack-bundle-analyzer": "^4.5.0"
+  },
+  "browser": {
+      "fs": false
   }
 }
