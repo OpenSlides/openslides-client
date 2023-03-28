@@ -10,6 +10,7 @@ export const meetingFields: (keyof Meeting)[] = [
     `name`,
     `start_time`,
     `end_time`,
+    `committee_id`,
     `is_active_in_organization_id`,
     `is_archived_organization_id`,
     `template_for_organization_id`,
