@@ -106,7 +106,7 @@ function openConnection(
     if (existingSubscription) {
         existingSubscription.addPort(ctx);
         if (!existingSubscription.stream.active) {
-            autoupdatePool.reconnect(existingSubscription.stream);
+            autoupdatePool.reconnect(existingSubscription.stream, false);
         }
         return;
     }
@@ -176,6 +176,9 @@ export function addAutoupdateListener(context: any): void {
                 break;
             case `reconnect-inactive`:
                 autoupdatePool.reconnectAll(true);
+                break;
+            case `reconnect-force`:
+                autoupdatePool.reconnectAll(false);
                 break;
             case `enable-debug`:
                 registerDebugCommands();

@@ -69,13 +69,13 @@ export class AutoupdateStreamPool {
      * Resets fail counter and reconnect a stream
      * @throws if stream not in pool
      */
-    public reconnect(stream: AutoupdateStream): void {
+    public reconnect(stream: AutoupdateStream, force: boolean = true): void {
         if (!this.streams.includes(stream)) {
             throw new Error(`Stream not found`);
         }
 
         stream.failedCounter = 0;
-        this.connectStream(stream, true);
+        this.connectStream(stream, force);
     }
 
     /**

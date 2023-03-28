@@ -47,6 +47,10 @@ export interface AutoupdateReconnectInactive extends WorkerMessageContent {
     action: 'reconnect-inactive';
 }
 
+export interface AutoupdateReconnectForce extends WorkerMessageContent {
+    action: 'reconnect-force';
+}
+
 export interface AutoupdateWorkerResponse {
     sender: 'autoupdate';
     action: string;

@@ -16,12 +16,18 @@ export class AutoupdateStream {
     private abortCtrl: AbortController = undefined;
     private activeSubscriptions: AutoupdateSubscription[] = null;
     private _active: boolean = false;
+    private _connecting: boolean = false;
+    private _abortResolver: (val?: any) => void | undefined;
     private error: any | ErrorDescription = null;
     private restarting: boolean = false;
     private _currentData: Object | null = null;
 
     public get active(): boolean {
         return this._active;
+    }
+
+    public get connecting(): boolean {
+        return this._connecting;
     }
 
     /**
@@ -58,10 +64,13 @@ export class AutoupdateStream {
     /**
      * Closes the stream
      */
-    public abort(): void {
+    public async abort(): Promise<void> {
         if (this.abortCtrl !== undefined) {
+            const abortPromise = new Promise(resolver => (this._abortResolver = resolver));
+            setTimeout(this._abortResolver, 5000);
             // @ts-ignore
             this.abortCtrl.abort();
+            await abortPromise;
         }
     }
 
@@ -77,8 +86,8 @@ export class AutoupdateStream {
     ): Promise<{ stopReason: 'error' | 'aborted' | 'unused' | 'resolved' | 'in-use'; error?: any }> {
         if (this._active && !force) {
             return { stopReason: `in-use` };
-        } else if (this._active && force) {
-            this.abort();
+        } else if ((this._active || this.abortCtrl) && force) {
+            await this.abort();
         }
 
         this.restarting = false;
@@ -86,6 +95,10 @@ export class AutoupdateStream {
         try {
             await this.doRequest();
             this._active = false;
+
+            if (this._abortResolver) {
+                this._abortResolver();
+            }
         } catch (e) {
             this._active = false;
             if (e.name !== `AbortError`) {
@@ -96,6 +109,9 @@ export class AutoupdateStream {
                 return await this.start();
             }
 
+            if (this._abortResolver) {
+                this._abortResolver();
+            }
             return { stopReason: this.activeSubscriptions?.length ? `aborted` : `unused`, error: this.error };
         }
 
