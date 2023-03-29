@@ -51,7 +51,28 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
         viewModelCtor: ViewPoll,
         ids,
         fieldset: FULL_FIELDSET,
-        follow: [{ idField: `global_option_id`, fieldset: FULL_FIELDSET, follow: [{ idField: `vote_ids` }] }]
+        follow: [
+            { idField: `content_object_id`, fieldset: [`title`, ...MEETING_ROUTING_FIELDS] },
+            {
+                idField: `option_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `content_object_id`,
+                        ...UserFieldsets.FullNameSubscription,
+                        follow: [
+                            {
+                                idField: `poll_candidate_ids`,
+                                fieldset: FULL_FIELDSET,
+                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                            }
+                        ]
+                    },
+                    { idField: `vote_ids`, fieldset: FULL_FIELDSET }
+                ]
+            },
+            { idField: `global_option_id`, fieldset: FULL_FIELDSET, follow: [{ idField: `vote_ids` }] }
+        ]
     },
     subscriptionName: POLL_DETAIL_SUBSCRIPTION
 });
