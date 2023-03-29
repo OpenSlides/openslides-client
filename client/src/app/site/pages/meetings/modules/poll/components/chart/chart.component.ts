@@ -58,7 +58,7 @@ export class ChartComponent {
 
     @Input()
     public set data(inputData: ChartDate[]) {
-        if (inputData) {
+        if (inputData && inputData.length) {
             this.progressInputData(inputData);
         }
     }

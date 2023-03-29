@@ -16,9 +16,10 @@ import { MotionsExportModule } from '../../services/export/motions-export.module
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { AmendmentsRoutingModule } from './amendments-routing.module';
 import { AmendmentListComponent } from './components/amendment-list/amendment-list.component';
+import { AmendmentListMainComponent } from './components/amendment-list-main/amendment-list-main.component';
 
 @NgModule({
-    declarations: [AmendmentListComponent],
+    declarations: [AmendmentListComponent, AmendmentListMainComponent],
     imports: [
         CommonModule,
         AmendmentsRoutingModule,

@@ -5,6 +5,7 @@ import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscript
 import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
+import { ViewPoll } from './view-models';
 
 export const pollModelRequest: BaseSimplifiedModelRequest = {
     fieldset: FULL_FIELDSET,
@@ -41,4 +42,37 @@ export const getPollListSubscriptionConfig: SubscriptionConfigGenerator = (id: I
         follow: [{ idField: `poll_ids`, ...pollModelRequest }]
     },
     subscriptionName: POLL_LIST_SUBSCRIPTION
+});
+
+export const POLL_DETAIL_SUBSCRIPTION = `poll_detail`;
+
+export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
+    modelRequest: {
+        viewModelCtor: ViewPoll,
+        ids,
+        fieldset: FULL_FIELDSET,
+        follow: [
+            { idField: `content_object_id`, fieldset: [`title`, ...MEETING_ROUTING_FIELDS] },
+            {
+                idField: `option_ids`,
+                fieldset: FULL_FIELDSET,
+                follow: [
+                    {
+                        idField: `content_object_id`,
+                        ...UserFieldsets.FullNameSubscription,
+                        follow: [
+                            {
+                                idField: `poll_candidate_ids`,
+                                fieldset: FULL_FIELDSET,
+                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                            }
+                        ]
+                    },
+                    { idField: `vote_ids`, fieldset: FULL_FIELDSET }
+                ]
+            },
+            { idField: `global_option_id`, fieldset: FULL_FIELDSET, follow: [{ idField: `vote_ids` }] }
+        ]
+    },
+    subscriptionName: POLL_DETAIL_SUBSCRIPTION
 });

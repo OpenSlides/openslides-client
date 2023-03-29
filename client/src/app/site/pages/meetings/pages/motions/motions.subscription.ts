@@ -1,5 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -30,6 +31,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `category_weight`,
                     `change_recommendation_ids`,
                     `comment_ids`,
+                    `attachment_ids`,
                     `created`,
                     `derived_motion_ids`,
                     `forwarded`,
@@ -60,7 +62,11 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                 follow: [
                     { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription },
                     { idField: `personal_note_ids`, fieldset: FULL_FIELDSET },
-                    { idField: `submitter_ids`, fieldset: FULL_FIELDSET }
+                    {
+                        idField: `submitter_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                    }
                 ]
             }
         ],
@@ -165,6 +171,11 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 fieldset: FULL_FIELDSET
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
+            { idField: `lead_motion_id`, fieldset: [`text`] },
+            {
+                idField: `amendment_ids`,
+                fieldset: [`text`, `modified_final_version`, { templateField: `amendment_paragraph_$` }]
+            },
             { idField: `comment_ids`, fieldset: FULL_FIELDSET }
         ],
         fieldset: [
@@ -174,7 +185,6 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             `all_origin_ids`,
             `origin_meeting_id`,
             `derived_motion_ids`,
-            `amendment_ids`,
             { templateField: `amendment_paragraph_$` }
         ]
     },
@@ -188,4 +198,27 @@ export const getMotionListMinimalSubscriptionConfig: SubscriptionConfigGenerator
         follow: [{ idField: `motion_ids`, fieldset: [`title`, `meeting_id`, `sequential_number`] }]
     },
     subscriptionName: MOTION_LIST_MINIMAL_SUBSCRIPTION
+});
+
+export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
+
+export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [
+            {
+                idField: `motion_ids`,
+                fieldset: [],
+                follow: [
+                    {
+                        idField: `amendment_ids`,
+                        fieldset: [`text`, { templateField: `amendment_paragraph_$` }],
+                        follow: [{ idField: `lead_motion_id`, fieldset: [`text`, `modified_final_version`] }]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: AMENDMENT_LIST_SUBSCRIPTION
 });
