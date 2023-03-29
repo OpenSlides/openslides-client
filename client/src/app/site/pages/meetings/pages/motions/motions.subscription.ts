@@ -171,6 +171,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 fieldset: FULL_FIELDSET
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
+            { idField: `lead_motion_id`, fieldset: [`text`] },
             {
                 idField: `amendment_ids`,
                 fieldset: [`text`, `modified_final_version`, { templateField: `amendment_paragraph_$` }]
