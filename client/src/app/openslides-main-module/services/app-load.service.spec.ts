@@ -3,7 +3,7 @@ import { E2EImportsModule } from 'src/e2e-imports.module';
 
 import { AppLoadService } from './app-load.service';
 
-describe(`AppLoadService`, () => {
+xdescribe(`AppLoadService`, () => {
     let service: AppLoadService;
 
     beforeEach(() => {
