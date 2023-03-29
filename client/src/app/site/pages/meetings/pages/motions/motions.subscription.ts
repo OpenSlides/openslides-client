@@ -30,6 +30,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `category_weight`,
                     `change_recommendation_ids`,
                     `comment_ids`,
+                    `attachment_ids`,
                     `created`,
                     `derived_motion_ids`,
                     `forwarded`,
