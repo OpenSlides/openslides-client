@@ -261,10 +261,11 @@ export class AutoupdateCommunicationService {
     private handleBrowserReload(): void {
         if (
             (window.performance.navigation && window.performance.navigation.type === 1) ||
-            window.performance
-                .getEntriesByType(`navigation`)
-                .map(nav => nav.name)
-                .includes(`reload`)
+            (window.performance.getEntriesByType &&
+                window.performance
+                    .getEntriesByType(`navigation`)
+                    .map(nav => nav.name)
+                    .includes(`reload`))
         ) {
             this.sharedWorker.sendMessage(`autoupdate`, {
                 action: `reconnect-force`
