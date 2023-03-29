@@ -199,3 +199,26 @@ export const getMotionListMinimalSubscriptionConfig: SubscriptionConfigGenerator
     },
     subscriptionName: MOTION_LIST_MINIMAL_SUBSCRIPTION
 });
+
+export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
+
+export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
+    modelRequest: {
+        viewModelCtor: ViewMeeting,
+        ids: [id],
+        follow: [
+            {
+                idField: `motion_ids`,
+                fieldset: [],
+                follow: [
+                    {
+                        idField: `amendment_ids`,
+                        fieldset: [`text`, { templateField: `amendment_paragraph_$` }],
+                        follow: [{ idField: `lead_motion_id`, fieldset: [`text`, `modified_final_version`] }]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: AMENDMENT_LIST_SUBSCRIPTION
+});
