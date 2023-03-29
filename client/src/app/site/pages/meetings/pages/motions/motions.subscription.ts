@@ -1,5 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -61,7 +62,11 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                 follow: [
                     { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription },
                     { idField: `personal_note_ids`, fieldset: FULL_FIELDSET },
-                    { idField: `submitter_ids`, fieldset: FULL_FIELDSET }
+                    {
+                        idField: `submitter_ids`,
+                        fieldset: FULL_FIELDSET,
+                        follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                    }
                 ]
             }
         ],
