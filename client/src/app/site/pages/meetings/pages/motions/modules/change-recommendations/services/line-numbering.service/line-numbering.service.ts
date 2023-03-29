@@ -475,17 +475,21 @@ export class LineNumberingService {
      * @param {number} length
      * @param {number} highlight
      */
-    public textNodeToLines(node: Node, length: number, highlight: number | null = -1): Element[] {
+    public textNodeToLines(node: Node, length: number, highlight: number | null = -1, justify = false): Element[] {
         const out: any[] = [];
         let currLineStart = 0;
         let i = 0;
         let firstTextNode = true;
-        const addLine = (text: string) => {
+        const addLine = (text: string, lastLine = false) => {
             let lineNode;
             if (firstTextNode) {
                 if (highlight === (this.currentLineNumber as number) - 1) {
                     lineNode = document.createElement(`span`);
                     lineNode.setAttribute(`class`, `highlight`);
+                    lineNode.innerHTML = text;
+                } else if (justify && !lastLine) {
+                    lineNode = document.createElement(`div`);
+                    lineNode.setAttribute(`style`, `text-align-last: justify;`);
                     lineNode.innerHTML = text;
                 } else {
                     lineNode = document.createTextNode(text);
@@ -495,6 +499,10 @@ export class LineNumberingService {
                 if (this.currentLineNumber === highlight && highlight !== null) {
                     lineNode = document.createElement(`span`);
                     lineNode.setAttribute(`class`, `highlight`);
+                    lineNode.innerHTML = text;
+                } else if (justify && !lastLine) {
+                    lineNode = document.createElement(`div`);
+                    lineNode.setAttribute(`style`, `text-align-last: justify;`);
                     lineNode.innerHTML = text;
                 } else {
                     lineNode = document.createTextNode(text);
@@ -581,7 +589,7 @@ export class LineNumberingService {
                 (<number>this.currentInlineOffset)++;
                 i++;
             }
-            const lastLine = addLine(node.nodeValue!.substring(currLineStart));
+            const lastLine = addLine(node.nodeValue!.substring(currLineStart), true);
             if (this.lastInlineBreakablePoint !== null) {
                 this.lastInlineBreakablePoint.node = lastLine;
             }
@@ -676,6 +684,7 @@ export class LineNumberingService {
             element.removeChild(element.firstChild);
         }
 
+        let justifiedText = (<HTMLElement>element).style && (<HTMLElement>element).style[`text-align`] === `justify`;
         for (let i = 0; i < oldChildren.length; i++) {
             if (oldChildren[i].nodeType === TEXT_NODE) {
                 if (!oldChildren[i].nodeValue!.match(/\S/)) {
@@ -691,7 +700,7 @@ export class LineNumberingService {
                         continue;
                     }
                 }
-                const ret = this.textNodeToLines(oldChildren[i], length, highlight);
+                const ret = this.textNodeToLines(oldChildren[i], length, highlight, justifiedText);
                 for (let j = 0; j < ret.length; j++) {
                     element.appendChild(ret[j]);
                 }

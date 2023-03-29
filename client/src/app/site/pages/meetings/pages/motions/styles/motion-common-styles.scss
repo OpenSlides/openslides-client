@@ -109,6 +109,10 @@
     li.os-split-before {
         list-style: none;
     }
+
+    div + .os-line-break {
+        display: none;
+    }
 }
 
 .amendment-view {
