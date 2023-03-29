@@ -87,6 +87,11 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                     this.user = user;
                     this.delegations = user.vote_delegations_from();
                     this.createVotingDataObjects();
+
+                    for (const key of Object.keys(this._canVoteForSubjectMap)) {
+                        this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
+                    }
+
                     this.cd.markForCheck();
                     this._isReady = true;
                 }
