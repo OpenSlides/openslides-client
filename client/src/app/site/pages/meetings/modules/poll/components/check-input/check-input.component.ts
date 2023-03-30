@@ -90,7 +90,7 @@ export class CheckInputComponent extends BaseUiComponent implements OnInit, Cont
         } else {
             this.contentForm.enable({ emitEvent: false });
         }
-        this.sendValue();
+        this.sendValue(this.contentForm.value);
     }
 
     /**
@@ -148,7 +148,7 @@ export class CheckInputComponent extends BaseUiComponent implements OnInit, Cont
      *
      * @param value Optional parameter to pass a value to send.
      */
-    private sendValue(value?: string | number): void {
+    private sendValue(value: string | number): void {
         if (this.isChecked) {
             this.propagateChange(this.checkboxValue);
         } else {
