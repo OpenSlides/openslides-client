@@ -250,6 +250,10 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     public onChipRemove(itemId: Id): void {
         this.addOrRemoveId(itemId);
+
+        const value = this.selectableItems.find(item => item.id === itemId);
+        this.selectionChanged.emit({ value, selected: this.selectedIds.includes(itemId) });
+        this.contentForm.setValue(this.selectedItems);
     }
 
     private addOrRemoveId(id: Id): void {
