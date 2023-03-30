@@ -16,7 +16,7 @@ import { MotionPollService } from '../../services';
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     public PercentBaseVerbose = PollPercentBaseVerbose;
-    public majority: string;
+    public majority: string = ``;
 
     public constructor(
         public motionPollService: MotionPollService,
@@ -28,7 +28,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent implement
     }
 
     public ngAfterViewInit() {
-        this.dialogVoteForm.get(`options.${this.pollData.content_object?.fqid}`).valueChanges.subscribe(data => {
+        this.dialogVoteForm.get(`options.${this.pollData.content_object?.fqid}`)?.valueChanges.subscribe(data => {
             let newMajority = data[this.majority] === -1 ? this.majority : ``;
             for (let option of Object.keys(data)) {
                 if (data[option] === -1 && this.majority !== option) {
@@ -39,7 +39,9 @@ export class MotionPollDialogComponent extends BasePollDialogComponent implement
             if (this.majority !== newMajority) {
                 for (let option of Object.keys(data)) {
                     if (data[option] === -1 && newMajority !== option) {
-                        this.dialogVoteForm.get(`options.${this.pollData.content_object?.fqid}.${option}`).setValue(``);
+                        this.dialogVoteForm
+                            .get(`options.${this.pollData.content_object?.fqid}.${option}`)
+                            ?.setValue(``);
                     }
                 }
             }
