@@ -16,7 +16,7 @@ import { MotionPollService } from '../../services';
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
     public PercentBaseVerbose = PollPercentBaseVerbose;
-    public majority: string = ``;
+    public majority: string;
 
     public constructor(
         public motionPollService: MotionPollService,
