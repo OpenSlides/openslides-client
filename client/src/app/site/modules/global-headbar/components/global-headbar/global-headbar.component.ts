@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
+import { GlobalSearchComponent } from '../global-search/global-search.component';
 
 @Component({
     selector: `os-global-headbar`,
@@ -8,7 +10,7 @@ import { OrganizationService } from 'src/app/site/pages/organization/services/or
     styleUrls: [`./global-headbar.component.scss`]
 })
 export class GlobalHeadbarComponent {
-    public isSearchEnabled = false;
+    public isSearchEnabled = true;
 
     public get displayName(): string {
         if (this.activeMeeting.meeting) {
@@ -20,7 +22,13 @@ export class GlobalHeadbarComponent {
         return ``;
     }
 
-    public constructor(private activeMeeting: ActiveMeetingService, private orgaService: OrganizationService) {}
+    public constructor(
+        private activeMeeting: ActiveMeetingService,
+        private orgaService: OrganizationService,
+        private dialog: MatDialog
+    ) {}
 
-    public openSearch(): void {}
+    public openSearch(): void {
+        this.dialog.open(GlobalSearchComponent);
+    }
 }

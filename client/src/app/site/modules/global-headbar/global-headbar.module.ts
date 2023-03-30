@@ -1,7 +1,9 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +28,8 @@ const MODULES = [
     MatDividerModule,
     MatMenuModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule
 ];
 const DECLARATIONS = [GlobalHeadbarComponent];
 
@@ -39,6 +42,8 @@ const DECLARATIONS = [GlobalHeadbarComponent];
         UserComponentsModule,
         RouterModule,
         ScrollingModule,
+        FormsModule,
+        ReactiveFormsModule,
         ...MODULES
     ]
 })

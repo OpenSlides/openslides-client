@@ -1,1 +1,17 @@
-<p>global-search works!</p>
+<div mat-dialog-title>
+    <mat-form-field appearance="outline">
+        <input matInput [(ngModel)]="searchTerm" (change)="searchChange()" placeholder="{{ 'Search' | translate }}">
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <section class="example-section" [formGroup]="currentFilters">
+        <mat-checkbox *ngFor="let filter of availableFilters" formControlName="{{ filter.field }}">{{ filter.label }}</mat-checkbox>
+    </section>
+</div>
+
+<mat-dialog-content class="search-results">
+    <div *ngFor="let result of results" class="result" [routerLink]="result.url" mat-dialog-close>
+        <h3 *ngIf="result.title">{{ result.title }}</h3>
+        <p *ngIf="result.text">{{ result.text }}</p>
+    </div>
+</mat-dialog-content>

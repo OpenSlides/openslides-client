@@ -1,0 +1,10 @@
+.search-results {
+    .result {
+        cursor: pointer;
+    }
+
+    .result:not(:last-of-type) {
+        margin-bottom: 1em;
+        border-bottom: 1px solid;
+    }
+}
