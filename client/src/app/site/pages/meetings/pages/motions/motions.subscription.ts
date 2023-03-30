@@ -176,7 +176,8 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 idField: `amendment_ids`,
                 fieldset: [`text`, `modified_final_version`, { templateField: `amendment_paragraph_$` }]
             },
-            { idField: `comment_ids`, fieldset: FULL_FIELDSET }
+            { idField: `comment_ids`, fieldset: FULL_FIELDSET },
+            { idField: `supporter_ids`, ...UserFieldsets.FullNameSubscription }
         ],
         fieldset: [
             `reason`,
