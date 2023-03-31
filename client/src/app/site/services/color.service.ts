@@ -110,4 +110,9 @@ export class ColorService {
         rgbA.r = Math.floor((rgbA.r * rgbB.r) / 255);
         return tinycolor(`rgb ` + rgbA.r + ` ` + rgbA.g + ` ` + rgbA.b);
     }
+
+    public isLightFromHex(hex: HtmlColor): boolean {
+        const color = tinycolor(hex);
+        return color.isLight();
+    }
 }

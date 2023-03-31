@@ -1,4 +1,5 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { currentGeneralColorsSubject, GENERAL_DEFAULT_COLORS } from 'src/app/site/services/theme.service';
 
 import { OptionDataKey, PollDataKey } from './generic-poll';
 
@@ -27,13 +28,17 @@ export enum PollClassType {
     Topic = `topic`
 }
 
-export enum PollColor {
-    yes = `#4caf50`,
-    no = `#cc6c5b`,
-    abstain = `#a6a6a6`,
+enum PollColor {
     votesvalid = `#e2e2e2`,
     votesinvalid = `#e2e2e2`,
     votescast = `#e2e2e2`
+}
+
+export function getPollColor(key: string): string {
+    if ([`yes`, `no`, `abstain`].includes(key)) {
+        return currentGeneralColorsSubject.value[key] ?? GENERAL_DEFAULT_COLORS[key];
+    }
+    return PollColor[key];
 }
 
 /**

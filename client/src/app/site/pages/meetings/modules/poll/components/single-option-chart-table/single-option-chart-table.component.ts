@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { PollData, PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
+import { currentGeneralColorsSubject } from 'src/app/site/services/theme.service';
 
 import { PollService } from '../../services/poll.service';
 import { ChartData } from '../chart/chart.component';
@@ -93,7 +94,13 @@ export class SingleOptionChartTableComponent {
         return !this.tableData.some(option => option.value[0].amount < 0);
     }
 
-    public constructor(private cd: ChangeDetectorRef, private defaultPollService: PollService) {}
+    public constructor(private cd: ChangeDetectorRef, private defaultPollService: PollService) {
+        currentGeneralColorsSubject.subscribe(_ => {
+            if (this.tableData) {
+                this.setChartData();
+            }
+        });
+    }
 
     private setChartData(): void {
         if (!this._pollService) {

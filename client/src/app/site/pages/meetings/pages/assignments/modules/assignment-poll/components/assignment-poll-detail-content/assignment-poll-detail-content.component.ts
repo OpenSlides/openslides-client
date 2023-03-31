@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -11,6 +12,7 @@ import {
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { currentGeneralColorsSubject } from 'src/app/site/services/theme.service';
 
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
@@ -130,7 +132,12 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     ) {}
 
     public ngOnInit(): void {
-        this.poll.options_as_observable.subscribe(options => this.setupTableData());
+        this.poll.options_as_observable
+            .pipe(
+                combineLatestWith(currentGeneralColorsSubject),
+                map(([options, _]) => options)
+            )
+            .subscribe(options => this.setupTableData());
     }
 
     private setupTableData(): void {

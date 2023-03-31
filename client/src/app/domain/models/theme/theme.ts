@@ -52,6 +52,13 @@ export interface ThemeOptionalValues {
     warn_a700?: HtmlColor;
 }
 
+export interface ThemeGeneralColors {
+    headbar: HtmlColor;
+    yes: HtmlColor;
+    no: HtmlColor;
+    abstain: HtmlColor;
+}
+
 // export class ThemeRequiredValues {
 //     // Required
 //     public name!: string;
@@ -158,9 +165,13 @@ export class Theme extends BaseModel {
         `warn_a200`,
         `warn_a400`,
         `warn_a700`,
+        `headbar`,
+        `yes`,
+        `no`,
+        `abstain`,
         `theme_for_organization_id`,
         `organization_id`
     ];
 }
 
-export interface Theme extends ThemeRequiredValues, ThemeOptionalValues {}
+export interface Theme extends ThemeRequiredValues, ThemeOptionalValues, Partial<ThemeGeneralColors> {}

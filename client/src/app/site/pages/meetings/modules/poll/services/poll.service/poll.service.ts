@@ -5,9 +5,9 @@ import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
+    getPollColor,
     isPollTableData,
     NO_KEY,
-    PollColor,
     PollMethod,
     PollPercentBase,
     PollPercentBaseVerbose,
@@ -335,8 +335,8 @@ export abstract class PollService {
                     ({
                         data: this.getResultFromPoll(poll, key), // 0: option, 1: global_option
                         label: key.toUpperCase(),
-                        backgroundColor: PollColor[key],
-                        hoverBackgroundColor: PollColor[key],
+                        backgroundColor: getPollColor(key),
+                        hoverBackgroundColor: getPollColor(key),
                         barThickness: PollChartBarThickness,
                         maxBarThickness: PollChartBarThickness
                     } as ChartDate)

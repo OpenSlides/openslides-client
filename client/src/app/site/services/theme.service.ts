@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 
 import { HtmlColor, Id } from '../../domain/definitions/key-types';
-import { ThemeRequiredValues } from '../../domain/models/theme/theme';
+import { ThemeGeneralColors, ThemeRequiredValues } from '../../domain/models/theme/theme';
 import { StorageService } from '../../gateways/storage.service';
 import { ViewTheme } from '../pages/organization/pages/designs';
 import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
@@ -13,6 +13,20 @@ import { ColorDefinition, ColorService } from './color.service';
 const DARK_MODE_STORAGE_KEY = `theme_dark_mode`;
 const DARK_MODE_CSS_CLASS = `openslides-dark-theme`;
 const LIGHT_MODE_CSS_CLASS = `openslides-light-theme`;
+
+export const GENERAL_DEFAULT_COLORS: Partial<ThemeGeneralColors> = {
+    yes: `#4caf50`,
+    no: `#cc6c5b`,
+    abstain: `#a6a6a6`
+};
+export type GeneralDefaultColorName = keyof typeof GENERAL_DEFAULT_COLORS;
+
+/**
+ * Subject that contains the current colors for the headbar, and the yes, no and abstain poll options.
+ *
+ * Set by the ColorService.
+ */
+export const currentGeneralColorsSubject: BehaviorSubject<Partial<ThemeGeneralColors>> = new BehaviorSubject({});
 
 @Injectable({
     providedIn: `root`
@@ -48,6 +62,8 @@ export class ThemeService {
     private _currentTheme: ViewTheme | null = null;
 
     private _currentThemeSubscription: Subscription | null = null;
+
+    private _primaryColorPalette: ColorDefinition[];
 
     /**
      * Here it will subscribe to the observer from login data service. The theme is part of
@@ -119,14 +135,41 @@ export class ThemeService {
     private changeThemePalettes({
         primary_500: primary = ThemeService.DEFAULT_PRIMARY_COLOR,
         accent_500: accent = ThemeService.DEFAULT_ACCENT_COLOR,
-        warn_500: warn = ThemeService.DEFAULT_WARN_COLOR
-    }: Partial<ThemeRequiredValues> = {}): void {
-        const primaryColorPalette = this.colorService.generateColorPaletteByHex(primary);
+        warn_500: warn = ThemeService.DEFAULT_WARN_COLOR,
+        yes = GENERAL_DEFAULT_COLORS.yes,
+        no = GENERAL_DEFAULT_COLORS.no,
+        abstain = GENERAL_DEFAULT_COLORS.abstain,
+        headbar,
+        ..._
+    }: Partial<ThemeRequiredValues & ThemeGeneralColors> = {}): void {
+        this._primaryColorPalette = this.colorService.generateColorPaletteByHex(primary);
         const accentColorPalette = this.colorService.generateColorPaletteByHex(accent);
         const warnColorPalette = this.colorService.generateColorPaletteByHex(warn);
-        this.setThemeByColorPalette(primaryColorPalette, `primary`);
+        this.setThemeByColorPalette(this._primaryColorPalette, `primary`);
         this.setThemeByColorPalette(accentColorPalette, `accent`);
         this.setThemeByColorPalette(warnColorPalette, `warn`);
+        this.changeThemeGeneralColors({ yes, no, abstain, headbar });
+    }
+
+    /**
+     * Adds the yes, no, abstain and headbar colors to the styles.
+     *
+     * Uses default values for yes, no and abstain,
+     * and the darkest version of the primary color for headbar,
+     * if the fields are empty.
+     */
+    private changeThemeGeneralColors(data: ThemeGeneralColors): void {
+        data.headbar = data.headbar ?? (this._primaryColorPalette.find(def => def.name === `900`).hex as HtmlColor);
+        for (const usage of Object.keys(data)) {
+            const key = `--theme-${usage}`;
+            const value = data[usage];
+            document.documentElement.style.setProperty(key, value);
+        }
+        currentGeneralColorsSubject.next(data);
+        document.documentElement.style.setProperty(
+            `--theme-headbar-contrast`,
+            this.colorService.isLightFromHex(data.headbar) ? `rgba(black, 0.87)` : `white`
+        );
     }
 
     private setThemeByColorPalette(colorPalette: ColorDefinition[], usage: ThemePalette): void {

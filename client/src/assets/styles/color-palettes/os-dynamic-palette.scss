@@ -96,3 +96,10 @@ $dynamic-theme-warn: (
         A700: var(--theme-warn-contrast-A700)
     )
 );
+
+$dynamic-theme-general-colors: (
+    yes: var(--theme-yes),
+    no: var(--theme-no),
+    abstain: var(--theme-abstain),
+    headbar: var(--theme-headbar)
+);

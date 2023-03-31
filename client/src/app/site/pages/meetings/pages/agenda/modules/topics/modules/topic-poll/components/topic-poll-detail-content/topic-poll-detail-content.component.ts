@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { pollChartColors, pollChartGreys, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { currentGeneralColorsSubject } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { TopicPollService } from '../../services/topic-poll.service';
@@ -85,11 +87,17 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     private setupTableData(): void {
         this.updateSubscription(
             SUBSCRIPTION_NAME,
-            this.pollService.generateTableDataAsObservable(this.poll).subscribe(tableData => {
-                this._tableData = tableData;
-                this.setChartData();
-                this.cd.markForCheck();
-            })
+            this.pollService
+                .generateTableDataAsObservable(this.poll)
+                .pipe(
+                    combineLatestWith(currentGeneralColorsSubject),
+                    map(([tableData, _]) => tableData)
+                )
+                .subscribe(tableData => {
+                    this._tableData = tableData;
+                    this.setChartData();
+                    this.cd.markForCheck();
+                })
         );
     }
 

@@ -5,11 +5,11 @@ import { map } from 'rxjs/operators';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
+    getPollColor,
     NO_KEY,
     OptionData,
     Poll,
     PollBackendDurationType,
-    PollColor,
     PollData,
     PollMethod,
     PollPercentBase,
@@ -155,8 +155,8 @@ export class TopicPollService extends PollService {
                 ({
                     data: this.getResultFromPoll(poll, key).sort((a, b) => compareNumber(a, b)),
                     label: key.toUpperCase(),
-                    backgroundColor: PollColor[key],
-                    hoverBackgroundColor: PollColor[key],
+                    backgroundColor: getPollColor(key),
+                    hoverBackgroundColor: getPollColor(key),
                     barThickness: 20,
                     maxBarThickness: 20
                 } as ChartDate)
