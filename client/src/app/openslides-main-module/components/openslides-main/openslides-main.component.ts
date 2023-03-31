@@ -10,6 +10,7 @@ import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
+import { availableTranslations } from 'src/app/domain/definitions/languages';
 
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
@@ -42,7 +43,7 @@ export class OpenSlidesMainComponent implements OnInit {
 
     private loadTranslation(): void {
         // manually add the supported languages
-        this.translate.addLangs([`en`, `de`, `cs`, `it`, `es`, `ru`]);
+        this.translate.addLangs(Object.keys(availableTranslations));
         // this language will be used as a fallback when a translation isn't found in the current language
         this.translate.setDefaultLang(`en`);
         // get the browsers default language

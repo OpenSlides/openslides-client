@@ -1128,6 +1128,9 @@ msgstr ""
 msgid "Default groups with voting rights"
 msgstr ""
 
+msgid "Default language"
+msgstr ""
+
 msgid "Default line numbering"
 msgstr ""
 
@@ -1969,6 +1972,9 @@ msgid "Keep each item in a single line."
 msgstr ""
 
 msgid "Label color"
+msgstr ""
+
+msgid "Language"
 msgstr ""
 
 msgid "Last email sent"
@@ -3763,13 +3769,13 @@ msgstr ""
 msgid "This meeting is archived"
 msgstr ""
 
+msgid "This number already exists"
+msgstr ""
+
 msgid "This paragraph does not exist in the main motion anymore:"
 msgstr ""
 
 msgid "This prefix already exists"
-msgstr ""
-
-msgid "This prefix already exists."
 msgstr ""
 
 msgid "This prefix will be set if you run the automatic agenda numbering."
