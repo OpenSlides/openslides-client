@@ -7,8 +7,10 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { BaseBeforeImportHandler } from '../base-before-import-handler';
 import { BeforeFindAction, CsvMapping, ImportResolveInformation } from '../import-utils';
 
+export type UserNameMap = { [username: string]: Partial<User>[] };
+
 export interface UserSearchService {
-    getDuplicates(users: Partial<User>[]): Promise<{ [identifiedName: string]: Partial<User>[] }>;
+    getDuplicates(users: Partial<User>[]): Promise<UserNameMap>;
 }
 
 interface UserImportHelperService {
@@ -28,17 +30,14 @@ interface UserImportConfig<Model> {
 
 class UserImportHelperSharedContext {
     private static _modelsToCreateMap: { [username: string]: CsvMapping<User> } = {};
-    private static _existingUsersMap: { [username: string]: Partial<User>[] } = {};
+    private static _existingUsersMap: UserNameMap = {};
 
-    public static addExistingUsers(map: { [username: string]: Partial<User>[] }): void {
-        for (const key of Object.keys(map)) {
-            this._existingUsersMap[key] = map[key];
-        }
+    public static addExistingUsers(map: UserNameMap): void {
+        Object.assign(this._existingUsersMap, map);
     }
 
-    public static findExistingUser(nextUser: { username: string }): ViewUser[] {
-        const index = `${nextUser.username}/`;
-        return this._existingUsersMap[index] ? (this._existingUsersMap[index] as any) : [];
+    public static findExistingUser(nextUser: { username: string }): Partial<User>[] {
+        return this._existingUsersMap[nextUser.username] ?? [];
     }
 
     public static addNextModelToCreate(model: CsvMapping<User>): void {
@@ -154,7 +153,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         return models.map(newUser => ({ first_name: newUser.name }));
     }
 
-    private getNextEntry(user: string, existingUsers: ViewUser[]): CsvMapping<User> {
+    private getNextEntry(user: string, existingUsers: Partial<User>[]): CsvMapping<User> {
         const returnValue: CsvMapping<User> = { name: user, willBeCreated: true } as any;
         if (
             !existingUsers.length &&
@@ -171,7 +170,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
         return returnValue;
     }
 
-    private findExistingUsers(user: string): ViewUser[] {
+    private findExistingUsers(user: string): Partial<User>[] {
         const nextUser = this._repo.parseStringIntoUser(user.trim());
         if (this._userSearchService) {
             return UserImportHelperSharedContext.findExistingUser(nextUser);

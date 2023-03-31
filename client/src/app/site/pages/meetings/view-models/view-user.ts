@@ -12,8 +12,16 @@ import { ViewMotion, ViewMotionSubmitter } from '../pages/motions';
 import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
+
+export enum DuplicateStatus {
+    None,
+    SameEmail,
+    SameName,
+    All
+}
 
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
@@ -266,6 +274,19 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         }
         return this.vote_delegations_from_ids().includes(user.id);
     }
+
+    public getDuplicateStatusInMap(data: { name: Map<string, Id[]>; email: Map<string, Id[]> }): DuplicateStatus {
+        const sameNameIds = this.getName() ? data.name.get(this.getName()) : [];
+        const sameEmailIds = this.email ? data.email.get(this.email) : [];
+        let status: number = DuplicateStatus.None;
+        if (sameNameIds?.find(id => id !== this.id)) {
+            status = DuplicateStatus.SameName;
+        }
+        if (sameEmailIds?.find(id => id !== this.id)) {
+            status = status === DuplicateStatus.SameName ? DuplicateStatus.All : DuplicateStatus.SameEmail;
+        }
+        return status;
+    }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
 interface IUserRelations {
@@ -273,6 +294,7 @@ interface IUserRelations {
     committees: ViewCommittee[];
     meetings: ViewMeeting[];
     organization: ViewOrganization;
+    poll_candidates: ViewPollCandidate[];
     committee_management_levels: (arg?: CML) => ViewCommittee[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;

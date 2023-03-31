@@ -157,7 +157,7 @@
         [canOpen]="perms.isAllowed('change_metadata', motion)">
         <button menu mat-menu-item *ngFor="let category of categories" (click)="setCategory(category.id)">
             <mat-icon *ngIf="motion.category_id === category.id">check</mat-icon>
-            {{ category.prefixedNameWithParents }}
+            <span [ngStyle]="{ 'padding-left': getCategorySelectionMarginLeft(category) }">{{ category.prefixedNameWithParents }}</span>
         </button>
 
         <div *ngIf="motion.category">
@@ -198,7 +198,7 @@
     <h4 *ngIf="perms.isAllowed('change_metadata', motion) || motion.block">
         {{ 'Motion block' | translate }}
     </h4>
-    <os-chip-select 
+    <os-chip-select
         *ngIf="perms.isAllowed('change_metadata', motion) || motion.block"
         [canOpen]="perms.isAllowed('change_metadata', motion)">
         <button menu mat-menu-item *ngFor="let block of motionBlocks" (click)="setBlock(block.id)">

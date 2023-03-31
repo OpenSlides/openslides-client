@@ -14,21 +14,9 @@
         </mat-card-header>
         <mat-card-content>
             <!-- Content -->
-            <div
-                #contentBox
-                osResized
-                class="content"
-                (osResizedHeight)="onResizedHeight($event)"
-                [ngClass]="!isExpanded && !disableExpandControl ? 'collapsed collapsed-card-content' : ''"
-            >
+            <os-expandable-content-wrapper [disableExpandControl]="disableExpandControl">
                 <ng-container *ngTemplateOutlet="content"></ng-container>
-            </div>
-            <!-- Expanding control -->
-            <div class="small show-entire-text" *ngIf="canExpand && !disableExpandControl">
-                <a (click)="isExpanded = !isExpanded">
-                    {{ isExpanded ? ('Hide more text' | translate) : ('Show full text' | translate) }}
-                </a>
-            </div>
+            </os-expandable-content-wrapper>
         </mat-card-content>
     </mat-card>
 </div>

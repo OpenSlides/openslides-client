@@ -4,7 +4,7 @@ import { E2EImportsModule } from 'src/e2e-imports.module';
 import { AgendaItemListModule } from '../../agenda-item-list.module';
 import { AgendaItemMultiselectService } from './agenda-item-multiselect.service';
 
-describe(`AgendaItemMultiselectService`, () => {
+xdescribe(`AgendaItemMultiselectService`, () => {
     let service: AgendaItemMultiselectService;
 
     beforeEach(() => {

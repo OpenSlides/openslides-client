@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
 import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
 import { djb2hash } from 'src/app/infrastructure/utils';
@@ -14,6 +15,7 @@ import {
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveError,
+    AutoupdateReconnectForce,
     AutoupdateReconnectInactive,
     AutoupdateSetConnectionStatus,
     AutoupdateSetEndpoint,
@@ -24,7 +26,6 @@ import {
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
-import { ModelRequest } from './autoupdate.service';
 
 @Injectable({
     providedIn: `root`
@@ -92,7 +93,21 @@ export class AutoupdateCommunicationService {
             } as AutoupdateAuthChange);
         });
 
+        if (window.localStorage.getItem(`DEBUG_MODE`)) {
+            this.enableDebugUtils();
+        }
+
         this.registerConnectionStatusListener();
+        this.handleBrowserReload();
+    }
+
+    /**
+     * Enable the debug utilities of the shared worker
+     */
+    public enableDebugUtils(): void {
+        this.sharedWorker.sendMessage(`autoupdate`, {
+            action: `enable-debug`
+        });
     }
 
     /**
@@ -240,6 +255,21 @@ export class AutoupdateCommunicationService {
             }, 1000);
         } else {
             clearTimeout(this.unhealtyTimeout);
+        }
+    }
+
+    private handleBrowserReload(): void {
+        if (
+            (window.performance.navigation && window.performance.navigation.type === 1) ||
+            (window.performance.getEntriesByType &&
+                window.performance
+                    .getEntriesByType(`navigation`)
+                    .map(nav => nav.name)
+                    .includes(`reload`))
+        ) {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `reconnect-force`
+            } as AutoupdateReconnectForce);
         }
     }
 }

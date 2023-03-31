@@ -3,7 +3,7 @@ import { AgendaItem, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda
 import { Projection } from 'src/app/domain/models/projector/projection';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
+import { HasAgendaItem, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { BaseProjectableViewModel, isProjectable } from 'src/app/site/pages/meetings/view-models';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
@@ -84,6 +84,7 @@ interface AgendaItemRelations<C extends BaseViewModel & HasAgendaItem> {
     parent?: ViewAgendaItem;
     children: ViewAgendaItem[];
     meeting?: ViewMeeting;
+    list_of_speakers: ViewListOfSpeakers;
 }
 export interface ViewAgendaItem<C extends BaseViewModel & HasAgendaItem = any>
     extends AgendaItem,

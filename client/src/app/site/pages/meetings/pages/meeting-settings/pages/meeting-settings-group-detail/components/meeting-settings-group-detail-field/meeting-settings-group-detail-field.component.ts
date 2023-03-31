@@ -195,6 +195,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             // This checks for discting content
             .pipe(
                 distinctUntilChanged((previous, next) => {
+                    this._comparedForm = true;
                     if (this.setting.type === `groups`) {
                         return JSON.stringify(this._firstValue) === JSON.stringify(next.value);
                     }
@@ -202,9 +203,13 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 })
             )
             .subscribe(form => {
-                this.onChange(form.value);
+                if (this._comparedForm || String(form.value) !== String(this._firstValue)) {
+                    this.onChange(form.value);
+                }
             });
     }
+
+    private _comparedForm = false;
 
     /**
      * Stops the change detection

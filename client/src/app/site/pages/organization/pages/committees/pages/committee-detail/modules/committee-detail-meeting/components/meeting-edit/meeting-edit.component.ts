@@ -21,6 +21,7 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { RoutingStateService } from 'src/app/ui/modules/head-bar/services/routing-state.service';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models';
@@ -109,6 +110,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     private editMeeting: ViewMeeting | null = null;
     private committeeId!: Id;
 
+    private cameFromList = false;
+
     /**
      * The operating user received from the OperatorService
      */
@@ -126,7 +129,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private operator: OperatorService,
         private userRepo: UserControllerService,
         private openslidesRouter: OpenSlidesRouterService,
-        private orga: OrganizationService
+        private orga: OrganizationService,
+        private routingState: RoutingStateService
     ) {
         super(componentServiceCollector, translate);
         this.checkCreateView();
@@ -143,6 +147,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.cameFromList = this.routingState.previousUrl?.includes(`meetings`);
         this.subscriptions.push(
             this.operator.userObservable.subscribe(user => {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
@@ -373,7 +378,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private goBack(): void {
-        this.router.navigate([`committees`, this.committeeId]);
+        if (this.cameFromList) {
+            this.router.navigate([`meetings`]);
+        } else {
+            this.router.navigate([`committees`, this.committeeId]);
+        }
     }
 
     private makeDatesValid(endDateChanged: boolean): void {

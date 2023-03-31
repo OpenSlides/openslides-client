@@ -85,6 +85,10 @@ export class SingleOptionChartTableComponent {
         return this.method === PollMethod.YNA;
     }
 
+    public get textSizeClass(): string {
+        return `text-` + this.iconSize;
+    }
+
     public get shouldShowChart(): boolean {
         return !this.tableData.some(option => option.value[0].amount < 0);
     }
@@ -129,7 +133,7 @@ export class SingleOptionChartTableComponent {
 
     public getVoteAmount(amount: number, row: PollTableData): number {
         amount = amount ?? 0;
-        if (this.isMethodN && row.class === `user`) {
+        if (this.isMethodN && [`user`, `list`].includes(row.class)) {
             if (amount < 0) {
                 return amount;
             } else {

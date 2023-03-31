@@ -75,6 +75,11 @@ export class ModelRequestService {
         return await this._modelSubscriptionMap[subscriptionName].receivedData;
     }
 
+    public async fetch({ modelRequest, subscriptionName }: SubscribeToConfig): Promise<ModelData> {
+        const request = await this.modelRequestBuilder.build(modelRequest);
+        return await this.autoupdateService.single(request, `${subscriptionName}:single`);
+    }
+
     private async makeSubscription({
         modelRequest,
         subscriptionName,

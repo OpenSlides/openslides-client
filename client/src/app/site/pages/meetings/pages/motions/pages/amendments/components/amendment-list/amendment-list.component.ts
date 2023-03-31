@@ -11,6 +11,7 @@ import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions
 import { MotionExportDialogService } from '../../../../components/motion-export-dialog/services/motion-export-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
 import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { AMENDMENT_LIST_SUBSCRIPTION } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionExportService } from '../../../../services/export/motion-export.service/motion-export.service';
@@ -33,6 +34,8 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
      * Hold the Id of the parent motion
      */
     private parentMotionId: Id | null = null;
+
+    public ready: boolean = false;
 
     /**
      * Hold the parent motion if present
@@ -72,6 +75,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         super.setTitle(`Amendments`);
         this.canMultiSelect = true;
         this.listStorageIndex = AMENDMENT_LIST_STORAGE_INDEX;
+        this.modelRequestService.waitSubscriptionReady(AMENDMENT_LIST_SUBSCRIPTION).then(() => (this.ready = true));
     }
 
     public ngOnInit(): void {

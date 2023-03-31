@@ -4,12 +4,12 @@ import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
-import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
+import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
 import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStepPhase } from 'src/app/infrastructure/utils/import/import-step';
-import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
+import { ImportConfig, RawImportModel } from 'src/app/infrastructure/utils/import/import-utils';
 import { copy } from 'src/app/infrastructure/utils/transform-functions';
-import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
+import { BaseUserImportService, UserMap } from 'src/app/site/base/base-user-import.service';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -55,7 +55,7 @@ export class ParticipantImportService extends BaseUserImportService {
         return this.activeMeetingIdService.meetingId!;
     }
 
-    private _existingUserMap: { [userEmailUsername: string]: Partial<User>[] } = {};
+    private _existingUsers: UserMap = {};
 
     public constructor(
         importServiceCollector: ImportServiceCollectorService,
@@ -64,7 +64,7 @@ export class ParticipantImportService extends BaseUserImportService {
         private activeMeetingIdService: ActiveMeetingIdService,
         private activeMeetingService: ActiveMeetingService,
         private exporter: ParticipantCsvExportService,
-        private presenter: SearchUsersByNameOrEmailPresenterService
+        private presenter: SearchUsersPresenterService
     ) {
         super(importServiceCollector);
 
@@ -114,41 +114,22 @@ export class ParticipantImportService extends BaseUserImportService {
         };
     }
 
-    protected override async onBeforeCreatingImportModels(_entries: User[]): Promise<void> {
-        this._existingUserMap = await this.getDuplicates(_entries);
+    protected override async onBeforeCreatingImportModels(_entries: RawImportModel<User>[]): Promise<void> {
+        const results = await this.presenter.callForUsers({
+            permissionRelatedId: this.activeMeetingId,
+            users: _entries.map(entry => entry.model)
+        });
+        this._existingUsers = _entries.mapToObject((entry, i) => ({ [entry.id]: results[i] }));
     }
 
-    protected override async onCreateImportModel({
-        input,
-        importTrackId
-    }: {
-        input: any;
-        importTrackId: number;
-    }): Promise<ImportModel<User>> {
-        const username = input.username ? input.username : `${input.first_name} ${input.last_name}`;
-        const userEmailUsername = `${username}/${input.email}`;
-        const userUsername = `${username}/`;
-        const duplicates = this._existingUserMap[userUsername] ?? this._existingUserMap[userEmailUsername] ?? [];
-        const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...input } : input;
+    protected override async onCreateImportModel({ model, id }: RawImportModel<User>): Promise<ImportModel<User>> {
+        const duplicates = this._existingUsers[id];
+        const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...model } : model;
         const hasDuplicates =
             duplicates.length > 1 ||
-            !!this.repo.getViewModelList().find(existingUser => existingUser.username === username);
+            !!this.repo.getViewModelList().find(existingUser => existingUser.username === model.username);
         const status = !hasDuplicates && duplicates.length === 1 ? `merge` : `new`;
-        return new ImportModel<User>({ model: newEntry, importTrackId, duplicates, hasDuplicates, status });
-    }
-
-    private async getDuplicates(entries: Partial<User>[]): Promise<{ [userEmailUsername: string]: Partial<User>[] }> {
-        const result = await this.presenter.call({
-            permissionRelatedId: this.activeMeetingId,
-            searchCriteria: entries.map(entry => {
-                if (entry.username) {
-                    return { username: entry.username };
-                }
-
-                return { username: `${entry.first_name}${entry.last_name}`, email: entry.email };
-            })
-        });
-        return result;
+        return new ImportModel<User>({ model: newEntry as User, id, duplicates, hasDuplicates, status });
     }
 
     private createUsers(users: any[]): Promise<Identifiable[]> {

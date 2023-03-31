@@ -1,11 +1,12 @@
 import { Directive, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject } from 'rxjs';
-import { Fqid } from 'src/app/domain/definitions/key-types';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
+    FormPollMethod,
     LOWEST_VOTE_VALUE,
     PollClassType,
     PollMethod,
@@ -23,8 +24,9 @@ import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { BasePollFormComponent } from '../components/base-poll-form/base-poll-form.component';
 
 export interface OptionsObject {
-    fqid?: Fqid; //Obligatory if optionTypeText===false
+    fqid?: Fqid; //Obligatory if optionTypeText===false and this isn't a list
     text?: string; //Obligatory if optionTypeText===true
+    poll_candidate_user_ids?: Id[]; //Obligatory if optionTypeText===false and this is a list
     content_object?: BaseModel;
 }
 
@@ -84,12 +86,16 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         return this._options;
     }
 
+    public reloading = false;
+
     public get formsValid(): boolean {
         if (!this.pollForm) {
             return false;
         }
         return this.pollForm.contentForm.valid && this.dialogVoteForm?.valid;
     }
+
+    private isList = false;
 
     public constructor(
         public dialogRef: MatDialogRef<BasePollDialogComponent>,
@@ -102,8 +108,11 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
 
     public ngOnInit(): void {
         this.onBeforeInit();
-        this.createOptions();
-        this.triggerUpdate();
+        this.triggerUpdate(true);
+        this.pollForm.pollMethodChangedToListObservable.pipe(distinctUntilChanged()).subscribe(isList => {
+            this.isList = isList;
+            this.triggerUpdate(true);
+        });
     }
 
     private addKeyListener(): void {
@@ -127,8 +136,17 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         const pollForm = this.pollForm?.getValues();
         const voteForm = this.dialogVoteForm.value;
         const payload: any = { ...pollForm, ...voteForm, publish_immediately: this.publishImmediately };
-        payload.options = this.getOptions(voteForm.options);
+        payload.options = this.getOptions(voteForm.options, payload.pollmethod === FormPollMethod.LIST_YNA);
+        this.formatPayload(payload);
         this.dialogRef.close(payload);
+    }
+
+    private formatPayload(payload: any): void {
+        payload.pollmethod = (payload.pollmethod as FormPollMethod).toUpperCase();
+        if (this.isList) {
+            payload.min_votes_amount = 1;
+            payload.max_votes_amount = 1;
+        }
     }
 
     /**
@@ -153,6 +171,10 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         return this.replaceEmptyValues(this.dialogVoteForm.value);
     }
 
+    public calculateOptionKey(option: OptionsObject): string {
+        return option.fqid ?? option.poll_candidate_user_ids.join(`, `);
+    }
+
     /**
      * @return Must return BaseModel in case of object-based options (optionTypeText===false)
      * and string in case of text-based options (optionTypeText===true)
@@ -161,9 +183,14 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
     protected abstract getAnalogVoteFields(): VoteValue[];
     protected onBeforeInit(): void {}
 
-    protected triggerUpdate(): void {
+    protected triggerUpdate(createOptions = false): void {
+        if (createOptions) {
+            this.reloading = true;
+            this.createOptions();
+        }
         this.analogVoteFields = this.getAnalogVoteFields();
         this.createDialog();
+        this.reloading = false;
     }
 
     /**
@@ -209,21 +236,29 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
         return result;
     }
 
-    private getOptions(options: any): (Partial<Option> & Identifiable)[] {
+    private getOptions(options: any, is_list_poll = false): (Partial<Option> & Identifiable)[] {
         const result: any[] = [];
         const optionKeys = Object.keys(options);
-        for (let index = 0; index < optionKeys.length; ++index) {
-            if (this.optionTypeText === false) {
-                result.push({
-                    ...options[optionKeys[index]],
-                    id: this.pollData.poll?.option_ids[index],
-                    content_object_id: optionKeys[index]
-                });
-            } else {
-                result.push({
-                    ...options[optionKeys[index]],
-                    id: this.pollData.poll?.option_ids[index]
-                });
+        if (is_list_poll) {
+            result.push({
+                ...options[optionKeys[0]],
+                id: this.pollData.poll?.option_ids[0],
+                poll_candidate_user_ids: optionKeys[0].split(`, `).map(element => Number(element))
+            });
+        } else {
+            for (let index = 0; index < optionKeys.length; ++index) {
+                if (this.optionTypeText === false) {
+                    result.push({
+                        ...options[optionKeys[index]],
+                        id: this.pollData.poll?.option_ids[index],
+                        content_object_id: optionKeys[index]
+                    });
+                } else {
+                    result.push({
+                        ...options[optionKeys[index]],
+                        id: this.pollData.poll?.option_ids[index]
+                    });
+                }
             }
         }
         return result;
@@ -234,13 +269,22 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
             if (this.pollData instanceof ViewPoll) {
                 this._options = this.pollData.options;
             } else if (this.optionTypeText === false) {
-                this._options = this.getContentObjectsForOptions().map(
-                    contentObject => ({
-                        fqid: contentObject.fqid,
-                        content_object: contentObject
-                    }),
-                    {}
-                );
+                if (!this.isList) {
+                    this._options = this.getContentObjectsForOptions().map(
+                        contentObject => ({
+                            fqid: contentObject.fqid,
+                            content_object: contentObject
+                        }),
+                        {}
+                    );
+                } else {
+                    const contentObjects = this.getContentObjectsForOptions();
+                    this._options = [
+                        {
+                            poll_candidate_user_ids: contentObjects.map(obj => obj.id)
+                        }
+                    ];
+                }
             } else {
                 this._options = this.getContentObjectsForOptions();
             }
@@ -251,7 +295,8 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
      * Create a form group for each option with the user id as key
      */
     private createOptionsForVoteForm(): { [key: string]: any } {
-        if (this.optionTypeText === false) {
+        const isListPoll = this.pollForm.getValues().pollmethod === FormPollMethod.LIST_YNA;
+        if (this.optionTypeText === false && !isListPoll) {
             //with content_object_id
             return this.options?.mapToObject(option => ({
                 [option.fqid]: this.formBuilder.group(
@@ -261,6 +306,15 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
                     }))
                 )
             }));
+        } else if (isListPoll) {
+            return {
+                [this.options[0].poll_candidate_user_ids?.join(`, `)]: this.formBuilder.group(
+                    // Create a form group with a control for each valid input (Y, N, A)
+                    this.analogVoteFields?.mapToObject(value => ({
+                        [value]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
+                    }))
+                )
+            };
         } else {
             //with text
             //get a unique key
@@ -326,7 +380,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
             if (data.pollmethod !== PollMethod.Y) {
                 votes.N = option.no;
             }
-            if (data.pollmethod === PollMethod.YNA) {
+            if (data.pollmethod.toUpperCase() === FormPollMethod.YNA) {
                 votes.A = option.abstain;
             }
             update.options[option.fqid] = votes;

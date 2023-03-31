@@ -26,12 +26,7 @@ import { OpenSlidesTranslationModule } from './app/site/modules/translations';
         BrowserAnimationsModule,
         OpenSlidesMainRoutingModule
     ],
-    exports: [
-        CommonModule,
-        HttpClientModule,
-        OpenSlidesTranslationModule,
-        OpenSlidesMainRoutingModule
-    ],
+    exports: [CommonModule, HttpClientModule, OpenSlidesTranslationModule, OpenSlidesMainRoutingModule],
     providers: [{ provide: APP_BASE_HREF, useValue: `/` }]
 })
 export class E2EImportsModule {}
