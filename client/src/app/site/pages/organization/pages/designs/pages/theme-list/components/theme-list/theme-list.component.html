@@ -22,10 +22,13 @@
             <div class="fake-button-no-touch" [ngStyle]="{ background: theme.warn_500 }"></div>
         </div>
     </div>
-    <div *osScrollingTableCell="'is_active'; row as theme; config: { width: 40 }" class="cell-slot fill">
-        <button mat-menu-item [disabled]="isThemeUsed(theme)" (click)="changeCurrentTheme(theme)">
-            <mat-icon>{{ isThemeUsed(theme) ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-        </button>
+    <div *osScrollingTableCell="'is_active'; row as theme; config: { width: 30 }" class="cell-slot fill central-button">
+        <mat-checkbox 
+            (click)="changeCurrentTheme(theme)"
+            [checked]="isThemeUsed(theme)"
+            [disabled]="isThemeUsed(theme)"
+            >
+        </mat-checkbox>
     </div>
     <div *osScrollingTableCell="'menu'; row as theme; config: { width: 40 }" class="cell-slot fill">
         <button mat-icon-button [matMenuTriggerFor]="themeMenu" [matMenuTriggerData]="{ theme: theme }">

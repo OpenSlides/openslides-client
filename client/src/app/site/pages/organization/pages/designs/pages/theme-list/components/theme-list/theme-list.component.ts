@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from '@angular/material/checkbox';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -13,7 +14,10 @@ import { ThemeControllerService } from '../../../../services/theme-controller.se
 @Component({
     selector: `os-theme-list`,
     templateUrl: `./theme-list.component.html`,
-    styleUrls: [`./theme-list.component.scss`]
+    styleUrls: [`./theme-list.component.scss`],
+    providers: [
+        { provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: { clickAction: `noop` } as MatCheckboxDefaultOptions }
+    ]
 })
 export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     public constructor(

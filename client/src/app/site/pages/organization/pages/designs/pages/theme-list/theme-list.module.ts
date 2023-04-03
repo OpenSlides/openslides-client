@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -28,7 +29,8 @@ import { ThemeListRoutingModule } from './theme-list-routing.module';
         MatIconModule,
         MatMenuModule,
         MatTooltipModule,
-        MatButtonModule
+        MatButtonModule,
+        MatCheckboxModule
     ]
 })
 export class ThemeListModule {}
