@@ -42,7 +42,7 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
 
     public async changeCurrentTheme(theme: ViewTheme): Promise<void> {
         const title = `Are you sure you want to activate this design?`;
-        const content = ``;
+        const content = `This will change the design in all committees.`;
         if (!this.isThemeUsed(theme)) {
             if (await this.prompt.open(title, content)) {
                 this.repo.changeCurrentTheme(theme);
