@@ -4,13 +4,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { locale } from 'moment';
 import { first, firstValueFrom, tap } from 'rxjs';
+import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 import { OpenSlidesService } from 'src/app/site/services/openslides.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
 
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
