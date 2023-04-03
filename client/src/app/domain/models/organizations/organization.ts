@@ -60,6 +60,7 @@ export class Organization extends BaseModel<Organization> {
         `enable_chat`,
         `limit_of_meetings`,
         `limit_of_users`,
+        `default_language`,
         `committee_ids`,
         `active_meeting_ids`,
         `archived_meeting_ids`,

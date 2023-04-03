@@ -289,6 +289,7 @@ export class Meeting extends BaseModel<Meeting> {
         `start_time`,
         `end_time`,
         `imported_at`,
+        `language`,
         `jitsi_domain`,
         `jitsi_room_name`,
         `jitsi_room_password`,
