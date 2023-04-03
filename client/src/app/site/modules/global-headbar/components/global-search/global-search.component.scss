@@ -1,10 +1,38 @@
+.search-field {
+    width: 100%;
+}
+
 .search-results {
-    .result {
-        cursor: pointer;
+    padding: 0;
+
+    .search-results-category h2 {
+        padding: 0 24px;
+        margin-top: 1em;
+        margin-bottom: 8px;
     }
 
-    .result:not(:last-of-type) {
-        margin-bottom: 1em;
-        border-bottom: 1px solid;
+    .search-results-entry {
+        padding: 1em 24px;
+        cursor: pointer;
+        > :first-of-type {
+            margin-top: 0;
+        }
+        > :last-of-type {
+            margin-bottom: 0;
+        }
+    }
+
+    .search-results-entry:nth-of-type(2n + 1) {
+        background-color: #eee;
+    }
+}
+
+.filters-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    > li {
+        padding: 0 12px;
     }
 }

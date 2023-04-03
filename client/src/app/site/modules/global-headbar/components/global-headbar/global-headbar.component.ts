@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
+
 import { GlobalSearchComponent } from '../global-search/global-search.component';
 
 @Component({
