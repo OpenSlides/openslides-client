@@ -37,7 +37,7 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: [`tree_weight`, `id`], label: `Call list` },
+        { property: `tree_weight`, label: `Call list` },
         { property: `number` },
         { property: `title` },
         { property: `submitters` },
@@ -92,7 +92,7 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
 
     private getDefaultSortProperty(): OsSortProperty<ViewMotion> {
         if (this.defaultMotionSorting === `weight`) {
-            return [`tree_weight`, `id`];
+            return `tree_weight`;
         } else {
             return this.defaultMotionSorting as keyof ViewMotion;
         }
