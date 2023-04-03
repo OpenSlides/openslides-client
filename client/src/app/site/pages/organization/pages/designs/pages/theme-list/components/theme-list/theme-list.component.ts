@@ -40,9 +40,13 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
         }
     }
 
-    public changeCurrentTheme(theme: ViewTheme): void {
+    public async changeCurrentTheme(theme: ViewTheme): Promise<void> {
+        const title = `Are you sure you want to activate this design?`;
+        const content = ``;
         if (!this.isThemeUsed(theme)) {
-            this.repo.changeCurrentTheme(theme);
+            if (await this.prompt.open(title, content)) {
+                this.repo.changeCurrentTheme(theme);
+            }
         }
     }
 
