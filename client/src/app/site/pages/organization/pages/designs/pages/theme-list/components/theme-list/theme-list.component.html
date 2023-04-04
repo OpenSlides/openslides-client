@@ -23,12 +23,11 @@
         </div>
     </div>
     <div *osScrollingTableCell="'is_active'; row as theme; config: { width: 30 }" class="cell-slot fill central-button">
-        <mat-checkbox 
-            (click)="changeCurrentTheme(theme)"
+        <os-prompt-checkbox
+            (selected)="changeCurrentTheme(theme)"
             [checked]="isThemeUsed(theme)"
             [disabled]="isThemeUsed(theme)"
-            >
-        </mat-checkbox>
+    ></os-prompt-checkbox>
     </div>
     <div *osScrollingTableCell="'menu'; row as theme; config: { width: 40 }" class="cell-slot fill">
         <button mat-icon-button [matMenuTriggerFor]="themeMenu" [matMenuTriggerData]="{ theme: theme }">
