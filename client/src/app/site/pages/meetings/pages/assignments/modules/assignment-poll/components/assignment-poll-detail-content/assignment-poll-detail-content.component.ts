@@ -25,6 +25,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
+    public reformedTableData: PollTableData[];
 
     @Input()
     public set poll(pollData: PollData) {
@@ -135,8 +136,28 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     private setupTableData(): void {
         this._tableData = this.pollService.generateTableData(this.poll);
+        this.updateReformedTableData();
         this.setChartData();
         this.cd.markForCheck();
+    }
+
+    private updateReformedTableData(): void {
+        this.reformedTableData = [];
+        this.tableData.forEach(tableDate => {
+            if ([`user`, `list`].includes(tableDate.class)) {
+                tableDate.value.forEach(value => {
+                    if (this.voteFitsMethod(value)) {
+                        this.reformedTableData.push({
+                            class: tableDate.class,
+                            votingOption: value.vote,
+                            value: [value]
+                        });
+                    }
+                });
+            } else {
+                this.reformedTableData.push(tableDate);
+            }
+        });
     }
 
     private setChartData(): void {
@@ -182,25 +203,5 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         } else {
             return true;
         }
-    }
-
-    public getReformedTableData(): PollTableData[] {
-        const tableData = [];
-        this.tableData.forEach(tableDate => {
-            if ([`user`, `list`].includes(tableDate.class)) {
-                tableDate.value.forEach(value => {
-                    if (this.voteFitsMethod(value)) {
-                        tableData.push({
-                            class: tableDate.class,
-                            votingOption: value.vote,
-                            value: [value]
-                        });
-                    }
-                });
-            } else {
-                tableData.push(tableDate);
-            }
-        });
-        return tableData;
     }
 }
