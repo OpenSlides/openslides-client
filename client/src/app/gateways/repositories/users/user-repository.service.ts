@@ -112,12 +112,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             { templateField: `structure_level_$` },
             { templateField: `number_$` },
             { templateField: `comment_$` },
-            { templateField: `group_$_ids` }
+            { templateField: `group_$_ids` },
+            `is_present_in_meeting_ids`
         ]);
 
-        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
-            .concat(filterableListFields)
-            .concat([`is_present_in_meeting_ids`]);
+        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal.concat(filterableListFields);
 
         const detailFields: TypedFieldset<User> = [
             `default_password`,
