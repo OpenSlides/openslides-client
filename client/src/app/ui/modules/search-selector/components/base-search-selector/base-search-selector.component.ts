@@ -254,6 +254,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         const value = this.selectableItems.find(item => item.id === itemId);
         this.selectionChanged.emit({ value, selected: this.selectedIds.includes(itemId) });
         this.contentForm.setValue(this.selectedItems);
+        this.matSelect.options.find(option => option.value === itemId)?.deselect(); // To ensure that the checkbox is updated in the view
     }
 
     private addOrRemoveId(id: Id): void {
