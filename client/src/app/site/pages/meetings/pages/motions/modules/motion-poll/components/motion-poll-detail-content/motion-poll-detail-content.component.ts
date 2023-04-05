@@ -7,7 +7,7 @@ import { PollState, PollTableData } from 'src/app/domain/models/poll/poll-consta
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { currentGeneralColorsSubject } from 'src/app/site/services/theme.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MotionPollService } from '../../services';
@@ -83,7 +83,8 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
     public constructor(
         private pollService: MotionPollService,
         private operator: OperatorService,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private themeService: ThemeService
     ) {
         super();
     }
@@ -102,7 +103,7 @@ export class MotionPollDetailContentComponent extends BaseUiComponent implements
             this.pollService
                 .generateTableDataAsObservable(this.poll!)
                 .pipe(
-                    combineLatestWith(currentGeneralColorsSubject),
+                    combineLatestWith(this.themeService.currentGeneralColorsSubject),
                     map(([tableData, _]) => tableData)
                 )
                 .subscribe(tableData => {

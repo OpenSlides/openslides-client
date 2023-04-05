@@ -12,7 +12,7 @@ import {
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { currentGeneralColorsSubject } from 'src/app/site/services/theme.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
@@ -128,13 +128,14 @@ export class AssignmentPollDetailContentComponent implements OnInit {
     public constructor(
         private pollService: AssignmentPollService,
         private cd: ChangeDetectorRef,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private themeService: ThemeService
     ) {}
 
     public ngOnInit(): void {
         this.poll.options_as_observable
             .pipe(
-                combineLatestWith(currentGeneralColorsSubject),
+                combineLatestWith(this.themeService.currentGeneralColorsSubject),
                 map(([options, _]) => options)
             )
             .subscribe(options => this.setupTableData());

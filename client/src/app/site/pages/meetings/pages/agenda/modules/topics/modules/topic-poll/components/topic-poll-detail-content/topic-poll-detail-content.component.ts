@@ -4,7 +4,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { pollChartColors, pollChartGreys, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { currentGeneralColorsSubject } from 'src/app/site/services/theme.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { TopicPollService } from '../../services/topic-poll.service';
@@ -79,7 +79,8 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
     public constructor(
         public pollService: TopicPollService,
         private cd: ChangeDetectorRef,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private themeService: ThemeService
     ) {
         super();
     }
@@ -90,7 +91,7 @@ export class TopicPollDetailContentComponent extends BaseUiComponent {
             this.pollService
                 .generateTableDataAsObservable(this.poll)
                 .pipe(
-                    combineLatestWith(currentGeneralColorsSubject),
+                    combineLatestWith(this.themeService.currentGeneralColorsSubject),
                     map(([tableData, _]) => tableData)
                 )
                 .subscribe(tableData => {

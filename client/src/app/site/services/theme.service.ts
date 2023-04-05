@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { PollColor } from 'src/app/domain/models/poll';
 import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 
 import { HtmlColor, Id } from '../../domain/definitions/key-types';
@@ -20,13 +21,6 @@ export const GENERAL_DEFAULT_COLORS: Partial<ThemeGeneralColors> = {
     abstain: `#a6a6a6`
 };
 export type GeneralDefaultColorName = keyof typeof GENERAL_DEFAULT_COLORS;
-
-/**
- * Subject that contains the current colors for the headbar, and the yes, no and abstain poll options.
- *
- * Set by the ColorService.
- */
-export const currentGeneralColorsSubject: BehaviorSubject<Partial<ThemeGeneralColors>> = new BehaviorSubject({});
 
 @Injectable({
     providedIn: `root`
@@ -53,6 +47,13 @@ export class ThemeService {
     public get currentAccentColor(): HtmlColor {
         return this._currentTheme?.accent_500 ?? ThemeService.DEFAULT_ACCENT_COLOR;
     }
+
+    /**
+     * Subject that contains the current colors for the headbar, and the yes, no and abstain poll options.
+     *
+     * Set by the ColorService.
+     */
+    public readonly currentGeneralColorsSubject: BehaviorSubject<Partial<ThemeGeneralColors>> = new BehaviorSubject({});
 
     private readonly _isDarkModeSubject = new BehaviorSubject<boolean>(false);
 
@@ -100,6 +101,13 @@ export class ThemeService {
 
     public toggleDarkMode(): void {
         this.isDarkMode = !this._isDarkModeSubject.value;
+    }
+
+    public getPollColor(key: string): string {
+        if ([`yes`, `no`, `abstain`].includes(key)) {
+            return this.currentGeneralColorsSubject.value[key] ?? GENERAL_DEFAULT_COLORS[key];
+        }
+        return PollColor[key];
     }
 
     /**
@@ -165,7 +173,7 @@ export class ThemeService {
             const value = data[usage];
             document.documentElement.style.setProperty(key, value);
         }
-        currentGeneralColorsSubject.next(data);
+        this.currentGeneralColorsSubject.next(data);
         document.documentElement.style.setProperty(
             `--theme-headbar-contrast`,
             this.colorService.isLightFromHex(data.headbar) ? `rgba(black, 0.87)` : `white`
