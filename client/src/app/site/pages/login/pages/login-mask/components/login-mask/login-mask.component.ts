@@ -73,6 +73,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public samlLoginButtonText: string | null = null;
 
+    public samlEnabled = true;
+
     public guestsEnabled = false;
 
     public isWaitingOnLogin = false;
@@ -130,6 +132,14 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             this.checkDevice();
         }
 
+        // check if global saml auth is enabled
+        // Todo: Create OrgaSetting
+        this.subscriptions.push(
+            this.orgaSettings.get(`saml_enabled`).subscribe(enabled => {
+                // this.samlEnabled = enabled;
+            })
+        );
+
         this.checkForUnsecureConnection();
     }
 
@@ -162,6 +172,11 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public async guestLogin(): Promise<void> {
         this.router.navigate([`${this.currentMeetingId}/`]);
+    }
+
+    public async samlLogin(): Promise<void> {
+        // Todo: inject url to Auth-Service /saml/send (GET)
+        this.router.navigate(['/auth-service/saml/send']);
     }
 
     /**
