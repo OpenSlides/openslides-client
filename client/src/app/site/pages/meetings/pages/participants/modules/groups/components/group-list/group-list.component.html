@@ -26,7 +26,7 @@
                 <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
                     <ng-container matColumnDef="perm" sticky>
                         <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
-                        <mat-cell *matCellDef="let perm">
+                        <mat-cell *matCellDef="let perm" class="raised-cell">
                             {{ perm.display_name | translate }}
                         </mat-cell>
                     </ng-container>
