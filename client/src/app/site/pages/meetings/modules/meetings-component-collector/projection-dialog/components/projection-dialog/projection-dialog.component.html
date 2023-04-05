@@ -18,26 +18,26 @@
                 </mat-icon>
             </span>
         </div>
+    </div>
 
-        <mat-divider *ngIf="options && options.length"></mat-divider>
+    <mat-divider *ngIf="options && options.length"></mat-divider>
 
-        <div *ngIf="options && options.length">
-            <div *ngFor="let option of options">
-                <div *ngIf="isDecisionOption(option)" class="spacer-top-10 spacer-left-10">
-                    <mat-checkbox
-                        [checked]="optionValues[option.key]"
-                        (change)="optionValues[option.key] = !optionValues[option.key]">
-                        {{ option.displayName | translate }}
-                    </mat-checkbox>
-                </div>
-                <div *ngIf="isChoiceOption(option)">
-                    <h3>{{ option.displayName | translate }}</h3>
-                    <mat-radio-group [name]="option.key" [(ngModel)]="optionValues[option.key]">
-                        <mat-radio-button *ngFor="let choice of option.choices" [value]="choice.value">
-                            {{ choice.displayName | translate }}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                </div>
+    <div *ngIf="options && options.length">
+        <div *ngFor="let option of options">
+            <div *ngIf="isDecisionOption(option)" class="spacer-top-10 spacer-left-10">
+                <mat-checkbox
+                    [checked]="optionValues[option.key]"
+                    (change)="optionValues[option.key] = !optionValues[option.key]">
+                    {{ option.displayName | translate }}
+                </mat-checkbox>
+            </div>
+            <div *ngIf="isChoiceOption(option)">
+                <h3>{{ option.displayName | translate }}</h3>
+                <mat-radio-group [name]="option.key" [(ngModel)]="optionValues[option.key]">
+                    <mat-radio-button *ngFor="let choice of option.choices" [value]="choice.value">
+                        {{ choice.displayName | translate }}
+                    </mat-radio-button>
+                </mat-radio-group>
             </div>
         </div>
     </div>
