@@ -86,6 +86,10 @@ export class AuthService {
         }
     }
 
+    public async startSamlLogin(): Promise<string> {
+        return this.authAdapter.startSamlLogin();
+    }
+
     public redirectUser(meetingId: number | null): void {
         if (this.isAuthenticated()) {
             const baseRoute = meetingId ? `${meetingId}/` : `/`;

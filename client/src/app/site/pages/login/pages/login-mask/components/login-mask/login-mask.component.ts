@@ -136,6 +136,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         // Todo: Create OrgaSetting
         this.subscriptions.push(
             this.orgaSettings.get(`saml_enabled`).subscribe(enabled => {
+                // DEV disabled
                 // this.samlEnabled = enabled;
             })
         );
@@ -175,8 +176,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     }
 
     public async samlLogin(): Promise<void> {
-        // Todo: inject url to Auth-Service /saml/send (GET)
-        this.router.navigate(['/auth-service/saml/send']);
+        const redirectUrl = await this.authService.startSamlLogin();
+        location.replace(redirectUrl);
     }
 
     /**
