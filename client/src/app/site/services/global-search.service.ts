@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { HttpService } from 'src/app/gateways/http.service';
 import { collectionFromFqid, idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 
 export interface GlobalSearchEntry {
