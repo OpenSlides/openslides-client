@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { HttpService } from 'src/app/gateways/http.service';
 import { collectionFromFqid, idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
+import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 
 export interface GlobalSearchEntry {
     title: string;
@@ -14,7 +15,7 @@ export interface GlobalSearchEntry {
     providedIn: `root`
 })
 export class GlobalSearchService {
-    public constructor(private http: HttpService) {}
+    public constructor(private http: HttpService, private activeMeeting: ActiveMeetingService) {}
 
     public async searchChange(
         searchTerm: string,
@@ -43,7 +44,7 @@ export class GlobalSearchService {
 
     private getResult(fqid: Fqid, content: any) {
         const collection = collectionFromFqid(fqid);
-        const id = idFromFqid(fqid);
+        const id = content.sequential_number || idFromFqid(fqid);
         let title = content.title || content.name;
         let text = content.text || content.description;
         let url = ``;
@@ -70,6 +71,11 @@ export class GlobalSearchService {
                 const userName = content.username?.trim() || ``;
                 const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
                 title = name?.trim() || ``;
+                if (this.activeMeeting.meetingId && content.meeting_ids?.includes(this.activeMeeting.meetingId)) {
+                    url = `/${this.activeMeeting.meetingId}/participants/${id}`;
+                } else {
+                    url = `/accounts/${id}`;
+                }
                 break;
         }
 
