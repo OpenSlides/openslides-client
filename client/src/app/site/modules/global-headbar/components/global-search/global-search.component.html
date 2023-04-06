@@ -27,7 +27,7 @@
         </h2>
         <div *ngFor="let result of category.value" class="search-results-entry" [routerLink]="result.url" mat-dialog-close>
             <h3 *ngIf="result.title">{{ result.title }}</h3>
-            <p *ngIf="result.text">{{ result.text }}</p>
+            <p *ngIf="result.text" [innerHtml]="result.text"></p>
         </div>
     </section>
 </mat-dialog-content>
