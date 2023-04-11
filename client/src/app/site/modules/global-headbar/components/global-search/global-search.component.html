@@ -25,9 +25,23 @@
                 [matBadge]="category.value.length < 100 ? category.value.length : '99+'"
                 [matBadgeOverlap]="false">{{ availableFilters[category.key] | translate }}</span>
         </h2>
-        <div *ngFor="let result of category.value" class="search-results-entry" [routerLink]="result.url" mat-dialog-close>
-            <h3 *ngIf="result.title">{{ result.title }}</h3>
-            <p *ngIf="result.text" [innerHtml]="result.text"></p>
-        </div>
+        <ng-container *ngFor="let result of category.value">
+            <a
+                *ngIf="result.fqid.startsWith('mediafile')"
+                class="search-results-entry"
+                [href]="result.url"
+                target="blank"
+                mat-dialog-close>
+                <h3 *ngIf="result.title">{{ result.title }}</h3>
+            </a>
+            <router-link
+                *ngIf="!result.fqid.startsWith('mediafile')"
+                class="search-results-entry"
+                [routerLink]="result.url"
+                mat-dialog-close>
+                <h3 *ngIf="result.title">{{ result.title }}</h3>
+                <p *ngIf="result.text" [innerHtml]="result.text"></p>
+            </router-link>
+        </ng-container>
     </section>
 </mat-dialog-content>

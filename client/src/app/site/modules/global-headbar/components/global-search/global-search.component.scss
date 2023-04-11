@@ -12,8 +12,10 @@
     }
 
     .search-results-entry {
+        display: block;
         padding: 1em 24px;
         cursor: pointer;
+        text-decoration: none;
         > :first-of-type {
             margin-top: 0;
         }
