@@ -4,8 +4,9 @@
     </ng-template>
     <ng-template osSidenavMainContent>
         <main class="background--default">
-            <os-global-headbar></os-global-headbar>
-            <router-outlet #o="outlet"></router-outlet>
+            <os-global-headbar>
+                <router-outlet #o="outlet"></router-outlet>
+            </os-global-headbar>
         </main>
     </ng-template>
 </os-sidenav>

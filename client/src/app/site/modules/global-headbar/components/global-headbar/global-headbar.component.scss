@@ -22,3 +22,9 @@
     font-weight: 400;
     font-size: 14px;
 }
+
+.scrollable-content {
+    height: calc(100vh - 28px);
+    width: 100%;
+    overflow: auto;
+}
