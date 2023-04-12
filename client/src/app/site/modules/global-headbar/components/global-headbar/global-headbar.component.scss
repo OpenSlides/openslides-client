@@ -6,8 +6,8 @@
 }
 
 .global-headbar {
-    height: 28px;
-    line-height: 28px;
+    height: var(--global-headbar-height);
+    line-height: var(--global-headbar-height);
     display: flex;
     flex-direction: row;
     padding-left: 26px;
@@ -21,10 +21,4 @@
 .display-name {
     font-weight: 400;
     font-size: 14px;
-}
-
-.scrollable-content {
-    height: calc(100vh - 28px);
-    width: 100%;
-    overflow: auto;
 }
