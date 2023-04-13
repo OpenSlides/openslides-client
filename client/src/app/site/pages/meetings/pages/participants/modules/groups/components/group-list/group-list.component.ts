@@ -252,4 +252,19 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
             this.updatedGroupIds.clear();
         };
     }
+
+    /**
+     * Function to open a prompt dialog,
+     * so the user will be warned if he has made changes and not saved them.
+     *
+     * @returns The result from the prompt dialog.
+     */
+    public async canDeactivate(): Promise<boolean> {
+        if (this.hasChanges) {
+            const title = this.translate.instant(`Do you really want to exit this page?`);
+            const content = this.translate.instant(`You made changes.`);
+            return await this.promptService.open(title, content);
+        }
+        return true;
+    }
 }
