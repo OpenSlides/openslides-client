@@ -7,7 +7,6 @@ import {
     CalculablePollKey,
     isPollTableData,
     NO_KEY,
-    PollColor,
     PollMethod,
     PollPercentBase,
     PollPercentBaseVerbose,
@@ -25,6 +24,7 @@ import {
 import { compareNumber } from 'src/app/infrastructure/utils';
 import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
@@ -48,7 +48,8 @@ export abstract class PollService {
         organizationSettingsService: OrganizationSettingsService,
         protected translate: TranslateService,
         protected pollKeyVerbose: PollKeyVerbosePipe,
-        protected pollParseNumber: PollParseNumberPipe
+        protected pollParseNumber: PollParseNumberPipe,
+        protected themeService: ThemeService
     ) {
         organizationSettingsService
             .get(`enable_electronic_voting`)
@@ -335,8 +336,8 @@ export abstract class PollService {
                     ({
                         data: this.getResultFromPoll(poll, key), // 0: option, 1: global_option
                         label: key.toUpperCase(),
-                        backgroundColor: PollColor[key],
-                        hoverBackgroundColor: PollColor[key],
+                        backgroundColor: this.themeService.getPollColor(key),
+                        hoverBackgroundColor: this.themeService.getPollColor(key),
                         barThickness: PollChartBarThickness,
                         maxBarThickness: PollChartBarThickness
                     } as ChartDate)
