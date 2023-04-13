@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from '@angular/material/checkbox';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { PromptService } from '../../../prompt-dialog';
 
@@ -13,20 +12,32 @@ import { PromptService } from '../../../prompt-dialog';
     ]
 })
 export class PromptCheckboxComponent {
+    /**
+     * Indicated if the checkbox is checked
+     */
     @Input() public checked: boolean;
+    /**
+     * Indicated if the checkbox is disabled
+     */
     @Input() public disabled: boolean;
-    @Output() selected = new EventEmitter<boolean>();
+    /**
+     * title from the dialog
+     */
+    @Input() public title: string;
+    /**
+     * content from the dialog
+     */
+    @Input() public content: string;
+    /**
+     * Indicated if the checkbox-event is selected from the user
+     */
+    @Output() public selected = new EventEmitter<boolean>();
 
     public constructor(public prompt: PromptService) {}
 
     public async openPrompt(): Promise<void> {
-        const title = _(`Change Theme`);
-        const content = _(
-            `Are you sure you want to activate this design? This will change the design in all committees.`
-        );
-
         if (!this.disabled) {
-            if (await this.prompt.open(title, content)) {
+            if (await this.prompt.open(this.title, this.content)) {
                 this.selected.emit(true);
             } else {
                 this.selected.emit(false);
