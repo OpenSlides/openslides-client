@@ -3123,6 +3123,9 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
+msgid "Retrieving vote status... Please wait!"
+msgstr ""
+
 msgid "Right"
 msgstr ""
 
@@ -3769,13 +3772,13 @@ msgstr ""
 msgid "This meeting is archived"
 msgstr ""
 
-msgid "This number already exists"
-msgstr ""
-
 msgid "This paragraph does not exist in the main motion anymore:"
 msgstr ""
 
 msgid "This prefix already exists"
+msgstr ""
+
+msgid "This prefix already exists."
 msgstr ""
 
 msgid "This prefix will be set if you run the automatic agenda numbering."
