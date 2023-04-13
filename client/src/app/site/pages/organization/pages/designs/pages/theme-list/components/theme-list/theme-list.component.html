@@ -5,17 +5,29 @@
     </div>
 </os-head-bar>
 
-<os-list [listObservable]="repo.getViewModelListObservable()" [(selectedRows)]="selectedRows"
-    [multiSelect]="isMultiSelect" listStorageKey="themes" [filterProps]="['name']" [vScrollFixed]="60"
-    [alwaysShowMenu]="true">
-    <div *osScrollingTableCell="'name'; row as theme" class="cell-slot fill pointer"
-        (click)="openThemeBuilderDialog(theme)">
+<os-list 
+    [listObservable]="repo.getViewModelListObservable()" 
+    [(selectedRows)]="selectedRows"
+    [multiSelect]="isMultiSelect" 
+    listStorageKey="themes" 
+    [filterProps]="['name']" 
+    [vScrollFixed]="60"
+    [alwaysShowMenu]="true"
+>
+    <div 
+        *osScrollingTableCell="'name'; row as theme" 
+        class="cell-slot fill pointer"
+        (click)="openThemeBuilderDialog(theme)"
+    >
         <div>
             {{ theme.name }}
         </div>
     </div>
-    <div *osScrollingTableCell="'colors'; row as theme; config: { width: 120 }" class="cell-slot fill pointer"
-        (click)="openThemeBuilderDialog(theme)">
+    <div 
+        *osScrollingTableCell="'colors'; row as theme; config: { width: 120 }" 
+        class="cell-slot fill pointer"
+        (click)="openThemeBuilderDialog(theme)"
+    >
         <div class="button-group">
             <div class="fake-button-no-touch" [ngStyle]="{ background: theme.primary_500 }"></div>
             <div class="fake-button-no-touch" [ngStyle]="{ background: theme.accent_500 }"></div>
