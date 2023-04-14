@@ -123,7 +123,7 @@ export class ParticipantImportService extends BaseUserImportService {
     }
 
     protected override async onCreateImportModel({ model, id }: RawImportModel<User>): Promise<ImportModel<User>> {
-        const duplicates = this._existingUsers[id];
+        const duplicates = this._existingUsers[id] ?? [];
         const newEntry = duplicates.length === 1 ? { ...duplicates[0], ...model } : model;
         const hasDuplicates =
             duplicates.length > 1 ||
