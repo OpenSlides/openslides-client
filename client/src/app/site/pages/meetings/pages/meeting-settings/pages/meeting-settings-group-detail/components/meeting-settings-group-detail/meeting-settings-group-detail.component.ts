@@ -129,9 +129,7 @@ export class MeetingSettingsGroupDetailComponent
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanges()) {
-            const title = this.translate.instant(`Do you really want to exit this page?`);
-            const content = this.translate.instant(`You made changes.`);
-            return await this.promptDialog.open(title, content);
+            return await this.promptDialog.discardChangesConfirmation();
         }
         return true;
     }
