@@ -195,8 +195,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         const notify: NotifyRequest<T> = {
             name: data.name,
             message: data.message,
-            channel_id: this.channelId,
-            to_meeting: this.activeMeetingIdService.meetingId!
+            channel_id: this.channelId
         };
         if (data.toAll === true) {
             notify.to_all = true;
@@ -207,6 +206,10 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         if (data.channels) {
             notify.to_channels = data.channels;
         }
+        if (!(data.channels || data.toAll == true || data.users)) {
+            notify.to_meeting = this.activeMeetingIdService.meetingId!;
+        }
+        console.log(`NOTIFY REQUEST`, notify);
         return notify;
     }
 
