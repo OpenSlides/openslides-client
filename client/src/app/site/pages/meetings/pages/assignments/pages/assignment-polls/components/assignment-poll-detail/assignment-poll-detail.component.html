@@ -33,7 +33,7 @@
         <div class="assignment-result-wrapper" *ngIf="poll">
             <!-- Result -->
             <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
-
+            <div *osPerms="permission.assignmentCanManage"> ... </div>
             <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting"  (selectedTabChange)="onTabChange()">
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <!-- Single Votes Table -->
