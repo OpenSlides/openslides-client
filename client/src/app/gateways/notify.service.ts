@@ -209,7 +209,6 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         if (!(data.channels || data.toAll == true || data.users)) {
             notify.to_meeting = this.activeMeetingIdService.meetingId!;
         }
-        console.log(`NOTIFY REQUEST`, notify);
         return notify;
     }
 
