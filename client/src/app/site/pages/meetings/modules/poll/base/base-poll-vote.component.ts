@@ -153,7 +153,10 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         this.subscriptions.push(
             this.voteRepo.subscribeVoted(this.poll).subscribe(() => {
                 if (this.user) {
-                    this.createVotingDataObjects();
+                    this.alreadyVoted[this.user.id] = this.poll.hasVoted;
+                    if (this.delegations) {
+                        this.setupDelegations();
+                    }
                 }
 
                 for (const key of Object.keys(this._canVoteForSubjectMap)) {

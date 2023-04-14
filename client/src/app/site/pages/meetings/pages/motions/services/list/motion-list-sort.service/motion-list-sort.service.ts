@@ -3,7 +3,12 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import {
+    BaseSortListService,
+    OsSortingDefinition,
+    OsSortingOption,
+    OsSortProperty
+} from 'src/app/site/base/base-sort.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewMotion } from '../../../view-models';
@@ -32,7 +37,7 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: [`tree_weight`, `id`], label: `Call list` },
+        { property: `tree_weight`, label: `Call list` },
         { property: `number` },
         { property: `title` },
         { property: `submitters` },
@@ -80,9 +85,17 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
     protected async getDefaultDefinition(): Promise<OsSortingDefinition<ViewMotion>> {
         await this.defaultSortingLoaded;
         return {
-            sortProperty: this.defaultMotionSorting as keyof ViewMotion,
+            sortProperty: this.getDefaultSortProperty(),
             sortAscending: true
         };
+    }
+
+    private getDefaultSortProperty(): OsSortProperty<ViewMotion> {
+        if (this.defaultMotionSorting === `weight`) {
+            return `tree_weight`;
+        } else {
+            return this.defaultMotionSorting as keyof ViewMotion;
+        }
     }
 
     /**
