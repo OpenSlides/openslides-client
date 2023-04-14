@@ -49,6 +49,7 @@
             >
                 <os-motion-detail-original-change-recommendations
                     [html]="getTextBetweenChanges(getAllTextChangingObjects()[i - 1], change)"
+                    [motionId]="motion.id"
                     [changeRecommendations]="[]"
                     (createChangeRecommendation)="onCreateChangeRecommendation($event)"
                 ></os-motion-detail-original-change-recommendations>
@@ -112,6 +113,7 @@
         >
             <os-motion-detail-original-change-recommendations
                 [html]="getTextRemainderAfterLastChange()"
+                [motionId]="motion.id"
                 [changeRecommendations]="[]"
                 (createChangeRecommendation)="onCreateChangeRecommendation($event)"
             ></os-motion-detail-original-change-recommendations>

@@ -9,11 +9,16 @@ import {
     Output,
     Renderer2
 } from '@angular/core';
+import { delay, filter } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { AutoupdateCommunicationService } from 'src/app/site/services/autoupdate/autoupdate-communication.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+
+import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../motions.subscription';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 
 /**
  * This component displays either the original motion text or the original amendment diff text
@@ -64,6 +69,9 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         this.cd.markForCheck();
     }
 
+    @Input()
+    public motionId: number;
+
     public get html(): string {
         return this._html;
     }
@@ -100,13 +108,31 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     private minLineNo: number | null = null;
     private maxLineNo: number | null = null;
 
+    private dataLoaded = false;
+
+    public get textLoaded(): boolean {
+        return this.dataLoaded || (this.motionId ? !!this.controller.getViewModel(this.motionId)?.text : false);
+    }
+
     public constructor(
         private renderer: Renderer2,
         private el: ElementRef,
         private cd: ChangeDetectorRef,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private autoupdateCommunications: AutoupdateCommunicationService,
+        private controller: MotionControllerService
     ) {
         this.operator.operatorUpdated.subscribe(() => this.checkPermissions());
+        this.autoupdateCommunications
+            .listen()
+            .pipe(
+                filter(data => data.description === MOTION_DETAIL_SUBSCRIPTION),
+                delay(500)
+            )
+            .subscribe(data => {
+                this.dataLoaded = true;
+                this.update();
+            });
     }
 
     // public ngDoCheck(): void {
@@ -229,7 +255,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      * Re-creates
      */
     private update(): void {
-        if (!this.element) {
+        if (!this.element || !this.textLoaded) {
             // Not yet initialized
             return;
         }

@@ -28,6 +28,7 @@
                             (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed)
                         "
                         [html]="getAmendmentDiffTextWithContext(paragraph)"
+                        [motionId]="motion.id"
                         [changeRecommendations]="changeRecommendations"
                         (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                         (createChangeRecommendation)="createChangeRecommendation.emit($event)"
