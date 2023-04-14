@@ -342,8 +342,9 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     private getUpdatePayload(update: any, viewMotion: Motion & { workflow_id: Id }): any {
+        const ownMotion = this.getViewModel(viewMotion.id);
         const updatePayload = Object.keys(update).mapToObject(key => {
-            if (JSON.stringify(update[key]) !== JSON.stringify(viewMotion[key as keyof Motion & { workflow_id: Id }])) {
+            if (JSON.stringify(update[key]) !== JSON.stringify(ownMotion[key as keyof Motion & { workflow_id: Id }])) {
                 return { [key]: update[key] };
             }
             return {};
