@@ -1,6 +1,7 @@
 import 'src/app/site/services/model-request-builder';
 
 import { Id } from 'src/app/domain/definitions/key-types';
+import { MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 
 import { ViewMeeting } from '../view-models/view-meeting';
 
@@ -51,6 +52,34 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                     idField: `projector_ids`,
                     fieldset: [`name`],
                     follow: [{ idField: `current_projection_ids`, fieldset: [`content_object_id`] }]
+                },
+                {
+                    idField: `reference_projector_id`,
+                    fieldset: [...MEETING_ROUTING_FIELDS, `used_as_reference_projector_meeting_id`],
+                    follow: [
+                        {
+                            idField: `current_projection_ids`,
+                            fieldset: [...MEETING_ROUTING_FIELDS],
+                            follow: [
+                                {
+                                    idField: `content_object_id`,
+                                    fieldset: [...MEETING_ROUTING_FIELDS],
+                                    follow: [
+                                        {
+                                            idField: `list_of_speakers_id`,
+                                            fieldset: [...MEETING_ROUTING_FIELDS],
+                                            follow: [
+                                                {
+                                                    idField: `speaker_ids`,
+                                                    fieldset: [`user_id`, `begin_time`, `end_time`, `weight`]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
             additionalFields: [
