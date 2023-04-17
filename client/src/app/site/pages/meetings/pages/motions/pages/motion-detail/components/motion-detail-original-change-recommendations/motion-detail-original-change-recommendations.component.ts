@@ -9,7 +9,7 @@ import {
     Output,
     Renderer2
 } from '@angular/core';
-import { delay, filter } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
@@ -123,16 +123,14 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         private controller: MotionControllerService
     ) {
         this.operator.operatorUpdated.subscribe(() => this.checkPermissions());
-        this.autoupdateCommunications
-            .listen()
-            .pipe(
-                filter(data => data.description === MOTION_DETAIL_SUBSCRIPTION),
-                delay(500)
-            )
-            .subscribe(data => {
-                this.dataLoaded = true;
-                this.update();
-            });
+        firstValueFrom(
+            this.autoupdateCommunications
+                .listen()
+                .pipe(filter(data => data && data.description === MOTION_DETAIL_SUBSCRIPTION))
+        ).then(data => {
+            this.dataLoaded = true;
+            this.update();
+        });
     }
 
     // public ngDoCheck(): void {
