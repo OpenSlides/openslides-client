@@ -58,7 +58,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `is_active_in_organization_id`,
             `is_archived_organization_id`,
             `template_for_organization_id`,
-            `user_ids`,
             `description`,
             `location`,
             `organization_tag_ids`,
@@ -219,6 +218,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     protected override createViewModel(model: Meeting): ViewMeeting {
         const viewModel = super.createViewModel(model);
         viewModel.getProjectorTitle = (projection: Projection) => this.getProjectorTitle(viewModel, projection);
+        viewModel.getUserIds = () => viewModel.groups.map(g => g.user_ids).flat();
         return viewModel;
     }
 

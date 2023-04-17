@@ -17,17 +17,23 @@ export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerat
         ids: [id],
         follow: [
             {
-                idField: `user_ids`,
-                fieldset: [
-                    `default_vote_weight`,
-                    `is_physical_person`,
-                    `is_active`,
-                    `meeting_ids`,
-                    { templateField: `vote_delegated_$_to_id` },
-                    { templateField: `vote_delegations_$_from_ids` },
-                    { templateField: `vote_weight_$` },
-                    { templateField: `group_$_ids` },
-                    `is_present_in_meeting_ids`
+                idField: `group_ids`,
+                fieldset: [],
+                follow: [
+                    {
+                        idField: `user_ids`,
+                        fieldset: [
+                            `default_vote_weight`,
+                            `is_physical_person`,
+                            `is_active`,
+                            `meeting_ids`,
+                            { templateField: `vote_delegated_$_to_id` },
+                            { templateField: `vote_delegations_$_from_ids` },
+                            { templateField: `vote_weight_$` },
+                            { templateField: `group_$_ids` },
+                            `is_present_in_meeting_ids`
+                        ]
+                    }
                 ]
             }
         ]
@@ -40,7 +46,13 @@ export const getParticipantIsPresentSubscriptionConfig: SubscriptionConfigGenera
         viewModelCtor: ViewMeeting,
         fieldset: [],
         ids: [id],
-        follow: [{ idField: `user_ids`, additionalFields: [`is_present_in_meeting_ids`] }]
+        follow: [
+            {
+                idField: `group_ids`,
+                fieldset: [],
+                follow: [{ idField: `user_ids`, additionalFields: [`is_present_in_meeting_ids`] }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION
 });
@@ -49,7 +61,13 @@ export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `user_ids`, fieldset: `participantList` }]
+        follow: [
+            {
+                idField: `group_ids`,
+                fieldset: [],
+                follow: [{ idField: `user_ids`, fieldset: `participantList` }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION
 });
@@ -58,7 +76,13 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `user_ids`, fieldset: `participantListMinimal` }]
+        follow: [
+            {
+                idField: `group_ids`,
+                fieldset: [],
+                follow: [{ idField: `user_ids`, fieldset: `participantListMinimal` }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 });

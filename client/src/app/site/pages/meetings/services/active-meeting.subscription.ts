@@ -18,7 +18,6 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `is_active_in_organization_id`,
                 `is_archived_organization_id`,
                 `template_for_organization_id`,
-                `user_ids`,
                 `description`,
                 `location`,
                 `organization_tag_ids`,
@@ -44,7 +43,8 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                         `default_group_for_meeting_id`,
                         `name`,
                         `permissions`,
-                        `weight`
+                        `weight`,
+                        `user_ids`
                     ]
                 },
                 {

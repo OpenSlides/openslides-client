@@ -1,4 +1,5 @@
 import { unix } from 'moment';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 
@@ -78,6 +79,10 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
         return this.is_template || !!this.template_for_organization_id;
     }
 
+    public get user_ids(): Id[] {
+        return this.getUserIds();
+    }
+
     public get relatedTime(): RelatedTime {
         if ((this.start_time ?? this.end_time) === undefined) {
             return RelatedTime.Dateless;
@@ -93,6 +98,8 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
             return RelatedTime.Past;
         }
     }
+
+    public getUserIds!: () => Id[];
 
     public static COLLECTION = Meeting.COLLECTION;
     public static ACCESSIBILITY_FIELD: keyof Meeting = `description`;

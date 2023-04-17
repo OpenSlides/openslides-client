@@ -243,7 +243,6 @@ export class Meeting extends BaseModel<Meeting> {
 
     // Other relations
     public present_user_ids!: Id[]; // (user/is_present_in_meeting_ids)[];
-    public user_ids!: Id[]; // Calculated: All ids all users assigned to groups.
     public reference_projector_id!: Id; // projector/used_as_reference_projector_meeting_id;
     public default_projector_$_ids!: string[]; // projector/used_as_default_$_in_meeting_id;
 
@@ -451,7 +450,6 @@ export class Meeting extends BaseModel<Meeting> {
         `default_meeting_for_committee_id`,
         `organization_tag_ids`,
         `present_user_ids`,
-        `user_ids`,
         `reference_projector_id`,
         `list_of_speakers_countdown_id`,
         `poll_countdown_id`,
