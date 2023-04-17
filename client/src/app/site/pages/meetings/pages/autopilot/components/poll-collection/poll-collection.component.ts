@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -19,7 +19,7 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`]
 })
-export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit {
+export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {
     public polls: ViewPoll[] = [];
 
     public lastPublishedPoll: ViewPoll | null = null;
@@ -82,6 +82,14 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
                     this.updateLastPublished();
                 })
         );
+    }
+
+    public override ngOnDestroy(): void {
+        if (this.currentSubscribed) {
+            this.modelRequestService.closeSubscription(`${POLL_DETAIL_SUBSCRIPTION}_${this.currentSubscribed}`);
+        }
+
+        super.ngOnDestroy();
     }
 
     public identifyPoll(index: number, poll: ViewPoll): number {
