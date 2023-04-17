@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Theme } from 'src/app/domain/models/theme/theme';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Theme, ThemeGeneralColors } from 'src/app/domain/models/theme/theme';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 import { ColorService } from 'src/app/site/services/color.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
+import { GENERAL_DEFAULT_COLORS, ThemeService } from 'src/app/site/services/theme.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 type ThemeBuilderDialogData = {
@@ -22,8 +23,15 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
 
     public _paletteKeys: string[] = [`500`];
     private _themePalettes: ThemePalette[] = [`primary`, `accent`, `warn`];
+    private _generalColorNames: string[] = [`yes`, `no`, `abstain`, `headbar`];
 
     private _currentPalettes: { [formControlName: string]: string } = {};
+
+    private get primaryControl(): AbstractControl {
+        return this.paletteBuilderForm.get(this.createFormControlName(`primary`, `500`));
+    }
+
+    private headbarDefaultColorSubject = new BehaviorSubject<string>(``);
 
     public constructor(
         private dialogRef: MatDialogRef<ThemeBuilderDialogComponent>,
@@ -39,6 +47,9 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
     public ngAfterViewInit(): void {
         setTimeout(() => {
             this.paletteBuilderForm = this.createForm();
+            this.primaryControl.valueChanges.subscribe(primary =>
+                this.headbarDefaultColorSubject.next(this.generateHeadbarColorFromPrimaryHex(primary))
+            );
             for (const paletteName of this._themePalettes) {
                 const formUpdate: any = this.data ?? this.createFormUpdate(paletteName);
                 this.paletteBuilderForm.patchValue(formUpdate);
@@ -49,8 +60,10 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
     }
 
     public resetField(formControlName: string | ThemePalette): void {
-        if (formControlName === `primary` || formControlName === `accent` || formControlName === `warn`) {
-            this.paletteBuilderForm!.patchValue(this.createFormUpdate(formControlName));
+        if (this._themePalettes.includes(formControlName as ThemePalette)) {
+            this.paletteBuilderForm!.patchValue(this.createFormUpdate(formControlName as ThemePalette));
+        } else if (this._generalColorNames.includes(formControlName)) {
+            this.paletteBuilderForm!.patchValue({ [formControlName]: `` });
         } else {
             this.paletteBuilderForm!.patchValue({
                 [formControlName as string]: this._currentPalettes[formControlName as string]
@@ -59,20 +72,36 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
     }
 
     public onClose(): void {
-        for (const palette of this._themePalettes) {
+        for (const palette of [...this._themePalettes, ...this._generalColorNames]) {
             this.resetField(palette);
         }
         this.dialogRef.close(null);
     }
 
     public onConfirm(): void {
+        const values = this.paletteBuilderForm!.value as { [key: string]: any };
+        let newValues = {};
+        for (let key of Object.keys(values)) {
+            newValues[key] = values[key] || (this.data && this.data[key] ? null : undefined);
+        }
         this.dialogRef.close({
-            ...this.paletteBuilderForm!.value
+            ...newValues
         });
     }
 
     public createFormControlName(paletteName: ThemePalette, paletteKey: string): string {
         return `${paletteName}_${paletteKey}`;
+    }
+
+    public getDefaultColor(key: keyof ThemeGeneralColors): Observable<string> | string {
+        if (key === `headbar`) {
+            return this.headbarDefaultColorSubject;
+        }
+        return GENERAL_DEFAULT_COLORS[key];
+    }
+
+    private generateHeadbarColorFromPrimaryHex(hex: string) {
+        return this.colorService.generateColorPaletteByHex(hex).find(def => def.name === `900`).hex;
     }
 
     private createForm(): UntypedFormGroup {
@@ -83,6 +112,9 @@ export class ThemeBuilderDialogComponent extends BaseUiComponent implements Afte
             for (const paletteKey of this._paletteKeys) {
                 formGroup[`${paletteName}_${paletteKey}`] = [``];
             }
+        }
+        for (const generalKey of this._generalColorNames) {
+            formGroup[generalKey] = [``];
         }
         return this.fb.group(formGroup);
     }

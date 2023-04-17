@@ -12,6 +12,11 @@ mat-dialog-content {
     overflow: inherit;
     min-width: auto;
 
+    .content-wrapper {
+        max-height: 400px;
+        overflow: auto;
+    }
+
     div.projectors {
         padding: 15px 0;
 

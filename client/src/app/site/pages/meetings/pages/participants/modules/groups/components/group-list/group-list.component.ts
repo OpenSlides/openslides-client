@@ -7,6 +7,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { AppPermission, DisplayPermission, PERMISSIONS } from 'src/app/domain/definitions/permission.config';
 import { permissionChildren, permissionParents } from 'src/app/domain/definitions/permission-relations';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -19,7 +20,7 @@ import { GroupControllerService } from '../../services';
     templateUrl: `./group-list.component.html`,
     styleUrls: [`./group-list.component.scss`]
 })
-export class GroupListComponent extends BaseMeetingComponent implements OnInit {
+export class GroupListComponent extends BaseMeetingComponent implements OnInit, CanComponentDeactivate {
     /**
      * Holds all Groups
      */
@@ -251,5 +252,18 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
             await this.repo.bulkUpdate(...payload).catch(this.raiseError);
             this.updatedGroupIds.clear();
         };
+    }
+
+    /**
+     * Function to open a prompt dialog,
+     * so the user will be warned if he has made changes and not saved them.
+     *
+     * @returns The result from the prompt dialog.
+     */
+    public async canDeactivate(): Promise<boolean> {
+        if (this.hasChanges) {
+            return await this.promptService.discardChangesConfirmation();
+        }
+        return true;
     }
 }

@@ -11,8 +11,13 @@ jobs:
     name: 'Set project'
     runs-on: ubuntu-latest
     steps:
-      - name: Set project
-        uses: actions/add-to-project@v0.4.0
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.AUTOMATION_APP_ID }}
+          private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+
+      - uses: actions/add-to-project@v0.5.0
         with:
           project-url: https://github.com/orgs/OpenSlides/projects/2
-          github-token: ${{ secrets.ISSUE_AND_PR_PAT }}
+          github-token: ${{ steps.generate-token.outputs.token }}

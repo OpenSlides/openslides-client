@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { Collection, Fqid, Id } from 'src/app/domain/definitions/key-types';
+import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces';
 import { isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
 import { BaseModel } from 'src/app/domain/models/base/base-model';
@@ -97,6 +98,10 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
         } else {
             return this.modelsRepoMap[value].getVerboseName();
         }
+    }
+
+    public get isSuperadmin(): boolean {
+        return this.operator.hasOrganizationPermissions(OML.superadmin);
     }
 
     public constructor(
@@ -251,8 +256,8 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
      * Serves as an entry point for the time travel routine
      */
     public async onClickRow(position: Position): Promise<void> {
-        console.log(`click on row`, position, this.operator.isInGroupIds(this.activeMeeting.admin_group_id));
-        if (!this.operator.isInGroupIds(this.activeMeeting.admin_group_id)) {
+        console.log(`click on row`, position, this.operator.hasOrganizationPermissions(OML.superadmin));
+        if (!this.operator.hasOrganizationPermissions(OML.superadmin)) {
             return;
         }
 
