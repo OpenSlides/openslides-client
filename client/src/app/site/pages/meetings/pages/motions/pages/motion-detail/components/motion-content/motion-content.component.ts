@@ -26,6 +26,7 @@ import { getParticipantMinimalSubscriptionConfig } from '../../../../../particip
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
@@ -64,6 +65,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     @Output()
     public validStateChanged = new EventEmitter<boolean>();
+
+    public tinyMceConfig = MotionTinyMceConfig;
 
     private finalEditMode = false;
 

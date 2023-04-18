@@ -19,6 +19,7 @@ import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/po
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
@@ -46,9 +47,10 @@ export class AssignmentPollService extends PollService {
         parsePollNumber: PollParseNumberPipe,
         pollServiceMapper: PollServiceMapperService,
         private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        themeService: ThemeService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber);
+        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
         this.meetingSettingsService
             .get(`assignment_poll_default_100_percent_base`)

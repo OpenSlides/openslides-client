@@ -414,6 +414,7 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_default_100_percent_base`,
         `poll_default_group_ids`,
         `poll_default_backend`,
+        `topic_poll_default_group_ids`,
         `projector_ids`,
         `all_projection_ids`,
         `projector_message_ids`,
