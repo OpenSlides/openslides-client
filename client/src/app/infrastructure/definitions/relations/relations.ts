@@ -683,16 +683,6 @@ export const RELATIONS: Relation[] = [
         generic: false,
         structured: true
     },
-    // meeting/user_ids -> user
-    {
-        ownViewModels: [ViewMeeting],
-        foreignViewModel: ViewUser,
-        ownField: `users`,
-        ownIdField: `user_ids`,
-        many: true,
-        generic: false,
-        structured: false
-    },
     // user/meeting_ids -> meeting
     {
         ownViewModels: [ViewUser],
