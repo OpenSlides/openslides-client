@@ -6,7 +6,6 @@ import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-funct
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 
-import { ViewProjection } from '../../../projectors';
 import {
     AUTOPILOT_CONTENT_SUBSCRIPTION,
     getAutopilotContentSubscriptionConfig,
@@ -31,29 +30,33 @@ export class AutopilotMainComponent extends BaseModelRequestHandlerComponent {
             this.projectorRepo
                 .getReferenceProjectorObservable()
                 .pipe(
-                    map(projector => projector?.current_projections || []),
-                    map((projections: ViewProjection[]) =>
-                        projections.filter(projection => {
-                            const fqid = projection.content_object_id;
+                    map(projector =>
+                        projector?.current_projections
+                            ?.filter(projection => {
+                                const fqid = projection.content_object_id;
 
-                            return (
-                                collectionFromFqid(fqid) !== `meeting` &&
-                                (this.collectionMapper
-                                    .getModelConstructor(collectionFromFqid(fqid))
-                                    ?.REQUESTABLE_FIELDS.indexOf(`poll_ids`) !== -1 ||
-                                    this.collectionMapper
+                                return (
+                                    collectionFromFqid(fqid) !== `meeting` &&
+                                    (this.collectionMapper
                                         .getModelConstructor(collectionFromFqid(fqid))
-                                        ?.REQUESTABLE_FIELDS.indexOf(`content_object_id`) !== -1 ||
-                                    this.collectionMapper
-                                        .getModelConstructor(collectionFromFqid(fqid))
-                                        ?.REQUESTABLE_FIELDS.indexOf(`list_of_speakers_id`) !== -1)
-                            );
-                        })
+                                        ?.REQUESTABLE_FIELDS.indexOf(`poll_ids`) !== -1 ||
+                                        this.collectionMapper
+                                            .getModelConstructor(collectionFromFqid(fqid))
+                                            ?.REQUESTABLE_FIELDS.indexOf(`content_object_id`) !== -1 ||
+                                        this.collectionMapper
+                                            .getModelConstructor(collectionFromFqid(fqid))
+                                            ?.REQUESTABLE_FIELDS.indexOf(`list_of_speakers_id`) !== -1)
+                                );
+                            })
+                            .map(p => p.id)
                     ),
-                    map(projections => projections.map(p => p.id)),
                     distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))
                 )
                 .subscribe((projections: Id[]) => {
+                    if (!projections) {
+                        return;
+                    }
+
                     for (let id of this.currentSubscriptions) {
                         if (projections.indexOf(id) === -1) {
                             this.modelRequestService.closeSubscription(`${AUTOPILOT_CONTENT_SUBSCRIPTION}_${id}`);
