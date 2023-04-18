@@ -55,19 +55,19 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 },
                 {
                     idField: `reference_projector_id`,
-                    fieldset: [...MEETING_ROUTING_FIELDS, `used_as_reference_projector_meeting_id`],
+                    fieldset: [`used_as_reference_projector_meeting_id`],
                     follow: [
                         {
                             idField: `current_projection_ids`,
-                            fieldset: [...MEETING_ROUTING_FIELDS],
+                            fieldset: [],
                             follow: [
                                 {
                                     idField: `content_object_id`,
-                                    fieldset: [...MEETING_ROUTING_FIELDS],
+                                    fieldset: [],
                                     follow: [
                                         {
                                             idField: `list_of_speakers_id`,
-                                            fieldset: [...MEETING_ROUTING_FIELDS],
+                                            fieldset: MEETING_ROUTING_FIELDS,
                                             follow: [
                                                 {
                                                     idField: `speaker_ids`,
