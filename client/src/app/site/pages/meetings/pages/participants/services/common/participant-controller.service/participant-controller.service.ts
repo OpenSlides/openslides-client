@@ -22,6 +22,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
+import { GroupControllerService } from '../../../modules';
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
@@ -48,6 +49,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
         public meetingController: MeetingControllerService,
+        public groupController: GroupControllerService,
         private userController: UserControllerService,
         private userDeleteDialog: UserDeleteDialogService,
         private presenter: GetUserScopePresenterService,
@@ -66,11 +68,19 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                     meetingUserIds = meeting?.user_ids ?? [];
                     const meetingUsers =
                         meeting && meeting?.user_ids
-                            ? repo.getViewModelList().filter(user => meeting?.user_ids.includes(user.id))
+                            ? repo.getViewModelList().filter(user => meetingUserIds.includes(user.id))
                             : [];
                     this._participantListSubject.next(meetingUsers);
                 });
             }
+        });
+
+        this.groupController.getViewModelListObservable().subscribe(_ => {
+            meetingUserIds = this.activeMeeting?.user_ids ?? [];
+            const meetingUsers = meetingUserIds.length
+                ? repo.getViewModelList().filter(user => meetingUserIds.includes(user.id))
+                : [];
+            this._participantListSubject.next(meetingUsers);
         });
 
         repo.getViewModelListObservable().subscribe(users => {
