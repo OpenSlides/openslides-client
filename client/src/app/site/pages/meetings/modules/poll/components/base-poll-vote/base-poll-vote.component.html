@@ -4,7 +4,7 @@
 
     <!-- Delegations -->
     <ng-container *ngIf="isUserPresent && voteDelegationEnabled | async">
-        <div class="assignment-vote-delegation" *ngFor="let delegation of delegations">
+        <div class="poll-vote-delegation" *ngFor="let delegation of delegations">
             <mat-divider></mat-divider>
 
             <ng-container
@@ -16,7 +16,7 @@
 </ng-container>
 
 <ng-template #votingArea let-delegation="delegation">
-    <h4 *ngIf="delegation" class="assignment-delegation-title">
+    <h4 *ngIf="delegation" class="poll-delegation-title">
         <span>{{ 'Voting right for' | translate }}</span>
         <span>&nbsp;{{ delegation.getFullName() }}</span>
     </h4>
@@ -29,7 +29,7 @@
             </p>
 
             <!-- Leftover votes -->
-            <h4 *ngIf="(poll.isMethodY || poll.isMethodN) && poll.max_votes_amount > 1">
+            <h4 *ngIf="!settings.hideLeftoverVotes && (poll.isMethodY || poll.isMethodN) && poll.max_votes_amount > 1">
                 {{ 'Available votes' | translate }}:
                 <b>{{ getVotesAvailable(delegation) }}/{{ poll.max_votes_amount }}</b>
 
@@ -42,7 +42,7 @@
                 <span *ngIf="poll.max_votes_per_option > 1">
                     ({{ 'At most' | translate }}
                     <b>{{ poll.max_votes_per_option }}</b>
-                    {{ 'votes per candidate' | translate }})
+                    {{ maxVotesPerOptionSuffix | translate }})
                 </span>
             </h4>
 
@@ -51,28 +51,32 @@
                 <div *ngIf="poll.type !== PollType.Analog">
                     <div
                         [ngClass]="{
-                            'yna-grid': poll.isMethodYNA,
-                            'yn-grid': poll.isMethodYN,
-                            'single-vote-grid': poll.isMethodY || poll.isMethodN
+                            'split-grid': settings.isSplitSingleOption,
+                            'yna-grid': !settings.isSplitSingleOption && poll.isMethodYNA,
+                            'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
+                            'single-vote-grid': !settings.isSplitSingleOption && poll.isMethodY || poll.isMethodN
                         }"
                     >
-                        <div class="vote-candidate-name" *ngIf="!option.isListOption">
+                        <div class="vote-option-title" *ngIf="!settings.isSplitSingleOption && !option.isListOption">
                             <span *ngIf="option.content_object">
                                 <span>{{ option.content_object.short_name }}</span>
                                 <div class="user-subtitle" *ngIf="option.content_object.getLevelAndNumber()">
                                     {{ option.content_object.getLevelAndNumber() }}
                                 </div>
                             </span>
-                            <i *ngIf="!option.content_object">{{ unknownUserLabel | translate }}</i>
+                            <span *ngIf="option.text">
+                                <span>{{ option.text }}</span>
+                            </span>
+                            <i *ngIf="!option.content_object && !option.text">{{ noDataLabel | translate }}</i>
                         </div>
-                        <div class="vote-candidate-name" *ngIf="option.isListOption">
+                        <div class="vote-option-title" *ngIf="!settings.isSplitSingleOption && option.isListOption">
                             <span *ngIf="option.content_object">
                                 <span>{{ option.content_object.getTitle() | translate }}</span>
                             </span>
                         </div>
 
                         <ng-container *ngIf="!poll.max_votes_per_option || poll.max_votes_per_option <= 1">
-                            <div *ngFor="let action of voteActions">
+                            <div class="vote-button-area" *ngFor="let action of (voteActions.length ? voteActions : voteOptions)">
                                 <button
                                     class="vote-button"
                                     mat-raised-button
@@ -108,7 +112,7 @@
             </div>
 
             <!-- global yes/no/abstain -->
-            <ng-container *ngIf="(poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
+            <ng-container *ngIf="!settings.hideLeftoverVotes && (poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
                 <mat-divider></mat-divider>
                 <div class="global-option-grid">
                     <div *ngIf="poll.global_yes">
@@ -160,53 +164,20 @@
 
             <!-- Submit Vote -->
             <ng-container
+                *ngIf="!settings.hideSendNow"
                 [ngTemplateOutlet]="sendNow"
                 [ngTemplateOutletContext]="{ delegation: delegation }"
             ></ng-container>
         </ng-container>
 
-        <ng-container
-            *ngIf="!voting.canVote"
-            [ngTemplateOutlet]="cannotVote"
-            [ngTemplateOutletContext]="{ delegation: delegation }"
-        ></ng-container>
+        <os-poll-cannot-vote-message
+            [poll]="poll"
+            [delegationUser]="delegation"
+            [hasAlreadyVoted]="hasAlreadyVoted(delegation)"
+            [isDeliveringVote]="isDeliveringVote(delegation)"
+            [hasDelegations]="!(delegations.length)"
+        ></os-poll-cannot-vote-message>
     </ng-container>
-</ng-template>
-
-<ng-template #cannotVote let-delegation="delegation">
-    <div class="centered-button-wrapper">
-        <!-- Success -->
-        <div *ngIf="hasAlreadyVoted(delegation) && !isDeliveringVote(delegation)">
-            <mat-icon class="vote-submitted">check_circle</mat-icon>
-            <br />
-            <span>{{ 'Voting successful.' | translate }}</span>
-        </div>
-
-        <!-- Delivering -->
-        <div *ngIf="isDeliveringVote(delegation)" class="submit-vote-indicator">
-            <mat-spinner class="small-spinner"></mat-spinner>
-            <br />
-            <span>{{ 'Delivering vote... Please wait!' | translate }}</span>
-        </div>
-
-        <div *ngIf="hasAlreadyVoted(delegation) === undefined">
-            <mat-spinner class="small-spinner"></mat-spinner>
-            <br />
-            <span>{{ 'Retrieving vote status... Please wait!' | translate }}</span>
-        </div>
-
-        <ng-container *ngIf="hasAlreadyVoted(delegation) !== undefined">
-            <!-- Permission error error -->
-            <div *ngIf="!hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !(!isUserPresent && delegations.length)">
-                <span>{{ getVotingError(delegation) | translate }}</span>
-            </div>
-
-            <!-- Delegation not present vote error -->
-            <div *ngIf="!hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !isUserPresent && delegations.length">
-                <span>{{ getVotingErrorFromName('USER_NOT_PRESENT') | translate }}</span>
-            </div>
-        </ng-container>
-    </div>
 </ng-template>
 
 <ng-template #sendNow let-delegation="delegation">

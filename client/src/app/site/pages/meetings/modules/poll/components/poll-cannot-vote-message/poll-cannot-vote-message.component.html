@@ -1,0 +1,33 @@
+<div class="centered-button-wrapper">
+    <!-- Success -->
+    <div *ngIf="hasAlreadyVoted && !isDeliveringVote">
+        <mat-icon class="vote-submitted">check_circle</mat-icon>
+        <br />
+        <span>{{ 'Voting successful.' | translate }}</span>
+    </div>
+
+    <!-- Delivering -->
+    <div *ngIf="isDeliveringVote" class="submit-vote-indicator">
+        <mat-spinner class="small-spinner"></mat-spinner>
+        <br />
+        <span>{{ 'Delivering vote... Please wait!' | translate }}</span>
+    </div>
+
+    <div *ngIf="hasAlreadyVoted === undefined">
+        <mat-spinner class="small-spinner"></mat-spinner>
+        <br />
+        <span>{{ 'Retrieving vote status... Please wait!' | translate }}</span>
+    </div>
+
+    <ng-container *ngIf="hasAlreadyVoted !== undefined">
+        <!-- Permission error error -->
+        <div *ngIf="!hasAlreadyVoted && !isDeliveringVote && !(!isUserPresent && hasDelegations)">
+            <span>{{ getVotingError(delegationUser) | translate }}</span>
+        </div>
+
+        <!-- Delegation not present vote error -->
+        <div *ngIf="!hasAlreadyVoted && !isDeliveringVote && !isUserPresent && hasDelegations">
+            <span>{{ getVotingErrorFromName('USER_NOT_PRESENT') | translate }}</span>
+        </div>
+    </ng-container>
+</div>
