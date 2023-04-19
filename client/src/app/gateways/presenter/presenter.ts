@@ -5,7 +5,7 @@ export enum Presenter {
     GET_USER_RELATED_MODELS = `get_user_related_models`,
     GET_USER_SCOPE = `get_user_scope`,
     GET_FORWARDING_MEETINGS = `get_forwarding_meetings`,
-    SEARCH_USERS_BY_NAME_OR_EMAIL = `search_users_by_name_or_email`,
+    SEARCH_USERS = `search_users`,
     SEARCH_DELETED_MODELS = `search_deleted_models`,
     GET_HISTORY_INFORMATION = `get_history_information`,
     EXPORT_MEETING = `export_meeting`,

@@ -28,9 +28,6 @@ export enum PollClassType {
 }
 
 export enum PollColor {
-    yes = `#4caf50`,
-    no = `#cc6c5b`,
-    abstain = `#a6a6a6`,
     votesvalid = `#e2e2e2`,
     votesinvalid = `#e2e2e2`,
     votescast = `#e2e2e2`
@@ -79,6 +76,14 @@ export enum PollMethod {
     YN = `YN`,
     YNA = `YNA`,
     N = `N`
+}
+
+export enum FormPollMethod {
+    Y = `Y`,
+    YN = `YN`,
+    YNA = `YNA`,
+    N = `N`,
+    LIST_YNA = `yna`
 }
 
 export enum PollPercentBase {
@@ -191,6 +196,7 @@ export const VoteValuesVerbose = {
 export interface PollTableData {
     votingOption: string;
     votingOptionSubtitle?: string;
+    votingOptions?: { title: string; subtitle: string }[]; //only if class === `list`
     class?: string;
     value: VotingResult[];
 }

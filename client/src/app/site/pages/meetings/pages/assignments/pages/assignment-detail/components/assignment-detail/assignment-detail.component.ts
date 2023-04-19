@@ -160,7 +160,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             title: [``, Validators.required],
             description: [``],
             default_poll_description: [``],
-            open_posts: [1, [Validators.required, Validators.min(1)]],
+            open_posts: [1, [Validators.min(0)]],
             agenda_create: [``],
             agenda_parent_id: [],
             agenda_type: [``],

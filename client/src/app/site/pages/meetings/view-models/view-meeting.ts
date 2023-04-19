@@ -1,3 +1,4 @@
+import { unix } from 'moment';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
@@ -32,10 +33,19 @@ import {
 } from '../pages/motions';
 import { ViewGroup } from '../pages/participants';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
+import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
 import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
+
+export enum RelatedTime {
+    Future = 1,
+    Current,
+    Past,
+    Dateless
+}
 
 export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     public get meeting(): Meeting {
@@ -54,12 +64,40 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
         return this.meeting_user_ids?.length || 0;
     }
 
+    public get motionsAmount(): number {
+        return this.motion_ids?.length || 0;
+    }
+
+    public get committeeName(): string {
+        return this.committee?.name;
+    }
+
     public get isArchived(): boolean {
         return !this.is_active_in_organization_id;
     }
 
     public get isActive(): boolean {
         return !!this.is_active_in_organization_id;
+    }
+
+    public get isTemplate(): boolean {
+        return this.is_template || !!this.template_for_organization_id;
+    }
+
+    public get relatedTime(): RelatedTime {
+        if ((this.start_time ?? this.end_time) === undefined) {
+            return RelatedTime.Dateless;
+        }
+        const current = new Date();
+        let start = unix(this.start_time).startOf(`day`).toDate() ?? unix(this.end_time).startOf(`day`).toDate();
+        const end = unix(this.end_time).endOf(`day`).toDate() ?? unix(this.start_time).endOf(`day`).toDate();
+        if (current < start) {
+            return RelatedTime.Future;
+        } else if (current <= end) {
+            return RelatedTime.Current;
+        } else {
+            return RelatedTime.Past;
+        }
     }
 
     public static COLLECTION = Meeting.COLLECTION;
@@ -122,6 +160,8 @@ interface IMeetingRelations {
     motion_statute_paragraphs: ViewMotionStatuteParagraph[];
     forwarded_motions: ViewMotion[];
     polls: ViewPoll[];
+    poll_candidates: ViewPollCandidate[];
+    poll_candidate_lists: ViewPollCandidateList[];
     options: ViewOption[];
     votes: ViewVote[];
     assignments: ViewAssignment[];

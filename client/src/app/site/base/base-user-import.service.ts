@@ -5,6 +5,8 @@ import { GENDERS } from '../../domain/models/users/user';
 import { ImportServiceCollectorService } from '../services/import-service-collector.service';
 import { BaseImportService } from './base-import.service';
 
+export type UserMap = { [importTrackId: number]: Partial<GeneralUser>[] };
+
 @Directive()
 export abstract class BaseUserImportService extends BaseImportService<GeneralUser> {
     public override requiredHeaderLength = 3;

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
@@ -41,20 +40,6 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     public delete(...viewModels: Identifiable[]): Promise<void> {
         const payload: Identifiable[] = viewModels.map(model => ({ id: model.id }));
         return this.sendBulkActionToBackend(MotionBlockAction.DELETE, payload);
-    }
-
-    public override getFieldsets(): Fieldsets<MotionBlock> {
-        const listFields: (keyof MotionBlock)[] = [
-            `sequential_number`,
-            `meeting_id`,
-            `title`,
-            `internal`,
-            `agenda_item_id`,
-            `motion_ids`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: listFields
-        };
     }
 
     public getTitle = (viewMotionBlock: ViewMotionBlock) => viewMotionBlock.title;

@@ -20,7 +20,7 @@ export class EntitledUsersTableComponent {
         this._entitledUsersObservable = observable.pipe(
             map(entries =>
                 entries.sort((entryA, entryB) =>
-                    this.getNameFromEntry(entryA).localeCompare(this.getNameFromEntry(entryB))
+                    this.getNameFromEntry(entryA)?.localeCompare(this.getNameFromEntry(entryB))
                 )
             )
         );

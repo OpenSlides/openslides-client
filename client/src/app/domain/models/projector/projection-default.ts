@@ -19,7 +19,7 @@ export const PROJECTIONDEFAULT = {
 
 export type ProjectiondefaultKey = keyof typeof PROJECTIONDEFAULT;
 
-export type ProjectiondefaultValue = typeof PROJECTIONDEFAULT[ProjectiondefaultKey];
+export type ProjectiondefaultValue = (typeof PROJECTIONDEFAULT)[ProjectiondefaultKey];
 
 export const PROJECTIONDEFAULT_VERBOSE: { [key in ProjectiondefaultKey]: string } = {
     agendaAllItems: _(`Agenda`),

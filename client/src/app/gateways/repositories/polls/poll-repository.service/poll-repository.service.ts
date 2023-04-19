@@ -5,7 +5,7 @@ import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
 import { toDecimal } from 'src/app/infrastructure/utils';
 import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
@@ -41,8 +41,9 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;
 
     public override getFieldsets(): Fieldsets<Poll> {
-        const routingFields: (keyof Poll)[] = [`sequential_number`, `meeting_id`];
-        const listFieldset: (keyof Poll)[] = routingFields.concat([
+        const listFieldset: (keyof Poll)[] = [
+            `sequential_number`,
+            `meeting_id`,
             `entitled_group_ids`,
             `state`,
             `title`,
@@ -51,28 +52,9 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             `onehundred_percent_base`,
             `backend`,
             `content_object_id`
-        ]);
-        const detailFieldset: (keyof Poll)[] = listFieldset.concat(
-            `voted_ids`,
-            `votescast`,
-            `votesinvalid`,
-            `votesvalid`,
-            `option_ids`,
-            `onehundred_percent_base`,
-            `global_option_id`,
-            `global_yes`,
-            `global_no`,
-            `global_abstain`,
-            `min_votes_amount`,
-            `max_votes_amount`,
-            `max_votes_per_option`,
-            `entitled_users_at_stop`,
-            `vote_count`,
-            `backend`
-        );
+        ];
         return {
-            [DEFAULT_FIELDSET]: detailFieldset,
-            [ROUTING_FIELDSET]: routingFields,
+            ...super.getFieldsets(),
             list: listFieldset
         };
     }
@@ -262,11 +244,13 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             } else {
                 delete option.text;
                 delete option.content_object_id;
+                delete option.poll_candidate_user_ids;
             }
             result.push({
                 id: option.id,
                 content_object_id: option.content_object_id,
                 text: option.text,
+                poll_candidate_user_ids: option.poll_candidate_user_ids,
                 Y: toDecimal(option.Y, false),
                 A: toDecimal(option.A, false),
                 N: toDecimal(option.N, false)
@@ -281,15 +265,19 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             this.validateOption(option);
             result.push({
                 content_object_id: option.content_object_id,
-                text: option.text
+                text: option.text,
+                poll_candidate_user_ids: option.poll_candidate_user_ids
             });
         }
         return result;
     }
 
     private validateOption(option: any): void {
-        if ((option.text && option.content_object_id) || (!option.text && !option.content_object_id)) {
-            throw new Error(`Exactly one of text or content_object_id has to be given!`);
+        if (
+            [option.text, option.content_object_id, option.poll_candidate_user_ids].filter(content => !!content)
+                .length !== 1
+        ) {
+            throw new Error(`Exactly one of text, content_object_id or poll_candidate_user_ids has to be given!`);
         }
     }
 
@@ -354,7 +342,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     protected override createViewModel(model: Poll): ViewPoll {
         const viewPoll = super.createViewModel(model);
 
-        this.voteController.setHasVotedOnPoll(viewPoll).then(() => {});
+        this.voteController.subscribeVoted(viewPoll);
 
         return viewPoll;
     }

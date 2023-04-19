@@ -37,5 +37,24 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     protected getDecimalFields(): (keyof MeetingUser)[] {
         return [`vote_weight`];
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof MeetingUser)[] = [
+        `id`,
+        `comment`,
+        `number`,
+        `structure_level`,
+        `about_me`,
+        `vote_weight`,
+        `user_id`,
+        `meeting_id`,
+        `personal_note_ids`,
+        `speaker_ids`,
+        `supported_motion_ids`,
+        `assignment_candidate_ids`,
+        `vote_delegated_to_id`,
+        `vote_delegations_from_ids`,
+        `chat_message_ids`,
+        `group_ids`
+    ];
 }
 export interface MeetingUser {}

@@ -34,5 +34,18 @@ export class Speaker extends BaseModel<Speaker> {
     public constructor(input?: any) {
         super(Speaker.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Speaker)[] = [
+        `id`,
+        `begin_time`,
+        `end_time`,
+        `weight`,
+        `speech_state`,
+        `note`,
+        `point_of_order`,
+        `list_of_speakers_id`,
+        `meeting_user_id`,
+        `meeting_id`
+    ];
 }
 export interface Speaker extends HasMeetingId {}

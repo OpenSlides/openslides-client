@@ -105,6 +105,42 @@ export class Mediafile extends BaseModel<Mediafile> {
     public get url(): string {
         return this.is_directory ? `/mediafiles/${this.id}` : `/system/media/get/${this.id}`;
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Mediafile)[] = [
+        `id`,
+        `title`,
+        `is_directory`,
+        `filesize`,
+        `filename`,
+        `mimetype`,
+        `pdf_information`,
+        `create_timestamp`,
+        `token`,
+        `inherited_access_group_ids`,
+        `access_group_ids`,
+        `parent_id`,
+        `child_ids`,
+        `list_of_speakers_id`,
+        `projection_ids`,
+        `attachment_ids`,
+        `owner_id`,
+        `used_as_logo_projector_main_in_meeting_id`,
+        `used_as_logo_projector_header_in_meeting_id`,
+        `used_as_logo_web_header_in_meeting_id`,
+        `used_as_logo_pdf_header_l_in_meeting_id`,
+        `used_as_logo_pdf_header_r_in_meeting_id`,
+        `used_as_logo_pdf_footer_l_in_meeting_id`,
+        `used_as_logo_pdf_footer_r_in_meeting_id`,
+        `used_as_logo_pdf_ballot_paper_in_meeting_id`,
+        `used_as_font_regular_in_meeting_id`,
+        `used_as_font_italic_in_meeting_id`,
+        `used_as_font_bold_in_meeting_id`,
+        `used_as_font_bold_italic_in_meeting_id`,
+        `used_as_font_monospace_in_meeting_id`,
+        `used_as_font_chyron_speaker_name_in_meeting_id`,
+        `used_as_font_projector_h1_in_meeting_id`,
+        `used_as_font_projector_h2_in_meeting_id`
+    ];
 }
 export interface Mediafile
     extends HasOwnerId,

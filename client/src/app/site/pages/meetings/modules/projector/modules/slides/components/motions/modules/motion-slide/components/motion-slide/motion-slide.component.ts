@@ -137,7 +137,9 @@ export class MotionSlideComponent
 
     public textDivStyles: {
         width?: string;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'margin-top'?: string;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'font-size'?: string;
     } = {};
 

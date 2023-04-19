@@ -1,5 +1,6 @@
 import { environment } from 'src/environments/environment';
 
+import { ModelRequest } from '../domain/interfaces/model-request';
 import {
     ErrorDescription,
     ErrorType,
@@ -31,6 +32,7 @@ export class AutoupdateStreamPool {
     private _authTokenRefreshTimeout: any | null = null;
     private _updateAuthPromise: Promise<void> | undefined;
     private _waitingForUpdateAuthPromise: boolean = false;
+    private _disableCompression: boolean = false;
 
     public get activeStreams(): AutoupdateStream[] {
         return this.streams.filter(stream => stream.active);
@@ -51,7 +53,12 @@ export class AutoupdateStreamPool {
             this.subscriptions[subscription.id] = subscription;
         }
 
-        const stream = new AutoupdateStream(subscriptions, queryParams, this.endpoint, this.authToken);
+        const params = new URLSearchParams(queryParams);
+        if (this._disableCompression) {
+            params.delete(`compress`);
+        }
+
+        const stream = new AutoupdateStream(subscriptions, params, this.endpoint, this.authToken);
         this.streams.push(stream);
         this.connectStream(stream);
 
@@ -62,13 +69,13 @@ export class AutoupdateStreamPool {
      * Resets fail counter and reconnect a stream
      * @throws if stream not in pool
      */
-    public reconnect(stream: AutoupdateStream): void {
+    public reconnect(stream: AutoupdateStream, force: boolean = true): void {
         if (!this.streams.includes(stream)) {
             throw new Error(`Stream not found`);
         }
 
         stream.failedCounter = 0;
-        this.connectStream(stream, true);
+        this.connectStream(stream, force);
     }
 
     /**
@@ -151,7 +158,7 @@ export class AutoupdateStreamPool {
      * @param queryParams
      * @param modelRequest
      */
-    public getMatchingSubscription(queryParams: string, modelRequest: Object): AutoupdateSubscription | null {
+    public getMatchingSubscription(queryParams: string, modelRequest: ModelRequest): AutoupdateSubscription | null {
         for (let stream of this.streams) {
             for (let subscription of stream.subscriptions) {
                 if (subscription.fulfills(queryParams, modelRequest)) {
@@ -200,6 +207,15 @@ export class AutoupdateStreamPool {
         });
 
         await this._updateAuthPromise;
+    }
+
+    public async disableCompression(): Promise<void> {
+        this._disableCompression = true;
+        for (let stream of this.streams) {
+            stream.queryParams.delete(`compress`);
+        }
+
+        this.reconnectAll(false);
     }
 
     private setAuthToken(token: string | null): void {

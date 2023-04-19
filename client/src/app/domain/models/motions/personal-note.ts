@@ -14,5 +14,14 @@ export class PersonalNote extends BaseModel<PersonalNote> {
     public constructor(input: Partial<PersonalNote>) {
         super(PersonalNote.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof PersonalNote)[] = [
+        `id`,
+        `note`,
+        `star`,
+        `meeting_user_id`,
+        `content_object_id`,
+        `meeting_id`
+    ];
 }
 export interface PersonalNote extends HasMeetingId {}

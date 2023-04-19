@@ -36,7 +36,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
     /**
      * Holds the view item to the given topic
      */
-    public viewListOfSpeakers!: ViewListOfSpeakers;
+    public viewListOfSpeakers: ViewListOfSpeakers | undefined;
 
     /**
      * Holds a list of projectors. Only in CurrentListOfSpeakers mode
@@ -116,7 +116,7 @@ export class ListOfSpeakersComponent extends BaseMeetingComponent implements OnI
      * E.g. if a motion is the current content object, "Motion" will be the returned value.
      */
     public getContentObjectProjectorButtonText(): string {
-        if (this.viewListOfSpeakers.content_object_id) {
+        if (this.viewListOfSpeakers?.content_object_id) {
             const collection = collectionFromFqid(this.viewListOfSpeakers.content_object_id);
             const verboseName = this.collectionMapper.getRepository(collection)!.getVerboseName();
             return verboseName;

@@ -16,5 +16,13 @@ export class AssignmentCandidate extends BaseModel<AssignmentCandidate> {
     public constructor(input?: any) {
         super(AssignmentCandidate.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof AssignmentCandidate)[] = [
+        `id`,
+        `weight`,
+        `assignment_id`,
+        `meeting_user_id`,
+        `meeting_id`
+    ];
 }
 export interface AssignmentCandidate extends HasMeetingId {}

@@ -6,9 +6,17 @@ import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
 import { ViewMeetingUser } from './view-meeting-user';
+
+export enum DuplicateStatus {
+    None,
+    SameEmail,
+    SameName,
+    All
+}
 
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
@@ -281,6 +289,19 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
             .filter(vote => vote.meeting_id === meetingID)
             .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
     }
+
+    public getDuplicateStatusInMap(data: { name: Map<string, Id[]>; email: Map<string, Id[]> }): DuplicateStatus {
+        const sameNameIds = this.getName() ? data.name.get(this.getName()) : [];
+        const sameEmailIds = this.email ? data.email.get(this.email) : [];
+        let status: number = DuplicateStatus.None;
+        if (sameNameIds?.find(id => id !== this.id)) {
+            status = DuplicateStatus.SameName;
+        }
+        if (sameEmailIds?.find(id => id !== this.id)) {
+            status = status === DuplicateStatus.SameName ? DuplicateStatus.All : DuplicateStatus.SameEmail;
+        }
+        return status;
+    }
 }
 interface IUserRelations {
     is_present_in_meetings: ViewMeeting[];
@@ -292,6 +313,7 @@ interface IUserRelations {
     committee_managements: ViewCommittee[];
     options: ViewOption[];
     votes: ViewVote[];
+    poll_candidates: ViewPollCandidate[];
 }
 
 export interface ViewUser extends User, IUserRelations {}

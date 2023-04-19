@@ -3,13 +3,11 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable, OperatorFunction } from 'rxjs';
+import { map, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -37,7 +35,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
 
     public isCreateView: boolean = false;
     public committeeForm!: UntypedFormGroup;
-    public meetingsObservable: Observable<ViewMeeting[]>;
 
     public editCommittee!: ViewCommittee;
 
@@ -53,7 +50,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         private formBuilder: UntypedFormBuilder,
         public committeeRepo: CommitteeControllerService,
         public orgaTagRepo: OrganizationTagControllerService,
-        private meetingRepo: MeetingControllerService,
         private route: ActivatedRoute,
         private operator: OperatorService
     ) {
@@ -66,7 +62,6 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         } else {
             super.setTitle(EDIT_COMMITTEE_LABEL);
         }
-        this.meetingsObservable = this.meetingRepo.getViewModelListObservable();
     }
 
     public ngOnInit(): void {

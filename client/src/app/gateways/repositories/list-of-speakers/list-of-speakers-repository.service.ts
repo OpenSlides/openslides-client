@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { hasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
@@ -22,24 +21,11 @@ export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepositor
         super(repositoryServiceCollector, ListOfSpeakers);
     }
 
-    public override getFieldsets(): Fieldsets<ListOfSpeakers> {
-        const routingFields: (keyof ListOfSpeakers)[] = [`sequential_number`, `meeting_id`];
-        const defaultFieldset: (keyof ListOfSpeakers)[] = routingFields.concat([
-            `closed`,
-            `content_object_id`,
-            `speaker_ids`
-        ]);
-        return {
-            [DEFAULT_FIELDSET]: defaultFieldset,
-            [ROUTING_FIELDSET]: routingFields
-        };
-    }
-
     public getVerboseName = (plural: boolean = false) =>
         this.translate.instant(plural ? `Lists of speakers` : `List of speakers`);
 
     public override getTitle = (viewListOfSpeakers: ViewListOfSpeakers) => {
-        if (viewListOfSpeakers.content_object) {
+        if (viewListOfSpeakers?.content_object) {
             return viewListOfSpeakers.content_object.getListOfSpeakersTitle();
         }
         return ``;

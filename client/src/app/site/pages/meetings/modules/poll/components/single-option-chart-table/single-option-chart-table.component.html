@@ -6,7 +6,7 @@
                 <th colspan="2">{{ 'Votes' | translate }}</th>
             </tr>
             <ng-container *ngFor="let row of tableData; let i = index">
-                <ng-container *ngIf="row.class === 'user'">
+                <ng-container *ngIf="['user', 'list'].includes(row.class)">
                     <tr [ngClass]="row.votingOption">
                         <td>
                             <os-icon-container *ngIf="row.value[0].icon" [icon]="row.value[0].icon" [size]="iconSize">
@@ -18,13 +18,13 @@
                         </td>
                         <td>
                             <div class="result-cell-definition">
-                                <span *ngIf="row.value[0].showPercent">
+                                <span *ngIf="row.value[0].showPercent" [class]="textSizeClass">
                                     {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
                                 </span>
                             </div>
                         </td>
                         <td>
-                            <div class="result-cell-definition">
+                            <div class="result-cell-definition" [class]="textSizeClass">
                                 <span>
                                     {{ getVoteAmount(row.value[0].amount, row) | pollParseNumber }}
                                 </span>
@@ -32,27 +32,27 @@
                         </td>
                     </tr>
                 </ng-container>
-                <ng-container *ngIf="row.class !== 'user'">
+                <ng-container *ngIf="!['user', 'list'].includes(row.class)">
                     <tr [class]="row.votingOption">
                         <!-- YNA/Valid etc -->
                         <td>
                             <os-icon-container *ngIf="row.value[0].icon" [icon]="row.value[0].icon" [size]="iconSize">
                                 {{ row.votingOption | pollKeyVerbose | translate }}
                             </os-icon-container>
-                            <span *ngIf="!row.value[0].icon">
+                            <span *ngIf="!row.value[0].icon" [class]="textSizeClass">
                                 {{ row.votingOption | pollKeyVerbose | translate }}
                             </span>
                         </td>
 
                         <!-- Percent numbers -->
                         <td class="result-cell-definition">
-                            <span *ngIf="row.value[0].showPercent">
+                            <span *ngIf="row.value[0].showPercent" [class]="textSizeClass">
                                 {{ row.value[0].amount! | pollPercentBase: poll }}
                             </span>
                         </td>
 
                         <!-- Voices -->
-                        <td class="result-cell-definition">
+                        <td class="result-cell-definition" [class]="textSizeClass">
                             {{ row.value[0].amount | pollParseNumber }}
                         </td>
                     </tr>

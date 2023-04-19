@@ -47,6 +47,7 @@ export class User extends BaseDecimalModel<User> {
     public poll_voted_ids!: string[]; // (poll/voted_ids)[];
     public vote_ids!: string[]; // (vote/user_id)[];
     public option_ids!: string[];
+    public poll_candidate_ids!: Id[]; // (poll_candidate/user_id);
     public organization_id!: Id; // organization/committee_ids;
 
     public organization_management_level!: keyof OMLMapping;
@@ -59,5 +60,37 @@ export class User extends BaseDecimalModel<User> {
     protected getDecimalFields(): (keyof User)[] {
         return [`default_vote_weight`];
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
+        `id`,
+        `username`,
+        `pronoun`,
+        `title`,
+        `first_name`,
+        `last_name`,
+        `is_active`,
+        `is_physical_person`,
+        `default_password`,
+        `can_change_own_password`,
+        `gender`,
+        `email`,
+        `default_number`,
+        `default_structure_level`,
+        `default_vote_weight`,
+        `last_email_send`,
+        `is_demo_user`,
+        `last_login`,
+        `organization_management_level`,
+        `is_present_in_meeting_ids`,
+        `committee_ids`,
+        `committee_management_ids`,
+        `meeting_user_ids`,
+        `poll_voted_ids`,
+        `option_ids`,
+        `vote_ids`,
+        `poll_candidate_ids`,
+        `meeting_ids`,
+        `organization_id`
+    ];
 }
 export interface User extends HasProjectionIds {}

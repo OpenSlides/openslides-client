@@ -1,3 +1,5 @@
+import { Identifiable } from 'src/app/domain/interfaces';
+
 import { Id } from '../../../domain/definitions/key-types';
 import { SharedImportContext } from './import-context';
 import { ImportModel } from './import-model';
@@ -59,6 +61,11 @@ export interface CsvJsonMapping {
 }
 
 export type RawObject<ToCreate> = { [key in keyof ToCreate]?: any };
+
+export interface RawImportModel<ToCreate> extends Identifiable {
+    readonly id: number;
+    model: RawObject<ToCreate>;
+}
 
 export type ImportConfig<MainModel = any, K = any> = StaticMainImportConfig<MainModel> & {
     modelHeadersAndVerboseNames: K;

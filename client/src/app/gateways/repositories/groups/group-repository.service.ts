@@ -3,7 +3,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { GroupAction } from './group.action';
@@ -19,16 +19,10 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
     public override getFieldsets(): Fieldsets<Group> {
         const titleFields: (keyof Group)[] = [`name`];
         const listFields: (keyof Group)[] = titleFields.concat([`permissions`]);
-        const detailFields: (keyof Group)[] = listFields.concat([
-            `admin_group_for_meeting_id`,
-            `default_group_for_meeting_id`,
-            `weight`,
-            `meeting_user_ids`
-        ]);
         return {
             title: titleFields,
             list: listFields,
-            [DEFAULT_FIELDSET]: detailFields
+            ...super.getFieldsets()
         };
     }
 

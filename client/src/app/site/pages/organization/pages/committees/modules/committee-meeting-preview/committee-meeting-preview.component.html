@@ -34,8 +34,14 @@
         </div>
 
         <!-- desc -->
-        <div>
+        <!-- <div>
             {{ description }}
+        </div> -->
+        <!-- tags -->
+        <div class="ellipsis-overflow" *ngIf="meeting.organization_tags.length">
+            <os-chip *ngFor="let tag of meeting.organization_tags" [color]="tag.color">
+                {{ tag.name }}
+            </os-chip>
         </div>
     </mat-card-content>
     <mat-card-actions class="prev-content">
@@ -73,11 +79,11 @@
 
 <mat-menu #meetingMenu="matMenu">
     <ng-template matMenuContent>
-        <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]">
+        <a mat-menu-item [routerLink]="['meeting', 'edit', meeting.id]" *ngIf="!meeting.isArchived">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </a>
-        <button mat-menu-item (click)="toggleTemplateMeeting()">
+        <button mat-menu-item (click)="toggleTemplateMeeting()" *ngIf="!meeting.isArchived">
             <mat-icon color="accent">
                 {{ isTemplateMeeting ? 'check_box' : 'check_box_outline_blank' }}
             </mat-icon>

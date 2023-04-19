@@ -6,7 +6,7 @@
         </h1>
         <h2>
             {{ title }}
-            <span *ngIf="waitingSpeakers !== null && waitingSpeakers > 0">
+            <span *ngIf="waitingSpeakers !== null && waitingSpeakers > 1">
                 &ndash; {{ waitingSpeakers }} <span>{{ 'Speakers' | translate }}</span>
             </span>
         </h2>

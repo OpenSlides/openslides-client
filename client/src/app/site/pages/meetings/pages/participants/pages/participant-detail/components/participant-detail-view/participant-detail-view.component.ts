@@ -20,6 +20,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService } from '../../../../modules';
+import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -28,6 +29,8 @@ import { GroupControllerService } from '../../../../modules';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
+
     public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
         [controlName]: [``]
     }));
@@ -99,8 +102,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      */
     public readonly groups: Observable<ViewGroup[]>;
 
-    public readonly users: Observable<ViewUser[]>;
-
     public get showVoteWeight(): boolean {
         const isVoteWeightEnabled = this._isElectronicVotingEnabled && this._isVoteWeightEnabled;
         return this.user ? isVoteWeightEnabled && typeof this.user.vote_weight() === `number` : isVoteWeightEnabled;
@@ -147,8 +148,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 .subscribe(enabled => (this._isVoteDelegationEnabled = enabled))
         );
 
+        // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
-        this.users = this.repo.getViewModelListObservable();
     }
 
     public isAllowed(action: string): boolean {

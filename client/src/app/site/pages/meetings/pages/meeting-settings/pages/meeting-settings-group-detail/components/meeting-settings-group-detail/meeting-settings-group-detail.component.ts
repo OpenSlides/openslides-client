@@ -129,9 +129,7 @@ export class MeetingSettingsGroupDetailComponent
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanges()) {
-            const title = this.translate.instant(`Do you really want to exit this page?`);
-            const content = this.translate.instant(`You made changes.`);
-            return await this.promptDialog.open(title, content);
+            return await this.promptDialog.discardChangesConfirmation();
         }
         return true;
     }
@@ -140,7 +138,7 @@ export class MeetingSettingsGroupDetailComponent
      * Updates the specified settings item indicated by the given key.
      */
     private calculateAutomaticFieldChanges(update: SettingsFieldUpdate): void {
-        const detailFields = this.settingsFields.filter(field => field.watchProperties?.includes(update.key));
+        const detailFields = this.settingsFields?.filter(field => field.watchProperties?.includes(update.key));
         detailFields.forEach(detailField => {
             const currentValue = detailField.currentValue;
             const changedValues = detailField.watchProperties.map(key => this.changedSettings[key]);

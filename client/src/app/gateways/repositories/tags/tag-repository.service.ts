@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Tag } from 'src/app/domain/models/tag/tag';
 import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
@@ -30,12 +29,6 @@ export class TagRepositoryService extends BaseMeetingRelatedRepository<ViewTag, 
     public async delete(...tags: Identifiable[]): Promise<void> {
         const payload: Identifiable[] = tags.map(tag => ({ id: tag.id }));
         return this.sendBulkActionToBackend(TagAction.DELETE, payload);
-    }
-
-    public override getFieldsets(): Fieldsets<Tag> {
-        return {
-            [DEFAULT_FIELDSET]: [`name`]
-        };
     }
 
     public getTitle = (viewTag: ViewTag) => viewTag.name;

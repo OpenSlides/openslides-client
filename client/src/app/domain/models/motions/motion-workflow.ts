@@ -22,5 +22,17 @@ export class MotionWorkflow extends BaseModel<MotionWorkflow> {
     public constructor(input?: any) {
         super(MotionWorkflow.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionWorkflow)[] = [
+        `id`,
+        `name`,
+        `sequential_number`,
+        `state_ids`,
+        `first_state_id`,
+        `default_workflow_meeting_id`,
+        `default_amendment_workflow_meeting_id`,
+        `default_statute_amendment_workflow_meeting_id`,
+        `meeting_id`
+    ];
 }
 export interface MotionWorkflow extends HasMeetingId, HasSequentialNumber {}

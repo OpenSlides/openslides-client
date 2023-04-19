@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
-import { SearchUsersByNameOrEmailPresenterService } from 'src/app/gateways/presenter/search-users-by-name-or-email-presenter.service';
+import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
 import { OneOfValidator } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -17,6 +17,7 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
 import { UserService } from 'src/app/site/services/user.service';
 
 import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
+import { getParticipantMinimalSubscriptionConfig } from '../../../../../../participants.subscription';
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
 
 @Component({
@@ -27,6 +28,8 @@ import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common
 export class ParticipantCreateWizardComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(MatStepper)
     private readonly _stepper!: MatStepper;
+
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
         [controlName]: [``]
@@ -126,7 +129,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         public readonly repo: ParticipantControllerService,
         private groupRepo: GroupControllerService,
         private userService: UserService,
-        private presenter: SearchUsersByNameOrEmailPresenterService,
+        private presenter: SearchUsersPresenterService,
         private organizationSettingsService: OrganizationSettingsService
     ) {
         super(componentServiceCollector, translate);
@@ -144,6 +147,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public ngOnInit(): void {
+        // TODO: Fetch groups for repo search selection
         this.groupsObservable = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
 
         this.subscriptions.push(
@@ -181,17 +185,11 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public async onChooseAccount(reverse = false): Promise<void> {
-        const { username, first_name, last_name, email } = this.createUserForm.value;
-        let searchCriteria: any = [{ username: `${first_name}${last_name}`, email: email }];
-        if (username) {
-            searchCriteria = [{ username: username }];
-        }
-
-        const result = await this.presenter.call({
-            searchCriteria,
-            permissionRelatedId: this.activeMeetingId!
+        const result = await this.presenter.callForUsers({
+            permissionRelatedId: this.activeMeetingId!,
+            users: [this.createUserForm.value]
         });
-        this._suitableAccountList = Object.values(result).flat();
+        this._suitableAccountList = result[0];
         if (this._suitableAccountList.length === 0) {
             this.goToStep(reverse ? this.FILL_FORM_PARTICIPANT_STEP : this.CREATE_PARTICIPANT_STEP);
         } else {

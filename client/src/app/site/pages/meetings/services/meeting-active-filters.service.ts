@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { OsFilter } from 'src/app/site/base/base-filter.service';
 import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
-import { ActiveFiltersStoreService, OsFilter } from 'src/app/ui/modules/list/definitions';
+import { ActiveFiltersStoreService } from 'src/app/ui/modules/list/definitions';
 
 import { HistoryService } from '../pages/history/services/history.service';
 

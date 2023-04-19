@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { createAgendaItem } from '../agenda';
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
@@ -40,22 +39,6 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
     public delete(...viewModels: ViewTopic[]): Promise<void> {
         const payload: Identifiable[] = viewModels.map(topic => ({ id: topic.id }));
         return this.sendBulkActionToBackend(TopicAction.DELETE, payload);
-    }
-
-    public override getFieldsets(): Fieldsets<Topic> {
-        const routingFields: (keyof Topic)[] = [`sequential_number`, `meeting_id`];
-        const titleFields: (keyof Topic)[] = routingFields.concat([`title`, `text`]);
-        return {
-            [DEFAULT_FIELDSET]: titleFields.concat([
-                `text`,
-                `attachment_ids`,
-                `tag_ids`,
-                `agenda_item_id`,
-                `list_of_speakers_id`,
-                `poll_ids`
-            ]),
-            [ROUTING_FIELDSET]: routingFields
-        };
     }
 
     public getTitle = (topic: ViewTopic) => topic.title;

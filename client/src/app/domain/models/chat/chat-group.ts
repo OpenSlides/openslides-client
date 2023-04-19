@@ -16,6 +16,16 @@ export class ChatGroup extends BaseModel<ChatGroup> implements HasMeetingId {
     public constructor(input?: Partial<ChatGroup>) {
         super(ChatGroup.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof ChatGroup)[] = [
+        `id`,
+        `name`,
+        `weight`,
+        `chat_message_ids`,
+        `read_group_ids`,
+        `write_group_ids`,
+        `meeting_id`
+    ];
 }
 
 export interface ChatGroup {}

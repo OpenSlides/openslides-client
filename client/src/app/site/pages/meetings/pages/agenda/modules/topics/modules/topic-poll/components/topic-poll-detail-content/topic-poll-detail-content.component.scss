@@ -36,7 +36,7 @@
     cursor: pointer;
     display: grid;
     grid-gap: 2em;
-    margin: 2em;
+    margin: 2em 25px;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 
     .doughnut-chart {

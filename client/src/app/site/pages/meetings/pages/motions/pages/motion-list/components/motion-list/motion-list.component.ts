@@ -81,7 +81,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      *
      * TODO: repo.getExtendedStateLabel(), repo.getExtendedRecommendationLabel()
      */
-    public filterProps = [`submitters`, `block`, `title`, `number`];
+    public filterProps = [`submitters`, `block`, `title`, `number`, `state_extension`, `recommendation_extension`];
 
     public get canForward(): boolean {
         return this._forwardingAvailable;

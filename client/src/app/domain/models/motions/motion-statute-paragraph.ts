@@ -9,6 +9,7 @@ import { BaseModel } from '../base/base-model';
 export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
     public static COLLECTION = `motion_statute_paragraph`;
 
+    public sequential_number!: number;
     public title!: string;
     public text!: string;
     public weight!: number;
@@ -18,5 +19,15 @@ export class MotionStatuteParagraph extends BaseModel<MotionStatuteParagraph> {
     public constructor(input?: any) {
         super(MotionStatuteParagraph.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionStatuteParagraph)[] = [
+        `id`,
+        `title`,
+        `text`,
+        `weight`,
+        `sequential_number`,
+        `motion_ids`,
+        `meeting_id`
+    ];
 }
 export interface MotionStatuteParagraph extends HasMeetingId {}

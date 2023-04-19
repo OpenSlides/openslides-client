@@ -6,6 +6,7 @@ import { Identifiable } from '../../interfaces/identifiable';
 
 export interface ModelConstructor<T extends BaseModel<T>> {
     COLLECTION: string;
+    REQUESTABLE_FIELDS?: string[];
     new (...args: any[]): T;
 }
 
