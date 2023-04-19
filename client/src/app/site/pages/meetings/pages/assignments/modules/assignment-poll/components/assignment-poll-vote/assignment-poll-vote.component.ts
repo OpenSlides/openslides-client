@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
@@ -24,7 +24,7 @@ import { UnknownUserLabel } from '../../services/assignment-poll.service';
     templateUrl: `../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
     styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`]
 })
-export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> implements OnInit {
+export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssignment> {
     public unknownUserLabel = UnknownUserLabel;
     public AssignmentPollMethod = PollMethod;
 
@@ -35,7 +35,9 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return null;
     }
 
-    public override maxVotesPerOptionSuffix = _(`votes per candidate`);
+    public override readonly maxVotesPerOptionSuffix = _(`votes per candidate`);
+
+    public override readonly optionPluralLabel: string = _(`Candidates`);
 
     private get assignment(): ViewAssignment {
         return this.poll.content_object;
@@ -58,11 +60,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
     }
 
-    public ngOnInit(): void {
-        this.defineVoteOptions();
-        this.cd.markForCheck();
-    }
-
     public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
         if (
             this.voteRequestData[user?.id]?.value[option.id] === actions.vote ||
@@ -71,17 +68,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             return actions.css!;
         }
         return ``;
-    }
-
-    private defineVoteOptions(): void {
-        this.voteActions = [];
-        if (this.poll) {
-            for (let option of this.voteOptions) {
-                if (this.poll.pollmethod.includes(option.vote)) {
-                    this.voteActions.push(option);
-                }
-            }
-        }
     }
 
     public override async submitVote(user: ViewUser = this.user): Promise<void> {
@@ -160,10 +146,5 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 this.submitVote(user);
             }
         }
-    }
-
-    protected override updatePoll() {
-        super.updatePoll();
-        this.defineVoteOptions();
     }
 }

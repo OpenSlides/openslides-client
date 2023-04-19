@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { VoteValue } from 'src/app/domain/models/poll';
@@ -24,7 +24,7 @@ import { ViewTopic } from '../../../../view-models';
     styleUrls: [`../../../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> implements OnInit {
+export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> {
     public override readonly settings: PollVoteViewSettings = {
         hideGlobalOptions: true
     };
@@ -44,11 +44,6 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
     }
 
-    public ngOnInit(): void {
-        this.defineVoteOptions();
-        this.cd.markForCheck();
-    }
-
     public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
         if (
             this.voteRequestData[user?.id]?.value[option.id] === actions.vote ||
@@ -57,17 +52,6 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             return actions.css;
         }
         return ``;
-    }
-
-    private defineVoteOptions(): void {
-        this.voteActions = [];
-        if (this.poll) {
-            for (let option of this.voteOptions) {
-                if (this.poll.pollmethod.includes(option.vote)) {
-                    this.voteActions.push(option);
-                }
-            }
-        }
     }
 
     public override async submitVote(user: ViewUser = this.user): Promise<void> {
@@ -153,10 +137,5 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
 
                 return o;
             }, {});
-    }
-
-    protected override updatePoll() {
-        super.updatePoll();
-        this.defineVoteOptions();
     }
 }

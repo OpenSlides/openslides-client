@@ -27,34 +27,114 @@
             <p *ngIf="pollHint">
                 <i>{{ pollHint }}</i>
             </p>
-
-            <!-- Leftover votes -->
-            <h4 *ngIf="!settings.hideLeftoverVotes && (poll.isMethodY || poll.isMethodN) && poll.max_votes_amount > 1">
-                {{ 'Available votes' | translate }}:
-                <b>{{ getVotesAvailable(delegation) }}/{{ poll.max_votes_amount }}</b>
-
-                <span *ngIf="poll.min_votes_amount > 1">
-                    ({{ 'At least' | translate }}
-                    <b>{{ poll.min_votes_amount }}</b>
-                    )
-                </span>
-
-                <span *ngIf="poll.max_votes_per_option > 1">
-                    ({{ 'At most' | translate }}
-                    <b>{{ poll.max_votes_per_option }}</b>
-                    {{ maxVotesPerOptionSuffix | translate }})
-                </span>
-            </h4>
-
-            <!-- Options and Actions -->
-            <div *ngFor="let option of poll.options; let i = index">
+            <div>
                 <div *ngIf="poll.type !== PollType.Analog">
+                    <!-- global yes/no/abstain -->
+                    <ng-container *ngIf="!settings.hideGlobalOptions && (poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
+                        <div
+                            *ngIf="!settings.isSplitSingleOption"
+                            [ngClass]="{
+                                'yna-grid': globalVoteActions.length === 3,
+                                'yn-grid': globalVoteActions.length === 2,
+                                'single-vote-grid': globalVoteActions.length === 1
+                            }"
+                        >
+                            <div></div>
+                            <div class="poll-option-title" *ngFor="let action of globalVoteActions">
+                                <b>
+                                    {{ action.label | translate }}
+                                </b>
+                            </div>
+                        </div>
+                        <div
+                            [ngClass]="{
+                                'yna-grid': globalVoteActions.length === 3,
+                                'yn-grid': globalVoteActions.length === 2,
+                                'single-vote-grid': globalVoteActions.length === 1
+                            }"
+                        >
+                            <span class="vote-option-title">
+                                {{ 'Global Approval' | translate }}
+                            </span>
+                            <div *ngFor="let option of globalVoteActions">
+                                <button
+                                    class="vote-button"
+                                    mat-raised-button
+                                    (click)="saveGlobalVote(option.vote, delegation)"
+                                    [ngClass]="getGlobalCSSClass(option, delegation)"
+                                    [disabled]="isDeliveringVote(delegation)"
+                                >
+                                    <mat-icon>{{option.icon}}</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <div
+                        *ngIf="!settings.hideLeftoverVotes && (poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled"
+                        class="or-divider-grid"
+                    >
+                        <div class="hr-wrapper">
+                            <hr>
+                        </div>
+                        <div translate>
+                            OR
+                        </div>
+                        <div class="hr-wrapper">
+                            <hr>
+                        </div>
+                    </div>
+
+                    <!-- Leftover votes -->
+                    <div class="option-list-information-grid" *ngIf="showAvailableVotes && !settings.hideLeftoverVotes">
+                        <b>
+                            {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
+                        </b>
+                        <div></div>
+                        <b>
+                            {{ 'Available votes' | translate }}:
+                            <b>{{ getVotesAvailable(delegation) }}/{{ poll.max_votes_amount }}</b>
+
+                            <span *ngIf="poll.min_votes_amount > 1">
+                                ({{ 'At least' | translate }}
+                                <b>{{ poll.min_votes_amount }}</b>
+                                )
+                            </span>
+
+                            <span *ngIf="poll.max_votes_per_option > 1">
+                                ({{ 'At most' | translate }}
+                                <b>{{ poll.max_votes_per_option }}</b>
+                                {{ maxVotesPerOptionSuffix | translate }})
+                            </span>
+                        </b>
+                    </div>
+
+                    <!-- Options and Actions -->
+                    <div
+                        *ngIf="!settings.isSplitSingleOption"
+                        [ngClass]="{
+                            'yna-grid': poll.isMethodYNA,
+                            'yn-grid': poll.isMethodYN,
+                            'single-vote-grid': (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
+                            'single-multi-vote-grid': (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option > 1
+                        }"
+                    >
+                        <div *ngIf="showAvailableVotes"></div>
+                        <b *ngIf="!showAvailableVotes">
+                            {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
+                        </b>
+                        <b class="poll-option-title" *ngFor="let action of (voteActions.length ? voteActions : voteOptions)">
+                            {{ action.label | translate }}
+                        </b>
+                    </div>
+                    <ng-container *ngFor="let option of poll.options; let i = index">
                     <div
                         [ngClass]="{
                             'split-grid': settings.isSplitSingleOption,
                             'yna-grid': !settings.isSplitSingleOption && poll.isMethodYNA,
                             'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
-                            'single-vote-grid': !settings.isSplitSingleOption && poll.isMethodY || poll.isMethodN
+                            'single-vote-grid': !settings.isSplitSingleOption && (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
+                            'single-multi-vote-grid': !settings.isSplitSingleOption && (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option > 1
                         }"
                     >
                         <div class="vote-option-title" *ngIf="!settings.isSplitSingleOption && !option.isListOption">
@@ -86,7 +166,7 @@
                                 >
                                     <mat-icon>{{ action.icon }}</mat-icon>
                                 </button>
-                                <span *ngIf="poll.isMethodYN || poll.isMethodYNA" class="vote-label">
+                                <span *ngIf="settings.isSplitSingleOption" class="vote-label">
                                     {{ action.label | translate }}
                                 </span>
                             </div>
@@ -108,59 +188,9 @@
                         </mat-form-field>
                     </div>
                     <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
+                    </ng-container>
                 </div>
             </div>
-
-            <!-- global yes/no/abstain -->
-            <ng-container *ngIf="!settings.hideLeftoverVotes && (poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
-                <mat-divider></mat-divider>
-                <div class="global-option-grid">
-                    <div *ngIf="poll.global_yes">
-                        <button
-                            class="vote-button"
-                            mat-raised-button
-                            (click)="saveGlobalVote('Y', delegation)"
-                            [ngClass]="getGlobalYesClass(delegation)"
-                            [disabled]="isDeliveringVote(delegation)"
-                        >
-                            <mat-icon>thumb_up</mat-icon>
-                        </button>
-                        <span class="vote-label">
-                            {{ PollPropertyVerbose.global_yes | translate }}
-                        </span>
-                    </div>
-
-                    <div *ngIf="poll.global_no">
-                        <button
-                            class="vote-button"
-                            mat-raised-button
-                            (click)="saveGlobalVote('N', delegation)"
-                            [ngClass]="getGlobalNoClass(delegation)"
-                            [disabled]="isDeliveringVote(delegation)"
-                        >
-                            <mat-icon>thumb_down</mat-icon>
-                        </button>
-                        <span class="vote-label">
-                            {{ PollPropertyVerbose.global_no | translate }}
-                        </span>
-                    </div>
-
-                    <div *ngIf="poll.global_abstain">
-                        <button
-                            class="vote-button"
-                            mat-raised-button
-                            (click)="saveGlobalVote('A', delegation)"
-                            [ngClass]="getGlobalAbstainClass(delegation)"
-                            [disabled]="isDeliveringVote(delegation)"
-                        >
-                            <mat-icon>trip_origin</mat-icon>
-                        </button>
-                        <span class="vote-label">
-                            {{ PollPropertyVerbose.global_abstain | translate }}
-                        </span>
-                    </div>
-                </div>
-            </ng-container>
 
             <!-- Submit Vote -->
             <ng-container

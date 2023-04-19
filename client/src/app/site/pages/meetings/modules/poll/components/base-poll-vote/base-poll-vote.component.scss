@@ -4,7 +4,7 @@
 %vote-grid-base {
     display: grid;
     grid-gap: 10px;
-    margin: 20px 0;
+    margin: 20px;
 
     .vote-button {
         min-width: 50px;
@@ -13,6 +13,20 @@
 
     .vote-label {
         margin-left: 10px;
+    }
+
+    .poll-option-title {
+        text-align: center;
+    }
+}
+
+.or-divider-grid {
+    @extend %vote-grid-base;
+    grid-template-areas: 'left or right';
+    grid-template-columns: auto min-content auto;
+
+    .hr-wrapper {
+        height: 100%;
     }
 }
 
@@ -26,27 +40,40 @@
 
 .yn-grid {
     @extend %vote-grid-base;
-    grid-template-areas:
-        'name name'
-        'yes no';
+    grid-template-areas: 'name yes no';
+    grid-template-columns: auto 70px 70px;
+    // gap: 0 20px;
 }
 
 .yna-grid {
     @extend %vote-grid-base;
-    grid-template-areas:
-        'name name name'
-        'yes no abstain';
+    grid-template-areas: 'name yes no abstain';
+    grid-template-columns: auto 70px 70px 70px;
+    // gap: 0 20px;
 }
 
 .single-vote-grid {
     @extend %vote-grid-base;
-    grid-template-areas: 'yes name';
-    grid-template-columns: min-content auto;
+    grid-template-areas: 'name yes';
+    grid-template-columns: auto 70px;
+    // gap: 0 20px;
+}
+
+.single-multi-vote-grid {
+    @extend %vote-grid-base;
+    grid-template-areas: 'name yes';
+    grid-template-columns: auto 120px;
+    // gap: 0 20px;
 }
 
 .global-option-grid {
     @extend %vote-grid-base;
     grid-template-columns: auto auto;
+}
+
+.option-list-information-grid {
+    @extend %vote-grid-base;
+    grid-template-columns: max-content auto max-content;
 }
 
 .split-grid {

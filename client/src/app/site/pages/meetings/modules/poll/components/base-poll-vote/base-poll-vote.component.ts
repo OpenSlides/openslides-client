@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,7 +39,7 @@ export interface PollVoteViewSettings {
 }
 
 @Directive()
-export abstract class BasePollVoteComponent<C extends PollContentObject = any> extends BaseComponent {
+export abstract class BasePollVoteComponent<C extends PollContentObject = any> extends BaseComponent implements OnInit {
     @Input()
     public set poll(value: ViewPoll<C>) {
         this._poll = value;
@@ -75,28 +75,36 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         {
             vote: `Y`,
             css: `voted-yes`,
-            icon: `thumb_up`,
+            icon: `check_circle_outline`,
             label: `Yes`
         },
         {
             vote: `N`,
             css: `voted-no`,
-            icon: `thumb_down`,
+            icon: `highlight_off`,
             label: `No`
         },
         {
             vote: `A`,
             css: `voted-abstain`,
-            icon: `trip_origin`,
+            icon: `radio_button_unchecked`,
             label: `Abstain`
         }
     ];
 
     /**
      * Subset of voteOptions that is used based on the pollmethod.
-     * If left empty, pollmethod YNA will be assumed
      */
     public voteActions: VoteOption[] = [];
+
+    public get showAvailableVotes(): boolean {
+        return (this.poll.isMethodY || this.poll.isMethodN) && this.poll.max_votes_amount > 1;
+    }
+
+    /**
+     * Subset of global voteOptions that is used.
+     */
+    public globalVoteActions: VoteOption[] = [];
 
     public get pollHint(): string {
         return null;
@@ -106,7 +114,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public readonly noDataLabel: string = _(`No data`);
 
-    public maxVotesPerOptionSuffix: string = _(`votes per option`);
+    public readonly maxVotesPerOptionSuffix: string = _(`votes per option`);
+
+    public readonly optionPluralLabel: string = _(`Options`);
 
     protected voteRequestData: IdentifiedVotingData = {};
 
@@ -152,6 +162,11 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 }
             })
         );
+    }
+
+    public ngOnInit(): void {
+        this.defineVoteOptions();
+        this.cd.markForCheck();
     }
 
     public isDeliveringVote(user: ViewUser = this.user): boolean {
@@ -253,29 +268,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         await this.sendVote(user.id, votePayload);
     }
 
-    public getGlobalYesClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === `Y`) {
-            return `voted-yes`;
-        }
-        return ``;
-    }
-
-    public getGlobalAbstainClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === `A`) {
-            return `voted-abstain`;
-        }
-        return ``;
-    }
-
-    public getGlobalNoClass(user?: ViewUser): string {
-        if (!user) {
-            if (!this.user) {
-                return ``;
-            }
-            user = this.user;
-        }
-        if (this.voteRequestData[user.id]?.value === `N`) {
-            return `voted-no`;
+    public getGlobalCSSClass(option: VoteOption, user: ViewUser = this.user): string {
+        if (this.voteRequestData[user.id]?.value === option.vote) {
+            return option.css;
         }
         return ``;
     }
@@ -400,6 +395,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     protected updatePoll(): void {
         this.setupHasVotedSubscription();
+        this.defineVoteOptions();
     }
 
     private setupHasVotedSubscription(): void {
@@ -437,5 +433,27 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             !this.hasAlreadyVoted(user) &&
             this.hasAlreadyVoted(user) !== undefined
         );
+    }
+
+    private defineVoteOptions(): void {
+        this.voteActions = [];
+        this.globalVoteActions = [];
+        if (this.poll) {
+            const globals = {
+                Y: this.poll.global_yes,
+                N: this.poll.global_no,
+                A: this.poll.global_abstain
+            };
+
+            for (let option of this.voteOptions) {
+                if (this.poll.pollmethod.includes(option.vote)) {
+                    this.voteActions.push(option);
+                }
+
+                if (globals[option.vote]) {
+                    this.globalVoteActions.push(option);
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
@@ -21,7 +21,7 @@ import { ViewOption } from '../../../../../polls';
     templateUrl: `../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.html`,
     styleUrls: [`../../../../../../modules/poll/components/base-poll-vote/base-poll-vote.component.scss`]
 })
-export class MotionPollVoteComponent extends BasePollVoteComponent implements OnInit {
+export class MotionPollVoteComponent extends BasePollVoteComponent {
     public override readonly settings = {
         hideLeftoverVotes: true,
         hideGlobalOptions: true,
@@ -40,10 +40,6 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         translate: TranslateService
     ) {
         super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
-    }
-
-    public ngOnInit(): void {
-        this.cd.markForCheck();
     }
 
     public getActionButtonClass(voteOption: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
