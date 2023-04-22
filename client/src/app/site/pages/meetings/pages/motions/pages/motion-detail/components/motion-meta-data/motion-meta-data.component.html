@@ -36,8 +36,7 @@
     </button>
     <p *ngIf="showSupporters" class="supporters">
         <span *ngFor="let supporter of motion.supporters; let last = last">
-            {{ supporter.full_name }}
-            <span *ngIf="!last">,</span>
+            {{ supporter.full_name }}<span *ngIf="!last">,</span>
         </span>
     </p>
 </div>
