@@ -255,6 +255,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
     }
 
+    public getReferencingMotions(): ViewMotion[] {
+        const allReferences = this.motion.referenced_in_motion_recommendation_extensions || [];
+        return allReferences.sort((a, b) => a.number.localeCompare(b.number));
+    }
+
     public getOriginMotions(): (ViewMotion | ViewMeeting)[] {
         const copy = this.motion.origin_id
             ? [...(this.motion.all_origins || [])]
