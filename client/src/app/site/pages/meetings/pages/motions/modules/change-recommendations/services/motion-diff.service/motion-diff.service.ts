@@ -1585,7 +1585,7 @@ export class MotionDiffService {
             }
         );
 
-        // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted tet</del><ins>inserted.</ins></P>
+        // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted text</del><ins>inserted.</ins></P>
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
             (_whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
@@ -1685,6 +1685,14 @@ export class MotionDiffService {
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
             (_whole: string, ending: string, _blockTag: string, space: string, insdel: string): string =>
                 `</` + insdel + `>` + ending + space
+        );
+
+        // <ul><li><ul><li>...</li><del></UL></LI></UL></del><LI class="insert">d</LI><LI class="insert">e</LI><ins></UL></LI></UL></ins>
+        // => <ul><li><ul><li>...</li><LI class="insert">d</LI><LI class="insert">e</LI></UL></LI></UL>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>((<\/(li|ul|ol)>)+)<\/del>((<li class="insert">.*?<\/li>)*)<ins>\1<\/ins>/i,
+            (_whole: string, ending: string, _e1: string, _e2: string, insertedLis: string, _e3: string) =>
+                insertedLis + ending
         );
 
         let diff: string;
