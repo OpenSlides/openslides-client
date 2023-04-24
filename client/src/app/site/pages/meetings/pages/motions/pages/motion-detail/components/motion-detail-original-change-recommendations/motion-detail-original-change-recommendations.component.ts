@@ -131,18 +131,6 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         this.setup();
     }
 
-    private async setup(): Promise<void> {
-        if (!this.dataLoaded) {
-            await firstValueFrom(
-                this.autoupdateCommunications
-                    .listen()
-                    .pipe(filter(data => data && data.description?.includes(MOTION_DETAIL_SUBSCRIPTION)))
-            );
-            this.dataLoaded = true;
-            this.update(true);
-        }
-    }
-
     // public ngDoCheck(): void {
     //     if (!this.minLineNo || !this.maxLineNo) {
     //         this.setLineNumberCache();
@@ -259,12 +247,22 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         this.gotoChangeRecommendation.emit(reco);
     }
 
+    private async setup(): Promise<void> {
+        if (!this.dataLoaded) {
+            await firstValueFrom(
+                this.autoupdateCommunications
+                    .listen()
+                    .pipe(filter(data => data && data.description?.includes(MOTION_DETAIL_SUBSCRIPTION)))
+            );
+            this.dataLoaded = true;
+            this.update();
+        }
+    }
+
     /**
      * Re-creates
      */
-    private update(fromAsync?: boolean): void {
-        if (fromAsync) {
-        }
+    private update(): void {
         if (!this.element || !this.textLoaded) {
             // Not yet initialized
             return;
