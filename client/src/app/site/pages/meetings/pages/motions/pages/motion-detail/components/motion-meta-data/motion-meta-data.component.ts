@@ -100,6 +100,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         );
     }
 
+    public get referencingMotions(): ViewMotion[] {
+        return this._referencingMotions;
+    }
+
+    private _referencingMotions: ViewMotion[];
+
     private _forwardingAvailable: boolean = false;
 
     /**
@@ -255,11 +261,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
     }
 
-    public getReferencingMotions(): ViewMotion[] {
-        const allReferences = this.motion.referenced_in_motion_recommendation_extensions || [];
-        return allReferences.sort((a, b) => a.number.localeCompare(b.number));
-    }
-
     public getOriginMotions(): (ViewMotion | ViewMeeting)[] {
         const copy = this.motion.origin_id
             ? [...(this.motion.all_origins || [])]
@@ -304,7 +305,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             this.categoryRepo
                 .getViewModelListObservable()
                 .subscribe(value => (this.categories = this.treeService.makeFlatTree(value, `weight`, `parent_id`))),
-            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value))
+            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
+            this.repo
+                .getViewModelObservable(this.motion.id)
+                .subscribe(
+                    value =>
+                        (this._referencingMotions = (value.referenced_in_motion_recommendation_extensions || []).sort(
+                            (a, b) => a.number.localeCompare(b.number)
+                        ))
+                )
         ];
     }
 
