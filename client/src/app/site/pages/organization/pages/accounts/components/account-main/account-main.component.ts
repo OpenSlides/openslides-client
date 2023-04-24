@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { map } from 'rxjs';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
 import { getMeetingListSubscriptionConfig } from '../../../../organization.subscription';

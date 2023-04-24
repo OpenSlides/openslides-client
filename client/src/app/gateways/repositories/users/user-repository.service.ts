@@ -119,14 +119,11 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([`meeting_user_ids`]);
 
-        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal.concat(filterableListFields).concat([
-            `is_present_in_meeting_ids`
-        ]);
+        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
+            .concat(filterableListFields)
+            .concat([`is_present_in_meeting_ids`]);
 
-        const detailFields: TypedFieldset<User> = [
-            `default_password`,
-            `can_change_own_password`
-        ];
+        const detailFields: TypedFieldset<User> = [`default_password`, `can_change_own_password`];
 
         return {
             ...super.getFieldsets(),

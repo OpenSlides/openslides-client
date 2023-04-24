@@ -659,11 +659,11 @@ export class OperatorService {
                 viewModelCtor: ViewUser,
                 fieldset: `all`,
                 follow: [
-                    { 
+                    {
                         idField: `meeting_user_ids`,
                         fieldset: `all`,
                         follow: [
-                            { 
+                            {
                                 idField: `vote_delegations_from_ids`,
                                 follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
                             }
