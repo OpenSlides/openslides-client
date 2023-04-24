@@ -108,10 +108,14 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
     private minLineNo: number | null = null;
     private maxLineNo: number | null = null;
 
-    private dataLoaded = false;
+    private dataLoaded: boolean;
 
     public get textLoaded(): boolean {
-        return this.dataLoaded || (this.motionId ? !!this.controller.getViewModel(this.motionId)?.text : false);
+        const motion = this.motionId ? this.controller.getViewModel(this.motionId) : undefined;
+        return (
+            !!this.dataLoaded ||
+            (motion ? !!motion?.text || !!motion?.amendment_paragraph_$ || !!motion.statute_paragraph : false)
+        );
     }
 
     public constructor(
@@ -123,14 +127,8 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         private controller: MotionControllerService
     ) {
         this.operator.operatorUpdated.subscribe(() => this.checkPermissions());
-        firstValueFrom(
-            this.autoupdateCommunications
-                .listen()
-                .pipe(filter(data => data && data.description === MOTION_DETAIL_SUBSCRIPTION))
-        ).then(data => {
-            this.dataLoaded = true;
-            this.update();
-        });
+        this.dataLoaded = this.autoupdateCommunications.hasReceivedDataForSubscription(MOTION_DETAIL_SUBSCRIPTION);
+        this.setup();
     }
 
     // public ngDoCheck(): void {
@@ -247,6 +245,18 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
      */
     public gotoReco(reco: ViewUnifiedChange): void {
         this.gotoChangeRecommendation.emit(reco);
+    }
+
+    private async setup(): Promise<void> {
+        if (!this.dataLoaded) {
+            await firstValueFrom(
+                this.autoupdateCommunications
+                    .listen()
+                    .pipe(filter(data => data && data.description?.includes(MOTION_DETAIL_SUBSCRIPTION)))
+            );
+            this.dataLoaded = true;
+            this.update();
+        }
     }
 
     /**
