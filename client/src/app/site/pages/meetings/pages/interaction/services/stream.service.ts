@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StorageMap } from '@ngx-pwa/local-storage';
-import { distinctUntilChanged, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
@@ -25,10 +25,10 @@ export class StreamService {
      */
     public streamLoadedOnceObservable: Observable<boolean>;
 
-    private isStreamRunningSubject = new Subject<boolean>();
+    private isStreamRunningSubject = new BehaviorSubject<boolean>(false);
     public isStreamRunningObservable = this.isStreamRunningSubject.asObservable();
 
-    private canSeeLiveStreamSubject = new Subject<boolean>();
+    private canSeeLiveStreamSubject = new BehaviorSubject<boolean>(false);
     public canSeeLiveStreamObservable = this.canSeeLiveStreamSubject.asObservable();
 
     public constructor(

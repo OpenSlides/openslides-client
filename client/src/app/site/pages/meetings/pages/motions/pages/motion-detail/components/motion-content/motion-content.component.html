@@ -14,6 +14,7 @@
         <os-motion-detail-original-change-recommendations
             *ngIf="lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original"
             [html]="getFormattedTextPlain()"
+            [motionId]="motion.id"
             [changeRecommendations]="changeRecommendations"
             (createChangeRecommendation)="createChangeRecommendation($event)"
             (gotoChangeRecommendation)="gotoChangeRecommendation($event)"

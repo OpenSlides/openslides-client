@@ -244,6 +244,10 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
             this.enabledWorkflows.motion = +id;
         });
 
+        this.meetingSettingsService.get(`motions_default_amendment_workflow_id`).subscribe(id => {
+            this.enabledWorkflows.amendment = +id;
+        });
+
         this.meetingSettingsService.get(`motions_statutes_enabled`).subscribe(bool => {
             this.enabledWorkflows.statuteEnabled = bool;
         });

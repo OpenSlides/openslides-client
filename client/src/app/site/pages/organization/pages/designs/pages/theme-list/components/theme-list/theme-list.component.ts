@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
@@ -21,7 +22,7 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
         protected override translate: TranslateService,
         public readonly repo: ThemeControllerService,
         private dialog: ThemeBuilderDialogService,
-        private prompt: PromptService
+        public prompt: PromptService
     ) {
         super(componentServiceCollector, translate);
         super.setTitle(`Design`);
@@ -40,15 +41,13 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
         }
     }
 
-    public changeCurrentTheme(theme: ViewTheme): void {
-        if (!this.isThemeUsed(theme)) {
-            this.repo.changeCurrentTheme(theme);
-        }
+    public async changeCurrentTheme(theme: ViewTheme): Promise<void> {
+        this.repo.changeCurrentTheme(theme);
     }
 
     public async deleteTheme(theme: ViewTheme): Promise<void> {
-        const promptDialogTitle = `Delete theme`;
-        const subtitle = `Do you really want to delete this theme?`;
+        const promptDialogTitle = _(`Delete theme`);
+        const subtitle = _(`Do you really want to delete this theme?`);
         if (await this.prompt.open(promptDialogTitle, subtitle)) {
             await this.repo.delete(theme.id);
         }

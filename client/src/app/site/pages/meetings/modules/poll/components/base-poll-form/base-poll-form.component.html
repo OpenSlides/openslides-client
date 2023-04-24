@@ -131,7 +131,7 @@
                     required
                 >
                     <ng-container *ngFor="let option of validPercentBases | keyvalue: keepEntryOrder">
-                        <mat-option [value]="option.key">{{ (isCreatedList || pollMethod === 'yna') ? alternativePercentBases[option.key] : option.value | translate }}</mat-option>
+                        <mat-option [value]="option.key">{{ ((isCreatedList || pollMethod === 'yna') ? alternativePercentBases[option.key] : option.value) | translate }}</mat-option>
                     </ng-container>
                 </mat-select>
             </mat-form-field>
