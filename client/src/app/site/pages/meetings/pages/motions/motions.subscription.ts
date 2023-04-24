@@ -65,7 +65,12 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     {
                         idField: `submitter_ids`,
                         fieldset: FULL_FIELDSET,
-                        follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                        follow: [
+                            {
+                                idField: `meeting_user_id`,
+                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                            }
+                        ]
                     }
                 ]
             }
@@ -177,7 +182,10 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 fieldset: [`text`, `modified_final_version`]
             },
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
-            { idField: `supporter_ids`, ...UserFieldsets.FullNameSubscription }
+            {
+                idField: `supporter_meeting_user_ids`,
+                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+            }
         ],
         fieldset: [
             `reason`,
