@@ -15,6 +15,8 @@ export type MeetingUserPatchFn =
     providedIn: `root`
 })
 export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<ViewMeetingUser, MeetingUser> {
+    public override readonly resetOnMeetingChange = false;
+
     public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MeetingUser);
     }
