@@ -65,7 +65,7 @@ mat-icon {
 }
 
 .scrollable-content {
-    height: calc(100vh - var(--global-headbar-height));
+    height: calc(100% - var(--global-headbar-height));
     width: 100%;
     overflow: auto;
 }
