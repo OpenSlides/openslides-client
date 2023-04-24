@@ -20,8 +20,14 @@ export const agendaItemFollow: FollowList<any> = [
                 fieldset: FULL_FIELDSET,
                 follow: [
                     {
-                        idField: `user_id`,
-                        ...UserFieldsets.FullNameSubscription
+                        idField: `meeting_user_id`,
+                        fieldset: [],
+                        follow: [
+                            {
+                                idField: `user_id`,
+                                ...UserFieldsets.FullNameSubscription
+                            }
+                        ]
                     }
                 ]
             }
