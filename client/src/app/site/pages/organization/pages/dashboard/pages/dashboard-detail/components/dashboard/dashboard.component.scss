@@ -46,6 +46,12 @@ os-dashboard {
             max-width: 1000px;
             margin: 20px auto;
         }
+        @include phone {
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.5em;
+        }
         display: flex;
         margin: 0 0px 8px 0;
     }
