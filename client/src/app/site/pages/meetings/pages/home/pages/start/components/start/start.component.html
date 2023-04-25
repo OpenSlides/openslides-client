@@ -16,10 +16,10 @@
     <ng-container *ngIf="!isEditing">
         <div class="app-content">
             <ng-container *ngIf="welcomeTitleObservable | async as welcomeTitle">
-                <h1>{{ welcomeTitle | translate }}</h1>
+                <h1>{{ welcomeTitle }}</h1>
             </ng-container>
             <ng-container *ngIf="welcomeTextObservable | async as welcomeText">
-                <div [innerHTML]="welcomeText | translate | trust: 'html'"></div>
+                <div [innerHTML]="welcomeText | trust: 'html'"></div>
             </ng-container>
         </div>
     </ng-container>

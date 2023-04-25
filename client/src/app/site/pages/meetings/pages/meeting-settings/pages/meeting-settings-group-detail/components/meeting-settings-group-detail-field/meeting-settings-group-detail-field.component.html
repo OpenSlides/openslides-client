@@ -54,7 +54,7 @@
                         matInput
                         osTrimOnPaste
                         formControlName="value"
-                        [value]="translatedValue"
+                        [value]="internalValue"
                         [errorStateMatcher]="matcher"
                         [type]="formType(setting.type!)"
                     />
@@ -62,7 +62,7 @@
                         *ngIf="setting.type !== 'email'"
                         matInput
                         formControlName="value"
-                        [value]="translatedValue"
+                        [value]="internalValue"
                         [errorStateMatcher]="matcher"
                         [type]="formType(setting.type!)"
                     />
@@ -86,7 +86,7 @@
                             rows="10"
                             matInput
                             placeholder="{{ setting.label | translate }}"
-                            [value]="translatedValue"
+                            [value]="internalValue"
                         ></textarea>
                         <span matSuffix>
                             <mat-icon pull="right" class="red-warning-text" *ngIf="updateSuccessIcon">

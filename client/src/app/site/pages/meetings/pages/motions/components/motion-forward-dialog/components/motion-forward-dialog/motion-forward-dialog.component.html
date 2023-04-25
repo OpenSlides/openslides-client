@@ -3,7 +3,7 @@
     <span *ngIf="data.motion.length === 1">{{ data.motion[0].number }}</span>
 </div>
 <div mat-dialog-content>
-    <span *ngIf="data.motion.length === 1">{{ 'State' | translate }}: <b>{{ data.motion[0].state.name | translate }} {{data.motion[0].state_extension}}</b></span>
+    <span *ngIf="data.motion.length === 1">{{ 'State' | translate }}: <b>{{ data.motion[0].state.name }} {{data.motion[0].state_extension}}</b></span>
     <br *ngIf="data.motion.length === 1 && activeMeetingCommitteeName">
     <span *ngIf="activeMeetingCommitteeName">{{ 'Submitter (in target meeting)' | translate }}: <b>{{ activeMeetingCommitteeName }}</b></span>
     <div class="motion-forward-meeting-list">

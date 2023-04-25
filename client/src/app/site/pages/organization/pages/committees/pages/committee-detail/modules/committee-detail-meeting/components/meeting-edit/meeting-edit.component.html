@@ -39,6 +39,18 @@
             <input matInput formControlName="description" />
         </mat-form-field>
 
+        <mat-form-field *ngIf="isCreateView">
+            <mat-label>{{ 'Language' | translate }}</mat-label>
+            <mat-select formControlName="language">
+                <mat-option
+                    *ngFor="let choice of translations | keyvalue"
+                    [value]="choice.key"
+                >
+                    {{ choice.value }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <mat-form-field>
             <mat-label>{{ 'Event location' | translate }}</mat-label>
             <input matInput formControlName="location" />

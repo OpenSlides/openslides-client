@@ -91,18 +91,9 @@
 
 <mat-menu #languageMenu="matMenu">
     <ng-template matMenuContent>
-        <ng-container *ngTemplateOutlet="languageButton; context: { $implicit: 'en' }"></ng-container>
-        <ng-container *ngTemplateOutlet="languageButton; context: { $implicit: 'de' }"></ng-container>
-        <ng-container *ngTemplateOutlet="languageButton; context: { $implicit: 'it' }"></ng-container>
-        <ng-container *ngTemplateOutlet="languageButton; context: { $implicit: 'es' }"></ng-container>
-        <ng-container *ngTemplateOutlet="languageButton; context: { $implicit: 'ru' }"></ng-container>
-        <ng-container *ngTemplateOutlet="languageButton; context: { $implicit: 'cs' }"></ng-container>
+        <button *ngFor="let lang of translations | keyvalue" mat-menu-item (click)="selectLanguage(lang.key)">
+            <mat-icon>{{ getCurrentLanguageName() === lang.value ? 'check' : '' }}</mat-icon>
+            <span>{{ lang.value }}</span>
+        </button>
     </ng-template>
 </mat-menu>
-
-<ng-template #languageButton let-language>
-    <button mat-menu-item (click)="selectLanguage(language)">
-        <mat-icon>{{ getCurrentLanguageName() === getLanguageName(language) ? 'check' : '' }}</mat-icon>
-        <span>{{ getLanguageName(language) }}</span>
-    </button>
-</ng-template>

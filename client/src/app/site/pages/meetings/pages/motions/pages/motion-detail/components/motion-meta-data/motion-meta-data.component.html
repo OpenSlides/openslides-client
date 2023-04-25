@@ -56,14 +56,14 @@
         <span class="trigger-menu" *ngIf="motion.state">
             <ng-container *ngIf="perms.isAllowed('change_state', motion)">
                 <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
-                    {{ state.name | translate }}
+                    {{ state.name }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <div>
                     <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
                     <button *ngFor="let state of motion.state.previous_states" mat-menu-item (click)="setState(state.id)">
                         <mat-icon>arrow_back</mat-icon>
-                        {{ state.name | translate }}
+                        {{ state.name }}
                         <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                     </button>
                     <button mat-menu-item (click)="resetState()">
@@ -74,7 +74,7 @@
             </ng-container>
             <ng-container *ngIf="!perms.isAllowed('change_state', motion) && !!motion.state.submitter_withdraw_state">
                 <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
-                    {{ motion.state.submitter_withdraw_state.name | translate }}
+                    {{ motion.state.submitter_withdraw_state.name }}
                 </button>
             </ng-container>
         </span>
@@ -120,7 +120,7 @@
                 (click)="setRecommendation(recommendation.id)"
             >
                 <mat-icon *ngIf="motion.recommendation_id === recommendation.id">check</mat-icon>
-                {{ recommendation.recommendation_label | translate }}
+                {{ recommendation.recommendation_label }}
                 <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
             </button>
             <mat-divider></mat-divider>
