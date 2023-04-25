@@ -901,6 +901,29 @@ describe(`MotionDiffService`, () => {
             }
         ));
 
+        it(`handles replaced text at the end of nested lists`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                // Hint: line number should be moved into first element
+                const before =
+                        `<ul><li><ul><li><ol>` +
+                        `<li><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>Test 1</li>` +
+                        `</ol></li></ul></li></ul>`,
+                    after =
+                        `<UL><LI><UL><LI><OL>` +
+                        `<LI><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>Test 2</LI>` +
+                        `</OL></LI></UL></LI></UL>`,
+                    expected =
+                        `<ul><li><ul><li><ol>` +
+                        `<li><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>` +
+                        `Test <del>1</del><ins>2</ins></li>` +
+                        `</ol></li></ul></li></ul>`;
+
+                const diff = service.diff(before, after);
+                expect(diff).toBe(expected);
+            }
+        ));
+
         it(`handles completely deleted paragraphs`, inject([MotionDiffService], (service: MotionDiffService) => {
             const before = `<P>Ihr könnt ohne Sorge fortgehen.'Da meckerte die Alte und machte sich getrost auf den Weg.</P>`,
                 after = ``;

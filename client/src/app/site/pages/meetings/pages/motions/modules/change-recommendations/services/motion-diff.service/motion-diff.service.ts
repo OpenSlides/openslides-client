@@ -1695,6 +1695,13 @@ export class MotionDiffService {
                 insertedLis + ending
         );
 
+        // <UL><LI><UL><LI><UL><LI><del>Ebene 4</LI></UL></LI></UL></LI></UL></del><ins>Ebene 5</LI></UL></LI></UL></LI></UL></ins>
+        // => <UL><LI><UL><LI><UL><LI><del>Ebene 4</del><ins>Ebene 5</ins></LI></UL></LI></UL></LI></UL>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>([^<>]*)((<\/(li|ul|ol)>)+)<\/del><ins>([^<>]*)\2<\/ins>/i,
+            (_whole, del, end, _ul, _u2, ins) => `<del>` + del + `</del><ins>` + ins + `</ins>` + end
+        );
+
         let diff: string;
         if (this.diffDetectBrokenDiffHtml(diffUnnormalized)) {
             diff = this.diffParagraphs(htmlOld, htmlNew, lineLength!, firstLineNumber!);
