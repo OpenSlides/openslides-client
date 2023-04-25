@@ -16,8 +16,6 @@ import { MotionCategoryAction } from './motion-category.action';
 export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepository<ViewMotionCategory, MotionCategory> {
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionCategory);
-
-        this.setSortFunction((a, b) => a.weight - b.weight);
     }
 
     public create(...categories: Partial<MotionCategory>[]): Promise<Identifiable[]> {
