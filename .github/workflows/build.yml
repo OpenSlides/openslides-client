@@ -30,7 +30,7 @@ jobs:
       - name: Start dev setup
         run: make run-dev ARGS="-d"
       - name: Wait for dev setup
-        uses: iFaxity/wait-on-action@v1
+        uses: iFaxity/wait-on-action@v1.1.0
         with:
           resource: https://localhost:8000
           timeout: 300000
