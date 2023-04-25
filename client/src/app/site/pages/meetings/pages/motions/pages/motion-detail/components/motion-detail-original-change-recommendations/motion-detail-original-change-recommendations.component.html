@@ -1,4 +1,7 @@
 <div class="text"></div>
+<p *ngIf="!textLoaded">
+    <mat-progress-bar mode="indeterminate" color="primary" [value]="50" [bufferValue]="75"></mat-progress-bar>
+</p>
 <ul class="change-recommendation-list" *ngIf="showChangeRecommendations">
     <li
         *ngFor="let reco of textChangeRecommmendations"

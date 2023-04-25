@@ -31,11 +31,12 @@
 
                         <os-motion-detail-original-change-recommendations
                             *ngIf="
-                                changeRecoMode !== ChangeRecoMode.Diff && 
+                                changeRecoMode !== ChangeRecoMode.Diff &&
                                 lineNumberingMode === LineNumberingMode.Outside &&
                                 (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed)
                             "
                             [html]="getAmendmentDiffTextWithContext(paragraph)"
+                            [motionId]="motion.id"
                             [changeRecommendations]="changeRecommendations"
                             (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                             (createChangeRecommendation)="createChangeRecommendation.emit($event)"
@@ -43,7 +44,7 @@
 
                         <div
                             *ngIf="
-                                changeRecoMode !== ChangeRecoMode.Diff && 
+                                changeRecoMode !== ChangeRecoMode.Diff &&
                                 (lineNumberingMode !== LineNumberingMode.Outside ||
                                 (changeRecoMode !== ChangeRecoMode.Original && changeRecoMode !== ChangeRecoMode.Changed))
                             "
