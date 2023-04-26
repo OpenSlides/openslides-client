@@ -3,10 +3,12 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
-import { BaseImportService } from 'src/app/site/base/base-import.service';
+import { ViaBackendImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
+import { BaseViaBackendImportService } from 'src/app/site/base/base-import.service/base-via-backend-import.service';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
+import { ImportViaBackendJSONUploadResponse } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
 
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicExportService } from '../topic-export.service';
@@ -15,7 +17,7 @@ import { TopicImportServiceModule } from '../topic-import-service.module';
 @Injectable({
     providedIn: TopicImportServiceModule
 })
-export class TopicImportService extends BaseImportService<Topic> {
+export class TopicImportService extends BaseViaBackendImportService<Topic> {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
@@ -29,6 +31,8 @@ export class TopicImportService extends BaseImportService<Topic> {
         ParsingErrors: _(`Some csv values could not be read correctly.`)
     };
 
+    public override readonly isMeetingImport = true;
+
     /**
      * Constructor. Calls the abstract class and sets the expected header
      *
@@ -39,7 +43,8 @@ export class TopicImportService extends BaseImportService<Topic> {
         serviceCollector: ImportServiceCollectorService,
         private durationService: DurationService,
         private repo: TopicRepositoryService,
-        private exporter: TopicExportService
+        private exporter: TopicExportService,
+        private activeMeetingId: ActiveMeetingIdService
     ) {
         super(serviceCollector);
     }
@@ -48,24 +53,30 @@ export class TopicImportService extends BaseImportService<Topic> {
         this.exporter.downloadCsvImportExample();
     }
 
-    protected getConfig(): ImportConfig<Topic> {
+    protected getConfig(): ViaBackendImportConfig<Topic> {
         return {
-            modelHeadersAndVerboseNames: topicHeadersAndVerboseNames,
-            verboseNameFn: plural => this.repo.getVerboseName(plural),
-            getDuplicatesFn: (entry: Partial<Topic>) =>
-                this.repo.getViewModelList().filter(topic => topic.title === entry.title),
-            createFn: (entries: any[]) => this.repo.create(...entries)
+            modelHeadersAndVerboseNames: topicHeadersAndVerboseNames
         };
     }
 
-    protected override pipeParseValue(value: string, header: any): any {
-        if (header === `agenda_duration`) {
-            return this.parseDuration(value);
-        }
-        if (header === `agenda_type`) {
-            return this.parseType(value);
-        }
+    protected override calculateJsonUploadPayload(): any {
+        let payload = super.calculateJsonUploadPayload();
+        payload[`meeting_id`] = this.activeMeetingId.meetingId;
+        return payload;
     }
+
+    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendJSONUploadResponse[]> {
+        return await this.repo.jsonUpload(payload).resolve();
+    }
+
+    // protected override pipeParseValue(value: string, header: any): any {
+    //     if (header === `agenda_duration`) {
+    //         return this.parseDuration(value);
+    //     }
+    //     if (header === `agenda_type`) {
+    //         return this.parseType(value);
+    //     }
+    // }
 
     /**
      * Matching the duration string/number to the time model in use

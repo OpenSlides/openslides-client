@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
+import { ImportViaBackendJSONUploadResponse } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
 
+import { Action } from '../../actions';
 import { createAgendaItem } from '../agenda';
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
@@ -39,6 +41,10 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
     public delete(...viewModels: ViewTopic[]): Promise<void> {
         const payload: Identifiable[] = viewModels.map(topic => ({ id: topic.id }));
         return this.sendBulkActionToBackend(TopicAction.DELETE, payload);
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<ImportViaBackendJSONUploadResponse> {
+        return this.createAction<ImportViaBackendJSONUploadResponse>(TopicAction.JSON_UPLOAD, payload);
     }
 
     public getTitle = (topic: ViewTopic) => topic.title;

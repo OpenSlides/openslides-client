@@ -4,6 +4,8 @@ import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStep } from 'src/app/infrastructure/utils/import/import-step';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 
+import { ImportViaBackendPreviewRow } from '../modules/import-list/definitions/import-via-backend-preview';
+
 interface ImportServicePreview {
     new: number;
     done: number;
@@ -36,5 +38,25 @@ export interface ImportService<M extends Identifiable> {
     onSelectFile(event: any): void;
     doImport(): Promise<void>;
     setNewHeaderValue(headerDefinition: { [headerKey: string]: string }): void;
+    downloadCsvExample(): void;
+}
+
+export interface ViaBackendImportService<M extends Identifiable> {
+    readonly rawFileObservable: Observable<File | null>;
+    readonly encodings: ValueLabelCombination[];
+    readonly columnSeparators: ValueLabelCombination[];
+    readonly textSeparators: ValueLabelCombination[];
+
+    columnSeparator: string;
+    textSeparator: string;
+    encoding: string;
+
+    verbose(error: string): string;
+    hasError(row: ImportViaBackendPreviewRow, error: string): boolean;
+    refreshFile(): void;
+    clearPreview(): void;
+    clearFile(): void;
+    onSelectFile(event: any): void;
+    doImport(): Promise<void>;
     downloadCsvExample(): void;
 }
