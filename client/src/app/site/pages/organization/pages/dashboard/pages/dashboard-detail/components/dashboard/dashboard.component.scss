@@ -49,8 +49,6 @@ os-dashboard {
         @include phone {
             flex-direction: column;
             align-items: center;
-            margin-bottom: 12px;
-            font-size: 0.5em;
         }
         display: flex;
         margin: 0 0px 8px 0;
@@ -59,8 +57,17 @@ os-dashboard {
     .meeting-icon-wrapper,
     .pseudo-icon-spacer {
         @include phone {
-            width: 40px;
+            width: calc(100% - 40px);
             font-size: 0.75rem;
+            height: 35px;
+            align-items: flex-start;
+            justify-content: flex-end;
+            box-sizing: border-box;
+            padding: 0 0 2px 0;
+            
+            mat-icon {
+                display: none;
+            }
         }
         @include tablet {
             width: 40px;
