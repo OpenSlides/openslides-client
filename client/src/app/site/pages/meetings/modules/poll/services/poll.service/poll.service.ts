@@ -272,12 +272,12 @@ export abstract class PollService {
         return [
             {
                 vote: YES_KEY,
-                icon: `thumb_up`,
+                icon: `check_box`,
                 showPercent: true
             },
             {
                 vote: NO_KEY,
-                icon: `thumb_down`,
+                icon: `disabled_by_default`,
                 showPercent: true
             },
             {
