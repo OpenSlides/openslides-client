@@ -24,13 +24,13 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         {
             vote: `Y`,
             css: `voted-yes`,
-            icon: `thumb_up`,
+            icon: `check_box`,
             label: `Yes`
         },
         {
             vote: `N`,
             css: `voted-no`,
-            icon: `thumb_down`,
+            icon: `disabled_by_default`,
             label: `No`
         },
         {
