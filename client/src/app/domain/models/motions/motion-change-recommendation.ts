@@ -24,5 +24,19 @@ export class MotionChangeRecommendation extends BaseModel<MotionChangeRecommenda
     public constructor(input?: any) {
         super(MotionChangeRecommendation.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionChangeRecommendation | { templateField: string })[] = [
+        `id`,
+        `rejected`,
+        `internal`,
+        `type`,
+        `other_description`,
+        `line_from`,
+        `line_to`,
+        `text`,
+        `creation_time`,
+        `motion_id`,
+        `meeting_id`
+    ];
 }
 export interface MotionChangeRecommendation extends HasMeetingId {}

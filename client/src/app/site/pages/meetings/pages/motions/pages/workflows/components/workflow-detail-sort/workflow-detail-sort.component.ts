@@ -1,22 +1,17 @@
 import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
 import { Action } from 'src/app/gateways/actions';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { ViewMotionState, ViewMotionWorkflow } from '../../../../modules';
 import { MotionStateControllerService } from '../../../../modules/states/services';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
-
-const WORKFLOW_DETAIL_SORT_SUBSCRIPTION_NAME = `workflow_detail_sort`;
+import { getMotionWorkflowDetailSubscriptionConfig } from '../../../../motions.subscription';
 
 @Component({
     selector: `os-workflow-detail-sort`,
@@ -59,13 +54,10 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     public constructor(
         private workflowController: MotionWorkflowControllerService,
         private stateController: MotionStateControllerService,
-        modelRequestService: ModelRequestService,
-        router: Router,
-        openslidesRouter: OpenSlidesRouterService,
         protected translate: TranslateService,
         private promptService: PromptService
     ) {
-        super(modelRequestService, router, openslidesRouter);
+        super();
     }
 
     public onIdFound(id: Id | null): void {
@@ -91,9 +83,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     public async onCancel(): Promise<void> {
         let resetList = true;
         if (this.hasChanges) {
-            const title = this.translate.instant(_(`Do you really want to discard all your changes?`));
-            const content = this.translate.instant(_(`Unsaved changes will not be applied.`));
-            resetList = (await this.promptService.open(title, content)) as boolean;
+            resetList = await this.promptService.discardChangesConfirmation();
         }
         if (resetList) {
             this.sortingList.restore();
@@ -108,18 +98,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     }
 
     private initWorkflowSubscription(): void {
-        this.updateSubscribeTo({
-            modelRequest: {
-                ids: [this._workflowId],
-                viewModelCtor: ViewMotionWorkflow,
-                follow: [
-                    {
-                        idField: `state_ids`
-                    }
-                ],
-                fieldset: ``
-            },
-            subscriptionName: WORKFLOW_DETAIL_SORT_SUBSCRIPTION_NAME,
+        this.updateSubscribeTo(getMotionWorkflowDetailSubscriptionConfig(this._workflowId), {
             hideWhenDestroyed: true
         });
     }

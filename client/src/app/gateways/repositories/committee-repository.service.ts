@@ -6,7 +6,7 @@ import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Identifiable } from '../../domain/interfaces';
 import { Committee } from '../../domain/models/comittees/committee';
 import { ViewCommittee } from '../../site/pages/organization/pages/committees';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
+import { Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
 import { OperatorService } from '../../site/services/operator.service';
 import { Action } from '../actions';
 import { BaseRepository } from './base-repository';
@@ -31,8 +31,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Committees` : `Committee`);
 
     public override getFieldsets(): Fieldsets<Committee> {
-        const listFields: TypedFieldset<Committee> = [
-            `name`,
+        const nameFields: TypedFieldset<Committee> = [`name`];
+        const listFields: TypedFieldset<Committee> = nameFields.concat([
             `description`,
             `meeting_ids`,
             `forward_to_committee_ids`,
@@ -40,11 +40,11 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `organization_tag_ids`,
             `user_ids`,
             { templateField: `user_$_management_level` }
-        ];
-        const detailFields: TypedFieldset<Committee> = [`default_meeting_id`];
+        ]);
         return {
-            [DEFAULT_FIELDSET]: detailFields,
-            list: listFields
+            ...super.getFieldsets(),
+            list: listFields,
+            name: nameFields
         };
     }
 

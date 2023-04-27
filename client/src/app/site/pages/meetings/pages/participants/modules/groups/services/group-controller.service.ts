@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
 import { GroupRepositoryService } from 'src/app/gateways/repositories/groups';
@@ -47,12 +46,12 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
         return this.repo.update(update, group);
     }
 
-    public delete(group: Identifiable): Promise<void> {
-        return this.repo.delete(group);
+    public bulkUpdate(...update: Partial<Group>[]): Promise<any> {
+        return this.repo.bulkUpdate(...update);
     }
 
-    public togglePermission(group: ViewGroup, permission: Permission): Promise<void> {
-        return this.repo.togglePermission(group, permission);
+    public delete(group: Identifiable): Promise<void> {
+        return this.repo.delete(group);
     }
 
     public getGeneralViewModelObservable(): Observable<ViewGroup> {
@@ -74,7 +73,7 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
         return this.repo
             .getSortedViewModelList()
             .filter(group => ids.includes(group.id))
-            .map(group => this.translate.instant(group.getTitle()))
+            .map(group => group.getTitle())
             .join(`, `);
     }
 

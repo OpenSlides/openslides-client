@@ -275,19 +275,21 @@ export class MotionPdfService {
         }
 
         // supporters
-        const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
-        if (minSupporters && motion.supporters.length > 0) {
-            const supporters = motion.supporters.map(supporter => supporter.full_name).join(`, `);
+        if (!infoToExport || infoToExport.includes(`supporters`)) {
+            const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
+            if (minSupporters && motion.supporters.length > 0) {
+                const supporters = motion.supporters.map(supporter => supporter.full_name).join(`, `);
 
-            metaTableBody.push([
-                {
-                    text: `${this.translate.instant(`Supporters`)}:`,
-                    style: `boldText`
-                },
-                {
-                    text: supporters
-                }
-            ]);
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Supporters`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: supporters
+                    }
+                ]);
+            }
         }
 
         // state
@@ -562,7 +564,7 @@ export class MotionPdfService {
     private createPreamble(): object {
         const motions_preamble = this.meetingSettingsService.instant(`motions_preamble`) as string;
         return {
-            text: `${this.translate.instant(motions_preamble)}`,
+            text: `${motions_preamble}`,
             margin: [0, 10, 0, 10]
         };
     }

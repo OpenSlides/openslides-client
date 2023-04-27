@@ -1,32 +1,5 @@
-// .manage-component-wrapper {
-//     display: flex;
-//     height: 100%;
-//     flex-direction: column;
-// }
-
-// .manage-toolbar {
-//     display: grid;
-//     width: 100%;
-//     grid-template-columns: auto 3fr 1fr;
-//     grid-gap: 1em;
-
-//     .left {
-//         display: flex;
-
-//         // OS logo components css is broken
-//         .os-logo-container {
-//             margin-top: 5px;
-//             max-height: 40px;
-//             max-width: 200px;
-//         }
-//     }
-
-//     .component-title {
-//         margin: auto 0;
-//         text-align: center;
-//     }
-
-//     .actions {
-//         text-align: end;
-//     }
-// }
+.scrollable-content {
+    height: calc(100% - var(--global-headbar-height));
+    width: 100%;
+    overflow: auto;
+}

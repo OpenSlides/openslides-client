@@ -15,7 +15,8 @@ export interface MotionFormattingRepresentation {
     start_line_number: number;
 }
 
-export interface HasReferencedMotionInRecommendationExtensionIds {
+export interface HasReferencedMotionInExtensionIds {
+    referenced_in_motion_state_extension_ids: Id[]; // (motion/state_extension_reference_ids)[];
     referenced_in_motion_recommendation_extension_ids: Id[]; // (motion/recommendation_extension_reference_ids)[];
 }
 
@@ -66,6 +67,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public all_origin_ids!: Id[]; // motion/all_derived_motion_ids;
     public state_id!: Id; // motion_state/motion_ids;
     public recommendation_id!: Id; // motion_state/motion_recommendation_ids;
+    public state_extension_reference_ids!: Fqid[]; // (*/referenced_in_motion_state_extension_ids)[];
     public recommendation_extension_reference_ids!: Fqid[]; // (*/referenced_in_motion_recommendation_extension_ids)[];
     // current option: motion
     public category_id!: Id; // category/motion_ids;
@@ -88,6 +90,55 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
     public amendment_paragraph(paragraphNumber: number): string | null {
         return ((this as any)[`amendment_paragraph_$${paragraphNumber}`] as string) ?? null;
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Motion | { templateField: string })[] = [
+        `id`,
+        `number`,
+        `sequential_number`,
+        `title`,
+        `text`,
+        { templateField: `amendment_paragraph_$` },
+        `modified_final_version`,
+        `reason`,
+        `category_weight`,
+        `state_extension`,
+        `recommendation_extension`,
+        `sort_weight`,
+        `created`,
+        `last_modified`,
+        `start_line_number`,
+        `forwarded`,
+        `lead_motion_id`,
+        `amendment_ids`,
+        `sort_parent_id`,
+        `sort_child_ids`,
+        `origin_id`,
+        `origin_meeting_id`,
+        `derived_motion_ids`,
+        `all_origin_ids`,
+        `all_derived_motion_ids`,
+        `state_id`,
+        `recommendation_id`,
+        `state_extension_reference_ids`,
+        `referenced_in_motion_state_extension_ids`,
+        `recommendation_extension_reference_ids`,
+        `referenced_in_motion_recommendation_extension_ids`,
+        `category_id`,
+        `block_id`,
+        `submitter_ids`,
+        `supporter_ids`,
+        `poll_ids`,
+        `change_recommendation_ids`,
+        `statute_paragraph_id`,
+        `comment_ids`,
+        `agenda_item_id`,
+        `list_of_speakers_id`,
+        `tag_ids`,
+        `attachment_ids`,
+        `projection_ids`,
+        `personal_note_ids`,
+        `meeting_id`
+    ];
 }
 export interface Motion
     extends HasMeetingId,
@@ -97,5 +148,5 @@ export interface Motion
         HasAttachmentIds,
         HasPersonalNoteIds,
         HasProjectionIds,
-        HasReferencedMotionInRecommendationExtensionIds,
+        HasReferencedMotionInExtensionIds,
         HasPollIds {}

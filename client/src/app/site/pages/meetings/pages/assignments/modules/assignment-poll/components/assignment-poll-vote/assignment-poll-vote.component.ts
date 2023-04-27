@@ -67,6 +67,14 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         return this.poll.min_votes_amount;
     }
 
+    private get assignment(): ViewAssignment {
+        return this.poll.content_object;
+    }
+
+    public get enumerateCandidates(): boolean {
+        return this.assignment?.number_poll_candidates || false;
+    }
+
     public constructor(
         private promptService: PromptService,
         operator: OperatorService,
@@ -123,6 +131,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     private defineVoteOptions(): void {
+        this.voteActions = [];
         if (this.poll) {
             if (this.poll.isMethodN) {
                 this.voteActions.push(voteOptions.No);
@@ -199,6 +208,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
+        const value = this.voteRequestData[user.id].value;
         if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
             this.raiseError(this.translate.instant(`There is an error in your vote.`));
             return;
@@ -217,7 +227,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             this.cd.markForCheck();
 
             const votePayload = {
-                value: this.voteRequestData[user.id].value,
+                value: value,
                 user_id: user.id
             };
 
@@ -359,6 +369,11 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             }
             this.submitVote(user);
         }
+    }
+
+    protected override updatePoll() {
+        super.updatePoll();
+        this.defineVoteOptions();
     }
 
     private enableInputs(): void {

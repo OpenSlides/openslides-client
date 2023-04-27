@@ -2,15 +2,16 @@ import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BallotPaperSelection } from 'src/app/domain/models/meetings/meeting';
-import { PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
+import { PollMethod, PollTableData, VoteValuesVerbose, VotingResult } from 'src/app/domain/models/poll';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
+import { ViewAssignment } from '../../../pages/assignments';
 import { ViewUser } from '../../../view-models/view-user';
 import { EntitledUsersTableEntry } from '../definitions';
 import { PollKeyVerbosePipe } from '../pipes';
@@ -289,6 +290,26 @@ export abstract class BasePollPdfService {
         return result;
     }
 
+    protected getRowsPerPage(poll: ViewPoll): number {
+        if (poll.pollmethod === PollMethod.Y) {
+            if (poll.options.length <= 2) {
+                return 4;
+            } else if (poll.options.length <= 5) {
+                return 3;
+            } else if (poll.options.length <= 10) {
+                return 2;
+            }
+        } else if (poll.options.length <= 2) {
+            return 4;
+        } else if (poll.options.length <= 3) {
+            return 3;
+        } else if (poll.options.length <= 7) {
+            return 2;
+        }
+
+        return 1;
+    }
+
     /**
      * Exports a single poll
      *
@@ -333,10 +354,24 @@ export abstract class BasePollPdfService {
 
         const resultsTable = this.pollService.generateTableData(poll);
 
+        if (poll.isListPoll) {
+            const listOption = poll.options[0];
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Nomination list`),
+                margin: [0, 0, 0, 5],
+                bold: true
+            });
+            const resultsData = this.createListEntriesTable(
+                listOption,
+                (poll.content_object as ViewAssignment)?.number_poll_candidates || false
+            );
+            pollResultPdfContent.push(resultsData);
+        }
+
         if (resultsTable) {
             pollResultPdfContent.push({
                 text: this.translate.instant(`Result`),
-                margin: [0, 0, 0, 5],
+                margin: [0, poll.isListPoll ? 20 : 0, 0, 5],
                 bold: true
             });
             const resultsData = this.createResultsTable(poll, resultsTable);
@@ -367,6 +402,74 @@ export abstract class BasePollPdfService {
     }
 
     /**
+     * Creates the list entries table for the given list poll option
+     *
+     * @returns the table as pdfmake object
+     */
+    private createListEntriesTable(option: ViewOption, enumerate = false): object {
+        if (!option.isListOption) {
+            throw new Error(`Can't generate entry list for non-list option`);
+        }
+        const pollTableBody: any[] = [
+            [
+                ...(enumerate
+                    ? [
+                          {
+                              text: ``,
+                              style: `tableHeader`
+                          }
+                      ]
+                    : []),
+                {
+                    text: this.translate.instant(`Candidate`),
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Structure level`),
+                    style: `tableHeader`
+                }
+            ]
+        ];
+
+        let i = 0;
+        for (const entry of option.contentTitlesAsSortedArray) {
+            const tableLine = [
+                ...(enumerate
+                    ? [
+                          {
+                              text: i + 1
+                          }
+                      ]
+                    : []),
+                {
+                    text: this.translate.instant(entry.title)
+                },
+                {
+                    text: this.translate.instant(entry.subtitle)
+                }
+            ];
+
+            pollTableBody.push(tableLine);
+            i++;
+        }
+
+        return this.generateListEntriesTableObject(pollTableBody, enumerate);
+    }
+
+    private generateListEntriesTableObject(pollTableBody: any[], enumerate: boolean): object {
+        return [
+            {
+                table: {
+                    widths: enumerate ? [`4%`, `48%`, `48%`] : [`52%`, `48%`],
+                    headerRows: 1,
+                    body: pollTableBody
+                },
+                layout: `switchColorTableLayout`
+            }
+        ];
+    }
+
+    /**
      * Creates the poll result table for the given poll
      *
      * @returns the table as pdfmake object
@@ -384,7 +487,7 @@ export abstract class BasePollPdfService {
         const pollTableBody: any[] = [
             [
                 {
-                    text: this.translate.instant(`Candidate`),
+                    text: this.translate.instant(poll.isListPoll ? `Option` : `Candidate`),
                     style: `tableHeader`
                 },
                 ...template.value.map(value => {

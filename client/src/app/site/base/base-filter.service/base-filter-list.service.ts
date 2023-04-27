@@ -402,6 +402,15 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     protected abstract getFilterDefinitions(): OsFilter<V>[];
 
     /**
+     * Will be called if the filter property is a function.
+     * Returns an array with custom arguments for said function.
+     * If any filter property needs to receive arguments this function may be expanded.
+     */
+    protected getFilterPropertyFunctionArguments(property: keyof V): any[] {
+        return [];
+    }
+
+    /**
      * Overriding this method allows a subclass to provide functions which define when a filter should neither be shown nor applied.
      */
     protected getHideFilterSettings(): OsHideFilterSetting<V>[] {
@@ -536,7 +545,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             option => typeof option !== `string` && option.isActive
         ) as OsFilterOption[];
         for (const option of relevantOptions) {
-            const isPassingFilterOption = this.isPassingFilterOption(item, item[filter.property], option.condition);
+            const isPassingFilterOption = this.isPassingFilterOption(item, filter.property, option.condition);
             if (!filter.isAndConnected && isPassingFilterOption) {
                 return true;
             } else if (filter.isAndConnected && !isPassingFilterOption) {
@@ -555,12 +564,12 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param condition The option to be checked
      * @returns true if the filter condition matches the item
      */
-    private isPassingFilterOption(item: V, property: unknown, condition: OsFilterOptionCondition): boolean {
+    private isPassingFilterOption(item: V, property: keyof V, condition: OsFilterOptionCondition): boolean {
         const conditions = Array.isArray(condition) ? condition : [condition];
-        let toCheck = property !== undefined ? property : null;
+        let toCheck = item[property] !== undefined ? (item[property] as unknown) : null;
 
         if (typeof toCheck === `function`) {
-            toCheck = toCheck.bind(item)();
+            toCheck = toCheck.bind(item)(...this.getFilterPropertyFunctionArguments(property));
         }
         if (!Array.isArray(toCheck)) {
             toCheck = toCheck ? [toCheck] : [];

@@ -56,6 +56,9 @@
         overflow: hidden;
         width: 100%;
         line-height: normal;
+        &.content-swapped {
+            margin-left: 0;
+        }
     }
 
     .break-lines {

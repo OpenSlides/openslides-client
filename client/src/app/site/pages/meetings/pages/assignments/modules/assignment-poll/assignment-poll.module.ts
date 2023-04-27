@@ -19,6 +19,7 @@ import { PollModule } from 'src/app/site/pages/meetings/modules/poll';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { ExpandableContentWrapperModule } from 'src/app/ui/modules/expandable-content-wrapper';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -68,6 +69,7 @@ const COMPONENTS = [
         ChoiceDialogModule,
         MeetingsComponentCollectorModule,
         IconContainerModule,
+        ExpandableContentWrapperModule,
         OpenSlidesTranslationModule.forChild()
     ],
     providers: [{ provide: PollService, useClass: AssignmentPollService }]

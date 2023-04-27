@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { combineLatestWith, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PollData } from 'src/app/domain/models/poll/generic-poll';
 import {
@@ -11,7 +12,9 @@ import {
 import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
+import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 @Component({
@@ -24,6 +27,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     private _tableData: PollTableData[] = [];
     private _chartData: ChartData = null;
+    public reformedTableData: PollTableData[];
 
     @Input()
     public set poll(pollData: PollData) {
@@ -110,20 +114,58 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         return this.pollService;
     }
 
+    private get assignment(): ViewAssignment {
+        return this.poll.content_object as ViewAssignment;
+    }
+
+    public get enumerateCandidates(): boolean {
+        return this.assignment?.number_poll_candidates || false;
+    }
+
+    public get showEntriesAmount(): boolean {
+        return !!this.poll.options[0]?.entries_amount;
+    }
+
     public constructor(
         private pollService: AssignmentPollService,
         private cd: ChangeDetectorRef,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private themeService: ThemeService
     ) {}
 
     public ngOnInit(): void {
-        this.poll.options_as_observable.subscribe(options => this.setupTableData());
+        this.poll.options_as_observable
+            .pipe(
+                combineLatestWith(this.themeService.currentGeneralColorsSubject),
+                map(([options, _]) => options)
+            )
+            .subscribe(options => this.setupTableData());
     }
 
     private setupTableData(): void {
         this._tableData = this.pollService.generateTableData(this.poll);
+        this.updateReformedTableData();
         this.setChartData();
         this.cd.markForCheck();
+    }
+
+    private updateReformedTableData(): void {
+        this.reformedTableData = [];
+        this.tableData.forEach(tableDate => {
+            if ([`user`, `list`].includes(tableDate.class)) {
+                tableDate.value.forEach(value => {
+                    if (this.voteFitsMethod(value)) {
+                        this.reformedTableData.push({
+                            class: tableDate.class,
+                            votingOption: value.vote,
+                            value: [value]
+                        });
+                    }
+                });
+            } else {
+                this.reformedTableData.push(tableDate);
+            }
+        });
     }
 
     private setChartData(): void {
@@ -145,7 +187,7 @@ export class AssignmentPollDetailContentComponent implements OnInit {
 
     public getVoteAmount(vote: VotingResult, row: PollTableData): number {
         vote.amount = vote.amount ?? 0;
-        if (this.isMethodN && row.class === `user`) {
+        if (this.isMethodN && [`user`, `list`].includes(row.class)) {
             if (vote.amount < 0) {
                 return vote.amount;
             } else {
@@ -169,25 +211,5 @@ export class AssignmentPollDetailContentComponent implements OnInit {
         } else {
             return true;
         }
-    }
-
-    public getReformedTableData(): PollTableData[] {
-        const tableData = [];
-        this.tableData.forEach(tableDate => {
-            if (tableDate.class === `user`) {
-                tableDate.value.forEach(value => {
-                    if (this.voteFitsMethod(value)) {
-                        tableData.push({
-                            class: tableDate.class,
-                            votingOption: value.vote,
-                            value: [value]
-                        });
-                    }
-                });
-            } else {
-                tableData.push(tableDate);
-            }
-        });
-        return tableData;
     }
 }

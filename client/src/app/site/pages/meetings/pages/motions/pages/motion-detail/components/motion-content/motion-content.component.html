@@ -2,7 +2,7 @@
 <ng-container *ngIf="!editMotion && !motion?.isStatuteAmendment() && !motion?.isParagraphBasedAmendment()">
     <!-- Text (hide preamble, if diff mode. The preample is included in the motion-detail-diff component) -->
     <span *ngIf="showPreamble && changeRecoMode !== ChangeRecoMode.Diff" class="text-prefix-label">
-        {{ preamble | translate }}
+        {{ preamble }}
     </span>
     <div
         *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
@@ -14,6 +14,7 @@
         <os-motion-detail-original-change-recommendations
             *ngIf="lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original"
             [html]="getFormattedTextPlain()"
+            [motionId]="motion.id"
             [changeRecommendations]="changeRecommendations"
             (createChangeRecommendation)="createChangeRecommendation($event)"
             (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
@@ -65,6 +66,7 @@
                     [multiple]="true"
                     placeholder="{{ 'Submitters' | translate }}"
                     [repo]="participantRepo"
+                    [subscriptionConfig]="participantSubscriptionConfig"
                     (clickNotFound)="createNewSubmitter($event)"
                 >
                     <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">
@@ -81,6 +83,7 @@
         <div *ngIf="editMotion && !newMotion && canChangeMetadata" class="content-field form-number">
             <mat-form-field *ngIf="editMotion">
                 <input matInput osAutofocus placeholder="{{ 'Number' | translate }}" formControlName="number" />
+                <mat-error>{{ 'already exists' | translate }}</mat-error>
             </mat-form-field>
         </div>
 
@@ -102,7 +105,7 @@
 
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
-        <os-editor formControlName="text" [required]="!isParagraphBasedAmendment"></os-editor>
+        <os-editor formControlName="text" [required]="!isParagraphBasedAmendment" [customSettings]="tinyMceConfig"></os-editor>
         <div
             *ngIf="
                 contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
@@ -145,7 +148,7 @@
         <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion?.reason | trust: 'html'"></div>
 
         <!-- The HTML Editor -->
-        <os-editor *ngIf="editMotion" formControlName="reason" [required]="reasonRequired"></os-editor>
+        <os-editor *ngIf="editMotion" formControlName="reason" [required]="reasonRequired" [customSettings]="tinyMceConfig"></os-editor>
         <div
             *ngIf="
                 reasonRequired &&
@@ -204,6 +207,7 @@
                         [multiple]="true"
                         placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"
+                        [subscriptionConfig]="participantSubscriptionConfig"
                         (clickNotFound)="createNewSupporter($event)"
                     >
                         <ng-template osNotFoundDescription>

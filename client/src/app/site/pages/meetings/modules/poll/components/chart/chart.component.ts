@@ -48,7 +48,14 @@ export class ChartComponent {
      * Required since circle charts demand SingleDataSet-Objects
      */
     @Input()
-    public circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
+    public set circleColors(colors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[]) {
+        this.colors = colors;
+        this._circleColors = colors;
+    }
+
+    private _circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
+
+    public colors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
 
     /**
      * The general data for the chart.
@@ -58,7 +65,7 @@ export class ChartComponent {
 
     @Input()
     public set data(inputData: ChartDate[]) {
-        if (inputData) {
+        if (inputData && inputData.length) {
             this.progressInputData(inputData);
         }
     }
@@ -140,8 +147,11 @@ export class ChartComponent {
         }
     }
 
-    private createCircleColors(inputChartData: ChartData): void {
-        this.circleColors = [
+    private calculateCircleColors(inputChartData: ChartData): {
+        backgroundColor?: string[];
+        hoverBackgroundColor?: string[];
+    }[] {
+        return [
             {
                 backgroundColor: inputChartData.map(chartDate => chartDate.backgroundColor).filter(color => !!color),
                 hoverBackgroundColor: inputChartData
@@ -157,20 +167,22 @@ export class ChartComponent {
                 // removes undefined and null values
                 return chartDate.data.filter(data => !!data);
             });
+            const newCircleColors = this.calculateCircleColors(inputChartData);
             if (
-                !this.circleColors ||
-                ![inputChartData.length, inputChartData[0].data.length].includes(
-                    this.circleColors[0].backgroundColor.length
-                )
+                !this._circleColors &&
+                newCircleColors?.length &&
+                newCircleColors[0].backgroundColor &&
+                newCircleColors[0].backgroundColor.length &&
+                JSON.stringify(newCircleColors) !== JSON.stringify(this.circleColors)
             ) {
-                this.createCircleColors(inputChartData);
+                this.colors = newCircleColors;
             }
             this.chartData.datasets = [
                 {
                     data: data,
-                    backgroundColor: this.circleColors[0].backgroundColor,
-                    hoverBackgroundColor: this.circleColors[0].hoverBackgroundColor,
-                    hoverBorderColor: this.circleColors[0].hoverBackgroundColor,
+                    backgroundColor: this.colors[0].backgroundColor,
+                    hoverBackgroundColor: this.colors[0].hoverBackgroundColor,
+                    hoverBorderColor: this.colors[0].hoverBackgroundColor,
                     hoverBorderWidth: 0
                 }
             ];

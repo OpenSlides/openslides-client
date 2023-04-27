@@ -22,6 +22,7 @@ import { AgendaItemControllerService } from '../../../../../../services';
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
 import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
 import { TopicControllerService } from '../../../../services/topic-controller.service';
+import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pdf.service';
 
 @Component({
     selector: `os-topic-detail`,
@@ -88,7 +89,8 @@ export class TopicDetailComponent extends BaseMeetingComponent {
         private itemRepo: AgendaItemControllerService,
         private pollDialog: TopicPollDialogService,
         private topicPollService: TopicPollService,
-        private pollController: PollControllerService
+        private pollController: PollControllerService,
+        private topicPdfService: TopicPdfService
     ) {
         super(componentServiceCollector, translate);
         this.createForm();
@@ -263,6 +265,10 @@ export class TopicDetailComponent extends BaseMeetingComponent {
     public async updateTopic(): Promise<void> {
         await this.repo.update(this.topicForm!.value, this.topic!);
         this.setEditMode(false);
+    }
+
+    public onDownloadPdf() {
+        this.topicPdfService.exportSingleTopic(this.topic);
     }
 
     /**

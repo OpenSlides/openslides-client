@@ -40,6 +40,11 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
         lists link paste searchreplace`,
         menubar: false,
         contextmenu: false,
+        setup: editor => {
+            editor.on(`FullscreenStateChanged`, event => {
+                this.onFullscreenChanged(event);
+            });
+        },
         toolbar: `styleselect | bold italic underline strikethrough |
             forecolor backcolor removeformat | bullist numlist |
             link image charmap | code fullscreen`,
@@ -65,6 +70,15 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
             ...this.tinyMceSettings,
             ...this.customSettings
         };
+    }
+
+    public onFullscreenChanged(event: any): void {
+        const element = document.querySelector(`mat-sidenav`) as HTMLElement;
+        if (event[`state`]) {
+            element.style.zIndex = `0`;
+        } else {
+            element.style.zIndex = null;
+        }
     }
 
     protected createForm(): UntypedFormControl {

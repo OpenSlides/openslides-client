@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import {
-    BaseModelRequestHandlerComponent,
-    ModelRequestConfig
-} from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
+import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component/base-model-request-handler.component';
 
-import { getOrganizationTagListSubscriptionConfig } from '../../../../../organization-tags/config/model-subscription';
-import { getCommitteeListSubscriptionConfig } from '../../../../config/model-subscription';
+import { getOrganizationTagListSubscriptionConfig } from '../../../../../organization-tags/organization-tags.subscription';
+import { getCommitteeListSubscriptionConfig } from '../../../../committees.subscription';
 
 @Component({
     selector: `os-committee-main`,
@@ -13,10 +10,9 @@ import { getCommitteeListSubscriptionConfig } from '../../../../config/model-sub
     styleUrls: [`./committee-main.component.scss`]
 })
 export class CommitteeMainComponent extends BaseModelRequestHandlerComponent {
-    protected override onCreateModelRequests(): void | ModelRequestConfig[] {
-        return [
-            getCommitteeListSubscriptionConfig(() => this.getNextMeetingIdObservable()),
-            getOrganizationTagListSubscriptionConfig(() => this.getNextMeetingIdObservable())
-        ];
+    protected override onShouldCreateModelRequests(): void {
+        this.subscribeTo([getCommitteeListSubscriptionConfig(), getOrganizationTagListSubscriptionConfig()], {
+            hideWhenMeetingChanged: true
+        });
     }
 }

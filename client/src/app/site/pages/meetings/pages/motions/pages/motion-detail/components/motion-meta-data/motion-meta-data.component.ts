@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -29,8 +29,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public categories: ViewMotionCategory[] = [];
 
     public tags: ViewTag[] = [];
-
-    public recommendationReferencingMotions: ViewMotion[] = [];
 
     /**
      * Determine if the name of supporters are visible
@@ -100,6 +98,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             !this.motion.derived_motions.length
         );
     }
+
+    public get referencingMotions(): ViewMotion[] {
+        return this._referencingMotions;
+    }
+
+    private _referencingMotions: ViewMotion[];
 
     private _forwardingAvailable: boolean = false;
 
@@ -226,6 +230,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         this.showSupporters = !this.showSupporters;
     }
 
+    public getCategorySelectionMarginLeft(category: ViewMotionCategory): string {
+        return (
+            (!this.motion.category_id || this.motion.category_id === category.id ? 0 : 32) + category.level * 5 + `px`
+        );
+    }
+
     /**
      * Check if a recommendation can be followed. Checks for permissions and additionally if a recommentadion is present
      */
@@ -277,7 +287,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
     public canAccess(origin: ViewMotion | ViewMeeting): boolean {
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
-            return motion.meeting?.canAccess();
+            return motion.sequential_number && motion.meeting?.canAccess();
         }
         return origin?.canAccess();
     }
@@ -293,8 +303,20 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             this.categoryRepo.getViewModelListObservable().subscribe(value => (this.categories = value)),
             this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
             this.repo
-                .getRecommendationReferencingMotions(this.motion?.id)
-                ?.subscribe(motions => (this.recommendationReferencingMotions = motions))
+                .getViewModelObservable(this.motion.id)
+                .pipe(
+                    distinctUntilChanged((p, c) =>
+                        p.referenced_in_motion_recommendation_extensions.equals(
+                            c.referenced_in_motion_recommendation_extensions
+                        )
+                    )
+                )
+                .subscribe(
+                    value =>
+                        (this._referencingMotions = (value.referenced_in_motion_recommendation_extensions || []).sort(
+                            (a, b) => a.number.localeCompare(b.number)
+                        ))
+                )
         ];
     }
 

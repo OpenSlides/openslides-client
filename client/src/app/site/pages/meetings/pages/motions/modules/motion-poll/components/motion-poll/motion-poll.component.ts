@@ -45,7 +45,7 @@ export class MotionPollComponent extends BasePollComponent {
         const option = this.poll.options[0];
         return (
             (this.poll.hasVotes && this.poll.stateHasVotes) ||
-            [option.yes, option.no, option.abstain].some(value => value === VOTE_MAJORITY)
+            [option?.yes, option?.no, option?.abstain].some(value => value === VOTE_MAJORITY)
         );
     }
 

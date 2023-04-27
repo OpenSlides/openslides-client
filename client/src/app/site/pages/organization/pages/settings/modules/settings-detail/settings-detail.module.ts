@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
@@ -22,6 +23,7 @@ import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
         HeadBarModule,
         FormsModule,
         ReactiveFormsModule,
+        MatSelectModule,
         MatCardModule,
         MatCheckboxModule,
         OpenSlidesTranslationModule.forChild(),

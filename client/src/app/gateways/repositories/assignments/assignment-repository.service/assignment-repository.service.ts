@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { Assignment } from '../../../../domain/models/assignments/assignment';
 import { createAgendaItem } from '../../agenda';
@@ -26,20 +26,10 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     }
 
     public override getFieldsets(): Fieldsets<Assignment> {
-        const routingFields: (keyof Assignment)[] = [`sequential_number`, `meeting_id`];
-        const titleFields: (keyof Assignment)[] = routingFields.concat([`title`]);
+        const titleFields: (keyof Assignment)[] = [`sequential_number`, `meeting_id`, `title`];
         const listFields: (keyof Assignment)[] = titleFields.concat([`open_posts`, `phase`, `candidate_ids`]);
         return {
-            [DEFAULT_FIELDSET]: listFields.concat([
-                `description`,
-                `default_poll_description`,
-                `number_poll_candidates`,
-                `agenda_item_id`,
-                `poll_ids`,
-                `sequential_number`,
-                `list_of_speakers_id`
-            ]),
-            [ROUTING_FIELDSET]: routingFields,
+            ...super.getFieldsets(),
             list: listFields,
             title: titleFields
         };

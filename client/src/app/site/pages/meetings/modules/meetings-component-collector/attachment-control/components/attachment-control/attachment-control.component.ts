@@ -3,6 +3,7 @@ import {
     Component,
     EventEmitter,
     forwardRef,
+    OnDestroy,
     OnInit,
     Output,
     TemplateRef
@@ -14,8 +15,14 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import {
+    getMediafilesListMinimalSubscriptionConfig,
+    MEDIAFILES_LIST_MINIMAL_SUBSCRIPTION
+} from 'src/app/site/pages/meetings/pages/mediafiles/mediafiles.subscription';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { GroupControllerService, ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
 
 @Component({
@@ -25,7 +32,7 @@ import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AttachmentControlComponent), multi: true }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttachmentControlComponent extends BaseFormControlComponent<ViewMediafile[]> implements OnInit {
+export class AttachmentControlComponent extends BaseFormControlComponent<ViewMediafile[]> implements OnInit, OnDestroy {
     /**
      * Output for an error handler
      */
@@ -33,6 +40,11 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
     public errorHandler: EventEmitter<string> = new EventEmitter();
 
     public readonly permission = Permission;
+
+    /**
+     * Subsciption of the mediafile list
+     */
+    private _mediafileSubscription: string;
 
     /**
      * The file list that is necessary for the `SearchValueSelector`
@@ -66,7 +78,9 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
         formBuilder: UntypedFormBuilder,
         private dialogService: MatDialog,
         public readonly repo: MediafileControllerService,
-        private groupsRepo: GroupControllerService
+        private groupsRepo: GroupControllerService,
+        private modelRequestService: ModelRequestService,
+        private activeMeeting: ActiveMeetingService
     ) {
         super(formBuilder);
     }
@@ -77,6 +91,20 @@ export class AttachmentControlComponent extends BaseFormControlComponent<ViewMed
                 this.push(value);
             })
         );
+
+        this._mediafileSubscription = MEDIAFILES_LIST_MINIMAL_SUBSCRIPTION + `_${Date.now()}`;
+        this.modelRequestService.subscribeTo({
+            ...getMediafilesListMinimalSubscriptionConfig(this.activeMeeting.meetingId),
+            subscriptionName: this._mediafileSubscription
+        });
+    }
+
+    public override ngOnDestroy(): void {
+        if (this._mediafileSubscription) {
+            this.modelRequestService.closeSubscription(this._mediafileSubscription);
+        }
+
+        super.ngOnDestroy();
     }
 
     public getMediafilesPipeFn(): OperatorFunction<ViewMediafile[], ViewMediafile[]> {

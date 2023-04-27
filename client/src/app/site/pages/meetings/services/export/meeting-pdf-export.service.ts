@@ -147,8 +147,8 @@ export class MeetingPdfExportService {
         );
 
         const promises = fontPathList.map(fontPath =>
-            this.httpService.downloadAsBase64(fontPath).then(base64 => ({
-                [fontPath.split(`/`).pop()!]: base64
+            this.httpService.downloadAsBase64(fontPath).then(file => ({
+                [fontPath.split(`/`).pop()!]: file.data
             }))
         );
         const binaryDataUrls = await Promise.all(promises);

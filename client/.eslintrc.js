@@ -12,7 +12,11 @@ module.exports = {
                 createDefaultProgram: true
             },
             plugins: ['simple-import-sort', 'unused-imports'],
-            extends: ['plugin:@angular-eslint/recommended', 'plugin:@angular-eslint/template/process-inline-templates'],
+            extends: [
+                'plugin:@angular-eslint/recommended',
+                'plugin:@angular-eslint/template/process-inline-templates',
+                'plugin:prettier/recommended'
+            ],
             rules: {
                 '@angular-eslint/component-selector': [
                     'error',

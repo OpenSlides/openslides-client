@@ -43,6 +43,21 @@ export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
         return id;
     }
 
+    /**
+     * A function which will return the id of the currently active meeting, if one is chosen.
+     *
+     * @returns The id of the currently active meeting
+     */
+    public getEnsuredActiveMeetingId!: () => Id;
+
+    public override canAccess(): boolean {
+        if (this.owner_id === `organization/1`) {
+            return !this.getEnsuredActiveMeetingId();
+        } else {
+            return this.getEnsuredActiveMeetingId() === this.meeting_id;
+        }
+    }
+
     public override getDetailStateUrl(): string {
         return this.url;
     }

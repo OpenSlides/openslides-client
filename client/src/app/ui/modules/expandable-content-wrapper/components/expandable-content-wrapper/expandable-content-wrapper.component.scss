@@ -1,0 +1,26 @@
+.expandable-content-wrapper {
+    word-wrap: break-word;
+
+    .content {
+        &.collapsed {
+            max-height: 76px;
+            overflow: hidden;
+            position: relative;
+            &::after {
+                content: '';
+                position: absolute;
+                top: 25px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+    }
+
+    .show-entire-text {
+        margin-top: 4px;
+        a {
+            cursor: pointer;
+        }
+    }
+}

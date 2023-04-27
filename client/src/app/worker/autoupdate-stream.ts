@@ -15,10 +15,20 @@ export class AutoupdateStream {
 
     private abortCtrl: AbortController = undefined;
     private activeSubscriptions: AutoupdateSubscription[] = null;
-    private active: boolean = false;
+    private _active: boolean = false;
+    private _connecting: boolean = false;
+    private _abortResolver: (val?: any) => void | undefined;
     private error: any | ErrorDescription = null;
     private restarting: boolean = false;
     private _currentData: Object | null = null;
+
+    public get active(): boolean {
+        return this._active;
+    }
+
+    public get connecting(): boolean {
+        return this._connecting;
+    }
 
     /**
      * Full data object received by autoupdate
@@ -37,7 +47,7 @@ export class AutoupdateStream {
 
     constructor(
         private _subscriptions: AutoupdateSubscription[],
-        public queryParams: string,
+        public queryParams: URLSearchParams,
         private endpoint: AutoupdateSetEndpointParams,
         private authToken: string
     ) {}
@@ -54,10 +64,13 @@ export class AutoupdateStream {
     /**
      * Closes the stream
      */
-    public abort(): void {
+    public async abort(): Promise<void> {
         if (this.abortCtrl !== undefined) {
+            const abortPromise = new Promise(resolver => (this._abortResolver = resolver));
+            setTimeout(this._abortResolver, 5000);
             // @ts-ignore
             this.abortCtrl.abort();
+            await abortPromise;
         }
     }
 
@@ -71,19 +84,23 @@ export class AutoupdateStream {
     public async start(
         force?: boolean
     ): Promise<{ stopReason: 'error' | 'aborted' | 'unused' | 'resolved' | 'in-use'; error?: any }> {
-        if (this.active && !force) {
+        if (this._active && !force) {
             return { stopReason: `in-use` };
-        } else if (this.active && force) {
-            this.abort();
+        } else if ((this._active || this.abortCtrl) && force) {
+            await this.abort();
         }
 
         this.restarting = false;
         this.error = null;
         try {
             await this.doRequest();
-            this.active = false;
+            this._active = false;
+
+            if (this._abortResolver) {
+                this._abortResolver();
+            }
         } catch (e) {
-            this.active = false;
+            this._active = false;
             if (e.name !== `AbortError`) {
                 console.error(e);
 
@@ -92,6 +109,9 @@ export class AutoupdateStream {
                 return await this.start();
             }
 
+            if (this._abortResolver) {
+                this._abortResolver();
+            }
             return { stopReason: this.activeSubscriptions?.length ? `aborted` : `unused`, error: this.error };
         }
 
@@ -144,6 +164,7 @@ export class AutoupdateStream {
     public restart(): void {
         this.restarting = true;
         this.abort();
+        this.clearSubscriptions();
     }
 
     public clearSubscriptions(): void {
@@ -155,7 +176,7 @@ export class AutoupdateStream {
     }
 
     private async doRequest(): Promise<void> {
-        this.active = true;
+        this._active = true;
 
         if (this.activeSubscriptions === null) {
             this.activeSubscriptions = [];
@@ -176,7 +197,8 @@ export class AutoupdateStream {
 
         this.abortCtrl = new AbortController();
 
-        const response = await fetch(this.endpoint.url + this.queryParams, {
+        const queryParams = this.queryParams.toString() ? `?${this.queryParams.toString()}` : ``;
+        const response = await fetch(this.endpoint.url + queryParams, {
             signal: this.abortCtrl.signal,
             method: this.endpoint.method,
             headers,
@@ -197,7 +219,7 @@ export class AutoupdateStream {
 
                     next = null;
 
-                    const data = this.decode(line);
+                    const data = this.queryParams.get(`compress`) ? this.decode(line) : new TextDecoder().decode(line);
                     const parsedData = this.parse(data);
                     this.handleContent(parsedData);
                 } else if (next) {

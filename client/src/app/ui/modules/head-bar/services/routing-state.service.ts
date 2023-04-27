@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
-import { filter, pairwise } from 'rxjs';
+import { filter, pairwise, startWith } from 'rxjs';
 
 /**
  * Watches URL changes.
@@ -47,28 +47,33 @@ export class RoutingStateService {
         return this._customOrigin;
     }
 
+    private _currentUrl: string = this.location.path();
+
     /**
      * Watch routing changes and save the last visited URL
      *
      * @param router Angular Router
      */
-    public constructor(router: Router, private location: Location) {
-        router.events
+    public constructor(private router: Router, private location: Location) {
+        this.router.events
             .pipe(
                 filter(e => e instanceof RoutesRecognized),
+                startWith(null),
                 pairwise()
             )
             .subscribe((event: any[]) => {
-                this._previousUrl = event[0].urlAfterRedirects;
+                this._previousUrl = event[0]?.urlAfterRedirects ?? this._currentUrl;
                 const currentNavigationExtras = router.getCurrentNavigation()?.extras;
                 if (currentNavigationExtras && currentNavigationExtras.state && currentNavigationExtras.state[`back`]) {
                     this._customOrigin = this._previousUrl;
                 } else if (
                     this._customOrigin &&
+                    event[0] &&
                     !this.isSameComponent(event[0].urlAfterRedirects, event[1].urlAfterRedirects)
                 ) {
                     this._customOrigin = null;
                 }
+                this._currentUrl = event[1].urlAfterRedirects;
             });
     }
 

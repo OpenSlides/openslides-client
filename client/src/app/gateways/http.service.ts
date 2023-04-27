@@ -196,10 +196,10 @@ export class HttpService {
      * @param url file url
      * @returns a promise with a base64 string
      */
-    public async downloadAsBase64(url: string): Promise<string> {
+    public async downloadAsBase64(url: string): Promise<{ data: string; type: string }> {
         const headers = new HttpHeaders();
         const file = await this.get<Blob>(url, {}, {}, headers, `blob`);
-        return await toBase64(file);
+        return { data: await toBase64(file), type: file.type };
     }
 
     /**

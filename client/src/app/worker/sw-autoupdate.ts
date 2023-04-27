@@ -16,19 +16,56 @@ const autoupdatePool = new AutoupdateStreamPool({
 
 let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
+    requiredMeeting: [],
     sequentialnumbermapping: [],
     other: []
 };
 let openTimeouts = {
     required: null,
+    requiredMeeting: [],
     sequentialnumbermapping: null,
     other: null
 };
 
-if (!environment.production) {
+let debugCommandsRegistered = false;
+function registerDebugCommands() {
+    if (debugCommandsRegistered) {
+        return;
+    }
+
+    debugCommandsRegistered = true;
     (<any>self).printAutoupdateState = function () {
+        console.log(`AU POOL INFO`);
+        console.log(`Currently open:`, autoupdatePool.activeStreams.length);
+        console.group(`Streams`);
+        for (let stream of autoupdatePool.activeStreams) {
+            console.groupCollapsed(stream.subscriptions.map(s => s.description).join(`, `));
+            console.log(`Current data:`, stream.currentData);
+            console.log(`Current data size:`, JSON.stringify(stream.currentData).length);
+            console.log(`Current data keys:`, Object.keys(stream.currentData).length);
+            console.log(`Query params:`, stream.queryParams.toString());
+            console.log(`Failed connects:`, stream.failedConnects);
+            console.groupCollapsed(`Subscriptions`);
+            for (let subscr of stream.subscriptions) {
+                console.group(subscr.description);
+                console.log(`ID:`, subscr.id);
+                console.log(`Request:`, subscr.request);
+                console.log(`Num subscribers:`, subscr.ports.length);
+                console.groupEnd();
+            }
+            console.groupEnd();
+            console.groupEnd();
+        }
+        console.groupEnd();
+
+        console.groupCollapsed(`Raw`);
         console.log(`subscriptionQueue\n`, subscriptionQueues);
-        console.log(`pool\n`, autoupdatePool);
+        console.log(`Pool\n`, autoupdatePool);
+        console.groupEnd();
+    };
+
+    (<any>self).disableAutoupdateCompression = function () {
+        autoupdatePool.disableCompression();
     };
 }
 
@@ -39,22 +76,38 @@ function openConnection(
     function getRequestCategory(
         description: string,
         _request: Object
-    ): 'required' | 'other' | 'sequentialnumbermapping' {
+    ): 'required' | 'requiredMeeting' | 'other' | 'sequentialnumbermapping' {
         const required = [`theme_list:subscription`, `operator:subscription`, `organization:subscription`];
         if (required.indexOf(description) !== -1) {
             return `required`;
         }
 
-        if (description === `SequentialNumberMappingService:prepare`) {
+        const requiredMeeting = [`active_meeting:subscription`, `active_polls:subscription`];
+        if (requiredMeeting.indexOf(description) !== -1) {
+            return `requiredMeeting`;
+        }
+
+        if (description.startsWith(`SequentialNumberMappingService:prepare`)) {
             return `sequentialnumbermapping`;
         }
 
         return `other`;
     }
 
+    for (const queue of Object.keys(subscriptionQueues)) {
+        const fulfillingSubscription = subscriptionQueues[queue].find(s => s.fulfills(queryParams, request));
+        if (fulfillingSubscription) {
+            fulfillingSubscription.addPort(ctx);
+            return;
+        }
+    }
+
     const existingSubscription = autoupdatePool.getMatchingSubscription(queryParams, request);
     if (existingSubscription) {
         existingSubscription.addPort(ctx);
+        if (!existingSubscription.stream.active) {
+            autoupdatePool.reconnect(existingSubscription.stream, false);
+        }
         return;
     }
 
@@ -91,6 +144,10 @@ function updateOnlineStatus(): void {
     autoupdatePool.updateOnlineStatus(currentlyOnline);
 }
 
+if (!environment.production) {
+    registerDebugCommands();
+}
+
 export function addAutoupdateListener(context: any): void {
     context.addEventListener(`message`, e => {
         const receiver = e.data?.receiver;
@@ -119,6 +176,12 @@ export function addAutoupdateListener(context: any): void {
                 break;
             case `reconnect-inactive`:
                 autoupdatePool.reconnectAll(true);
+                break;
+            case `reconnect-force`:
+                autoupdatePool.reconnectAll(false);
+                break;
+            case `enable-debug`:
+                registerDebugCommands();
                 break;
         }
     });

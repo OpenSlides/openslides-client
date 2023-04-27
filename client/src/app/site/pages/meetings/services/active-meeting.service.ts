@@ -5,61 +5,14 @@ import { BehaviorSubject, first, firstValueFrom, map, Observable, Subscription }
 import { Id } from 'src/app/domain/definitions/key-types';
 import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { LifecycleService } from '../../../services/lifecycle.service';
-import { getParticipantMinimalSubscriptionConfig } from '../pages/participants/config/model-subscription';
-import { getProjectorListSubscriptionConfig } from '../pages/projectors/config/model-subscription';
 import { ViewMeeting } from '../view-models/view-meeting';
+import { ACTIVE_MEETING_SUBSCRIPTION, getActiveMeetingSubscriptionConfig } from './active-meeting.subscription';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ArchiveStatusService } from './archive-status.service';
 import { MeetingControllerService } from './meeting-controller.service';
-
-const MEETING_DETAIL_SUBSCRIPTION = `meeting_detail`;
-const MEETING_DETAIL_GROUP_SUBSCRIPTION = `meeting_detail_group`; // Used for the active meeting service
-const MEETING_DETAIL_MEDIAFILES_SUBSCRIPTION = `meeting_detail_mediafiles`;
-
-const getMediafilesSubscriptionConfig = (id: Id, getNextMeetingIdObservable: () => Observable<Id | null>) => ({
-    modelRequest: {
-        viewModelCtor: ViewMeeting,
-        ids: [id],
-        follow: [`mediafile_ids`]
-    },
-    subscriptionName: MEETING_DETAIL_MEDIAFILES_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
-});
-
-const getMeetingDetailSubscriptionConfig = (id: Id, getNextMeetingIdObservable: () => Observable<Id | null>) => ({
-    modelRequest: {
-        viewModelCtor: ViewMeeting,
-        ids: [id],
-        fieldset: DEFAULT_FIELDSET,
-        follow: [
-            `chat_group_ids`,
-            `chat_message_ids`,
-            { idField: `poll_ids`, follow: [`content_object_id`] },
-            `group_ids`,
-            { idField: `option_ids`, follow: [`content_object_id`], additionalFields: [`text`] },
-            `vote_ids`,
-            { idField: `committee_id`, additionalFields: [`name`] }
-        ],
-        additionalFields: [`jitsi_domain`, `jitsi_room_name`, `jitsi_room_password`]
-    },
-    subscriptionName: MEETING_DETAIL_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id))
-});
-
-const getMeetingDetailGroupSubscriptionConfig = (id: Id, getNextMeetingIdObservable: () => Observable<Id | null>) => ({
-    modelRequest: {
-        viewModelCtor: ViewMeeting,
-        ids: [id],
-        fieldset: `group`,
-        follow: [`group_ids`]
-    },
-    subscriptionName: MEETING_DETAIL_GROUP_SUBSCRIPTION,
-    hideWhen: getNextMeetingIdObservable().pipe(map(id => !id)),
-    isDelayed: false
-});
+import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service';
 
 @Injectable({
     providedIn: `root`
@@ -98,7 +51,8 @@ export class ActiveMeetingService {
         private archiveService: ArchiveStatusService,
         private modelRequestService: ModelRequestService,
         private router: Router,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private meetingSettingsDefinitionService: MeetingSettingsDefinitionService
     ) {
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => {
             if (id !== undefined) {
@@ -124,7 +78,7 @@ export class ActiveMeetingService {
         if (!!this.meetingId) {
             await this.refreshAutoupdateSubscription();
             this.refreshRepoSubscription();
-            this.modelRequestService.subscriptionGotData(MEETING_DETAIL_SUBSCRIPTION).then(data => {
+            this.modelRequestService.subscriptionGotData(ACTIVE_MEETING_SUBSCRIPTION).then(data => {
                 if (!data[`meeting`]) {
                     this.router.navigate([`error`], {
                         queryParams: {
@@ -172,20 +126,13 @@ export class ActiveMeetingService {
         });
     }
 
-    private getHasMeetingIdChangedObservable(): Observable<boolean> {
-        return this.activeMeetingIdService.meetingIdChanged.pipe(map(event => event.hasChanged));
-    }
-
     private async refreshAutoupdateSubscription(): Promise<void> {
-        await this.modelRequestService.updateSubscribeTo(
-            getMeetingDetailGroupSubscriptionConfig(
+        await this.modelRequestService.updateSubscribeTo({
+            ...getActiveMeetingSubscriptionConfig(
                 this.meetingId!,
-                () => this.activeMeetingIdService.meetingIdObservable
+                this.meetingSettingsDefinitionService.getSettingsKeys()
             ),
-            getMeetingDetailSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
-            getMediafilesSubscriptionConfig(this.meetingId!, () => this.activeMeetingIdService.meetingIdObservable),
-            getProjectorListSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable()),
-            getParticipantMinimalSubscriptionConfig(this.meetingId!, () => this.getHasMeetingIdChangedObservable())
-        );
+            hideWhen: this.activeMeetingIdService.meetingIdObservable.pipe(map(id => !id))
+        });
     }
 }

@@ -12,11 +12,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -123,10 +125,12 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatSelectModule,
         MatListModule,
         MatInputModule,
+        MatProgressBarModule,
         ParticipantSearchSelectorModule,
 
         // Detail view
         ScrollingModule,
+        ChipSelectModule,
         MatBadgeModule,
 
         // Amendment create wizard

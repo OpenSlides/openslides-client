@@ -34,7 +34,7 @@ export class MediaUploadContentComponent extends BaseUiComponent implements OnIn
      * Synchronous uploading might be necessary if we see that stuff breaks
      */
     @Input()
-    public parallel = true;
+    public parallel = false;
 
     @Input()
     public directoryId: number | null | undefined;

@@ -4,7 +4,7 @@ import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting'
 
 import { ViewMotion } from '../../../view-models';
 
-export class ViewMotionCategory extends BaseViewModel<MotionCategory> /* implements Searchable  */ {
+export class ViewMotionCategory extends BaseViewModel<MotionCategory> {
     public static COLLECTION = MotionCategory.COLLECTION;
     protected _collection = MotionCategory.COLLECTION;
 
@@ -20,6 +20,11 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> /* impleme
         }
     }
 
+    /**
+     * An array with all parents. The ordering is the direct parent is in front of the array and the
+     * "highest" parent the last entry. Returns an empty array if the category does not have any
+     * parents.
+     */
     public get allParents(): ViewMotionCategory[] {
         if (!this.parent_id || !this.parent) {
             return [];
@@ -47,7 +52,7 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> /* impleme
      * @returns the name with all parents in brackets: "<Cat> (<CatParent>, <CatParentParent>)"
      */
     public get prefixedNameWithParents(): string {
-        const parents = this.collectParents();
+        const parents = this.allParents;
         let name = this.prefixedName;
         if (parents.length) {
             name += ` (` + parents.map(parent => parent.prefixedName).join(`, `) + `)`;
@@ -68,21 +73,6 @@ export class ViewMotionCategory extends BaseViewModel<MotionCategory> /* impleme
 
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/motions/categories/${this.sequential_number}`;
-    }
-
-    /**
-     * @returns an array with all parents. The ordering is the direct parent
-     * is in front of the array and the "highest" parent the last entry. Returns
-     * an empty array if the category does not have any parents.
-     */
-    public collectParents(): ViewMotionCategory[] {
-        if (this.parent) {
-            const parents = this.parent.collectParents();
-            parents.unshift(this.parent);
-            return parents;
-        } else {
-            return [];
-        }
     }
 }
 interface IMotionCategoryRelations {

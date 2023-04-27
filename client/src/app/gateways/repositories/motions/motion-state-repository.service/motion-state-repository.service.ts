@@ -3,7 +3,6 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionState } from 'src/app/domain/models/motions/motion-state';
 import { Action } from 'src/app/gateways/actions';
 import { ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -15,33 +14,6 @@ import { MotionStateAction } from './motion-state.action';
 export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<ViewMotionState, MotionState> {
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionState);
-    }
-
-    public override getFieldsets(): Fieldsets<MotionState> {
-        const detailFields: (keyof MotionState)[] = [
-            `name`,
-            `css_class`,
-            `recommendation_label`,
-            `restrictions`,
-            `allow_support`,
-            `allow_create_poll`,
-            `allow_submitter_edit`,
-            `allow_motion_forwarding`,
-            `set_number`,
-            `set_created_timestamp`,
-            `show_state_extension_field`,
-            `merge_amendment_into_final`,
-            `show_recommendation_extension_field`,
-            `weight`,
-            `workflow_id`,
-            `next_state_ids`,
-            `previous_state_ids`,
-            `submitter_withdraw_state_id`,
-            `submitter_withdraw_back_ids`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: detailFields
-        };
     }
 
     public getTitle = (viewMotionState: ViewMotionState) => viewMotionState.name;
