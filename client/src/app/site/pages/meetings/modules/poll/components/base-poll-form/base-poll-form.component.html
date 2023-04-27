@@ -44,13 +44,13 @@
 
             <div class="info-grid">
                 <!-- Poll Methods -->
-                <mat-form-field *ngIf="pollMethods && !hideSelects.pollMethod">
+                <mat-form-field *ngIf="!isCreatedList && filteredPollMethods && !hideSelects.pollMethod">
                     <mat-select
                         [placeholder]="PollPropertyVerbose.pollmethod | translate"
                         formControlName="pollmethod"
                         required
                     >
-                        <mat-option *ngFor="let option of pollMethods | keyvalue: keepEntryOrder" [value]="option.key">
+                        <mat-option *ngFor="let option of filteredPollMethods | keyvalue: keepEntryOrder" [value]="option.key">
                             {{ option.value | translate }}
                         </mat-option>
                     </mat-select>
@@ -131,7 +131,7 @@
                     required
                 >
                     <ng-container *ngFor="let option of validPercentBases | keyvalue: keepEntryOrder">
-                        <mat-option [value]="option.key">{{ option.value | translate }}</mat-option>
+                        <mat-option [value]="option.key">{{ ((isCreatedList || pollMethod === 'yna') ? alternativePercentBases[option.key] : option.value) | translate }}</mat-option>
                     </ng-container>
                 </mat-select>
             </mat-form-field>

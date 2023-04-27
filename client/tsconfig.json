@@ -8,6 +8,7 @@
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
         "importHelpers": true,
+        "allowSyntheticDefaultImports": true,
         "lib": ["es2020", "dom"],
         "module": "es2020",
         "moduleResolution": "node",

@@ -10,16 +10,16 @@ import { MediafileListServiceModule } from '../mediafile-list-service.module';
     providedIn: MediafileListServiceModule
 })
 export class MediafileListExportService {
-    public constructor(private exporter: FileExportService) {}
+    public constructor(private exporter: FileExportService, private http: HttpService) {}
 
     public downloadArchive(filename: string, mediafiles: ViewMediafile[]): Promise<void> {
-        return this.exporter.saveFileZip(filename, async (zip, http) => await this.addFileToZip(mediafiles, zip, http));
+        return this.exporter.saveFileZip(filename, async zip => await this.addFileToZip(mediafiles, zip));
     }
 
-    private async addFileToZip(mediafiles: ViewMediafile[], zip: JSZip, http: HttpService): Promise<void> {
+    private async addFileToZip(mediafiles: ViewMediafile[], zip: JSZip): Promise<void> {
         for (const mediafile of mediafiles) {
             if (!mediafile.is_directory) {
-                const download = await http.downloadAsBase64(mediafile.url);
+                const download = await this.http.downloadAsBase64(mediafile.url);
                 zip.file(mediafile.title, download.data, { base64: true });
             }
         }

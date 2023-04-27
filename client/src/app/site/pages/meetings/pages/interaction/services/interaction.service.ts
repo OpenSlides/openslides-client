@@ -5,6 +5,7 @@ import { NotifyService } from 'src/app/gateways/notify.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewUser } from '../../../view-models/view-user';
 import { BroadcastService } from './broadcast.service';
 import { CallRestrictionService } from './call-restriction.service';
@@ -21,6 +22,7 @@ export enum ConferenceState {
 
 export interface senderMessage {
     inviter: string;
+    meeting_id: number;
 }
 
 export interface kickMessage {
@@ -67,7 +69,8 @@ export class InteractionService {
         private operator: OperatorService,
         promptService: PromptService,
         broadcast: BroadcastService,
-        private interactionReceive: InteractionReceiveService
+        private interactionReceive: InteractionReceiveService,
+        private activeMeetingService: ActiveMeetingService
     ) {
         interactionReceive.startListening({
             streamService,
@@ -84,7 +87,8 @@ export class InteractionService {
 
     public inviteToCall(userId: Id): void {
         const content: senderMessage = {
-            inviter: this.operator.user.getShortName()
+            inviter: this.operator.user.getShortName(),
+            meeting_id: this.activeMeetingService.meetingId
         };
         this.notifyService.sendToUsers(InviteMessage, content, userId);
     }

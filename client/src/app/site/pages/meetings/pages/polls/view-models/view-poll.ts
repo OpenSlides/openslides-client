@@ -1,9 +1,9 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DetailNavigable } from 'src/app/domain/interfaces';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
 import {
     PollClassType,
     PollClassTypeVerbose,
+    PollContentObject,
     PollData,
     PollPercentBaseVerbose,
     PollStateChangeActionVerbose,
@@ -12,28 +12,33 @@ import {
 } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
-export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
+export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
     implements DetailNavigable, PollData
 {
+    private _hasVoted: boolean | undefined;
+
     public get poll(): Poll {
         return this._model;
     }
     public static COLLECTION = Poll.COLLECTION;
 
-    public set hasVoted(value: boolean) {
-        this._hasVotedSubject.next(value);
+    public set hasVoted(value: boolean | undefined) {
+        this._hasVoted = value;
     }
 
-    public get hasVoted(): boolean {
-        return this._hasVotedSubject.value;
+    /**
+     * @return boolean if a hasVoted state available undefined
+     *         if the state is not set yet
+     */
+    public get hasVoted(): boolean | undefined {
+        return this._hasVoted;
     }
 
     public get pollClassType(): PollClassType | undefined {
@@ -42,6 +47,10 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
 
     public get isAssignmentPoll(): boolean {
         return this.content_object?.collection === PollClassType.Assignment;
+    }
+
+    public get isListPoll(): boolean {
+        return this.options[0]?.isListOption;
     }
 
     public get isMotionPoll(): boolean {
@@ -96,10 +105,6 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
         return this.results.flatMap(option => option.votes).some(vote => vote.weight > 0);
     }
 
-    public get hasVotedObservable(): Observable<boolean> {
-        return this._hasVotedSubject.asObservable();
-    }
-
     public hasVotedForDelegations(userId?: number): boolean {
         if (!userId) {
             return false;
@@ -122,11 +127,9 @@ export class ViewPoll<C extends BaseViewModel<BaseModel> = any>
     private get results(): ViewOption[] {
         return (this.options || []).concat(this.global_option).filter(option => !!option);
     }
-
-    private readonly _hasVotedSubject = new BehaviorSubject(false);
 }
 
-interface IPollRelations<C extends BaseViewModel<BaseModel> = any> {
+interface IPollRelations<C extends PollContentObject = any> {
     content_object?: C;
     voted: ViewUser[];
     entitled_groups: ViewGroup[];
@@ -134,4 +137,4 @@ interface IPollRelations<C extends BaseViewModel<BaseModel> = any> {
     options_as_observable: Observable<ViewOption[]>;
     global_option: ViewOption;
 }
-export interface ViewPoll<C extends BaseViewModel<BaseModel>> extends HasMeeting, IPollRelations<C>, Poll {}
+export interface ViewPoll<C extends PollContentObject = any> extends HasMeeting, IPollRelations<C>, Poll {}

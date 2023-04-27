@@ -6,8 +6,8 @@
 }
 
 .global-headbar {
-    height: 28px;
-    line-height: 28px;
+    height: var(--global-headbar-height);
+    line-height: var(--global-headbar-height);
     display: flex;
     flex-direction: row;
     padding-left: 26px;

@@ -3,7 +3,7 @@ import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import { Action } from 'src/app/gateways/actions';
 import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -16,6 +16,7 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionWorkflow);
     }
+
     public override getFieldsets(): Fieldsets<MotionWorkflow> {
         const routingFields: (keyof MotionWorkflow)[] = [`sequential_number`, `meeting_id`, `name`];
         const nameFields: (keyof MotionWorkflow)[] = [`name`];
@@ -23,7 +24,7 @@ export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepositor
             .concat(routingFields)
             .concat([`first_state_id`, `state_ids`]);
         return {
-            [DEFAULT_FIELDSET]: listFields,
+            ...super.getFieldsets(),
             [ROUTING_FIELDSET]: routingFields,
             name: nameFields,
             list: listFields

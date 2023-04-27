@@ -189,7 +189,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * @param state the selected workflow state
      */
     public onClickStateName(state: ViewMotionState): void {
-        this.openEditDialog(state.name, `Rename state`, ``, true).subscribe(result => {
+        this.openEditDialog(state.name, this.translate.instant(`Rename state`), ``, true).subscribe(result => {
             if (result) {
                 if (result.action === `update`) {
                     this.updateWorkflowStateName(result.value!, state);
@@ -223,7 +223,11 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Opens a dialog to rename the workflow
      */
     public onEditWorkflowButton(): void {
-        this.openEditDialog(this.workflow.name, `Edit name`, `Please enter a new workflow name:`).subscribe(result => {
+        this.openEditDialog(
+            this.workflow.name,
+            this.translate.instant(`Edit name`),
+            this.translate.instant(`Please enter a new workflow name:`)
+        ).subscribe(result => {
             if (result && result.action === `update`) {
                 this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow).resolve());
             }

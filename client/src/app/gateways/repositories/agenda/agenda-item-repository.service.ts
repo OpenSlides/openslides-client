@@ -5,7 +5,6 @@ import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-
 import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem, ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Action } from '../../actions';
@@ -24,27 +23,6 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
         super(repositoryServiceCollector, AgendaItem);
 
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is
-    }
-
-    public override getFieldsets(): Fieldsets<AgendaItem> {
-        return {
-            [DEFAULT_FIELDSET]: [
-                `item_number`,
-                `comment`,
-                `closed`,
-                `type`,
-                `is_hidden`,
-                `is_internal`,
-                `duration`,
-                `weight`,
-                `level`,
-                `parent_id`,
-                `child_ids`,
-                `meeting_id`,
-                `tag_ids`,
-                `content_object_id`
-            ]
-        };
     }
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Items` : `Item`);

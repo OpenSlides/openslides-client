@@ -15,7 +15,6 @@ import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/act
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
 const ROUTE_SUBSCRIPTION_NAME = `routeSubscription`;
-const SEQUENTIAL_NUMBER_SUBSCRIPTION_NAME = `sequentialNumberSubscription`;
 
 @Component({
     selector: `os-detail-view`,

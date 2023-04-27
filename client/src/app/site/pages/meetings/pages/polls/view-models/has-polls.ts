@@ -1,13 +1,13 @@
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { PollContentObject } from 'src/app/domain/models/poll';
 
 import { ViewPoll } from './view-poll';
 
-export interface VotingTextContext<C extends BaseViewModel = any> {
+export interface VotingTextContext<C extends PollContentObject = any> {
     poll: ViewPoll<C>;
     translateFn: (text: string) => string;
 }
 
-export interface HasPolls<C extends BaseViewModel = any> {
+export interface HasPolls<C extends PollContentObject = any> {
     polls: ViewPoll<C>[];
     getVotingText: (context: VotingTextContext<C>) => string;
 }

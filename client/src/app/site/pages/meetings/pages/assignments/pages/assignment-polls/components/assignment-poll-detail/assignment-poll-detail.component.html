@@ -33,29 +33,30 @@
         <div class="assignment-result-wrapper" *ngIf="poll">
             <!-- Result -->
             <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
-
-            <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting"  (selectedTabChange)="onTabChange()">
-                <mat-tab label="{{ 'Single votes' | translate }}">
-                    <!-- Single Votes Table -->
-                    <div class="named-result-table">
-                        <os-votes-table
-                            *ngIf="votesDataObservable"
-                            [votesDataObservable]="votesDataObservable"
-                            [filterProps]="filterProps"
-                            [isViewingThis]="isViewingVoteslist"
-                            [parent]="self"
-                            [templateType]="'assignment'"
-                        >
-                        </os-votes-table>
-                    </div>
-                </mat-tab>
-                <mat-tab label="{{ 'Entitled users' | translate }}">
-                    <os-entitled-users-table
-                        [entitledUsersObservable]="entitledUsersObservable"
-                        [isViewingThis]="isViewingEntitledUserslist"
-                    ></os-entitled-users-table>
-                </mat-tab>
-            </mat-tab-group>
+            <div *osPerms="permission.assignmentCanManage">
+                <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting"  (selectedTabChange)="onTabChange()">
+                    <mat-tab label="{{ 'Single votes' | translate }}">
+                        <!-- Single Votes Table -->
+                        <div class="named-result-table">
+                            <os-votes-table
+                                *ngIf="votesDataObservable"
+                                [votesDataObservable]="votesDataObservable"
+                                [filterProps]="filterProps"
+                                [isViewingThis]="isViewingVoteslist"
+                                [parent]="self"
+                                [templateType]="'assignment'"
+                            >
+                            </os-votes-table>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="{{ 'Entitled users' | translate }}">
+                        <os-entitled-users-table
+                            [entitledUsersObservable]="entitledUsersObservable"
+                            [isViewingThis]="isViewingEntitledUserslist"
+                        ></os-entitled-users-table>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
         </div>
     </div>
 

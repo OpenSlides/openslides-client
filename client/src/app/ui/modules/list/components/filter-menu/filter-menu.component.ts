@@ -11,8 +11,9 @@ import {
 import { ChangeDetectorRef } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { OsFilterOption, OsFilterOptions } from 'src/app/site/base/base-filter.service';
 
-import { FilterListService, OsFilterOption, OsFilterOptions } from '../../definitions/filter-service';
+import { FilterListService } from '../../definitions/filter-service';
 
 const MAX_CHECKBOX_WIDTH = 290; // Maximum width of a checkbox (in px).
 

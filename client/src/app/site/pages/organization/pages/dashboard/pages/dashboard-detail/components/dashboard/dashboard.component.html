@@ -22,7 +22,7 @@
     <div class="padding-right-8">
         <!-- active meetings -->
         <div *ngIf="organizationDescription" class="meeting-list-container">
-            <div class="organization-description" [innerHTML]="organizationDescription | translate"></div>
+            <div class="organization-description" [innerHTML]="organizationDescription"></div>
         </div>
 
         <div id="active-meetings" class="meeting-list-container">
@@ -162,7 +162,7 @@
             [routerLink]="['/', 'committees', meeting.committee_id]"
             matTooltip="{{ 'Show committee' | translate }}"
         >
-            <mat-icon>auto_awesome_mosaic</mat-icon>
+            <mat-icon>layers</mat-icon>
         </a>
     </div>
 </ng-template>

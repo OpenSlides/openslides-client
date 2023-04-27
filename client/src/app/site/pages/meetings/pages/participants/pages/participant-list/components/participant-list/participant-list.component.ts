@@ -191,6 +191,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 if (!result.group_ids?.length) {
                     result.group_ids = [this.activeMeeting!.default_group_id];
                 }
+                if (result.vote_delegated_to_id === 0) {
+                    result.vote_delegated_to_id = null;
+                }
                 this.repo.update(result, user).resolve();
             }
         });

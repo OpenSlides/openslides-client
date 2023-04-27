@@ -81,7 +81,7 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
      *
      * TODO: repo.getExtendedStateLabel(), repo.getExtendedRecommendationLabel()
      */
-    public filterProps = [`submitters`, `block`, `title`, `number`];
+    public filterProps = [`submitters`, `block`, `title`, `number`, `state_extension`, `recommendation_extension`];
 
     public get canForward(): boolean {
         return this._forwardingAvailable;
@@ -251,9 +251,9 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             motionsWithNotes += +this.motionHasProp(motion, `hasNotes`);
         }
 
-        this.addToTileInfo(`Favorites`, `star`, true, favoriteMotions);
+        this.addToTileInfo(`Favorites`, `isFavorite`, true, favoriteMotions);
         this.addToTileInfo(`Personal notes`, `hasNotes`, true, motionsWithNotes);
-        this.addToTileInfo(`No category`, `category_id`, [], motionsWithoutCategory);
+        this.addToTileInfo(`No category`, `category_id`, null, motionsWithoutCategory);
 
         this.createCategoryTiles(Array.from(localCategories));
 

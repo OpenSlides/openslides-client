@@ -6,15 +6,13 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { distinctUntilChanged } from 'rxjs';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
-import {
-    SearchUsersByNameOrEmailPresenterScope,
-    SearchUsersByNameOrEmailPresenterService
-} from 'src/app/gateways/presenter';
+import { User } from 'src/app/domain/models/users/user';
+import { SearchUsersPresenterService } from 'src/app/gateways/presenter';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { UserScope } from 'src/app/site/services/user.service';
 import { BaseSearchSelectorComponent } from 'src/app/ui/modules/search-selector/components/base-search-selector/base-search-selector.component';
 
 @Component({
@@ -47,9 +45,8 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         fm: FocusMonitor,
         element: ElementRef,
         ngControl: NgControl,
-        private userController: UserControllerService,
         private operator: OperatorService,
-        private presenter: SearchUsersByNameOrEmailPresenterService,
+        private presenter: SearchUsersPresenterService,
         private userRepo: UserRepositoryService
     ) {
         super(fb, fm, element, ngControl);
@@ -86,29 +83,23 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         );
     }
 
-    private async searchAccount(name: string): Promise<void> {
-        // TODO: This condition is not reachable because the presenter
-        //       needs the checked permission currently which might change
-        //       in the future.
-        if (this.operator.hasOrganizationPermissions(OML.can_manage_users) && name.length >= 3) {
-            const user = this.userController.parseStringIntoUser(name);
+    private async searchAccount(username: string): Promise<void> {
+        if (this.operator.hasOrganizationPermissions(OML.can_manage_users) && username.length >= 3) {
             const result = await this.presenter.call({
-                searchCriteria: [{ username: user.username }, { username: name }],
+                searchCriteria: [{ username }],
                 permissionRelatedId: ORGANIZATION_ID,
-                permissionScope: SearchUsersByNameOrEmailPresenterScope.ORGANIZATION
-            });
-            const nextValue = Object.values(result).flat();
-            const getTitle = (user: { first_name: string; last_name: string }) =>
-                `${user.first_name ?? ``} ${user.last_name ?? ``}`;
+                permissionScope: UserScope.ORGANIZATION
+            })[0];
+            const getTitle = (user: Partial<User>) => `${user.first_name ?? ``} ${user.last_name ?? ``}`;
             this.filteredItemsSubject.next(
-                nextValue.map(entry => ({
+                result.map(entry => ({
                     id: entry.id,
                     getTitle: () => getTitle(entry),
                     getListTitle: () => getTitle(entry)
                 }))
             );
         } else {
-            super.onSearchValueUpdated(name);
+            super.onSearchValueUpdated(username);
         }
     }
 }

@@ -1,12 +1,12 @@
 # 
 # Translators:
-# jsangmeister <joshua.sangmeister@gmail.com>, 2022
 # Emanuel Schütze <emanuel.schuetze@intevation.de>, 2023
+# jsangmeister <joshua.sangmeister@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Last-Translator: Emanuel Schütze <emanuel.schuetze@intevation.de>, 2023\n"
-"Language-Team: German (https://www.transifex.com/openslides/teams/14270/de/)\n"
+"Last-Translator: jsangmeister <joshua.sangmeister@gmail.com>, 2023\n"
+"Language-Team: German (https://app.transifex.com/openslides/teams/14270/de/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de\n"
@@ -39,6 +39,9 @@ msgstr ""
 
 msgid "<unknown motion>"
 msgstr "<unbekannter Antrag>"
+
+msgid "<unknown>"
+msgstr "<unbekannt>"
 
 msgid ""
 "A change recommendation or amendment is probably referring to a non-existant"
@@ -230,9 +233,6 @@ msgstr "Alle gültigen Stimmzettel"
 msgid "All votes will be lost."
 msgstr "Alle Stimmen gehen verloren."
 
-msgid "All your changes are saved immediately."
-msgstr "Alle Änderungen werden sofort gespeichert."
-
 msgid "Allow amendments of amendments"
 msgstr "Änderungsanträge zu Änderungsanträgen erlauben"
 
@@ -381,6 +381,9 @@ msgstr "Sollen alle ausgewählten Wahlen wirklich gelöscht werden?"
 msgid "Are you sure you want to delete all selected files and folders?"
 msgstr ""
 "Sollen alle ausgewählten Dateien und Verzeichnisse wirklich gelöscht werden?"
+
+msgid "Are you sure you want to delete all selected meetings?"
+msgstr "Sollen alle ausgewählten Veranstaltungen wirklich gelöscht werden?"
 
 msgid "Are you sure you want to delete all selected motions?"
 msgstr "Sollen alle ausgewählten Anträge wirklich gelöscht werden?"
@@ -1005,6 +1008,9 @@ msgstr "Konferenzraum"
 msgid "Confirm new password"
 msgstr "Neues Passwort bestätigen"
 
+msgid "Confirmation of the nomination list"
+msgstr "Bestätigung der Wahlvorschlagsliste"
+
 msgid "Congratuations! Your browser is supported by OpenSlides."
 msgstr "Glückwunsch! Ihr Browser wird von OpenSlides unterstützt. "
 
@@ -1028,6 +1034,9 @@ msgstr "Gegenrede"
 
 msgid "Contribution"
 msgstr "Einbringung"
+
+msgid "Copy report to clipboard"
+msgstr "Bericht in die Zwischenablage kopieren"
 
 msgid "Count active users"
 msgstr "Aktive Nutzer zählen"
@@ -1122,6 +1131,9 @@ msgstr "Design anpassen"
 msgid "Dark mode"
 msgstr "Dunkler Modus"
 
+msgid "Dashboard"
+msgstr "Dashboard"
+
 msgid "Datastore is corrupt! See the console for errors."
 msgstr "Der Datastore ist beschädigt! Mehr Details in der Konsole."
 
@@ -1174,6 +1186,9 @@ msgstr "Vorgegebene Gruppen"
 
 msgid "Default groups with voting rights"
 msgstr "Voreingestellte Gruppen mit Stimmrecht"
+
+msgid "Default language"
+msgstr ""
 
 msgid "Default line numbering"
 msgstr "Voreingestellte Zeilennummerierung"
@@ -1330,6 +1345,9 @@ msgstr "Duplizieren"
 msgid "Duplicate from"
 msgstr "Duplizieren von"
 
+msgid "Duplicates"
+msgstr "Duplikate"
+
 msgid "Duration"
 msgstr "Dauer"
 
@@ -1373,6 +1391,9 @@ msgstr "Redaktionelle Beschlussfassung bearbeiten"
 
 msgid "Edit meeting"
 msgstr "Veranstaltung bearbeiten"
+
+msgid "Edit name"
+msgstr "Name bearbeiten"
 
 msgid "Edit projector"
 msgstr "Projektor bearbeiten"
@@ -1940,6 +1961,9 @@ msgstr "Ist ein Gremium"
 msgid "Is a natural person"
 msgstr "Ist eine natürliche Person"
 
+msgid "Is a template"
+msgstr "Ist eine öffentliche Vorlage"
+
 msgid "Is active"
 msgstr "Ist aktiv"
 
@@ -1948,6 +1972,9 @@ msgstr "ist bereits projiziert"
 
 msgid "Is amendment"
 msgstr "Ist ein Änderungsantrag"
+
+msgid "Is archived"
+msgstr "Ist archiviert"
 
 msgid "Is being projected"
 msgstr "wird projiziert"
@@ -1979,8 +2006,14 @@ msgstr "Ist keine natürliche Person"
 msgid "Is not a committee"
 msgstr "Ist kein Gremium"
 
+msgid "Is not a template"
+msgstr "Ist keine öffentliche Vorlage"
+
 msgid "Is not active"
 msgstr "Ist nicht aktiv"
+
+msgid "Is not archived"
+msgstr "Ist nicht archiviert"
 
 msgid "Is not favorite"
 msgstr "Ist kein Favorit"
@@ -2038,6 +2071,9 @@ msgstr "Verwenden Sie eine Zeile pro Eintrag."
 
 msgid "Label color"
 msgstr "Beschriftungsfarbe"
+
+msgid "Language"
+msgstr ""
 
 msgid "Last email sent"
 msgstr "Letzte gesendete E-Mail"
@@ -2540,6 +2576,9 @@ msgstr "Es ist kein ausführlicher Name definiert"
 msgid "No."
 msgstr "Nr."
 
+msgid "Nomination list"
+msgstr "Wahlvorschlagsliste"
+
 msgid "None"
 msgstr "aus"
 
@@ -2592,11 +2631,17 @@ msgstr "Kandidatenanzahl"
 msgid "Number of last speakers to be shown on the projector"
 msgstr "Anzahl der dargestellten letzten Redner*innen auf dem Projektor"
 
+msgid "Number of motions"
+msgstr "Anzahl von Anträgen"
+
 msgid ""
 "Number of next speakers automatically connecting to the live conference"
 msgstr ""
 "Anzahl der nächsten Redner*innen, die automatisch mit der Livekonferenz "
 "verbunden werden"
+
+msgid "Number of participants"
+msgstr "Anzahl von Teilnehmenden"
 
 msgid "Number of persons to be elected"
 msgstr "Anzahl der zu wählenden Personen"
@@ -2890,6 +2935,9 @@ msgstr "Bitte geben Sie einen Namen für das neue Verzeichnis ein:"
 msgid "Please enter a name for the new workflow:"
 msgstr "Bitte geben Sie einen Namen für den neuen Arbeitsablauf ein:"
 
+msgid "Please enter a new workflow name:"
+msgstr "Bitte geben Sie einen neuen Arbeitsablaufnamen ein:"
+
 msgid "Please enter a valid email address"
 msgstr "Bitte geben Sie einen neuen Namen ein für"
 
@@ -2916,9 +2964,6 @@ msgid "Please update your browser or contact your system administration."
 msgstr ""
 "Bitte aktualisieren Sie Ihren Browser oder kontaktieren Sie Ihre "
 "Systemadministration."
-
-msgid "Please wait"
-msgstr "Bitte warten"
 
 msgid "Point of order"
 msgstr "GO-Antrag"
@@ -2961,9 +3006,6 @@ msgstr "Datenschutzerklärung"
 
 msgid "Privacy policy"
 msgstr "Datenschutzerklärung"
-
-msgid "Process type"
-msgstr "Prozesstyp"
 
 msgid "Project"
 msgstr "Projizieren"
@@ -3142,6 +3184,9 @@ msgstr "Entferne mich"
 msgid "Remove option"
 msgstr "Option entfernen"
 
+msgid "Rename state"
+msgstr "Status umbenennen"
+
 msgid "Reopen"
 msgstr "wieder öffnen"
 
@@ -3194,6 +3239,9 @@ msgstr "Status zurücksetzen"
 msgid "Reset to factory defaults"
 msgstr "Auf Werkseinstellung zurücksetzen"
 
+msgid "Reset your OpenSlides password"
+msgstr "Zurücksetzen Ihres Openslides-Passworts"
+
 msgid "Resolution and size"
 msgstr "Auflösung und Größe"
 
@@ -3209,11 +3257,20 @@ msgstr "Ergebnis"
 msgid "Results"
 msgstr "Ergebnisse"
 
+msgid "Retrieving vote status... Please wait!"
+msgstr ""
+
 msgid "Right"
 msgstr "Rechts"
 
 msgid "Roman"
 msgstr "Römisch"
+
+msgid "Same email"
+msgstr "Gleiche E-Mail-Adresse"
+
+msgid "Same first/last name"
+msgstr "Gleicher Vor- und Nachname"
 
 msgid "Save"
 msgstr "Speichern"
@@ -3484,6 +3541,9 @@ msgstr "Empfehlung auf dem Projektor anzeigen"
 msgid "Show referring motions"
 msgstr "Verweisende Anträge anzeigen"
 
+msgid "Show report"
+msgstr "Bericht anzeigen"
+
 msgid "Show state extension field"
 msgstr "Ergänzungsfeld für Status anzeigen"
 
@@ -3627,6 +3687,12 @@ msgstr "Zählen stoppen"
 
 msgid "Stop voting"
 msgstr "Stimmabgabe beenden"
+
+msgid "Stop waiting"
+msgstr "Nicht länger warten"
+
+msgid "Stopped waiting for process(es)"
+msgstr ""
 
 msgid "Structure level"
 msgstr "Gliederungsebene"
@@ -3783,8 +3849,12 @@ msgstr "Der Server konnte nicht erreicht werden."
 msgid "The server didn't respond."
 msgstr "Der Server antwortet nicht."
 
-msgid "The server process is still running."
-msgstr "Der Serverprozess läuft noch."
+msgid ""
+"The server may still be processing them, but you will probably not get a "
+"result."
+msgstr ""
+"Der Server verarbeitet sie zwar noch, aber Sie werden wahrscheinlich kein "
+"Ergebnis erhalten."
 
 msgid "The title is required"
 msgstr "Ein Titel ist erforderlich"
@@ -3874,6 +3944,12 @@ msgstr "Diese Veranstaltung ist archiviert"
 msgid "This paragraph does not exist in the main motion anymore:"
 msgstr "Dieser Absatz existiert im Hauptantrag nicht mehr:"
 
+msgid "This prefix already exists"
+msgstr "Dieses Präfix existiert bereits."
+
+msgid "This prefix already exists."
+msgstr "Dieses Präfix existiert bereits."
+
 msgid "This prefix will be set if you run the automatic agenda numbering."
 msgstr ""
 "Dieses Präfix wird gesetzt, wenn die automatische Nummerierung der "
@@ -3947,6 +4023,9 @@ msgstr "Gründliche Überprüfung des Datastores (unsicher)"
 
 msgid "Tile view"
 msgstr "Kachelansicht"
+
+msgid "Time"
+msgstr "Zeitpunkt"
 
 msgid "Timestamp"
 msgstr "Zeitstempel"
@@ -4167,6 +4246,9 @@ msgstr "WLAN-Name (SSID)"
 msgid "WLAN password"
 msgstr "WLAN-Passwort"
 
+msgid "Wait"
+msgstr "Warten"
+
 msgid "Wait for response ..."
 msgstr "Warten auf Antwort ..."
 
@@ -4254,6 +4336,9 @@ msgstr "Ja/Nein/Enthaltung"
 msgid "Yes/No/Abstain per candidate"
 msgstr "Ja/Nein/Enthaltung pro Kandidat"
 
+msgid "Yes/No/Abstain per list"
+msgstr "Ja/Nein/Enthaltung pro Liste"
+
 msgid "You are not allowed to see all entitled users."
 msgstr "Sie sind nicht berechtigt alle Stimmberechtigte zu sehen."
 
@@ -4262,6 +4347,21 @@ msgstr "Sie sind nicht berechtigt den Livestream zu sehen."
 
 msgid "You are not supposed to be here..."
 msgstr "Sie sollten nicht hier sein ..."
+
+msgid ""
+"You are receiving this email because you have requested a new password for your OpenSlides-account.\n"
+"\n"
+"Please open the following link and choose a new password:\n"
+"{url}/login/forget-password-confirm?user_id={user_id}&token={token}\n"
+"\n"
+"For completeness your username: {username}"
+msgstr ""
+"Sie erhalten diese E-Mail, da Sie ein neues Passwort für Ihren OpenSlides-Account angefordert haben.\n"
+"\n"
+"Bitte öffnen Sie den folgenden Link und wählen Sie ein neues Passwort:\n"
+"{url}/login/forget-password-confirm?user_id={user_id}&token={token}\n"
+"\n"
+"Zur Vollständigkeit Ihr Nutzername: {username}"
 
 msgid ""
 "You are using the history mode of OpenSlides. Changes will not be saved."
@@ -4444,6 +4544,9 @@ msgstr "Gruppe(n) hinzufügen"
 msgid "adjourned"
 msgstr "vertagt"
 
+msgid "already exists"
+msgstr "existiert bereits"
+
 msgid "analog"
 msgstr "analog"
 
@@ -4602,6 +4705,9 @@ msgstr "Anträge"
 
 msgid "move ..."
 msgstr "verschieben ..."
+
+msgid "name"
+msgstr ""
 
 msgid "natural person"
 msgstr "natürliche Person"

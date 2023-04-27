@@ -9,7 +9,7 @@ import { Projection } from '../../domain/models/projector/projection';
 import { MeetingSettingsDefinitionService } from '../../site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
-import { DEFAULT_FIELDSET, Fieldsets } from '../../site/services/model-request-builder';
+import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { ActionRequest } from '../actions/action-utils';
 import { BaseRepository } from './base-repository';
@@ -61,7 +61,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `user_ids`,
             `description`,
             `location`,
-            `organization_tag_ids`
+            `organization_tag_ids`,
+            `motion_ids`
         ]);
         const listFields: TypedFieldset<Meeting> = sharedFields.concat([
             `default_group_id`,
@@ -69,24 +70,18 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `committee_id`,
             `group_ids`
         ]);
-        const detailFields: TypedFieldset<Meeting> = sharedFields.concat([
-            `welcome_title`,
-            `welcome_text`,
-            `enable_anonymous`,
-            { templateField: `logo_$_id` },
-            { templateField: `font_$_id` }
-        ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `is_template`,
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
-            `jitsi_room_password`
+            `jitsi_room_password`,
+            `language`
         ];
         const groupFields: TypedFieldset<Meeting> = [`admin_group_id`, `default_group_id`];
 
         return {
-            [DEFAULT_FIELDSET]: detailFields.concat(this.meetingSettingsDefinitionProvider.getSettingsKeys()),
+            ...super.getFieldsets(),
             detailEdit: detailEditFields,
             list: listFields,
             settings: this.meetingSettingsDefinitionProvider.getSettingsKeys(),
@@ -103,17 +98,17 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
 
         switch (projection.type as MeetingProjectionType) {
             case MeetingProjectionType.CurrentListOfSpeakers:
-                title = `Current list of speakers`;
+                title = this.translate.instant(`Current list of speakers`);
                 break;
             case MeetingProjectionType.CurrentSpeakerChyron:
-                title = `Current speaker chyron`;
+                title = this.translate.instant(`Current speaker chyron`);
                 break;
             case MeetingProjectionType.AgendaItemList:
-                title = `Agenda`;
+                title = this.translate.instant(`Agenda`);
                 break;
             default:
                 console.warn(`Unknown slide type for meeting:`, projection.type);
-                title = `<unknown>`;
+                title = this.translate.instant(`<unknown>`);
                 break;
         }
 

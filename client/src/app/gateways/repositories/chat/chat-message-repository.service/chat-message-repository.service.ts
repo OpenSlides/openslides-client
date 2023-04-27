@@ -3,7 +3,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { ChatMessage } from 'src/app/domain/models/chat/chat-message';
 import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -22,12 +21,6 @@ export class ChatMessageRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getVerboseName = (plural?: boolean) => (plural ? `Chat messages` : `Chat message`);
     public getTitle = () => `No name`;
-    public override getFieldsets(): Fieldsets<ChatMessage> {
-        const detailFields: (keyof ChatMessage)[] = [`chat_group_id`, `content`, `created`, `user_id`];
-        return {
-            [DEFAULT_FIELDSET]: detailFields
-        };
-    }
 
     public create(...data: any[]): Promise<Identifiable[]> {
         const payload = data.map(partialChatMessage => partialChatMessage);

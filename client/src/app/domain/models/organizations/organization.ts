@@ -7,8 +7,6 @@ export class OrganizationAction {
     public static readonly UPDATE = `organization.update`;
 }
 
-export const ORGANIZATION_SUBSCRIPTION = `organization`;
-
 export class OrganizationSetting {
     public name!: string;
     public description!: string;
@@ -22,6 +20,7 @@ export class OrganizationSetting {
     public enable_chat!: boolean;
     public limit_of_meetings!: number;
     public limit_of_users!: number;
+    public default_language!: string;
 
     public users_email_sender!: string; // default: OpenSlides
     public users_email_subject!: string; // default: OpenSlides access data
@@ -48,6 +47,35 @@ export class Organization extends BaseModel<Organization> {
     public constructor(input?: any) {
         super(Organization.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Organization | { templateField: string })[] = [
+        `id`,
+        `name`,
+        `description`,
+        `legal_notice`,
+        `privacy_policy`,
+        `login_text`,
+        `reset_password_verbose_errors`,
+        `enable_electronic_voting`,
+        `enable_chat`,
+        `limit_of_meetings`,
+        `limit_of_users`,
+        `default_language`,
+        `committee_ids`,
+        `active_meeting_ids`,
+        `archived_meeting_ids`,
+        `template_meeting_ids`,
+        `organization_tag_ids`,
+        `theme_id`,
+        `theme_ids`,
+        `mediafile_ids`,
+        `user_ids`,
+        `users_email_sender`,
+        `users_email_replyto`,
+        `users_email_subject`,
+        `users_email_body`,
+        `url`
+    ];
 }
 
 export interface Organization extends OrganizationSetting {}

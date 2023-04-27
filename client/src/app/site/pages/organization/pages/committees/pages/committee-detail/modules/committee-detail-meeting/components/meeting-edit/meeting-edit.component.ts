@@ -5,6 +5,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import {
@@ -15,10 +16,12 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
+import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { RoutingStateService } from 'src/app/ui/modules/head-bar/services/routing-state.service';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models';
@@ -57,6 +60,7 @@ const ARCHIVED_MEETINGS_LABEL: Selectable = {
 })
 export class MeetingEditComponent extends BaseComponent implements OnInit {
     public readonly availableUsers: Observable<ViewUser[]>;
+    public readonly translations = availableTranslations;
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
 
@@ -106,6 +110,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     private editMeeting: ViewMeeting | null = null;
     private committeeId!: Id;
 
+    private cameFromList = false;
+
     /**
      * The operating user received from the OperatorService
      */
@@ -119,10 +125,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         private meetingRepo: MeetingControllerService,
         private committeeRepo: CommitteeControllerService,
         public orgaTagRepo: OrganizationTagControllerService,
+        private orgaSettings: OrganizationSettingsService,
         private operator: OperatorService,
         private userRepo: UserControllerService,
         private openslidesRouter: OpenSlidesRouterService,
-        private orga: OrganizationService
+        private orga: OrganizationService,
+        private routingState: RoutingStateService
     ) {
         super(componentServiceCollector, translate);
         this.checkCreateView();
@@ -139,6 +147,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.cameFromList = this.routingState.previousUrl?.includes(`meetings`);
         this.subscriptions.push(
             this.operator.userObservable.subscribe(user => {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
@@ -257,8 +266,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             organization_tag_ids: [[]]
         };
 
+        if (this.isCreateView) {
+            rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
+        }
+
         if (this.isJitsiManipulationAllowed) {
-            rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*(?<!\/)$/)];
+            rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^\/]$/)];
             rawForm[`jitsi_room_name`] = [``];
             rawForm[`jitsi_room_password`] = [``];
         }
@@ -365,7 +378,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private goBack(): void {
-        this.router.navigate([`committees`, this.committeeId]);
+        if (this.cameFromList) {
+            this.router.navigate([`meetings`]);
+        } else {
+            this.router.navigate([`committees`, this.committeeId]);
+        }
     }
 
     private makeDatesValid(endDateChanged: boolean): void {

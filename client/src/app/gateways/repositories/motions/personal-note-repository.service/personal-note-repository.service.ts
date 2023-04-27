@@ -5,7 +5,6 @@ import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { Action } from 'src/app/gateways/actions';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { PersonalNoteAction } from './personal-note.action';
@@ -24,13 +23,6 @@ export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<
 
     public getVerboseName = (plural: boolean = false) =>
         this.translate.instant(plural ? `Personal notes` : `Personal note`);
-
-    public override getFieldsets(): Fieldsets<PersonalNote> {
-        const detailFields: (keyof PersonalNote)[] = [`id`, `star`, `note`, `content_object_id`, `user_id`];
-        return {
-            [DEFAULT_FIELDSET]: detailFields
-        };
-    }
 
     public create(personalNote: Partial<PersonalNote>, content_object_id: Fqid): Action<Identifiable> {
         if (personalNote.star === undefined && personalNote.note === undefined) {

@@ -291,6 +291,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     }
                 ]
+            },
+            {
+                label: _(`Voting and ballot papers`),
+                settings: [
+                    {
+                        key: `topic_poll_default_group_ids`,
+                        label: _(`Default groups with voting rights`),
+                        type: `groups`
+                    }
+                ]
             }
         ]
     },
@@ -510,7 +520,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Sort motions by`),
                         type: `choice`,
                         choices: {
-                            number: _(`Motion number`),
+                            number: _(`Number`),
                             weight: _(`Call list`)
                         }
                     }

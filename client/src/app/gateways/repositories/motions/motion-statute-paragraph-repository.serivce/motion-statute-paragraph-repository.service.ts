@@ -3,7 +3,6 @@ import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionStatuteParagraph } from 'src/app/domain/models/motions/motion-statute-paragraph';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -18,13 +17,6 @@ export class MotionStatuteParagraphRepositoryService extends BaseMeetingRelatedR
 > {
     constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
         super(repositoryServiceCollector, MotionStatuteParagraph);
-    }
-
-    public override getFieldsets(): Fieldsets<MotionStatuteParagraph> {
-        const defaultFields: (keyof MotionStatuteParagraph)[] = [`title`, `text`, `weight`];
-        return {
-            [DEFAULT_FIELDSET]: defaultFields
-        };
     }
 
     public create(partialStatuteParagraph: Partial<MotionStatuteParagraph>): Promise<Identifiable> {

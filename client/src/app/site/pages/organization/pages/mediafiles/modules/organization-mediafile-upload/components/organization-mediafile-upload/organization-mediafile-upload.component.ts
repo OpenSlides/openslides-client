@@ -18,7 +18,7 @@ export class OrganizationMediafileUploadComponent implements OnInit {
      * Determine if uploading should happen parallel or synchronously.
      * Synchronous uploading might be necessary if we see that stuff breaks
      */
-    public parallel = true;
+    public parallel = false;
 
     public directoryId: number | null = null;
 

@@ -116,7 +116,7 @@
             <span>{{ 'Edit' | translate }}</span>
         </a>
         <a mat-menu-item [routerLink]="[member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
-            <mat-icon>auto_awesome_mosaic</mat-icon>
+            <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
         <button mat-menu-item class="red-warning-text" (click)="deleteUsers([member])">
@@ -152,7 +152,7 @@
             (deleting)="deleteUsers()"
         >
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
-                <mat-icon>auto_awesome_mosaic</mat-icon>
+                <mat-icon>event_available</mat-icon>
                 <span>{{ 'Set/remove meeting' | translate }} ...</span>
             </button>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">

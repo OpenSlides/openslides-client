@@ -21,7 +21,7 @@
                         <os-color-form-field
                             title="{{ title | translate }}"
                             [formControlName]="createFormControlName(palette, '500')"
-                            (reset)="resetField(palette)"
+                            (resetted)="resetField(palette)"
                         ></os-color-form-field>
                     </div>
                 </div>
@@ -38,6 +38,47 @@
             <ng-template
                 [ngTemplateOutlet]="collapsingField"
                 [ngTemplateOutletContext]="{ palette: 'warn', title: 'Warn color' }"
+            ></ng-template>
+        </div>
+        <div class="flex-vertical-center">
+            <div>
+                <div>
+                    <os-color-form-field
+                        title="{{ 'Global headbar color' | translate }}"
+                        formControlName="headbar"
+                        [defaultDisplayColor]="getDefaultColor('headbar')"
+                        (resetted)="resetField('headbar')"
+                    ></os-color-form-field>
+                </div>
+            </div>
+        </div>
+        <h3 translate>Poll option colors</h3>
+        <div class="flex-vertical-center">
+            <!-- Template to streamline all the poll color forms -->
+            <ng-template #pollColorField let-place="place" let-title="title">
+                <div>
+                    <div>
+                        <os-color-form-field
+                            title="{{ title | translate }}"
+                            [formControlName]="place"
+                            [defaultDisplayColor]="getDefaultColor(place)"
+                            (resetted)="resetField(place)"
+                        ></os-color-form-field>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template
+                [ngTemplateOutlet]="pollColorField"
+                [ngTemplateOutletContext]="{ place: 'yes', title: 'Yes' }"
+            ></ng-template>
+            <ng-template
+                [ngTemplateOutlet]="pollColorField"
+                [ngTemplateOutletContext]="{ place: 'no', title: 'No' }"
+            ></ng-template>
+            <ng-template
+                [ngTemplateOutlet]="pollColorField"
+                [ngTemplateOutletContext]="{ place: 'abstain', title: 'Abstain' }"
             ></ng-template>
         </div>
     </div>

@@ -1,26 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import pofile from 'pofile';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 /**
  * Translation loader that replaces empty strings with nothing.
- *
- * ngx-translate-extract writes empty strings into json files.
- * The problem is that these empty strings don't trigger
- * the MissingTranslationHandler - they are simply empty strings...
- *
  */
 export class PruningTranslationLoader implements TranslateLoader {
     /**
-     * Path to the language files. Can be adjusted of needed
+     * Path to the language files. Can be adjusted as needed
      */
     private prefix = `/assets/i18n/`;
 
     /**
-     * Suffix of the translation files. Usually '.json'.
+     * Suffix of the translation files.
      */
-    private suffix = `.json`;
+    private suffix = `.po`;
+
+    /**
+     * Default language which must not be translated.
+     */
+    private defaultLanguage = `en`;
 
     /**
      * Constructor to load the HttpClient
@@ -34,27 +35,26 @@ export class PruningTranslationLoader implements TranslateLoader {
      * @param lang language string (en, fr, de, ...)
      */
     public getTranslation(lang: string): Observable<any> {
-        return this.http.get(`${this.prefix}${lang}${this.suffix}`).pipe(map((res: Object) => this.process(res)));
+        if (lang != this.defaultLanguage) {
+            return this.http
+                .get(`${this.prefix}${lang}${this.suffix}`, { responseType: `text` })
+                .pipe(map((content: string) => this.parse(content)));
+        } else {
+            return of({});
+        }
     }
 
-    /**
-     * Prevent to display empty strings as a translation.
-     * Falls back to the default language or simply copy the content of the key.
-     * @param any the content of any language file.
-     */
-    private process(object: any): any {
-        const newObject: any = {};
-        for (const key in object) {
-            if (object.hasOwnProperty(key)) {
-                if (typeof object[key] === `object`) {
-                    newObject[key] = this.process(object[key]);
-                } else if (typeof object[key] === `string` && object[key] === ``) {
-                    // do not copy empty strings
-                } else {
-                    newObject[key] = object[key];
-                }
+    private parse(content: string): any {
+        let translations: { [key: string]: string } = {};
+
+        const po = pofile.parse(content);
+        for (const item of po.items) {
+            const translation: string = item.msgstr.pop();
+            if (item.msgid.length > 0 && translation.length > 0) {
+                translations[item.msgid] = translation;
             }
         }
-        return newObject;
+
+        return translations;
     }
 }

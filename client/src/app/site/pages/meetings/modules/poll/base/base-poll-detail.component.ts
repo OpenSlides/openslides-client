@@ -5,8 +5,8 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { PollContentObject } from 'src/app/domain/models/poll';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -29,7 +29,7 @@ export interface BaseVoteData extends Identifiable {
 }
 
 @Directive()
-export abstract class BasePollDetailComponent<V extends BaseViewModel, S extends PollService>
+export abstract class BasePollDetailComponent<V extends PollContentObject, S extends PollService>
     extends BaseMeetingComponent
     implements OnInit, OnDestroy
 {
