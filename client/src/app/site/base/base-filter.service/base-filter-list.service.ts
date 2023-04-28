@@ -167,6 +167,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         }
         this.inputDataSubscription = inputData.subscribe(data => {
             this._source.next(this.preFilter(data));
+            console.log("run this.updateFilteredData() this.inputDataSubscription = inputData.subscribe line 170")
             this.updateFilteredData();
         });
     }
@@ -319,7 +320,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         console.log("storeActiveFilters this.filterDefinitions: ", this.filterDefinitions);
         this.updateFilteredData();
         console.log("storeActiveFilters this.filterDefinitions: ", this.filterDefinitions);
-        
+
         this.activeFiltersStore.save<V>(this.storageKey, this.filterDefinitions);
     }
 
@@ -429,6 +430,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         const settingHidden = setting ? setting.shouldHideFn() : false;
         if (setting && settingHidden !== setting.currentlyHidden && update) {
             setting.currentlyHidden = settingHidden;
+            console.log("running this.updateFilteredData() from shouldHideOption line 433")
             this.updateFilteredData();
         }
         return settingHidden;
