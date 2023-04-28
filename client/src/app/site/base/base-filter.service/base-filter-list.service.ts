@@ -182,31 +182,20 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * and sets/updates {@link filterDefinitions}
      */
     public async updateFilterDefinitions(): Promise<void> {
-        console.log("updateFilterDefinitions() : loadfilters:",(await this.loadFilters()))
         if (!this.filterDefinitions) {
-            console.log("no def found")
             return;
         }
-        console.log("def found:",this.filterDefinitions)
         const nextDefinitions = this.getFilterDefinitions();
 
         let storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
-        console.log("storedFilters:", storedFilters)
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
-            console.log("breaking out:")
-            console.log("storedFilters", storedFilters)
-            console.log("storedFilters.length", storedFilters.length)
-            console.log("nextDefinitions", nextDefinitions)
-            console.log("nextDefinitions.length", nextDefinitions.length)
             return;
         }
 
         for (const nextDefinition of nextDefinitions) {
             nextDefinition.count = this.getCountForFilterOptions(nextDefinition, storedFilters);
         }
-        console.log("setting  this.filterDefinitions = nextDefinitions ?? []")
         this.filterDefinitions = nextDefinitions ?? []; // Prevent being null or undefined
-        console.log("this.filterDefinitions:", this.filterDefinitions)
         this.storeActiveFilters();
     }
 
@@ -217,7 +206,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param update
      */
     public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
-        console.log("clearFilter");
         filter.options.forEach(option => {
             if (typeof option === `object` && option.isActive) {
                 this.removeFilterOption(filter.property, option);
@@ -232,7 +220,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Removes all filters currently in use from this filterService
      */
     public clearAllFilters(): void {
-    console.log("clearAllFilters");
         if (this.filterDefinitions && this.filterDefinitions.length) {
             this.filterDefinitions.forEach(filter => {
                 this.clearFilter(filter, false);
@@ -325,10 +312,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Update the filtered data and store the current filter options
      */
     public storeActiveFilters(): void {
-        console.log("storeActiveFilters -start- ", this.storageKey);
-        console.log("storeActiveFilters this.filterDefinitions: ", this.filterDefinitions);
         this.updateFilteredData();
-        console.log("storeActiveFilters this.filterDefinitions: ", this.filterDefinitions);
 
         this.activeFiltersStore.save<V>(this.storageKey, this.filterDefinitions);
     }
@@ -372,7 +356,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param option The option to disable
      */
     protected removeFilterOption(filterProperty: keyof V, option: OsFilterOption): void {
-        console.log("removeFilterOption");
         const filter = this.filterDefinitions.find(f => f.property === filterProperty);
         if (!filter) {
             return;
@@ -439,7 +422,6 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
         const settingHidden = setting ? setting.shouldHideFn() : false;
         if (setting && settingHidden !== setting.currentlyHidden && update) {
             setting.currentlyHidden = settingHidden;
-            console.log("running this.updateFilteredData() from shouldHideOption line 433")
             this.updateFilteredData();
         }
         return settingHidden;
@@ -614,14 +596,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * and publishes the filtered data to the observable {@link _outputSubject}
      */
     private updateFilteredData(): void {
-    console.log("updateFilteredData ");
         let filteredData: V[] = [];
         if (this._inputData) {
-            console.log("this._inputData = true: ",this._inputData)
             if (!this.filterDefinitions || !this.filterDefinitions.length) {
                 filteredData = this._inputData;
             } else {
-                console.log("this._inputData = false ");
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
                 filteredData = this._inputData.filter(item =>
                     activeFilters.every(
