@@ -152,7 +152,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
         const storedFilter = await this.loadFilters();
-        console.log("initFilters");
+        console.log("initFilters storedFilter:", storedFilters);
         if (storedFilter && this.isOsFilter(storedFilter)) {
             this.filterDefinitions = storedFilter;
             this.activeFiltersToStack();
@@ -600,12 +600,14 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * and publishes the filtered data to the observable {@link _outputSubject}
      */
     private updateFilteredData(): void {
-    console.log("updateFilteredData ")
+    console.log("updateFilteredData ");
         let filteredData: V[] = [];
         if (this._inputData) {
+            conosle.log("this._inputData = true: ",this._inputData)
             if (!this.filterDefinitions || !this.filterDefinitions.length) {
                 filteredData = this._inputData;
             } else {
+                conosle.log("this._inputData = false ");
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
                 filteredData = this._inputData.filter(item =>
                     activeFilters.every(
