@@ -36,7 +36,7 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public type!: AgendaItemType;
     public is_hidden!: boolean;
     public is_internal!: boolean;
-    public duration!: number; // in seconds
+    public duration!: number; // in minutes
     public weight!: number;
     /**
      * Client-calculated field: The level indicates the indentation of an agenda-item.

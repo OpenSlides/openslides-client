@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CsvExportService } from 'src/app/gateways/export/csv-export.service';
+import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { OSTreeNode } from 'src/app/infrastructure/definitions/tree';
 import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
@@ -22,7 +22,7 @@ interface AgendaTreePdfEntry {
 export class AgendaItemExportService {
     constructor(
         private translate: TranslateService,
-        private csvExportService: CsvExportService,
+        private csvExportService: CsvExportForBackendService,
         private pdfExportService: MeetingPdfExportService,
         private treeService: TreeService
     ) {}
@@ -31,16 +31,16 @@ export class AgendaItemExportService {
         this.csvExportService.export(
             source,
             [
-                { label: `Title`, map: viewItem => viewItem.getTitle() },
+                { label: `title`, map: viewItem => viewItem.getTitle() },
                 {
-                    label: `Text`,
+                    label: `text`,
                     map: viewItem =>
                         viewItem.content_object?.getCSVExportText ? viewItem.content_object.getCSVExportText() : ``
                 },
-                { label: `Duration`, property: `duration` },
-                { label: `Comment`, property: `comment` },
-                { label: `Item type`, property: `verboseCsvType` },
-                { label: `Tags`, property: `tags` }
+                { label: `agenda_duration`, property: `duration` },
+                { label: `agenda_comment`, property: `comment` },
+                { label: `agenda_type`, property: `verboseCsvType` }
+                // { label: `tags`, property: `tags` }
             ],
             this.translate.instant(`Agenda`) + `.csv`
         );

@@ -24,7 +24,7 @@ export class TopicImportComponent extends BaseViaBackendImportListComponent<Topi
      */
     public textAreaForm: UntypedFormGroup;
 
-    public possibleFields = Object.values(topicHeadersAndVerboseNames);
+    public possibleFields = Object.keys(topicHeadersAndVerboseNames);
 
     public columns: ImportListHeaderDefinition[] = Object.keys(topicHeadersAndVerboseNames).map(header => ({
         property: header,

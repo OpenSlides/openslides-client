@@ -1,6 +1,6 @@
 import { Identifiable } from 'src/app/domain/interfaces';
 
-enum ImportState {
+export enum ImportState {
     Error = `error`,
     Warning = `warning`,
     New = `new`,
@@ -28,17 +28,18 @@ export type ImportViaBackendPreviewModelData =
 
 export interface ImportViaBackendPreviewRow {
     status: ImportState;
-    error: string[];
+    message: string[];
     data: {
         // property name and type must match an entry in the given `headers`
-        [property: string]: ImportViaBackendPreviewModelData[]; // if is_list is set in corresponding header column, we need here also a list
-    }[];
+        [property: string]: ImportViaBackendPreviewModelData | ImportViaBackendPreviewModelData[]; // if is_list is set in corresponding header column, we need here also a list
+    };
 }
 
 export type ImportViaBackendPreviewIndexedRow = ImportViaBackendPreviewRow & Identifiable;
 
 export interface ImportViaBackendPreviewSummary {
-    [text: string]: number; // text like "Total Number of Items", "Created", "Updated", depending the action
+    name: string; // text like "Total Number of Items", "Created", "Updated", depending the action
+    value: number;
 }
 
 export interface ImportViaBackendPreview {

@@ -12,6 +12,7 @@ import {
 import { ViaBackendImportService } from 'src/app/ui/base/import-service';
 import { ImportViaBackendPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
 import {
+    ImportViaBackendIndexedPreview,
     ImportViaBackendJSONUploadResponse,
     ImportViaBackendPreview,
     ImportViaBackendPreviewRow
@@ -90,18 +91,29 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     public get previewActionIds(): number[] {
-        return this._preview.results.map(result => result.id);
+        return this._previews.map(result => result.id);
     }
 
-    public get preview(): ImportViaBackendPreview[] {
-        return this._preview.results;
+    public get previews(): ImportViaBackendIndexedPreview[] {
+        return this._previews;
+    }
+
+    private set previews(preview: ImportViaBackendIndexedPreview[] | null) {
+        this._previews = preview;
+        this._previewsSubject.next(preview);
     }
 
     /**
      * storing the summary preview for the import, to avoid recalculating it
      * at each display change.
      */
-    private _preview: ImportViaBackendJSONUploadResponse | null = null;
+    private _previews: ImportViaBackendIndexedPreview[] | null = null;
+
+    public get previewsObservable(): Observable<ImportViaBackendIndexedPreview[] | null> {
+        return this._previewsSubject as Observable<ImportViaBackendIndexedPreview[] | null>;
+    }
+
+    private _previewsSubject = new BehaviorSubject<ImportViaBackendIndexedPreview[] | null>(null);
 
     private _modelHeadersAndVerboseNames: { [key: string]: string } = {};
 
@@ -226,7 +238,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         // this.getEveryImportHandler().forEach(handler => handler.doCleanup());
         this.setNextEntries({});
         // this._lostHeaders = { expected: {}, received: [] };
-        this._preview = null;
+        this.previews = null;
         this._currentImportPhaseSubject.next(ImportViaBackendPhase.LOADING_PREVIEW);
         // this._isImportValidSubject.next(false);
     }
@@ -256,7 +268,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * @returns true if the error is present
      */
     public hasError(entry: ImportViaBackendPreviewRow, error: string): boolean {
-        return entry.error.includes(error); // TODO: implement properly!
+        return entry.message.includes(error); // TODO: implement properly!
     }
 
     /**
@@ -365,8 +377,23 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
 
     private async propagateNextNewEntries(): Promise<void> {
         const payload = this.calculateJsonUploadPayload();
-        const rawPreview = await this.jsonUpload(payload);
-        console.log(`UPLOADED JSON =>`, rawPreview);
+        const response = (await this.jsonUpload(payload)) as ImportViaBackendJSONUploadResponse[];
+        if (!response) {
+            throw new Error(`Didn't receive preview`);
+        }
+        console.log(`UPLOADED JSON =>`, response);
+        const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = response
+            .filter(response => response.success)
+            .flatMap(response => response.results);
+        let index = 0;
+        for (let preview of previews) {
+            for (let row of preview.rows) {
+                row[`id`] = index;
+                index++;
+            }
+        }
+
+        this.previews = previews as ImportViaBackendIndexedPreview[];
         // TODO: implement rest. I.e. actually save the result!
         // const rawEntries = this._csvLines.map((line, i) => this.createRawImportModel(line, i + 1));
         // await this.onBeforeCreatingImportModels(rawEntries);

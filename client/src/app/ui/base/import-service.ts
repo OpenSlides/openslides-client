@@ -4,7 +4,10 @@ import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStep } from 'src/app/infrastructure/utils/import/import-step';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 
-import { ImportViaBackendPreviewRow } from '../modules/import-list/definitions/import-via-backend-preview';
+import {
+    ImportViaBackendIndexedPreview,
+    ImportViaBackendPreviewRow
+} from '../modules/import-list/definitions/import-via-backend-preview';
 
 interface ImportServicePreview {
     new: number;
@@ -46,6 +49,7 @@ export interface ViaBackendImportService<M extends Identifiable> {
     readonly encodings: ValueLabelCombination[];
     readonly columnSeparators: ValueLabelCombination[];
     readonly textSeparators: ValueLabelCombination[];
+    readonly previewsObservable: Observable<ImportViaBackendIndexedPreview[] | null>;
 
     columnSeparator: string;
     textSeparator: string;

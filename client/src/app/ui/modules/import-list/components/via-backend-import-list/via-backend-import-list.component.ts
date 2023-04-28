@@ -19,12 +19,14 @@ import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { firstValueFrom, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { ViaBackendImportService } from 'src/app/ui/base/import-service';
 
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 import { ImportListHeaderDefinition } from '../../definitions';
 import {
+    ImportState,
     ImportViaBackendIndexedPreview,
     ImportViaBackendPreviewHeader,
     ImportViaBackendPreviewIndexedRow,
@@ -115,18 +117,19 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     public get previewColumns(): ImportViaBackendPreviewHeader[] {
-        return this._preview[0].headers;
+        return this._previewColumns;
     }
 
     public get summary(): ImportViaBackendPreviewSummary[] {
-        return this._preview.flatMap(preview => preview.statistics);
+        return this._summary;
     }
 
     public get rows(): ImportViaBackendPreviewIndexedRow[] {
-        return this._preview.flatMap(preview => preview.rows);
+        return this._rows;
     }
-
-    private _preview: ImportViaBackendIndexedPreview[];
+    private _summary: ImportViaBackendPreviewSummary[];
+    private _rows: ImportViaBackendPreviewIndexedRow[];
+    private _previewColumns: ImportViaBackendPreviewHeader[];
 
     /**
      * Currently selected encoding. Is set and changed by the config's available
@@ -169,7 +172,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     public get hasRowErrors(): boolean {
-        return this.rows.some(row => row.error.length); // TODO: dont call some in getter!
+        return this.rows.some(row => row.status === ImportState.Error); // TODO: dont call some in getter!
     }
 
     public get requiredFields(): string[] {
@@ -193,6 +196,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         this._importer.clearPreview();
         // this._defaultColumns = this.createColumns();
         this._requiredFields = this.createRequiredFields();
+        this._importer.previewsObservable.subscribe(previews => this.fillPreviewData(previews));
     }
 
     public ngOnDestroy(): void {
@@ -232,6 +236,25 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         this._importer.clearFile();
     }
 
+    public getHeader(propertyName: string): ImportViaBackendPreviewHeader {
+        return this._previewColumns.find(header => header.property === propertyName);
+    }
+
+    public getIcon(info: ImportState): string {
+        switch (info) {
+            case ImportState.Error:
+                return `block`;
+            case ImportState.Warning:
+                return `warn`;
+            case ImportState.New:
+                return `add`;
+            case ImportState.Generated:
+                return `autorenew`;
+            default:
+                return ``;
+        }
+    }
+
     /**
      * Get the icon for the action of the item
      * @param entry a newEntry object with a current status
@@ -255,7 +278,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     public getErrorDescription(entry: ImportViaBackendPreviewIndexedRow): string {
-        return entry.error.map(error => _(this.getVerboseError(error))).join(`, `);
+        return entry.message.map(error => _(this.getVerboseError(error))).join(`, `);
     }
 
     /**
@@ -329,16 +352,33 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         await firstValueFrom(ref.afterClosed());
     }
 
+    public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
+        const ref = this.dialog.open(dialogTemplate, infoDialogSettings);
+        await firstValueFrom(ref.afterClosed());
+    }
+
+    private fillPreviewData(previews: ImportViaBackendIndexedPreview[]) {
+        if (!previews || !previews.length) {
+            this._previewColumns = undefined;
+            this._summary = undefined;
+            this._rows = undefined;
+        } else {
+            this._previewColumns = previews[0].headers;
+            this._summary = previews.flatMap(preview => preview.statistics);
+            this._rows = previews.flatMap(preview => preview.rows);
+        }
+    }
+
     private createRequiredFields(): string[] {
-        //TODO: implement!
         // const definitions: ImportViaBackendPreviewHeader[] = this.columns ?? [this.headerDefinition!];
-        // if (Array.isArray(definitions) && definitions.length > 0) {
-        //     return definitions
-        //         .filter((definition: ImportViaBackendPreviewHeader) => definition.isRequired as boolean)
-        //         .map(definition => definition.label as string);
-        // } else {
-        return [];
-        // }
+        const definitions = this.defaultColumns;
+        if (Array.isArray(definitions) && definitions.length > 0) {
+            return definitions
+                .filter(definition => definition.isRequired as boolean)
+                .map(definition => definition.property as string);
+        } else {
+            return [];
+        }
     }
 
     // @Input()

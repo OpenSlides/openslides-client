@@ -17,6 +17,7 @@
 <os-via-backend-import-list
     [importer]="importer"
     [possibleFields]="possibleFields"
+    [defaultColumns]="columns"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
     <mat-tab label="{{ 'Text import' | translate }}" osImportListFirstTab>

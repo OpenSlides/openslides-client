@@ -118,16 +118,17 @@
         }}
     </span>
     <br />
-    <div class="code foreground-warn">
-        <span *ngFor="let entry of possibleFields; let last = last">
-            {{ entry | translate }}
+    <div class="code">
+        <span class="foreground-warn" *ngFor="let entry of possibleFields; let last = last">
+            {{ entry }}
             <span *ngIf="!last">,&nbsp;</span>
         </span>
+        <mat-icon color="primary" style="cursor: pointer" inline (click)="openDialog(fieldsInfoDialog)">info</mat-icon>
     </div>
     <ul *ngIf="requiredFields.length">
         <li>
             <span *ngFor="let field of requiredFields; let last = last">
-                {{ field | translate }}
+                {{ field }}
                 <span *ngIf="!last">,&nbsp;</span>
             </span>
             <span *ngIf="requiredFields.length === 1">{{ 'is required' | translate }}.</span>
@@ -195,35 +196,51 @@
     </div>
 </ng-template>
 
-<ng-template #modelNameTemplate let-model="model">
-    {{ model.name | translate }}
-    <mat-icon class="newBadge" color="accent" inline *ngIf="model.willBeCreated">add</mat-icon>
-</ng-template>
-
 <ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
     <div *ngIf="entry[def] || type === 'boolean'" class="flex-vertical-center">
         <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
             warning
         </mat-icon>
-        <!-- <ng-container *ngIf="isArray(entry[def])">
+        <ng-container *ngIf="getHeader(def).is_list">
             <ng-container
                 *ngIf="entry[def][0]"
-                [ngTemplateOutlet]="modelNameTemplate"
-                [ngTemplateOutletContext]="{ model: entry[def][0] }"
+                [ngTemplateOutlet]="entryContentTemplate"
+                [ngTemplateOutletContext]="{ entry: entry[def][0], def: def }"
             ></ng-container>
             <ng-container *ngIf="entry[def].length > 1">
                 <div class="fake-button-no-touch">+{{ entry[def].length - 1 }}</div>
             </ng-container>
         </ng-container>
-        <ng-container *ngIf="!isArray(entry[def])">
-            <ng-container *ngIf="!isObject(entry[def]) && type !== 'boolean'">{{ entry[def] | translate }}</ng-container>
-            <mat-checkbox *ngIf="type === 'boolean'" [checked]="isTrue(entry[def])" disabled></mat-checkbox>
-            <ng-container *ngIf="isObject(entry[def])">
-                <ng-container *ngTemplateOutlet="modelNameTemplate; context: { model: entry[def] }"></ng-container>
-            </ng-container>
-            &nbsp;
-        </ng-container> -->
+        <ng-container *ngIf="!getHeader(def).is_list"
+            [ngTemplateOutlet]="entryContentTemplate"
+            [ngTemplateOutletContext]="{ entry: entry[def], def: def }"
+        ></ng-container>
     </div>
+</ng-template>
+
+<ng-template #entryContentTemplate let-entry="entry" let-def="def">
+    <ng-container
+        *ngIf="getHeader(def).type==='object'"
+    >
+        <ng-container
+            [ngTemplateOutlet]="nonObjectEntryTemplate"
+            [ngTemplateOutletContext]="{ entry: entry[def].value, type: entry[def].type}"
+        ></ng-container>
+        <mat-icon class="newBadge" color="accent" inline *ngIf="getEntryIcon(entry[def].info)">{{getEntryIcon(entry[def].info)}}</mat-icon>
+    </ng-container>
+    <ng-container
+        *ngIf="getHeader(def).type!=='object'"
+        [ngTemplateOutlet]="nonObjectEntryTemplate"
+        [ngTemplateOutletContext]="{ entry: entry[def], type: getHeader(def).type}"
+    ></ng-container>
+</ng-template>
+
+<ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
+    <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
+    <ng-container *ngIf="type === 'number'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
+    <mat-checkbox *ngIf="type === 'boolean'" [checked]="entry" disabled></mat-checkbox>
+    &nbsp;
 </ng-template>
 
 <ng-template #previewList>
@@ -314,6 +331,24 @@
     </div>
     <div mat-dialog-content>
         <ng-container *ngTemplateOutlet="previewList"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #fieldsInfoDialog>
+    <div mat-dialog-title class="action-title">
+        <h1 class="dialog-title" translate>The fields are defined as follows</h1>
+    </div>
+    <div mat-dialog-content>
+        <ul>
+            <li *ngFor="let column of defaultColumns">
+                {{ column.property }}: {{ column.label | translate }}
+            </li>
+        </ul>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>
+            {{ 'Close' | translate }}
+        </button>
     </div>
 </ng-template>
 
