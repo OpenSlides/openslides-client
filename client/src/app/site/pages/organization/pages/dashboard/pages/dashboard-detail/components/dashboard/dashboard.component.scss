@@ -3,11 +3,12 @@
 os-dashboard {
     .organization-description {
         padding-left: 104px;
-        @include tablet {
+
+        @include phone {
             padding-left: 66px;
             padding-top: 15px;
         }
-        @include phone {
+        @include tablet {
             padding-left: 66px;
             padding-top: 15px;
         }
@@ -42,6 +43,9 @@ os-dashboard {
     }
 
     .meeting-list-container {
+        display: flex;
+        margin: 8px 0 0 0;
+
         @include desktop {
             max-width: 1000px;
             margin: 20px auto;
@@ -50,8 +54,10 @@ os-dashboard {
             flex-direction: column;
             align-items: center;
         }
-        display: flex;
-        margin: 0 0px 8px 0;
+        @include tablet {
+            flex-direction: column;
+            align-items: center;
+        }
     }
 
     .meeting-icon-wrapper,
@@ -80,35 +86,67 @@ os-dashboard {
             align-items: flex-end;
             justify-content: flex-start;
             box-sizing: border-box;
-            padding: 0 0px 2px 0;
+            padding: 0;
+            margin-top: 6px;
 
             mat-icon {
-                padding: 0 4px 0 0;
+                padding: 0;
             }
         }
         @include tablet {
-            width: 40px;
+            width: calc(100% - 10px);
+            font-size: 1rem;
+            height: 35px;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: flex-start;
+            box-sizing: border-box;
+            padding: 0;
+            margin-top: 6px;
+
+            mat-icon {
+                padding: 0;
+            }
         }
     }
 
     .auto_awesome_mosaic {
         @include phone {
-            display: none;
+            padding-right: 20px; // Ensures that the wrapper has really a width of 40px
+            $size: 20px;
+            font-size: $size;
+            width: 10%;
+            height: $size;
+        }
+        @include tablet {
+            padding-right: 20px; // Ensures that the wrapper has really a width of 40px
+            $size: 20px;
+            font-size: $size;
+            width: 10%;
+            height: $size;
         }
     }
 
     .orga-information {
+        width: calc(100% - 128px);
+
         @include phone {
             width: calc(100% - 88px);
         }
-        width: calc(100% - 128px);
+        @include tablet {
+            width: calc(100% - 88px);
+        }
     }
 
     .meeting-list {
+        width: calc(100% - 80px);
+
         @include phone {
             width: calc(100% - 10px);
         }
-        width: calc(100% - 80px);
+        @include tablet {
+            width: calc(100% - 10px);
+        }
     }
 
     .meeting-list {
@@ -133,6 +171,13 @@ os-dashboard {
         .no-meetings-card {
             border-radius: 0;
             padding: 16px 20px;
+
+            @include phone {
+                padding-left: 5px;
+            }
+            @include tablet {
+                padding-left: 5px;
+            }
         }
     }
 
@@ -157,6 +202,40 @@ os-dashboard {
                 padding-right: 20px;
             }
         }
+        @include phone {
+            > a {
+                text-decoration: none;
+    
+                &:first-child {
+                    padding-left: 5px;
+                    height: 100%;
+                    width: calc(100% - 28px);
+                }
+                &:last-child {
+                    margin-right: 5px;
+                    padding-left: 0px;
+                    width: 16px;
+                    height: 75%;
+                }
+            }
+        }
+        @include tablet {
+            > a {
+                text-decoration: none;
+    
+                &:first-child {
+                    padding-left: 5px;
+                    height: 100%;
+                    width: calc(100% - 28px);
+                }
+                &:last-child {
+                    margin-right: 5px;
+                    padding-left: 0px;
+                    width: 16px;
+                    height: 75%;
+                }
+            }
+        }
 
         &--mid {
             font-size: 18px;
@@ -169,6 +248,13 @@ os-dashboard {
 
     .meeting-box-left {
         width: calc(95% - 50px);
+
+        @include phone {
+            width: 90%;
+        }
+        @include tablet {
+            width: 90%;
+        }
     }
 
     #active-meetings {
