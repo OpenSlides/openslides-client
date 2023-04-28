@@ -315,8 +315,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Update the filtered data and store the current filter options
      */
     public storeActiveFilters(): void {
-        console.log("storeActiveFilters");
+        console.log("storeActiveFilters -start- ", this.storageKey);
+        console.log("storeActiveFilters this.filterDefinitions: ", this.filterDefinitions);
         this.updateFilteredData();
+        console.log("storeActiveFilters this.filterDefinitions: ", this.filterDefinitions);
+        
         this.activeFiltersStore.save<V>(this.storageKey, this.filterDefinitions);
     }
 
