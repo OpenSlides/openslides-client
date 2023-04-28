@@ -152,7 +152,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      */
     public async initFilters(inputData: Observable<V[]>): Promise<void> {
         const storedFilter = await this.loadFilters();
-
+        console.log("initFilters");
         if (storedFilter && this.isOsFilter(storedFilter)) {
             this.filterDefinitions = storedFilter;
             this.activeFiltersToStack();
@@ -207,6 +207,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param update
      */
     public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
+        console.log("clearFilter");
         filter.options.forEach(option => {
             if (typeof option === `object` && option.isActive) {
                 this.removeFilterOption(filter.property, option);
@@ -221,6 +222,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Removes all filters currently in use from this filterService
      */
     public clearAllFilters(): void {
+    console.log("clearAllFilters");
         if (this.filterDefinitions && this.filterDefinitions.length) {
             this.filterDefinitions.forEach(filter => {
                 this.clearFilter(filter, false);
@@ -313,6 +315,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * Update the filtered data and store the current filter options
      */
     public storeActiveFilters(): void {
+        console.log("storeActiveFilters");
         this.updateFilteredData();
         this.activeFiltersStore.save<V>(this.storageKey, this.filterDefinitions);
     }
@@ -356,6 +359,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param option The option to disable
      */
     protected removeFilterOption(filterProperty: keyof V, option: OsFilterOption): void {
+        console.log("removeFilterOption");
         const filter = this.filterDefinitions.find(f => f.property === filterProperty);
         if (!filter) {
             return;
@@ -596,6 +600,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * and publishes the filtered data to the observable {@link _outputSubject}
      */
     private updateFilteredData(): void {
+    console.log("updateFilteredData ")
         let filteredData: V[] = [];
         if (this._inputData) {
             if (!this.filterDefinitions || !this.filterDefinitions.length) {
