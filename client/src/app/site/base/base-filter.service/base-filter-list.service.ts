@@ -116,6 +116,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * The currently used filters.
      */
     private set filterDefinitions(filters: OsFilter<V>[]) {
+        console.log("set filterDefinitions:", filters)
         filters.forEach(def => {
             if (!Number.isInteger(def.count)) {
                 def.count = this.getCountForFilterOptions(def);
@@ -181,23 +182,31 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * and sets/updates {@link filterDefinitions}
      */
     public async updateFilterDefinitions(): Promise<void> {
+        console.log("updateFilterDefinitions() ")
         if (!this.filterDefinitions) {
+            console.log("no def found")
             return;
         }
-
+        console.log("def found:",this.filterDefinitions)
         const nextDefinitions = this.getFilterDefinitions();
 
         let storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
-
+        console.log("storedFilters:", storedFilters)
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
+            console.log("breaking out:")
+            console.log("storedFilters", storedFilters)
+            console.log("storedFilters.length", storedFilters.length)
+            console.log("nextDefinitions", nextDefinitions)
+            console.log("nextDefinitions.length", nextDefinitions.length)
             return;
         }
 
         for (const nextDefinition of nextDefinitions) {
             nextDefinition.count = this.getCountForFilterOptions(nextDefinition, storedFilters);
         }
-
+        console.log("setting  this.filterDefinitions = nextDefinitions ?? []")
         this.filterDefinitions = nextDefinitions ?? []; // Prevent being null or undefined
+        console.log("this.filterDefinitions:", this.filterDefinitions)
         this.storeActiveFilters();
     }
 
