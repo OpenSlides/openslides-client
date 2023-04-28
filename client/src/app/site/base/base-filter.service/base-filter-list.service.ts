@@ -182,7 +182,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * and sets/updates {@link filterDefinitions}
      */
     public async updateFilterDefinitions(): Promise<void> {
-        console.log("updateFilterDefinitions() ")
+        console.log("updateFilterDefinitions() : loadfilters:",(await this.loadFilters()))
         if (!this.filterDefinitions) {
             console.log("no def found")
             return;
