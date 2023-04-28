@@ -603,11 +603,11 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
     console.log("updateFilteredData ");
         let filteredData: V[] = [];
         if (this._inputData) {
-            conosle.log("this._inputData = true: ",this._inputData)
+            console.log("this._inputData = true: ",this._inputData)
             if (!this.filterDefinitions || !this.filterDefinitions.length) {
                 filteredData = this._inputData;
             } else {
-                conosle.log("this._inputData = false ");
+                console.log("this._inputData = false ");
                 const activeFilters = this.filterDefinitions.filter(filter => !!filter.count);
                 filteredData = this._inputData.filter(item =>
                     activeFilters.every(
