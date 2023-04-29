@@ -1680,6 +1680,14 @@ export class MotionDiffService {
                 `</ins>`
         );
 
+        // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>
+        // => <del>Ebene 3 </del><ins>Ebene 3a </ins><UL><LI><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>([^<]+)((?:<(?:ul|ol|li)>)+)<\/del>(<span[^>]*os-line-number[^>]*>(?:&nbsp;|\s)<\/span>)?<ins>([^<]+)\2<\/ins>/gi,
+            (_whole: string, del: string, block: string, ln: string, ins: string): string =>
+                `<del>` + del + `</del><ins>` + ins + `</ins>` + block + ln
+        );
+
         // </p> </ins> -> </ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,

@@ -901,6 +901,32 @@ describe(`MotionDiffService`, () => {
             }
         ));
 
+        it(`handles changed text within nested lists`, inject([MotionDiffService], (service: MotionDiffService) => {
+            // Hint: line number should be moved into first element
+            const before =
+                    `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="os-line-number line-number-2" data-line-number="2" contenteditable="false">&nbsp;</span>Ebene 2` +
+                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>Ebene 3` +
+                    `<ul><li><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span>Ebene 4</li>` +
+                    `</ul></li></ul></li></ul></li></ul>`,
+                after =
+                    `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2` +
+                    `<ul><li>Ebene 3a` +
+                    `<ul><li>Ebene 4</li></ul>` +
+                    `</li></ul></li></ul></li></ul>`,
+                expected =
+                    `<ul><li><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Ebene 2` +
+                    `<ul><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>` +
+                    `<del>Ebene 3</del><ins>Ebene 3a</ins>` +
+                    `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Ebene 4</li>` +
+                    `</ul></li></ul></li></ul></li></ul>`;
+
+            const diff = service.diff(before, after);
+            expect(diff).toBe(expected);
+        }));
+
         it(`handles replaced text at the end of nested lists`, inject(
             [MotionDiffService],
             (service: MotionDiffService) => {
