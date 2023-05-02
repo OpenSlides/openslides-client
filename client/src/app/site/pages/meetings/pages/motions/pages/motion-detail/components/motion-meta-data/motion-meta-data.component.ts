@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -11,7 +11,6 @@ import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meet
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
@@ -100,6 +99,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         );
     }
 
+    public get referencingMotions(): ViewMotion[] {
+        return this._referencingMotions;
+    }
+
+    private _referencingMotions: ViewMotion[];
+
     private _forwardingAvailable: boolean = false;
 
     /**
@@ -114,8 +119,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         public perms: MotionPermissionService,
         private operator: OperatorService,
         private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService,
-        private treeService: TreeService
+        private meetingController: MeetingControllerService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
 
@@ -296,10 +300,23 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return [
             this.amendmentRepo.getViewModelListObservableFor(this.motion).subscribe(value => (this.amendments = value)),
             this.tagRepo.getViewModelListObservable().subscribe(value => (this.tags = value)),
-            this.categoryRepo
-                .getViewModelListObservable()
-                .subscribe(value => (this.categories = this.treeService.makeFlatTree(value, `weight`, `parent_id`))),
-            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value))
+            this.categoryRepo.getViewModelListObservable().subscribe(value => (this.categories = value)),
+            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
+            this.repo
+                .getViewModelObservable(this.motion.id)
+                .pipe(
+                    distinctUntilChanged((p, c) =>
+                        p.referenced_in_motion_recommendation_extensions.equals(
+                            c.referenced_in_motion_recommendation_extensions
+                        )
+                    )
+                )
+                .subscribe(
+                    value =>
+                        (this._referencingMotions = (value.referenced_in_motion_recommendation_extensions || []).sort(
+                            (a, b) => a.number.localeCompare(b.number)
+                        ))
+                )
         ];
     }
 

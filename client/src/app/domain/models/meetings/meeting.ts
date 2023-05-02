@@ -36,6 +36,7 @@ export class Settings {
     // in the committee-list-view is finished.
     public is_template!: boolean; // Unique within a committee
     public enable_anonymous!: boolean;
+    public language!: boolean;
 
     // Jitsi/Livestream settings
     public jitsi_domain!: string;
@@ -288,6 +289,7 @@ export class Meeting extends BaseModel<Meeting> {
         `start_time`,
         `end_time`,
         `imported_at`,
+        `language`,
         `jitsi_domain`,
         `jitsi_room_name`,
         `jitsi_room_password`,
@@ -414,6 +416,7 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_default_100_percent_base`,
         `poll_default_group_ids`,
         `poll_default_backend`,
+        `topic_poll_default_group_ids`,
         `projector_ids`,
         `all_projection_ids`,
         `projector_message_ids`,

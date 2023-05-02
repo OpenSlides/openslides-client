@@ -7,7 +7,6 @@ import {
     BasePollDetailComponent,
     BaseVoteData
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
-import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
@@ -47,10 +46,6 @@ export class AssignmentPollDetailComponent
 
     public get showResults(): boolean {
         return this.hasPerms() || this.poll.isPublished;
-    }
-
-    public get chartData(): ChartData {
-        return this.pollService.generateChartData(this.poll);
     }
 
     public constructor(

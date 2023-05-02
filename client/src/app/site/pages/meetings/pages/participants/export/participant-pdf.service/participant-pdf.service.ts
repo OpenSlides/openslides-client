@@ -213,11 +213,11 @@ export class ParticipantPdfService {
         const users_pdf_welcometext = this.meetingSettingsService.instant(`users_pdf_welcometext`)!;
         return [
             {
-                text: this.translate.instant(users_pdf_welcometitle),
+                text: users_pdf_welcometitle,
                 style: `userDataHeading`
             },
             {
-                text: this.translate.instant(users_pdf_welcometext),
+                text: users_pdf_welcometext,
                 style: `userDataTopic`
             }
         ];
@@ -267,7 +267,7 @@ export class ParticipantPdfService {
         const result: any[] = [];
         let counter = 1;
         users.forEach(user => {
-            const groupList = user.groups().map(grp => this.translate.instant(grp.name));
+            const groupList = user.groups().map(grp => grp.name);
             result.push([{ text: `` + counter }, { text: user.full_name }, { text: groupList.join(`, `) }]);
             counter += 1;
         });

@@ -250,6 +250,8 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     public onChipRemove(itemId: Id): void {
         this.addOrRemoveId(itemId);
+
+        this.matSelect.options.find(option => option.value === itemId)?.deselect(); // To ensure that the checkbox is updated in the view
     }
 
     private addOrRemoveId(id: Id): void {

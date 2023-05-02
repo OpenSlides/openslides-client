@@ -33,7 +33,7 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
     public getNameForIds(...ids: number[]): string {
         return this.getSortedViewModelList()
             .filter(group => ids.includes(group.id))
-            .map(group => this.translate.instant(group.getTitle()))
+            .map(group => group.getTitle())
             .join(`, `);
     }
 

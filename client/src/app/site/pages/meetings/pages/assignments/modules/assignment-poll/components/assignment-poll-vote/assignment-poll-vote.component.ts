@@ -208,6 +208,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
+        const value = this.voteRequestData[user.id].value;
         if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
             this.raiseError(this.translate.instant(`There is an error in your vote.`));
             return;
@@ -226,7 +227,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             this.cd.markForCheck();
 
             const votePayload = {
-                value: this.voteRequestData[user.id].value,
+                value: value,
                 user_id: user.id
             };
 

@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
@@ -28,9 +28,7 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
     private dialogRef: MatDialogRef<any> | null = null;
 
     public get categoriesObservable(): Observable<ViewMotionCategory[]> {
-        return this.repo
-            .getViewModelListObservable()
-            .pipe(map(agendaItems => this.treeService.makeFlatTree(agendaItems, `weight`, `parent_id`)));
+        return this.repo.getViewModelListObservable();
     }
 
     /**

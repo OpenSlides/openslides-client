@@ -15,6 +15,8 @@ export interface SubscribeToConfig {
     isDelayed?: boolean;
 }
 
+export const SUBSCRIPTION_SUFFIX = `:subscription`;
+
 @Injectable({
     providedIn: `root`
 })
@@ -90,7 +92,7 @@ export class ModelRequestService {
             const request = await this.modelRequestBuilder.build(modelRequest);
             const modelSubscription = await this.autoupdateService.subscribe(
                 request,
-                `${subscriptionName}:subscription`
+                `${subscriptionName}${SUBSCRIPTION_SUFFIX}`
             );
             this._modelSubscriptionMap[subscriptionName] = modelSubscription;
             if (hideWhen) {

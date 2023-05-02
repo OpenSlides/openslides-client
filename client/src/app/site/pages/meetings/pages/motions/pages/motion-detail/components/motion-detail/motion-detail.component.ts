@@ -12,8 +12,6 @@ import {
 } from '../../../../motions.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
-const MOTION_DETAIL_ADDITIONAL_SUBSCRIPTION = `motion_additional_detail`;
-
 @Component({
     selector: `os-motion-detail`,
     templateUrl: `./motion-detail.component.html`,

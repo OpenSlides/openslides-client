@@ -26,6 +26,7 @@ import {
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
+import { SUBSCRIPTION_SUFFIX } from '../model-request.service';
 
 @Injectable({
     providedIn: `root`
@@ -37,6 +38,7 @@ export class AutoupdateCommunicationService {
     private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
     private unhealtyTimeout: any;
     private tryReconnectOpen: boolean = false;
+    private subscriptionsWithData = new Set<string>();
 
     constructor(
         private authTokenService: AuthTokenService,
@@ -177,6 +179,10 @@ export class AutoupdateCommunicationService {
         return this.autoupdateDataObservable;
     }
 
+    public hasReceivedDataForSubscription(description: string): boolean {
+        return this.subscriptionsWithData.has(description);
+    }
+
     private registerConnectionStatusListener(): void {
         addEventListener(`offline`, () => {
             this.sharedWorker.sendMessage(`autoupdate`, {
@@ -195,6 +201,9 @@ export class AutoupdateCommunicationService {
 
     private handleReceiveData(data: AutoupdateReceiveData, dataSubscription: Subscriber<any>): void {
         dataSubscription.next(data.content);
+        if (data.content?.description) {
+            this.subscriptionsWithData.add(data.content.description.replace(SUBSCRIPTION_SUFFIX, ``));
+        }
         if (this.tryReconnectOpen) {
             this.matSnackBar.dismiss();
             this.tryReconnectOpen = false;

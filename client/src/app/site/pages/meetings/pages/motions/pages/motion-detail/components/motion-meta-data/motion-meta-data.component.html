@@ -36,8 +36,7 @@
     </button>
     <p *ngIf="showSupporters" class="supporters">
         <span *ngFor="let supporter of motion.supporters; let last = last">
-            {{ supporter.full_name }}
-            <span *ngIf="!last">,</span>
+            {{ supporter.full_name }}<span *ngIf="!last">,</span>
         </span>
     </p>
 </div>
@@ -57,14 +56,14 @@
         <span class="trigger-menu" *ngIf="motion.state">
             <ng-container *ngIf="perms.isAllowed('change_state', motion)">
                 <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
-                    {{ state.name | translate }}
+                    {{ state.name }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <div>
                     <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
                     <button *ngFor="let state of motion.state.previous_states" mat-menu-item (click)="setState(state.id)">
                         <mat-icon>arrow_back</mat-icon>
-                        {{ state.name | translate }}
+                        {{ state.name }}
                         <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                     </button>
                     <button mat-menu-item (click)="resetState()">
@@ -75,7 +74,7 @@
             </ng-container>
             <ng-container *ngIf="!perms.isAllowed('change_state', motion) && !!motion.state.submitter_withdraw_state">
                 <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
-                    {{ motion.state.submitter_withdraw_state.name | translate }}
+                    {{ motion.state.submitter_withdraw_state.name }}
                 </button>
             </ng-container>
         </span>
@@ -121,7 +120,7 @@
                 (click)="setRecommendation(recommendation.id)"
             >
                 <mat-icon *ngIf="motion.recommendation_id === recommendation.id">check</mat-icon>
-                {{ recommendation.recommendation_label | translate }}
+                {{ recommendation.recommendation_label }}
                 <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
             </button>
             <mat-divider></mat-divider>
@@ -140,9 +139,9 @@
 <!-- recommendation referencing motions -->
 <div *ngIf="showReferringMotions && motion?.referenced_in_motion_recommendation_extensions?.length > 0">
     <h4>{{ 'Referring motions' | translate }}</h4>
-    <span *ngFor="let motion of motion.referenced_in_motion_recommendation_extensions; let last = last">
+    <span *ngFor="let motion of referencingMotions; let last = last">
         <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
-        <span *ngIf="!last">&nbsp;·&nbsp;</span>
+        <span *ngIf="!last" class="referencelist">&nbsp;·&nbsp;</span>
     </span>
 </div>
 

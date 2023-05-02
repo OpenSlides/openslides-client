@@ -564,7 +564,7 @@ export class MotionPdfService {
     private createPreamble(): object {
         const motions_preamble = this.meetingSettingsService.instant(`motions_preamble`) as string;
         return {
-            text: `${this.translate.instant(motions_preamble)}`,
+            text: `${motions_preamble}`,
             margin: [0, 10, 0, 10]
         };
     }
