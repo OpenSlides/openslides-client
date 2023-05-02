@@ -200,7 +200,7 @@
             [ngTemplateOutlet]="nonObjectEntryTemplate"
             [ngTemplateOutletContext]="{ entry: entry.value, type: entry.type}"
         ></ng-container>
-        <mat-icon class="newBadge" color="accent" inline *ngIf="getIcon(entry.info)">{{getIcon(entry.info)}}</mat-icon>
+        <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry.info)">{{getActionIcon(entry.info)}}</mat-icon>
     </ng-container>
     <ng-container
         *ngIf="getHeader(def).type!=='object'"

@@ -226,22 +226,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         return this._previewColumns.find(header => header.property === propertyName);
     }
 
-    public getIcon(info: ImportState): string {
-        console.log(`ICON`, info);
-        switch (info) {
-            case ImportState.Error:
-                return `block`;
-            case ImportState.Warning:
-                return `warning`;
-            case ImportState.New:
-                return `add`;
-            case ImportState.Generated:
-                return `autorenew`;
-            default:
-                return ``;
-        }
-    }
-
     /**
      * Get the icon for the action of the item
      * @param entry a newEntry object with a current status
