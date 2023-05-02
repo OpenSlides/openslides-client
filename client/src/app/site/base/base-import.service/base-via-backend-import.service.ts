@@ -138,6 +138,10 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      */
     private _reader = new FileReader();
 
+    public get currentImportPhaseObservable(): Observable<ImportViaBackendPhase> {
+        return this._currentImportPhaseSubject as Observable<ImportViaBackendPhase>;
+    }
+
     private _currentImportPhaseSubject = new BehaviorSubject<ImportViaBackendPhase>(
         ImportViaBackendPhase.LOADING_PREVIEW
     );
@@ -297,10 +301,14 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
 
         // await this.doAfterImport();
 
-        // TODO: implement!
+        const results = await this.import(this.previewActionIds);
 
         this._currentImportPhaseSubject.next(ImportViaBackendPhase.FINISHED);
         this.updatePreview();
+
+        if (Array.isArray(results) && results.find(result => result)) {
+            throw new Error(`Import failed unexpectedly, please try uploading the preview again`);
+        }
     }
 
     private setNextEntries(nextEntries: { [importTrackId: number]: ImportViaBackendPreviewRow }): void {
@@ -383,22 +391,27 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     private async propagateNextNewEntries(): Promise<void> {
-        const payload = this.calculateJsonUploadPayload();
-        const response = (await this.jsonUpload(payload)) as ImportViaBackendPreview[];
-        if (!response) {
-            throw new Error(`Didn't receive preview`);
-        }
-        console.log(`UPLOADED JSON =>`, response);
-        const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = response;
-        let index = 1;
-        for (let preview of previews) {
-            for (let row of preview.rows) {
-                row[`id`] = index;
-                index++;
+        try {
+            const payload = this.calculateJsonUploadPayload();
+            const response = (await this.jsonUpload(payload)) as ImportViaBackendPreview[];
+            if (!response) {
+                throw new Error(`Didn't receive preview`);
             }
-        }
+            console.log(`UPLOADED JSON =>`, response);
+            const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = response;
+            let index = 1;
+            for (let preview of previews) {
+                for (let row of preview.rows) {
+                    row[`id`] = index;
+                    index++;
+                }
+            }
 
-        this.previews = previews as ImportViaBackendIndexedPreview[];
+            this.previews = previews as ImportViaBackendIndexedPreview[];
+            this._currentImportPhaseSubject.next(ImportViaBackendPhase.AWAITING_CONFIRM);
+        } catch (e) {
+            this._currentImportPhaseSubject.next(ImportViaBackendPhase.ERROR);
+        }
         // const rawEntries = this._csvLines.map((line, i) => this.createRawImportModel(line, i + 1));
         // await this.onBeforeCreatingImportModels(rawEntries);
         // for (let entry of rawEntries) {
@@ -418,6 +431,8 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]>;
+
+    protected abstract import(actionWorkerIds: number[]): Promise<void | (ImportViaBackendPreview | void)[]>;
 
     protected calculateJsonUploadPayload(): { [key: string]: any } {
         return {

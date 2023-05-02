@@ -11,6 +11,13 @@
         <button *ngIf="canImport" mat-button (click)="doImport()">
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
+        <mat-icon *ngIf="finishedSuccessfully">
+            done
+        </mat-icon>
+        <mat-icon *ngIf="finishedWithErrors">
+            done
+        </mat-icon>
+        <os-spinner *ngIf="isImporting"></os-spinner>
     </div>
 </os-head-bar>
 

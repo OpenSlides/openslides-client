@@ -47,6 +47,10 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
         return this.createAction<ImportViaBackendPreview>(TopicAction.JSON_UPLOAD, payload);
     }
 
+    public import(payload: { id: number; import: boolean }[]): Action<ImportViaBackendPreview | void> {
+        return this.createAction<ImportViaBackendPreview | void>(TopicAction.IMPORT, payload);
+    }
+
     public getTitle = (topic: ViewTopic) => topic.title;
 
     public override getListTitle = (topic: ViewTopic) => {

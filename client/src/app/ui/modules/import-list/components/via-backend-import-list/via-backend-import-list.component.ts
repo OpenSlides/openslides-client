@@ -41,7 +41,8 @@ export enum ImportViaBackendPhase {
     AWAITING_CONFIRM,
     IMPORTING,
     FINISHED,
-    ERROR
+    ERROR,
+    FINISHED_WITH_ERRORS
 }
 
 @Component({
