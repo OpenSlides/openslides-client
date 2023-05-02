@@ -8,7 +8,7 @@ import { BaseViaBackendImportService } from 'src/app/site/base/base-import.servi
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { ImportViaBackendJSONUploadResponse } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
+import { ImportViaBackendPreview } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
 
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicExportService } from '../topic-export.service';
@@ -32,6 +32,14 @@ export class TopicImportService extends BaseViaBackendImportService<Topic> {
     };
 
     public override readonly isMeetingImport = true;
+
+    public override readonly verboseSummaryTitleMap: { [title: string]: string } = {
+        total: _(`Total topics`),
+        created: _(`Topics created`),
+        updated: _(`Topics updated`),
+        omitted: _(`Topics skipped`),
+        warning: _(`Topics with warnings (will be skipped)`)
+    };
 
     /**
      * Constructor. Calls the abstract class and sets the expected header
@@ -65,7 +73,7 @@ export class TopicImportService extends BaseViaBackendImportService<Topic> {
         return payload;
     }
 
-    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendJSONUploadResponse[]> {
+    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]> {
         return await this.repo.jsonUpload(payload).resolve();
     }
 

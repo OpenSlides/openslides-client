@@ -13,7 +13,6 @@ import { ViaBackendImportService } from 'src/app/ui/base/import-service';
 import { ImportViaBackendPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
 import {
     ImportViaBackendIndexedPreview,
-    ImportViaBackendJSONUploadResponse,
     ImportViaBackendPreview,
     ImportViaBackendPreviewRow
 } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
@@ -123,6 +122,11 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     protected readonly isMeetingImport: boolean = false;
 
     /**
+     * Overwrite in subclass to define verbose titles for the ones sent by the backend
+     */
+    protected readonly verboseSummaryTitleMap: { [title: string]: string } = {};
+
+    /**
      * The last parsed file object (may be reparsed with new encoding, thus kept in memory)
      */
     private _rawFile: File | null = null;
@@ -176,7 +180,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         }
         const result = this._papa.parse(file, papaConfig);
         this._csvLines = result.data;
-        console.log(`NEW CSV LINES`, result, this._csvLines);
         this.parseCsvLines();
     }
 
@@ -260,6 +263,11 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         return this.errorList[error] || error;
     }
 
+    public getVerboseSummaryPointTitle(title: string): string {
+        const verbose = (this.verboseSummaryTitleMap[title] ?? title).trim();
+        return verbose.charAt(0).toUpperCase() + verbose.slice(1);
+    }
+
     /**
      * Queries if a given error is present in the given entry
      *
@@ -268,7 +276,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * @returns true if the error is present
      */
     public hasError(entry: ImportViaBackendPreviewRow, error: string): boolean {
-        return entry.message.includes(error); // TODO: implement properly!
+        return entry.message?.includes(error); // TODO: implement properly!
     }
 
     /**
@@ -304,7 +312,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     private parseCsvLines(): void {
         this._receivedHeaders = Object.keys(this._csvLines[0]);
         const isValid = this.checkHeaderLength();
-        // this.checkReceivedHeaders();
         if (!isValid) {
             return;
         }
@@ -377,15 +384,13 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
 
     private async propagateNextNewEntries(): Promise<void> {
         const payload = this.calculateJsonUploadPayload();
-        const response = (await this.jsonUpload(payload)) as ImportViaBackendJSONUploadResponse[];
+        const response = (await this.jsonUpload(payload)) as ImportViaBackendPreview[];
         if (!response) {
             throw new Error(`Didn't receive preview`);
         }
         console.log(`UPLOADED JSON =>`, response);
-        const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = response
-            .filter(response => response.success)
-            .flatMap(response => response.results);
-        let index = 0;
+        const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = response;
+        let index = 1;
         for (let preview of previews) {
             for (let row of preview.rows) {
                 row[`id`] = index;
@@ -394,7 +399,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         }
 
         this.previews = previews as ImportViaBackendIndexedPreview[];
-        // TODO: implement rest. I.e. actually save the result!
         // const rawEntries = this._csvLines.map((line, i) => this.createRawImportModel(line, i + 1));
         // await this.onBeforeCreatingImportModels(rawEntries);
         // for (let entry of rawEntries) {
@@ -413,9 +417,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         // this.checkImportValidness();
     }
 
-    protected abstract jsonUpload(payload: {
-        [key: string]: any;
-    }): Promise<void | ImportViaBackendJSONUploadResponse[]>;
+    protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]>;
 
     protected calculateJsonUploadPayload(): { [key: string]: any } {
         return {

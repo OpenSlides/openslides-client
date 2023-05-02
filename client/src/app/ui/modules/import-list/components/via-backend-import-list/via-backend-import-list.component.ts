@@ -16,8 +16,8 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { firstValueFrom, Observable, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
@@ -78,8 +78,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     @Input()
     public set importer(importer: ViaBackendImportService<M>) {
         this._importer = importer;
-        // this.initTable();
-        // importer.errorEvent.subscribe(this.raiseError);
     }
 
     public get importer(): ViaBackendImportService<M> {
@@ -99,10 +97,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
 
     public readonly Phase = ImportViaBackendPhase;
 
-    /**
-     * Switch that turns true if a file has been selected in the input
-     */
-    public hasFile!: Observable<boolean>;
     public get rawFileObservable(): Observable<File | null> {
         return this._importer?.rawFileObservable || of(null);
     }
@@ -143,14 +137,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     public shown: 'all' | 'error' | 'noerror' = `all`;
 
     /**
-     * @returns the amount of total item successfully parsed
-     */
-    public get totalCount(): number | null {
-        return null; // TODO: implement!
-        // return this._importer && this.hasFile ? this._importer.summary.total : null;
-    }
-
-    /**
      * @returns the encodings available and their labels
      */
     public get encodings(): ValueLabelCombination[] {
@@ -187,16 +173,16 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     private _requiredFields: string[] = [];
     private _defaultColumns: ImportListHeaderDefinition[] = [];
 
-    public constructor(private dialog: MatDialog) {}
+    public constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
      */
     public ngOnInit(): void {
         this._importer.clearPreview();
-        // this._defaultColumns = this.createColumns();
         this._requiredFields = this.createRequiredFields();
         this._importer.previewsObservable.subscribe(previews => this.fillPreviewData(previews));
+        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
     }
 
     public ngOnDestroy(): void {
@@ -228,7 +214,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      *
      */
     public async doImport(): Promise<void> {
-        this._importer.doImport(); //.then(() => this.setFilter());
+        this._importer.doImport();
     }
 
     public removeSelectedFile(): void {
@@ -241,11 +227,12 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     public getIcon(info: ImportState): string {
+        console.log(`ICON`, info);
         switch (info) {
             case ImportState.Error:
                 return `block`;
             case ImportState.Warning:
-                return `warn`;
+                return `warning`;
             case ImportState.New:
                 return `add`;
             case ImportState.Generated:
@@ -262,23 +249,34 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      */
     public getActionIcon(entry: ImportViaBackendPreviewIndexedRow): string {
         switch (entry.status) {
-            case `error`: // no import possible
+            case ImportState.Error: // no import possible
                 return `block`;
-            case `warning`:
-                return `warn`;
-            case `new`:
+            case ImportState.Warning:
+                return `warning`;
+            case ImportState.New:
                 return `add`;
-            case `done`: // item has been imported
+            case ImportState.Done: // item has been imported
                 return `done`;
-            case `generated`:
-                return `arrow`;
+            case ImportState.Generated:
+                return `autorenew`;
             default:
                 return `block`; // fallback: Error
         }
     }
 
-    public getErrorDescription(entry: ImportViaBackendPreviewIndexedRow): string {
-        return entry.message.map(error => _(this.getVerboseError(error))).join(`, `);
+    public getRowTooltip(row: ImportViaBackendPreviewIndexedRow): string {
+        switch (row.status) {
+            case ImportState.Error: // no import possible
+                return this.getErrorDescription(row);
+            case ImportState.Warning:
+                return this.getErrorDescription(row);
+            case ImportState.New:
+                return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
+            case ImportState.Done: // item has been imported
+                return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`has been imported`);
+            default:
+                return undefined;
+        }
     }
 
     /**
@@ -357,6 +355,14 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         await firstValueFrom(ref.afterClosed());
     }
 
+    public getSummaryPointTitle(title: string): string {
+        return this._importer.getVerboseSummaryPointTitle(title);
+    }
+
+    private getErrorDescription(entry: ImportViaBackendPreviewIndexedRow): string {
+        return entry.message?.map(error => this.translate.instant(this.getVerboseError(error))).join(`,\n `);
+    }
+
     private fillPreviewData(previews: ImportViaBackendIndexedPreview[]) {
         if (!previews || !previews.length) {
             this._previewColumns = undefined;
@@ -364,13 +370,16 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
             this._rows = undefined;
         } else {
             this._previewColumns = previews[0].headers;
-            this._summary = previews.flatMap(preview => preview.statistics);
-            this._rows = previews.flatMap(preview => preview.rows);
+            this._summary = previews.flatMap(preview => preview.statistics).filter(point => point.value);
+            this._rows = this.calculateRows(previews);
         }
     }
 
+    private calculateRows(previews: ImportViaBackendIndexedPreview[]): ImportViaBackendPreviewIndexedRow[] {
+        return previews?.flatMap(preview => preview.rows);
+    }
+
     private createRequiredFields(): string[] {
-        // const definitions: ImportViaBackendPreviewHeader[] = this.columns ?? [this.headerDefinition!];
         const definitions = this.defaultColumns;
         if (Array.isArray(definitions) && definitions.length > 0) {
             return definitions

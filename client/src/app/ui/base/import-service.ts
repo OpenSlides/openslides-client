@@ -63,4 +63,5 @@ export interface ViaBackendImportService<M extends Identifiable> {
     onSelectFile(event: any): void;
     doImport(): Promise<void>;
     downloadCsvExample(): void;
+    getVerboseSummaryPointTitle(title: string): string;
 }

@@ -18,6 +18,7 @@
     [importer]="importer"
     [possibleFields]="possibleFields"
     [defaultColumns]="columns"
+    modelName="Topic"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
     <mat-tab label="{{ 'Text import' | translate }}" osImportListFirstTab>
@@ -48,12 +49,12 @@
         </ng-template>
     </mat-tab>
 
-    <div *osScrollingTableCell="'agenda_duration'; row as entry; config: { width: 150 }">
+    <!-- <div *osScrollingTableCell="'agenda_duration'; row as entry; config: { width: 150 }">
         <div *osScrollingTableCellLabel>{{ 'Duration' | translate }}</div>
         {{ getDuration(entry.newEntry.agenda_duration) }}
     </div>
     <div *osScrollingTableCell="'agenda_type'; row as entry; config: { width: 150 }">
         <div *osScrollingTableCellLabel>{{ 'Internal item' | translate }}</div>
         {{ getTypeString(entry.newEntry.agenda_type) | translate }}
-    </div>
+    </div> -->
 </os-via-backend-import-list>

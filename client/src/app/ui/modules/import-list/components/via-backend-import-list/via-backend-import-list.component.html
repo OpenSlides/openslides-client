@@ -27,7 +27,7 @@
 </mat-card>
 
 <!-- preview table -->
-<ng-container *ngIf="hasFile | async">
+<ng-container *ngIf="rawFileObservable | async">
     <mat-card class="os-form-card spacer-bottom-60">
         <div class="action-title">
             <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
@@ -39,41 +39,15 @@
                 <mat-icon>fullscreen</mat-icon>
             </button>
         </div>
-        <div>
-            <div>
-                <ng-container *ngFor="let point of summary | keyvalue">
-                    <!-- <div
-                        class="import-list-summary flex-vertical-center"
-                        [ngClass]="{
-                            'green-text': step.phase === Phase.FINISHED,
-                            'red-warning-text': step.phase === Phase.ERROR
-                        }"
-                    > -->
-                    <div
-                        class="import-list-summary flex-vertical-center"
-                    >
-                        <!-- <ng-container *ngTemplateOutlet="phaseIcon; context: { phase: step.phase }"></ng-container> -->
-                        <ng-container>
-                            &nbsp;
-                            <span>{{ 0 }} {{ 'of' | translate }}</span>
-                        </ng-container>
-                        &nbsp;
-                        <span>
-                            {{ point.value }}
-                        </span>
-                        &nbsp;
-                        <span>{{ point.key | translate }}</span>
-                    </div>
-                </ng-container>
-            </div>
-            <!-- errors/duplicates -->
-            <!-- <div *ngIf="nonImportableCount" class="red-warning-text flex-vertical-center">
-                <mat-icon class="icon-16 margin-left-12 margin-right-12">warning</mat-icon>
-                <span>&nbsp;{{ nonImportableCount }}&nbsp;</span>
-                <span>{{ 'entries will be ommitted.' | translate }}</span>
-            </div> -->
-        </div>
-        <div class="margin-top-12 margin-bottom-12" *ngIf="rows.length">
+        <table>
+            <tr
+                *ngFor="let point of summary"
+            >
+                <td>{{ getSummaryPointTitle(point.name) | translate }}:</td>
+                <td>&nbsp;{{ point.value }}</td>
+            </tr>
+        </table>
+        <div class="margin-top-12 margin-bottom-12" *ngIf="rows?.length">
             <span>{{ 'After verifiy the preview click on "import" please (see top right).' | translate }}</span>
         </div>
         <!-- <div
@@ -224,14 +198,14 @@
     >
         <ng-container
             [ngTemplateOutlet]="nonObjectEntryTemplate"
-            [ngTemplateOutletContext]="{ entry: entry[def].value, type: entry[def].type}"
+            [ngTemplateOutletContext]="{ entry: entry.value, type: entry.type}"
         ></ng-container>
-        <mat-icon class="newBadge" color="accent" inline *ngIf="getIcon(entry[def].info)">{{getIcon(entry[def].info)}}</mat-icon>
+        <mat-icon class="newBadge" color="accent" inline *ngIf="getIcon(entry.info)">{{getIcon(entry.info)}}</mat-icon>
     </ng-container>
     <ng-container
         *ngIf="getHeader(def).type!=='object'"
         [ngTemplateOutlet]="nonObjectEntryTemplate"
-        [ngTemplateOutletContext]="{ entry: entry[def], type: getHeader(def).type}"
+        [ngTemplateOutletContext]="{ entry, type: getHeader(def).type}"
     ></ng-container>
 </ng-template>
 
@@ -245,6 +219,7 @@
 
 <ng-template #previewList>
     <os-scrolling-table
+        *ngIf="rows"
         style="height: 500px"
         class="import-list-preview-table"
         tableHeight="500px"
@@ -257,47 +232,11 @@
             *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
             class="flex-vertical-center"
         >
-            <ng-container [ngSwitch]="row.status">
-                <ng-container *ngSwitchCase="'error'">
-                    <mat-icon class="red-warning-text" matTooltip="{{ getErrorDescription(row) }}">
-                        {{ getActionIcon(row) }}
-                    </mat-icon>
-                    <mat-icon
-                        color="warn"
-                        *ngIf="hasError(row, 'ParsingErrors')"
-                        matTooltip="{{ getVerboseError('ParsingErrors') | translate }}"
-                    >
-                        warning
-                    </mat-icon>
-                </ng-container>
-                <ng-container *ngSwitchCase="'warning'">
-                    <mat-icon class="red-warning-text" matTooltip="{{ getErrorDescription(row) }}">
-                        {{ getActionIcon(row) }}
-                    </mat-icon>
-                    <mat-icon
-                        color="warn"
-                        *ngIf="hasError(row, 'ParsingErrors')"
-                        matTooltip="{{ getVerboseError('ParsingErrors') | translate }}"
-                    >
-                        warning
-                    </mat-icon>
-                </ng-container>
-                <ng-container *ngSwitchCase="'done'">
-                    <mat-icon matTooltip="{{ (modelName | translate) + ' ' + ('has been imported' | translate) }}">
-                        {{ getActionIcon(row) }}
-                    </mat-icon>
-                </ng-container>
-                <ng-container *ngSwitchCase="'new'">
-                    <mat-icon matTooltip="{{ (modelName | translate) + ' ' + ('will be imported' | translate) }}">
-                        {{ getActionIcon(row) }}
-                    </mat-icon>
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                    <ng-container *ngTemplateOutlet="importListStateTemplate; context: { row: row }"></ng-container>
-                </ng-container>
-            </ng-container>
+            <mat-icon [ngClass]="{'red-warning-text': row.status === 'error', 'warn': row.status === 'warning'}" matTooltip="{{ getRowTooltip(row) }}">
+                {{ getActionIcon(row) }}
+            </mat-icon>
         </div>
-        <div *osScrollingTableCell="'importTrackId'; value as value; config: { width: 25, position: START_POSITION }">
+        <div *osScrollingTableCell="'id'; value as value; config: { width: 25, position: START_POSITION }">
             <div *osScrollingTableCellLabel>#</div>
             {{ value }}
         </div>
@@ -339,11 +278,14 @@
         <h1 class="dialog-title" translate>The fields are defined as follows</h1>
     </div>
     <div mat-dialog-content>
-        <ul>
-            <li *ngFor="let column of defaultColumns">
-                {{ column.property }}: {{ column.label | translate }}
-            </li>
-        </ul>
+        <table>
+            <tr
+                *ngFor="let column of defaultColumns"
+            >
+                <td>{{ column.property }}:</td>
+                <td>&nbsp;{{ column.label | translate }}</td>
+            </tr>
+        </table>
     </div>
     <div mat-dialog-actions>
         <button mat-button mat-dialog-close>
