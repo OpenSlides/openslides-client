@@ -85,6 +85,7 @@ export async function createMeeting(
     const meetingData = {
         committee_id: id,
         name,
+        language: `en`,
         admin_ids
     };
 
