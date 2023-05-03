@@ -89,7 +89,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     private _importer!: ViaBackendImportService<M>;
 
     /**
-     * Defines all necessary and optional fields, that a .csv-file has to contain.
+     * Defines all necessary and optional fields, that a .csv-file can contain.
      */
     @Input()
     public possibleFields: string[] = [];
@@ -154,11 +154,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      * encodings and user mat-select input
      */
     public selectedEncoding = `utf-8`;
-
-    /**
-     * indicator on which elements to display
-     */
-    public shown: 'all' | 'error' | 'noerror' = `all`;
 
     /**
      * @returns the encodings available and their labels
@@ -246,7 +241,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
 
     /**
      * Triggers the importer's import
-     *
      */
     public async doImport(): Promise<void> {
         this._importer.doImport();
@@ -265,7 +259,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
 
     /**
      * Get the icon for the action of the item
-     * @param entry a newEntry object with a current status
+     * @param entry a row or an entry with a current status
      * @eturn the icon for the action of the item
      */
     public getActionIcon(entry: ImportViaBackendPreviewIndexedRow): string {
@@ -312,8 +306,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
 
     /**
      * Trigger for the column separator selection.
-     *
-     * @param event
      */
     public selectColSep(event: MatSelectChange): void {
         this._importer.columnSeparator = event.value;
@@ -322,8 +314,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
 
     /**
      * Trigger for the column separator selection
-     *
-     * @param event
      */
     public selectTextSep(event: MatSelectChange): void {
         this._importer.textSeparator = event.value;
@@ -340,8 +330,6 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
 
     /**
      * Trigger for the encoding selection
-     *
-     * @param event
      */
     public selectEncoding(event: MatSelectChange): void {
         this._importer.encoding = event.value;
@@ -359,9 +347,9 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     /**
-     * Checks if an error is present in a new entry
+     * Checks if an error is present in a row
      *
-     * @param row the NewEntry
+     * @param row the row
      * @param error An error as defined as key of {@link errorList}
      * @returns true if the error is present in the entry described in the row
      */

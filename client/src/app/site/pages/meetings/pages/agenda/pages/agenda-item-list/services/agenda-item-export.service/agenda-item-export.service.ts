@@ -40,7 +40,6 @@ export class AgendaItemExportService {
                 { label: `agenda_duration`, property: `duration` },
                 { label: `agenda_comment`, property: `comment` },
                 { label: `agenda_type`, property: `verboseCsvType` }
-                // { label: `tags`, property: `tags` }
             ],
             this.translate.instant(`Agenda`) + `.csv`
         );

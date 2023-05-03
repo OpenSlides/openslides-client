@@ -4,11 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
-import {
-    FileReaderProgressEvent,
-    ValueLabelCombination,
-    ViaBackendImportConfig
-} from 'src/app/infrastructure/utils/import/import-utils';
+import { FileReaderProgressEvent, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { ViaBackendImportService } from 'src/app/ui/base/import-service';
 import { ImportViaBackendPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
 import {
@@ -25,18 +21,6 @@ import { ImportServiceCollectorService } from '../../services/import-service-col
 export abstract class BaseViaBackendImportService<MainModel extends Identifiable>
     implements ViaBackendImportService<MainModel>
 {
-    public chunkSize = 100;
-
-    /**
-     * List of possible errors and their verbose explanation
-     */
-    public errorList: { [errorKey: string]: string } = {};
-
-    /**
-     * The headers expected in the CSV matching import properties (in order)
-     */
-    public expectedHeaders: string[] = [];
-
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
@@ -92,33 +76,25 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     public get previewActionIds(): number[] {
-        return this._previews?.map(result => result.id) ?? [];
+        return this._previewActionIds;
     }
 
     public get previewHasRowErrors(): boolean {
-        return this.previews?.some(preview => preview.rows.some(row => row.status === ImportState.Error)) || false;
+        return this._previewHasRowErrors;
     }
-
-    public get previews(): ImportViaBackendIndexedPreview[] {
-        return this._previews;
-    }
-
-    private set previews(preview: ImportViaBackendIndexedPreview[] | null) {
-        this._previews = preview;
-        this._previewsSubject.next(preview);
-    }
-
-    /**
-     * storing the summary preview for the import, to avoid recalculating it
-     * at each display change.
-     */
-    private _previews: ImportViaBackendIndexedPreview[] | null = null;
 
     public get previewsObservable(): Observable<ImportViaBackendIndexedPreview[] | null> {
         return this._previewsSubject as Observable<ImportViaBackendIndexedPreview[] | null>;
     }
 
-    private _previewsSubject = new BehaviorSubject<ImportViaBackendIndexedPreview[] | null>(null);
+    public get currentImportPhaseObservable(): Observable<ImportViaBackendPhase> {
+        return this._currentImportPhaseSubject as Observable<ImportViaBackendPhase>;
+    }
+
+    /**
+     * List of possible errors and their verbose explanation.
+     */
+    protected abstract readonly errorList: { [errorKey: string]: string };
 
     protected readonly translate: TranslateService = this.importServiceCollector.translate;
     protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
@@ -129,6 +105,21 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * Overwrite in subclass to define verbose titles for the ones sent by the backend
      */
     protected readonly verboseSummaryTitleMap: { [title: string]: string } = {};
+
+    private set previews(preview: ImportViaBackendIndexedPreview[] | null) {
+        this._previews = preview;
+        this._previewActionIds = this._previews?.map(result => result.id) ?? [];
+        this._previewHasRowErrors =
+            this._previews?.some(preview => preview.rows.some(row => row.status === ImportState.Error)) || false;
+        this._previewsSubject.next(preview);
+    }
+
+    private _previews: ImportViaBackendIndexedPreview[] | null = null;
+
+    private _previewsSubject = new BehaviorSubject<ImportViaBackendIndexedPreview[] | null>(null);
+
+    private _previewActionIds: number[] = [];
+    private _previewHasRowErrors: boolean = false;
 
     /**
      * The last parsed file object (may be reparsed with new encoding, thus kept in memory)
@@ -142,16 +133,12 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      */
     private _reader = new FileReader();
 
-    public get currentImportPhaseObservable(): Observable<ImportViaBackendPhase> {
-        return this._currentImportPhaseSubject as Observable<ImportViaBackendPhase>;
-    }
-
     private _currentImportPhaseSubject = new BehaviorSubject<ImportViaBackendPhase>(
         ImportViaBackendPhase.LOADING_PREVIEW
     );
 
     /**
-     * the list of parsed models that have been extracted from the opened file
+     * the list of parsed models that have been extracted from the opened file or inserted manually
      */
     private _csvLines: { [header: string]: string }[] = [];
     private _receivedHeaders: string[] = [];
@@ -165,8 +152,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         this._reader.onload = (event: FileReaderProgressEvent) => {
             this.parseInput(event.target?.result as string);
         };
-        const config = this.getConfig();
-        this.expectedHeaders = Object.keys(config.modelHeadersAndVerboseNames);
     }
 
     /**
@@ -254,6 +239,9 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         return this.errorList[error] || error;
     }
 
+    /**
+     * Matches the summary titles from the backend to more verbose versions that should be displayed instead.
+     */
     public getVerboseSummaryPointTitle(title: string): string {
         const verbose = (this.verboseSummaryTitleMap[title] ?? title).trim();
         return verbose.charAt(0).toUpperCase() + verbose.slice(1);
@@ -294,6 +282,11 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         }
     }
 
+    /**
+     * Calculates the payload for the jsonUpload function.
+     * Should be overridden by sub-classes if the upload needs to be more specific.
+     * F.e. if it is a meeting import and a meeting id needs to be given additionally
+     */
     protected calculateJsonUploadPayload(): { [key: string]: any } {
         return {
             data: this._csvLines
@@ -365,11 +358,23 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     // Abstract methods
+
+    /**
+     * Allows the user to download an example csv file.
+     */
     public abstract downloadCsvExample(): void;
+    /**
+     * Calls the relevant json_upload backend action with the payload.
+     */
     protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]>;
+    /**
+     * Calls the relevant import backend action with the payload.
+     *
+     * If abort is set to true, the import should be aborted,
+     * i.e. the data should NOT be imported, but instead the action worker should be deleted.
+     */
     protected abstract import(
         actionWorkerIds: number[],
         abort?: boolean
     ): Promise<void | (ImportViaBackendPreview | void)[]>;
-    protected abstract getConfig(): ViaBackendImportConfig<MainModel>;
 }

@@ -72,10 +72,6 @@ export type ImportConfig<MainModel = any, K = any> = StaticMainImportConfig<Main
     requiredFields?: (keyof MainModel)[];
 };
 
-export interface ViaBackendImportConfig<MainModel = any, K = any> {
-    modelHeadersAndVerboseNames: K;
-}
-
 export const DUPLICATE_IMPORT_ERROR = `Duplicates`;
 
 export interface CsvValueParsingConfig<MainModel, SideModel> {
