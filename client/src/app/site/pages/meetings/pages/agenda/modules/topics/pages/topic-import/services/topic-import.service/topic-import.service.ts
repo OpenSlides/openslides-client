@@ -73,8 +73,11 @@ export class TopicImportService extends BaseViaBackendImportService<Topic> {
         return payload;
     }
 
-    protected async import(actionWorkerIds: number[]): Promise<void | (ImportViaBackendPreview | void)[]> {
-        return await this.repo.import(actionWorkerIds.map(id => ({ id, import: true }))).resolve();
+    protected async import(
+        actionWorkerIds: number[],
+        abort: boolean = false
+    ): Promise<void | (ImportViaBackendPreview | void)[]> {
+        return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
     }
 
     protected async jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]> {

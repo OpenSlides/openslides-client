@@ -24,19 +24,23 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
     public getShortPreview = getShortPreview;
 
     public get canImport(): boolean {
-        return this._state === ImportViaBackendPhase.AWAITING_CONFIRM;
+        return this._state === ImportViaBackendPhase.AWAITING_CONFIRM || this.tryAgain;
     }
 
     public get finishedSuccessfully(): boolean {
         return this._state === ImportViaBackendPhase.FINISHED;
     }
 
-    public get finishedWithErrors(): boolean {
-        return this._state === ImportViaBackendPhase.FINISHED_WITH_ERRORS;
+    public get tryAgain(): boolean {
+        return this._state === ImportViaBackendPhase.TRY_AGAIN;
     }
 
     public get isImporting(): boolean {
         return this._state === ImportViaBackendPhase.IMPORTING;
+    }
+
+    public get hasErrors(): boolean {
+        return this._state === ImportViaBackendPhase.ERROR;
     }
 
     private _state: ImportViaBackendPhase = ImportViaBackendPhase.LOADING_PREVIEW;

@@ -65,7 +65,11 @@ export class TopicImportComponent extends BaseViaBackendImportListComponent<Topi
      * Sends the data in the text field input area to the importer
      */
     public parseTextArea(): void {
-        (this.importer as TopicImportService).parseTextArea(this.textAreaForm.get(`inputtext`)!.value);
+        const text = this.textAreaForm.get(`inputtext`)!.value;
+        if (text) {
+            (this.importer as TopicImportService).parseTextArea(text);
+            this.textAreaForm.reset();
+        }
     }
 
     /**

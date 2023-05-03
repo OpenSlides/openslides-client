@@ -16,8 +16,9 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTab, MatTabChangeEvent } from '@angular/material/tabs';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, map, Observable, of } from 'rxjs';
+import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
@@ -42,7 +43,7 @@ export enum ImportViaBackendPhase {
     IMPORTING,
     FINISHED,
     ERROR,
-    FINISHED_WITH_ERRORS
+    TRY_AGAIN
 }
 
 @Component({
@@ -126,6 +127,28 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     private _rows: ImportViaBackendPreviewIndexedRow[];
     private _previewColumns: ImportViaBackendPreviewHeader[];
 
+    public get awaitingConfirm(): boolean {
+        return this._state === ImportViaBackendPhase.AWAITING_CONFIRM || this.tryAgain;
+    }
+
+    public get finishedSuccessfully(): boolean {
+        return this._state === ImportViaBackendPhase.FINISHED;
+    }
+
+    public get tryAgain(): boolean {
+        return this._state === ImportViaBackendPhase.TRY_AGAIN;
+    }
+
+    public get isImporting(): boolean {
+        return this._state === ImportViaBackendPhase.IMPORTING;
+    }
+
+    public get hasErrors(): boolean {
+        return this._state === ImportViaBackendPhase.ERROR;
+    }
+
+    private _state: ImportViaBackendPhase = ImportViaBackendPhase.LOADING_PREVIEW;
+
     /**
      * Currently selected encoding. Is set and changed by the config's available
      * encodings and user mat-select input
@@ -159,8 +182,10 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     public get hasRowErrors(): boolean {
-        return this.rows.some(row => row.status === ImportState.Error); // TODO: dont call some in getter!
+        return this._hasErrors;
     }
+
+    private _hasErrors: boolean = false;
 
     public get requiredFields(): string[] {
         return this._requiredFields;
@@ -182,8 +207,16 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     public ngOnInit(): void {
         this._importer.clearPreview();
         this._requiredFields = this.createRequiredFields();
-        this._importer.previewsObservable.subscribe(previews => this.fillPreviewData(previews));
-        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
+        this._importer.currentImportPhaseObservable.subscribe(phase => {
+            this._state = phase;
+        });
+        this._importer.previewsObservable.subscribe(previews => {
+            this.fillPreviewData(previews);
+        });
+        this._dataSource = this.importer.previewsObservable.pipe(
+            map(previews => this.calculateRows(previews)),
+            delay(50)
+        );
     }
 
     public ngOnDestroy(): void {
@@ -195,7 +228,8 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      * Triggers a change in the tab group: Clearing the preview selection
      */
     public onTabChange({ index }: MatTabChangeEvent): void {
-        this._importer.clearPreview();
+        this.removeSelectedFile();
+        this._importer.clearAll();
         this.selectedTabChanged.emit(index);
     }
 
@@ -219,7 +253,9 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     public removeSelectedFile(): void {
-        this.fileInput.nativeElement.value = ``;
+        if (this.fileInput) {
+            this.fileInput.nativeElement.value = ``;
+        }
         this._importer.clearFile();
     }
 
@@ -252,9 +288,12 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     public getRowTooltip(row: ImportViaBackendPreviewIndexedRow): string {
         switch (row.status) {
             case ImportState.Error: // no import possible
-                return this.getErrorDescription(row);
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
             case ImportState.Warning:
-                return this.getErrorDescription(row);
+                return this.getErrorDescription(row) ?? _(`This row will not be imported, due to an unknown reason.`);
             case ImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
             case ImportState.Done: // item has been imported
@@ -353,10 +392,12 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
             this._previewColumns = undefined;
             this._summary = undefined;
             this._rows = undefined;
+            this._hasErrors = false;
         } else {
             this._previewColumns = previews[0].headers;
             this._summary = previews.flatMap(preview => preview.statistics).filter(point => point.value);
             this._rows = this.calculateRows(previews);
+            this._hasErrors = this.importer.previewHasRowErrors;
         }
     }
 
@@ -374,183 +415,4 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
             return [];
         }
     }
-
-    // @Input()
-    // public columns?: ImportListHeaderDefinition[];
-
-    // @Input()
-    // public headerDefinition?: ImportViaBackendPreviewHeader;
-
-    // @Input()
-    // public showUnknownHeaders = true;
-
-    // public get hasLeftReceivedHeaders(): boolean {
-    //     return this.leftReceivedHeaders.length > 0;
-    // }
-
-    // public get leftReceivedHeaders(): string[] {
-    //     return this._importer.leftReceivedHeaders;
-    // }
-
-    // public get leftExpectedHeaders(): { [key: string]: string } {
-    //     return this._importer.leftExpectedHeaders;
-    // }
-
-    /**
-     * @returns the amount of import items that will be imported
-     */
-    // public get newCount(): number {
-    //     return 0; // TODO: implement!
-    //     // return this._importer && this.hasFile ? this._importer.summary.new : 0;
-    // }
-
-    /**
-     * @returns the number of import items that cannot be imported
-     */
-    // public get nonImportableCount(): number {
-    //     if (this._importer && this.hasFile) {
-    //         return 0; // TODO: Implement!
-    //         // return this._importer.summary.errors + this._importer.summary.duplicates;
-    //     }
-    //     return 0;
-    // }
-
-    /**
-     * @returns the number of import items that have been successfully imported
-     */
-    // public get doneCount(): number {
-    //     return 0; // TODO: implement!
-    //     // return this._importer && this.hasFile ? this._importer.summary.done : 0;
-    // }
-
-    // public get importPreviewLabel(): string {
-    //     return `${this.modelName || `Models`} will be imported.`;
-    // }
-
-    // public get importDoneLabel(): string {
-    //     return `${this.modelName || `Models`} have been imported.`;
-    // }
-
-    // public get importingStepsObservable(): Observable<ImportViaBackendPhase[]> {
-    //     return null; // TODO: implement!
-    //     // return this._importer.importingStepsObservable;
-    // }
-
-    // public headerValueMap: any = {};
-
-    /**
-     * Initializes the table
-     */
-    // public initTable(): void {
-    //     const newEntriesObservable = this._importer.getNewEntriesObservable();
-    //     this.hasFile = newEntriesObservable.pipe(
-    //         distinctUntilChanged(),
-    //         auditTime(100),
-    //         map(entries => entries.length > 0)
-    //     );
-
-    //     this._dataSource = newEntriesObservable;
-    // }
-
-    /**
-     * Updates and manually triggers the filter function.
-     * See {@link hidden} for options
-     * (changed from default mat-table filter)
-     */
-    // public setFilter(): void {
-    //     if (this.shown === `all`) {
-    //         // this.vScrollDataSource.setFilter();
-    //     } else if (this.shown === `noerror`) {
-    //         // const noErrorFilter = (data: ImportModel<any>) => data.status === `done` || data.status !== `error`;
-    //         // this.vScrollDataSource.setFilter(noErrorFilter);
-    //     } else if (this.shown === `error`) {
-    //         // const hasErrorFilter = (data: ImportModel<any>) =>
-    //         //     data.status === `error` || !!data.errors.length || data.hasDuplicates;
-    //         // this.vScrollDataSource.setFilter(hasErrorFilter);
-    //     }
-    // }
-
-    /**
-     * Get the appropiate css class for a row according to the import state
-     *
-     * @param row a newEntry object with a current status
-     * @returns a css class name
-     */
-    // public getStateClass(row: ImportViaBackendPreviewRow): string {
-    //     switch (row.status) {
-    //         case `done`:
-    //             return `import-done import-decided`;
-    //         case `error`:
-    //             return `import-error`;
-    //         default:
-    //             return ``;
-    //     }
-    // }
-
-    // public getTooltip(value: string | CsvMapping[]): string {
-    //     if (Array.isArray(value)) {
-    //         return value.map(entry => entry.name).join(`;\n\r`);
-    //     }
-    //     return value;
-    // }
-    // public isUnknown(headerKey: string): boolean {
-    //     return !this._importer.headerValues[headerKey];
-    // }
-
-    // public onChangeUnknownHeaderKey(headerKey: string, value: string): void {
-    //     this.headerValueMap[headerKey] = value;
-    //     this._importer.setNewHeaderValue({ [headerKey]: value });
-    // }
-
-    // public isArray(data: any): boolean {
-    //     return Array.isArray(data);
-    // }
-
-    // public isObject(data: any): boolean {
-    //     return typeof data === `object`;
-    // }
-
-    // public getLabelByStepPhase(phase: ImportViaBackendPhase): string {
-    //     switch (phase) {
-    //         case ImportViaBackendPhase.FINISHED:
-    //             return _(`have been created`);
-    //         case ImportViaBackendPhase.ERROR:
-    //             return _(`could not be created`);
-    //         default:
-    //             return _(`will be created`);
-    //     }
-    // }
-
-    // public isTrue(value: any) {
-    //     return [`true`, 1, true, `1`].includes(value);
-    // }
-
-    // private createColumns(): ImportViaBackendPreviewHeader[] {
-    //     const getHeaderProp = (prop: string) => {
-    //         return prop.startsWith(`newEntry.`) ? prop.slice(`newEntry.`.length) : prop;
-    //     };
-    //     const definitions = this.columns ?? [this.headerDefinition];
-    //     if (!definitions) {
-    //         throw new Error(`You have to specify the columns to show`);
-    //     }
-    //     if (Array.isArray(definitions) && definitions.length > 0) {
-    //         const computedDefinitions = definitions
-    //             .filter((definition: ImportViaBackendPreviewHeader) => definition.isTableColumn)
-    //             .map(column => ({
-    //                 ...column,
-    //                 property: getHeaderProp(column.property),
-    //                 type: this.getTypeByProperty(getHeaderProp(column.property))
-    //             }));
-    //         return computedDefinitions;
-    //     }
-    //     return [];
-    // }
-
-    // private getTypeByProperty(property: string): 'boolean' | 'string' {
-    //     if (property.startsWith(`is`) || property.startsWith(`has`)) {
-    //         return `boolean`;
-    //     } else {
-    //         return `string`;
-    //     }
-    // }
 }

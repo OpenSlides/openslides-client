@@ -27,7 +27,7 @@
 </mat-card>
 
 <!-- preview table -->
-<ng-container *ngIf="rawFileObservable | async">
+<ng-container *ngIf="dataSource | async">
     <mat-card class="os-form-card spacer-bottom-60">
         <div class="action-title">
             <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
@@ -48,34 +48,12 @@
             </tr>
         </table>
         <div class="margin-top-12 margin-bottom-12" *ngIf="rows?.length">
-            <span>{{ 'After verifiy the preview click on "import" please (see top right).' | translate }}</span>
+            <span *ngIf="tryAgain">{{ 'The import has failed due to recent changes on the server. Please check the updated preview before clicking on "import" again.' | translate }}</span>
+            <span *ngIf="awaitingConfirm">{{ 'After verifying the preview click on "import" please (see top right).' | translate }}</span>
+            <span *ngIf="isImporting">{{ 'The import is in progress, please wait...' | translate }}</span>
+            <span class="warn" *ngIf="hasErrors">{{ 'The import can not proceed. There is likely a problem with the import data, please check the preview for details.' | translate }}</span>
+            <span class="green-text" *ngIf="finishedSuccessfully">{{ 'The import was successful.' | translate }}</span>
         </div>
-        <!-- <div
-            *ngIf="((leftExpectedHeaders | keyvalue).length > 0 || leftReceivedHeaders.length > 0) && newCount"
-            class="flex-vertical-center"
-        >
-            <div class="fake-button-no-touch">
-                <mat-icon>warning</mat-icon>
-            </div>
-            <div>
-                {{ 'There are some columns that do not match the template' | translate }}
-                <div class="flex-vertical-center">
-                    <span
-                        class="flex-vertical-center subtitle"
-                        *ngFor="let header of leftExpectedHeaders | keyvalue; let last = last"
-                    >
-                        {{ header.value }}
-                        <span *ngIf="!last">,&nbsp;</span>
-                    </span>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- <mat-select *ngIf="hasRowErrors" class="filter-imports" [(value)]="shown" (selectionChange)="setFilter()">
-            <mat-option value="all">{{ 'Show all' | translate }}</mat-option>
-            <mat-option value="error">{{ 'Show errors only' | translate }}</mat-option>
-            <mat-option value="noerror">{{ 'Show correct entries only' | translate }}</mat-option>
-        </mat-select> -->
 
         <h2>{{ 'Preview' | translate }}</h2>
         <div>
@@ -219,7 +197,7 @@
 
 <ng-template #previewList>
     <os-scrolling-table
-        *ngIf="rows"
+        *ngIf="rows?.length && (dataSource | async)"
         style="height: 500px"
         class="import-list-preview-table"
         tableHeight="500px"
@@ -232,7 +210,11 @@
             *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
             class="flex-vertical-center"
         >
-            <mat-icon [ngClass]="{'red-warning-text': row.status === 'error', 'warn': row.status === 'warning'}" matTooltip="{{ getRowTooltip(row) }}">
+            <mat-icon
+                [ngClass]="{'red-warning-text': row.status === 'error', 'warn': row.status === 'warning'}"
+                matTooltip="{{ getRowTooltip(row) }}"
+                matTooltipPosition="right"
+            >
                 {{ getActionIcon(row) }}
             </mat-icon>
         </div>
@@ -252,7 +234,6 @@
                 "
             >
                 <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>
-                <!-- row is `ImportModel`, entry is the csv data as object, def is the "property" -->
                 <ng-container
                     *ngTemplateOutlet="entryTemplate; context: { entry: row.data, def: def, row: row, type: column.type }"
                 ></ng-container>
@@ -293,20 +274,3 @@
         </button>
     </div>
 </ng-template>
-
-<!-- <ng-template #phaseIcon let-phase="phase">
-    <div [ngSwitch]="phase">
-        <div *ngSwitchDefault>
-            <mat-icon class="icon-16 margin-left-12 margin-right-12"></mat-icon>
-        </div>
-        <div *ngSwitchCase="Phase.PENDING">
-            <mat-icon class="icon-16 margin-left-12 margin-right-12 import-list-icon">sync</mat-icon>
-        </div>
-        <div *ngSwitchCase="Phase.FINISHED">
-            <mat-icon class="icon-16 margin-left-12 margin-right-12">done</mat-icon>
-        </div>
-        <div *ngSwitchCase="Phase.ERROR">
-            <mat-icon class="icon-16 margin-left-12 margin-right-12">close</mat-icon>
-        </div>
-    </div>
-</ng-template> -->

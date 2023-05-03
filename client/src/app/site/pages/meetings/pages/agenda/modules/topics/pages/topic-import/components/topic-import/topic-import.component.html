@@ -9,15 +9,17 @@
 
     <div class="menu-slot">
         <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ 'Import' | translate }}</span>
+            <span class="upper">{{ tryAgain ? 'Try again' : 'Import' | translate }}</span>
         </button>
-        <mat-icon *ngIf="finishedSuccessfully">
-            done
-        </mat-icon>
-        <mat-icon *ngIf="finishedWithErrors">
-            done
-        </mat-icon>
-        <os-spinner *ngIf="isImporting"></os-spinner>
+        <div *ngIf="finishedSuccessfully || hasErrors" style="padding-top: 6px">
+            <mat-icon *ngIf="finishedSuccessfully" matTooltip="{{'Import successful' | translate}}">
+                done
+            </mat-icon>
+            <mat-icon *ngIf="hasErrors" matTooltip="{{'Can not import because of errors' | translate}}">
+                block
+            </mat-icon>
+        </div>
+        <os-spinner *ngIf="isImporting" [width]="30" [height]="30" [showText]="false"></os-spinner>
     </div>
 </os-head-bar>
 
@@ -55,13 +57,4 @@
             </div>
         </ng-template>
     </mat-tab>
-
-    <!-- <div *osScrollingTableCell="'agenda_duration'; row as entry; config: { width: 150 }">
-        <div *osScrollingTableCellLabel>{{ 'Duration' | translate }}</div>
-        {{ getDuration(entry.newEntry.agenda_duration) }}
-    </div>
-    <div *osScrollingTableCell="'agenda_type'; row as entry; config: { width: 150 }">
-        <div *osScrollingTableCellLabel>{{ 'Internal item' | translate }}</div>
-        {{ getTypeString(entry.newEntry.agenda_type) | translate }}
-    </div> -->
 </os-via-backend-import-list>

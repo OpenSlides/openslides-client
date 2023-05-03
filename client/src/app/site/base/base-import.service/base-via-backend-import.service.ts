@@ -12,9 +12,11 @@ import {
 import { ViaBackendImportService } from 'src/app/ui/base/import-service';
 import { ImportViaBackendPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
 import {
+    ImportState,
     ImportViaBackendIndexedPreview,
     ImportViaBackendPreview,
-    ImportViaBackendPreviewRow
+    ImportViaBackendPreviewRow,
+    isImportViaBackendPreview
 } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
 
 import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
@@ -90,7 +92,11 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     public get previewActionIds(): number[] {
-        return this._previews.map(result => result.id);
+        return this._previews?.map(result => result.id) ?? [];
+    }
+
+    public get previewHasRowErrors(): boolean {
+        return this.previews?.some(preview => preview.rows.some(row => row.status === ImportState.Error)) || false;
     }
 
     public get previews(): ImportViaBackendIndexedPreview[] {
@@ -113,8 +119,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     private _previewsSubject = new BehaviorSubject<ImportViaBackendIndexedPreview[] | null>(null);
-
-    private _modelHeadersAndVerboseNames: { [key: string]: string } = {};
 
     protected readonly translate: TranslateService = this.importServiceCollector.translate;
     protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
@@ -151,7 +155,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      */
     private _csvLines: { [header: string]: string }[] = [];
     private _receivedHeaders: string[] = [];
-    private _mapReceivedExpectedHeaders: { [expectedHeader: string]: string } = {};
     private readonly _papa: Papa = this.importServiceCollector.papa;
 
     /**
@@ -162,7 +165,8 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         this._reader.onload = (event: FileReaderProgressEvent) => {
             this.parseInput(event.target?.result as string);
         };
-        this.init();
+        const config = this.getConfig();
+        this.expectedHeaders = Object.keys(config.modelHeadersAndVerboseNames);
     }
 
     /**
@@ -171,7 +175,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * @param file
      */
     public parseInput(file: string): void {
-        this.init();
         this.clearPreview();
         const papaConfig: ParseConfig = {
             header: true,
@@ -188,7 +191,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     }
 
     public clearFile(): void {
-        this.setParsedEntries({});
+        this.clearPreview();
         this._rawFile = null;
         this._rawFileSubject.next(null);
     }
@@ -198,20 +201,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
             this._csvLines.push(line);
         }
         this.parseCsvLines();
-    }
-
-    /**
-     * counts the amount of duplicates that have no decision on the action to
-     * be taken
-     */
-    public updatePreview(): void {
-        // TODO: implement!
-        // this._preview = summary;
-    }
-
-    public updateSummary(): void {
-        // TODO: implement
-        // this._importingStepsSubject.next(this.getEveryImportHandler());
     }
 
     /**
@@ -242,19 +231,17 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * Resets the data and preview (triggered upon selecting an invalid file)
      */
     public clearPreview(): void {
-        // this.getEveryImportHandler().forEach(handler => handler.doCleanup());
-        this.setNextEntries({});
-        // this._lostHeaders = { expected: {}, received: [] };
-        this.previews = null;
         this._currentImportPhaseSubject.next(ImportViaBackendPhase.LOADING_PREVIEW);
-        // this._isImportValidSubject.next(false);
+        this.previews = null;
+        if (this.previewActionIds?.length) {
+            this.import(this.previewActionIds, true);
+        }
     }
 
-    /**
-     * set a list of short names for error, indicating which column failed
-     */
-    private getVerboseError(error: string): string {
-        return this.errorList[error] ?? error;
+    public clearAll(): void {
+        this._csvLines = [];
+        this.clearPreview();
+        this.clearFile();
     }
 
     /**
@@ -280,41 +267,37 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * @returns true if the error is present
      */
     public hasError(entry: ImportViaBackendPreviewRow, error: string): boolean {
-        return entry.message?.includes(error); // TODO: implement properly!
+        return entry.message?.includes(error);
     }
 
     /**
-     * Executing the import. Creates all secondary data, maps the newly created
-     * secondary data to the new entries, then creates all entries without errors
-     * by submitting them to the server. The entries will receive the status
-     * 'done' on success.
+     * Executing the import.
      */
     public async doImport(): Promise<void> {
         this._currentImportPhaseSubject.next(ImportViaBackendPhase.IMPORTING);
-        // await this.doBeforeImport();
 
-        // for (const handler of this.getEveryMainImportHandler()) {
-        //     handler.startImport();
-        //     await handler.doImport();
-        //     handler.finishImport();
-        // }
+        const results = await this.import(this.previewActionIds, false);
 
-        // await this.doAfterImport();
-
-        const results = await this.import(this.previewActionIds);
-
-        this._currentImportPhaseSubject.next(ImportViaBackendPhase.FINISHED);
-        this.updatePreview();
-
-        if (Array.isArray(results) && results.find(result => result)) {
-            throw new Error(`Import failed unexpectedly, please try uploading the preview again`);
+        if (Array.isArray(results) && results.find(result => isImportViaBackendPreview(result))) {
+            const updatedPreviews = results.filter(result =>
+                isImportViaBackendPreview(result)
+            ) as ImportViaBackendPreview[];
+            this.processRawPreviews(updatedPreviews);
+            if (this.previewHasRowErrors) {
+                this._currentImportPhaseSubject.next(ImportViaBackendPhase.ERROR);
+            } else {
+                this._currentImportPhaseSubject.next(ImportViaBackendPhase.TRY_AGAIN);
+            }
+        } else {
+            this._currentImportPhaseSubject.next(ImportViaBackendPhase.FINISHED);
+            this._csvLines = [];
         }
     }
 
-    private setNextEntries(nextEntries: { [importTrackId: number]: ImportViaBackendPreviewRow }): void {
-        // this._newEntries.next(nextEntries);
-        // TODO: implement properly!
-        this.updatePreview();
+    protected calculateJsonUploadPayload(): { [key: string]: any } {
+        return {
+            data: this._csvLines
+        };
     }
 
     private parseCsvLines(): void {
@@ -324,30 +307,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
             return;
         }
         this.propagateNextNewEntries();
-        this.updateSummary();
-    }
-
-    /**
-     * parses pre-prepared entries (e.g. from a textarea) instead of a csv structure
-     *
-     * @param entries: an array of prepared newEntry objects
-     */
-    private setParsedEntries(entries: { [importTrackId: number]: ImportViaBackendPreviewRow }): void {
-        this.clearPreview();
-        if (!entries) {
-            return;
-        }
-        this.setNextEntries(entries);
-    }
-
-    private init(): void {
-        // TODO: implement correctly!
-        const config = this.getConfig();
-        this.expectedHeaders = Object.keys(config.modelHeadersAndVerboseNames);
-        this._modelHeadersAndVerboseNames = config.modelHeadersAndVerboseNames;
-        // this._getDuplicatesFn = config.getDuplicatesFn;
-        // this._requiredFields = config.requiredFields || [];
-        // this.initializeImportHelpers();
     }
 
     /**
@@ -365,7 +324,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * @returns true if the line has at least the minimum amount of columns
      */
     private checkHeaderLength(): boolean {
-        // TODO: could probably be shortened!
         const snackbarDuration = 3000;
         if (this._receivedHeaders.length < this.requiredHeaderLength) {
             this.matSnackbar.open(this.translate.instant(`The file has too few columns to be parsed properly.`), ``, {
@@ -374,403 +332,44 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
 
             this.clearPreview();
             return false;
-        } else if (this._receivedHeaders.length < this.expectedHeaders.length) {
-            this.matSnackbar.open(
-                this.translate.instant(`The file seems to have some ommitted columns. They will be considered empty.`),
-                ``,
-                { duration: snackbarDuration }
-            );
-        } else if (this._receivedHeaders.length > this.expectedHeaders.length) {
-            this.matSnackbar.open(
-                this.translate.instant(`The file seems to have additional columns. They will be ignored.`),
-                ``,
-                { duration: snackbarDuration }
-            );
         }
         return true;
     }
 
     private async propagateNextNewEntries(): Promise<void> {
-        try {
-            const payload = this.calculateJsonUploadPayload();
-            const response = (await this.jsonUpload(payload)) as ImportViaBackendPreview[];
-            if (!response) {
-                throw new Error(`Didn't receive preview`);
-            }
-            console.log(`UPLOADED JSON =>`, response);
-            const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = response;
-            let index = 1;
-            for (let preview of previews) {
-                for (let row of preview.rows) {
-                    row[`id`] = index;
-                    index++;
-                }
-            }
-
-            this.previews = previews as ImportViaBackendIndexedPreview[];
-            this._currentImportPhaseSubject.next(ImportViaBackendPhase.AWAITING_CONFIRM);
-        } catch (e) {
-            this._currentImportPhaseSubject.next(ImportViaBackendPhase.ERROR);
+        this.clearPreview();
+        const payload = this.calculateJsonUploadPayload();
+        const response = (await this.jsonUpload(payload)) as ImportViaBackendPreview[];
+        if (!response) {
+            throw new Error(`Didn't receive preview`);
         }
-        // const rawEntries = this._csvLines.map((line, i) => this.createRawImportModel(line, i + 1));
-        // await this.onBeforeCreatingImportModels(rawEntries);
-        // for (let entry of rawEntries) {
-        //     const nextEntry = await this.createImportModel(entry);
-        //     this.pushNextNewEntry(nextEntry);
-        // }
-        // for (const importHandler of this.getEveryImportHandler()) {
-        //     if (hasBeforeFindAction(importHandler)) {
-        //         await importHandler.onBeforeFind(this.importModels);
-        //     }
-        // }
-        // this.importModels.forEach(importModel => this.mapData(importModel));
-        // for (const importHandler of this.getEveryImportHandler()) {
-        //     importHandler.pipeModels(this.importModels);
-        // }
-        // this.checkImportValidness();
+        this.processRawPreviews(response);
+        if (this.previewHasRowErrors) {
+            this._currentImportPhaseSubject.next(ImportViaBackendPhase.ERROR);
+        } else {
+            this._currentImportPhaseSubject.next(ImportViaBackendPhase.AWAITING_CONFIRM);
+        }
     }
 
-    protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]>;
+    private processRawPreviews(rawPreviews: ImportViaBackendPreview[]): void {
+        const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = rawPreviews;
+        let index = 1;
+        for (let preview of previews) {
+            for (let row of preview.rows) {
+                row[`id`] = index;
+                index++;
+            }
+        }
 
-    protected abstract import(actionWorkerIds: number[]): Promise<void | (ImportViaBackendPreview | void)[]>;
-
-    protected calculateJsonUploadPayload(): { [key: string]: any } {
-        return {
-            data: this._csvLines
-        };
+        this.previews = previews as ImportViaBackendIndexedPreview[];
     }
 
     // Abstract methods
     public abstract downloadCsvExample(): void;
+    protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]>;
+    protected abstract import(
+        actionWorkerIds: number[],
+        abort?: boolean
+    ): Promise<void | (ImportViaBackendPreview | void)[]>;
     protected abstract getConfig(): ViaBackendImportConfig<MainModel>;
-
-    /**
-     * Emits an error string to display if a file import cannot be done
-     */
-    // public errorEvent = new EventEmitter<string>();
-
-    // public get leftReceivedHeaders(): string[] {
-    //     return this._lostHeaders.received;
-    // }
-
-    // public get leftExpectedHeaders(): { [key: string]: string } {
-    //     return this._lostHeaders.expected;
-    // }
-
-    // public get headerValues(): { [header: string]: string } {
-    //     return this._mapReceivedExpectedHeaders;
-    // }
-
-    // private _requiredFields: (keyof MainModel)[] = [];
-    // private _lostHeaders: { expected: { [header: string]: string }; received: string[] } = {
-    //     expected: {},
-    //     received: []
-    // };
-
-    // private pushNextNewEntry(nextEntry: ImportViaBackendPreviewRow): void {
-    //     const oldEntries = this._newEntries.value;
-    //     oldEntries[nextEntry.id] = nextEntry;
-    //     this.setNextEntries(oldEntries);
-    // }
-
-    /**
-     * a subscribable representation of the new items to be imported
-     *
-     * @returns an observable BehaviorSubject
-     */
-    // public getNewEntriesObservable(): Observable<ImportViaBackendPreviewRow[]> {
-    //     return this._newEntries.asObservable().pipe(map(value => Object.values(value)));
-    // }
-
-    // private async doBeforeImport(): Promise<void> {
-    //     for (const { mainHandler } of Object.values(this._beforeImportHandler)) {
-    //         await mainHandler.doImport();
-    //     }
-    // }
-
-    // private async doAfterImport(): Promise<void> {
-    //     for (const { mainHandler, additionalHandlers } of Object.values(this._afterImportHandler)) {
-    //         await mainHandler.doImport();
-    //         for (const handler of additionalHandlers) {
-    //             handler.pipeImportedSideModels(mainHandler.getModelsToCreate());
-    //             await handler.doImport();
-    //         }
-    //     }
-    // }
-
-    // public setNewHeaderValue(updateMapReceivedExpectedHeaders: { [headerKey: string]: string }): void {
-    //     for (const headerKey of Object.keys(updateMapReceivedExpectedHeaders)) {
-    //         this._mapReceivedExpectedHeaders[headerKey] = updateMapReceivedExpectedHeaders[headerKey];
-    //         delete this._lostHeaders.expected[headerKey];
-    //         this.leftReceivedHeaders.splice(
-    //             this.leftReceivedHeaders.findIndex(header => header === updateMapReceivedExpectedHeaders[headerKey]),
-    //             1
-    //         );
-    //     }
-    //     this.checkImportValidness();
-    //     this.propagateNextNewEntries();
-    // }
-
-    /**
-     * A helper function to specify import-helpers for `ToCreate`.
-     * Should be overriden to specify the import-helpers.
-     *
-     * @returns A map containing import-helpers for specific attributes of `ToCreate`.
-     */
-    // protected getBeforeImportHelpers(): { [key: string]: BeforeImportHandler<MainModel, any> } {
-    //     return {};
-    // }
-
-    // protected pipeParseValue(_value: string, _header: keyof MainModel): any {}
-
-    // protected registerBeforeImportHandler<ToImport>(
-    //     header: string,
-    //     handler: StaticBeforeImportConfig<MainModel, ToImport> | BaseBeforeImportHandler
-    // ): void {
-    //     if (handler instanceof BaseBeforeImportHandler) {
-    //         this._beforeImportHandler[header] = { mainHandler: handler };
-    //     } else {
-    //         this._beforeImportHandler[header] = {
-    //             mainHandler: new StaticBeforeImportHandler(handler, key => this.translate.instant(key))
-    //         };
-    //     }
-    // }
-
-    // protected registerAfterImportHandler<SideModel>(
-    //     header: string,
-    //     handler: StaticAfterImportConfig<MainModel, SideModel> | BaseAfterImportHandler,
-    //     additionalHandlers?: (
-    //         | StaticAdditionalImportHandlerConfig<MainModel, SideModel>
-    //         | BaseAdditionalImportHandler<MainModel, SideModel>
-    //     )[]
-    // ): void {
-    //     const getAfterImportHandler = (
-    //         _handler:
-    //             | StaticAdditionalImportHandlerConfig<MainModel, SideModel>
-    //             | BaseAdditionalImportHandler<MainModel, SideModel>
-    //     ) => {
-    //         if (_handler instanceof BaseAdditionalImportHandler) {
-    //             return _handler;
-    //         } else {
-    //             return new StaticAdditionalImportHandler<MainModel, SideModel>({
-    //                 ..._handler,
-    //                 translateFn: key => this.translate.instant(key)
-    //             });
-    //         }
-    //     };
-    //     const _additionalHandlers = (additionalHandlers ?? []).map(_handler => getAfterImportHandler(_handler));
-    //     if (handler instanceof BaseAfterImportHandler) {
-    //         this._afterImportHandler[header] = { mainHandler: handler, additionalHandlers: _additionalHandlers };
-    //     } else {
-    //         this._afterImportHandler[header] = {
-    //             mainHandler: new StaticAfterImportHandler<MainModel, SideModel>(
-    //                 handler,
-    //                 header as keyof MainModel,
-    //                 toTranslate => this.translate.instant(toTranslate)
-    //             ),
-    //             additionalHandlers: _additionalHandlers
-    //         };
-    //     }
-    // }
-
-    // protected registerMainImportHandler(
-    //     handler: StaticMainImportConfig<MainModel> | BaseMainImportHandler<MainModel>
-    // ): void {
-    //     if (handler instanceof BaseMainImportHandler) {
-    //         this._otherMainImportHelper.push(handler);
-    //     } else {
-    //         this._otherMainImportHelper.push(
-    //             new StaticMainImportHandler({
-    //                 translateFn: key => this.translate.instant(key),
-    //                 resolveEntryFn: importModel => this.resolveEntry(importModel),
-    //                 ...handler
-    //             })
-    //         );
-    //     }
-    // }
-
-    // protected async onCreateImportModel(input: RawImportModel<MainModel>): Promise<ImportModel<MainModel>> {
-    //     if (!this._getDuplicatesFn) {
-    //         throw new Error(`No function to check for duplicates defined`);
-    //     }
-    //     const duplicates = await this._getDuplicatesFn(input);
-    //     const hasDuplicates = duplicates.length > 0;
-    //     const entry: ImportViaBackendPreviewRow<MainModel> = new ImportModel({
-    //         model: input.model as MainModel,
-    //         id: input.id,
-    //         hasDuplicates,
-    //         duplicates
-    //     });
-    //     return entry;
-    // }
-
-    /**
-     * This function pipes received rows from a csv file already mapped to their internal used data structure.
-     * This is done, before import models are created from those rows. Thus, this function facilitates to decide
-     * how import models are created depending on the rows in the csv file.
-     *
-     * @param _entries
-     */
-    // protected async onBeforeCreatingImportModels(_entries: RawImportModel<MainModel>[]): Promise<void> {}
-
-    // private async createImportModel(
-    //     input: RawImportModel<MainModel>,
-    //     errors: string[] = []
-    // ): Promise<ImportViaBackendPreviewRow<MainModel>> {
-    //     const nextEntry = await this.onCreateImportModel(input);
-    //     if (nextEntry.hasDuplicates) {
-    //         errors.push(DUPLICATE_IMPORT_ERROR);
-    //     }
-    //     if (errors.length) {
-    //         nextEntry.errors = errors.map(error => this.getVerboseError(error));
-    //         nextEntry.status = `error`;
-    //     }
-    //     return nextEntry;
-    // }
-
-    /**
-     * Maps the value in one csv line for every header to the header, which is later used for models that will be created or updated.
-     * These headers are specified in `_mapReceivedExpectedHeader`.
-     *
-     * @param line a csv line
-     *
-     * @returns an object which has the headers of the models used internal
-     */
-    // private createRawImportModel(line: CsvJsonMapping, index: number): RawImportModel<MainModel> {
-    //     const rawObject = Object.keys(this._mapReceivedExpectedHeaders).mapToObject(expectedHeader => {
-    //         const receivedHeader = this._mapReceivedExpectedHeaders[expectedHeader];
-    //         return { [expectedHeader]: line[receivedHeader] };
-    //     });
-    //     return {
-    //         id: index,
-    //         model: rawObject as MainModel
-    //     };
-    // }
-
-    /**
-     * Maps incoming data of probably manual typed headers and values into headers, used by the rest of an import
-     * process.
-     *
-     * @param line An incoming header <-> value map
-     * @param importTrackId The number of an import object
-     *
-     * @returns A new model which values are linked to any helpers if needed.
-     */
-    // private mapData(importModel: ImportViaBackendPreviewRow): void {
-    //     const rawObject = importModel.data;
-    //     const errors = [];
-    //     for (const expectedHeader of Object.keys(this._mapReceivedExpectedHeaders)) {
-    //         // const handler = this._beforeImportHandler[expectedHeader] || this._afterImportHandler[expectedHeader];
-    //         const csvValue = rawObject[expectedHeader as keyof MainModel] as any;
-    //         try {
-    //             const value = this.parseCsvValue(csvValue, {
-    //                 header: expectedHeader as keyof MainModel,
-    //                 importModel: importModel,
-    //                 importFindHandler: handler?.mainHandler,
-    //                 allImportModels: this.importModels
-    //             });
-    //             rawObject[expectedHeader as keyof MainModel] = value;
-    //         } catch (e) {
-    //             console.debug(`Error while parsing ${expectedHeader}\n`, e);
-    //             errors.push((e as any).message);
-    //             rawObject[expectedHeader as keyof MainModel] = csvValue;
-    //         }
-    //     }
-    //     // importModel.errors = importModel.errors.concat(errors);
-    // }
-
-    // private getSelfImportHelper(): MainImportHandler<MainModel> {
-    //     return this._selfImportHelper!;
-    // }
-
-    // private initializeImportHelpers(): void {
-    //     const { createFn, updateFn, getDuplicatesFn, verboseNameFn, shouldCreateModelFn } = this.getConfig();
-    //     const handlers = Object.entries(this.getBeforeImportHelpers()).mapToObject(([key, value]) => ({
-    //         [key]: { mainHandler: value }
-    //     }));
-    //     this._beforeImportHandler = { ...this._beforeImportHandler, ...handlers };
-    //     this._selfImportHelper = new StaticMainImportHandler({
-    //         verboseNameFn,
-    //         getDuplicatesFn,
-    //         shouldCreateModelFn,
-    //         createFn,
-    //         updateFn,
-    //         translateFn: key => this.translate.instant(key),
-    //         resolveEntryFn: importModel => this.resolveEntry(importModel)
-    //     });
-    //     this.updateSummary();
-    // }
-
-    // private resolveEntry(entry: ImportViaBackendPreviewRow): MainModel {
-    //     let model = { ...entry.newEntry } as MainModel;
-    //     for (const key of Object.keys(this._beforeImportHandler)) {
-    //         const { mainHandler: handler } = this._beforeImportHandler[key];
-    //         const result = handler.doResolve(model, key);
-    //         model = result.model;
-    //         if (result.unresolvedModels) {
-    //             entry.errors = (entry.errors ?? []).concat(this.getVerboseError(result.verboseName as string));
-    //             this.updatePreview();
-    //             break;
-    //         }
-    //     }
-    //     for (const key of Object.keys(this._afterImportHandler)) {
-    //         delete model[key as keyof MainModel];
-    //     }
-    //     return model;
-    // }
-
-    // private parseCsvValue<ToImport>(value: string, config: CsvValueParsingConfig<MainModel, ToImport>): any {
-    //     if (config.importFindHandler) {
-    //         const { importModel, allImportModels } = config;
-    //         return config.importFindHandler.findByName(value, { importModel, allImportModels });
-    //     }
-    //     // value = this.pipeParseValue(value, config.header) ?? value;
-    //     return value;
-    // }
-
-    // private checkReceivedHeaders(): void {
-    //     const leftReceivedHeaders = [...this._receivedHeaders];
-    //     const expectedHeaders = [...this.expectedHeaders];
-    //     while (expectedHeaders.length > 0) {
-    //         const toExpected = expectedHeaders.shift() as string;
-    //         const nextHeader = this._modelHeadersAndVerboseNames[toExpected];
-    //         const nextHeaderTranslated = this.translate.instant(nextHeader);
-    //         let index = leftReceivedHeaders.findIndex(header => header === nextHeaderTranslated);
-    //         if (index > -1) {
-    //             this._mapReceivedExpectedHeaders[toExpected] = nextHeaderTranslated;
-    //             leftReceivedHeaders.splice(index, 1);
-    //             continue;
-    //         }
-    //         index = leftReceivedHeaders.findIndex(header => header === nextHeader);
-    //         if (index > -1) {
-    //             this._mapReceivedExpectedHeaders[toExpected] = nextHeader;
-    //             leftReceivedHeaders.splice(index, 1);
-    //             continue;
-    //         }
-    //         this._mapReceivedExpectedHeaders[toExpected] = toExpected;
-    //         this._lostHeaders.expected[toExpected] = nextHeaderTranslated;
-    //     }
-    //     this._lostHeaders.received = leftReceivedHeaders;
-    //     this.checkImportValidness();
-    // }
-
-    // private checkImportValidness(): void {
-    //     const requiredFulfilled = this._requiredFields.every(
-    //         field => !Object.keys(this._lostHeaders.expected).includes(field as string)
-    //     );
-    //     const validModels = this.importModels.some(importModel => !importModel.errors.length);
-    //     this._isImportValidSubject.next(requiredFulfilled && validModels);
-    // }
-
-    // private getEveryImportHandler(): ImportHandler[] {
-    //     const beforeImportHandlers = Object.values(this._beforeImportHandler).map(({ mainHandler }) => mainHandler);
-    //     const afterImportHandlers = Object.values(this._afterImportHandler).flatMap(
-    //         ({ mainHandler, additionalHandlers }) => [mainHandler, ...additionalHandlers]
-    //     );
-    //     return [...beforeImportHandlers, ...this.getEveryMainImportHandler(), ...afterImportHandlers];
-    // }
-
-    // private getEveryMainImportHandler(): MainImportHandler<MainModel>[] {
-    //     return [this.getSelfImportHelper(), ...this._otherMainImportHelper];
-    // }
 }

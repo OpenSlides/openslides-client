@@ -56,8 +56,13 @@ export interface ImportViaBackendIndexedPreview {
     statistics: ImportViaBackendPreviewSummary[];
 }
 
-export interface ImportViaBackendJSONUploadResponse {
-    success: boolean;
-    message: string;
-    results: ImportViaBackendPreview[];
+export function isImportViaBackendPreview(obj: any): obj is ImportViaBackendPreview {
+    return (
+        obj &&
+        typeof obj === `object` &&
+        typeof obj.id === `number` &&
+        Array.isArray(obj.headers) &&
+        Array.isArray(obj.rows) &&
+        Array.isArray(obj.statistics)
+    );
 }
