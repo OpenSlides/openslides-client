@@ -49,7 +49,7 @@
     <mat-form-field *osMeetingSetting="'motions_recommendations_by'; and: hasRecommendations()">
         <mat-select placeholder="{{ 'Recommendation' | translate }}" [(ngModel)]="infoDialog.recommendation_id">
             <mat-option *ngFor="let recommendation of getPossibleRecommendations()" [value]="recommendation.id">
-                {{ recommendation.recommendation_label | translate }}
+                {{ recommendation.recommendation_label }}
             </mat-option>
         </mat-select>
     </mat-form-field>

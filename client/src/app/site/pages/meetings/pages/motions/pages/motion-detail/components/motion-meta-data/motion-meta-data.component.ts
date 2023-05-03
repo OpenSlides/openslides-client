@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -98,6 +98,12 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             !this.motion.derived_motions.length
         );
     }
+
+    public get referencingMotions(): ViewMotion[] {
+        return this._referencingMotions;
+    }
+
+    private _referencingMotions: ViewMotion[];
 
     private _forwardingAvailable: boolean = false;
 
@@ -295,7 +301,22 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             this.amendmentRepo.getViewModelListObservableFor(this.motion).subscribe(value => (this.amendments = value)),
             this.tagRepo.getViewModelListObservable().subscribe(value => (this.tags = value)),
             this.categoryRepo.getViewModelListObservable().subscribe(value => (this.categories = value)),
-            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value))
+            this.blockRepo.getViewModelListObservable().subscribe(value => (this.motionBlocks = value)),
+            this.repo
+                .getViewModelObservable(this.motion.id)
+                .pipe(
+                    distinctUntilChanged((p, c) =>
+                        p.referenced_in_motion_recommendation_extensions.equals(
+                            c.referenced_in_motion_recommendation_extensions
+                        )
+                    )
+                )
+                .subscribe(
+                    value =>
+                        (this._referencingMotions = (value.referenced_in_motion_recommendation_extensions || []).sort(
+                            (a, b) => a.number.localeCompare(b.number)
+                        ))
+                )
         ];
     }
 

@@ -30,9 +30,11 @@
     "cleanup": "npm run prettify-write && npm run lint-write",
     "prettify-check": "prettier --list-different \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
     "prettify-write": "prettier --list-different --write \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
-    "generate-defaults": "ts-node -s -r tsconfig-paths/register cli/generate-settings-defaults.ts && prettier --write src/app/domain/definitions/meeting-settings-defaults.ts",
-    "generate-permissions": "ts-node -s -r tsconfig-paths/register cli/generate-permissions.ts && prettier --write src/app/domain/definitions/permission*.ts",
-    "generate-models": "ts-node -s -r tsconfig-paths/register cli/generate-models.ts && ng lint --fix --lint-file-patterns=src/app/domain/models/**/*.ts"
+    "ts": "ts-node -s -r tsconfig-paths/register",
+    "generate-defaults": "npm run ts -- cli/generate-settings-defaults.ts && prettier --write src/app/domain/definitions/meeting-settings-defaults.ts",
+    "generate-permissions": "npm run ts -- cli/generate-permissions.ts && prettier --write src/app/domain/definitions/permission*.ts",
+    "generate-models": "npm run ts -- cli/generate-models.ts && ng lint --fix --lint-file-patterns=src/app/domain/models/**/*.ts",
+    "get-available-languages": "npm run ts -- cli/get-available-languages.ts"
   },
   "dependencies": {
     "@angular/animations": "^14.3.0",

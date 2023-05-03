@@ -520,7 +520,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Sort motions by`),
                         type: `choice`,
                         choices: {
-                            number: _(`Motion number`),
+                            number: _(`Number`),
                             weight: _(`Call list`)
                         }
                     }
