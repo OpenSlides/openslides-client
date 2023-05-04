@@ -443,7 +443,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     private getErrorDescription(entry: ImportViaBackendPreviewIndexedRow): string {
-        return entry.message?.map(error => this.translate.instant(this._importer.verbose(error))).join(`,\n `);
+        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`,\n `);
     }
 
     private fillPreviewData(previews: ImportViaBackendIndexedPreview[]) {

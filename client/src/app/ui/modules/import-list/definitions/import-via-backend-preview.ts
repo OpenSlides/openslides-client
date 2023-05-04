@@ -25,7 +25,7 @@ export type ImportViaBackendPreviewObject = {
 
 export interface ImportViaBackendPreviewRow {
     state: ImportState;
-    message: string[];
+    messages: string[];
     data: {
         // property name and type must match an entry in the given `headers`
         [property: string]: ImportViaBackendPreviewModelData | ImportViaBackendPreviewModelData[]; // if is_list is set in corresponding header column, we need here also a list
