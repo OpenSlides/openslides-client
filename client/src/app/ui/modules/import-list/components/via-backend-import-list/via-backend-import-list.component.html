@@ -150,9 +150,6 @@
 
 <ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
     <div *ngIf="entry[def] || type === 'boolean'" class="flex-vertical-center">
-        <mat-icon color="warn" *ngIf="hasError(row, def)" matTooltip="{{ getVerboseError(def) | translate }}">
-            warning
-        </mat-icon>
         <ng-container *ngIf="getHeader(def).is_list">
             <ng-container
                 *ngIf="entry[def][0]"
@@ -211,7 +208,7 @@
             class="flex-vertical-center"
         >
             <mat-icon
-                [ngClass]="{'red-warning-text': row.status === 'error', 'warn': row.status === 'warning'}"
+                [ngClass]="{'red-warning-text': row.state === 'error', 'warn': row.state === 'warning'}"
                 matTooltip="{{ getRowTooltip(row) }}"
                 matTooltipPosition="right"
             >

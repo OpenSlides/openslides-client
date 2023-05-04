@@ -5,10 +5,7 @@ import { ImportStep } from 'src/app/infrastructure/utils/import/import-step';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 
 import { ImportViaBackendPhase } from '../modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
-import {
-    ImportViaBackendIndexedPreview,
-    ImportViaBackendPreviewRow
-} from '../modules/import-list/definitions/import-via-backend-preview';
+import { ImportViaBackendIndexedPreview } from '../modules/import-list/definitions/import-via-backend-preview';
 
 interface ImportServicePreview {
     new: number;
@@ -59,7 +56,6 @@ export interface ViaBackendImportService<M extends Identifiable> {
     encoding: string;
 
     verbose(error: string): string;
-    hasError(row: ImportViaBackendPreviewRow, error: string): boolean;
     refreshFile(): void;
     clearPreview(): void;
     clearFile(): void;

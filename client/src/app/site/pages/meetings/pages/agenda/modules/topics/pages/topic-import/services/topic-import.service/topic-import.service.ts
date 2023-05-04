@@ -28,9 +28,7 @@ export class TopicImportService extends BaseViaBackendImportService<Topic> {
         ParsingErrors: _(`Some csv values could not be read correctly.`)
     };
 
-    public override readonly isMeetingImport = true;
-
-    public override readonly verboseSummaryTitleMap: { [title: string]: string } = {
+    public override readonly verboseSummaryTitles: { [title: string]: string } = {
         total: _(`Total topics`),
         created: _(`Topics created`),
         updated: _(`Topics updated`),

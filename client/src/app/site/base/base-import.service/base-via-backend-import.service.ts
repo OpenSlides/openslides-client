@@ -11,7 +11,6 @@ import {
     ImportState,
     ImportViaBackendIndexedPreview,
     ImportViaBackendPreview,
-    ImportViaBackendPreviewRow,
     isImportViaBackendPreview
 } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
 
@@ -71,22 +70,37 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         { label: `Gravis (\`)`, value: `\`` }
     ];
 
+    /**
+     * Observable that allows one to monitor the currenty selected file.
+     */
     public get rawFileObservable(): Observable<File | null> {
         return this._rawFileSubject.asObservable();
     }
 
+    /**
+     * Action worker ids that will trigger the currently previewed import.
+     */
     public get previewActionIds(): number[] {
         return this._previewActionIds;
     }
 
+    /**
+     * If false there is something wrong with the data.
+     */
     public get previewHasRowErrors(): boolean {
-        return this._previewHasRowErrors;
+        return this._previews?.some(preview => preview.state === ImportState.Error) ?? false;
     }
 
+    /**
+     * Observable that passes updates on the current preview.
+     */
     public get previewsObservable(): Observable<ImportViaBackendIndexedPreview[] | null> {
         return this._previewsSubject as Observable<ImportViaBackendIndexedPreview[] | null>;
     }
 
+    /**
+     * Observable that allows one to monitor the part of the import that is currently in process.
+     */
     public get currentImportPhaseObservable(): Observable<ImportViaBackendPhase> {
         return this._currentImportPhaseSubject as Observable<ImportViaBackendPhase>;
     }
@@ -99,18 +113,14 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     protected readonly translate: TranslateService = this.importServiceCollector.translate;
     protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
 
-    protected readonly isMeetingImport: boolean = false;
-
     /**
      * Overwrite in subclass to define verbose titles for the ones sent by the backend
      */
-    protected readonly verboseSummaryTitleMap: { [title: string]: string } = {};
+    protected readonly verboseSummaryTitles: { [title: string]: string } = {};
 
     private set previews(preview: ImportViaBackendIndexedPreview[] | null) {
         this._previews = preview;
         this._previewActionIds = this._previews?.map(result => result.id) ?? [];
-        this._previewHasRowErrors =
-            this._previews?.some(preview => preview.rows.some(row => row.status === ImportState.Error)) || false;
         this._previewsSubject.next(preview);
     }
 
@@ -119,7 +129,6 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     private _previewsSubject = new BehaviorSubject<ImportViaBackendIndexedPreview[] | null>(null);
 
     private _previewActionIds: number[] = [];
-    private _previewHasRowErrors: boolean = false;
 
     /**
      * The last parsed file object (may be reparsed with new encoding, thus kept in memory)
@@ -175,12 +184,20 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
         this.parseCsvLines();
     }
 
+    /**
+     * Clears the current File (and the preview along with it)
+     */
     public clearFile(): void {
         this.clearPreview();
         this._rawFile = null;
         this._rawFileSubject.next(null);
     }
 
+    /**
+     * Adds new csv lines onto the end of and then updates the preview.
+     *
+     * @param lines should conform to the format expected by the backend.
+     */
     public addLines(...lines: { [header: string]: any }[]): void {
         for (const line of lines) {
             this._csvLines.push(line);
@@ -216,16 +233,18 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * Resets the data and preview (triggered upon selecting an invalid file)
      */
     public clearPreview(): void {
+        if (this.previewActionIds?.length) {
+            this.import(this.previewActionIds, true); // Delete the suspended action worker from the backend
+        }
         this._currentImportPhaseSubject.next(ImportViaBackendPhase.LOADING_PREVIEW);
         this.previews = null;
-        if (this.previewActionIds?.length) {
-            this.import(this.previewActionIds, true);
-        }
     }
 
+    /**
+     * Resets the service to starting condition.
+     */
     public clearAll(): void {
         this._csvLines = [];
-        this.clearPreview();
         this.clearFile();
     }
 
@@ -243,19 +262,8 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * Matches the summary titles from the backend to more verbose versions that should be displayed instead.
      */
     public getVerboseSummaryPointTitle(title: string): string {
-        const verbose = (this.verboseSummaryTitleMap[title] ?? title).trim();
+        const verbose = (this.verboseSummaryTitles[title] ?? title).trim();
         return verbose.charAt(0).toUpperCase() + verbose.slice(1);
-    }
-
-    /**
-     * Queries if a given error is present in the given entry
-     *
-     * @param entry the entry to check for the error.
-     * @param error The error to check for
-     * @returns true if the error is present
-     */
-    public hasError(entry: ImportViaBackendPreviewRow, error: string): boolean {
-        return entry.message?.includes(error);
     }
 
     /**

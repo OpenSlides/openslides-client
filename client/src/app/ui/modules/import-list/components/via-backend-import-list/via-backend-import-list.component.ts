@@ -31,6 +31,7 @@ import {
     ImportViaBackendIndexedPreview,
     ImportViaBackendPreviewHeader,
     ImportViaBackendPreviewIndexedRow,
+    ImportViaBackendPreviewObject,
     ImportViaBackendPreviewSummary
 } from '../../definitions/import-via-backend-preview';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
@@ -99,55 +100,82 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
 
     public readonly Phase = ImportViaBackendPhase;
 
+    /**
+     * Observable that allows one to monitor the currenty selected file.
+     */
     public get rawFileObservable(): Observable<File | null> {
         return this._importer?.rawFileObservable || of(null);
     }
 
+    /**
+     * Client-side definition of required/accepted columns.
+     * Ensures that the client can display information about how the import works.
+     */
+    @Input()
+    public set defaultColumns(cols: ImportListHeaderDefinition[]) {
+        this._defaultColumns = cols;
+        this.setHeaders({ default: cols });
+    }
     public get defaultColumns(): ImportListHeaderDefinition[] {
         return this._defaultColumns;
     }
 
-    @Input()
-    public set defaultColumns(cols: ImportListHeaderDefinition[]) {
-        this._defaultColumns = cols;
-    }
-
+    /**
+     * The actual headers of the preview, as they were delivered by the backend.
+     */
     public get previewColumns(): ImportViaBackendPreviewHeader[] {
         return this._previewColumns;
     }
 
+    /**
+     * The summary of the preview, as it was delivered by the backend.
+     */
     public get summary(): ImportViaBackendPreviewSummary[] {
         return this._summary;
     }
 
+    /**
+     * The rows of the preview, which were delivered by the backend.
+     * Affixed with fake ids for the purpose of displaying them correctly.
+     */
     public get rows(): ImportViaBackendPreviewIndexedRow[] {
         return this._rows;
     }
-    private _summary: ImportViaBackendPreviewSummary[];
-    private _rows: ImportViaBackendPreviewIndexedRow[];
-    private _previewColumns: ImportViaBackendPreviewHeader[];
 
+    /**
+     * True if, after the first json-upload, the view is waiting for the user to confirm the import.
+     */
     public get awaitingConfirm(): boolean {
-        return this._state === ImportViaBackendPhase.AWAITING_CONFIRM || this.tryAgain;
+        return this._state === ImportViaBackendPhase.AWAITING_CONFIRM;
     }
 
+    /**
+     * True if the import has successfully finished.
+     */
     public get finishedSuccessfully(): boolean {
         return this._state === ImportViaBackendPhase.FINISHED;
     }
 
+    /**
+     * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
+     */
     public get tryAgain(): boolean {
         return this._state === ImportViaBackendPhase.TRY_AGAIN;
     }
 
+    /**
+     * True while an import is in progress.
+     */
     public get isImporting(): boolean {
         return this._state === ImportViaBackendPhase.IMPORTING;
     }
 
+    /**
+     * True if the preview can not be imported.
+     */
     public get hasErrors(): boolean {
         return this._state === ImportViaBackendPhase.ERROR;
     }
-
-    private _state: ImportViaBackendPhase = ImportViaBackendPhase.LOADING_PREVIEW;
 
     /**
      * Currently selected encoding. Is set and changed by the config's available
@@ -176,23 +204,41 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         return this._importer.textSeparators;
     }
 
+    /**
+     * If false there is something wrong with the data.
+     */
     public get hasRowErrors(): boolean {
-        return this._hasErrors;
+        return this._importer.previewHasRowErrors;
     }
 
-    private _hasErrors: boolean = false;
-
+    /**
+     * Client side information on the required fields of this import.
+     * Generated from the information in the defaultColumns.
+     */
     public get requiredFields(): string[] {
         return this._requiredFields;
     }
 
+    /**
+     * The Observable from which the views table will be calculated
+     */
     public get dataSource(): Observable<ImportViaBackendPreviewIndexedRow[]> {
         return this._dataSource;
     }
 
+    private _state: ImportViaBackendPhase = ImportViaBackendPhase.LOADING_PREVIEW;
+
+    private _summary: ImportViaBackendPreviewSummary[];
+    private _rows: ImportViaBackendPreviewIndexedRow[];
+    private _previewColumns: ImportViaBackendPreviewHeader[];
+
     private _dataSource: Observable<ImportViaBackendPreviewIndexedRow[]> = of([]);
     private _requiredFields: string[] = [];
     private _defaultColumns: ImportListHeaderDefinition[] = [];
+
+    private _headers: {
+        [property: string]: { default?: ImportListHeaderDefinition; preview?: ImportViaBackendPreviewHeader };
+    } = {};
 
     public constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
@@ -200,7 +246,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      * Starts with a clean preview (removing any previously existing import previews)
      */
     public ngOnInit(): void {
-        this._importer.clearPreview();
+        this._importer.clearAll();
         this._requiredFields = this.createRequiredFields();
         this._importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
@@ -214,9 +260,11 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         );
     }
 
+    /**
+     * Resets the importer when leaving the view
+     */
     public ngOnDestroy(): void {
         this._importer.clearFile();
-        this._importer.clearPreview();
     }
 
     /**
@@ -228,6 +276,9 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         this.selectedTabChanged.emit(index);
     }
 
+    /**
+     * True if there are custom tabs.
+     */
     public hasSeveralTabs(): boolean {
         return this.importListFirstTabs.length + this.importListLastTabs.length > 0;
     }
@@ -246,6 +297,9 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         this._importer.doImport();
     }
 
+    /**
+     * Removes the selected file and also empties the preview.
+     */
     public removeSelectedFile(): void {
         if (this.fileInput) {
             this.fileInput.nativeElement.value = ``;
@@ -253,17 +307,34 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         this._importer.clearFile();
     }
 
+    /**
+     * Gets the relevant backend header information for a property.
+     */
     public getHeader(propertyName: string): ImportViaBackendPreviewHeader {
-        return this._previewColumns.find(header => header.property === propertyName);
+        return this._headers[propertyName]?.preview;
     }
 
     /**
-     * Get the icon for the action of the item
-     * @param entry a row or an entry with a current status
-     * @eturn the icon for the action of the item
+     * Gets the width of the column for the given property.
      */
-    public getActionIcon(entry: ImportViaBackendPreviewIndexedRow): string {
-        switch (entry.status) {
+    public getColumnWidth(propertyName: string): number {
+        return this._headers[propertyName]?.default?.width ?? 50;
+    }
+
+    /**
+     * Gets the label of the column for the given property.
+     */
+    public getColumnLabel(propertyName: string): string {
+        return this._headers[propertyName]?.default?.label ?? propertyName;
+    }
+
+    /**
+     * Get the icon for the the item
+     * @param item a row or an entry with a current state
+     * @eturn the icon for the item
+     */
+    public getActionIcon(item: ImportViaBackendPreviewIndexedRow | ImportViaBackendPreviewObject): string {
+        switch (item[`state`] ?? item[`info`]) {
             case ImportState.Error: // no import possible
                 return `block`;
             case ImportState.Warning:
@@ -279,8 +350,13 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         }
     }
 
+    /**
+     * Get the correct tooltip for the item
+     * @param entry a row with a current state
+     * @eturn the tooltip for the item
+     */
     public getRowTooltip(row: ImportViaBackendPreviewIndexedRow): string {
-        switch (row.status) {
+        switch (row.state) {
             case ImportState.Error: // no import possible
                 return (
                     this.getErrorDescription(row) ??
@@ -320,16 +396,8 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         this._importer.refreshFile();
     }
 
-    public getColumnWidth(propertyName: string): number {
-        return this.defaultColumns.find(col => col.property === propertyName)?.width ?? 50;
-    }
-
-    public getColumnLabel(propertyName: string): string {
-        return this.defaultColumns.find(col => col.property === propertyName)?.label ?? propertyName;
-    }
-
     /**
-     * Trigger for the encoding selection
+     * Trigger for the encoding selection.
      */
     public selectEncoding(event: MatSelectChange): void {
         this._importer.encoding = event.value;
@@ -337,42 +405,45 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     }
 
     /**
-     * Returns a descriptive string for an import error
-     *
-     * @param error The short string for the error as listed in the {@lilnk errorList}
-     * @returns a predefined descriptive error string from the importer
+     * Opens a fullscreen dialog with the given template as content.
      */
-    public getVerboseError(error: string): string {
-        return this._importer.verbose(error);
-    }
-
-    /**
-     * Checks if an error is present in a row
-     *
-     * @param row the row
-     * @param error An error as defined as key of {@link errorList}
-     * @returns true if the error is present in the entry described in the row
-     */
-    public hasError(row: ImportViaBackendPreviewIndexedRow, error: string): boolean {
-        return this._importer.hasError(row, error);
-    }
-
     public async enterFullscreen(dialogTemplate: TemplateRef<any>): Promise<void> {
         const ref = this.dialog.open(dialogTemplate, { width: `80vw` });
         await firstValueFrom(ref.afterClosed());
     }
 
+    /**
+     * Opens an info dialog with the given template as content.
+     */
     public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
         const ref = this.dialog.open(dialogTemplate, infoDialogSettings);
         await firstValueFrom(ref.afterClosed());
     }
 
+    /**
+     * Returns the verbose title for a given summary title.
+     */
     public getSummaryPointTitle(title: string): string {
         return this._importer.getVerboseSummaryPointTitle(title);
     }
 
+    private setHeaders(data: {
+        default?: ImportListHeaderDefinition[];
+        preview?: ImportViaBackendPreviewHeader[];
+    }): void {
+        for (let key of Object.keys(data)) {
+            for (let header of data[key] ?? []) {
+                if (!this._headers[header.property]) {
+                    this._headers[header.property] = { [key]: header };
+                } else {
+                    this._headers[header.property][key] = header;
+                }
+            }
+        }
+    }
+
     private getErrorDescription(entry: ImportViaBackendPreviewIndexedRow): string {
-        return entry.message?.map(error => this.translate.instant(this.getVerboseError(error))).join(`,\n `);
+        return entry.message?.map(error => this.translate.instant(this._importer.verbose(error))).join(`,\n `);
     }
 
     private fillPreviewData(previews: ImportViaBackendIndexedPreview[]) {
@@ -380,12 +451,11 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
             this._previewColumns = undefined;
             this._summary = undefined;
             this._rows = undefined;
-            this._hasErrors = false;
         } else {
             this._previewColumns = previews[0].headers;
             this._summary = previews.flatMap(preview => preview.statistics).filter(point => point.value);
             this._rows = this.calculateRows(previews);
-            this._hasErrors = this.importer.previewHasRowErrors;
+            this.setHeaders({ preview: this._previewColumns });
         }
     }
 
