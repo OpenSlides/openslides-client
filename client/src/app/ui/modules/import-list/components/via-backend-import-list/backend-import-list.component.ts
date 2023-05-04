@@ -22,23 +22,23 @@ import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
-import { ViaBackendImportService } from 'src/app/ui/base/import-service';
+import { BackendImportService } from 'src/app/ui/base/import-service';
 
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 import { ImportListHeaderDefinition } from '../../definitions';
 import {
-    ImportState,
-    ImportViaBackendIndexedPreview,
-    ImportViaBackendPreviewHeader,
-    ImportViaBackendPreviewIndexedRow,
-    ImportViaBackendPreviewObject,
-    ImportViaBackendPreviewSummary
-} from '../../definitions/import-via-backend-preview';
+    BackendImportEntryObject,
+    BackendImportHeader,
+    BackendImportIdentifiedRow,
+    BackendImportPreview,
+    BackendImportState,
+    BackendImportSummary
+} from '../../definitions/backend-import-preview';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
 
-export enum ImportViaBackendPhase {
+export enum BackendImportPhase {
     LOADING_PREVIEW,
     AWAITING_CONFIRM,
     IMPORTING,
@@ -48,12 +48,12 @@ export enum ImportViaBackendPhase {
 }
 
 @Component({
-    selector: `os-via-backend-import-list`,
-    templateUrl: `./via-backend-import-list.component.html`,
-    styleUrls: [`./via-backend-import-list.component.scss`],
+    selector: `os-backend-import-list`,
+    templateUrl: `./backend-import-list.component.html`,
+    styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class ViaBackendImportListComponent<M extends Identifiable> implements OnInit, OnDestroy {
+export class BackendImportListComponent<M extends Identifiable> implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -79,15 +79,15 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     public additionalInfo = ``;
 
     @Input()
-    public set importer(importer: ViaBackendImportService<M>) {
+    public set importer(importer: BackendImportService<M>) {
         this._importer = importer;
     }
 
-    public get importer(): ViaBackendImportService<M> {
+    public get importer(): BackendImportService<M> {
         return this._importer;
     }
 
-    private _importer!: ViaBackendImportService<M>;
+    private _importer!: BackendImportService<M>;
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.
@@ -98,7 +98,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     @Output()
     public selectedTabChanged = new EventEmitter<number>();
 
-    public readonly Phase = ImportViaBackendPhase;
+    public readonly Phase = BackendImportPhase;
 
     /**
      * Observable that allows one to monitor the currenty selected file.
@@ -123,14 +123,14 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     /**
      * The actual headers of the preview, as they were delivered by the backend.
      */
-    public get previewColumns(): ImportViaBackendPreviewHeader[] {
+    public get previewColumns(): BackendImportHeader[] {
         return this._previewColumns;
     }
 
     /**
      * The summary of the preview, as it was delivered by the backend.
      */
-    public get summary(): ImportViaBackendPreviewSummary[] {
+    public get summary(): BackendImportSummary[] {
         return this._summary;
     }
 
@@ -138,7 +138,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      * The rows of the preview, which were delivered by the backend.
      * Affixed with fake ids for the purpose of displaying them correctly.
      */
-    public get rows(): ImportViaBackendPreviewIndexedRow[] {
+    public get rows(): BackendImportIdentifiedRow[] {
         return this._rows;
     }
 
@@ -146,35 +146,35 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      * True if, after the first json-upload, the view is waiting for the user to confirm the import.
      */
     public get awaitingConfirm(): boolean {
-        return this._state === ImportViaBackendPhase.AWAITING_CONFIRM;
+        return this._state === BackendImportPhase.AWAITING_CONFIRM;
     }
 
     /**
      * True if the import has successfully finished.
      */
     public get finishedSuccessfully(): boolean {
-        return this._state === ImportViaBackendPhase.FINISHED;
+        return this._state === BackendImportPhase.FINISHED;
     }
 
     /**
      * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
      */
     public get tryAgain(): boolean {
-        return this._state === ImportViaBackendPhase.TRY_AGAIN;
+        return this._state === BackendImportPhase.TRY_AGAIN;
     }
 
     /**
      * True while an import is in progress.
      */
     public get isImporting(): boolean {
-        return this._state === ImportViaBackendPhase.IMPORTING;
+        return this._state === BackendImportPhase.IMPORTING;
     }
 
     /**
      * True if the preview can not be imported.
      */
     public get hasErrors(): boolean {
-        return this._state === ImportViaBackendPhase.ERROR;
+        return this._state === BackendImportPhase.ERROR;
     }
 
     /**
@@ -222,22 +222,22 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     /**
      * The Observable from which the views table will be calculated
      */
-    public get dataSource(): Observable<ImportViaBackendPreviewIndexedRow[]> {
+    public get dataSource(): Observable<BackendImportIdentifiedRow[]> {
         return this._dataSource;
     }
 
-    private _state: ImportViaBackendPhase = ImportViaBackendPhase.LOADING_PREVIEW;
+    private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
 
-    private _summary: ImportViaBackendPreviewSummary[];
-    private _rows: ImportViaBackendPreviewIndexedRow[];
-    private _previewColumns: ImportViaBackendPreviewHeader[];
+    private _summary: BackendImportSummary[];
+    private _rows: BackendImportIdentifiedRow[];
+    private _previewColumns: BackendImportHeader[];
 
-    private _dataSource: Observable<ImportViaBackendPreviewIndexedRow[]> = of([]);
+    private _dataSource: Observable<BackendImportIdentifiedRow[]> = of([]);
     private _requiredFields: string[] = [];
     private _defaultColumns: ImportListHeaderDefinition[] = [];
 
     private _headers: {
-        [property: string]: { default?: ImportListHeaderDefinition; preview?: ImportViaBackendPreviewHeader };
+        [property: string]: { default?: ImportListHeaderDefinition; preview?: BackendImportHeader };
     } = {};
 
     public constructor(private dialog: MatDialog, private translate: TranslateService) {}
@@ -310,7 +310,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
     /**
      * Gets the relevant backend header information for a property.
      */
-    public getHeader(propertyName: string): ImportViaBackendPreviewHeader {
+    public getHeader(propertyName: string): BackendImportHeader {
         return this._headers[propertyName]?.preview;
     }
 
@@ -333,17 +333,17 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      * @param item a row or an entry with a current state
      * @eturn the icon for the item
      */
-    public getActionIcon(item: ImportViaBackendPreviewIndexedRow | ImportViaBackendPreviewObject): string {
+    public getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
-            case ImportState.Error: // no import possible
+            case BackendImportState.Error: // no import possible
                 return `block`;
-            case ImportState.Warning:
+            case BackendImportState.Warning:
                 return `warning`;
-            case ImportState.New:
+            case BackendImportState.New:
                 return `add`;
-            case ImportState.Done: // item has been imported
+            case BackendImportState.Done: // item has been imported
                 return `done`;
-            case ImportState.Generated:
+            case BackendImportState.Generated:
                 return `autorenew`;
             default:
                 return `block`; // fallback: Error
@@ -355,18 +355,18 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
      * @param entry a row with a current state
      * @eturn the tooltip for the item
      */
-    public getRowTooltip(row: ImportViaBackendPreviewIndexedRow): string {
+    public getRowTooltip(row: BackendImportIdentifiedRow): string {
         switch (row.state) {
-            case ImportState.Error: // no import possible
+            case BackendImportState.Error: // no import possible
                 return (
                     this.getErrorDescription(row) ??
                     _(`There is an unspecified error in this line, which prevents the import.`)
                 );
-            case ImportState.Warning:
+            case BackendImportState.Warning:
                 return this.getErrorDescription(row) ?? _(`This row will not be imported, due to an unknown reason.`);
-            case ImportState.New:
+            case BackendImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
-            case ImportState.Done: // item has been imported
+            case BackendImportState.Done: // item has been imported
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`has been imported`);
             default:
                 return undefined;
@@ -427,10 +427,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         return this._importer.getVerboseSummaryPointTitle(title);
     }
 
-    private setHeaders(data: {
-        default?: ImportListHeaderDefinition[];
-        preview?: ImportViaBackendPreviewHeader[];
-    }): void {
+    private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
         for (let key of Object.keys(data)) {
             for (let header of data[key] ?? []) {
                 if (!this._headers[header.property]) {
@@ -442,11 +439,11 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         }
     }
 
-    private getErrorDescription(entry: ImportViaBackendPreviewIndexedRow): string {
+    private getErrorDescription(entry: BackendImportIdentifiedRow): string {
         return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`,\n `);
     }
 
-    private fillPreviewData(previews: ImportViaBackendIndexedPreview[]) {
+    private fillPreviewData(previews: BackendImportPreview[]) {
         if (!previews || !previews.length) {
             this._previewColumns = undefined;
             this._summary = undefined;
@@ -459,7 +456,7 @@ export class ViaBackendImportListComponent<M extends Identifiable> implements On
         }
     }
 
-    private calculateRows(previews: ImportViaBackendIndexedPreview[]): ImportViaBackendPreviewIndexedRow[] {
+    private calculateRows(previews: BackendImportPreview[]): BackendImportIdentifiedRow[] {
         return previews?.flatMap(preview => preview.rows);
     }
 

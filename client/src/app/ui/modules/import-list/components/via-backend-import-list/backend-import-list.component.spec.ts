@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViaBackendImportListComponent } from './via-backend-import-list.component';
+import { BackendImportListComponent } from './backend-import-list.component';
 
 xdescribe(`ViaBackendImportListComponent`, () => {
-    let component: ViaBackendImportListComponent;
-    let fixture: ComponentFixture<ViaBackendImportListComponent>;
+    let component: BackendImportListComponent;
+    let fixture: ComponentFixture<BackendImportListComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ViaBackendImportListComponent]
+            declarations: [BackendImportListComponent]
         }).compileComponents();
 
-        fixture = TestBed.createComponent(ViaBackendImportListComponent);
+        fixture = TestBed.createComponent(BackendImportListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

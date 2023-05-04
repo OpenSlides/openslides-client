@@ -1,12 +1,12 @@
 import { Directive, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { ImportViaBackendPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
+import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 
 import { Identifiable } from '../../domain/interfaces';
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
 import { ComponentServiceCollectorService } from '../services/component-service-collector.service';
-import { BaseViaBackendImportService } from './base-import.service/base-via-backend-import.service';
+import { BaseBackendImportService } from './base-import.service/base-backend-import.service';
 
 @Directive()
 export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
@@ -27,43 +27,43 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
      * True if the import is in a state in which an import can be conducted
      */
     public get canImport(): boolean {
-        return this._state === ImportViaBackendPhase.AWAITING_CONFIRM || this.tryAgain;
+        return this._state === BackendImportPhase.AWAITING_CONFIRM || this.tryAgain;
     }
 
     /**
      * True if the import has successfully finished.
      */
     public get finishedSuccessfully(): boolean {
-        return this._state === ImportViaBackendPhase.FINISHED;
+        return this._state === BackendImportPhase.FINISHED;
     }
 
     /**
      * True if, after an attempted import failed, the view is waiting for the user to confirm the import on the new preview.
      */
     public get tryAgain(): boolean {
-        return this._state === ImportViaBackendPhase.TRY_AGAIN;
+        return this._state === BackendImportPhase.TRY_AGAIN;
     }
 
     /**
      * True while an import is in progress.
      */
     public get isImporting(): boolean {
-        return this._state === ImportViaBackendPhase.IMPORTING;
+        return this._state === BackendImportPhase.IMPORTING;
     }
 
     /**
      * True if the preview can not be imported.
      */
     public get hasErrors(): boolean {
-        return this._state === ImportViaBackendPhase.ERROR;
+        return this._state === BackendImportPhase.ERROR;
     }
 
-    private _state: ImportViaBackendPhase = ImportViaBackendPhase.LOADING_PREVIEW;
+    private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        protected importer: BaseViaBackendImportService<M>
+        protected importer: BaseBackendImportService<M>
     ) {
         super(componentServiceCollector, translate);
     }

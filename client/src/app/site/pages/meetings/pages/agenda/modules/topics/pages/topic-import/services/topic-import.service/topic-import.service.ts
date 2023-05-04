@@ -3,10 +3,10 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { BaseViaBackendImportService } from 'src/app/site/base/base-import.service/base-via-backend-import.service';
+import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { ImportViaBackendPreview } from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { TopicExportService } from '../topic-export.service';
 import { TopicImportServiceModule } from '../topic-import-service.module';
@@ -14,7 +14,7 @@ import { TopicImportServiceModule } from '../topic-import-service.module';
 @Injectable({
     providedIn: TopicImportServiceModule
 })
-export class TopicImportService extends BaseViaBackendImportService<Topic> {
+export class TopicImportService extends BaseBackendImportService<Topic> {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
@@ -64,11 +64,11 @@ export class TopicImportService extends BaseViaBackendImportService<Topic> {
     protected async import(
         actionWorkerIds: number[],
         abort: boolean = false
-    ): Promise<void | (ImportViaBackendPreview | void)[]> {
+    ): Promise<void | (BackendImportRawPreview | void)[]> {
         return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
     }
 
-    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]> {
+    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]> {
         return await this.repo.jsonUpload(payload).resolve();
     }
 

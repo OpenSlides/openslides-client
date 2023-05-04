@@ -14,7 +14,7 @@ import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
 import { ImportListComponent } from './components/import-list/import-list.component';
-import { ViaBackendImportListComponent } from './components/via-backend-import-list/via-backend-import-list.component';
+import { BackendImportListComponent } from './components/via-backend-import-list/backend-import-list.component';
 import { ImportListFirstTabDirective } from './directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from './directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from './directives/import-list-status-template.directive';
@@ -24,7 +24,7 @@ const DECLARATIONS = [
     ImportListFirstTabDirective,
     ImportListLastTabDirective,
     ImportListStatusTemplateDirective,
-    ViaBackendImportListComponent
+    BackendImportListComponent
 ];
 
 @NgModule({

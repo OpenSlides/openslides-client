@@ -5,20 +5,20 @@ import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { FileReaderProgressEvent, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
-import { ViaBackendImportService } from 'src/app/ui/base/import-service';
-import { ImportViaBackendPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
+import { BackendImportService } from 'src/app/ui/base/import-service';
+import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import {
-    ImportState,
-    ImportViaBackendIndexedPreview,
-    ImportViaBackendPreview,
-    isImportViaBackendPreview
-} from 'src/app/ui/modules/import-list/definitions/import-via-backend-preview';
+    BackendImportPreview,
+    BackendImportRawPreview,
+    BackendImportState,
+    isBackendImportRawPreview
+} from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
 
 @Directive()
-export abstract class BaseViaBackendImportService<MainModel extends Identifiable>
-    implements ViaBackendImportService<MainModel>
+export abstract class BaseBackendImportService<MainModel extends Identifiable>
+    implements BackendImportService<MainModel>
 {
     /**
      * The minimimal number of header entries needed to successfully create an entry
@@ -88,21 +88,21 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * If false there is something wrong with the data.
      */
     public get previewHasRowErrors(): boolean {
-        return this._previews?.some(preview => preview.state === ImportState.Error) ?? false;
+        return this._previews?.some(preview => preview.state === BackendImportState.Error) ?? false;
     }
 
     /**
      * Observable that passes updates on the current preview.
      */
-    public get previewsObservable(): Observable<ImportViaBackendIndexedPreview[] | null> {
-        return this._previewsSubject as Observable<ImportViaBackendIndexedPreview[] | null>;
+    public get previewsObservable(): Observable<BackendImportPreview[] | null> {
+        return this._previewsSubject as Observable<BackendImportPreview[] | null>;
     }
 
     /**
      * Observable that allows one to monitor the part of the import that is currently in process.
      */
-    public get currentImportPhaseObservable(): Observable<ImportViaBackendPhase> {
-        return this._currentImportPhaseSubject as Observable<ImportViaBackendPhase>;
+    public get currentImportPhaseObservable(): Observable<BackendImportPhase> {
+        return this._currentImportPhaseSubject as Observable<BackendImportPhase>;
     }
 
     /**
@@ -118,15 +118,15 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      */
     protected readonly verboseSummaryTitles: { [title: string]: string } = {};
 
-    private set previews(preview: ImportViaBackendIndexedPreview[] | null) {
+    private set previews(preview: BackendImportPreview[] | null) {
         this._previews = preview;
         this._previewActionIds = this._previews?.map(result => result.id) ?? [];
         this._previewsSubject.next(preview);
     }
 
-    private _previews: ImportViaBackendIndexedPreview[] | null = null;
+    private _previews: BackendImportPreview[] | null = null;
 
-    private _previewsSubject = new BehaviorSubject<ImportViaBackendIndexedPreview[] | null>(null);
+    private _previewsSubject = new BehaviorSubject<BackendImportPreview[] | null>(null);
 
     private _previewActionIds: number[] = [];
 
@@ -142,9 +142,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      */
     private _reader = new FileReader();
 
-    private _currentImportPhaseSubject = new BehaviorSubject<ImportViaBackendPhase>(
-        ImportViaBackendPhase.LOADING_PREVIEW
-    );
+    private _currentImportPhaseSubject = new BehaviorSubject<BackendImportPhase>(BackendImportPhase.LOADING_PREVIEW);
 
     /**
      * the list of parsed models that have been extracted from the opened file or inserted manually
@@ -233,10 +231,10 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * Resets the data and preview (triggered upon selecting an invalid file)
      */
     public clearPreview(): void {
-        if (this.previewActionIds?.length) {
+        if (this.previewActionIds?.length && this._currentImportPhaseSubject.value !== BackendImportPhase.FINISHED) {
             this.import(this.previewActionIds, true); // Delete the suspended action worker from the backend
         }
-        this._currentImportPhaseSubject.next(ImportViaBackendPhase.LOADING_PREVIEW);
+        this._currentImportPhaseSubject.next(BackendImportPhase.LOADING_PREVIEW);
         this.previews = null;
     }
 
@@ -270,22 +268,22 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
      * Executing the import.
      */
     public async doImport(): Promise<void> {
-        this._currentImportPhaseSubject.next(ImportViaBackendPhase.IMPORTING);
+        this._currentImportPhaseSubject.next(BackendImportPhase.IMPORTING);
 
         const results = await this.import(this.previewActionIds, false);
 
-        if (Array.isArray(results) && results.find(result => isImportViaBackendPreview(result))) {
+        if (Array.isArray(results) && results.find(result => isBackendImportRawPreview(result))) {
             const updatedPreviews = results.filter(result =>
-                isImportViaBackendPreview(result)
-            ) as ImportViaBackendPreview[];
+                isBackendImportRawPreview(result)
+            ) as BackendImportRawPreview[];
             this.processRawPreviews(updatedPreviews);
             if (this.previewHasRowErrors) {
-                this._currentImportPhaseSubject.next(ImportViaBackendPhase.ERROR);
+                this._currentImportPhaseSubject.next(BackendImportPhase.ERROR);
             } else {
-                this._currentImportPhaseSubject.next(ImportViaBackendPhase.TRY_AGAIN);
+                this._currentImportPhaseSubject.next(BackendImportPhase.TRY_AGAIN);
             }
         } else {
-            this._currentImportPhaseSubject.next(ImportViaBackendPhase.FINISHED);
+            this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
             this._csvLines = [];
         }
     }
@@ -340,20 +338,20 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     private async propagateNextNewEntries(): Promise<void> {
         this.clearPreview();
         const payload = this.calculateJsonUploadPayload();
-        const response = (await this.jsonUpload(payload)) as ImportViaBackendPreview[];
+        const response = (await this.jsonUpload(payload)) as BackendImportRawPreview[];
         if (!response) {
             throw new Error(`Didn't receive preview`);
         }
         this.processRawPreviews(response);
         if (this.previewHasRowErrors) {
-            this._currentImportPhaseSubject.next(ImportViaBackendPhase.ERROR);
+            this._currentImportPhaseSubject.next(BackendImportPhase.ERROR);
         } else {
-            this._currentImportPhaseSubject.next(ImportViaBackendPhase.AWAITING_CONFIRM);
+            this._currentImportPhaseSubject.next(BackendImportPhase.AWAITING_CONFIRM);
         }
     }
 
-    private processRawPreviews(rawPreviews: ImportViaBackendPreview[]): void {
-        const previews: (ImportViaBackendPreview | ImportViaBackendIndexedPreview)[] = rawPreviews;
+    private processRawPreviews(rawPreviews: BackendImportRawPreview[]): void {
+        const previews: (BackendImportRawPreview | BackendImportPreview)[] = rawPreviews;
         let index = 1;
         for (let preview of previews) {
             for (let row of preview.rows) {
@@ -362,7 +360,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
             }
         }
 
-        this.previews = previews as ImportViaBackendIndexedPreview[];
+        this.previews = previews as BackendImportPreview[];
     }
 
     // Abstract methods
@@ -374,7 +372,7 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     /**
      * Calls the relevant json_upload backend action with the payload.
      */
-    protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | ImportViaBackendPreview[]>;
+    protected abstract jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]>;
     /**
      * Calls the relevant import backend action with the payload.
      *
@@ -384,5 +382,5 @@ export abstract class BaseViaBackendImportService<MainModel extends Identifiable
     protected abstract import(
         actionWorkerIds: number[],
         abort?: boolean
-    ): Promise<void | (ImportViaBackendPreview | void)[]>;
+    ): Promise<void | (BackendImportRawPreview | void)[]>;
 }

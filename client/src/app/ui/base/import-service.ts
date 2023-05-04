@@ -4,8 +4,8 @@ import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
 import { ImportStep } from 'src/app/infrastructure/utils/import/import-step';
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 
-import { ImportViaBackendPhase } from '../modules/import-list/components/via-backend-import-list/via-backend-import-list.component';
-import { ImportViaBackendIndexedPreview } from '../modules/import-list/definitions/import-via-backend-preview';
+import { BackendImportPhase } from '../modules/import-list/components/via-backend-import-list/backend-import-list.component';
+import { BackendImportPreview } from '../modules/import-list/definitions/backend-import-preview';
 
 interface ImportServicePreview {
     new: number;
@@ -42,13 +42,13 @@ export interface ImportService<M extends Identifiable> {
     downloadCsvExample(): void;
 }
 
-export interface ViaBackendImportService<M extends Identifiable> {
+export interface BackendImportService<M extends Identifiable> {
     readonly rawFileObservable: Observable<File | null>;
     readonly encodings: ValueLabelCombination[];
     readonly columnSeparators: ValueLabelCombination[];
     readonly textSeparators: ValueLabelCombination[];
-    readonly previewsObservable: Observable<ImportViaBackendIndexedPreview[] | null>;
-    readonly currentImportPhaseObservable: Observable<ImportViaBackendPhase>;
+    readonly previewsObservable: Observable<BackendImportPreview[] | null>;
+    readonly currentImportPhaseObservable: Observable<BackendImportPhase>;
     readonly previewHasRowErrors: boolean;
 
     columnSeparator: string;
