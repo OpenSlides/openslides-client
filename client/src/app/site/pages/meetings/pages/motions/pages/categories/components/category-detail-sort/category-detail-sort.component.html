@@ -26,6 +26,14 @@
                             {{ motion.id }}
                         </mat-basic-chip>
                     </span>
+                    
+                    <span>
+                        <mat-basic-chip class="bluegrey" disableRipple
+                            matTooltip="{{ 'Sequential number' | translate }}">
+                            {{ motion.sequential_number }}
+                        </mat-basic-chip>
+                    </span>
+                    
                 </div>
             </ng-template>
         </os-sorting-list>
