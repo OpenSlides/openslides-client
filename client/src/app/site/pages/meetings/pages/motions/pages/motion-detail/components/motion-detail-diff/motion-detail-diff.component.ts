@@ -209,6 +209,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                 firstLine: this.motion.firstLine
             });
         }
+        console.log(`BASETEXT`, baseText, this.getAllTextChangingObjects());
 
         return this.diff.getTextRemainderAfterLastChange(
             baseText,

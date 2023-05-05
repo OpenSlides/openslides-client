@@ -224,6 +224,14 @@ export class MotionSlideComponent
             .filter(x => x !== null) as AmendmentParagraphUnifiedChange[];
     }
 
+    public getTextBasedAmendmentLines(): string {
+        return this.lineNumbering.insertLineNumbers({
+            html: this.data.data.text,
+            lineLength: this.lineLength,
+            firstLine: 1
+        });
+    }
+
     /**
      * Merges amendments and change recommendations and sorts them by the line numbers.
      * Called each time one of these arrays changes.

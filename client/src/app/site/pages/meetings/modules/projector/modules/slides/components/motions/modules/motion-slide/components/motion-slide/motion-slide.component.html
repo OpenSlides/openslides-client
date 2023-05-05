@@ -113,9 +113,16 @@
 
             <!-- Amendment text -->
             <section class="text-holder" *ngIf="isParagraphBasedAmendment()">
-                <div class="alert alert-info" *ngIf="getAmendedParagraphs().length === 0">
+                <div class="alert alert-info" *ngIf="getAmendedParagraphs().length === 0 && !data.data.text">
                     <span>{{ 'No changes at the text.' | translate }}</span>
                 </div>
+                <div
+                    class="motion-text"
+                    [class.line-numbers-none]="isLineNumberingNone()"
+                    [class.line-numbers-inline]="isLineNumberingInline()"
+                    [class.line-numbers-outside]="isLineNumberingOutside()"
+                    *ngIf="data.data.text" [innerHtml]="getTextBasedAmendmentLines() | trust: 'html'"
+                ></div>
                 <div
                     *ngFor="let paragraph of getAmendedParagraphs()"
                     class="motion-text motion-text-diff amendment-view"
