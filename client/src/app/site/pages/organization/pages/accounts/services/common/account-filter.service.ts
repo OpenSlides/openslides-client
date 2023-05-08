@@ -101,7 +101,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
-                property: `isLastEmailSend`,
+                property: `isLastEmailSent`,
                 label: this.translate.instant(`Last email sent`),
                 options: [
                     { condition: true, label: this.translate.instant(`Got an email`) },

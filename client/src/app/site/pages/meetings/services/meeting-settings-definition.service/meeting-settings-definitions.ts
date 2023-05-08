@@ -627,7 +627,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `motion_poll_default_100_percent_base`,
+                        key: `motion_poll_default_onehundred_percent_base`,
                         label: _(`Default 100 % base of a voting result`),
                         type: `choice`,
                         choices: PollPercentBaseVerbose
@@ -727,7 +727,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `assignment_poll_default_100_percent_base`,
+                        key: `assignment_poll_default_onehundred_percent_base`,
                         label: _(`Default 100 % base of an election result`),
                         type: `choice`,
                         choices: PollPercentBaseVerbose
