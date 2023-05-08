@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -24,6 +25,8 @@ import { AccountDialogComponent } from '../account-dialog/account-dialog.compone
     styleUrls: [`./account-button.component.scss`]
 })
 export class AccountButtonComponent extends BaseUiComponent implements OnInit {
+    public readonly translations = availableTranslations;
+
     @ViewChild(`languageTrigger`, { read: MatMenuTrigger })
     public set languageTrigger(trigger: MatMenuTrigger | undefined) {
         this._languageTrigger = trigger;
@@ -100,20 +103,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
      * language should be used.
      */
     public getLanguageName(abbreviation: string): string {
-        if (abbreviation === `en`) {
-            return `English`;
-        } else if (abbreviation === `de`) {
-            return `Deutsch`;
-        } else if (abbreviation === `cs`) {
-            return `Čeština`;
-        } else if (abbreviation === `it`) {
-            return `Italiano`;
-        } else if (abbreviation === `es`) {
-            return `Español`;
-        } else if (abbreviation === `ru`) {
-            return `русский`;
-        }
-        return `No language`;
+        return availableTranslations[abbreviation] || `No language`;
     }
 
     public selectLanguage(abbreviation: string): void {

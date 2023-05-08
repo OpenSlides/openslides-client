@@ -3,35 +3,33 @@
 import 'zone.js/testing';
 
 import { getTestBed } from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting
-} from '@angular/platform-browser-dynamic/testing';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 
 import { overloadJsFunctions } from './app/infrastructure/utils/overload-js-functions';
 
 declare const require: {
-  context(path: string, deep?: boolean, filter?: RegExp): {
-    <T>(id: string): T;
-    keys(): string[];
-  };
+    context(
+        path: string,
+        deep?: boolean,
+        filter?: RegExp
+    ): {
+        <T>(id: string): T;
+        keys(): string[];
+    };
 };
 
 overloadJsFunctions();
 
 if (!window.requestAnimationFrame) {
-  window.requestAnimationFrame = function (callback) {
-    return window.setTimeout(function () {
-      callback(Date.now());
-    }, 1000 / 60);
-  };
+    window.requestAnimationFrame = function (callback) {
+        return window.setTimeout(function () {
+            callback(Date.now());
+        }, 1000 / 60);
+    };
 }
 
 // First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting(),
-);
+getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 
 // Then we find all the tests.
 const context = require.context(`./`, true, /\.spec\.ts$/);

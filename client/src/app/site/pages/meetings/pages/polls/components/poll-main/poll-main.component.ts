@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { map } from 'rxjs';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-const POLL_LIST_SUBSCRIPTION = `poll_list`;
+import { getPollListSubscriptionConfig } from '../../polls.subscription';
 
 @Component({
     selector: `os-poll-main`,
@@ -13,15 +11,7 @@ const POLL_LIST_SUBSCRIPTION = `poll_list`;
 export class PollMainComponent extends BaseModelRequestHandlerComponent {
     protected override onNextMeetingId(id: number | null): void {
         if (id) {
-            this.subscribeTo({
-                modelRequest: {
-                    viewModelCtor: ViewMeeting,
-                    ids: [id],
-                    follow: [{ idField: `poll_ids`, fieldset: `list` }, `option_ids`, `vote_ids`]
-                },
-                subscriptionName: POLL_LIST_SUBSCRIPTION,
-                hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !id))
-            });
+            this.subscribeTo(getPollListSubscriptionConfig(id), { hideWhenMeetingChanged: true });
         }
     }
 }

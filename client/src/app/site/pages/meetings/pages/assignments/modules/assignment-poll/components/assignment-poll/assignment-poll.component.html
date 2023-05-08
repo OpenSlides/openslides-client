@@ -85,7 +85,9 @@
         <os-assignment-poll-meta-info
             [poll]="poll"
             [showCandidates]="showCandidatesInMetaInfo"
-            *ngIf="showMetaInfo"
+            [showStats]="showMetaInfo"
+            [shortenList]="poll.isListPoll && !poll.canBeVotedFor()"
+            *ngIf="showMetaInfo || poll.isListPoll"
         ></os-assignment-poll-meta-info>
     </div>
 </mat-card>

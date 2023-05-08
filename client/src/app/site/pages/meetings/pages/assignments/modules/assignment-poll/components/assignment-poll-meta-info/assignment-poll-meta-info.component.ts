@@ -19,6 +19,12 @@ export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComp
     @Input()
     public showCandidates = true;
 
+    @Input()
+    public showStats = true;
+
+    @Input()
+    public shortenList = false;
+
     private get assignment(): ViewAssignment {
         return this.poll.content_object;
     }
@@ -40,6 +46,8 @@ export class AssignmentPollMetaInfoComponent extends BasePollMetaInformationComp
     }
 
     public getVerbosePollMethod(): string {
-        return AssignmentPollMethodVerbose[this.poll.pollmethod];
+        return AssignmentPollMethodVerbose[
+            this.poll.isListPoll ? this.poll.pollmethod.toLowerCase() : this.poll.pollmethod
+        ];
     }
 }

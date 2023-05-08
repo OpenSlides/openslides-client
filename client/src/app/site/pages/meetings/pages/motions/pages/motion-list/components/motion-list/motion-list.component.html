@@ -99,10 +99,10 @@
                         {{ motion.sequential_number }}
                     </span>
 
-                    <span>
+                    <span *ngIf="sortService.sortProperty === 'last_modified' || sortService.sortProperty === 'created'">
                         <span *ngIf="motion.submitters.length || showSequential">&middot;&nbsp;</span>
-                        <span>{{ motion.last_modified && motion.last_modified !== motion.created ? ('modified' | translate) : ('created' | translate) }}</span>
-                        {{ motion.last_modified ?? motion.created | localizedDate }}
+                        <span *ngIf="sortService.sortProperty === 'last_modified'">{{ motion.last_modified && motion.last_modified !== motion.created ? ('modified' | translate) : ('created' | translate) }} {{ motion.last_modified ?? motion.created | localizedDate }}</span>
+                        <span *ngIf="sortService.sortProperty === 'created'">{{ 'created' | translate }} {{ motion.created | localizedDate }}</span>
                     </span>
                 </div>
 
@@ -268,7 +268,7 @@
 
             <!-- Statutes -->
             <button mat-menu-item routerLink="statute-paragraphs" *ngIf="statutesEnabled">
-                <mat-icon>auto_awesome_mosaic</mat-icon>
+                <mat-icon>gavel</mat-icon>
                 <span>{{ 'Statute' | translate }}</span>
             </button>
 

@@ -5,6 +5,7 @@ export function replaceHtmlEntities(html: string): string {
     html = html.replace(/&gt;/g, `<GT></GT>`);
     html = html.replace(/&lt;/g, `<LT></LT>`);
     html = html.replace(/&nbsp;/g, ` `);
+    html = html.replace(/&ndash;/g, `-`);
 
     const textarea = document.createElement(`textarea`);
     textarea.innerHTML = html;

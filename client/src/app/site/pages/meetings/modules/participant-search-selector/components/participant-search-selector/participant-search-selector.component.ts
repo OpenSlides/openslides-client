@@ -1,10 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
+import {
+    getParticipantMinimalSubscriptionConfig,
+    PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
+} from '../../../../pages/participants/participants.subscription';
 import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
+import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { ViewUser } from '../../../../view-models/view-user';
 import { UserSelectionData } from '../..';
 
@@ -13,9 +19,14 @@ import { UserSelectionData } from '../..';
     templateUrl: `./participant-search-selector.component.html`,
     styleUrls: [`./participant-search-selector.component.scss`]
 })
-export class ParticipantSearchSelectorComponent extends BaseUiComponent implements OnInit {
+export class ParticipantSearchSelectorComponent extends BaseUiComponent implements OnInit, OnDestroy {
     private _filteredUsersSubject = new BehaviorSubject<ViewUser[]>([]);
     private _nonSelectableUserIds: number[] = [];
+
+    /**
+     * Subsciption of the participant list
+     */
+    private _participantSubscription: string;
 
     /**
      * Array that holds all participants of the current meeting.
@@ -57,7 +68,12 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
 
     public usersForm: UntypedFormGroup;
 
-    public constructor(private userRepo: ParticipantControllerService, formBuilder: UntypedFormBuilder) {
+    public constructor(
+        private userRepo: ParticipantControllerService,
+        private modelRequestService: ModelRequestService,
+        private activeMeeting: ActiveMeetingService,
+        formBuilder: UntypedFormBuilder
+    ) {
         super();
 
         this.usersForm = formBuilder.group({
@@ -81,6 +97,20 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
                 this.filterUsers();
             })
         );
+
+        this._participantSubscription = PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL + `_${Date.now()}`;
+        this.modelRequestService.subscribeTo({
+            ...getParticipantMinimalSubscriptionConfig(this.activeMeeting.meetingId),
+            subscriptionName: this._participantSubscription
+        });
+    }
+
+    public override ngOnDestroy(): void {
+        if (this._participantSubscription) {
+            this.modelRequestService.closeSubscription(this._participantSubscription);
+        }
+
+        super.ngOnDestroy();
     }
 
     /**

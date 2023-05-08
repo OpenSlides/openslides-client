@@ -1,5 +1,6 @@
+import { FieldDescriptor, Fields, ModelRequest } from 'src/app/domain/interfaces/model-request';
+
 import { Collection, Id } from '../../../domain/definitions/key-types';
-import { FieldDescriptor, Fields, ModelRequest } from '../autoupdate';
 import { BaseSimplifiedModelRequest } from './model-request-builder.service';
 
 export class ModelRequestObject {

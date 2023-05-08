@@ -25,7 +25,8 @@ export class ProjectionDialogService {
         >(module.getComponent(), {
             maxHeight: `90vh`,
             autoFocus: false,
-            data: descriptor
+            data: descriptor,
+            restoreFocus: false
         });
         const response = await firstValueFrom(dialogRef.afterClosed());
         if (response) {

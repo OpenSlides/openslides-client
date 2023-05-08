@@ -1,5 +1,5 @@
-import { ModificationType } from "src/app/domain/models/motions/motions.constants";
-import { ViewUnifiedChange, ViewUnifiedChangeType } from "src/app/site/pages/meetings/pages/motions";
+import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { ViewUnifiedChange, ViewUnifiedChangeType } from 'src/app/site/pages/meetings/pages/motions';
 
 export class TestChangeRecommendation implements ViewUnifiedChange {
     public id!: number;

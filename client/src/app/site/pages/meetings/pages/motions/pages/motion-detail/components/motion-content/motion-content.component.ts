@@ -22,9 +22,11 @@ import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
+import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
@@ -63,6 +65,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     @Output()
     public validStateChanged = new EventEmitter<boolean>();
+
+    public tinyMceConfig = MotionTinyMceConfig;
 
     private finalEditMode = false;
 
@@ -139,6 +143,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
     }
+
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
     private titleFieldUpdateSubscription: Subscription;
     private textFieldUpdateSubscription: Subscription;
@@ -491,7 +497,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             parent_id: [],
             modified_final_version: [``],
             ...(this.canChangeMetadata && {
-                number: [``, isUniqueAmong<string>(this._motionNumbersSubject)],
+                number: [
+                    ``,
+                    isUniqueAmong<string>(this._motionNumbersSubject, (a, b) => a === b, [``, null, undefined])
+                ],
                 agenda_create: [``],
                 agenda_type: [``]
             })

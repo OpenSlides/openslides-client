@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { UserRepositoryService } from 'src/app/gateways/repositories/users';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
@@ -656,12 +657,18 @@ export class OperatorService {
      * @returns Either a `SimplifiedModelRequest` if a user is signed in
      * or `null` if a user is not signed in. Then they will be redirected to `/login`.
      */
-    private getOperatorRequestWithoutActiveMeeting(): SimplifiedModelRequest<ViewUser> | null {
+    private getOperatorRequestWithoutActiveMeeting(): SimplifiedModelRequest | null {
         if (this.isAuthenticated && this.operatorId) {
             return {
                 ids: [this.operatorId],
                 viewModelCtor: ViewUser,
-                fieldset: `all`
+                fieldset: `all`,
+                follow: [
+                    {
+                        idField: { templateIdField: `vote_delegations_$_from_ids`, templateValue: `` },
+                        fieldset: [{ templateField: `group_$_ids` }, ...UserFieldsets.FullNameSubscription.fieldset]
+                    }
+                ]
             };
         } else {
             // not logged in and no anonymous. We are done with loading, so we have

@@ -135,7 +135,8 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
             yes: data.yes,
             no: data.no,
             abstain: data.abstain,
-            weight
+            weight,
+            ...(data.content_object ? { entries_amount: data.content_object[`entries_amount`] } : {})
         };
     }
 }

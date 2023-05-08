@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Vote } from 'src/app/domain/models/poll/vote';
 import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
@@ -20,23 +21,45 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
         super(controllerServiceCollector, Vote, repo);
     }
 
-    public async updateHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
-        const pollIds: Id[] = viewPolls.map(poll => poll.id);
-        await this.repo.updateHasVotedFor(...pollIds);
-        await this.setHasVotedOnPoll(...viewPolls);
+    public subscribeVoted(...viewPolls: ViewPoll[]): Observable<{ [key: Id]: Id[] }> {
+        return new Observable<{ [key: Id]: Id[] }>(subscriber => {
+            const current = {};
+            for (let poll of viewPolls) {
+                const subscription = this.repo.subscribeVoted(poll, [
+                    this.operator.user.id,
+                    ...this.operator.user.vote_delegations_from_ids()
+                ]);
+
+                if (!subscription) {
+                    continue;
+                }
+
+                if (subscription.value !== undefined) {
+                    current[poll.id] = subscription.value;
+                }
+
+                subscription.subscribe({
+                    next: async (voted: Id[] | null | undefined) => {
+                        if (voted !== undefined) {
+                            await this.setHasVotedOnPoll(poll, voted);
+
+                            current[poll.id] = voted;
+                            subscriber.next(current);
+                        }
+                    },
+                    complete: () => {
+                        subscriber.complete();
+                    }
+                });
+            }
+
+            subscriber.next(current);
+        });
     }
 
-    public async setHasVotedOnPoll(...viewPolls: ViewPoll[]): Promise<void> {
-        const pollIds: Id[] = viewPolls.map(poll => poll.id);
-        const voteResp = await this.repo.hasVotedFor(...pollIds);
-
+    public async setHasVotedOnPoll(poll: ViewPoll, voteResp: Id[]): Promise<void> {
         await this.operator.ready;
-        if (voteResp) {
-            for (const poll of viewPolls) {
-                poll.hasVoted = voteResp[poll.id]?.some(id => id === this.operator.operatorId) ?? false;
-                poll.user_has_voted_for_delegations =
-                    voteResp[poll.id]?.filter(id => id !== this.operator.operatorId) ?? [];
-            }
-        }
+        poll.hasVoted = voteResp?.some(id => id === this.operator.operatorId) ?? false;
+        poll.user_has_voted_for_delegations = voteResp?.filter(id => id !== this.operator.operatorId) ?? [];
     }
 }

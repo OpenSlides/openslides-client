@@ -11,7 +11,7 @@ import { User, UserSortProperty } from '../../../domain/models/users/user';
 import { PreventedInDemoError } from '../../../infrastructure/errors';
 import { toDecimal } from '../../../infrastructure/utils';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
+import { Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
 import { Action } from '../../actions';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
@@ -78,49 +78,56 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     private _demoModeUserIds: number[] | null = null;
 
     public override getFieldsets(): Fieldsets<User> {
-        const shortNameFields: TypedFieldset<User> = [
+        const listFields: TypedFieldset<User> = [
             `title`,
             `first_name`,
             `last_name`,
             `pronoun`,
             `username` /* Required! To getShortName */,
-            `is_active`,
-            `is_physical_person`,
-            `default_password`,
-            `can_change_own_password`,
             `gender`,
             `default_number`,
             `default_structure_level`,
             `default_vote_weight`,
+            `is_physical_person`,
+            `is_active`,
+            `meeting_ids`
+        ];
+
+        const filterableListFields: TypedFieldset<User> = listFields.concat([
             `email`,
             `last_email_send`,
             `last_login`,
-            `organization_management_level`,
-            `meeting_ids`
-        ];
-        const accountListFields: TypedFieldset<User> = shortNameFields.concat([
+            `organization_management_level`
+        ]);
+
+        const accountListFields: TypedFieldset<User> = filterableListFields.concat([
             `committee_ids`,
             { templateField: `committee_$_management_level` }
         ]);
 
-        const participantListFieldsMinimal: TypedFieldset<User> = shortNameFields.concat([
+        const participantListFieldsMinimal: TypedFieldset<User> = listFields.concat([
             { templateField: `vote_delegated_$_to_id` },
             { templateField: `vote_delegations_$_from_ids` },
             { templateField: `vote_weight_$` },
             { templateField: `structure_level_$` },
             { templateField: `number_$` },
             { templateField: `comment_$` },
-            { templateField: `group_$_ids` }
-        ]);
-
-        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal.concat([
+            { templateField: `group_$_ids` },
             `is_present_in_meeting_ids`
         ]);
 
-        const detailFields: TypedFieldset<User> = [{ templateField: `about_me_$` }];
+        const participantListFields: TypedFieldset<User> = participantListFieldsMinimal
+            .concat(filterableListFields)
+            .concat([`default_password`]);
+
+        const detailFields: TypedFieldset<User> = [
+            `default_password`,
+            `can_change_own_password`,
+            { templateField: `about_me_$` }
+        ];
 
         return {
-            [DEFAULT_FIELDSET]: detailFields,
+            ...super.getFieldsets(),
             accountList: accountListFields,
             participantList: participantListFields,
             participantListMinimal: participantListFieldsMinimal,

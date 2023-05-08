@@ -1,4 +1,11 @@
 import { Injectable } from '@angular/core';
+import {
+    FieldDescriptor,
+    Fields,
+    GenericRelationFieldDecriptor,
+    RelationFieldDescriptor,
+    StructuredFieldDecriptor
+} from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Field, Id } from '../../../domain/definitions/key-types';
 import { BaseModel } from '../../../domain/models/base/base-model';
@@ -6,13 +13,6 @@ import { Relation } from '../../../infrastructure/definitions/relations';
 import { Deferred } from '../../../infrastructure/utils/promises';
 import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
 import { BaseViewModel, ViewModelConstructor } from '../../base/base-view-model';
-import {
-    FieldDescriptor,
-    Fields,
-    GenericRelationFieldDecriptor,
-    RelationFieldDescriptor,
-    StructuredFieldDecriptor
-} from '../autoupdate';
 import { CollectionMapperService } from '../collection-mapper.service';
 import { RelationManagerService } from '../relation-manager.service';
 import { ModelRequestObject } from '.';
@@ -34,6 +34,7 @@ export interface BaseSimplifiedModelRequest<M = any> {
     fieldset?: Fieldset<M>;
     /**
      * Additional fields to be loaded. They will never be followed.
+     * @deprecated
      */
     additionalFields?: AdditionalField[];
 }
@@ -158,6 +159,10 @@ export class ModelRequestBuilderService {
     private addDataFields(modelRequestObject: ModelRequestObject): void {
         const fieldset = modelRequestObject.simplifiedRequest.fieldset || DEFAULT_FIELDSET;
         let fieldsetFields: AdditionalField[];
+        if (!modelRequestObject.simplifiedRequest.fieldset) {
+            console.warn(`Non explicit use of default fieldset`, [modelRequestObject], modelRequestObject.collection);
+        }
+
         if (typeof fieldset === `string`) {
             const registeredFieldsets = this.fieldsets[modelRequestObject.collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {

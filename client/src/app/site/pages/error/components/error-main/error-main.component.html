@@ -1,4 +1,4 @@
-<div class="background-default error-page full-height flex-center">
+<div class="background-default error-page full-height flex-center-unsafe">
     <h2>{{ 'You are not supposed to be here...' | translate }}</h2>
     <h3 *ngIf="error">{{ error | translate }}</h3>
     <p *ngIf="error === 'Authorization Error' && msg.length">{{ 'Required permissions to view this page:' | translate }}</p>

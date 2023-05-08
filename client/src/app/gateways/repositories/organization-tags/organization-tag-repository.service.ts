@@ -4,7 +4,6 @@ import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organi
 import { Identifiable } from '../../../domain/interfaces';
 import { OrganizationTag } from '../../../domain/models/organization-tags/organization-tag';
 import { ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags';
-import { DEFAULT_FIELDSET, Fieldsets } from '../../../site/services/model-request-builder';
 import { ThemeService } from '../../../site/services/theme.service';
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
@@ -20,12 +19,6 @@ export class OrganizationTagRepositoryService extends BaseRepository<ViewOrganiz
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Tags` : `Tag`);
     public getTitle = (viewModel: ViewOrganizationTag): string => viewModel.name;
-    public override getFieldsets(): Fieldsets<OrganizationTag> {
-        const detailFieldset: (keyof OrganizationTag)[] = [`color`, `name`, `committee_ids`, `organization_id`];
-        return {
-            [DEFAULT_FIELDSET]: detailFieldset
-        };
-    }
 
     public async create(...tags: Partial<OrganizationTag>[]): Promise<Identifiable[]> {
         const payload = tags.map(tag => ({

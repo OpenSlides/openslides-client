@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -14,7 +15,7 @@ import { MotionCategoryControllerService } from '../../../../modules/categories/
     templateUrl: `./category-list-sort.component.html`,
     styleUrls: [`./category-list-sort.component.scss`]
 })
-export class CategoryListSortComponent extends BaseMeetingComponent {
+export class CategoryListSortComponent extends BaseMeetingComponent implements CanComponentDeactivate {
     /**
      * Reference to the sorting tree.
      */
@@ -76,9 +77,7 @@ export class CategoryListSortComponent extends BaseMeetingComponent {
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = this.translate.instant(`Do you really want to exit this page?`);
-            const content = this.translate.instant(`You made changes.`);
-            return await this.promptService.open(title, content);
+            return await this.promptService.discardChangesConfirmation();
         }
         return true;
     }

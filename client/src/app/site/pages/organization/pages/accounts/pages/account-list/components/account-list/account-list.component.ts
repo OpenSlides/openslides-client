@@ -9,6 +9,7 @@ import { MeetingControllerService } from 'src/app/site/pages/meetings/services/m
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
@@ -44,6 +45,7 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         private choiceService: ChoiceService,
         private userController: UserControllerService,
         public searchService: AccountListSearchService,
+        private operator: OperatorService,
         private vp: ViewPortService
     ) {
         super(componentServiceCollector, translate);
@@ -69,9 +71,12 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         const ADD = _(`Add`);
         const REMOVE = _(`Remove`);
         const actions = [ADD, REMOVE];
+        const meetings = this.meetingRepo.getViewModelList();
         const result = await this.choiceService.open<ViewMeeting>({
             title,
-            choices: this.meetingRepo.getViewModelList(),
+            choices: this.operator.isSuperAdmin
+                ? meetings
+                : meetings.filter(meeting => this.operator.isInMeeting(meeting.id)),
             multiSelect: true,
             actions,
             content: this.translate.instant(

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
 import { ViewMotionComment } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -19,13 +18,6 @@ export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository
     public getTitle = (viewMotionComment: ViewMotionComment) => `Comment`;
 
     public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Comments` : `Comment`);
-
-    public override getFieldsets(): Fieldsets<ViewMotionComment> {
-        const commentFields: (keyof ViewMotionComment)[] = [`motion_id`, `section_id`, `comment`];
-        return {
-            [DEFAULT_FIELDSET]: commentFields
-        };
-    }
 
     public async create(partialModel: Partial<MotionComment>): Promise<Identifiable> {
         const payload = {
