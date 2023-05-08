@@ -27,7 +27,7 @@ export class AgendaContentObjectFormComponent
     }
 
     public get itemObserver(): Observable<ViewAgendaItem[]> {
-        return this._itemsSubject.asObservable();
+        return this._itemsSubject;
     }
 
     public permission = Permission;
