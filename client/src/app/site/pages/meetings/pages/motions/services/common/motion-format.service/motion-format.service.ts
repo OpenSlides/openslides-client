@@ -121,10 +121,23 @@ export class MotionFormatService {
 
         return {
             origin_id: motion.id,
-            title: motion.title,
+            title: this.getFinalTitle(motion, lineLength),
             reason: motion.reason || ``,
             text: textWithoutLines
         };
+    }
+
+    private getFinalTitle(motion: ViewMotion, lineLength: number): string {
+        const titleChange = this.getUnifiedChanges(motion, lineLength).find((obj: ViewUnifiedChange) =>
+            obj.isTitleChange()
+        )!;
+        const crMode = !!motion.modified_final_version ? ChangeRecoMode.ModifiedFinal : ChangeRecoMode.Final;
+
+        if (titleChange) {
+            return this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
+        }
+
+        return motion.title;
     }
 
     /**
