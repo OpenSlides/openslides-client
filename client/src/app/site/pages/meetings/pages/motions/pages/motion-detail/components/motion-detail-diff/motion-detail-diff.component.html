@@ -7,7 +7,7 @@
         [elContainer]="nativeElement"
     ></os-motion-detail-diff-summary>
 
-    <span class="text-prefix-label" *ngIf="showPreamble">{{ preamble | translate }}</span>
+    <span class="text-prefix-label" *ngIf="showPreamble">{{ preamble }}</span>
 
     <!-- The actual diff view -->
     <div class="motion-text-with-diffs">
@@ -91,7 +91,7 @@
                  However, if showAllAmendments === true, the prefix should be shown alwayes,
                  even if it's accepted -->
                 <div class="status-row" *ngIf="isAmendment(change) && showAllAmendments">
-                    <i class="grey">{{ change.amendment.number }} - {{ change.amendment.state!.name | translate }}</i>
+                    <i class="grey">{{ change.amendment.number }} - {{ change.amendment.state!.name }}</i>
                 </div>
 
                 <div

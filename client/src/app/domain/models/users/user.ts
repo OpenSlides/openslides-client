@@ -10,7 +10,7 @@ import { BaseDecimalModel } from '../base/base-decimal-model';
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 
 /**
- * Iterable pre selection of genders (sexes)
+ * Iterable pre selection of genders
  */
 export const GENDERS = [_(`female`), _(`male`), _(`diverse`)];
 

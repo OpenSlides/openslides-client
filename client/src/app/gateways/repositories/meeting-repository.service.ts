@@ -75,7 +75,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
-            `jitsi_room_password`
+            `jitsi_room_password`,
+            `language`
         ];
         const groupFields: TypedFieldset<Meeting> = [`admin_group_id`, `default_group_id`];
 
