@@ -17,29 +17,51 @@ export class SidenavComponent {
     @ContentChild(SidenavDrawerContentDirective, { read: TemplateRef, static: true })
     public drawerContent: TemplateRef<any> | null = null;
 
-    @ViewChild(`sideNav`, { static: true, read: MatSidenav })
+    @ViewChild(`sideNav`, { read: MatSidenav })
     private sideNav: MatSidenav | undefined;
 
     @Input()
     public logoLink = [``];
 
+    private desktopOpen = true;
+
     public get isMobile(): boolean {
         return this.vp.isMobile;
+    }
+
+    public get isOpen(): boolean {
+        return this.isMobile ? this.sideNav?.opened : this.desktopOpen;
     }
 
     public constructor(private vp: ViewPortService) {}
 
     public close(): void {
-        this.sideNav?.close();
+        if (this.isMobile) {
+            this.sideNav?.close();
+        } else {
+            this.desktopOpen = false;
+        }
     }
 
     public toggle(): void {
-        this.sideNav?.toggle();
+        if (this.isMobile) {
+            this.sideNav?.toggle();
+        } else {
+            this.desktopOpen = !this.desktopOpen;
+        }
     }
 
     public mobileAutoCloseNav(): void {
         if (this.isMobile && this.sideNav) {
             this.sideNav.close();
+        }
+    }
+
+    public open(): void {
+        if (this.isMobile) {
+            this.sideNav?.open();
+        } else {
+            this.desktopOpen = true;
         }
     }
 }

@@ -9,5 +9,6 @@
 
     .os-router-outlet-container {
         flex-grow: 1;
+        overflow: auto;
     }
 }
