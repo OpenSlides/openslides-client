@@ -19,6 +19,7 @@ import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/s
 import { MotionLineNumberingService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-line-numbering.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { BaseScaleScrollSlideComponent } from '../../../../../../base/base-scale-scroll-slide-component';
 import { BaseMotionSlideComponent, MotionTitleInformation } from '../../../../base/base-motion-slide';
@@ -149,6 +150,12 @@ export class MotionSlideComponent
 
     private _submittersSubject = new BehaviorSubject<string[]>([]);
 
+    public get showText(): boolean {
+        return this._showText;
+    }
+
+    private _showText = false;
+
     public constructor(
         protected override translate: TranslateService,
         motionRepo: MotionControllerService,
@@ -156,9 +163,11 @@ export class MotionSlideComponent
         private motionFormatService: MotionFormatService,
         private changeRepo: MotionChangeRecommendationControllerService,
         private lineNumbering: LineNumberingService,
-        private diff: MotionDiffService
+        private diff: MotionDiffService,
+        private meetingSettings: MeetingSettingsService
     ) {
         super(translate, motionRepo);
+        this.meetingSettings.get(`motions_enable_text_on_projector`).subscribe(val => (this._showText = val));
     }
 
     protected override setData(value: SlideData<MotionSlideData>): void {

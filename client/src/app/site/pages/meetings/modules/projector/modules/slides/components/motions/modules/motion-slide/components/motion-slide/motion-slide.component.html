@@ -82,7 +82,7 @@
         <div id="text" [ngStyle]="textDivStyles">
             <!-- Text -->
             <span
-                *ngIf="isStatuteAmendment() || isParagraphBasedAmendment() || formattedMotionTextPlain"
+                *ngIf="(isStatuteAmendment() || isParagraphBasedAmendment() || formattedMotionTextPlain) && !(getAmendedParagraphs().length === 0 && !showText)"
                 class="text-prefix-label"
             >
                 {{ preamble }}
@@ -113,7 +113,7 @@
 
             <!-- Amendment text -->
             <section class="text-holder" *ngIf="isParagraphBasedAmendment()">
-                <div class="alert alert-info" *ngIf="getAmendedParagraphs().length === 0 && !data.data.text">
+                <div class="alert alert-info" *ngIf="getAmendedParagraphs().length === 0 && !data.data.text && showText">
                     <span>{{ 'No changes at the text.' | translate }}</span>
                 </div>
                 <div
