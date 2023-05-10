@@ -65,15 +65,7 @@ Generally, please work in your own fork, make branches and make a pull request i
 
 ## Commit messages
 
-Write your commit messages like they could appear in a change log.
-
-- Separate subject from body with a blank line
-- Limit the subject line to 50 characters
-- Capitalize the subject line
-- Do not end the subject line with a period
-- Use the imperative mood in the subject line
-- Wrap the body at 72 characters
-- Use the body to explain what and why vs. how
+See https://github.com/OpenSlides/OpenSlides/wiki/Development-organization#pull-request-titles-and-commit-messages.
 
 ## Code alignment
 
