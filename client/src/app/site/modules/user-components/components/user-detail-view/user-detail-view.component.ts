@@ -258,7 +258,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this.personalInfoForm = this.fb.group(
             {
                 username: [``, this.isNewUser ? [] : [Validators.required]],
-                pronoun: [``],
+                pronoun: [``, Validators.maxLength(32)],
                 title: [``],
                 first_name: [``],
                 last_name: [``],
