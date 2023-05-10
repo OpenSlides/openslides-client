@@ -1,7 +1,10 @@
 <div *osPerms="permission.userCanSee">
     <div *ngIf="isViewingThis">
-        <os-list [listObservable]="entitledUsersObservable" [filterProps]="filterPropsEntitledUsersTable"
-            [fullScreen]="false">
+        <os-list
+            [listObservable]="entitledUsersObservable"
+            [filterProps]="filterPropsEntitledUsersTable"
+            [fullScreen]="false"
+        >
             <!-- Content -->
             <div *osScrollingTableCell="'user_id'; row as entry">
                 <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
@@ -16,8 +19,7 @@
                         <!-- Delegation -->
                         <div *ngIf="entry.vote_delegated_to_id">
                             <span>
-                                ({{ 'represented by' | translate }}
-                                {{ entry.vote_delegated_to.getShortName().trim() }})
+                                ({{ 'represented by' | translate }} {{ entry.vote_delegated_to.getShortName().trim() }})
                             </span>
                         </div>
                     </div>

@@ -234,7 +234,7 @@
             </div>
 
             <!-- Received Vote delegations -->
-            <div *ngIf="showVoteDelegations && (user!.vote_delegations_from().length > 0)">
+            <div *ngIf="showVoteDelegations && user!.vote_delegations_from().length > 0">
                 <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
                 <span>{{ user!.vote_delegations_from() }}</span>
             </div>
@@ -250,7 +250,7 @@
             <!-- About me -->
             <div *ngIf="user?.about_me()">
                 <h4>{{ 'About me' | translate }}</h4>
-                <div [innerHTML]="user!.about_me() | trust: 'html'"></div>
+                <div [innerHTML]="user!.about_me() | trust : 'html'"></div>
             </div>
         </div>
 

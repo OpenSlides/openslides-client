@@ -222,12 +222,7 @@
 
             <mat-divider></mat-divider>
 
-            <button
-                *ngIf="tags.length"
-                mat-menu-item
-                [disabled]="!selectedRows.length"
-                (click)="changeSelectedTags()"
-            >
+            <button *ngIf="tags.length" mat-menu-item [disabled]="!selectedRows.length" (click)="changeSelectedTags()">
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Set tags' | translate }} ...</span>
             </button>

@@ -26,8 +26,8 @@
 
 <ng-template #timeTemplate let-startTime="startTime" let-endTime="endTime">
     <ng-container *ngIf="startTime">
-        <span>{{ startTime | localizedDate: 'll' }}</span>
-        <span *ngIf="endTime && (startTime !== endTime)">&nbsp;-&nbsp;</span>
+        <span>{{ startTime | localizedDate : 'll' }}</span>
+        <span *ngIf="endTime && startTime !== endTime">&nbsp;-&nbsp;</span>
     </ng-container>
-    <span *ngIf="endTime && (startTime !== endTime)">{{ endTime | localizedDate: 'll' }}</span>
+    <span *ngIf="endTime && startTime !== endTime">{{ endTime | localizedDate : 'll' }}</span>
 </ng-template>

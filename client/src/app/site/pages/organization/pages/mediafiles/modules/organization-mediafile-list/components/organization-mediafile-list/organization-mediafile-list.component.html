@@ -130,7 +130,11 @@
 
 <!-- Template for the managing buttons -->
 <ng-template #manageButton let-mediafile="mediafile" let-place="place">
-    <button mat-menu-item (click)="toggleMediafileUsage($event, mediafile, place)" [disabled]="updatingLogoAndFontSettings">
+    <button
+        mat-menu-item
+        (click)="toggleMediafileUsage($event, mediafile, place)"
+        [disabled]="updatingLogoAndFontSettings"
+    >
         <mat-icon color="accent">
             {{ isMediafileUsed(mediafile, place) ? 'check_box' : 'check_box_outline_blank' }}
         </mat-icon>
@@ -142,11 +146,11 @@
     <div *osOmlPerms="OML.can_manage_organization">
         <!-- Exclusive for images -->
         <div *ngIf="mediafile.isImage()">
-                <ng-container *ngFor="let place of logoPlaces">
-                    <ng-container
-                        *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, place: place }"
-                    ></ng-container>
-                </ng-container>
+            <ng-container *ngFor="let place of logoPlaces">
+                <ng-container
+                    *ngTemplateOutlet="manageButton; context: { mediafile: mediafile, place: place }"
+                ></ng-container>
+            </ng-container>
         </div>
         <mat-divider *ngIf="mediafile.isImage()"></mat-divider>
     </div>

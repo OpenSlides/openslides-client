@@ -35,7 +35,7 @@
             <div>
                 <span *ngIf="topic.text">
                     <!-- Render topic text as HTML -->
-                    <div [innerHTML]="topic.text | trust: 'html'"></div>
+                    <div [innerHTML]="topic.text | trust : 'html'"></div>
                 </span>
             </div>
 

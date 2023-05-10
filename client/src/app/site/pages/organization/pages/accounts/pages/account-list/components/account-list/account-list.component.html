@@ -35,7 +35,9 @@
         <div style="overflow: hidden" class="flex-vertical-center">
             <div style="overflow: hidden" class="nameCell">
                 <div class="title-line title-box">
-                    <span class="ellipsis-overflow">{{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')'  : '') }}</span>
+                    <span class="ellipsis-overflow">
+                        {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
+                    </span>
                     <div style="float: right; display: inline-flex">
                         &nbsp;
                         <os-icon-container
@@ -52,9 +54,7 @@
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">
                     {{ user.username }}
-                    <ng-container *ngIf="user.email">
-                        · {{ user.email }}
-                    </ng-container>
+                    <ng-container *ngIf="user.email">· {{ user.email }}</ng-container>
                 </div>
             </div>
         </div>
@@ -79,8 +79,7 @@
                 *ngIf="user.isLastEmailSent"
                 matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                 matTooltipPosition="left"
-            >
-            </os-icon-container>
+            ></os-icon-container>
         </div>
         <div class="flex-center">
             <os-icon-container

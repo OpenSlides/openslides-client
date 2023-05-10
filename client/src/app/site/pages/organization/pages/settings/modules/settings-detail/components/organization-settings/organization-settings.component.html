@@ -32,10 +32,7 @@
             <mat-form-field>
                 <mat-label>{{ 'Default language' | translate }}</mat-label>
                 <mat-select formControlName="default_language">
-                    <mat-option
-                        *ngFor="let choice of translations | keyvalue"
-                        [value]="choice.key"
-                    >
+                    <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
                         {{ choice.value }}
                     </mat-option>
                 </mat-select>

@@ -9,7 +9,7 @@
             <h3 *ngIf="submitters.length > 0">{{ 'Submitters' | translate }}</h3>
             <span *ngFor="let submitter of submitters; let last = last">
                 <span>{{ submitter }}</span>
-                <span *ngIf="!last">, </span>
+                <span *ngIf="!last">,</span>
             </span>
         </ng-container>
 
@@ -30,10 +30,11 @@
             </h1>
             <!-- recommendation referencing motions -->
             <h2 *ngIf="data.data.show_sidebox && data.data.recommendation_referencing_motions" class="projector_h2">
-                <span>{{ 'Referring motions' | translate }}</span>:
+                <span>{{ 'Referring motions' | translate }}</span>
+                :
                 <span *ngFor="let titleInformation of referencingMotions; let last = last">
                     <span>{{ getNumberOrTitle(titleInformation) }}</span>
-                    <span *ngIf="!last">, </span>
+                    <span *ngIf="!last">,</span>
                 </span>
             </h2>
 
@@ -48,7 +49,7 @@
                         <td>
                             <span *ngFor="let submitter of submitters; let last = last">
                                 <span>{{ submitter }}</span>
-                                <span *ngIf="!last">, </span>
+                                <span *ngIf="!last">,</span>
                             </span>
                         </td>
                     </tr>
@@ -70,7 +71,7 @@
                     <td>
                         <span *ngFor="let titleInformation of referencingMotions; let last = last">
                             <span>{{ getNumberOrTitle(titleInformation) }}</span>
-                            <span *ngIf="!last">, </span>
+                            <span *ngIf="!last">,</span>
                         </span>
                     </td>
                 </tr>
@@ -98,9 +99,9 @@
                 >
                     <div *ngIf="getTitleChangingObject() && crMode === 'diff'">
                         <div class="bold">{{ 'Changed title' | translate }}:</div>
-                        <div [innerHTML]="getFormattedTitleDiff() | trust: 'html'"></div>
+                        <div [innerHTML]="getFormattedTitleDiff() | trust : 'html'"></div>
                     </div>
-                    <div *ngIf="formattedMotionTextPlain" [innerHTML]="formattedMotionTextPlain | trust: 'html'"></div>
+                    <div *ngIf="formattedMotionTextPlain" [innerHTML]="formattedMotionTextPlain | trust : 'html'"></div>
                 </div>
             </ng-container>
 
@@ -108,7 +109,7 @@
             <div
                 class="motion-text line-numbers-none"
                 *ngIf="isStatuteAmendment()"
-                [innerHTML]="getFormattedStatuteAmendment() | trust: 'html'"
+                [innerHTML]="getFormattedStatuteAmendment() | trust : 'html'"
             ></div>
 
             <!-- Amendment text -->
@@ -131,14 +132,14 @@
                         <span>{{ 'Line' | translate }}</span>
                         {{ paragraph.diffLineFrom }} - {{ paragraph.diffLineTo }}:
                     </h3>
-                    <div [innerHtml]="paragraph.text | trust: 'html'"></div>
+                    <div [innerHtml]="paragraph.text | trust : 'html'"></div>
                 </div>
             </section>
 
             <!-- Reason -->
             <div *ngIf="data.data.reason">
                 <h3>{{ 'Reason' | translate }}</h3>
-                <div [innerHTML]="data.data.reason | trust: 'html'"></div>
+                <div [innerHTML]="data.data.reason | trust : 'html'"></div>
             </div>
         </div>
     </div>

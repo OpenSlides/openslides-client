@@ -69,9 +69,7 @@
 
         <!-- Chart / Table -->
         <div *ngIf="poll.stateHasVotes" class="poll-result-wrapper">
-            <os-topic-poll-detail-content
-                [poll]="poll"
-            ></os-topic-poll-detail-content>
+            <os-topic-poll-detail-content [poll]="poll"></os-topic-poll-detail-content>
         </div>
 
         <!-- Poll progress bar -->
@@ -81,10 +79,7 @@
         <os-topic-poll-vote *ngIf="poll.canBeVotedFor()" [poll]="poll"></os-topic-poll-vote>
 
         <!-- Meta-Info -->
-        <os-topic-poll-meta-info
-            [poll]="poll"
-            *ngIf="showMetaInfo"
-        ></os-topic-poll-meta-info>
+        <os-topic-poll-meta-info [poll]="poll" *ngIf="showMetaInfo"></os-topic-poll-meta-info>
     </div>
 </mat-card>
 
@@ -99,15 +94,14 @@
         <os-projector-button
             [object]="poll"
             [menuItem]="true"
-            *osPerms="permission.projectorCanManage">
-        </os-projector-button>
+            *osPerms="permission.projectorCanManage"
+        ></os-projector-button>
     </div>
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>
     </button>
     <div *osPerms="permission.agendaItemCanManage">
-
         <mat-divider></mat-divider>
 
         <!-- Reset Button -->
