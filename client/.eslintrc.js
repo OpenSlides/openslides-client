@@ -13,7 +13,8 @@ module.exports = {
             },
             plugins: ['simple-import-sort', 'unused-imports'],
             extends: [
-                "plugin:@typescript-eslint/recommended",
+                'plugin:@typescript-eslint/recommended',
+                'plugin:rxjs/recommended',
                 'plugin:@angular-eslint/recommended',
                 'plugin:@angular-eslint/template/process-inline-templates',
                 'plugin:prettier/recommended'
@@ -62,6 +63,7 @@ module.exports = {
                 'jsdoc/no-types': ['off'],
                 '@typescript-eslint/no-empty-function': ['off'],
                 '@typescript-eslint/no-empty-interface': ['off'],
+                'rxjs/no-async-subscribe': ['off'],
 
                 // Should be switched to error ordered by priority
                 '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
