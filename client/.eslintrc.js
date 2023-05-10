@@ -64,6 +64,8 @@ module.exports = {
                 '@typescript-eslint/no-empty-interface': ['off'],
 
                 // Should be switched to error ordered by priority
+                '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
+                '@typescript-eslint/no-this-alias': ['warn'],
                 '@typescript-eslint/ban-types': ['warn'],
                 '@typescript-eslint/no-unused-vars': 'warn',
                 '@typescript-eslint/adjacent-overload-signatures': ['warn'],
