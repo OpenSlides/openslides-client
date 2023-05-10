@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
-import { MotionChangeRecommendationRepositoryService, MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
