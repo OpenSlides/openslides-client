@@ -82,7 +82,7 @@
         <div id="text" [ngStyle]="textDivStyles">
             <!-- Text -->
             <span
-                *ngIf="(isStatuteAmendment() || isParagraphBasedAmendment() || formattedMotionTextPlain) && !(getAmendedParagraphs().length === 0 && !showText)"
+                *ngIf="(isStatuteAmendment() || isParagraphBasedAmendment() || formattedMotionTextPlain) && !(!showText && getAmendedParagraphs().length === 0)"
                 class="text-prefix-label"
             >
                 {{ preamble }}

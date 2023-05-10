@@ -205,7 +205,7 @@ export class MotionSlideComponent
         baseHtml = this.lineNumbering.insertLineNumbers({
             html: baseHtml,
             lineLength: this.lineLength,
-            firstLine: this.data.data.start_line_number
+            firstLine: this.data.data.start_line_number ?? 1
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
@@ -216,6 +216,9 @@ export class MotionSlideComponent
         return paragraphNumbers
             .map(paraNo => {
                 const origText = baseParagraphs[paraNo];
+                if (!origText || !amendment.amendment_paragraphs[paraNo]) {
+                    return null;
+                }
                 const diff = this.diff.diff(origText, amendment.amendment_paragraphs[paraNo]);
                 const affectedLines = this.diff.detectAffectedLineRange(diff);
 
@@ -285,7 +288,7 @@ export class MotionSlideComponent
             changes,
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine,
-            firstLine: this.data.data.start_line_number || 1
+            firstLine: this.data.data.start_line_number ?? 1
         });
     }
 
