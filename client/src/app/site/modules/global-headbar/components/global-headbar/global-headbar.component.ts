@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 
+import { GlobalHeadbarService } from '../../global-headbar.service';
+
 @Component({
     selector: `os-global-headbar`,
     templateUrl: `./global-headbar.component.html`,
@@ -20,7 +22,11 @@ export class GlobalHeadbarComponent {
         return ``;
     }
 
-    public constructor(private activeMeeting: ActiveMeetingService, private orgaService: OrganizationService) {}
+    public constructor(
+        private activeMeeting: ActiveMeetingService,
+        private orgaService: OrganizationService,
+        public headbarService: GlobalHeadbarService
+    ) {}
 
     public openSearch(): void {}
 }
