@@ -22,7 +22,7 @@
             [ngTemplateOutlet]="sideNavToggleButton"
         ></ng-container>
         <div class="main-content-wrapper">
-            <div *ngIf="!isMobile && isOpen" class="navigation">
+            <div *ngIf="!isMobile && isOpen" class="navigation sidenav-background">
                 <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
             </div>
             <div class="content">
