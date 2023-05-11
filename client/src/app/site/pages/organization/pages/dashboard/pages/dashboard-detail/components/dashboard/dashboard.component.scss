@@ -8,6 +8,7 @@ os-dashboard {
             padding-left: 66px;
             padding-top: 15px;
         }
+
         @include tablet {
             padding-left: 66px;
             padding-top: 15px;
@@ -16,6 +17,7 @@ os-dashboard {
 
     .meeting-list-viewport {
         max-width: 100%;
+
         .cdk-virtual-scroll-content-wrapper {
             max-width: 100%;
         }
@@ -24,6 +26,13 @@ os-dashboard {
     .no-content {
         padding: 16px 0;
         text-align: center;
+
+        // .phone {
+        //     padding-left: 10px;
+        // }
+        // .tablet {
+        //     padding-left: 10px;
+        // }
     }
 
     .spinner-center {
@@ -44,31 +53,51 @@ os-dashboard {
 
     .meeting-list-container {
         display: flex;
-        margin: 8px 0 0 0;
+        margin: 16px 0;
 
         @include desktop {
             max-width: 1000px;
-            margin: 20px auto;
+            margin: 40px auto;
         }
+
         @include phone {
             flex-direction: column;
             align-items: center;
+            margin-top: 8px;
+            margin-bottom: 8px;
+
+            mat-icon {
+                display: none;
+            }
         }
+
         @include tablet {
             flex-direction: column;
             align-items: center;
+            margin-top: 8px;
+            margin-bottom: 8px;
+
+            mat-icon {
+                display: none;
+            }
         }
+    }
+
+    .padding-right-8 {
+        margin-left: 23px;
+        margin-right: 23px;
+        padding-right: 0;
     }
 
     .meeting-icon-wrapper,
     .pseudo-icon-spacer {
-        padding: 0 10px 0 16px;
-        width: 80px;
+        padding: 0 5px 0 0px;
+        width: 70px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        
+
         mat-icon {
             padding: 0 8px; // Ensures that the wrapper has really a width of 40px
             $size: 30px;
@@ -93,6 +122,7 @@ os-dashboard {
                 padding: 0;
             }
         }
+
         @include tablet {
             width: calc(100% - 10px);
             font-size: 1rem;
@@ -110,15 +140,28 @@ os-dashboard {
         }
     }
 
-    .auto_awesome_mosaic {
+    .show-committee-icon {
         @include phone {
+            display: none;
+        }
+
+        @include tablet {
+            display: inline-block !important;
             padding-right: 20px; // Ensures that the wrapper has really a width of 40px
             $size: 20px;
             font-size: $size;
             width: 10%;
             height: $size;
         }
+    }
+
+    .show-committee-link {
+        @include phone {
+            display: none;
+        }
+
         @include tablet {
+            display: inline-block !important;
             padding-right: 20px; // Ensures that the wrapper has really a width of 40px
             $size: 20px;
             font-size: $size;
@@ -133,6 +176,7 @@ os-dashboard {
         @include phone {
             width: calc(100% - 88px);
         }
+
         @include tablet {
             width: calc(100% - 88px);
         }
@@ -144,6 +188,7 @@ os-dashboard {
         @include phone {
             width: calc(100% - 10px);
         }
+
         @include tablet {
             width: calc(100% - 10px);
         }
@@ -173,10 +218,11 @@ os-dashboard {
             padding: 16px 20px;
 
             @include phone {
-                padding-left: 5px;
+                padding-left: 10px;
             }
+
             @include tablet {
-                padding-left: 5px;
+                padding-left: 10px;
             }
         }
     }
@@ -191,43 +237,48 @@ os-dashboard {
         box-sizing: border-box;
         height: 60px;
 
-        > a {
+        >a {
             text-decoration: none;
 
             &:first-child {
                 padding-left: 20px;
                 height: 100%;
             }
+
             &:last-child {
                 padding-right: 20px;
             }
         }
+
         @include phone {
-            > a {
+            >a {
                 text-decoration: none;
-    
+
                 &:first-child {
-                    padding-left: 5px;
+                    padding-left: 10px;
                     height: 100%;
-                    width: calc(100% - 28px);
+                    width: calc(100% - 9px);
                 }
+
                 &:last-child {
                     margin-right: 5px;
                     padding-left: 0px;
-                    width: 16px;
+                    width: 0;
                     height: 75%;
                 }
             }
         }
+
         @include tablet {
-            > a {
+            >a {
                 text-decoration: none;
-    
+
                 &:first-child {
-                    padding-left: 5px;
+                    padding-left: 10px;
                     height: 100%;
-                    width: calc(100% - 28px);
+                    width: calc(100% - 40px);
                 }
+
                 &:last-child {
                     margin-right: 5px;
                     padding-left: 0px;
@@ -252,6 +303,7 @@ os-dashboard {
         @include phone {
             width: 90%;
         }
+
         @include tablet {
             width: 90%;
         }
