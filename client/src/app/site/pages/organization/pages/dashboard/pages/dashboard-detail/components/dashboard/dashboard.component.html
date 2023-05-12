@@ -89,7 +89,7 @@
         </div>
 
         <!-- meetings with no date -->
-        <div id="no-date-meetings" class="meeting-list-container">
+        <div *ngIf="!noNoDateMeetingsToShow" id="no-date-meetings" class="meeting-list-container">
             <div class="meeting-icon-wrapper">
                 <mat-icon aria-hidden="true">watch_later</mat-icon>
                 <span>{{ 'dateless' | translate }}</span>
