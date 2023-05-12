@@ -26,13 +26,6 @@ os-dashboard {
     .no-content {
         padding: 16px 0;
         text-align: center;
-
-        // .phone {
-        //     padding-left: 10px;
-        // }
-        // .tablet {
-        //     padding-left: 10px;
-        // }
     }
 
     .spinner-center {
@@ -86,6 +79,7 @@ os-dashboard {
     .padding-right-8 {
         margin-left: 23px;
         margin-right: 23px;
+        margin-bottom: 17px;
         padding-right: 0;
     }
 
@@ -141,10 +135,6 @@ os-dashboard {
     }
 
     .show-committee-icon {
-        @include phone {
-            display: none;
-        }
-
         @include tablet {
             display: inline-block !important;
             padding-right: 20px; // Ensures that the wrapper has really a width of 40px
@@ -152,13 +142,14 @@ os-dashboard {
             font-size: $size;
             width: 10%;
             height: $size;
+        }
+
+        @media (max-width: 900px) {
+            display: none !important;
         }
     }
 
     .show-committee-link {
-        @include phone {
-            display: none;
-        }
 
         @include tablet {
             display: inline-block !important;
@@ -167,6 +158,10 @@ os-dashboard {
             font-size: $size;
             width: 10%;
             height: $size;
+        }
+
+        @media (max-width: 900px) {
+            display: none !important;
         }
     }
 
@@ -316,10 +311,26 @@ os-dashboard {
             .meeting-box {
                 &--mid {
                     font-size: 22px;
+
+                    @include phone {
+                        font-size: 18px;
+                    }
+    
+                    @include tablet {
+                        font-size: 18px;
+                    }
                 }
 
                 &:last-child {
                     border: none;
+
+                    @include phone {
+                        font-size: 12px;
+                    }
+    
+                    @include tablet {
+                        font-size: 12px;
+                    }
                 }
             }
         }
@@ -328,7 +339,7 @@ os-dashboard {
     #previous-meetings,
     #no-date-meetings {
         .meeting-icon-wrapper {
-            color: #8f8f8f;
+            color: rgba(0, 0, 0, 0.65);
         }
     }
 }
