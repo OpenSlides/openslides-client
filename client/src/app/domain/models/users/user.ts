@@ -12,7 +12,7 @@ export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 /**
  * Iterable pre selection of genders
  */
-export const GENDERS = [_(`female`), _(`male`), _(`diverse`)];
+export const GENDERS = [_(`female`), _(`male`), _(`diverse`), _(`non-binary`)];
 
 /**
  * Representation of a user in contrast to the operator.
