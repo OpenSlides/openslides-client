@@ -55,10 +55,12 @@
             <span class="green-text" *ngIf="finishedSuccessfully">{{ 'The import was successful.' | translate }}</span>
         </div>
 
+        <ng-container *ngIf="!finishedSuccessfully">
         <h2>{{ 'Preview' | translate }}</h2>
-        <div>
-            <ng-container *ngTemplateOutlet="previewList"></ng-container>
-        </div>
+            <div *ngIf="!isInFullscreen">
+                <ng-container *ngTemplateOutlet="previewList"></ng-container>
+            </div>
+        </ng-container>
     </mat-card>
 </ng-container>
 
@@ -138,7 +140,7 @@
             <button mat-button color="accent" (click)="fileInput.click()">
                 <span>{{ 'Select file' | translate }}</span>
             </button>
-            <div *ngIf="rawFileObservable | async as file">
+            <div *ngIf="!finishedSuccessfully && (rawFileObservable | async) as file">
                 {{ file.name }}
                 <button mat-icon-button (click)="removeSelectedFile()">
                     <mat-icon>close</mat-icon>

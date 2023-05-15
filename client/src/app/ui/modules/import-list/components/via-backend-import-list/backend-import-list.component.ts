@@ -183,6 +183,8 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
      */
     public selectedEncoding = `utf-8`;
 
+    public isInFullscreen = false;
+
     /**
      * @returns the encodings available and their labels
      */
@@ -408,8 +410,10 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
      * Opens a fullscreen dialog with the given template as content.
      */
     public async enterFullscreen(dialogTemplate: TemplateRef<any>): Promise<void> {
+        this.isInFullscreen = true;
         const ref = this.dialog.open(dialogTemplate, { width: `80vw` });
         await firstValueFrom(ref.afterClosed());
+        this.isInFullscreen = false;
     }
 
     /**
