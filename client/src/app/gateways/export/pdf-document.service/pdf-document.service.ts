@@ -332,7 +332,7 @@ export class PdfDocumentService {
      */
     public createTitle(title: string): object {
         return {
-            text: this.translate.instant(title),
+            text: title,
             style: `title`
         };
     }

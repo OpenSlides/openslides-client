@@ -426,4 +426,13 @@
     .inline-flex {
         display: inline-flex;
     }
+
+    .background-headbar {
+        background: var(--theme-headbar);
+        color: var(--theme-headbar-contrast) !important;
+    }
+
+    .sidenav-background {
+        background: if($is-dark-theme,  darken(mat.get-color-from-palette($background, background), 0.5%), white);
+    }
 }

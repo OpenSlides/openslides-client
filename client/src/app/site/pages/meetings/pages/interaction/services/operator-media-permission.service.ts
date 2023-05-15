@@ -80,10 +80,8 @@ export class OperatorMediaPermissionService {
                 });
             }
         } catch (e) {
-            if (e instanceof DOMException) {
-                if (e.message === `Permission denied`) {
-                    this.throwPermError();
-                }
+            if (e instanceof DOMException && e.name === `NotAllowedError`) {
+                this.throwPermError();
             } else {
                 this.throwPermError(e as any);
             }

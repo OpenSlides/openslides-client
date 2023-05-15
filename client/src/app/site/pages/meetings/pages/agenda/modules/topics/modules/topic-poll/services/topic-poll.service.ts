@@ -9,7 +9,6 @@ import {
     OptionData,
     Poll,
     PollBackendDurationType,
-    PollColor,
     PollData,
     PollMethod,
     PollPercentBase,
@@ -26,6 +25,7 @@ import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/p
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { TopicPollServiceModule } from './topic-poll-service.module';
 
@@ -44,11 +44,12 @@ export class TopicPollService extends PollService {
         parsePollNumber: PollParseNumberPipe,
         translate: TranslateService,
         private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        themeService: ThemeService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber);
+        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
         this.meetingSettingsService
-            .get(`topic_poll_default_100_percent_base`)
+            .get(`topic_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base ?? PollPercentBase.Y));
 
         this.meetingSettingsService
@@ -155,8 +156,8 @@ export class TopicPollService extends PollService {
                 ({
                     data: this.getResultFromPoll(poll, key).sort((a, b) => compareNumber(a, b)),
                     label: key.toUpperCase(),
-                    backgroundColor: PollColor[key],
-                    hoverBackgroundColor: PollColor[key],
+                    backgroundColor: this.themeService.getPollColor(key),
+                    hoverBackgroundColor: this.themeService.getPollColor(key),
                     barThickness: 20,
                     maxBarThickness: 20
                 } as ChartDate)

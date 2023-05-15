@@ -18,6 +18,7 @@ import {
     MotionLineNumberingService,
     ParagraphToChoose
 } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
+import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 
 @Component({
     selector: `os-amendment-create-wizard`,
@@ -68,6 +69,8 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
      * Indicates if an amendment can change multiple paragraphs or only one
      */
     public multipleParagraphsAllowed: boolean = false;
+
+    public tinyMceConfig = MotionTinyMceConfig;
 
     private _parentMotionId: Id | null = null;
 

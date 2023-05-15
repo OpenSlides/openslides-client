@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { locale } from 'moment';
 import { first, firstValueFrom, tap } from 'rxjs';
+import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
@@ -42,7 +43,7 @@ export class OpenSlidesMainComponent implements OnInit {
 
     private loadTranslation(): void {
         // manually add the supported languages
-        this.translate.addLangs([`en`, `de`, `cs`, `it`, `es`, `ru`]);
+        this.translate.addLangs(Object.keys(availableTranslations));
         // this language will be used as a fallback when a translation isn't found in the current language
         this.translate.setDefaultLang(`en`);
         // get the browsers default language

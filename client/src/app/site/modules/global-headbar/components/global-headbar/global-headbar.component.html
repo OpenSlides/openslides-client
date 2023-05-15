@@ -1,4 +1,4 @@
-<mat-toolbar class="global-headbar background-primary-darkest">
+<mat-toolbar class="global-headbar background-headbar">
     <div class="one-line display-name">
         <span>{{ displayName }}</span>
     </div>
@@ -12,3 +12,5 @@
         <os-account-button></os-account-button>
     </div>
 </mat-toolbar>
+
+<ng-template [cdkPortalOutlet]="headbarService.headbar"></ng-template>

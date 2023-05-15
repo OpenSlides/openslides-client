@@ -4,10 +4,10 @@
     >
         <div class="header-name" *ngIf="observables.meeting || observables.organization" [@fadeIn]>
             <!-- Meeting's name -->
-            <h1 *ngIf="observables.meeting">{{ observables.meeting.name | translate }}</h1>
+            <h1 *ngIf="observables.meeting">{{ observables.meeting.name }}</h1>
             <!-- Organization's name -->
             <h1 *ngIf="observables.organization && !observables.meeting">
-                {{ observables.organization.name | translate }}
+                {{ observables.organization.name }}
             </h1>
         </div>
     </ng-container>

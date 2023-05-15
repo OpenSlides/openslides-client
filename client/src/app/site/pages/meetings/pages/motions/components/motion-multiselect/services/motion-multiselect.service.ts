@@ -278,10 +278,10 @@ export class MotionMultiselectService {
             clearChoiceOption
         });
         const blockId = selectedChoice?.action ? null : selectedChoice?.firstId;
-        if (selectedChoice && blockId) {
+        if (selectedChoice) {
             const message = this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
-                hideAfterPromiseResolved: () => this.repo.setBlock(blockId, ...motions)
+                hideAfterPromiseResolved: () => this.repo.setBlock(blockId ?? null, ...motions)
             });
         }
     }

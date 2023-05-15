@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -124,6 +125,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatSelectModule,
         MatListModule,
         MatInputModule,
+        MatProgressBarModule,
         ParticipantSearchSelectorModule,
 
         // Detail view

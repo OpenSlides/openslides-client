@@ -15,6 +15,7 @@ import {
 import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { BroadcastService } from './broadcast.service';
 import { CallRestrictionService } from './call-restriction.service';
 import { ConferenceState, InviteMessage, KickMessage, kickMessage, senderMessage } from './interaction.service';
@@ -81,7 +82,7 @@ export class InteractionReceiveService {
 
     private _kickObservable = this.notifyService.getMessageObservable<kickMessage>(KickMessage);
 
-    constructor(private notifyService: NotifyService) {}
+    constructor(private notifyService: NotifyService, private activeMeetingService: ActiveMeetingService) {}
 
     public startListening(lazyServices: InteractionReceiveSetupServices): void {
         if (!!this._inviteSubscription) {
@@ -127,7 +128,11 @@ export class InteractionReceiveService {
         merge(
             this.callRestrictionService.hasToEnterCallObservable,
             this.notifyService.getMessageObservable<senderMessage>(InviteMessage).pipe(
-                filter(message => message.sendByThisUser === false),
+                filter(
+                    message =>
+                        message.sendByThisUser === false &&
+                        message.message.meeting_id === this.activeMeetingService.meetingId
+                ),
                 map(message => message.message)
             )
         ).subscribe(() => {

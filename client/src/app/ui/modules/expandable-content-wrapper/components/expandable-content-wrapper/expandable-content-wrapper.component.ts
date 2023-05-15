@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 
 @Component({
     selector: `os-expandable-content-wrapper`,
@@ -20,6 +20,7 @@ export class ExpandableContentWrapperComponent {
         if (disableControl) {
             this.isExpanded = false;
         }
+        this.update();
     }
 
     /**
@@ -44,18 +45,14 @@ export class ExpandableContentWrapperComponent {
      */
     public isExpanded = false;
 
-    public onResizedHeight(nextHeight: number): void {
-        this.resizesContentBox(nextHeight);
+    public showCollapsed: boolean;
+
+    constructor(private cd: ChangeDetectorRef) {
+        this.update();
     }
 
-    /**
-     * Function to check, if the new height of the element
-     * is greater than the limit of `200px`.
-     *
-     * @param height The new height as `number` of the linked element.
-     */
-    private resizesContentBox(height: number): void {
-        this.canExpand = height > 75;
+    public onResizedHeight(nextHeight: number): void {
+        this.resizesContentBox(nextHeight);
     }
 
     /**
@@ -66,6 +63,23 @@ export class ExpandableContentWrapperComponent {
     public toggleExpansion(setTo?: boolean): void {
         if (this.canExpand && !this.disableExpandControl) {
             this.isExpanded = setTo ?? !this.isExpanded;
+            this.update();
         }
+    }
+
+    /**
+     * Function to check, if the new height of the element
+     * is greater than the limit of `200px`.
+     *
+     * @param height The new height as `number` of the linked element.
+     */
+    private resizesContentBox(height: number): void {
+        this.canExpand = height > 75;
+        this.update();
+    }
+
+    private update(): void {
+        this.showCollapsed = !this.isExpanded && !this.disableExpandControl && this.canExpand;
+        this.cd.markForCheck();
     }
 }

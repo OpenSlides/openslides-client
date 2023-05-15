@@ -43,7 +43,7 @@ export class AmendmentListPdfService {
             if (amendment.recommendation.show_recommendation_extension_field && amendment.recommendationExtension) {
                 recommendationText += ` ${this.motionService.getExtendedRecommendationLabel(amendment)}`;
             } else {
-                recommendationText += this.translate.instant(amendment.recommendation.recommendation_label);
+                recommendationText += amendment.recommendation.recommendation_label;
             }
         }
 

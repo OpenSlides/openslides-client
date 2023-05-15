@@ -36,6 +36,7 @@ export class Settings {
     // in the committee-list-view is finished.
     public is_template!: boolean; // Unique within a committee
     public enable_anonymous!: boolean;
+    public language!: boolean;
 
     // Jitsi/Livestream settings
     public jitsi_domain!: string;
@@ -140,7 +141,7 @@ export class Settings {
     public motion_poll_ballot_paper_selection!: BallotPaperSelection;
     public motion_poll_ballot_paper_number!: number;
     public motion_poll_default_type!: PollType;
-    public motion_poll_default_100_percent_base!: PollPercentBase;
+    public motion_poll_default_onehundred_percent_base!: PollPercentBase;
     public motion_poll_default_group_ids!: Id[]; // (group/used_as_motion_poll_default_id)[];
     public motion_poll_default_backend!: PollBackendDurationType;
 
@@ -170,7 +171,7 @@ export class Settings {
     public assignment_poll_sort_poll_result_by_votes!: boolean;
     public assignment_poll_default_type!: PollType;
     public assignment_poll_default_method!: PollMethod;
-    public assignment_poll_default_100_percent_base!: PollPercentBase;
+    public assignment_poll_default_onehundred_percent_base!: PollPercentBase;
     public assignment_poll_default_group_ids!: Id[]; // (group/used_as_assignment_poll_default_id)[];
     public assignment_poll_default_backend!: PollBackendDurationType;
 
@@ -182,7 +183,7 @@ export class Settings {
     topic_poll_sort_poll_result_by_votes: boolean;
     topic_poll_default_type: PollType;
     topic_poll_default_method: PollMethod;
-    topic_poll_default_100_percent_base: PollPercentBase;
+    topic_poll_default_onehundred_percent_base: PollPercentBase;
     topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     topic_poll_default_backend: PollBackendDurationType;
 
@@ -194,7 +195,7 @@ export class Settings {
     poll_sort_poll_result_by_votes: boolean;
     poll_default_type: PollType;
     poll_default_method: PollMethod;
-    poll_default_100_percent_base: PollPercentBase;
+    poll_default_onehundred_percent_base: PollPercentBase;
     poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     poll_default_backend: PollBackendDurationType;
 }
@@ -288,6 +289,7 @@ export class Meeting extends BaseModel<Meeting> {
         `start_time`,
         `end_time`,
         `imported_at`,
+        `language`,
         `jitsi_domain`,
         `jitsi_room_name`,
         `jitsi_room_password`,
@@ -376,7 +378,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_ballot_paper_selection`,
         `motion_poll_ballot_paper_number`,
         `motion_poll_default_type`,
-        `motion_poll_default_100_percent_base`,
+        `motion_poll_default_onehundred_percent_base`,
         `motion_poll_default_group_ids`,
         `motion_poll_default_backend`,
         `poll_candidate_list_ids`,
@@ -403,7 +405,7 @@ export class Meeting extends BaseModel<Meeting> {
         `assignment_poll_sort_poll_result_by_votes`,
         `assignment_poll_default_type`,
         `assignment_poll_default_method`,
-        `assignment_poll_default_100_percent_base`,
+        `assignment_poll_default_onehundred_percent_base`,
         `assignment_poll_default_group_ids`,
         `assignment_poll_default_backend`,
         `poll_ballot_paper_selection`,
@@ -411,9 +413,10 @@ export class Meeting extends BaseModel<Meeting> {
         `poll_sort_poll_result_by_votes`,
         `poll_default_type`,
         `poll_default_method`,
-        `poll_default_100_percent_base`,
+        `poll_default_onehundred_percent_base`,
         `poll_default_group_ids`,
         `poll_default_backend`,
+        `topic_poll_default_group_ids`,
         `projector_ids`,
         `all_projection_ids`,
         `projector_message_ids`,

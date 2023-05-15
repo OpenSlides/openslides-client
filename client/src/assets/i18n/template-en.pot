@@ -1128,6 +1128,9 @@ msgstr ""
 msgid "Default groups with voting rights"
 msgstr ""
 
+msgid "Default language"
+msgstr ""
+
 msgid "Default line numbering"
 msgstr ""
 
@@ -1969,6 +1972,9 @@ msgid "Keep each item in a single line."
 msgstr ""
 
 msgid "Label color"
+msgstr ""
+
+msgid "Language"
 msgstr ""
 
 msgid "Last email sent"
@@ -3115,6 +3121,9 @@ msgid "Result"
 msgstr ""
 
 msgid "Results"
+msgstr ""
+
+msgid "Retrieving vote status... Please wait!"
 msgstr ""
 
 msgid "Right"
