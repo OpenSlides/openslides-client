@@ -4,6 +4,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -25,6 +26,8 @@ import { ModifiedFinalVersionAction } from '../../services/motion-detail-view.se
 export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent implements OnInit {
     public readonly LineNumberingMode = LineNumberingMode;
     public readonly ChangeRecoMode = ChangeRecoMode;
+
+    private currentMotionId: Id | null = null;
 
     @ViewChild(MatMenuTrigger)
     private readonly lineNumberMenuTrigger!: MatMenuTrigger;
@@ -301,12 +304,15 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     }
 
     protected override getSubscriptions(): Subscription[] {
+        const motionChanged = this.currentMotionId !== this.motion.id;
+        this.currentMotionId = this.motion.id;
+
         return [
             this.meetingSettingsService
                 .get(`motions_default_line_numbering`)
                 .subscribe(mode => this.setLineNumberingMode(mode)),
             this.meetingSettingsService.get(`motions_recommendation_text_mode`).subscribe(mode => {
-                if (mode) {
+                if (mode && motionChanged) {
                     this.setChangeRecoMode(this.determineCrMode(mode as ChangeRecoMode));
                 }
             })
