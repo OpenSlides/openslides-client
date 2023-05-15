@@ -159,7 +159,13 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.unloadVjs();
+        if (this.usingVjs) {
+            this.unloadVjs();
+        }
+
+        if (this.nanoPlayer) {
+            this.nanoPlayer.destroy();
+        }
     }
 
     private stopVJS(): void {
