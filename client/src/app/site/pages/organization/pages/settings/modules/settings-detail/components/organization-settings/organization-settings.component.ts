@@ -72,7 +72,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     enable_electronic_voting: [this._currentOrgaSettings.enable_electronic_voting],
                     enable_chat: [this._currentOrgaSettings.enable_chat],
                     limit_of_meetings: [this._currentOrgaSettings.limit_of_meetings ?? 0],
-                    limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0]
+                    limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0],
+                    sso_enabled: [this._currentOrgaSettings.sso_enabled ?? false],
+                    login_button_text: [this._currentOrgaSettings.login_button_text],
+                    save_attr_config: [this._currentOrgaSettings.save_attr_config]
                 };
             }
         } else {

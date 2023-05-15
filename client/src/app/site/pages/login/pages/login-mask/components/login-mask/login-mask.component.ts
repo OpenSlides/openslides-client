@@ -133,11 +133,12 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         }
 
         // check if global saml auth is enabled
-        // Todo: Create OrgaSetting
         this.subscriptions.push(
-            this.orgaSettings.get(`saml_enabled`).subscribe(enabled => {
-                // DEV disabled
-                // this.samlEnabled = enabled;
+            this.orgaSettings.get(`sso_enabled`).subscribe(enabled => {
+                this.samlEnabled = enabled;
+            }),
+            this.orgaSettings.get(`login_text`).subscribe(text => {
+                this.samlLoginButtonText = text;
             })
         );
 

@@ -26,7 +26,9 @@ export class OrganizationSetting {
     public users_email_replyto!: string;
     public users_email_body!: UnsafeHtml;
 
-    public saml_enabled!: boolean; // default: false
+    public sso_enabled!: boolean; // default: false
+    public login_button_text!: string;
+    public save_attr_config!: string;
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -75,7 +77,9 @@ export class Organization extends BaseModel<Organization> {
         `users_email_subject`,
         `users_email_body`,
         `url`,
-        `saml_enabled`
+        `sso_enabled`,
+        `login_button_text`,
+        `save_attr_config`
     ];
 }
 

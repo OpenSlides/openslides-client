@@ -36,7 +36,10 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `users_email_body`,
             `users_email_replyto`,
             `users_email_sender`,
-            `users_email_subject`
+            `users_email_subject`,
+            `sso_enabled`,
+            `login_button_text`,
+            `save_attr_config`
         );
         return {
             ...super.getFieldsets(),

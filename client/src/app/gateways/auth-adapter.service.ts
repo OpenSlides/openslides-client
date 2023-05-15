@@ -36,7 +36,7 @@ export class AuthAdapterService {
     }
 
     public async startSamlLogin(): Promise<string> {
-        const {message} =  await this.http.get<AuthServiceResponse>(`/system/saml/getUrl`);
-        return message
+        const { message } = await this.http.get<AuthServiceResponse>(`/system/saml/getUrl`);
+        return message;
     }
 }
