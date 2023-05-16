@@ -1,5 +1,5 @@
 <div class="title" *ngIf="motion">
-    <os-projectable-title [model]="motion" [getTitleFn]="getTitleFn">
+    <os-projectable-title [model]="motion" [getTitleFn]="getTitleFn" [updateObservable]="updateObservable">
         <span class="motion-title" prepend *ngIf="titleCanBeChanged()">
             <span
                 class="title-change-indicator"

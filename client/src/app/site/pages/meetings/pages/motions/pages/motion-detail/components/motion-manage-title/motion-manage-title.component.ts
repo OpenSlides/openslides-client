@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
@@ -29,6 +29,12 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return this.motion.getPersonalNote();
     }
 
+    public get updateObservable(): Observable<any> {
+        return this.updateSubject as Observable<any>;
+    }
+
+    private updateSubject: BehaviorSubject<any> = new BehaviorSubject(null);
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -37,6 +43,10 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         private dialog: MotionChangeRecommendationDialogService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
+
+        this.viewService.changeRecommendationModeSubject.pipe(distinctUntilChanged()).subscribe(reco => {
+            this.updateSubject.next(reco);
+        });
     }
 
     /**
