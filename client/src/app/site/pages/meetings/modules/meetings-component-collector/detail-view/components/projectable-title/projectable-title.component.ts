@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
-import { distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
 
@@ -20,13 +20,6 @@ export class ProjectableTitleComponent {
     @Input()
     public titleStyle: `h1` | `h2` = `h1`;
 
-    @Input()
-    public set updateObservable(obs: Observable<any>) {
-        obs.subscribe(_ => this.cd.markForCheck());
-    }
-
-    private updateSubscription: Subscription;
-
     public isProjectedObservable = this.projectorService.getViewModelListObservable().pipe(
         distinctUntilChanged(),
         map(_ => this.isBeingProjected())
@@ -40,5 +33,9 @@ export class ProjectableTitleComponent {
         }
 
         return this.projectorService.isProjected(this.model);
+    }
+
+    public update(): void {
+        this.cd.markForCheck();
     }
 }
