@@ -207,6 +207,18 @@
                 <h4>{{ 'Initial password' | translate }}</h4>
                 <span>{{ user.default_password }}</span>
             </div>
+            <!-- tech id -->
+            <div *ngIf="user.tech_id">
+                <h4>{{ 'Initial password' | translate }}</h4>
+                <span>{{ user.tech_id }}</span>
+            </div>
+            <!-- member id -->
+            <div *ngIf="user.member_id">
+                <h4>{{ 'Initial password' | translate }}</h4>
+                <span>{{ user.member_id }}</span>
+            </div>
+
+
         </div>
     </ng-container>
 </ng-template>

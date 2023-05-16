@@ -4,6 +4,8 @@ import { User } from './user';
 
 export const userHeadersAndVerboseNames: { [key in keyof User]?: any } = {
     title: _(`Title`),
+    tech_id: _(`Technische ID`),
+    member_id: _(`Mitgliedsnummer`),
     first_name: _(`Given name`),
     last_name: _(`Surname`),
     email: _(`Email`),
