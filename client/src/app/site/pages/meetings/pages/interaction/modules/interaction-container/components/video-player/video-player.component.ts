@@ -74,19 +74,9 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         } else if (this.usingNanocosmos) {
             this.videoId = this.getNanocosmosVideoId(this.videoUrl);
 
-            if (!this.nanoPlayer) {
-                const script = document.createElement(`script`);
-                script.type = `text/javascript`;
-                script.src = `https://demo.nanocosmos.de/nanoplayer/api/release/nanoplayer.4.min.js`;
-                script.onload = () => {
-                    // @ts-ignore
-                    this.nanoPlayer = new NanoPlayer(`nanocosmosPlayer`);
-                    this.updateNano();
-                };
-                document.getElementsByTagName(`head`)[0].appendChild(script);
-            } else {
+            this.loadNanoplayer().then(() => {
                 this.updateNano();
-            }
+            });
         } else {
             this.videoId = this.getYouTubeVideoId(this.videoUrl);
             if (this.usingYouTube) {
@@ -244,6 +234,24 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
                 muted: false
             },
             style
+        });
+    }
+
+    private loadNanoplayer(): Promise<void> {
+        return new Promise(resolve => {
+            if (!this.nanoPlayer) {
+                const script = document.createElement(`script`);
+                script.type = `text/javascript`;
+                script.src = `https://demo.nanocosmos.de/nanoplayer/api/release/nanoplayer.4.min.js`;
+                script.onload = () => {
+                    // @ts-ignore
+                    this.nanoPlayer = new NanoPlayer(`nanocosmosPlayer`);
+                    resolve();
+                };
+                document.getElementsByTagName(`head`)[0].appendChild(script);
+            } else {
+                resolve();
+            }
         });
     }
 
