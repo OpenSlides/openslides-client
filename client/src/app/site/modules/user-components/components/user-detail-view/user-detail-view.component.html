@@ -117,7 +117,7 @@
         </div>
 
         <div *ngIf="isAllowed('manage')">
-            <!-- tech and member id -->
+            <!-- tech id -->
             <mat-form-field class="full-width">
                 <input
                     matInput
@@ -125,6 +125,9 @@
                     placeholder="{{ 'Technische ID' }}"
                     formControlName="tech_id"
                 />
+            </mat-form-field>
+            <!-- member id -->
+            <mat-form-field class="full-width">
                 <input
                     matInput
                     autocomplete="off"
