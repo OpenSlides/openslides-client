@@ -448,7 +448,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
                     const newOption = (
                         definition.options.filter(newOpt => !!newOpt && typeof newOpt !== `string`) as OsFilterOption[]
-                    ).find(newOpt => newOpt.label === option.label);
+                    )?.find(newOpt => newOpt.label === option.label);
                     if (newOption) {
                         newOption.isActive = option.isActive;
                     }
