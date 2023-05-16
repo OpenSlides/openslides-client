@@ -52,12 +52,16 @@ export function getNodeByName(node: Node, searchName: string, last: boolean = fa
  * @returns {Node[]}
  */
 export function getNodeContextTrace(node: Node): Node[] {
-    const context = [node];
-    while (context[0].parentNode) {
-        context.unshift(context[0].parentNode);
+    if (node) {
+        const context = [node];
+        while (context[0].parentNode) {
+            context.unshift(context[0].parentNode);
+        }
+
+        return context;
     }
 
-    return context;
+    return [];
 }
 
 /**
