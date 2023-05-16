@@ -49,7 +49,7 @@ export class TopicPollService extends PollService {
     ) {
         super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
         this.meetingSettingsService
-            .get(`topic_poll_default_100_percent_base`)
+            .get(`topic_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base ?? PollPercentBase.Y));
 
         this.meetingSettingsService

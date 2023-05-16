@@ -95,7 +95,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
             `email`,
-            `last_email_send`,
+            `last_email_sent`,
             `last_login`,
             `organization_management_level`
         ]);

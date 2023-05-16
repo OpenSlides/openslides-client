@@ -309,8 +309,18 @@ export class HtmlToPdfService {
      * Can be overwritten by subclasses for more specific functionality.
      */
     protected createListParagraph(data: CreateSpecificParagraphPayload): any {
-        const children = this.parseChildren(data.element, data.styles);
+        let children = this.parseChildren(data.element, data.styles);
         const list = this.create(data.nodeName);
+
+        // Fixes nested lists being placed inside `text` elements
+        if (
+            children.length === 1 &&
+            (<any>children[0])?.text.length &&
+            (<any>children[0])?.text.find((el: any) => !!el.ul)
+        ) {
+            // @ts-ignore
+            children = [{ stack: (<any>children[0]).text }];
+        }
 
         // keep the numbers of the ol list
         if (data.nodeName === `ol`) {

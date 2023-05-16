@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
 
+import { GlobalHeadbarService } from '../../global-headbar.service';
 import { GlobalSearchComponent } from '../global-search/global-search.component';
 
 @Component({
@@ -26,7 +27,8 @@ export class GlobalHeadbarComponent {
     public constructor(
         private activeMeeting: ActiveMeetingService,
         private orgaService: OrganizationService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        public headbarService: GlobalHeadbarService
     ) {}
 
     public openSearch(): void {

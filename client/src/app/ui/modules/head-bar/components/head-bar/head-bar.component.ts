@@ -1,6 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { TemplatePortal } from '@angular/cdk/portal';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';
 
 import { MainMenuService } from '../../../../../site/pages/meetings/services/main-menu.service';
 import { ViewPortService } from '../../../../../site/services/view-port.service';
@@ -59,7 +72,7 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
     styleUrls: [`./head-bar.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class HeadBarComponent implements OnInit {
+export class HeadBarComponent implements OnInit, AfterViewInit {
     /**
      * Determine if the the navigation "hamburger" icon should be displayed in mobile mode
      */
@@ -97,6 +110,8 @@ export class HeadBarComponent implements OnInit {
     public set isSaveButtonEnabled(value: boolean | undefined) {
         this._isSaveButtonEnabled = value || false;
     }
+
+    @ViewChild(`headbarContent`) headbarContent: TemplateRef<unknown>;
 
     public get isSaveButtonEnabled(): boolean {
         return this._isSaveButtonEnabled;
@@ -198,7 +213,9 @@ export class HeadBarComponent implements OnInit {
         private menu: MainMenuService,
         private router: Router,
         private route: ActivatedRoute,
-        private routingState: RoutingStateService
+        private routingState: RoutingStateService,
+        private headbarService: GlobalHeadbarService,
+        private _viewContainerRef: ViewContainerRef
     ) {}
 
     /**
@@ -206,6 +223,10 @@ export class HeadBarComponent implements OnInit {
      */
     public ngOnInit(): void {
         this.isCancelEditUsed = this.cancelEditEvent.observers.length > 0;
+    }
+
+    public ngAfterViewInit(): void {
+        this.headbarService.headbar = new TemplatePortal(this.headbarContent, this._viewContainerRef);
     }
 
     /**

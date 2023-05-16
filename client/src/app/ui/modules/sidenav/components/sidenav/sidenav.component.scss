@@ -13,6 +13,19 @@
     }
 }
 
+.main-content-wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    .navigation {
+        position: sticky;
+        flex: 1 0 auto;
+    }
+    .content {
+        width: 100%;
+        overflow: auto;
+    }
+}
+
 .nav-toolbar-flex-container {
     display: flex;
     flex-direction: column;
@@ -53,17 +66,23 @@ mat-sidenav-container {
     height: 100%;
     width: 100%;
 
-    mat-sidenav.side-panel {
+    mat-sidenav-content {
+        display: flex;
+    }
+
+    mat-sidenav.side-panel,
+    .main-content-wrapper .navigation {
         border: 0;
         box-shadow: 3px 0px 10px 0px rgba(0, 0, 0, 0.2);
         width: 260px;
         overflow-x: hidden;
+        z-index: 3;
     }
 }
 
 // CSS for the toggle button
 .nav-toggle-button-container {
-    position: absolute;
+    position: sticky;
     z-index: 99;
     bottom: 24px;
     & > div {

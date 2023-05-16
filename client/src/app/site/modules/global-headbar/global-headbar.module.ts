@@ -1,3 +1,4 @@
+import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -31,7 +32,8 @@ const MODULES = [
     MatTooltipModule,
     MatDialogModule,
     MatCheckboxModule,
-    MatBadgeModule
+    MatBadgeModule,
+    PortalModule
 ];
 const DECLARATIONS = [GlobalHeadbarComponent];
 
