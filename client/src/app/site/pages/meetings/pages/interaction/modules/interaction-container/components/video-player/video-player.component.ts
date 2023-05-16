@@ -226,6 +226,11 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
             };
         }
 
+        let style: any = {};
+        if (this.posterUrl) {
+            style.poster = this.posterUrl;
+        }
+
         this.nanoPlayer.setup({
             source: {
                 defaults: {
@@ -237,7 +242,8 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
                 autoplay: true,
                 automute: true,
                 muted: false
-            }
+            },
+            style
         });
     }
 
