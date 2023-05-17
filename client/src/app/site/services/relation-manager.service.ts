@@ -156,6 +156,9 @@ export class RelationManagerService {
                     throw new Error(`You must give a non-empty attribute for this structured relation`);
                 }
             }
+            if (!(model[relation.ownIdField] as string[])?.includes(attr)) {
+                return relation.many ? [] : undefined;
+            }
             const idField = (relation.ownIdFieldPrefix + attr + relation.ownIdFieldSuffix) as keyof M;
             return this.handleNormalRelation(model, relation, idField);
         };

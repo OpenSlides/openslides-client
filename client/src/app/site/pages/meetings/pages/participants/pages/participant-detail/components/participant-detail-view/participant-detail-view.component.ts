@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -160,6 +160,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
         this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.user.fqid } });
     }
 
+    private subsc: Subscription;
+
     private getUserByUrl(): void {
         if (this.route.snapshot.url[0] && this.route.snapshot.url[0].path === `new`) {
             super.setTitle(`New participant`);
@@ -173,7 +175,13 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                             this._userId = +params[`id`];
                         }
                         if (this._userId) {
+                            if (this.subsc) {
+                                this.subsc.unsubscribe();
+                            }
                             await this.loadUserById();
+                            this.subsc = this.repo
+                                .getViewModelObservable(this._userId)
+                                .subscribe(user => console.log(`UPDATE:`, user));
                         }
                     }
                 )
