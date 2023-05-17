@@ -41,12 +41,6 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         private dialog: MotionChangeRecommendationDialogService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
-
-        this.viewService.changeRecommendationModeSubject.pipe(distinctUntilChanged()).subscribe(reco => {
-            if (this.titleComponent) {
-                this.titleComponent.update();
-            }
-        });
     }
 
     /**
@@ -90,7 +84,12 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return [
             this.changeRecoRepo
                 .getTitleChangeRecoOfMotionObservable(this.motion?.id)
-                ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco))
+                ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco)),
+            this.viewService.changeRecommendationModeSubject.pipe(distinctUntilChanged()).subscribe(reco => {
+                if (this.titleComponent) {
+                    this.titleComponent.update();
+                }
+            })
         ];
     }
 }
