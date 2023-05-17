@@ -2,17 +2,7 @@
 
 os-dashboard {
     .organization-description {
-        padding-left: 104px;
-
-        @include phone {
-            padding-left: 66px;
-            padding-top: 15px;
-        }
-
-        @include tablet {
-            padding-left: 66px;
-            padding-top: 15px;
-        }
+        padding-left: 76px;
     }
 
     .meeting-list-viewport {
@@ -50,7 +40,7 @@ os-dashboard {
 
         @include desktop {
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 0 auto 40px auto;
         }
 
         @include phone {
@@ -74,6 +64,11 @@ os-dashboard {
                 display: none;
             }
         }
+    }
+
+    .meeting-list-container-description {
+        display: flex;
+        margin: 20px 0;
     }
 
     .padding-right-8 {
@@ -340,6 +335,10 @@ os-dashboard {
     #no-date-meetings {
         .meeting-icon-wrapper {
             color: rgba(0, 0, 0, 0.65);
+
+            mat-icon {
+                color: #8f8f8f;
+            }
         }
     }
 }
