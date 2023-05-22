@@ -58,3 +58,8 @@
 .vscroll-viewport {
     display: block;
 }
+
+.selected-options {
+    visibility: hidden;
+    position: absolute;
+}

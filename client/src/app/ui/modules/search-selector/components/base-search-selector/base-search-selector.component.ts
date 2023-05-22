@@ -300,6 +300,10 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         this.searchValueForm.setValue(``);
     }
 
+    public getItemById(id: number): Selectable {
+        return this.selectableItems.find(item => item.id === id);
+    }
+
     protected onSearchValueUpdated(nextValue: string): void {
         this.filteredItemsSubject.next(this.getFilteredItemsBySearchValue(nextValue.toLowerCase()));
     }

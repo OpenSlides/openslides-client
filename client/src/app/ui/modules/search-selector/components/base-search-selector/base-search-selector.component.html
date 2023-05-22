@@ -74,4 +74,10 @@
             {{ selectableItem.getTitle() | translate }} {{ getItemAdditionalInfoFn(selectableItem) }}
         </mat-option>
     </cdk-virtual-scroll-viewport>
+    <ng-container *ngIf="multiple">
+        <mat-option class="selected-options" *ngFor="let option of selectedItems" [value]="option.id" disabled>{{option.getTitle() | translate}} {{ getItemAdditionalInfoFn(option) }}</mat-option>
+    </ng-container>
+    <ng-container *ngIf="!multiple">
+        <mat-option class="selected-options" *ngIf="contentForm.value" [value]="contentForm.value" disabled>{{getItemById(contentForm.value)?.getTitle() ?? '' | translate}} {{ getItemAdditionalInfoFn(getItemById(contentForm.value)) }}</mat-option>
+    </ng-container>
 </mat-select>
