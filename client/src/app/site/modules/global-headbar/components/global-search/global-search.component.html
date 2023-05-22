@@ -1,1 +1,47 @@
-<p>global-search works!</p>
+<div>
+    <mat-form-field class="search-field" appearance="outline" floatLabel="never">
+        <input
+            matInput
+            [(ngModel)]="searchTerm"
+            (change)="searchChange()"
+            placeholder="{{ 'Search' | translate }}"
+            autofocus>
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <section class="filter-section" [formGroup]="currentFilters">
+        <ul class="filters-list">
+            <li *ngFor="let filter of availableFilters | keyvalue">
+                <mat-checkbox formControlName="{{ filter.key }}">{{ filter.value }}</mat-checkbox>
+            </li>
+        </ul>
+    </section>
+</div>
+
+<mat-dialog-content class="search-results">
+    <section *ngFor="let category of results | keyvalue" class="search-results-category">
+        <h2>
+            <span
+                [matBadge]="category.value.length < 100 ? category.value.length : '99+'"
+                [matBadgeOverlap]="false">{{ availableFilters[category.key] | translate }}</span>
+        </h2>
+        <ng-container *ngFor="let result of category.value">
+            <a
+                *ngIf="result.fqid.startsWith('mediafile')"
+                class="search-results-entry"
+                [href]="result.url"
+                target="blank"
+                mat-dialog-close>
+                <h3 *ngIf="result.title">{{ result.title }}</h3>
+            </a>
+            <router-link
+                *ngIf="!result.fqid.startsWith('mediafile')"
+                class="search-results-entry"
+                [routerLink]="result.url"
+                mat-dialog-close>
+                <h3 *ngIf="result.title">{{ result.title }}</h3>
+                <p *ngIf="result.text" [innerHtml]="result.text"></p>
+            </router-link>
+        </ng-container>
+    </section>
+</mat-dialog-content>
