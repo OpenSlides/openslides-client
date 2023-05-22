@@ -6,6 +6,10 @@
     }
 }
 
+.os-search-selector-panel {
+    overflow: hidden;
+}
+
 .os-search-selector--no-options {
     mat-pseudo-checkbox {
         display: none;
