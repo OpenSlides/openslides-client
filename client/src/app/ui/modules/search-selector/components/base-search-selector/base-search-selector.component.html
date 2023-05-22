@@ -77,8 +77,8 @@
 
     <!-- Ensure that selected options are always loaded, so that the mat-trigger is shown-->
     <ng-container *ngIf="multiple">
-        <mat-option class="selected-options-hidden" *ngFor="let option of selectedItems" [value]="option.id" disabled>
-            <ng-container *ngTemplateOutlet="optionContent; context: { item: option }"></ng-container>
+        <mat-option class="selected-options-hidden" *ngIf="selectedItems.length" [value]="selectedItems[0].id" disabled>
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectedItems[0] }"></ng-container>
         </mat-option>
     </ng-container>
     <ng-container *ngIf="!multiple">

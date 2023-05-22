@@ -7,6 +7,8 @@
 }
 
 .os-search-selector-panel {
+    height: max-content;
+    max-height: none;
     overflow: hidden !important;
 }
 
