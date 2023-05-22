@@ -71,13 +71,25 @@
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
             (click)="keepOpen ? matSelect.open() : null"
         >
-            {{ selectableItem.getTitle() | translate }} {{ getItemAdditionalInfoFn(selectableItem) }}
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: selectableItem }"></ng-container>
         </mat-option>
     </cdk-virtual-scroll-viewport>
+
+    <!-- Ensure that selected options are always loaded, so that the mat-trigger is shown-->
     <ng-container *ngIf="multiple">
-        <mat-option class="selected-options" *ngFor="let option of selectedItems" [value]="option.id" disabled>{{option.getTitle() | translate}} {{ getItemAdditionalInfoFn(option) }}</mat-option>
+        <mat-option class="selected-options-hidden" *ngFor="let option of selectedItems" [value]="option.id" disabled>
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: option }"></ng-container>
+        </mat-option>
     </ng-container>
     <ng-container *ngIf="!multiple">
-        <mat-option class="selected-options" *ngIf="contentForm.value" [value]="contentForm.value" disabled>{{getItemById(contentForm.value)?.getTitle() ?? '' | translate}} {{ getItemAdditionalInfoFn(getItemById(contentForm.value)) }}</mat-option>
+        <mat-option class="selected-options-hidden" *ngIf="contentForm.value" [value]="contentForm.value" disabled>
+            <ng-container *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"></ng-container>
+        </mat-option>
     </ng-container>
 </mat-select>
+
+<ng-template #optionContent let-item="item">
+    <ng-container *ngIf="item">
+        {{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}
+    </ng-container>
+</ng-template>
