@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { distinctUntilChanged, Subscription } from 'rxjs';
 import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
+import { ProjectableTitleComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/detail-view/components/projectable-title/projectable-title.component';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
@@ -17,6 +18,9 @@ import { MotionDetailServiceCollectorService } from '../../services/motion-detai
     styleUrls: [`./motion-manage-title.component.scss`]
 })
 export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
+    @ViewChild(ProjectableTitleComponent)
+    protected readonly titleComponent: ProjectableTitleComponent | undefined;
+
     public titleChangeRecommendation: ViewMotionChangeRecommendation | null = null;
 
     public override get parent(): ViewMotion | null {
@@ -80,7 +84,12 @@ export class MotionManageTitleComponent extends BaseMotionDetailChildComponent {
         return [
             this.changeRecoRepo
                 .getTitleChangeRecoOfMotionObservable(this.motion?.id)
-                ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco))
+                ?.subscribe(changeReco => (this.titleChangeRecommendation = changeReco)),
+            this.viewService.changeRecommendationModeSubject.pipe(distinctUntilChanged()).subscribe(reco => {
+                if (this.titleComponent) {
+                    this.titleComponent.update();
+                }
+            })
         ];
     }
 }
