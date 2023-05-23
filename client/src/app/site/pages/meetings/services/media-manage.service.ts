@@ -48,7 +48,7 @@ export class MediaManageService {
         if (!this.logoUrlSubjects[place]) {
             this.logoUrlSubjects[place] = new BehaviorSubject(this.getLogoUrl(place));
         }
-        return this.logoUrlSubjects[place]!.asObservable() as Observable<string>;
+        return this.logoUrlSubjects[place];
     }
 
     public getLogoUrl(place: LogoPlace): string | null {
@@ -69,7 +69,7 @@ export class MediaManageService {
         if (!this.fontUrlSubjects[place]) {
             this.fontUrlSubjects[place] = new BehaviorSubject(this.getFontUrl(place));
         }
-        return this.fontUrlSubjects[place]!.asObservable();
+        return this.fontUrlSubjects[place];
     }
 
     public getFontUrl(place: FontPlace): string {

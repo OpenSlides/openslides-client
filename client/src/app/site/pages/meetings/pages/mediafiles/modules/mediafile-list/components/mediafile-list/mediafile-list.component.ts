@@ -110,7 +110,7 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
             access_group_ids: []
         });
         this.groupsBehaviorSubject = this.groupRepo.getViewModelListObservable();
-        this.directoryObservable = this.directorySubject.asObservable();
+        this.directoryObservable = this.directorySubject as Observable<ViewMediafile[]>;
     }
 
     /**

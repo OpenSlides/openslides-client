@@ -47,7 +47,7 @@ export class ConnectionStatusService {
     }
 
     public get isOfflineObservable(): Observable<boolean> {
-        return this._isOfflineSubject.asObservable();
+        return this._isOfflineSubject;
     }
 
     private readonly _isOfflineSubject = new BehaviorSubject(false);

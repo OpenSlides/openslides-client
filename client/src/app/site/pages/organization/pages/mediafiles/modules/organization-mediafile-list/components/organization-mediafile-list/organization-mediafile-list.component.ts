@@ -103,7 +103,7 @@ export class OrganizationMediafileListComponent
         this.newDirectoryForm = this.formBuilder.group({
             title: [``, Validators.required]
         });
-        this.directoryObservable = this.directorySubject.asObservable();
+        this.directoryObservable = this.directorySubject as Observable<ViewMediafile[]>;
     }
 
     /**

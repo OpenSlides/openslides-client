@@ -18,7 +18,7 @@ export const ORGANIZATION_ID = 1;
 })
 export class OrganizationService {
     public get organizationObservable(): Observable<ViewOrganization | null> {
-        return this.organizationSubject.asObservable();
+        return this.organizationSubject;
     }
 
     public get organization(): ViewOrganization | null {

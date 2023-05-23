@@ -5,7 +5,7 @@ import { SearchService } from '../definitions/search-service';
 
 export class ListSearchService<V extends Identifiable> implements SearchService<V> {
     public get outputObservable(): Observable<V[]> {
-        return this._outputSubject.asObservable();
+        return this._outputSubject;
     }
 
     private _source: V[] = [];

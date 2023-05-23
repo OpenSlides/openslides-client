@@ -24,7 +24,7 @@ import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
 })
 export class MotionForwardDialogService extends BaseDialogService<MotionForwardDialogComponent, ViewMotion[], Ids> {
     public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
-        return this._forwardingCommitteesSubject.asObservable();
+        return this._forwardingCommitteesSubject;
     }
 
     private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);

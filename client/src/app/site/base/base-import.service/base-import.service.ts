@@ -88,11 +88,11 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     public encoding = `utf-8`;
 
     public get currentImportPhaseObservable(): Observable<ImportStepPhase> {
-        return this._currentImportPhaseSubject.asObservable();
+        return this._currentImportPhaseSubject;
     }
 
     public get isImportValidObservable(): Observable<boolean> {
-        return this._isImportValidSubject.asObservable();
+        return this._isImportValidSubject;
     }
 
     /**
@@ -140,7 +140,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     }
 
     public get importingStepsObservable(): Observable<ImportStep[]> {
-        return this._importingStepsSubject.asObservable();
+        return this._importingStepsSubject;
     }
 
     public get leftReceivedHeaders(): string[] {
@@ -156,7 +156,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     }
 
     public get rawFileObservable(): Observable<File | null> {
-        return this._rawFileSubject.asObservable();
+        return this._rawFileSubject;
     }
 
     private get importModels(): ImportModel<MainModel>[] {
@@ -307,7 +307,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      * @returns an observable BehaviorSubject
      */
     public getNewEntriesObservable(): Observable<ImportModel<MainModel>[]> {
-        return this._newEntries.asObservable().pipe(map(value => Object.values(value)));
+        return this._newEntries.pipe(map(value => Object.values(value)));
     }
 
     /**

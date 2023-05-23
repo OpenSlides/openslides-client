@@ -211,7 +211,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     public getViewModelListUnsafeObservable(): Observable<V[]> {
-        return this.unsafeViewModelListSubject.asObservable();
+        return this.unsafeViewModelListSubject;
     }
 
     /**
@@ -258,7 +258,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         if (!this.viewModelSubjects[id]) {
             this.viewModelSubjects[id] = new BehaviorSubject<V | null>(this.getViewModel(id));
         }
-        return this.viewModelSubjects[id].asObservable();
+        return this.viewModelSubjects[id];
     }
 
     /**
@@ -272,18 +272,18 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * This observable fires every time an object is changed in the repository.
      */
     public getGeneralViewModelObservable(): Observable<V> {
-        return this.generalViewModelSubject.asObservable();
+        return this.generalViewModelSubject;
     }
 
     /**
      * This observable fires on every update once contains each changed id.
      */
     public getModifiedIdsObservable(): Observable<Id[]> {
-        return this.modifiedIdsSubject.asObservable();
+        return this.modifiedIdsSubject;
     }
 
     public getViewModelMapObservable(): Observable<{ [id: number]: V }> {
-        return this.viewModelStoreSubject.asObservable();
+        return this.viewModelStoreSubject;
     }
 
     /**

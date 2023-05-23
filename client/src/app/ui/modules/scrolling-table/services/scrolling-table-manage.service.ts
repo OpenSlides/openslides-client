@@ -51,7 +51,7 @@ export class ScrollingTableManageService {
     public currentScrollingTableComponent: ScrollingTableComponent<any> | null = null;
 
     public get cellDefinitionsObservable(): Observable<ScrollingTableCellDefinition[]> {
-        return this._cellDefinitionsSubject.asObservable();
+        return this._cellDefinitionsSubject;
     }
 
     public readonly noDataTemplateSubject = new BehaviorSubject<TemplatePortal | null>(null);
