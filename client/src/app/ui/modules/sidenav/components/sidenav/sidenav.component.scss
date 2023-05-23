@@ -16,6 +16,7 @@
 .main-content-wrapper {
     display: flex;
     flex: 1 1 auto;
+    max-width: 100%;
     .navigation {
         position: sticky;
         flex: 1 0 auto;
