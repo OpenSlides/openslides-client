@@ -28,8 +28,8 @@ export class OrganizationSetting {
     public users_email_body!: UnsafeHtml;
 
     public sso_enabled!: boolean; // default: false
-    public login_button_text!: string;
-    public save_attr_config!: string;
+    public sso_login_button_text!: string;
+    public sso_attr_mapping!: string;
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -80,8 +80,8 @@ export class Organization extends BaseModel<Organization> {
         `users_email_body`,
         `url`,
         `sso_enabled`,
-        `login_button_text`,
-        `save_attr_config`
+        `sso_login_button_text`,
+        `sso_attr_mapping`
     ];
 }
 

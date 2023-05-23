@@ -77,8 +77,8 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     limit_of_meetings: [this._currentOrgaSettings.limit_of_meetings ?? 0],
                     limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0],
                     sso_enabled: [this._currentOrgaSettings.sso_enabled ?? false],
-                    login_button_text: [this._currentOrgaSettings.login_button_text],
-                    save_attr_config: [this._currentOrgaSettings.save_attr_config]
+                    sso_login_button_text: [this._currentOrgaSettings.sso_login_button_text],
+                    sso_attr_mapping: [this._currentOrgaSettings.sso_attr_mapping]
                 };
             }
         } else {

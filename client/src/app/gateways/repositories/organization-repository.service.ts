@@ -38,8 +38,8 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `users_email_sender`,
             `users_email_subject`,
             `sso_enabled`,
-            `login_button_text`,
-            `save_attr_config`,
+            `sso_login_button_text`,
+            `sso_attr_mapping`,
             `default_language`
         );
         return {
