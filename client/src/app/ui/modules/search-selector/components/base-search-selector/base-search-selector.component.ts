@@ -273,6 +273,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     public onOpenChanged(event: boolean): void {
         this.openedChange.emit(event);
         if (event) {
+            // Ensure that the main panel doesn't ever scroll away from the top
             const panelElement = this.matSelect.panel.nativeElement as HTMLElement;
             const inputRect = this.inputDiv.nativeElement.getBoundingClientRect();
             const cdkRect = this.cdkVirtualScrollViewPort.elementRef.nativeElement.getBoundingClientRect();
