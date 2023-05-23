@@ -145,7 +145,6 @@ os-dashboard {
     }
 
     .show-committee-link {
-
         @include tablet {
             display: inline-block !important;
             padding-right: 20px; // Ensures that the wrapper has really a width of 40px
@@ -227,7 +226,7 @@ os-dashboard {
         box-sizing: border-box;
         height: 60px;
 
-        >a {
+        > a {
             text-decoration: none;
 
             &:first-child {
@@ -241,7 +240,7 @@ os-dashboard {
         }
 
         @include phone {
-            >a {
+            > a {
                 text-decoration: none;
 
                 &:first-child {
@@ -260,7 +259,7 @@ os-dashboard {
         }
 
         @include tablet {
-            >a {
+            > a {
                 text-decoration: none;
 
                 &:first-child {
@@ -310,7 +309,7 @@ os-dashboard {
                     @include phone {
                         font-size: 18px;
                     }
-    
+
                     @include tablet {
                         font-size: 18px;
                     }
@@ -322,7 +321,7 @@ os-dashboard {
                     @include phone {
                         font-size: 12px;
                     }
-    
+
                     @include tablet {
                         font-size: 12px;
                     }
