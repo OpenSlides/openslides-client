@@ -75,9 +75,15 @@ export class UserService {
      *
      * @param userIds The id of every user to check
      *
-     * @returns A boolean whether every given user is in the same scope as the operator
+     * @returns A boolean whether every given user is in the same scope as the operator, if there are no users or only the operator is given, it will always be true
      */
     public async isUserInSameScope(...userIds: Id[]): Promise<boolean> {
+        if (userIds.includes(this.operator.operatorId)) {
+            userIds = userIds.filter(id => id !== this.operator.operatorId);
+        }
+        if (!userIds.length) {
+            return true;
+        }
         const result = await this.presenter.call({ user_ids: [...userIds, this.operator.operatorId!] });
         const ownScope = result[this.operator.operatorId!];
         return !Object.keys(result)
