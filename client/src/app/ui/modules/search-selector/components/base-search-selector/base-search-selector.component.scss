@@ -7,7 +7,7 @@
 }
 
 .os-search-selector-panel {
-    height: max-content;
+    height: var(--os-search-selector-panel-height, 296px);
     max-height: none !important;
     overflow: hidden !important;
 }

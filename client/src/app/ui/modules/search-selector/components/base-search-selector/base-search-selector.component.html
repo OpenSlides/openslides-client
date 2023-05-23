@@ -16,7 +16,7 @@
         </ng-container>
     </mat-select-trigger>
 
-    <div class="os-search-selector--input-wrapper" *ngIf="matSelect.panelOpen">
+    <div #searchSelectorInput class="os-search-selector--input-wrapper" *ngIf="matSelect.panelOpen">
         <input
             matInput
             osAutofocus
