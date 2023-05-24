@@ -135,7 +135,7 @@
             <h2>{{ 'Single Sign On settings' | translate }}</h2>
             <!-- sso enabled -->
             <section>
-                <mat-checkbox formControlName="sso_enabled">
+                <mat-checkbox formControlName="saml_enabled">
                     {{ 'SSO enabled' | translate }}
                 </mat-checkbox>
             </section>
@@ -143,14 +143,14 @@
             <section>
                 <mat-form-field>
                     <mat-label>{{ 'Login button text' | translate }}</mat-label>
-                    <input matInput formControlName="sso_login_button_text" />
+                    <input matInput formControlName="saml_login_button_text" />
                 </mat-form-field>
             </section>
             <!-- JSON source attribute -->
             <section>
                 <mat-form-field>
                     <mat-label>{{ 'JSON source attribute' | translate }}</mat-label>
-                    <textarea matInput formControlName="sso_attr_mapping"></textarea>
+                    <textarea matInput formControlName="saml_attr_mapping"></textarea>
                 </mat-form-field>
             </section>
         </div>

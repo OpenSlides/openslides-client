@@ -37,9 +37,9 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
             `users_email_replyto`,
             `users_email_sender`,
             `users_email_subject`,
-            `sso_enabled`,
-            `sso_login_button_text`,
-            `sso_attr_mapping`,
+            `saml_enabled`,
+            `saml_login_button_text`,
+            `saml_attr_mapping`,
             `default_language`
         );
         return {
@@ -51,6 +51,9 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
 
     public update(data: any): Promise<void> {
         data.id = ORGANIZATION_ID;
+        if (data.saml_attr_mapping) {
+            data.saml_attr_mapping = JSON.parse(data.saml_attr_mapping);
+        }
         return this.sendActionToBackend(OrganizationAction.UPDATE, data);
     }
 }
