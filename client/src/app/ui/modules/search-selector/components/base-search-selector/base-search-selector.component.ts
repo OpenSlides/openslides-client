@@ -270,7 +270,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         this.openedChange.emit(event);
         if (event) {
             this.scrollViewport.nativeElement.scroll({ top: 0 });
-            // this.scrollViewport.nativeElement.checkViewportSize();
         }
     }
 
