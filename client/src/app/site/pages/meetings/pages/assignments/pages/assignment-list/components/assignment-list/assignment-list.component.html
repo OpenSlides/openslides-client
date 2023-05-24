@@ -30,7 +30,7 @@
     <!-- Title -->
     <div *osScrollingTableCell="'title'; row as assignment; rowContext as rowContext" class="cell-slot fill">
         <os-detail-view-navigator [model]="assignment" *ngIf="!isMultiSelect"></os-detail-view-navigator>
-        <div class="innerTable">
+        <div style="overflow: hidden" class="innerTable">
             <div class="title-line ellipsis-overflow">
                 {{ assignment.getListTitle() }}
             </div>
