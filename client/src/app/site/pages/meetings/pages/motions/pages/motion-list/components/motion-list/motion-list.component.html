@@ -64,7 +64,7 @@
         <!-- Title -->
         <div *osScrollingTableCell="'title'; row as motion; rowContext as rowContext" class="cell-slot fill">
             <os-detail-view-navigator [model]="motion" *ngIf="!isMultiSelect"></os-detail-view-navigator>
-            <div style="overflow: hidden" class="column-title innerTable">
+            <div class="column-title innerTable overflow-hidden">
                 <div class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
                     <span *ngIf="motion.getPersonalNote()?.star" class="favorite-star">

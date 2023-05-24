@@ -40,7 +40,7 @@
             [routerLink]="committee.id"
             *ngIf="!isMultiSelect && committee.canAccess()"
         ></a>
-        <div style="overflow:hidden">
+        <div class="overflow-hidden">
             <div class="title-line ellipsis-overflow">
                 {{ committee.name }}
                 <div class="subtitle ellipsis-overflow" *ngIf="committee.description?.trim()">
