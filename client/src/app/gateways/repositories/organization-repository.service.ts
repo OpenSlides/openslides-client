@@ -51,7 +51,7 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
 
     public update(data: any): Promise<void> {
         data.id = ORGANIZATION_ID;
-        if (data.saml_attr_mapping) {
+        if (typeof data.saml_attr_mapping === `string`) {
             try {
                 data.saml_attr_mapping = JSON.parse(data.saml_attr_mapping);
             } catch (e) {}

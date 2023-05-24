@@ -79,9 +79,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false],
                     saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
                     saml_attr_mapping: [
-                        this._currentOrgaSettings.saml_attr_mapping
+                        this._currentOrgaSettings.saml_attr_mapping &&
+                        typeof this._currentOrgaSettings.saml_attr_mapping !== `string`
                             ? JSON.stringify(this._currentOrgaSettings.saml_attr_mapping)
-                            : ``
+                            : this._currentOrgaSettings.saml_attr_mapping
                     ]
                 };
             }
@@ -110,9 +111,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this.orgaSettingsForm = this.createForm();
         }
         const patchMeeting: any = viewOrganization.organization;
-        patchMeeting.saml_attr_mapping = patchMeeting.saml_attr_mapping
-            ? JSON.stringify(patchMeeting.saml_attr_mapping)
-            : ``;
+        patchMeeting.saml_attr_mapping =
+            patchMeeting.saml_attr_mapping && typeof patchMeeting.saml_attr_mapping !== `string`
+                ? JSON.stringify(patchMeeting.saml_attr_mapping)
+                : patchMeeting.saml_attr_mapping;
         this.orgaSettingsForm!.patchValue(patchMeeting);
     }
 

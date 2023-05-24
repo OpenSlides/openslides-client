@@ -137,7 +137,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             this.orgaSettings.get(`saml_enabled`).subscribe(enabled => {
                 this.samlEnabled = enabled;
             }),
-            this.orgaSettings.get(`login_text`).subscribe(text => {
+            this.orgaSettings.get(`saml_login_button_text`).subscribe(text => {
                 this.samlLoginButtonText = text;
             })
         );

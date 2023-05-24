@@ -63,7 +63,7 @@
             {{ 'Login as guest' | translate }}
         </button>
 
-        <button mat-stroked-button *ngIf="samlEnabled" class="login-button" type="button" (click)="samlLogin()">{{ 'SAML Login' | translate }}</button>
+        <button mat-stroked-button *ngIf="samlEnabled" class="login-button" type="button" (click)="samlLogin()">{{ (samlLoginButtonText || 'SAML Login') | translate }}</button>
 
         <!-- forgot password button -->
         <br />
