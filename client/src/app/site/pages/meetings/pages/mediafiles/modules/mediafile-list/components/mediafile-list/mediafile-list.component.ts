@@ -21,6 +21,7 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
 
 import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
+import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
@@ -171,7 +172,13 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         return false;
     }
 
-    public changeDirectory(directoryId: number | null): void {
+    public async changeDirectory(directoryId: number | null): Promise<void> {
+        const mediafilesSubscribed = await this.modelRequestService.subscriptionGotData(MEDIAFILES_SUBSCRIPTION);
+        if (!mediafilesSubscribed) {
+            setTimeout(() => this.changeDirectory(directoryId), 50);
+            return;
+        }
+
         this.clearSubscriptions();
 
         // pipe the directory observable to the directorySubject so that the actual observable which

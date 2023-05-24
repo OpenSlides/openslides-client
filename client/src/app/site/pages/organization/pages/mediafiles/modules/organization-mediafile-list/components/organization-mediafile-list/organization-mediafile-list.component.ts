@@ -16,6 +16,7 @@ import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { MEDIAFILES_SUBSCRIPTION } from 'src/app/site/pages/meetings/pages/mediafiles/mediafiles.subscription';
 import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListSortService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-sort.service';
 import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
@@ -184,7 +185,13 @@ export class OrganizationMediafileListComponent
         return this.canEdit;
     }
 
-    public changeDirectory(directoryId: number | null): void {
+    public async changeDirectory(directoryId: number | null): Promise<void> {
+        const mediafilesSubscribed = await this.modelRequestService.subscriptionGotData(MEDIAFILES_SUBSCRIPTION);
+        if (!mediafilesSubscribed) {
+            setTimeout(() => this.changeDirectory(directoryId), 50);
+            return;
+        }
+
         this.clearSubscriptions();
 
         // pipe the directory observable to the directorySubject so that the actual observable which
