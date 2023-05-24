@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { BehaviorSubject, filter, fromEvent, map, Observable } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, fromEvent, map, Observable } from 'rxjs';
 
 import { BannerDefinition, BannerService } from '../modules/site-wrapper/services/banner.service';
 
@@ -17,7 +17,7 @@ export interface OfflineReasonConfig {
 
 const DEFAULT_OFFLINE_REASON: OfflineReasonConfig = {
     reason: `Connection lost`,
-    isOnlineFn: () => fromEvent(window, `online`).pipe(map(event => !!event))
+    isOnlineFn: () => navigator.onLine
 };
 
 const OFFLINE_BANNER: BannerDefinition = {
@@ -69,9 +69,9 @@ export class ConnectionStatusService {
     /**
      * Helper function to set offline status
      */
-    public goOffline(config: OfflineReasonConfig): void {
+    public async goOffline(config: OfflineReasonConfig): Promise<void> {
         if (null !== this._config) {
-            return;
+            await firstValueFrom(this.isOfflineObservable.pipe(filter(v => !v)));
         }
         this._config = config;
 
@@ -82,10 +82,11 @@ export class ConnectionStatusService {
 
     private deferCheckStillOffline(): void {
         this._isOfflineSubject.next(true);
-        this.bannerService.addBanner(OFFLINE_BANNER);
+        let addBannerTimeout = setTimeout(() => this.bannerService.addBanner(OFFLINE_BANNER), 5000);
         if (this._config?.isOnlineFn instanceof Observable) {
             const subscription = this._config.isOnlineFn.subscribe(is => {
                 if (is) {
+                    clearTimeout(addBannerTimeout);
                     this.goOnline();
                     subscription.unsubscribe();
                 }
@@ -99,6 +100,7 @@ export class ConnectionStatusService {
                 console.warn(`Is online again? ->`, isOnline);
 
                 if (isOnline) {
+                    clearTimeout(addBannerTimeout);
                     this.goOnline();
                 } else {
                     // continue trying.
