@@ -64,7 +64,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                             follow: [
                                 {
                                     idField: `content_object_id`,
-                                    fieldset: [`owner_id`],
+                                    fieldset: [],
                                     follow: [
                                         {
                                             idField: `list_of_speakers_id`,
