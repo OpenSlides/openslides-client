@@ -52,7 +52,9 @@ export class OrganizationRepositoryService extends BaseRepository<ViewOrganizati
     public update(data: any): Promise<void> {
         data.id = ORGANIZATION_ID;
         if (data.saml_attr_mapping) {
-            data.saml_attr_mapping = JSON.parse(data.saml_attr_mapping);
+            try {
+                data.saml_attr_mapping = JSON.parse(data.saml_attr_mapping);
+            } catch (e) {}
         }
         return this.sendActionToBackend(OrganizationAction.UPDATE, data);
     }
