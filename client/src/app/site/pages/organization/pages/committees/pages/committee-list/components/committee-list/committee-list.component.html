@@ -34,16 +34,16 @@
     [filterService]="filterService"
     [(selectedRows)]="selectedRows"
 >
-    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot">
+    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
         <a
             class="stretch-to-fill-parent"
             [routerLink]="committee.id"
             *ngIf="!isMultiSelect && committee.canAccess()"
         ></a>
-        <div>
+        <div style="overflow:hidden">
             <div class="title-line ellipsis-overflow">
                 {{ committee.name }}
-                <div class="subtitle" *ngIf="committee.description?.trim()">
+                <div class="subtitle ellipsis-overflow" *ngIf="committee.description?.trim()">
                     {{ committee.description }}
                 </div>
             </div>
