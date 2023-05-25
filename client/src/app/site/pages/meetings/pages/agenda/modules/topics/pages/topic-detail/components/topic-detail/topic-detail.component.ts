@@ -106,7 +106,6 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     public ngOnInit(): void {
         this.route.queryParams.pipe(filter(params => params[`parent`])).subscribe(params => {
-            console.log(`A SUBSCRIPTION`, params, Number(``));
             if (!this.topicForm) {
                 this.createForm();
             }
