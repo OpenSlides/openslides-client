@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -29,7 +30,7 @@ import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pd
     templateUrl: `./topic-detail.component.html`,
     styleUrls: [`./topic-detail.component.scss`]
 })
-export class TopicDetailComponent extends BaseMeetingComponent {
+export class TopicDetailComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewTopic.COLLECTION;
 
     /**
@@ -90,7 +91,8 @@ export class TopicDetailComponent extends BaseMeetingComponent {
         private pollDialog: TopicPollDialogService,
         private topicPollService: TopicPollService,
         private pollController: PollControllerService,
-        private topicPdfService: TopicPdfService
+        private topicPdfService: TopicPdfService,
+        private route: ActivatedRoute
     ) {
         super(componentServiceCollector, translate);
         this.createForm();
@@ -100,6 +102,18 @@ export class TopicDetailComponent extends BaseMeetingComponent {
             .subscribe(isEnabled => (this._isEVotingEnabled = isEnabled));
 
         this.itemObserver = this.itemRepo.getViewModelListObservable();
+    }
+
+    public ngOnInit(): void {
+        this.route.queryParams.pipe(filter(params => params[`parent`])).subscribe(params => {
+            console.log(`A SUBSCRIPTION`, params, Number(``));
+            if (!this.topicForm) {
+                this.createForm();
+            }
+            if (Number(params[`parent`])) {
+                this.topicForm!.patchValue({ agenda_parent_id: Number(params[`parent`]) });
+            }
+        });
     }
 
     /**
