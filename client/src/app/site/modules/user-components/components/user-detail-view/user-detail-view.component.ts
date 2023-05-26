@@ -39,7 +39,6 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     @Input()
     public set user(user: ViewUser | null) {
-        console.log(`NEW USER`, user);
         const oldUser = this._user;
         this._user = user;
         if (!oldUser) {
@@ -175,7 +174,6 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     }
 
     public resetEditMode(): void {
-        console.log(`reset edit mode`);
         this.enterEditMode();
     }
 

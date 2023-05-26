@@ -60,16 +60,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
-            console.log(
-                `SHOULD ENABLE FORM CONTROL FN\ncontrolName:`,
-                controlName,
-                `\nisUserInScope:`,
-                this._isUserInScope,
-                `\nisNewUser:`,
-                this._isNewUser,
-                `\naccountId:`,
-                this._accountId
-            );
             const canManageUsers = this.isAllowedFn(`manage`);
             if (canManageUsers) {
                 if (this._isUserInScope || (this._isNewUser && !this._accountId)) {
@@ -123,6 +113,12 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public get user(): ViewUser | null {
         return this.account ?? this.createUserForm.value;
     }
+
+    public get flicker(): Observable<boolean> {
+        return this.flickerSubject;
+    }
+
+    public flickerSubject = new BehaviorSubject<boolean>(false);
 
     private readonly _currentStepIndexSubject = new BehaviorSubject<number>(0);
 
@@ -214,6 +210,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public async onAccountSelected(account: Partial<User>): Promise<void> {
+        this.flickerSubject.next(true);
         const shouldReset = !!this.detailView;
         this.createUserForm.patchValue(account);
         this._accountId = account.id || null;
@@ -225,7 +222,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         if (this.account) {
             this.detailView.personalInfoForm.patchValue(this.account);
         }
-        console.log(`SELECTED`, account, this.createUserForm.value);
+        this.flickerSubject.next(false);
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -271,7 +268,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                         this._accountId
                     ] as Partial<User>
                 );
-                console.log(`ACCOUNT`, this.account);
             } else if (!this._isUserInScope) {
                 this.account = null;
             }
