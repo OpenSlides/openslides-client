@@ -39,6 +39,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     @Input()
     public set user(user: ViewUser | null) {
+        console.log(`NEW USER`, user);
         const oldUser = this._user;
         this._user = user;
         if (!oldUser) {
@@ -173,6 +174,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this._hasChanges = false;
     }
 
+    public resetEditMode(): void {
+        console.log(`reset edit mode`);
+        this.enterEditMode();
+    }
+
     private enterEditMode(): void {
         this.prepareForm();
         this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
@@ -240,13 +246,13 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
         // Enable all controls.
         formControlNames.forEach(formControlName => {
-            this.personalInfoForm.get(formControlName)!.enable();
+            setTimeout(() => this.personalInfoForm.get(formControlName)!.enable(), 1000);
         });
 
         // Disable not permitted controls
         formControlNames.forEach(formControlName => {
             if (!fn(formControlName)) {
-                this.personalInfoForm.get(formControlName)!.disable();
+                setTimeout(() => this.personalInfoForm.get(formControlName)!.disable(), 1000);
             }
         });
     }

@@ -124,7 +124,7 @@
             <ng-template matStepLabel>{{ 'Creation' | translate }}</ng-template>
             <ng-template matStepContent>
                 <os-user-detail-view
-                    [user]="createUserForm.value"
+                    [user]="user"
                     [isNewUser]="isNewUser"
                     [isEditing]="true"
                     [additionalFormControls]="additionalFormControls"

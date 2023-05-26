@@ -7,12 +7,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
-import { OneOfValidator } from 'src/app/site/modules/user-components';
+import { OneOfValidator, UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { getAccountDetailSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/accounts.subscription';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
 
@@ -28,6 +29,11 @@ import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common
 export class ParticipantCreateWizardComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(MatStepper)
     private readonly _stepper!: MatStepper;
+
+    @ViewChild(UserDetailViewComponent)
+    private detailView: UserDetailViewComponent;
+
+    private account: User = null;
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
 
@@ -46,7 +52,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public get patchFormValueFn(): (controlName: string, user?: ViewUser) => any | null {
         return (controlName, user) => {
             if (controlName === `is_present`) {
-                return user ? user.isPresentInMeeting() : true;
+                return user?.isPresentInMeeting ? user.isPresentInMeeting() : true;
             }
             return null;
         };
@@ -54,6 +60,16 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
+            console.log(
+                `SHOULD ENABLE FORM CONTROL FN\ncontrolName:`,
+                controlName,
+                `\nisUserInScope:`,
+                this._isUserInScope,
+                `\nisNewUser:`,
+                this._isNewUser,
+                `\naccountId:`,
+                this._accountId
+            );
             const canManageUsers = this.isAllowedFn(`manage`);
             if (canManageUsers) {
                 if (this._isUserInScope || (this._isNewUser && !this._accountId)) {
@@ -104,8 +120,8 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return this._isVoteDelegationEnabled;
     }
 
-    private get user(): ViewUser | null {
-        return this._currentUser;
+    public get user(): ViewUser | null {
+        return this.account ?? this.createUserForm.value;
     }
 
     private readonly _currentStepIndexSubject = new BehaviorSubject<number>(0);
@@ -197,11 +213,19 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         }
     }
 
-    public onAccountSelected(account: Partial<User>): void {
+    public async onAccountSelected(account: Partial<User>): Promise<void> {
+        const shouldReset = !!this.detailView;
         this.createUserForm.patchValue(account);
         this._accountId = account.id || null;
         this._stepper.next();
-        this.checkScope();
+        await this.checkScope();
+        if (shouldReset || this._isUserInScope) {
+            this.detailView.resetEditMode();
+        }
+        if (this.account) {
+            this.detailView.personalInfoForm.patchValue(this.account);
+        }
+        console.log(`SELECTED`, account, this.createUserForm.value);
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -241,6 +265,16 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     private async checkScope(): Promise<void> {
         if (this._accountId) {
             this._isUserInScope = await this.userService.isUserInSameScope(this._accountId);
+            if (this._isUserInScope && this.account?.id !== this._accountId) {
+                this.account = new User(
+                    (await this.modelRequestService.fetch(getAccountDetailSubscriptionConfig(this._accountId)))[`user`][
+                        this._accountId
+                    ] as Partial<User>
+                );
+                console.log(`ACCOUNT`, this.account);
+            } else if (!this._isUserInScope) {
+                this.account = null;
+            }
         }
     }
 }
