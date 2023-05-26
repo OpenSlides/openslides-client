@@ -244,5 +244,9 @@ export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator
         ],
         fieldset: [`reason`, `text`, `modified_final_version`, `all_origin_ids`]
     },
-    subscriptionName: MOTION_FORWARD_DATA_SUBSCRIPTION
+    subscriptionName: getSpecificMotionSubscriptionName(MOTION_FORWARD_DATA_SUBSCRIPTION, ids)
 });
+
+export function getSpecificMotionSubscriptionName(name: string, ids: number[]): string {
+    return `${name}:${ids.sort().join(`+`)}`;
+}
