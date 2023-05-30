@@ -15,11 +15,7 @@ import { ModelRequestService } from 'src/app/site/services/model-request.service
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
-import {
-    getMotionForwardDataSubscriptionConfig,
-    getSpecificMotionSubscriptionName,
-    MOTION_FORWARD_DATA_SUBSCRIPTION
-} from '../../../motions.subscription';
+import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';
 import { MotionFormatService } from '../../../services/common/motion-format.service';
 import { ViewMotion } from '../../../view-models';
 import { MotionForwardDialogComponent } from '../components/motion-forward-dialog/motion-forward-dialog.component';
@@ -82,17 +78,11 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         if (toMeetingIds) {
             try {
                 const motionIds = toForward.map(motion => motion.id);
-                await this.modelRequest.subscribeTo(getMotionForwardDataSubscriptionConfig(...motionIds));
-                await this.modelRequest.subscriptionGotData(
-                    getSpecificMotionSubscriptionName(MOTION_FORWARD_DATA_SUBSCRIPTION, motionIds)
-                );
+                await this.modelRequest.fetch(getMotionForwardDataSubscriptionConfig(...motionIds));
                 const forwardMotions = toForward.map(motion =>
                     this.formatService.formatMotionForForward(this.repo.getViewModel(motion.id))
                 );
                 const result = await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
-                this.modelRequest.closeSubscription(
-                    getSpecificMotionSubscriptionName(MOTION_FORWARD_DATA_SUBSCRIPTION, motionIds)
-                );
                 this.snackbar.open(this.createForwardingSuccessMessage(motions.length, result), `Ok`);
             } catch (e: any) {
                 this.snackbar.open(e.toString(), `Ok`);
