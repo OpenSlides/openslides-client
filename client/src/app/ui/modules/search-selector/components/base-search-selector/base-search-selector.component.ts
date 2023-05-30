@@ -276,11 +276,13 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public onSelectionChange(value: Selectable, change: MatOptionSelectionChange): void {
-        if (change.isUserInput && this.multiple) {
+        if (change.isUserInput) {
             if (this.multiple) {
                 this.addOrRemoveId(value.id);
+                this.selectionChanged.emit({ value, selected: change.source.selected });
             }
-            this.selectionChanged.emit({ value, selected: change.source.selected });
+
+            this.searchValueForm.setValue(``);
         }
     }
 
