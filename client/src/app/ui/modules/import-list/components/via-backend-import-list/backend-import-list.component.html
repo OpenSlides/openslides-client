@@ -229,7 +229,7 @@
                     row as row;
                     definition as def;
                     isDefault: true;
-                    config: { width: getColumnWidth(column.property), minWidth: 150 }
+                    config: getColumnConfig(column.property)
                 "
             >
                 <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>

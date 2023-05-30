@@ -24,6 +24,7 @@ import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings
 import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { BackendImportService } from 'src/app/ui/base/import-service';
 
+import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
 import { ImportListHeaderDefinition } from '../../definitions';
 import {
@@ -317,10 +318,16 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
     }
 
     /**
-     * Gets the width of the column for the given property.
+     * Gets the style of the column for the given property.
      */
-    public getColumnWidth(propertyName: string): number {
-        return this._headers[propertyName]?.default?.width ?? 50;
+    public getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
+        const defaultHeader = this._headers[propertyName]?.default;
+        const colWidth = defaultHeader?.width ?? 50;
+        const def: ScrollingTableCellDefConfig = { minWidth: Math.max(150, colWidth) };
+        if (!defaultHeader?.flexible) {
+            def.width = colWidth;
+        }
+        return def;
     }
 
     /**

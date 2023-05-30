@@ -30,7 +30,8 @@ export class TopicImportComponent extends BaseViaBackendImportListComponent<Topi
         property: header,
         label: (<any>topicHeadersAndVerboseNames)[header],
         isTableColumn: true,
-        isRequired: header === `title`
+        isRequired: header === `title`,
+        flexible: [`title`, `text`, `agenda_comment`].includes(header)
     }));
 
     public get isTextImportSelected(): boolean {
