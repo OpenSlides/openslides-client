@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { Moment, unix as moment } from 'moment';
+import { fromUnixTime, getHours, getMinutes, getUnixTime, setHours, setMinutes } from 'date-fns';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -240,35 +240,35 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     }
 
     /**
-     * Helper function to split a unix timestamp into a date as a moment object and a time string in the form of HH:SS
+     * Helper function to split a unix timestamp into a date as a date object and a time string in the form of HH:SS
      *
      * @param unix the timestamp
      *
      * @return an object with a date and a time field
      */
-    private unixToDateAndTime(unix: number): { date: Moment; time: string } {
-        const date = moment(unix);
-        const time = date.hours() + `:` + date.minutes();
+    private unixToDateAndTime(unix: number): { date: Date; time: string } {
+        const date = fromUnixTime(unix);
+        const time = getHours(date) + `:` + getMinutes(date);
         return { date, time };
     }
 
     /**
-     * Helper function to fuse a moment object as the date part and a time string (HH:SS) as the time part.
+     * Helper function to fuse a date object as the date part and a time string (HH:SS) as the time part.
      *
-     * @param date the moment date object
+     * @param date the date object
      * @param time the time string
      *
      * @return a unix timestamp
      */
-    private dateAndTimeToUnix(date: Moment, time: string): number | null {
+    private dateAndTimeToUnix(date: Date, time: string): number | null {
         if (date) {
             if (time) {
                 const timeSplit = time.split(`:`);
                 // + is faster than parseint and number(). ~~ would be fastest but prevented by linter...
-                date.hour(+timeSplit[0]);
-                date.minute(+timeSplit[1]);
+                setHours(date, +timeSplit[0]);
+                setMinutes(date, +timeSplit[1]);
             }
-            return date.unix();
+            return getUnixTime(date);
         } else {
             return null;
         }
