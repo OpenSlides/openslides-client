@@ -246,7 +246,3 @@ export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator
     },
     subscriptionName: MOTION_FORWARD_DATA_SUBSCRIPTION
 });
-
-export function getSpecificMotionSubscriptionName(name: string, ids: number[]): string {
-    return `${name}:${ids.sort().join(`+`)}`;
-}
