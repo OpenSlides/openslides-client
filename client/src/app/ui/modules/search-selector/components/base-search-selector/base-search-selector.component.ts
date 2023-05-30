@@ -281,7 +281,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
                 this.addOrRemoveId(value.id);
                 this.selectionChanged.emit({ value, selected: change.source.selected });
             }
-
             this.searchValueForm.setValue(``);
         }
     }
@@ -292,6 +291,13 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             return;
         }
         this.matSelect.open();
+    }
+
+    public onSearchKeydown(event: any): void {
+        // Only propagate enter, up, down
+        if ([13, 38, 40].indexOf(event.keyCode) === -1) {
+            event.stopPropagation();
+        }
     }
 
     /**
