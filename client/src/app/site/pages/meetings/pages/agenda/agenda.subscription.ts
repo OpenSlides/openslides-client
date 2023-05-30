@@ -73,35 +73,13 @@ export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator
                 follow: [
                     {
                         idField: `content_object_id`,
-                        fieldset: [`title`, ...MEETING_ROUTING_FIELDS]
+                        fieldset: [`title`, `number`, ...MEETING_ROUTING_FIELDS]
                     }
                 ]
             }
         ]
     },
     subscriptionName: AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION
-});
-
-export const AGENDA_LIST_TITLE_ONLY_SUBSCRIPTION = `agenda_list_title_only`;
-
-export const getAgendaListTitleOnlySubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
-    modelRequest: {
-        viewModelCtor: ViewMeeting,
-        ids: [id],
-        follow: [
-            {
-                idField: `agenda_item_ids`,
-                fieldset: [`child_ids`, `item_number`],
-                follow: [
-                    {
-                        idField: `content_object_id`,
-                        fieldset: [`title`, `number`]
-                    }
-                ]
-            }
-        ]
-    },
-    subscriptionName: AGENDA_LIST_TITLE_ONLY_SUBSCRIPTION
 });
 
 export const TOPIC_ITEM_SUBSCRIPTION = `topic_detail`;

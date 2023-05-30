@@ -5,7 +5,7 @@ import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-r
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import {
-    getAgendaListTitleOnlySubscriptionConfig,
+    getAgendaListMinimalSubscriptionConfig,
     getTopicDetailSubscriptionConfig
 } from '../../../../../../agenda.subscription';
 
@@ -45,6 +45,6 @@ export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
     }
 
     private loadTopicList(meetingId: number): void {
-        this.updateSubscribeTo(getAgendaListTitleOnlySubscriptionConfig(meetingId));
+        this.updateSubscribeTo(getAgendaListMinimalSubscriptionConfig(meetingId));
     }
 }
