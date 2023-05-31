@@ -73,7 +73,7 @@ export const getAgendaListMinimalSubscriptionConfig: SubscriptionConfigGenerator
                 follow: [
                     {
                         idField: `content_object_id`,
-                        fieldset: [`title`, ...MEETING_ROUTING_FIELDS]
+                        fieldset: [`title`, `number`, ...MEETING_ROUTING_FIELDS]
                     }
                 ]
             }
