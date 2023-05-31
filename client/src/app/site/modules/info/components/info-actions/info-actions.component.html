@@ -12,7 +12,7 @@
         </button>
     </div>
     <div *osOmlPerms="OML.superadmin" class="superadmin-button">
-        <button type="button" mat-stroked-button (click)="checkDatastore(true)" matTooltip="{{ 'For large instances this may block the server to the point of unusability' | translate }}">
+        <button type="button" mat-stroked-button (click)="checkDatastore(true)" matTooltip="{{ 'For large instances this may block the server to the point of unusability' | translate }}" matTooltipPosition="right">
             {{ 'Thoroughly check datastore (unsafe)' | translate }}
         </button>
     </div>
