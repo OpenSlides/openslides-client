@@ -272,6 +272,8 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         if (event) {
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();
+        } else {
+            this.searchValueForm.setValue(``);
         }
     }
 
@@ -281,7 +283,6 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
                 this.addOrRemoveId(value.id);
                 this.selectionChanged.emit({ value, selected: change.source.selected });
             }
-            this.searchValueForm.setValue(``);
         }
     }
 
