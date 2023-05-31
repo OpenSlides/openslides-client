@@ -59,7 +59,7 @@
                 [state]="{ back: 'true' }"
                 *ngIf="!isMultiSelect"
             ></a>
-            <div class="column-title innerTable">
+            <div class="column-title innerTable overflow-hidden">
                 <div class="title-line ellipsis-overflow">
                     <!-- Is Favorite -->
                     <span *ngIf="motion.star" class="favorite-star">
@@ -72,7 +72,7 @@
                     </span>
 
                     <!-- The title -->
-                    <span>
+                    <span class="ellipsis-overflow">
                         <span *ngIf="motion.number">
                             {{ motion.number }}
                             <span>&middot;</span>
@@ -105,7 +105,7 @@
         </div>
 
         <!-- Recommendation column -->
-        <div *osScrollingTableCell="'recommendation'; row as motion" class="cell-slot fill">
+        <div *osScrollingTableCell="'recommendation'; row as motion; config: { width: 120 }" class="cell-slot fill">
             <mat-basic-chip *ngIf="!!motion.recommendation" disableRipple class="bluegrey">
                 {{ getRecommendationLabel(motion) }}
             </mat-basic-chip>
