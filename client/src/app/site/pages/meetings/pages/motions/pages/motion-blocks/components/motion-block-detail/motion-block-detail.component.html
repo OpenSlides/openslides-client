@@ -180,7 +180,7 @@
         </button>
     </div>
 
-    <div *osPerms="[permission.motionCanManage, permission.motionCanManageMetadata]">
+    <div *osPerms="[permission.motionCanManage]">
         <button mat-menu-item (click)="toggleEditMode()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
