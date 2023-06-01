@@ -148,6 +148,7 @@ export class SortFilterBarComponent<V extends Identifiable> {
      * @param filter
      */
     public removeFilterFromStack(filter: OsFilterIndicator<V>): void {
+        console.log(`REMOVE FILTER FROM STACK`, filter);
         this.filterService!.toggleFilterOption(filter.property, filter.option);
     }
 
