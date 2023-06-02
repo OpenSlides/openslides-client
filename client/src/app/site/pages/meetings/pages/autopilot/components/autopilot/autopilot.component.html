@@ -6,7 +6,7 @@
 <div class="content-container">
     <!-- Title Card -->
     <mat-card class="os-card" *ngIf="!!title">
-        <a [routerLink]="viewModelUrl || null" [state]="{ back: 'true' }">
+        <a [routerLink]="viewModelUrl || null" [target]="lowerProjectionTarget" [state]="{ back: 'true' }">
             <h1 class="line-and-icon">
                 {{ title | translate }}
             </h1>
