@@ -12,7 +12,7 @@ export class AuthTokenService {
     }
 
     public get accessTokenObservable(): Observable<AuthToken | null> {
-        return this._accessTokenSubject.asObservable();
+        return this._accessTokenSubject;
     }
 
     public get accessToken(): AuthToken | null {

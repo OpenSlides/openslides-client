@@ -191,7 +191,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public get filteredItemsObservable(): Observable<Selectable[]> {
-        return this.filteredItemsSubject.asObservable();
+        return this.filteredItemsSubject;
     }
 
     public selectedIds: Id[] = [];

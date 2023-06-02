@@ -84,7 +84,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public groupsObservable: Observable<ViewGroup[]> | null = null;
 
     public get currentStepIndexObservable(): Observable<number> {
-        return this._currentStepIndexSubject.asObservable();
+        return this._currentStepIndexSubject;
     }
 
     public get isNewUser(): boolean {

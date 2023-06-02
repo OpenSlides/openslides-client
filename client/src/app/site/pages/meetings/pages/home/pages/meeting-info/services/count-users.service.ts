@@ -86,7 +86,7 @@ export class CountUsersService {
         this.notifyService.sendToAllUsers<CountUserRequest>(REQUEST_NAME, {
             token: trackToken
         });
-        return [trackToken, this.activeCounts[trackToken].asObservable()];
+        return [trackToken, this.activeCounts[trackToken]];
     }
 
     /**

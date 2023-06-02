@@ -120,7 +120,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     public get noDataTemplateObservable(): Observable<TemplatePortal> {
-        return this.manageService.noDataTemplateSubject.asObservable();
+        return this.manageService.noDataTemplateSubject;
     }
 
     public get cellHeadersObservable(): Observable<string[]> {

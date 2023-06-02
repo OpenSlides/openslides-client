@@ -469,6 +469,6 @@ export class MotionSlideComponent
     }
 
     public getSubmittersObservable(): Observable<string[]> {
-        return this._submittersSubject.asObservable();
+        return this._submittersSubject;
     }
 }
