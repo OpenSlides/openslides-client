@@ -35,11 +35,6 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-label>{{ 'Description' | translate }}</mat-label>
-            <input matInput formControlName="description" />
-        </mat-form-field>
-
-        <mat-form-field>
             <mat-label>{{ 'Language' | translate }}</mat-label>
             <mat-select formControlName="language" [disabled]="!isCreateView || !!theDuplicateFromId">
                 <mat-option
@@ -56,18 +51,11 @@
             <input matInput formControlName="location" />
         </mat-form-field>
 
-        <os-datepicker formControlName="start_time" title="Start date"></os-datepicker>
+        <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
 
-        <os-datepicker formControlName="end_time" title="End date"></os-datepicker>
+        <!-- <os-datepicker formControlName="start_time" title="Start date"></os-datepicker>
 
-        <mat-form-field>
-            <mat-label>{{ 'Participants' | translate }}</mat-label>
-            <os-account-search-selector
-                formControlName="user_ids"
-                [accounts]="meetingUsers"
-                placeholder="{{ 'Participants' | translate }}"
-            ></os-account-search-selector>
-        </mat-form-field>
+        <os-datepicker formControlName="end_time" title="End date"></os-datepicker> -->
 
         <mat-form-field>
             <mat-label>{{ 'Administrators' | translate }}</mat-label>

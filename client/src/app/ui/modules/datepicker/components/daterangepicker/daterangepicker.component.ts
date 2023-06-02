@@ -1,24 +1,25 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, ElementRef, Optional, Self, ViewEncapsulation } from '@angular/core';
-import { NgControl, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { NgControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 
 import { BaseDatepickerComponent } from '../base-datepicker/base-datepicker.component';
+import { DatepickerComponent } from '../datepicker/datepicker.component';
 
 @Component({
-    selector: `os-datepicker`,
-    templateUrl: `./datepicker.component.html`,
-    styleUrls: [`./datepicker.component.scss`],
+    selector: `os-daterangepicker`,
+    templateUrl: `./daterangepicker.component.html`,
+    styleUrls: [`./daterangepicker.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: DatepickerComponent }],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerComponent extends BaseDatepickerComponent {
+export class DaterangepickerComponent extends BaseDatepickerComponent {
     public get empty(): boolean {
-        return !(this.value[`start`] || this.value[`end`]);
+        return !this.value;
     }
 
-    public override contentForm: UntypedFormControl;
+    public override contentForm: UntypedFormGroup;
 
     constructor(
         formBuilder: UntypedFormBuilder,
@@ -29,11 +30,14 @@ export class DatepickerComponent extends BaseDatepickerComponent {
         super(formBuilder, focusMonitor, element, ngControl);
     }
 
-    protected createForm(): UntypedFormControl {
-        return this.fb.control(null);
+    protected createForm(): UntypedFormGroup {
+        return this.fb.group({
+            start: [null],
+            end: [null]
+        });
     }
 
     protected updateForm(value: any | null): void {
-        this.contentForm.setValue(value);
+        this.contentForm.patchValue(value);
     }
 }

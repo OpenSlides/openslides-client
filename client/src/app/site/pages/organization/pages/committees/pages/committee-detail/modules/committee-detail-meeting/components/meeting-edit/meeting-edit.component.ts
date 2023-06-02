@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { delay, map, Observable, pairwise, startWith } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
@@ -29,7 +29,7 @@ import { ViewCommittee } from '../../../../../../view-models';
 const ADD_MEETING_LABEL = _(`New meeting`);
 const EDIT_MEETING_LABEL = _(`Edit meeting`);
 
-const ORGA_ADMIN_ALLOWED_CONTROLNAMES = [`user_ids`, `admin_ids`];
+const ORGA_ADMIN_ALLOWED_CONTROLNAMES = [`admin_ids`];
 
 const TEMPLATE_MEETINGS_LABEL: Selectable = {
     id: -1,
@@ -69,8 +69,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public get isTimeValid(): boolean {
-        const start = this.meetingForm?.get(`start_time`).value;
-        const end = this.meetingForm?.get(`end_time`).value;
+        const time = this.daterangeControl.value;
+        const start = time.start;
+        const end = time.end;
+        if ((start === null) !== (end === null)) {
+            return false;
+        }
         if (!!start && (!!end || end === 0)) {
             return start <= end;
         }
@@ -117,6 +121,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      */
     private operatingUser: ViewUser | null = null;
 
+    private get daterangeControl(): AbstractControl {
+        return this.meetingForm?.get(`daterange`);
+    }
+
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -154,8 +162,22 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 this.operatingUser = user;
                 this.onAfterCreateForm();
             }),
-            this.meetingForm.controls[`start_time`].valueChanges.subscribe(start_time => this.makeDatesValid(false)),
-            this.meetingForm.controls[`end_time`].valueChanges.subscribe(end_time => this.makeDatesValid(true))
+            this.daterangeControl.valueChanges
+                .pipe(
+                    startWith({ start: null, end: null }),
+                    pairwise(),
+                    map(val => {
+                        return { prev: val[0], curr: val[1] };
+                    }),
+                    delay(10)
+                )
+                .subscribe(({ prev, curr }) => {
+                    if (prev[`start`] !== curr[`start`]) {
+                        this.makeDatesValid(false);
+                    } else if (prev[`end`] !== curr[`end`]) {
+                        this.makeDatesValid(true);
+                    }
+                })
         );
 
         this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
@@ -203,10 +225,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         if (id) {
             this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
         }
-    }
-
-    public onClearDate(formControlName: string): void {
-        this.meetingForm.controls[formControlName].setValue(null);
     }
 
     private checkCreateView(): void {
@@ -260,11 +278,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
         const rawForm: { [key: string]: any } = {
             name: [``, Validators.required],
-            description: [``],
             location: [``],
-            start_time: [currentDate],
-            end_time: [currentDate],
-            user_ids: [[]],
+            daterange: {
+                start: [currentDate],
+                end: [currentDate]
+            },
             admin_ids: [[], Validators.minLength(1)],
             organization_tag_ids: [[]]
         };
@@ -295,13 +313,23 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private updateForm(meeting: ViewMeeting): void {
-        const patchMeeting: any = meeting.getUpdatedModelData({
-            start_time: meeting.start_time ? new Date(meeting.start_time * 1000) : undefined,
-            end_time: meeting.end_time ? new Date(meeting.end_time * 1000) : undefined,
-            user_ids: [...(meeting.default_group?.user_ids || [])],
+        const start_time = meeting.start_time ? new Date(meeting.start_time * 1000) : null;
+        const end_time = meeting.end_time ? new Date(meeting.end_time * 1000) : null;
+        const {
+            start_time: start,
+            end_time: end,
+            ...patchMeeting
+        }: any = meeting.getUpdatedModelData({
+            start_time: start_time,
+            end_time: end_time,
             admin_ids: [...(meeting.admin_group?.user_ids || [])]
         } as any);
+        const patchDaterange = {
+            start,
+            end
+        };
         this.meetingForm.patchValue(patchMeeting);
+        this.daterangeControl?.patchValue(patchDaterange);
         this.onAfterCreateForm();
     }
 
@@ -335,7 +363,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private async doUpdateMeeting(): Promise<void> {
-        const payload = { ...this.meetingForm.value };
+        const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
+            ...this.meetingForm.value
+        };
+        const payload = { start_time, end_time, ...rawPayload };
         await this.meetingRepo.update(this.sanitizePayload(payload), {
             meeting: this.editMeeting!,
             options: this.getUsersToUpdateForMeetingObject()
@@ -351,18 +382,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      * and `removedAdmins`
      */
     private getUsersToUpdateForMeetingObject(): MeetingUserModifiedFields {
-        const nextUserIds = this.meetingForm.value.user_ids as Id[];
-        const previousUserIds = this.editMeeting!.default_group.user_ids || [];
-        const addedUserIds = (nextUserIds || []).difference(previousUserIds);
-        const removedUserIds = previousUserIds.difference(nextUserIds);
         const nextAdminIds = this.meetingForm.value.admin_ids as Id[];
         const previousAdminIds = this.editMeeting!.admin_group.user_ids || [];
         const addedAdminIds = (nextAdminIds || []).difference(previousAdminIds);
         const removedAdminIds = previousAdminIds.difference(nextAdminIds);
 
         return {
-            addedUsers: addedUserIds.map(id => this.userRepo.getViewModel(id) as ViewUser),
-            removedUsers: removedUserIds.map(id => this.userRepo.getViewModel(id) as ViewUser),
             addedAdmins: addedAdminIds.map(id => this.userRepo.getViewModel(id) as ViewUser),
             removedAdmins: removedAdminIds.map(id => this.userRepo.getViewModel(id) as ViewUser)
         };
@@ -372,7 +397,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
      * Removes the `language`, `user_ids` and `admin_ids` from an update-payload
      */
     private sanitizePayload(payload: any): any {
-        delete payload.user_ids; // This must not be sent
         delete payload.admin_ids; // This must not be sent
         delete payload.language;
         return payload;
@@ -396,11 +420,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private makeDatesValid(endDateChanged: boolean): void {
         if (!this.isTimeValid) {
-            if (endDateChanged) {
-                this.meetingForm.controls[`start_time`].setValue(this.meetingForm.get(`end_time`).value);
-            } else {
-                this.meetingForm.controls[`end_time`].setValue(this.meetingForm.get(`start_time`).value);
-            }
+            const patchValue = endDateChanged ? this.daterangeControl?.value.end : this.daterangeControl?.value.start;
+            this.daterangeControl?.patchValue({ start: patchValue, end: patchValue });
         }
     }
 }
