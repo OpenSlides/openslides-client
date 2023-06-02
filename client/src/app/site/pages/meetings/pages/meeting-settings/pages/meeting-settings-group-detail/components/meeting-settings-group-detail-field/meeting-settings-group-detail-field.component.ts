@@ -26,7 +26,7 @@ import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/vali
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 
 export interface SettingsFieldUpdate {
-    key: keyof Settings;
+    key: keyof Settings | (keyof Settings)[];
     value: any;
 }
 
@@ -180,12 +180,23 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         this.form = this.formBuilder.group({
             value: [``, this.setting.validators ?? []],
             date: [``],
-            time: [``]
+            time: [``],
+            daterange: {
+                start: [null],
+                end: [null]
+            }
         });
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
             this.form.patchValue(datetimeObj);
+        }
+        if (this.setting.type === `daterange` && this.value) {
+            const daterangeObj = {
+                start: this.getRestrictedValue(this.value[0] ? new Date(this.value[0] * 1000) : null),
+                end: this.getRestrictedValue(this.value[1] ? new Date(this.value[1] * 1000) : null)
+            };
+            this.form.get(`daterange`).patchValue(daterangeObj);
         }
         this.form.patchValue({
             value: this.getRestrictedValue(this.internalValue)
@@ -233,6 +244,13 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && newValue) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(newValue as number));
             this.form.patchValue(datetimeObj);
+        }
+        if (this.setting.type === `daterange` && newValue) {
+            const daterangeObj = {
+                start: this.getRestrictedValue(newValue[0] ? new Date(newValue[0]) : null),
+                end: this.getRestrictedValue(newValue[1] ? new Date(newValue[1]) : null)
+            };
+            this.form.get(`daterange`).patchValue(daterangeObj);
         }
         this.form.patchValue({
             value: this.getRestrictedValue(newValue)
@@ -288,6 +306,12 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 const date = this.form.get(`date`)!.value;
                 const time = this.form.get(`time`)!.value;
                 value = this.dateAndTimeToUnix(date, time);
+                break;
+            case `daterange`:
+                // daterange has to be formatted
+                const start = this.form.get(`daterange`)!.value.start;
+                const end = this.form.get(`daterange`)!.value.end;
+                value = [start, end];
                 break;
             case `groups`:
                 // we have to check here explicitly if nothing changed because of the search value selector
@@ -358,7 +382,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = [`boolean`, `markupText`, `text`, `translations`, `datetime`, `date`];
+        const excluded = [`boolean`, `markupText`, `text`, `translations`, `datetime`, `date`, `daterange`];
         return excluded.includes(type);
     }
 
