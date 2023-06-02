@@ -323,7 +323,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_can_set_contribution_self`,
-                        label: _(`Enable star icon to mark speaker (e.g. for contribution)`),
+                        label: _(`Enable star icon usage by speakers`),
                         type: `boolean`
                     },
                     {
