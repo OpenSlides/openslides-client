@@ -19,6 +19,13 @@ table {
     }
 }
 
+.has-help-text {
+    cursor: help;
+    &:hover {
+        color: #555;
+    }
+}
+
 .hint-text {
     padding-top: 1em;
     padding-left: 25px;
