@@ -21,6 +21,8 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
 
     public override contentForm: UntypedFormGroup;
 
+    private currentValue: any;
+
     constructor(
         formBuilder: UntypedFormBuilder,
         focusMonitor: FocusMonitor,
@@ -39,5 +41,24 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
 
     protected updateForm(value: any | null): void {
         this.contentForm.patchValue(value);
+    }
+
+    protected override push(value: any): void {
+        super.push(value);
+        this.makeDatesValid();
+    }
+
+    private async makeDatesValid(): Promise<void> {
+        setTimeout(() => {
+            const value = this.contentForm.value;
+            if ((value.start === null) !== (value.end === null)) {
+                const newValue = value.start !== null ? value.start : value.end;
+                this.updateForm({ start: newValue, end: newValue });
+            } else if (value.start && value.end && value.start > value.end) {
+                const newValue = this.currentValue.start !== value.start ? value.start : value.end;
+                this.updateForm({ start: newValue, end: newValue });
+            }
+            this.currentValue = this.contentForm.value;
+        }, 10);
     }
 }

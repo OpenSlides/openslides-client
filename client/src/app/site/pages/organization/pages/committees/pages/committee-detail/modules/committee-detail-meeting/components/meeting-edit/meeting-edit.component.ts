@@ -3,7 +3,7 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { delay, map, Observable, pairwise, startWith } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { Identifiable, Selectable } from 'src/app/domain/interfaces';
@@ -161,23 +161,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 // We need here the user from the operator, because the operator holds not all groups in all meetings they are
                 this.operatingUser = user;
                 this.onAfterCreateForm();
-            }),
-            this.daterangeControl.valueChanges
-                .pipe(
-                    startWith({ start: null, end: null }),
-                    pairwise(),
-                    map(val => {
-                        return { prev: val[0], curr: val[1] };
-                    }),
-                    delay(10)
-                )
-                .subscribe(({ prev, curr }) => {
-                    if (prev[`start`] !== curr[`start`]) {
-                        this.makeDatesValid(false);
-                    } else if (prev[`end`] !== curr[`end`]) {
-                        this.makeDatesValid(true);
-                    }
-                })
+            })
         );
 
         this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
