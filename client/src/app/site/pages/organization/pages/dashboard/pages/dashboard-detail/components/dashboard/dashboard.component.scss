@@ -226,7 +226,7 @@ os-dashboard {
         box-sizing: border-box;
         height: 60px;
 
-        >a {
+        > a {
             text-decoration: none;
 
             &:first-child {
@@ -240,7 +240,7 @@ os-dashboard {
         }
 
         @include phone {
-            >a {
+            > a {
                 text-decoration: none;
 
                 &:first-child {
@@ -259,7 +259,7 @@ os-dashboard {
         }
 
         @include tablet {
-            >a {
+            > a {
                 text-decoration: none;
 
                 &:first-child {
