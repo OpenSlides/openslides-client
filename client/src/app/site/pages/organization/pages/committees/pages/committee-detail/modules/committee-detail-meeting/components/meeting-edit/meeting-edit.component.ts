@@ -322,6 +322,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     private async doCreateMeeting(): Promise<void> {
         if (this.theDuplicateFromId) {
             const from = { meeting_id: this.theDuplicateFromId, ...this.meetingForm.value };
+            delete from.language;
             await this.meetingRepo.duplicateFrom(this.committeeId, from).resolve();
         } else {
             const payload = { committee_id: this.committeeId, ...this.meetingForm.value };
