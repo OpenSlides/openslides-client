@@ -41,6 +41,7 @@ interface DialogResult {
  */
 interface StatePerm {
     name: string;
+    help_text?: string;
     selector: keyof MotionState;
     type: `input` | `check` | `restrictions` | `color` | `amendment` | `state`;
     reference?: string;
@@ -138,25 +139,107 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Holds state permissions
      */
     private readonly _statePermissionsList = [
-        { name: _(`Recommendation label`), selector: `recommendation_label`, type: `input` },
-        { name: _(`Allow support`), selector: `allow_support`, type: `check` },
-        { name: _(`Allow create poll`), selector: `allow_create_poll`, type: `check` },
-        { name: _(`Allow submitter edit`), selector: `allow_submitter_edit`, type: `check` },
-        { name: _(`Allow forwarding of motions`), selector: `allow_motion_forwarding`, type: `check` },
-        { name: _(`Set number`), selector: `set_number`, type: `check` },
-        { name: _(`Set timestamp of creation`), selector: `set_created_timestamp`, type: `check` },
-        { name: _(`Show state extension field`), selector: `show_state_extension_field`, type: `check` },
+        {
+            name: _(`Recommendation label`),
+            help_text: _(
+                `Defines the wording of the recommendation that belongs to this status. To activate the recommendation system, a recommender (for example, a motion committee) must be defined under > Settings > Motions > Name of recommender.`
+            ),
+            selector: `recommendation_label`,
+            type: `input`
+        },
+        {
+            name: _(`Allow support`),
+            help_text: _(
+                `Enables the support function for motions in the selected state. The support function must be enabled under > Settings > Motions as well as defined for the corresponding groups under > Participants > Groups.`
+            ),
+            selector: `allow_support`,
+            type: `check`
+        },
+        {
+            name: _(`Allow create poll`),
+            help_text: _(`Enables the ability to create ballots for motions in this state.`),
+            selector: `allow_create_poll`,
+            type: `check`
+        },
+        {
+            name: _(`Allow submitter edit`),
+            help_text: _(`Enables the editing of the motion text and reasons by submitters in the selected state.`),
+            selector: `allow_submitter_edit`,
+            type: `check`
+        },
+        {
+            name: _(`Allow forwarding of motions`),
+            help_text: _(
+                `Enables the forwarding of motions to other events within the OpenSlides instance in the selected state. Target committees must be defined at organisation level under > Committees > Edit committee.`
+            ),
+            selector: `allow_motion_forwarding`,
+            type: `check`
+        },
+        {
+            name: _(`Set number`),
+            help_text: _(
+                `Activates the automatic setting of an identifier for motions that reach this status. The scheme for numbering can be customized under > Settings > Motions.`
+            ),
+            selector: `set_number`,
+            type: `check`
+        },
+        {
+            name: _(`Set timestamp of creation`),
+            help_text: _(
+                `Activates the automatic logging of the date and time when this status was first reached. A set time stamp cannot be removed again.`
+            ),
+            selector: `set_created_timestamp`,
+            type: `check`
+        },
+        {
+            name: _(`Show state extension field`),
+            help_text: _(
+                `Activates the extension field for the selected status, which can be filled with free text as desired.`
+            ),
+            selector: `show_state_extension_field`,
+            type: `check`
+        },
         {
             name: _(`Show recommendation extension field`),
+            help_text: _(
+                `Activates the extension field of the recommendation in this status, which can be filled with text or extended with references to other motions or committees as desired.`
+            ),
             selector: `show_recommendation_extension_field`,
             type: `check`
         },
-        { name: _(`Show amendment in parent motion`), selector: `merge_amendment_into_final`, type: `amendment` },
-        { name: _(`Restrictions`), selector: `restrictions`, type: `restrictions` },
-        { name: _(`Label color`), selector: `css_class`, type: `color` },
-        { name: _(`Next states`), selector: `next_states_id`, type: `state` },
+        {
+            name: _(`Show amendment in parent motion`),
+            help_text: _(
+                `Enables the visibility of amendments directly in the corresponding main motion. The text of amendments is embedded within the text of the motion.`
+            ),
+            selector: `merge_amendment_into_final`,
+            type: `amendment`
+        },
+        {
+            name: _(`Restrictions`),
+            help_text: _(
+                `Defines for the selected state which groups have access: If no option is selected, the motions in the selected state are visible to all; prerequisite: "Can see motions". Selecting one or more options restricts access to those groups for which the selected authorisation option is defined under Participants > Groups.`
+            ),
+            selector: `restrictions`,
+            type: `restrictions`
+        },
+        {
+            name: _(`Label color`),
+            help_text: _(`Defines the colour for the state button.`),
+            selector: `css_class`,
+            type: `color`
+        },
+        {
+            name: _(`Next states`),
+            help_text: _(`Defines which states can be selected next in the workflow.`),
+            selector: `next_states_id`,
+            type: `state`
+        },
         {
             name: _(`Submitter may set state to`),
+            help_text: _(
+                `Enables submitters to only change the state of the motion. Other administrative functions are excluded.`
+            ),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
         }
