@@ -218,7 +218,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Restrictions`),
             help_text: _(
-                `Defines for the selected state which groups have access: If no option is selected, the motions in the selected state are visible to all; prerequisite: "Can see motions". Selecting one or more options restricts access to those groups for which the selected authorisation option is defined under Participants > Groups.`
+                `Defines for the selected state which groups have access:\n If no option is selected, the motions in the selected state are visible to all; prerequisite: "Can see motions".\nSelecting one or more options restricts access to those groups for which the selected authorisation option is defined under Participants > Groups.`
             ),
             selector: `restrictions`,
             type: `restrictions`

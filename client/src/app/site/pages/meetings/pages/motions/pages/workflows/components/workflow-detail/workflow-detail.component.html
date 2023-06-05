@@ -42,6 +42,7 @@
                         #tooltip="matTooltip"
                         [ngClass]="{ 'has-help-text': perm.help_text }"
                         [matTooltip]="perm.help_text"
+                        matTooltipClass="pre-wrap"
                         matTooltipPosition="after"
                         (mouseenter)="$event.stopImmediatePropagation()"
                         (mouseleave)="tooltip.hide()"
