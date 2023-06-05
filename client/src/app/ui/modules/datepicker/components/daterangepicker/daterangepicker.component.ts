@@ -1,7 +1,17 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, ElementRef, Optional, Self, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Optional,
+    Self,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { NgControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MatDateRangePicker } from '@angular/material/datepicker';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { distinctUntilChanged, map } from 'rxjs';
 
 import { BaseDatepickerComponent } from '../base-datepicker/base-datepicker.component';
 import { DatepickerComponent } from '../datepicker/datepicker.component';
@@ -15,6 +25,8 @@ import { DatepickerComponent } from '../datepicker/datepicker.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DaterangepickerComponent extends BaseDatepickerComponent {
+    @ViewChild(`rangepicker`) rangepicker: MatDateRangePicker<Date>;
+
     public get empty(): boolean {
         return !this.value;
     }
@@ -30,6 +42,18 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
         @Optional() @Self() ngControl: NgControl
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
+
+        this.fm
+            .monitor(element.nativeElement, true)
+            .pipe(
+                map(origin => !!origin),
+                distinctUntilChanged()
+            )
+            .subscribe(focused => {
+                if (focused) {
+                    this.rangepicker.open();
+                }
+            });
     }
 
     protected createForm(): UntypedFormGroup {
