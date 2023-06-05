@@ -226,7 +226,7 @@ os-dashboard {
         box-sizing: border-box;
         height: 60px;
 
-        > a {
+        >a {
             text-decoration: none;
 
             &:first-child {
@@ -240,7 +240,7 @@ os-dashboard {
         }
 
         @include phone {
-            > a {
+            >a {
                 text-decoration: none;
 
                 &:first-child {
@@ -259,7 +259,7 @@ os-dashboard {
         }
 
         @include tablet {
-            > a {
+            >a {
                 text-decoration: none;
 
                 &:first-child {
@@ -333,7 +333,7 @@ os-dashboard {
     #previous-meetings,
     #no-date-meetings {
         .meeting-icon-wrapper {
-            color: rgba(0, 0, 0, 0.65);
+            color: rgba(87, 87, 87);
 
             mat-icon {
                 color: #8f8f8f;
