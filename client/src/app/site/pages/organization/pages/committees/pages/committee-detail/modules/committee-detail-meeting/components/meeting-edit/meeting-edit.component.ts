@@ -200,6 +200,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     public onUpdateDuplicateFrom(id: Id | null): void {
         this.theDuplicateFromId = id;
+        if (id) {
+            this.meetingForm.get(`language`)?.setValue(this.meetingRepo.getViewModel(id).language);
+        }
     }
 
     public onClearDate(formControlName: string): void {
@@ -266,9 +269,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             organization_tag_ids: [[]]
         };
 
-        if (this.isCreateView) {
-            rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
-        }
+        rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
 
         if (this.isJitsiManipulationAllowed) {
             rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^\/]$/)];
@@ -285,6 +286,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         if (!this.operator.isSuperAdmin && !this.isMeetingAdmin && !this.isCreateView) {
             Object.keys(this.meetingForm.controls).forEach(controlName => {
                 if (!ORGA_ADMIN_ALLOWED_CONTROLNAMES.includes(controlName)) {
+                    this.meetingForm.get(controlName)!.disable();
+                } else if (!this.isCreateView && controlName === `language`) {
                     this.meetingForm.get(controlName)!.disable();
                 }
             });
@@ -366,16 +369,21 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     /**
-     * Removes the `user_ids` and `admin_ids` from an update-payload
+     * Removes the `language`, `user_ids` and `admin_ids` from an update-payload
      */
     private sanitizePayload(payload: any): any {
         delete payload.user_ids; // This must not be sent
         delete payload.admin_ids; // This must not be sent
+        delete payload.language;
         return payload;
     }
 
     private enableFormControls(): void {
-        Object.keys(this.meetingForm.controls).forEach(controlName => this.meetingForm.get(controlName)!.enable());
+        Object.keys(this.meetingForm.controls).forEach(controlName => {
+            if (this.isCreateView || controlName !== `language`) {
+                this.meetingForm.get(controlName)!.enable();
+            }
+        });
     }
 
     private goBack(): void {

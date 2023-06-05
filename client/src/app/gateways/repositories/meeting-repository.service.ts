@@ -68,7 +68,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `default_group_id`,
             `admin_group_id`,
             `committee_id`,
-            `group_ids`
+            `group_ids`,
+            `language`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `is_template`,

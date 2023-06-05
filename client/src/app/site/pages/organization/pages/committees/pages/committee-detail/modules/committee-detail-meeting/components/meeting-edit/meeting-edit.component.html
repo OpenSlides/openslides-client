@@ -39,9 +39,9 @@
             <input matInput formControlName="description" />
         </mat-form-field>
 
-        <mat-form-field *ngIf="isCreateView && !theDuplicateFromId">
+        <mat-form-field>
             <mat-label>{{ 'Language' | translate }}</mat-label>
-            <mat-select formControlName="language">
+            <mat-select formControlName="language" [disabled]="!isCreateView || !!theDuplicateFromId">
                 <mat-option
                     *ngFor="let choice of translations | keyvalue"
                     [value]="choice.key"
