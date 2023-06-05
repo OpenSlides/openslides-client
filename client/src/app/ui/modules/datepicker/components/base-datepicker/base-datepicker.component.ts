@@ -1,10 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Directive, ElementRef, Input, Optional, Self } from '@angular/core';
+import { Directive, ElementRef, Input, Optional, Self, ViewChild } from '@angular/core';
 import { NgControl, UntypedFormBuilder } from '@angular/forms';
+import { MatDatepicker, MatDateRangePicker } from '@angular/material/datepicker';
+import { distinctUntilChanged, map } from 'rxjs';
 import { BaseFormFieldControlComponent } from 'src/app/ui/base/base-form-field-control';
 
 @Directive()
 export abstract class BaseDatepickerComponent extends BaseFormFieldControlComponent<any> {
+    @ViewChild(`picker`) picker: MatDateRangePicker<Date> | MatDatepicker<Date>;
+
     public readonly controlType = `os-datepicker`;
 
     /**
@@ -29,6 +33,18 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
         @Optional() @Self() ngControl: NgControl
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
+
+        this.fm
+            .monitor(element.nativeElement, true)
+            .pipe(
+                map(origin => !!origin),
+                distinctUntilChanged()
+            )
+            .subscribe(focused => {
+                if (focused) {
+                    this.picker.open();
+                }
+            });
     }
 
     public onContainerClick(event: MouseEvent): void {}
