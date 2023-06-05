@@ -41,7 +41,7 @@
                         *matCellDef="let perm"
                         #tooltip="matTooltip"
                         [ngClass]="{ 'has-help-text': perm.help_text }"
-                        [matTooltip]="perm.help_text"
+                        [matTooltip]="perm.help_text | translate"
                         matTooltipClass="pre-wrap"
                         matTooltipPosition="after"
                         (mouseenter)="$event.stopImmediatePropagation()"
