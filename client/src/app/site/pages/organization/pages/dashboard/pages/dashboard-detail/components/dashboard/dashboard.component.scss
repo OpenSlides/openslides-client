@@ -3,6 +3,14 @@
 os-dashboard {
     .organization-description {
         padding-left: 76px;
+
+        @include phone {
+            padding-left: 0;
+        }
+
+        @include tablet {
+            padding-left: 0;
+        }
     }
 
     .meeting-list-viewport {
@@ -68,7 +76,21 @@ os-dashboard {
 
     .meeting-list-container-description {
         display: flex;
-        margin: 20px 0;
+        margin: 10px auto 40px auto;
+
+        @include phone {
+            flex-direction: column;
+            align-items: start;
+            justify-items: center;
+            margin-bottom: 0px;
+        }
+
+        @include tablet {
+            flex-direction: column;
+            align-items: start;
+            justify-items: center;
+            margin-bottom: 0px;
+        }
     }
 
     .padding-right-8 {
