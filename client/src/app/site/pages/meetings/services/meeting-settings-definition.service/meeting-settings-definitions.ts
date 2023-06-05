@@ -26,13 +26,6 @@ export type SettingsType =
     | 'groups'
     | 'daterange';
 
-export function getFakeSettingsKey(settingsKey: keyof Settings | (keyof Settings)[]): string {
-    if (Array.isArray(settingsKey)) {
-        return settingsKey.join(`#`);
-    }
-    return settingsKey;
-}
-
 export interface ChoicesMap {
     [name: string]: string | number;
 }
