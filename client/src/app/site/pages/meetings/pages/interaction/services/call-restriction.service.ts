@@ -27,13 +27,13 @@ export class CallRestrictionService {
     );
 
     private hasToEnterCallSubject = new Subject<void>();
-    public hasToEnterCallObservable = this.hasToEnterCallSubject.asObservable();
+    public hasToEnterCallObservable = this.hasToEnterCallSubject as Observable<void>;
 
     private hasToLeaveCallSubject = new Subject<void>();
-    public hasToLeaveCallObservable = this.hasToLeaveCallSubject.asObservable();
+    public hasToLeaveCallObservable = this.hasToLeaveCallSubject as Observable<void>;
 
     private canEnterCallSubject = new BehaviorSubject<boolean>(false);
-    public canEnterCallObservable = this.canEnterCallSubject.asObservable();
+    public canEnterCallObservable = this.canEnterCallSubject as Observable<boolean>;
 
     public constructor(
         private settingService: MeetingSettingsService,

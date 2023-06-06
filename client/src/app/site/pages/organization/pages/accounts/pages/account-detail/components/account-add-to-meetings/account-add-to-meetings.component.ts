@@ -96,7 +96,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public ngOnInit(): void {
-        this.meetingsObservable = this.meetingsSubject.asObservable();
+        this.meetingsObservable = this.meetingsSubject as Observable<ViewMeeting[]>;
 
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {

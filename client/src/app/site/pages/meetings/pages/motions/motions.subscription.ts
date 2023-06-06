@@ -227,3 +227,22 @@ export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (
     },
     subscriptionName: AMENDMENT_LIST_SUBSCRIPTION
 });
+
+export const MOTION_FORWARD_DATA_SUBSCRIPTION = `motion_forward_data`;
+
+export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
+    modelRequest: {
+        ids,
+        viewModelCtor: ViewMotion,
+        follow: [
+            {
+                idField: `amendment_ids`,
+                fieldset: [`text`, `modified_final_version`, { templateField: `amendment_paragraph_$` }],
+                follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
+            },
+            { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }
+        ],
+        fieldset: [`reason`, `text`, `modified_final_version`, `all_origin_ids`]
+    },
+    subscriptionName: MOTION_FORWARD_DATA_SUBSCRIPTION
+});

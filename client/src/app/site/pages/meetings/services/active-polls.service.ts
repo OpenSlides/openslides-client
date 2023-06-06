@@ -19,7 +19,7 @@ export class ActivePollsService {
     private _pollSubject = new BehaviorSubject<ViewPoll[] | null>(null);
 
     public get activePollsObservable(): Observable<ViewPoll[] | null> {
-        return this._pollSubject.asObservable();
+        return this._pollSubject;
     }
 
     public get activePolls(): ViewPoll[] | null {

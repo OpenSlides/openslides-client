@@ -70,7 +70,7 @@ export abstract class BaseMainImportHandler<MainModel extends ImportIdentifiable
     }
 
     public getModelsToCreateObservable(): Observable<ImportModel<MainModel>[]> {
-        return this._modelsToCreateSubject.asObservable();
+        return this._modelsToCreateSubject;
     }
 
     public getModelsToCreateAmount(): number {

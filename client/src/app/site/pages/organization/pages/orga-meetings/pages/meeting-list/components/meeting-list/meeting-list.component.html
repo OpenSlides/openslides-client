@@ -106,12 +106,12 @@
         ></a>
         <div>
             <div *ngIf="meeting.userAmount">
-                <os-icon-container iconTooltip="{{ 'Participants' | translate }}" icon="group">
+                <os-icon-container iconTooltip="{{ 'Participants' | translate }}" iconTooltipPosition="right" icon="group">
                     {{ meeting.userAmount }}
                 </os-icon-container>
             </div>
             <div *ngIf="meeting.motionsAmount">
-                <os-icon-container iconTooltip="{{ 'Motions' | translate }}" icon="assignment">
+                <os-icon-container iconTooltip="{{ 'Motions' | translate }}" iconTooltipPosition="right" icon="assignment">
                     {{ meeting.motionsAmount }}
                 </os-icon-container>
             </div>
