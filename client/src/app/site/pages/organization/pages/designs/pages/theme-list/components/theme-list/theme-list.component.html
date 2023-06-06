@@ -39,8 +39,8 @@
             (selected)="changeCurrentTheme(theme)"
             [checked]="isThemeUsed(theme)"
             [disabled]="isThemeUsed(theme)"
-            [title]="'Change Theme' | translate"
-            [content]="'Are you sure you want to activate this design? This will change the design in all meetings.' | translate"
+            [title]="'Change color set' | translate"
+            [content]="'Are you sure you want to activate this color set? This will change the colors in all meetings.' | translate"
         ></os-prompt-checkbox>
     </div>
     <div *osScrollingTableCell="'menu'; row as theme; config: { width: 40 }" class="cell-slot fill">
