@@ -336,26 +336,29 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
 
     private async doCreateMeeting(): Promise<void> {
         if (this.theDuplicateFromId) {
-            const from = { meeting_id: this.theDuplicateFromId, ...this.meetingForm.value };
+            const from = { meeting_id: this.theDuplicateFromId, ...this.getPayload() };
             delete from.language;
             await this.meetingRepo.duplicateFrom(this.committeeId, from).resolve();
         } else {
-            const payload = { committee_id: this.committeeId, ...this.meetingForm.value };
+            const payload = { committee_id: this.committeeId, ...this.getPayload() };
             await this.meetingRepo.create(payload).resolve();
         }
         this.goBack();
     }
 
     private async doUpdateMeeting(): Promise<void> {
-        const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
-            ...this.meetingForm.value
-        };
-        const payload = { start_time, end_time, ...rawPayload };
-        await this.meetingRepo.update(this.sanitizePayload(payload), {
+        await this.meetingRepo.update(this.sanitizePayload(this.getPayload()), {
             meeting: this.editMeeting!,
             options: this.getUsersToUpdateForMeetingObject()
         });
         this.goBack();
+    }
+
+    private getPayload(): any {
+        const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
+            ...this.meetingForm.value
+        };
+        return { start_time, end_time, ...rawPayload };
     }
 
     /**
