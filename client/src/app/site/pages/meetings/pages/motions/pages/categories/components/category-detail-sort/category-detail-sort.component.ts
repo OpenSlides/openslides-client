@@ -66,7 +66,7 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
      * @returns an observable for the {@link motionsSubject}
      */
     public get motionObservable(): Observable<ViewMotion[]> {
-        return this.motionsSubject.asObservable();
+        return this.motionsSubject;
     }
 
     /**

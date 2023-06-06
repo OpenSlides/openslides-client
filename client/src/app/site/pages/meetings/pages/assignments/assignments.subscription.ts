@@ -19,7 +19,10 @@ export const getAssignmentSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     { idField: `list_of_speakers_id`, ...listOfSpeakersSpeakerCountSubscription }
                 ]
             },
-            `assignment_candidate_ids`
+            {
+                idField: `assignment_candidate_ids`,
+                follow: [`user_id`]
+            }
         ]
     },
     subscriptionName: ASSIGNMENT_LIST_SUBSCRIPTION

@@ -104,7 +104,7 @@ export const RTC_LOGGED_STORAGE_KEY = `rtcIsLoggedIn`;
 export class RtcService {
     private jitsiConfig!: JitsiConfig;
     private isJitsiEnabledSubject = new BehaviorSubject<boolean>(false);
-    public isJitsiEnabledObservable = this.isJitsiEnabledSubject.asObservable();
+    public isJitsiEnabledObservable = this.isJitsiEnabledSubject as Observable<boolean>;
 
     public autoConnect: Observable<boolean>;
 
@@ -121,38 +121,38 @@ export class RtcService {
 
     public isSupportEnabled: Observable<boolean>;
     private connectedToHelpDeskSubject = new BehaviorSubject<boolean>(false);
-    public connectedToHelpDesk = this.connectedToHelpDeskSubject.asObservable();
+    public connectedToHelpDesk = this.connectedToHelpDeskSubject as Observable<boolean>;
 
     private isJoinedSubject = new BehaviorSubject<boolean>(false);
-    public isJoinedObservable = this.isJoinedSubject.asObservable();
+    public isJoinedObservable = this.isJoinedSubject as Observable<boolean>;
 
     private isPasswordSet = false;
 
     private isJitsiActiveSubject = new BehaviorSubject<boolean>(false);
-    public isJitsiActiveObservable = this.isJitsiActiveSubject.asObservable();
+    public isJitsiActiveObservable = this.isJitsiActiveSubject as Observable<boolean>;
 
     private get defaultRoomName(): string {
         return this.jitsiConfig?.JITSI_ROOM_NAME;
     }
 
     private jitsiMeetUrlSubject = new Subject<string>();
-    public jitsiMeetUrl = this.jitsiMeetUrlSubject.asObservable();
+    public jitsiMeetUrl = this.jitsiMeetUrlSubject as Observable<string>;
 
     private members: { [id: string]: any } = {};
     private memberSubject = new BehaviorSubject<ConferenceMemberCollection>(this.members);
-    public memberObservableObservable = this.memberSubject.asObservable();
+    public memberObservableObservable = this.memberSubject as Observable<ConferenceMemberCollection>;
 
     private dominantSpeaker: JitsiMember | null = null;
     private dominantSpeakerSubject = new Subject<JitsiMember | null>();
-    public dominantSpeakerObservable = this.dominantSpeakerSubject.asObservable();
+    public dominantSpeakerObservable = this.dominantSpeakerSubject as Observable<JitsiMember | null>;
 
     private isMutedSubject = new BehaviorSubject<boolean>(false);
-    public isMuted = this.isMutedSubject.asObservable();
+    public isMuted = this.isMutedSubject as Observable<boolean>;
 
     private canEnterCall: boolean = false;
 
     private showCallDialogSubject = new BehaviorSubject<boolean>(false);
-    public showCallDialogObservable = this.showCallDialogSubject.asObservable();
+    public showCallDialogObservable = this.showCallDialogSubject as Observable<boolean>;
     public set showCallDialog(show: boolean) {
         this.showCallDialogSubject.next(show);
     }

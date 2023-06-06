@@ -32,7 +32,7 @@ export class ActiveMeetingService {
     }
 
     public get meetingObservable(): Observable<ViewMeeting | null> {
-        return this._meetingSubject.asObservable();
+        return this._meetingSubject;
     }
 
     public get meeting(): ViewMeeting | null {

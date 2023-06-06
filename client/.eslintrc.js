@@ -57,7 +57,6 @@ module.exports = {
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
 
-
                 'jsdoc/require-example': ['off'],
                 'jsdoc/newline-after-description': ['off'],
                 'jsdoc/no-types': ['off'],
@@ -75,6 +74,10 @@ module.exports = {
                 '@typescript-eslint/no-explicit-any': ['off'],
                 '@typescript-eslint/no-non-null-assertion': ['off'],
                 'no-console': ['off', { allow: ['warn', 'error', 'info', 'debug'] }],
+                'no-restricted-properties': ['error', {
+                    'property': 'asObservable',
+                    'message': 'Please use a typecast or explicitly instantiate a new Observable.'
+                }]
             }
         },
         {

@@ -49,6 +49,6 @@ export class OrganizationSettingsService {
         if (!this.settingSubjects[key]) {
             this.settingSubjects[key] = new BehaviorSubject<any>(this.instant(key));
         }
-        return this.settingSubjects[key].asObservable();
+        return this.settingSubjects[key];
     }
 }

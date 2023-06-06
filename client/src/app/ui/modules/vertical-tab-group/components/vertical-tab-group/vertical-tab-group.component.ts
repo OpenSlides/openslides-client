@@ -60,7 +60,7 @@ export class VerticalTabGroupComponent {
     public contentStateChanged = new EventEmitter<VerticalTabGroupContentState>();
 
     public get tabLabelsObservable(): Observable<TemplatePortal[]> {
-        return this._tabLabelsSubject.asObservable();
+        return this._tabLabelsSubject;
     }
 
     public get selectedPortalObservable(): Observable<TemplatePortal | null> {

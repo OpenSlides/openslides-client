@@ -59,6 +59,7 @@
             <div *ngIf="committee.forward_to_committees?.length && operator.isOrgaManager">
                 <os-icon-container
                     iconTooltip="{{ 'Can forward motions to committee' | translate }}"
+                    iconTooltipPosition="left"
                     icon="file_upload"
                     [noWrap]="true"
                 >
@@ -70,6 +71,7 @@
             <div *ngIf="committee.receive_forwardings_from_committees?.length && operator.isOrgaManager">
                 <os-icon-container
                     iconTooltip="{{ 'Can receive motions from committee' | translate }}"
+                    iconTooltipPosition="left"
                     icon="file_download"
                     [noWrap]="true"
                 >
@@ -81,20 +83,20 @@
         </div>
     </div>
 
-    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 70 }">
+    <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
         <div>
             <div *ngIf="committee.meetingAmount">
-                <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" icon="event_available">
+                <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" iconTooltipPosition="right" icon="event_available">
                     {{ committee.meetingAmount }}
                 </os-icon-container>
             </div>
             <div *ngIf="committee.memberAmount">
-                <os-icon-container iconTooltip="{{ 'Accounts' | translate }}" icon="group">
+                <os-icon-container iconTooltip="{{ 'Accounts' | translate }}" iconTooltipPosition="right" icon="group">
                     {{ committee.memberAmount }}
                 </os-icon-container>
             </div>
             <div *ngIf="committee.managerAmount">
-                <os-icon-container iconTooltip="{{ 'Committee management' | translate }}" icon="engineering">
+                <os-icon-container iconTooltip="{{ 'Committee management' | translate }}" iconTooltipPosition="right" icon="engineering">
                     {{ committee.managerAmount }}
                 </os-icon-container>
             </div>

@@ -18,6 +18,7 @@
             mat-icon-button
             (click)="toggleFavorite()"
             matTooltip="{{ 'Mark as personal favorite' | translate }}"
+            matTooltipPosition="right"
         >
             <mat-icon>{{ isFavorite() ? 'star' : 'star_border' }}</mat-icon>
         </button>

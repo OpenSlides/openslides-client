@@ -14,16 +14,11 @@
                 [src]="youTubeVideoUrl | trust: 'resourceUrl'"
             ></iframe>
 
-            <iframe
+            <div
                 *ngIf="usingNanocosmos"
+                id="nanocosmosPlayer"
                 class="player"
-                type="text/html"
-                scrolling="no"
-                frameborder="0"
-                allowfullscreen="true"
-                [src]="nanocosmosVideoUrl | trust: 'resourceUrl'"
-            >
-            </iframe>
+            ></div>
     </div>
     <div *ngIf="usingVjs && !isUrlOnline" class="is-offline-wrapper">
         <ng-container *ngIf="!posterUrl">

@@ -11,7 +11,7 @@ export class OpenSlidesStatusService {
     }
 
     public get isStableObservable(): Observable<boolean> {
-        return this._stableSubject.asObservable();
+        return this._stableSubject;
     }
 
     private _stable = new Deferred();
