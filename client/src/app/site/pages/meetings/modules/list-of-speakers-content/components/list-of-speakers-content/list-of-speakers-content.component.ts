@@ -88,6 +88,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
 
+    public get canSee(): boolean {
+        return this.operator.hasPerms(this.permission.listOfSpeakersCanSee);
+    }
+
     public get canAddDueToPresence(): boolean {
         return !this.onlyPresentUsers || this._currentUser!.isPresentInMeeting();
     }
