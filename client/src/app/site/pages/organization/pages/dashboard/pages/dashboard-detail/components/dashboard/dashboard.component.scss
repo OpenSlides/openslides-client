@@ -76,7 +76,7 @@ os-dashboard {
 
     .meeting-list-container-description {
         display: flex;
-        margin: 10px auto 40px auto;
+        margin: 25px auto 40px auto;
 
         @include phone {
             flex-direction: column;
