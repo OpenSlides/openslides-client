@@ -18,6 +18,7 @@ export interface Relation<Own = any> {
     ownIdFieldPrefix?: string; // given, if structured=true
     ownIdFieldSuffix?: string; // given, if structured=true
     isFullList?: boolean; // if this relation requests a full-list of view-models in a specific repo.
+    isExclusiveList?: boolean; // if the relation request only contains view-models that are not referenced by other top level view-models
 }
 
 export function makeO2O<A extends BaseViewModel, B extends BaseViewModel>(args: {
@@ -61,6 +62,7 @@ export function makeM2O<O extends BaseViewModel, M extends BaseViewModel>(args: 
     MIdField?: keyof M & string;
     order?: keyof M & string;
     isFullList?: boolean;
+    isExclusiveList?: boolean;
 }): Relation[] {
     return [
         // M -> O
@@ -83,7 +85,8 @@ export function makeM2O<O extends BaseViewModel, M extends BaseViewModel>(args: 
             generic: false,
             structured: false,
             order: args.order,
-            isFullList: args.isFullList
+            isFullList: args.isFullList,
+            isExclusiveList: args.isExclusiveList
         }
     ];
 }

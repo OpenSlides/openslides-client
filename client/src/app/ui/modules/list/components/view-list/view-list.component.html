@@ -1,4 +1,4 @@
-<mat-drawer-container class="list-view-frame" [ngStyle]="{ height: componentHeight }">
+<mat-drawer-container class="list-view-frame">
     <div class="list-view-table-wrapper">
         <os-sort-filter-bar
             *ngIf="showFilterBar"
@@ -18,7 +18,9 @@
 
         <os-scrolling-table
             [dataSource]="dataListObservable"
+            [fullDataSource]="dataFullListObservable"
             [rowHeight]="vScrollFixed"
+            [tableHeight]="fullScreen ? undefined : '50vh'"
             [hiddenColumns]="hiddenColumns"
             [selectionMode]="multiSelect"
             (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"

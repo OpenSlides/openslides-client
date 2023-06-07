@@ -288,6 +288,11 @@
                 <span>{{ 'Edit details' | translate }}</span>
             </button>
 
+            <button mat-menu-item (click)="onPlusButton(item.id)">
+                <mat-icon>add_circle</mat-icon>
+                <span>{{ 'Create subitem' | translate }}</span>
+            </button>
+
             <!-- Duplicate button -->
             <button mat-menu-item (click)="duplicateTopic(item)" *ngIf="isTopic(item.content_object)">
                 <mat-icon>file_copy</mat-icon>

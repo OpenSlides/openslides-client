@@ -14,6 +14,7 @@ import { DirectivesModule } from 'src/app/ui/directives';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
 
 import { ParticipantCommonServiceModule } from '../../pages/participants/services/common/participant-common-service.module';
+import { DetailViewModule } from '../meetings-component-collector/detail-view/detail-view.module';
 import { ParticipantSearchSelectorModule } from '../participant-search-selector';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ListOfSpeakersContentTitleDirective } from './directives/list-of-speakers-content-title.directive';
@@ -26,6 +27,7 @@ const DECLARATIONS = [ListOfSpeakersContentComponent, ListOfSpeakersContentTitle
     declarations: DECLARATIONS,
     imports: [
         CommonModule,
+        DetailViewModule,
         MatIconModule,
         MatExpansionModule,
         MatListModule,

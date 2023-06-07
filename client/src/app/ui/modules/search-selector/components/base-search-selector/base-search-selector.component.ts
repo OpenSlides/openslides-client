@@ -123,6 +123,18 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     @Input()
     public excludeIds: boolean = false;
 
+    /**
+     * If true, the dialog will not close when a value is selected.
+     */
+    @Input()
+    public keepOpen: boolean = false;
+
+    /**
+     * If true, the dialog will be opened with double width.
+     */
+    @Input()
+    public wider: boolean = false;
+
     public itemSizeInPx = 50;
 
     public get panelHeight(): number {
@@ -179,7 +191,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public get filteredItemsObservable(): Observable<Selectable[]> {
-        return this.filteredItemsSubject.asObservable();
+        return this.filteredItemsSubject;
     }
 
     public selectedIds: Id[] = [];
@@ -238,6 +250,8 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
     public onChipRemove(itemId: Id): void {
         this.addOrRemoveId(itemId);
+
+        this.matSelect.options.find(option => option.value === itemId)?.deselect(); // To ensure that the checkbox is updated in the view
     }
 
     private addOrRemoveId(id: Id): void {
@@ -258,15 +272,17 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
         if (event) {
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();
+        } else {
+            this.searchValueForm.setValue(``);
         }
     }
 
     public onSelectionChange(value: Selectable, change: MatOptionSelectionChange): void {
-        if (change.isUserInput && this.multiple) {
+        if (change.isUserInput) {
             if (this.multiple) {
                 this.addOrRemoveId(value.id);
+                this.selectionChanged.emit({ value, selected: change.source.selected });
             }
-            this.selectionChanged.emit({ value, selected: change.source.selected });
         }
     }
 
@@ -276,6 +292,13 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             return;
         }
         this.matSelect.open();
+    }
+
+    public onSearchKeydown(event: any): void {
+        // Only propagate enter, up, down
+        if ([13, 38, 40].indexOf(event.keyCode) === -1) {
+            event.stopPropagation();
+        }
     }
 
     /**

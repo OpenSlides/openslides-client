@@ -18,10 +18,11 @@ import { TopicPollModule } from '../agenda/modules/topics/modules/topic-poll/top
 import { InteractionServiceModule } from '../interaction/services/interaction-service.module';
 import { AutopilotRoutingModule } from './autopilot-routing.module';
 import { AutopilotComponent } from './components/autopilot/autopilot.component';
+import { AutopilotMainComponent } from './components/autopilot-main/autopilot-main.component';
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
 
 @NgModule({
-    declarations: [AutopilotComponent, PollCollectionComponent],
+    declarations: [AutopilotMainComponent, AutopilotComponent, PollCollectionComponent],
     imports: [
         CommonModule,
         RouterModule,

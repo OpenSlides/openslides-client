@@ -18,6 +18,12 @@ const routes: Routes = [
                 canLoad: [PermissionGuard]
             },
             {
+                path: `meetings`,
+                loadChildren: () =>
+                    import(`./pages/orga-meetings/orga-meetings.module`).then(m => m.OrgaMeetingsModule),
+                canLoad: [PermissionGuard]
+            },
+            {
                 path: `committees`,
                 loadChildren: () => import(`./pages/committees/committees.module`).then(m => m.CommitteesModule),
                 canLoad: [PermissionGuard]
@@ -44,7 +50,7 @@ const routes: Routes = [
             {
                 path: `mediafiles`,
                 loadChildren: () => import(`./pages/mediafiles/mediafiles.module`).then(m => m.MediafilesModule),
-                data: { omlPermissions: [OML.superadmin] },
+                data: { omlPermissions: [OML.can_manage_organization] },
                 canLoad: [PermissionGuard]
             },
             {

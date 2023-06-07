@@ -38,7 +38,7 @@ export class ServerTimePresenterService {
      * Get an observable for the server offset.
      */
     public getServerOffsetObservable(): Observable<number> {
-        return this._serverOffsetSubject.asObservable();
+        return this._serverOffsetSubject;
     }
 
     /**

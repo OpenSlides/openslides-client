@@ -5,7 +5,7 @@
             <ng-container *ngIf="showMeetingNav">
                 <a [@navItemAnim] mat-list-item (click)="mobileAutoCloseNav()" [routerLink]="['/']" class="meetingNavRow">
                     <mat-icon>apps</mat-icon>
-                    <span>{{ 'Meetings' | translate }}</span>
+                    <span>{{ 'Dashboard' | translate }}</span>
                 </a>
                 <mat-divider></mat-divider>
             </ng-container>
@@ -16,6 +16,7 @@
                         *osPerms="entry.permission"
                         mat-list-item
                         class="foreground-icon"
+                        [ngStyle]="getCustomStyleForEntry(entry)"
                         (click)="mobileAutoCloseNav()"
                         [routerLink]="entry.route"
                         routerLinkActive="active"
@@ -58,10 +59,8 @@
     </ng-template>
     <ng-template osSidenavMainContent>
         <div class="content">
-            <main>
-                <os-global-headbar></os-global-headbar>
-                <router-outlet #o="outlet"></router-outlet>
-            </main>
+            <os-global-headbar></os-global-headbar>
+            <router-outlet #o="outlet"></router-outlet>
         </div>
         <div class="toolbars">
             <os-action-bar></os-action-bar>

@@ -1,3 +1,5 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
@@ -16,9 +18,9 @@ export enum AgendaItemType {
  * Determine type for agenda items
  */
 export const ItemTypeChoices = [
-    { key: AgendaItemType.COMMON, name: `public`, csvName: `` },
-    { key: AgendaItemType.INTERNAL, name: `internal`, csvName: `internal` },
-    { key: AgendaItemType.HIDDEN, name: `hidden`, csvName: `hidden` }
+    { key: AgendaItemType.COMMON, name: _(`public`), csvName: `` },
+    { key: AgendaItemType.INTERNAL, name: _(`internal`), csvName: `internal` },
+    { key: AgendaItemType.HIDDEN, name: _(`hidden`), csvName: `hidden` }
 ];
 
 /**
@@ -52,5 +54,24 @@ export class AgendaItem extends BaseModel<AgendaItem> {
     public constructor(input?: any) {
         super(AgendaItem.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof AgendaItem | { templateField: string })[] = [
+        `id`,
+        `item_number`,
+        `comment`,
+        `closed`,
+        `type`,
+        `duration`,
+        `is_internal`,
+        `is_hidden`,
+        `level`,
+        `weight`,
+        `content_object_id`,
+        `parent_id`,
+        `child_ids`,
+        `tag_ids`,
+        `projection_ids`,
+        `meeting_id`
+    ];
 }
 export interface AgendaItem extends HasMeetingId, HasProjectionIds, HasTagIds {}

@@ -23,6 +23,10 @@
 
 @import 'assets/styles/tables.scss';
 
+:root {
+    --global-headbar-height: 28px;
+}
+
 /**
 * Must be cleaned up
 */
@@ -42,6 +46,10 @@
 
     .checkbox-ripple-padding {
         padding-left: 12px;
+    }
+
+    .central-button {
+        justify-content: center;
     }
 
     .clickable {
@@ -712,6 +720,10 @@ button.mat-menu-item.selected {
     margin-right: 0px;
 }
 
+.overflow-hidden {
+    overflow: hidden;
+}
+
 .nowrap {
     white-space: nowrap;
 }
@@ -800,18 +812,37 @@ button.mat-menu-item.selected {
     display: none;
 }
 
-.flex-vertical-center {
+.flex-vertical-center-unsafe {
     display: flex;
-    align-items: center;
     flex-direction: row;
+    align-items: center;
 
     &.align-left {
         justify-content: flex-start;
     }
 }
 
+.flex-vertical-center {
+    display: flex;
+    flex-direction: row;
+
+    &.align-left {
+        justify-content: flex-start;
+    }
+
+    & > * {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
+
 .flex-center {
     @extend .flex-vertical-center;
+    justify-content: center;
+}
+
+.flex-center-unsafe {
+    @extend .flex-vertical-center-unsafe;
     justify-content: center;
 }
 

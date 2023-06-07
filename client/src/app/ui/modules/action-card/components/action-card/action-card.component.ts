@@ -24,9 +24,6 @@ export class ActionCardComponent {
     @Input()
     public set disableExpandControl(disableControl: boolean) {
         this._disableExpandControl = disableControl;
-        if (disableControl) {
-            this.isExpanded = false;
-        }
     }
 
     /**
@@ -40,28 +37,4 @@ export class ActionCardComponent {
      * Boolean, whether the control to expand the element should be disabled or not.
      */
     private _disableExpandControl = false;
-
-    /**
-     * Boolean to see, if the content can be expanded.
-     */
-    public canExpand = false;
-
-    /**
-     * Boolean to see, if the content is currently expanded.
-     */
-    public isExpanded = false;
-
-    public onResizedHeight(nextHeight: number): void {
-        this.resizesContentBox(nextHeight);
-    }
-
-    /**
-     * Function to check, if the new height of the element
-     * is greater than the limit of `200px`.
-     *
-     * @param height The new height as `number` of the linked element.
-     */
-    private resizesContentBox(height: number): void {
-        this.canExpand = height > 75;
-    }
 }

@@ -20,7 +20,7 @@ jobs:
           ref: main
           submodules: true
       - name: Checkout latest commits
-        run: ./dev-commands/submodules-do.sh 'git checkout main && git pull origin main'
+        run: git submodule foreach 'git checkout main && git pull origin main'
       - name: Delete the client folder
         run: rm -r openslides-client
       - name: Clone openslides-client
@@ -30,7 +30,7 @@ jobs:
       - name: Start dev setup
         run: make run-dev ARGS="-d"
       - name: Wait for dev setup
-        uses: iFaxity/wait-on-action@v1
+        uses: iFaxity/wait-on-action@v1.1.0
         with:
           resource: https://localhost:8000
           timeout: 300000
@@ -50,7 +50,7 @@ jobs:
   build-and-check-dev-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: create docker dev image
         run: make build-dev
@@ -67,7 +67,7 @@ jobs:
   build-and-test-prod-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build prod image
         run: make build-prod

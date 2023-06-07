@@ -20,6 +20,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
 import { GroupControllerService } from '../../../../modules';
+import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 
 @Component({
     selector: `os-participant-detail-view`,
@@ -28,6 +29,8 @@ import { GroupControllerService } from '../../../../modules';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantDetailViewComponent extends BaseMeetingComponent {
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
+
     public readonly additionalFormControls = MEETING_RELATED_FORM_CONTROLS.mapToObject(controlName => ({
         [controlName]: [``]
     }));
@@ -53,12 +56,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     public get shouldEnableFormControlFn(): (controlName: string) => boolean {
         return controlName => {
             const canManageUsers = this.isAllowed(`manage`);
-            if (canManageUsers) {
-                if (this._isUserInScope || this.newUser) {
-                    return true;
-                } else {
-                    return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
-                }
+            if (this._isUserInScope || (this.newUser && canManageUsers)) {
+                return true;
+            } else if (canManageUsers) {
+                return MEETING_RELATED_FORM_CONTROLS.includes(controlName);
             } else {
                 return PERSONAL_FORM_CONTROLS.includes(controlName);
             }
@@ -100,8 +101,6 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      * Contains all groups, except for the default group.
      */
     public readonly groups: Observable<ViewGroup[]>;
-
-    public readonly users: Observable<ViewUser[]>;
 
     public get showVoteWeight(): boolean {
         const isVoteWeightEnabled = this._isElectronicVotingEnabled && this._isVoteWeightEnabled;
@@ -149,8 +148,8 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 .subscribe(enabled => (this._isVoteDelegationEnabled = enabled))
         );
 
+        // TODO: Open groups subscription
         this.groups = this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
-        this.users = this.repo.getViewModelListObservable();
     }
 
     public isAllowed(action: string): boolean {
@@ -193,7 +192,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                 }
             }),
             this.operator.operatorUpdated.subscribe(
-                async () => (this._isUserInScope = await this.userService.isUserInSameScope(this._userId!))
+                async () => (this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!))
             )
         );
     }
@@ -247,7 +246,7 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
      */
     public async setEditMode(edit: boolean): Promise<void> {
         if (!this.newUser && edit) {
-            this._isUserInScope = await this.userService.isUserInSameScope(this._userId!);
+            this._isUserInScope = await this.userService.hasScopeManagePerms(this._userId!);
         }
 
         this.isEditingSubject.next(edit);
@@ -324,8 +323,11 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private checkForGroups(user: any): void {
+        const defaultGroupId = this.activeMeetingService.meeting!.default_group_id;
+        if (user?.group_ids.includes(defaultGroupId) && user?.group_ids.length > 1) {
+            user.group_ids = user.group_ids.filter(id => id !== defaultGroupId);
+        }
         if (!user?.group_ids.length) {
-            const defaultGroupId = this.activeMeetingService.meeting!.default_group_id;
             user.group_ids = [defaultGroupId];
         }
     }

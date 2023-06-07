@@ -1576,7 +1576,7 @@ export class MotionDiffService {
             (whole: string, insDel: string): string => {
                 const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
                 return whole.replace(
-                    /(<(p|div|blockquote|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
+                    /(<(p|div|blockquote|ul|ol|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
                     (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
                         const modifiedTag = DomHelpers.addClassToHtmlTag(opening, modificationClass);
                         return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
@@ -1585,7 +1585,7 @@ export class MotionDiffService {
             }
         );
 
-        // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted tet</del><ins>inserted.</ins></P>
+        // <del>deleted text</P></del><ins>inserted.</P></ins> => <del>deleted text</del><ins>inserted.</ins></P>
         diffUnnormalized = diffUnnormalized.replace(
             /<del>([^<]*)<\/(p|div|blockquote|li)><\/del><ins>([^<]*)<\/\2>(\s*)<\/ins>/gi,
             (_whole: string, deleted: string, tag: string, inserted: string, white: string): string =>
@@ -1680,11 +1680,34 @@ export class MotionDiffService {
                 `</ins>`
         );
 
+        // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>
+        // => <del>Ebene 3 </del><ins>Ebene 3a </ins><UL><LI><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>([^<]+)((?:<(?:ul|ol|li)>)+)<\/del>(<span[^>]*os-line-number[^>]*>(?:&nbsp;|\s)<\/span>)?<ins>([^<]+)\2<\/ins>/gi,
+            (_whole: string, del: string, block: string, ln: string, ins: string): string =>
+                `<del>` + del + `</del><ins>` + ins + `</ins>` + block + ln
+        );
+
         // </p> </ins> -> </ins></p>
         diffUnnormalized = diffUnnormalized.replace(
             /(<\/(p|div|blockquote|li)>)(\s*)<\/(ins|del)>/gi,
             (_whole: string, ending: string, _blockTag: string, space: string, insdel: string): string =>
                 `</` + insdel + `>` + ending + space
+        );
+
+        // <ul><li><ul><li>...</li><del></UL></LI></UL></del><LI class="insert">d</LI><LI class="insert">e</LI><ins></UL></LI></UL></ins>
+        // => <ul><li><ul><li>...</li><LI class="insert">d</LI><LI class="insert">e</LI></UL></LI></UL>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>((<\/(li|ul|ol)>)+)<\/del>((<li class="insert">.*?<\/li>)*)<ins>\1<\/ins>/i,
+            (_whole: string, ending: string, _e1: string, _e2: string, insertedLis: string, _e3: string) =>
+                insertedLis + ending
+        );
+
+        // <UL><LI><UL><LI><UL><LI><del>Ebene 4</LI></UL></LI></UL></LI></UL></del><ins>Ebene 5</LI></UL></LI></UL></LI></UL></ins>
+        // => <UL><LI><UL><LI><UL><LI><del>Ebene 4</del><ins>Ebene 5</ins></LI></UL></LI></UL></LI></UL>
+        diffUnnormalized = diffUnnormalized.replace(
+            /<del>([^<>]*)((<\/(li|ul|ol)>)+)<\/del><ins>([^<>]*)\2<\/ins>/i,
+            (_whole, del, end, _ul, _u2, ins) => `<del>` + del + `</del><ins>` + ins + `</ins>` + end
         );
 
         let diff: string;

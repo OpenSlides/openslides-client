@@ -7,12 +7,6 @@ import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
 import { NullablePartial } from 'src/app/infrastructure/utils';
 import { AgendaListTitle } from 'src/app/site/pages/meetings/pages/agenda';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import {
-    DEFAULT_FIELDSET,
-    Fieldsets,
-    ROUTING_FIELDSET,
-    TypedFieldset
-} from 'src/app/site/services/model-request-builder';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Motion } from '../../../../domain/models/motions/motion';
@@ -212,7 +206,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             block_id: partialMotion.block_id,
             state_extension: partialMotion.state_extension,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids,
             supporter_ids: partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
@@ -235,7 +228,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             state_extension: partialMotion.state_extension,
             amendment_paragraph_$: partialMotion.amendment_paragraph_$,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids === null ? [] : partialMotion.tag_ids,
             supporter_ids: partialMotion.supporter_ids === null ? [] : partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
@@ -258,63 +250,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
             state_extension: partialMotion.state_extension,
             statute_paragraph_id: partialMotion.statute_paragraph_id,
             sort_parent_id: partialMotion.sort_parent_id,
-            tag_ids: partialMotion.tag_ids,
             supporter_ids: partialMotion.supporter_ids,
             ...createAgendaItem(partialMotion)
         };
         return this.createAction(AmendmentAction.CREATE_STATUTEBASED_AMENDMENT, payload);
-    }
-
-    public override getFieldsets(): Fieldsets<Motion> {
-        const routingFields: TypedFieldset<Motion> = [`sequential_number`, `meeting_id`];
-        const titleFields: TypedFieldset<Motion> = routingFields.concat([
-            `title`,
-            `number`,
-            `created`,
-            `forwarded`,
-            `state_extension`,
-            `state_id`
-        ]);
-        const detailFields: TypedFieldset<Motion> = titleFields.concat([
-            `sort_weight`,
-            `start_line_number`,
-            `category_weight`,
-            `lead_motion_id`, // needed for filtering
-            `amendment_ids`,
-            `submitter_ids`,
-            `supporter_ids`,
-            `sequential_number`,
-            `reason`,
-            `recommendation_id`,
-            `tag_ids`,
-            `personal_note_ids`,
-            `block_id`,
-            `category_id`,
-            `lead_motion_id`,
-            `comment_ids`,
-            `modified_final_version`,
-            `recommendation_extension`,
-            `list_of_speakers_id`,
-            `agenda_item_id`, // for add/remove from agenda,
-            { templateField: `amendment_paragraph_$` },
-            `origin_id`,
-            `origin_meeting_id`,
-            `all_origin_ids`,
-            `derived_motion_ids`,
-            `all_derived_motion_ids`,
-            `poll_ids`,
-            `sort_weight`,
-            `sort_parent_id`,
-            `text`,
-            `change_recommendation_ids`,
-            `attachment_ids`,
-            `last_modified`
-        ]);
-        return {
-            [DEFAULT_FIELDSET]: detailFields,
-            titleFields: titleFields,
-            [ROUTING_FIELDSET]: routingFields
-        };
     }
 
     public getTitle = (viewMotion: ViewMotion) => {
@@ -403,8 +342,9 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     private getUpdatePayload(update: any, viewMotion: Motion & { workflow_id: Id }): any {
+        const ownMotion = this.getViewModel(viewMotion.id);
         const updatePayload = Object.keys(update).mapToObject(key => {
-            if (JSON.stringify(update[key]) !== JSON.stringify(viewMotion[key as keyof Motion & { workflow_id: Id }])) {
+            if (JSON.stringify(update[key]) !== JSON.stringify(ownMotion[key as keyof Motion & { workflow_id: Id }])) {
                 return { [key]: update[key] };
             }
             return {};
@@ -457,6 +397,6 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     private getCurrentMotions(motions: ViewMotion[]): ViewMotion[] {
-        return motions.filter(motion => motion.meeting_id === this.activeMeetingId);
+        return motions.filter(motion => motion.meeting_id === this.activeMeetingId && !!motion.sequential_number);
     }
 }

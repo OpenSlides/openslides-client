@@ -21,6 +21,18 @@ export class Topic extends BaseModel<Topic> {
     public constructor(input?: Partial<Topic>) {
         super(Topic.COLLECTION, input);
     }
+
+    public static readonly REQUESTABLE_FIELDS: (keyof Topic | { templateField: string })[] = [
+        `id`,
+        `title`,
+        `text`,
+        `sequential_number`,
+        `attachment_ids`,
+        `agenda_item_id`,
+        `list_of_speakers_id`,
+        `tag_ids`,
+        `meeting_id`
+    ];
 }
 export interface Topic
     extends HasMeetingId,

@@ -86,6 +86,7 @@
                 *ngIf="user.vote_delegated_to() && voteDelegationEnabled"
                 class="spacer-top-5"
                 matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
+                matTooltipPosition="left"
             >
                 <os-icon-container icon="forward" [noWrap]="true">{{ user.vote_delegated_to() }}</os-icon-container>
             </div>
@@ -94,6 +95,7 @@
                 *ngIf="user.vote_delegations_from_ids()?.length && voteDelegationEnabled"
                 class="spacer-top-5"
                 matTooltip="{{ 'Voting right received from (principals)' | translate }}"
+                matTooltipPosition="left"
             >
                 <os-icon-container icon="work" [noWrap]="true">{{ user.vote_delegations_from() }}</os-icon-container>
             </div>
@@ -106,8 +108,9 @@
             <!-- Email-sent indicator -->
             <mat-icon
                 inline
-                *ngIf="user.isLastEmailSend"
-                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_send | localizedDate }})"
+                *ngIf="user.isLastEmailSent"
+                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
+                matTooltipPosition="above"
             >
                 mail
             </mat-icon>
@@ -242,7 +245,7 @@
             </button>
 
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="changePhysicalStateOfSelectedUsers()">
-                <mat-icon>auto_awesome_mosaic</mat-icon>
+                <mat-icon>sync</mat-icon>
                 <span>{{ 'Set natural person ...' | translate }}</span>
             </button>
 

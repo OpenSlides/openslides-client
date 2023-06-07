@@ -4,119 +4,155 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import dedent from 'ts-dedent';
 
-import { PermissionsMap } from 'app/domain/definitions/permission.config';
-import { Permission } from 'app/domain/definitions/permission';
+import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
+
+overloadJsFunctions();
 
 const SOURCE = 'https://raw.githubusercontent.com/OpenSlides/openslides-backend/main/global/meta/permission.yml';
 
-const PATH_TO_DOMAIN_DEFINITIONS = `src/app/domain/definitions`;
-const MAIN_PATH = path.resolve(path.join(__dirname, `..`, PATH_TO_DOMAIN_DEFINITIONS));
+const BASE_PATH = path.resolve(path.join(__dirname, `..`));
+const DOMAIN_DEFINITIONS_PATH = `src/app/domain/definitions`;
 
-const DESTINATION_PERMISSION = path.resolve(path.join(MAIN_PATH, `permission.ts`));
-const DESTINATION_PERMISSION_CHILDREN = path.resolve(path.join(MAIN_PATH, 'permission-children.ts'));
+const PERMISSION_FILE = path.join(DOMAIN_DEFINITIONS_PATH, `permission.ts`);
+const PERMISSION_RELATIONS_FILE = path.join(DOMAIN_DEFINITIONS_PATH, 'permission-relations.ts');
+
+const DESTINATION_PERMISSION = path.join(BASE_PATH, PERMISSION_FILE);
+const DESTINATION_PERMISSION_RELATIONS = path.join(BASE_PATH, PERMISSION_RELATIONS_FILE);
 
 const FILE_TEMPLATE_PERMISSION = dedent`
     // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
     /**
-     * Permissions on the client are just strings. This makes clear, that
+     * Permissions on the client are just strings. This makes clear that
      * permissions instead of arbitrary strings should be given.
      */
     export enum Permission {
 `;
 
-const FILE_TEMPLATE_PERMISSION_CHILDREN = dedent`
+const FILE_TEMPLATE_PERMISSION_RELATIONS = dedent`
     // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT CHANGE IT MANUALLY.
     import { Permission } from './permission';
     import { PermissionsMap } from './permission.config';
-    export const childPermissions: PermissionsMap = {
 `;
 
-const permissionMap: { [collection: string]: { [permissionKey: string]: string } } = {};
-const permissionChildrenMap: PermissionsMap = {};
+const permissionMap: { [permission: string]: PermissionNode } = {};
 
-function buildPermissionChildrenMap(collection: string, current: object): string[] {
-    const permissions = new Set<string>();
-    for (const [key, value] of Object.entries(current || {})) {
-        const permission: keyof PermissionsMap = (collection + '.' + key) as keyof PermissionsMap;
-        permissions.add(permission);
-        const childPermissions: Permission[] = buildPermissionChildrenMap(collection, value) as Permission[];
-        permissionChildrenMap[permission] = childPermissions;
-        childPermissions.forEach(perm => permissions.add(perm));
-    }
-    return Array.from(permissions);
-}
+/**
+ * Helper class to generate the permission graph. Holds information about its permission as well as
+ * its parents and children.
+ */
+class PermissionNode {
+    parents: PermissionNode[] = [];
+    children: PermissionNode[] = [];
+    permission: string;
+    enumKey: string;
 
-function buildPermissionMap(collection: string, collectionYaml: object): void {
-    const collectionPermissions = createCollectionPermissions(collection, collectionYaml);
-    collectionPermissions.sort((a, b) => a.value.localeCompare(b.value));
-    permissionMap[collection] = {};
-    for (const { key, value } of collectionPermissions) {
-        permissionMap[collection][key] = value;
+    public constructor(permission: string) {
+        this.permission = permission;
+        this.enumKey = permission.replace(/[_\.]([a-z])/g, (_, c) => c.toUpperCase());
     }
 }
 
-function createCollectionPermissions(
-    collection: string,
-    current: object,
-    collectionPermissions: { key: string; value: string }[] = []
-): { key: string; value: string }[] {
-    for (const [key, value] of Object.entries(current || {})) {
-        const permissionValue = `${collection}.${key}`;
-        const permissionKey = `${collection}_${key}`.replace(/[_\.]([a-z])/g, (_, character) =>
-            character.toUpperCase()
-        );
-        collectionPermissions.push({ key: permissionKey, value: permissionValue });
-        createCollectionPermissions(collection, value, collectionPermissions);
-    }
-    return collectionPermissions;
-}
+type PermissionNodeRelativesField = (`children` | `parents`) & keyof PermissionNode;
 
-const loadSource = async () => {
-    const result = await axios.get(SOURCE);
-    return yaml.load(result.data) as string | number | object;
-};
-
-const generatePermissions = (permissionsYaml: string | number | object) => {
+/**
+ * Generates a PermissionNode for each permission in the permissionMap and fills the children and
+ * parents fields correctly.
+ *
+ * @param permissionsYaml the parsed permission.yml file
+ * @returns a list of all permission nodes, sorted by their permission string
+ */
+function generatePermissionMap(permissionsYaml: object): PermissionNode[] {
     for (const [collection, permissions] of Object.entries(permissionsYaml)) {
-        buildPermissionMap(collection, permissions);
+        generatePermissionMapForCollection(collection, permissions);
     }
+    return Object.values(permissionMap).sort((a, b) => a.permission.localeCompare(b.permission));
+}
 
-    let content = `${FILE_TEMPLATE_PERMISSION}`;
-    for (const [_, map] of Object.entries(permissionMap)) {
-        content += `\n`;
-        for (const [permissionKey, permissionValue] of Object.entries(map)) {
-            content += `    ${permissionKey} = \`${permissionValue}\`,\n`;
+function generatePermissionMapForCollection(collection: string, permissions: object, parent?: PermissionNode): void {
+    for (const [name, children] of Object.entries(permissions || {})) {
+        const permission = `${collection}.${name}`;
+        // try to fetch the node from the map
+        let node: PermissionNode = permissionMap[permission];
+        if (!node) {
+            // if it does not exist, create it
+            permissionMap[permission] = node = new PermissionNode(permission);
         }
+        // if a parent is given, fill the arrays. If no parent is given, this is a root node and we
+        // do not need to fill in any information
+        if (parent) {
+            node.parents.push(parent);
+            parent.children.push(node);
+        }
+        generatePermissionMapForCollection(collection, children, node);
     }
-    content += `};\n`;
+}
+
+/**
+ * Writes the permission.ts file.
+ *
+ * @param nodes the list of all permission nodes, in the order they should be written to the file
+ */
+function writePermissions(nodes: PermissionNode[]): void {
+    let content = `${FILE_TEMPLATE_PERMISSION}\n`;
+    for (const node of nodes) {
+        content += `    ${node.enumKey} = \`${node.permission}\`,\n`;
+    }
+    content += `}\n`;
 
     fs.writeFileSync(DESTINATION_PERMISSION, content);
 
-    console.log(`CREATE ${PATH_TO_DOMAIN_DEFINITIONS}/permission.ts`);
-};
+    console.log(`CREATE ${PERMISSION_FILE}`);
+}
 
-const generateChildPermissions = (permissionsYaml: string | number | object) => {
-    for (const [collection, permissions] of Object.entries(permissionsYaml)) {
-        buildPermissionChildrenMap(collection, permissions);
+/**
+ * Writes the permission-relations.ts file.
+ *
+ * @param nodes the list of all permission nodes, in the order they should be written to the file
+ */
+function writePermissionRelations(nodes: PermissionNode[]): void {
+    let content = FILE_TEMPLATE_PERMISSION_RELATIONS + '\n';
+
+    for (const field of ['children', 'parents'] as PermissionNodeRelativesField[]) {
+        const suffix = field.charAt(0).toUpperCase() + field.slice(1);
+        content += `\nexport const permission${suffix}: PermissionsMap = {\n`;
+        for (const node of nodes) {
+            content += `    "${node.permission}": [`;
+            getPermissionRelatives(node, field).forEach(relative => {
+                content += `Permission.${relative.enumKey}, `;
+            });
+            content += '],\n';
+        }
+        content += '};\n';
     }
 
-    let content = FILE_TEMPLATE_PERMISSION_CHILDREN + '\n';
-    for (const [key, value] of Object.entries<string[]>(permissionChildrenMap)) {
-        content += `    "${key}": [`;
-        content += value
-            .map(permString => 'Permission.' + permString.replace(/[_\.]([a-z])/g, (_, c) => c.toUpperCase()))
-            .join(', ');
-        content += '],\n';
+    fs.writeFileSync(DESTINATION_PERMISSION_RELATIONS, content);
+
+    console.log(`CREATE ${PERMISSION_RELATIONS_FILE}`);
+}
+
+/**
+ * Recursively gather all relatives of the given node, either in child or in parent direction.
+ *
+ * @param node the current starting node
+ * @param field the field to use for the relation
+ * @returns a set of all relatives of the given node in the given direction
+ */
+function getPermissionRelatives(node: PermissionNode, field: PermissionNodeRelativesField): Set<PermissionNode> {
+    let relatives = new Set<PermissionNode>();
+    for (const relative of node[field]) {
+        relatives.add(relative);
+        relatives.update(getPermissionRelatives(relative, field));
     }
-    content += '};\n';
+    return relatives;
+}
 
-    // write at the end to not leave a broken state in case of error
-    fs.writeFileSync(DESTINATION_PERMISSION_CHILDREN, content);
-
-    console.log(`CREATE ${PATH_TO_DOMAIN_DEFINITIONS}/permission-children.ts`);
-};
+async function loadSource(): Promise<object> {
+    const result = await axios.get(SOURCE);
+    return yaml.load(result.data) as object;
+}
 
 loadSource().then(permissionsYaml => {
-    generatePermissions(permissionsYaml);
-    generateChildPermissions(permissionsYaml);
+    const sortedPermissions = generatePermissionMap(permissionsYaml);
+    writePermissions(sortedPermissions);
+    writePermissionRelations(sortedPermissions);
 });

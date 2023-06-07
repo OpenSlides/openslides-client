@@ -83,6 +83,7 @@
                 <mat-checkbox
                     formControlName="is_present"
                     matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
+                    matTooltipPosition="right"
                 >
                     <span>{{ 'present' | translate }}</span>
                 </mat-checkbox>
@@ -149,6 +150,7 @@
                         formControlName="vote_delegations_from_ids"
                         [repo]="repo"
                         [multiple]="true"
+                        [subscriptionConfig]="participantSubscriptionConfig"
                         placeholder="{{ 'Voting right received from (principals)' | translate }}"
                     ></os-repo-search-selector>
                 </mat-form-field>
@@ -160,6 +162,7 @@
                         [repo]="repo"
                         [multiple]="false"
                         [includeNone]="true"
+                        [subscriptionConfig]="participantSubscriptionConfig"
                         placeholder="{{ 'Voting right delegated to (proxy)' | translate }}"
                     ></os-repo-search-selector>
                 </mat-form-field>
@@ -184,10 +187,10 @@
 
     <ng-template #showView>
         <h2>{{ 'Meeting specific information' | translate }}</h2>
-        <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSend">
+        <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSent">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
-                <span>{{ user.last_email_send | localizedDate }}</span>
+                <span>{{ user.last_email_sent | localizedDate }}</span>
             </div>
         </div>
 

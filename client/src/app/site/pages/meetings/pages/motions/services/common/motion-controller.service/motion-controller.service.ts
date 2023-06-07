@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Motion } from 'src/app/domain/models/motions/motion';
@@ -108,7 +107,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (!motion.state) {
             return ``;
         }
-        let state = this.translate.instant(motion.state.name);
+        let state = motion.state.name;
         if (motion.stateExtension && motion.state.show_state_extension_field) {
             state += ` ` + this.parseMotionPlaceholders(motion.stateExtension);
         }
@@ -196,37 +195,11 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (!motion.recommendation) {
             return ``;
         }
-        let rec = this.translate.instant(motion.recommendation.recommendation_label);
+        let rec = motion.recommendation.recommendation_label;
         if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
             rec += ` ` + this.parseMotionPlaceholders(motion.recommendationExtension);
         }
         return rec;
-    }
-
-    /**
-     * Returns an observable for all motions, that referencing the given motion (via id)
-     * in the recommendation.
-     */
-    public getRecommendationReferencingMotions(motionId: number): Observable<ViewMotion[]> {
-        return this.repo.getViewModelListObservable().pipe(
-            map((motions: ViewMotion[]): ViewMotion[] =>
-                motions.filter((motion: ViewMotion): boolean => {
-                    if (!motion.recommendationExtension) {
-                        return false;
-                    }
-
-                    // Check, if this motion has the motionId in it's recommendation
-                    let match;
-                    while ((match = REFERENCED_MOTION_REGEX.exec(motion.recommendationExtension))) {
-                        if (parseInt(match[1]) === motionId) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                })
-            )
-        );
     }
 
     public hasAmendments(motion: Identifiable): boolean {
@@ -268,5 +241,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         } else {
             viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode) => [];
         }
+        viewModel.getExtendedStateLabel = () => this.getExtendedStateLabel(viewModel);
+        viewModel.getExtendedRecommendationLabel = () => this.getExtendedRecommendationLabel(viewModel);
     }
 }

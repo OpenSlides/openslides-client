@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
@@ -11,7 +12,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
     templateUrl: `./participant-multiselect-actions.component.html`,
     styleUrls: [`./participant-multiselect-actions.component.scss`]
 })
-export class ParticipantMultiselectActionsComponent extends BaseUiComponent {
+export class ParticipantMultiselectActionsComponent extends BaseComponent {
     @Input()
     public selectedUsers: ViewUser[] = [];
 
@@ -25,12 +26,13 @@ export class ParticipantMultiselectActionsComponent extends BaseUiComponent {
     public deselectAll = new EventEmitter<void>();
 
     public constructor(
-        private translate: TranslateService,
         private operator: OperatorService,
         private promptService: PromptService,
-        public repo: ParticipantControllerService
+        public repo: ParticipantControllerService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super();
+        super(componentServiceCollector, translate);
     }
 
     /**

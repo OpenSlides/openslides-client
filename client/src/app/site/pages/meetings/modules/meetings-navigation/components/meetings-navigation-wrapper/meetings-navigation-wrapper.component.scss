@@ -56,10 +56,16 @@ mat-icon {
     * right: 0; would overlap a browser's scrollbar
     */
     right: 20px;
-    z-index: 99;
+    z-index: 1001;
     pointer-events: none;
 
     * {
         pointer-events: initial;
     }
+}
+
+.scrollable-content {
+    height: calc(100% - var(--global-headbar-height));
+    width: 100%;
+    overflow: auto;
 }

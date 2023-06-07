@@ -32,7 +32,7 @@ import {
     hasBeforeFindAction,
     ImportConfig,
     ImportCSVPreview,
-    RawObject,
+    RawImportModel,
     ValueLabelCombination
 } from '../../../infrastructure/utils/import/import-utils';
 import {
@@ -88,11 +88,11 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     public encoding = `utf-8`;
 
     public get currentImportPhaseObservable(): Observable<ImportStepPhase> {
-        return this._currentImportPhaseSubject.asObservable();
+        return this._currentImportPhaseSubject;
     }
 
     public get isImportValidObservable(): Observable<boolean> {
-        return this._isImportValidSubject.asObservable();
+        return this._isImportValidSubject;
     }
 
     /**
@@ -140,7 +140,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     }
 
     public get importingStepsObservable(): Observable<ImportStep[]> {
-        return this._importingStepsSubject.asObservable();
+        return this._importingStepsSubject;
     }
 
     public get leftReceivedHeaders(): string[] {
@@ -156,7 +156,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     }
 
     public get rawFileObservable(): Observable<File | null> {
-        return this._rawFileSubject.asObservable();
+        return this._rawFileSubject;
     }
 
     private get importModels(): ImportModel<MainModel>[] {
@@ -183,7 +183,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     private _modelHeadersAndVerboseNames: { [key: string]: string } = {};
 
     private _getDuplicatesFn:
-        | ((entry: Partial<MainModel>) => Partial<MainModel>[] | Promise<Partial<MainModel>[]>)
+        | ((entry: RawImportModel<MainModel>) => Partial<MainModel>[] | Promise<Partial<MainModel>[]>)
         | undefined;
 
     protected readonly translate: TranslateService = this.importServiceCollector.translate;
@@ -307,7 +307,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      * @returns an observable BehaviorSubject
      */
     public getNewEntriesObservable(): Observable<ImportModel<MainModel>[]> {
-        return this._newEntries.asObservable().pipe(map(value => Object.values(value)));
+        return this._newEntries.pipe(map(value => Object.values(value)));
     }
 
     /**
@@ -508,22 +508,16 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
         }
     }
 
-    protected async onCreateImportModel({
-        input,
-        importTrackId
-    }: {
-        input: MainModel;
-        importTrackId: number;
-    }): Promise<ImportModel<MainModel>> {
+    protected async onCreateImportModel(input: RawImportModel<MainModel>): Promise<ImportModel<MainModel>> {
         if (!this._getDuplicatesFn) {
             throw new Error(`No function to check for duplicates defined`);
         }
         const duplicates = await this._getDuplicatesFn(input);
         const hasDuplicates = duplicates.length > 0;
         const entry: ImportModel<MainModel> = new ImportModel({
-            model: input,
+            model: input.model as MainModel,
+            id: input.id,
             hasDuplicates,
-            importTrackId,
             duplicates
         });
         return entry;
@@ -536,22 +530,17 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      *
      * @param _entries
      */
-    protected async onBeforeCreatingImportModels(_entries: MainModel[]): Promise<void> {}
+    protected async onBeforeCreatingImportModels(_entries: RawImportModel<MainModel>[]): Promise<void> {}
 
-    private async createImportModel({
-        input,
-        importTrackId,
-        errors
-    }: {
-        input: MainModel;
-        importTrackId: number;
-        errors: string[];
-    }): Promise<ImportModel<MainModel>> {
-        const nextEntry = await this.onCreateImportModel({ input, importTrackId });
+    private async createImportModel(
+        input: RawImportModel<MainModel>,
+        errors: string[] = []
+    ): Promise<ImportModel<MainModel>> {
+        const nextEntry = await this.onCreateImportModel(input);
         if (nextEntry.hasDuplicates) {
             errors.push(DUPLICATE_IMPORT_ERROR);
         }
-        if (errors?.length) {
+        if (errors.length) {
             nextEntry.errors = errors.map(error => this.getVerboseError(error));
             nextEntry.status = `error`;
         }
@@ -566,11 +555,15 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
      *
      * @returns an object which has the headers of the models used internal
      */
-    private createRawObject(line: CsvJsonMapping): RawObject<MainModel> {
-        return Object.keys(this._mapReceivedExpectedHeaders).mapToObject(expectedHeader => {
+    private createRawImportModel(line: CsvJsonMapping, index: number): RawImportModel<MainModel> {
+        const rawObject = Object.keys(this._mapReceivedExpectedHeaders).mapToObject(expectedHeader => {
             const receivedHeader = this._mapReceivedExpectedHeaders[expectedHeader];
             return { [expectedHeader]: line[receivedHeader] };
-        }) as { [key in keyof MainModel]?: any };
+        });
+        return {
+            id: index,
+            model: rawObject as MainModel
+        };
     }
 
     private parseCsvLines(): void {
@@ -761,15 +754,10 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
     }
 
     private async propagateNextNewEntries(): Promise<void> {
-        const rawEntries = this._csvLines.map(line => this.createRawObject(line));
-        await this.onBeforeCreatingImportModels(rawEntries.map(entry => entry as MainModel));
-        for (let i = 0; i < rawEntries.length; ++i) {
-            const model = rawEntries[i] as MainModel;
-            const nextEntry = await this.createImportModel({
-                input: model,
-                importTrackId: i + 1,
-                errors: []
-            });
+        const rawEntries = this._csvLines.map((line, i) => this.createRawImportModel(line, i + 1));
+        await this.onBeforeCreatingImportModels(rawEntries);
+        for (let entry of rawEntries) {
+            const nextEntry = await this.createImportModel(entry);
             this.pushNextNewEntry(nextEntry);
         }
         for (const importHandler of this.getEveryImportHandler()) {
@@ -786,7 +774,7 @@ export abstract class BaseImportService<MainModel extends Identifiable> implemen
 
     private pushNextNewEntry(nextEntry: ImportModel<MainModel>): void {
         const oldEntries = this._newEntries.value;
-        oldEntries[nextEntry.importTrackId] = nextEntry;
+        oldEntries[nextEntry.id] = nextEntry;
         this.setNextEntries(oldEntries);
     }
 

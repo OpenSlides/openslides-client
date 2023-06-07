@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
 import { Action } from 'src/app/gateways/actions';
@@ -49,55 +49,6 @@ export class ParticipantRepositoryService extends BaseMeetingRelatedRepository<V
             number
         }));
         return this.createAction<Identifiable>(UserAction.TOGGLE_PRESENCE_BY_NUMBER, payload).resolve() as any;
-    }
-
-    public async sendInvitationEmails(
-        users: Identifiable[],
-        meetingIds: Ids = [this.activeMeetingId!]
-    ): Promise<string> {
-        const response = await this.userRepo.sendInvitationEmails(users, meetingIds);
-
-        const numEmails = response.filter(email => email.sent).length;
-        const noEmails = response.filter(email => !email.sent);
-        let responseMessage: string;
-        if (numEmails === 0) {
-            responseMessage = this.translate.instant(`No emails were send.`);
-        } else if (numEmails === 1) {
-            responseMessage = this.translate.instant(`One email was send sucessfully.`);
-        } else {
-            responseMessage = this.translate.instant(`%num% emails were send sucessfully.`);
-            responseMessage = responseMessage.replace(`%num%`, numEmails.toString());
-        }
-
-        if (noEmails.length) {
-            responseMessage += ` `;
-
-            if (noEmails.length === 1) {
-                responseMessage += this.translate.instant(
-                    `The user %user% has no email, so the invitation email could not be send.`
-                );
-            } else {
-                responseMessage += this.translate.instant(
-                    `The users %user% have no email, so the invitation emails could not be send.`
-                );
-            }
-
-            // This one builds a username string like "user1, user2 and user3" with the full names.
-            const usernames = noEmails
-                .map(email => this.getViewModel(email.recipient_user_id))
-                .filter(user => !!user)
-                .map(user => user!.short_name);
-            let userString: string;
-            if (usernames.length > 1) {
-                const lastUsername = usernames.pop();
-                userString = usernames.join(`, `) + ` ` + this.translate.instant(`and`) + ` ` + lastUsername;
-            } else {
-                userString = usernames.join(`, `);
-            }
-            responseMessage = responseMessage.replace(`%user%`, userString);
-        }
-
-        return responseMessage;
     }
 
     public bulkAddGroupsToUsers(users: ViewUser[], groupIds: Id[]): Promise<void> {

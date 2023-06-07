@@ -11,6 +11,7 @@ import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -54,15 +55,16 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
     }
 
     public constructor(
+        private promptService: PromptService,
         operator: OperatorService,
         votingService: VotingService,
-        pollRepo: PollControllerService,
-        private promptService: PromptService,
         cd: ChangeDetectorRef,
-        private translate: TranslateService,
-        meetingSettingsService: MeetingSettingsService
+        pollRepo: PollControllerService,
+        meetingSettingsService: MeetingSettingsService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService);
+        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
     }
 
     public ngOnInit(): void {
@@ -108,6 +110,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
     }
 
     private defineVoteOptions(): void {
+        this.voteActions = [];
         if (this.poll) {
             if (this.poll.isMethodN) {
                 this.voteActions.push(voteOptions.No);
@@ -184,6 +187,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
     }
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
+        const value = this.voteRequestData[user.id].value;
         if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
             this.raiseError(this.translate.instant(`There is an error in your vote.`));
             return;
@@ -196,7 +200,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             this.cd.markForCheck();
 
             const votePayload = {
-                value: this.voteRequestData[user.id].value,
+                value: value,
                 user_id: user.id
             };
 
@@ -355,6 +359,11 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             }
             this.submitVote(user);
         }
+    }
+
+    protected override updatePoll() {
+        super.updatePoll();
+        this.defineVoteOptions();
     }
 
     private enableInputs(): void {

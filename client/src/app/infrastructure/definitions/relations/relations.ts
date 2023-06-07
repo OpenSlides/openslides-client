@@ -1,3 +1,5 @@
+import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
+import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
@@ -13,7 +15,7 @@ import { ViewAssignment, ViewAssignmentCandidate } from '../../../site/pages/mee
 import { ViewChatGroup, ViewChatMessage } from '../../../site/pages/meetings/pages/chat';
 import { HasAttachment, ViewMediafile } from '../../../site/pages/meetings/pages/mediafiles';
 import {
-    HasReferencedMotionsInRecommendationExtension,
+    HasReferencedMotionsInExtension,
     HasTags,
     ViewMotion,
     ViewMotionBlock,
@@ -52,7 +54,6 @@ const PROJECTABLE_VIEW_MODELS: ViewModelConstructor<BaseViewModel & Projectable>
     ViewMotionBlock,
     ViewAssignment,
     ViewAgendaItem,
-    ViewUser,
     ViewPoll,
     ViewProjectorMessage,
     ViewProjectorCountdown
@@ -161,19 +162,22 @@ export const RELATIONS: Relation[] = [
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `active_meetings`,
-        MField: `is_active_in_organization`
+        MField: `is_active_in_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `archived_meetings`,
-        MField: `is_archived_in_organization`
+        MField: `is_archived_in_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
         MViewModel: ViewMeeting,
         OField: `template_meetings`,
-        MField: `template_for_organization`
+        MField: `template_for_organization`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewOrganization,
@@ -295,6 +299,12 @@ export const RELATIONS: Relation[] = [
         structured: true,
         ownIdFieldDefaultAttribute: `active-meeting`
     },
+    ...makeM2O({
+        OViewModel: ViewUser,
+        MViewModel: ViewPollCandidate,
+        OField: `poll_candidates`,
+        MField: `user`
+    }),
     // ########## Committees
     ...makeM2O({
         OViewModel: ViewCommittee,
@@ -440,7 +450,7 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMediafile,
         OField: `mediafiles`,
         MField: `meeting`,
-        isFullList: true
+        isExclusiveList: true
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
@@ -575,6 +585,20 @@ export const RELATIONS: Relation[] = [
         MField: `meeting`,
         isFullList: true
     }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewPollCandidateList,
+        OField: `poll_candidate_lists`,
+        MField: `meeting`,
+        isFullList: true
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewPollCandidate,
+        OField: `poll_candidates`,
+        MField: `meeting`,
+        isFullList: true
+    }),
     ...makeO2O({
         AViewModel: ViewMeeting,
         BViewModel: ViewProjectorCountdown,
@@ -601,9 +625,9 @@ export const RELATIONS: Relation[] = [
     {
         ownViewModels: [ViewMeeting],
         foreignViewModel: ViewProjector,
-        ownField: `default_projector`,
-        ownIdField: `default_projector_$_id`,
-        many: false,
+        ownField: `default_projectors`,
+        ownIdField: `default_projector_$_ids`,
+        many: true,
         generic: false,
         structured: true
     },
@@ -769,11 +793,17 @@ export const RELATIONS: Relation[] = [
         MField: `recommendation`,
         OField: `motions`
     }),
-    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInRecommendationExtension>({
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
         viewModel: ViewMotion,
         possibleViewModels: [ViewMotion],
-        viewModelField: `recommendation_extension_reference_ids`,
-        possibleViewModelsField: `referenced_in_motion_recommendation_extension`
+        viewModelField: `state_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_state_extensions`
+    }),
+    ...makeGenericM2M<ViewMotion, HasReferencedMotionsInExtension>({
+        viewModel: ViewMotion,
+        possibleViewModels: [ViewMotion],
+        viewModelField: `recommendation_extension_references`,
+        possibleViewModelsField: `referenced_in_motion_recommendation_extensions`
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
@@ -799,7 +829,8 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewMotionChangeRecommendation,
         OViewModel: ViewMotion,
         MField: `motion`,
-        OField: `change_recommendations`
+        OField: `change_recommendations`,
+        isExclusiveList: true
     }),
     ...makeM2O({
         MViewModel: ViewMotion,
@@ -892,12 +923,33 @@ export const RELATIONS: Relation[] = [
         AField: `poll`,
         BField: `global_option`
     }),
-    ...makeGenericO2M({
-        OViewModel: ViewOption,
-        MPossibleViewModels: [ViewUser],
-        OViewModelField: `content_object`,
-        MPossibleViewModelsField: `options`
-    }),
+    // ViewOption -> ViewUser, ViewPollCandidateList
+    {
+        ownViewModels: [ViewOption],
+        foreignViewModelPossibilities: [ViewUser, ViewPollCandidateList, ViewMotion],
+        ownField: `content_object`,
+        many: false,
+        generic: true,
+        structured: false
+    },
+    // ViewUser -> ViewOption
+    {
+        ownViewModels: [ViewUser],
+        foreignViewModel: ViewOption,
+        ownField: `options`,
+        many: true,
+        generic: false,
+        structured: false
+    },
+    // ViewPollCandidateList -> ViewUser
+    {
+        ownViewModels: [ViewPollCandidateList],
+        foreignViewModel: ViewOption,
+        ownField: `option`,
+        many: false,
+        generic: false,
+        structured: false
+    },
     ...makeM2O({
         MViewModel: ViewVote,
         OViewModel: ViewOption,
@@ -1000,5 +1052,12 @@ export const RELATIONS: Relation[] = [
         many: true,
         generic: false,
         structured: false
-    }
+    },
+    // ########## PollCandidateList
+    ...makeM2O({
+        OViewModel: ViewPollCandidateList,
+        MViewModel: ViewPollCandidate,
+        OField: `poll_candidates`,
+        MField: `poll_candidate_list`
+    })
 ];

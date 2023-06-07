@@ -56,7 +56,7 @@
         <!-- Timestamp -->
         <ng-container matColumnDef="time">
             <mat-header-cell *matHeaderCellDef>{{ 'Timestamp' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let position">{{ getTimestamp(position) }}</mat-cell>
+            <mat-cell *matCellDef="let position">{{ position.timestamp | localizedDate }}</mat-cell>
         </ng-container>
 
         <!-- Info -->
@@ -78,7 +78,7 @@
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="getRowDef()"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: getRowDef()" (click)="onClickRow(row)"></mat-row>
+        <mat-row [ngClass]="{'links-disabled': !isSuperadmin}" *matRowDef="let row; columns: getRowDef()" (click)="onClickRow(row)"></mat-row>
     </mat-table>
 
     <mat-paginator [pageSizeOptions]="pageSizes"></mat-paginator>

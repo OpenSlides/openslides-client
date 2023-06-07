@@ -57,58 +57,7 @@ That might take a few minutes.
 The static files will be build in `openslides-client/client/dist`.
 
 # Developing the client
-
-This is an Angular project.
-The usage of Angular CLI is highly recommended to create components and services.
-See https://angular.io/guide/quickstart for details.
-
-## Building your developing tool chain in docker
-
-Get the code:
-
-`git clone git@github.com:OpenSlides/openslides-client.git` (but you will use your own fork of course)
-
-Change into the client:
-
-`cd openslides-client`
-
-Build the docker image with your tool chain:
-
-`docker build . -f Dockerfile.dev -t client-dev`
-
-Run the developing docker image:
-
-`docker run -it -v ${PWD}/client/src:/app/src -p 4200:4200 --rm client-dev`
-
-You should now have an Angular developing server using docker up and running on http://localhost:4201/.
-The app will automatically reload if you change any of the source files.
-
-To run angular and npm commands, you can access the docker image directly using:
-
-`docker run -it client-dev bash`
-
-If your editor likes to have a `node_modules` folder, you might want to copy it from your docker image, or run `npm install` in the clients "client" directory.
-
-## Building your developing tool chain manually
-
-Get the code:
-
-`git clone git@github.com:OpenSlides/openslides-client.git` (but you will use your own fork of course)
-
-Change into the client:
-
-`cd openslides-client/client`
-
-Install the npm dependencies:
-
-`npm install`
-
-Run the angular development server:
-
-`npm start`
-
-You should now have a native Angular development server up and running on http://localhost:4200/.
-The app will automatically reload if you change any of the source files.
+For further information about developing the OpenSlides client, refer to [the development readme](https://github.com/OpenSlides/openslides-client/blob/main/DEVELOPMENT.md).
 
 # For contributors
 
@@ -116,15 +65,7 @@ Generally, please work in your own fork, make branches and make a pull request i
 
 ## Commit messages
 
-Write your commit messages like they could appear in a change log.
-
-- Separate subject from body with a blank line
-- Limit the subject line to 50 characters
-- Capitalize the subject line
-- Do not end the subject line with a period
-- Use the imperative mood in the subject line
-- Wrap the body at 72 characters
-- Use the body to explain what and why vs. how
+See https://github.com/OpenSlides/OpenSlides/wiki/Development-organization#pull-request-titles-and-commit-messages.
 
 ## Code alignment
 

@@ -130,7 +130,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
      * Returns a general observalbe of all notify messages.
      */
     public getObservable(): Observable<NotifyResponse<any>> {
-        return this.notifySubject.asObservable();
+        return this.notifySubject;
     }
 
     /**
@@ -141,7 +141,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         if (!this.messageSubjects[name]) {
             this.messageSubjects[name] = new Subject<NotifyResponse<any>>();
         }
-        return this.messageSubjects[name].asObservable() as Observable<NotifyResponse<T>>;
+        return this.messageSubjects[name] as Observable<NotifyResponse<T>>;
     }
 
     /**
@@ -195,8 +195,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         const notify: NotifyRequest<T> = {
             name: data.name,
             message: data.message,
-            channel_id: this.channelId,
-            to_meeting: this.activeMeetingIdService.meetingId!
+            channel_id: this.channelId
         };
         if (data.toAll === true) {
             notify.to_all = true;
@@ -206,6 +205,9 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         }
         if (data.channels) {
             notify.to_channels = data.channels;
+        }
+        if (!(data.channels || data.toAll == true || data.users)) {
+            notify.to_meeting = this.activeMeetingIdService.meetingId!;
         }
         return notify;
     }

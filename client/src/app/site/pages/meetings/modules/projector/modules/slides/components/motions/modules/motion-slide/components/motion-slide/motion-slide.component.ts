@@ -19,8 +19,7 @@ import { MotionFormatService } from 'src/app/site/pages/meetings/pages/motions/s
 import { MotionLineNumberingService } from 'src/app/site/pages/meetings/pages/motions/services/common/motion-line-numbering.service';
 import { ViewMotionAmendedParagraph } from 'src/app/site/pages/meetings/pages/motions/view-models/view-motion-amended-paragraph';
 import { SlideData } from 'src/app/site/pages/meetings/pages/projectors/definitions';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { BaseScaleScrollSlideComponent } from '../../../../../../base/base-scale-scroll-slide-component';
 import { BaseMotionSlideComponent, MotionTitleInformation } from '../../../../base/base-motion-slide';
@@ -127,14 +126,21 @@ export class MotionSlideComponent
     public get recommendationLabel(): string {
         let recommendation = this.translate.instant(this.data.data.recommendation_label!);
         if (this.data.data.recommendation_extension) {
-            recommendation += ` ` + this.motionRepo.parseMotionPlaceholders(this.data.data.recommendation_extension);
+            recommendation +=
+                ` ` +
+                this.replaceReferencedMotions(
+                    this.data.data.recommendation_extension,
+                    this.data.data.recommendation_referenced_motions
+                );
         }
         return recommendation;
     }
 
     public textDivStyles: {
         width?: string;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'margin-top'?: string;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'font-size'?: string;
     } = {};
 
@@ -144,6 +150,12 @@ export class MotionSlideComponent
 
     private _submittersSubject = new BehaviorSubject<string[]>([]);
 
+    public get showText(): boolean {
+        return this._showText;
+    }
+
+    private _showText = false;
+
     public constructor(
         protected override translate: TranslateService,
         motionRepo: MotionControllerService,
@@ -152,10 +164,10 @@ export class MotionSlideComponent
         private changeRepo: MotionChangeRecommendationControllerService,
         private lineNumbering: LineNumberingService,
         private diff: MotionDiffService,
-        auService: AutoupdateService,
-        modelRequestBuilder: ModelRequestBuilderService
+        private meetingSettings: MeetingSettingsService
     ) {
-        super(translate, motionRepo, auService, modelRequestBuilder);
+        super(translate, motionRepo);
+        this.meetingSettings.get(`motions_enable_text_on_projector`).subscribe(val => (this._showText = val));
     }
 
     protected override setData(value: SlideData<MotionSlideData>): void {
@@ -172,11 +184,6 @@ export class MotionSlideComponent
             this.referencingMotions = value.data.recommendation_referencing_motions.sort((a, b) =>
                 a.number.localeCompare(b.number)
             );
-        }
-
-        if (value.data.recommendation_extension) {
-            this.addReferencedMotions(value.data.recommendation_extension);
-            this.loadReferencedMotions();
         }
 
         this.recalcUnifiedChanges();
@@ -198,7 +205,7 @@ export class MotionSlideComponent
         baseHtml = this.lineNumbering.insertLineNumbers({
             html: baseHtml,
             lineLength: this.lineLength,
-            firstLine: this.data.data.start_line_number
+            firstLine: this.data.data.start_line_number ?? 1
         });
         const baseParagraphs = this.lineNumbering.splitToParagraphs(baseHtml);
 
@@ -209,6 +216,9 @@ export class MotionSlideComponent
         return paragraphNumbers
             .map(paraNo => {
                 const origText = baseParagraphs[paraNo];
+                if (!origText || !amendment.amendment_paragraphs[paraNo]) {
+                    return null;
+                }
                 const diff = this.diff.diff(origText, amendment.amendment_paragraphs[paraNo]);
                 const affectedLines = this.diff.detectAffectedLineRange(diff);
 
@@ -224,6 +234,14 @@ export class MotionSlideComponent
                 return new AmendmentParagraphUnifiedChange(amendment, paraNo, affectedConsolidated, affectedLines);
             })
             .filter(x => x !== null) as AmendmentParagraphUnifiedChange[];
+    }
+
+    public getTextBasedAmendmentLines(): string {
+        return this.lineNumbering.insertLineNumbers({
+            html: this.data.data.text,
+            lineLength: this.lineLength,
+            firstLine: 1
+        });
     }
 
     /**
@@ -270,7 +288,7 @@ export class MotionSlideComponent
             changes,
             lineLength: this.lineLength,
             highlightedLine: this.highlightedLine,
-            firstLine: this.data.data.start_line_number || 1
+            firstLine: this.data.data.start_line_number ?? 1
         });
     }
 
@@ -451,6 +469,6 @@ export class MotionSlideComponent
     }
 
     public getSubmittersObservable(): Observable<string[]> {
-        return this._submittersSubject.asObservable();
+        return this._submittersSubject;
     }
 }

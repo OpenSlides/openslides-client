@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/c
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -97,16 +98,16 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
     /**
      * Determine label colors. Where they should come from is currently now know
      */
-    public labelColors: string[] = [`grey`, `red`, `green`, `lightblue`, `yellow`];
+    public labelColors: string[] = [_(`grey`), _(`red`), _(`green`), _(`lightblue`), _(`yellow`)];
 
     /**
      * Determines possible restrictions
      */
     public restrictions = [
-        { key: Restriction.motionsCanManage, label: `Can manage motions` },
-        { key: Restriction.motionsCanSeeInternal, label: `Can see motions in internal state` },
-        { key: Restriction.motionsCanManageMetadata, label: `Can manage motion metadata` },
-        { key: Restriction.motionsIsSubmitter, label: `Submitters` }
+        { key: Restriction.motionsCanManage, label: _(`Can manage motions`) },
+        { key: Restriction.motionsCanSeeInternal, label: _(`Can see motions in internal state`) },
+        { key: Restriction.motionsCanManageMetadata, label: _(`Can manage motion metadata`) },
+        { key: Restriction.motionsIsSubmitter, label: _(`Submitters`) }
     ] as RestrictionShape[];
 
     /**
@@ -137,25 +138,25 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Holds state permissions
      */
     private readonly _statePermissionsList = [
-        { name: `Recommendation label`, selector: `recommendation_label`, type: `input` },
-        { name: `Allow support`, selector: `allow_support`, type: `check` },
-        { name: `Allow create poll`, selector: `allow_create_poll`, type: `check` },
-        { name: `Allow submitter edit`, selector: `allow_submitter_edit`, type: `check` },
-        { name: `Allow forwarding of motions`, selector: `allow_motion_forwarding`, type: `check` },
-        { name: `Set number`, selector: `set_number`, type: `check` },
-        { name: `Set timestamp of creation`, selector: `set_created_timestamp`, type: `check` },
-        { name: `Show state extension field`, selector: `show_state_extension_field`, type: `check` },
+        { name: _(`Recommendation label`), selector: `recommendation_label`, type: `input` },
+        { name: _(`Allow support`), selector: `allow_support`, type: `check` },
+        { name: _(`Allow create poll`), selector: `allow_create_poll`, type: `check` },
+        { name: _(`Allow submitter edit`), selector: `allow_submitter_edit`, type: `check` },
+        { name: _(`Allow forwarding of motions`), selector: `allow_motion_forwarding`, type: `check` },
+        { name: _(`Set number`), selector: `set_number`, type: `check` },
+        { name: _(`Set timestamp of creation`), selector: `set_created_timestamp`, type: `check` },
+        { name: _(`Show state extension field`), selector: `show_state_extension_field`, type: `check` },
         {
-            name: `Show recommendation extension field`,
+            name: _(`Show recommendation extension field`),
             selector: `show_recommendation_extension_field`,
             type: `check`
         },
-        { name: `Show amendment in parent motion`, selector: `merge_amendment_into_final`, type: `amendment` },
-        { name: `Restrictions`, selector: `restrictions`, type: `restrictions` },
-        { name: `Label color`, selector: `css_class`, type: `color` },
-        { name: `Next states`, selector: `next_states_id`, type: `state` },
+        { name: _(`Show amendment in parent motion`), selector: `merge_amendment_into_final`, type: `amendment` },
+        { name: _(`Restrictions`), selector: `restrictions`, type: `restrictions` },
+        { name: _(`Label color`), selector: `css_class`, type: `color` },
+        { name: _(`Next states`), selector: `next_states_id`, type: `state` },
         {
-            name: `Submitter may set state to`,
+            name: _(`Submitter may set state to`),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`
         }
@@ -188,7 +189,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * @param state the selected workflow state
      */
     public onClickStateName(state: ViewMotionState): void {
-        this.openEditDialog(state.name, `Rename state`, ``, true).subscribe(result => {
+        this.openEditDialog(state.name, this.translate.instant(`Rename state`), ``, true).subscribe(result => {
             if (result) {
                 if (result.action === `update`) {
                     this.updateWorkflowStateName(result.value!, state);
@@ -222,7 +223,11 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
      * Opens a dialog to rename the workflow
      */
     public onEditWorkflowButton(): void {
-        this.openEditDialog(this.workflow.name, `Edit name`, `Please enter a new workflow name:`).subscribe(result => {
+        this.openEditDialog(
+            this.workflow.name,
+            this.translate.instant(`Edit name`),
+            this.translate.instant(`Please enter a new workflow name:`)
+        ).subscribe(result => {
             if (result && result.action === `update`) {
                 this.handleRequest(this.workflowRepo.update({ name: result.value! }, this.workflow).resolve());
             }

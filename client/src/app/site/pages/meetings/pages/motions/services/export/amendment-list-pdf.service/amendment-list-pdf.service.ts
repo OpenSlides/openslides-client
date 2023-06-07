@@ -27,7 +27,7 @@ export class AmendmentListPdfService {
     private renderDiffLines(amendment: ViewMotion): object {
         if (amendment.affectedAmendmentLines?.length) {
             const linesHtml = amendment.affectedAmendmentLines.map(line => line.text).join(`<br />[...]<br />`);
-            return this.htmlToPdfService.convertHtml(linesHtml);
+            return this.htmlToPdfService.convertHtml({ htmlText: linesHtml });
         }
         return {};
     }
@@ -43,7 +43,7 @@ export class AmendmentListPdfService {
             if (amendment.recommendation.show_recommendation_extension_field && amendment.recommendationExtension) {
                 recommendationText += ` ${this.motionService.getExtendedRecommendationLabel(amendment)}`;
             } else {
-                recommendationText += this.translate.instant(amendment.recommendation.recommendation_label);
+                recommendationText += amendment.recommendation.recommendation_label;
             }
         }
 

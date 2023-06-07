@@ -2,23 +2,9 @@ import { Identifiable } from 'src/app/domain/interfaces';
 
 import { CsvImportStatus } from './import-utils';
 
-export type ImportModelConfig<ToCreate> = Partial<ImportModel<ToCreate>> & {
-    model: ToCreate;
-    importTrackId: number;
-    afterImportFields?: { [field: string]: any };
-};
-
-export function createImportModel<ToCreate>(config: ImportModelConfig<ToCreate>): ImportModel<ToCreate> {
-    return new ImportModel(config);
-}
-
 export class ImportModel<ToCreate> implements Identifiable {
     public readonly id: number;
 
-    /**
-     * @deprecated: The `id` property is used as same value
-     */
-    public readonly importTrackId: number;
     public readonly afterImportFields: { [field: string]: any };
 
     public set newEntry(model: ToCreate) {
@@ -35,11 +21,10 @@ export class ImportModel<ToCreate> implements Identifiable {
     public duplicates: Partial<ToCreate>[];
     public hasDuplicates: boolean;
 
-    public constructor({ model, importTrackId, afterImportFields, ...config }: ImportModelConfig<ToCreate>) {
-        this.model = model;
-        this.id = importTrackId;
-        this.importTrackId = importTrackId;
-        this.afterImportFields = afterImportFields || [];
+    public constructor({ model, id, ...config }: Partial<ImportModel<ToCreate>>) {
+        this.model = model as ToCreate;
+        this.id = id;
+        this.afterImportFields = config.afterImportFields || [];
         this.errors = config.errors || [];
         this.hasDuplicates =
             typeof config.hasDuplicates === `boolean` ? config.hasDuplicates : !!config.duplicates?.length;

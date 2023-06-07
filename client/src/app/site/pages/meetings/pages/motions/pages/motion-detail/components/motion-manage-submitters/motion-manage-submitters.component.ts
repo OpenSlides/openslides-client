@@ -78,7 +78,7 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     ) {
         super();
 
-        this.editSubmitterObservable = this.editSubmitterSubject.asObservable();
+        this.editSubmitterObservable = this.editSubmitterSubject as Observable<Selectable[]>;
     }
 
     public ngOnInit(): void {

@@ -1,5 +1,6 @@
 import { environment } from 'src/environments/environment';
 
+import { ModelRequest } from '../domain/interfaces/model-request';
 import {
     ErrorDescription,
     ErrorType,
@@ -31,6 +32,11 @@ export class AutoupdateStreamPool {
     private _authTokenRefreshTimeout: any | null = null;
     private _updateAuthPromise: Promise<void> | undefined;
     private _waitingForUpdateAuthPromise: boolean = false;
+    private _disableCompression: boolean = false;
+
+    public get activeStreams(): AutoupdateStream[] {
+        return this.streams.filter(stream => stream.active);
+    }
 
     constructor(private endpoint: AutoupdateSetEndpointParams) {
         this.updateAuthentication();
@@ -47,11 +53,29 @@ export class AutoupdateStreamPool {
             this.subscriptions[subscription.id] = subscription;
         }
 
-        const stream = new AutoupdateStream(subscriptions, queryParams, this.endpoint, this.authToken);
+        const params = new URLSearchParams(queryParams);
+        if (this._disableCompression) {
+            params.delete(`compress`);
+        }
+
+        const stream = new AutoupdateStream(subscriptions, params, this.endpoint, this.authToken);
         this.streams.push(stream);
         this.connectStream(stream);
 
         return stream;
+    }
+
+    /**
+     * Resets fail counter and reconnect a stream
+     * @throws if stream not in pool
+     */
+    public reconnect(stream: AutoupdateStream, force: boolean = true): void {
+        if (!this.streams.includes(stream)) {
+            throw new Error(`Stream not found`);
+        }
+
+        stream.failedCounter = 0;
+        this.connectStream(stream, force);
     }
 
     /**
@@ -134,7 +158,7 @@ export class AutoupdateStreamPool {
      * @param queryParams
      * @param modelRequest
      */
-    public getMatchingSubscription(queryParams: string, modelRequest: Object): AutoupdateSubscription | null {
+    public getMatchingSubscription(queryParams: string, modelRequest: ModelRequest): AutoupdateSubscription | null {
         for (let stream of this.streams) {
             for (let subscription of stream.subscriptions) {
                 if (subscription.fulfills(queryParams, modelRequest)) {
@@ -185,6 +209,15 @@ export class AutoupdateStreamPool {
         await this._updateAuthPromise;
     }
 
+    public async disableCompression(): Promise<void> {
+        this._disableCompression = true;
+        for (let stream of this.streams) {
+            stream.queryParams.delete(`compress`);
+        }
+
+        this.reconnectAll(false);
+    }
+
     private setAuthToken(token: string | null): void {
         const lastUserId = this.currentUserId;
         this.authToken = token;
@@ -233,6 +266,8 @@ export class AutoupdateStreamPool {
             let params = new URLSearchParams(stream.queryParams);
             if (+params.get(`position`) === 0 && !params.get(`single`)) {
                 await this.handleError(stream, null);
+            } else {
+                this.removeStream(stream);
             }
         }
     }
@@ -317,14 +352,14 @@ export class AutoupdateStreamPool {
             await this.waitUntilEndpointHealthy();
         }
 
-        if (stream.failedConnects <= 3 && error?.reason !== ErrorType.CLIENT) {
+        if (stream.failedConnects <= POOL_CONFIG.RETRY_AMOUNT && error?.reason !== ErrorType.CLIENT) {
             if (error?.error.content?.type === `auth`) {
                 await this.updateAuthentication();
             }
 
             await this.connectStream(stream);
         } else if (
-            stream.failedConnects === 4 &&
+            stream.failedConnects === POOL_CONFIG.RETRY_AMOUNT + 1 &&
             !(error instanceof ErrorDescription) &&
             (isCommunicationError(error) || isCommunicationErrorWrapper(error)) &&
             stream.subscriptions.length > 1

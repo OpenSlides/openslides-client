@@ -1,12 +1,16 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { SettingsGroup } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import {
+    SettingsGroup,
+    SettingsItem
+} from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -73,7 +77,10 @@ export class MeetingSettingsGroupDetailComponent
      * Updates the specified settings item indicated by the given key.
      */
     public updateSetting(update: SettingsFieldUpdate): void {
-        this.changedSettings[update.key] = update.value;
+        const keys = Array.isArray(update.key) ? update.key : [update.key];
+        for (let i = 0; i < keys.length; i++) {
+            this.changedSettings[keys[i]] = update.value[i];
+        }
         this.calculateAutomaticFieldChanges(update);
         this.cd.markForCheck();
     }
@@ -129,18 +136,41 @@ export class MeetingSettingsGroupDetailComponent
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanges()) {
-            const title = this.translate.instant(`Do you really want to exit this page?`);
-            const content = this.translate.instant(`You made changes.`);
-            return await this.promptDialog.open(title, content);
+            return await this.promptDialog.discardChangesConfirmation();
         }
         return true;
+    }
+
+    public getDetailFieldValue(meeting: ViewMeeting, setting: SettingsItem): any {
+        const isArray = Array.isArray(setting.key);
+        if (setting.type === `daterange`) {
+            if (!isArray || setting.key.length < 2 || setting.key[0] === setting.key[1]) {
+                throw new Error(
+                    `Daterange settings must always cover two different setting keys (${setting.key.toString()})`
+                );
+            } else {
+                return [meeting[setting.key[0]], meeting[setting.key[1]]];
+            }
+        }
+        if (isArray) {
+            if (!setting.key.length) {
+                throw new Error(`Missing setting key`);
+            }
+            if (setting.key.length > 1) {
+                console.warn(`Additional setting keys for ${setting.key[0]} will be skipped.`);
+            }
+            return meeting[setting.key[0]];
+        }
+        return meeting[setting.key as keyof Settings];
     }
 
     /**
      * Updates the specified settings item indicated by the given key.
      */
     private calculateAutomaticFieldChanges(update: SettingsFieldUpdate): void {
-        const detailFields = this.settingsFields.filter(field => field.watchProperties?.includes(update.key));
+        const detailFields = this.settingsFields?.filter(field =>
+            (Array.isArray(update.key) ? update.key : [update.key]).some(key => field.watchProperties?.includes(key))
+        );
         detailFields.forEach(detailField => {
             const currentValue = detailField.currentValue;
             const changedValues = detailField.watchProperties.map(key => this.changedSettings[key]);

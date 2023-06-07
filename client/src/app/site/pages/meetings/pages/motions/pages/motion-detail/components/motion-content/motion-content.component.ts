@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, map, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Subscription } from 'rxjs';
 import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
 import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
@@ -11,6 +11,7 @@ import { Motion } from 'src/app/domain/models/motions/motion';
 import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { RawUser } from 'src/app/gateways/repositories/users';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
+import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
 import {
     ViewMotion,
     ViewMotionCategory,
@@ -20,10 +21,12 @@ import {
 import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-child.component';
+import { MotionTinyMceConfig } from '../../definitions/tinymce-config';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
 import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
@@ -62,6 +65,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     @Output()
     public validStateChanged = new EventEmitter<boolean>();
+
+    public tinyMceConfig = MotionTinyMceConfig;
 
     private finalEditMode = false;
 
@@ -139,6 +144,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         this.propagateChanges();
     }
 
+    public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
+
     private titleFieldUpdateSubscription: Subscription;
     private textFieldUpdateSubscription: Subscription;
 
@@ -149,6 +156,8 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
 
     private _editSubscriptions: Subscription[] = [];
 
+    private _motionNumbersSubject = new BehaviorSubject<string[]>([]);
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -158,9 +167,12 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         private route: ActivatedRoute,
         private cd: ChangeDetectorRef,
         private perms: MotionPermissionService,
-        private operator: OperatorService
+        private motionController: MotionControllerService
     ) {
         super(componentServiceCollector, translate, motionServiceCollector);
+        this.motionController
+            .getViewModelListObservable()
+            .subscribe(motions => this.updateMotionNumbersSubject(motions));
     }
 
     /**
@@ -171,6 +183,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     public onKeyDown(event: KeyboardEvent): void {
         if (event.key === `Enter` && event.shiftKey) {
             this.save.emit(this.contentForm.value);
+            this.updateMotionNumbersSubject();
         }
     }
 
@@ -404,6 +417,20 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
         return [];
     }
 
+    protected override onAfterInit(): void {
+        this.updateMotionNumbersSubject();
+    }
+
+    private updateMotionNumbersSubject(motions?: ViewMotion[]) {
+        this._motionNumbersSubject.next(
+            (motions ?? this.motionController.getViewModelList())
+                .filter(
+                    motion => motion.number !== this.motion?.number && (!motion.id || motion.id !== this.motion?.id)
+                )
+                .map(motion => motion.number)
+        );
+    }
+
     private initContentFormSubscription(): void {
         for (const subscription of this._editSubscriptions) {
             subscription.unsubscribe();
@@ -470,7 +497,10 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             parent_id: [],
             modified_final_version: [``],
             ...(this.canChangeMetadata && {
-                number: [``],
+                number: [
+                    ``,
+                    isUniqueAmong<string>(this._motionNumbersSubject, (a, b) => a === b, [``, null, undefined])
+                ],
                 agenda_create: [``],
                 agenda_type: [``]
             })

@@ -20,6 +20,7 @@ export class ParticipantPresenceComponent implements OnInit {
      * participant number has no unique valid user
      */
     public lastChangedUser: ViewUser | null = null;
+    public lastChangedUserPresent: boolean | null = null;
 
     /**
      * A message if an error is thrown when toggling the presence of a user.
@@ -48,6 +49,7 @@ export class ParticipantPresenceComponent implements OnInit {
         try {
             this.errorMsg = null;
             this.lastChangedUser = this.userRepo.getViewModelByNumber(number)!;
+            this.lastChangedUserPresent = !this.lastChangedUser?.isPresentInMeeting();
             await this.userRepo.togglePresenceByNumber(number);
         } catch (e: any) {
             this.errorMsg = _(e);

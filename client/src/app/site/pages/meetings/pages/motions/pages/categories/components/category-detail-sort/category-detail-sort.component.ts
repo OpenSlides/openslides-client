@@ -66,7 +66,7 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
      * @returns an observable for the {@link motionsSubject}
      */
     public get motionObservable(): Observable<ViewMotion[]> {
-        return this.motionsSubject.asObservable();
+        return this.motionsSubject;
     }
 
     /**
@@ -138,9 +138,7 @@ export class CategoryDetailSortComponent extends BaseMeetingComponent implements
      */
     public async canDeactivate(): Promise<boolean> {
         if (this.hasChanged) {
-            const title = this.translate.instant(`Do you really want to exit this page?`);
-            const content = this.translate.instant(`You made changes.`);
-            return await this.promptService.open(title, content);
+            return await this.promptService.discardChangesConfirmation();
         }
         return true;
     }

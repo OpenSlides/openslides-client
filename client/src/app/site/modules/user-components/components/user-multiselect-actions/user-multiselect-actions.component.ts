@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 @Component({
@@ -14,7 +15,7 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
     styleUrls: [`./user-multiselect-actions.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserMultiselectActionsComponent extends BaseUiComponent {
+export class UserMultiselectActionsComponent extends BaseComponent {
     @ViewChild(TemplateRef, { static: true })
     public implicitContent: TemplateRef<any>;
 
@@ -37,14 +38,15 @@ export class UserMultiselectActionsComponent extends BaseUiComponent {
     public selectedUsersChange = new EventEmitter<ViewUser[]>();
 
     public constructor(
-        private translate: TranslateService,
         private operator: OperatorService,
         private promptService: PromptService,
         private matSnackbar: MatSnackBar,
         private activeMeetingIdService: ActiveMeetingIdService,
-        public repo: UserControllerService
+        public repo: UserControllerService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super();
+        super(componentServiceCollector, translate);
     }
 
     /**
@@ -109,8 +111,4 @@ export class UserMultiselectActionsComponent extends BaseUiComponent {
     public deleteSelected(): void {
         this.deleting.emit();
     }
-
-    protected override raiseError = (message: string): void => {
-        this.matSnackbar.open(message, this.translate.instant(`OK`));
-    };
 }

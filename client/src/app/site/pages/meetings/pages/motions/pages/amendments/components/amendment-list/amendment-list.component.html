@@ -28,6 +28,7 @@
 </os-head-bar>
 
 <os-projectable-list
+    *ngIf="ready"
     [listObservableProvider]="amendmentRepo"
     [sortService]="amendmentSortService"
     [filterService]="amendmentFilterService"
@@ -42,6 +43,16 @@
         <div class="innerTable">
             <!-- number and line -->
             <div class="title-line one-line">
+                <!-- Is Favorite -->
+                <span *ngIf="motion.getPersonalNote()?.star" class="favorite-star">
+                    <mat-icon inline>star</mat-icon>
+                </span>
+
+                <!-- Has File -->
+                <span class="icon-prefix" *ngIf="motion.hasAttachments()">
+                    <mat-icon>attach_file</mat-icon>
+                </span>
+
                 <span>{{ motion.number }}</span>
                 <span *ngIf="getChangedLinesFromAmendment(motion)">
                     <span *ngIf="motion.number">&nbsp;&middot;&nbsp;</span>
@@ -89,7 +100,7 @@
     </div>
 
     <!-- Menu -->
-    <div *osScrollingTableCell="'menu'; row as motion" class="cell-slot fill">
+    <div *osScrollingTableCell="'menu'; row as motion; config: { width: 40 }" class="cell-slot fill">
         <button
             mat-icon-button
             [disabled]="isMultiSelect"

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
 import {
@@ -25,18 +26,18 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
      * Define the sort options
      */
     private userSortOptions: OsSortingOption<ViewUser>[] = [
-        { property: `full_name`, label: `Full name` },
-        { property: [`first_name`, `last_name`], label: `Given name` },
-        { property: [`last_name`, `first_name`], label: `Surname` },
-        { property: `is_present_in_meeting_ids`, label: `Presence` },
-        { property: `is_active`, label: `Is active` },
-        { property: `is_physical_person`, label: `Is a natural person` },
-        { property: `number`, label: `Participant number` },
-        { property: `structure_level`, label: `Structure level` },
-        { property: `voteWeight`, label: `Vote weight` },
+        { property: `full_name`, label: _(`Full name`) },
+        { property: [`first_name`, `last_name`], label: _(`Given name`) },
+        { property: [`last_name`, `first_name`], label: _(`Surname`) },
+        { property: `is_present_in_meeting_ids`, label: _(`Presence`) },
+        { property: `is_active`, label: _(`Is active`) },
+        { property: `is_physical_person`, label: _(`Is a natural person`) },
+        { property: `number`, label: _(`Participant number`) },
+        { property: `structure_level`, label: _(`Structure level`) },
+        { property: `voteWeight`, label: _(`Vote weight`) },
         { property: `comment` },
-        { property: `last_email_send`, label: `Last email sent` },
-        { property: `last_login`, label: `Last login` }
+        { property: `last_email_sent`, label: _(`Last email sent`) },
+        { property: `last_login`, label: _(`Last login`) }
     ];
 
     private _voteWeightEnabled: boolean;

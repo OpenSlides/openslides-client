@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Group } from 'src/app/domain/models/users/group';
 import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
+import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { GroupAction } from './group.action';
@@ -20,16 +19,10 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
     public override getFieldsets(): Fieldsets<Group> {
         const titleFields: (keyof Group)[] = [`name`];
         const listFields: (keyof Group)[] = titleFields.concat([`permissions`]);
-        const detailFields: (keyof Group)[] = listFields.concat([
-            `admin_group_for_meeting_id`,
-            `default_group_for_meeting_id`,
-            `weight`,
-            `user_ids`
-        ]);
         return {
             title: titleFields,
             list: listFields,
-            [DEFAULT_FIELDSET]: detailFields
+            ...super.getFieldsets()
         };
     }
 
@@ -40,7 +33,7 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
     public getNameForIds(...ids: number[]): string {
         return this.getSortedViewModelList()
             .filter(group => ids.includes(group.id))
-            .map(group => this.translate.instant(group.getTitle()))
+            .map(group => group.getTitle())
             .join(`, `);
     }
 
@@ -57,23 +50,12 @@ export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGro
         return this.sendActionToBackend(GroupAction.UPDATE, payload);
     }
 
-    public delete(group: Identifiable): Promise<void> {
-        return this.sendActionToBackend(GroupAction.DELETE, { id: group.id });
+    public bulkUpdate(...update: Partial<Group>[]): Promise<any> {
+        return this.createAction(GroupAction.UPDATE, update).resolve();
     }
 
-    /**
-     * Toggles the given permisson.
-     *
-     * @param group The group
-     * @param permission The permission to toggle
-     */
-    public async togglePermission(group: ViewGroup, permission: Permission): Promise<void> {
-        const payload = {
-            id: group.id,
-            permission,
-            set: !group.hasPermission(permission)
-        };
-        return this.sendActionToBackend(GroupAction.SET_PERMISSION, payload);
+    public delete(group: Identifiable): Promise<void> {
+        return this.sendActionToBackend(GroupAction.DELETE, { id: group.id });
     }
 
     private getCreatePayload(partialGroup: Partial<Group>): Partial<Group> {

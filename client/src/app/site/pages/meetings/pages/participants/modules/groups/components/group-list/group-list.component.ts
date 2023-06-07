@@ -5,7 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AppPermission, DisplayPermission, PERMISSIONS } from 'src/app/domain/definitions/permission.config';
+import { permissionChildren, permissionParents } from 'src/app/domain/definitions/permission-relations';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -18,7 +20,7 @@ import { GroupControllerService } from '../../services';
     templateUrl: `./group-list.component.html`,
     styleUrls: [`./group-list.component.scss`]
 })
-export class GroupListComponent extends BaseMeetingComponent implements OnInit {
+export class GroupListComponent extends BaseMeetingComponent implements OnInit, CanComponentDeactivate {
     /**
      * Holds all Groups
      */
@@ -40,9 +42,19 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
     public editGroup = false;
 
     /**
+     * All group ids that have been changed
+     */
+    public updatedGroupIds = new Set<number>();
+
+    /**
      * Store the group to edit
      */
     public selectedGroup: ViewGroup | null = null;
+
+    /**
+     * Holds the current value fo all permissions for all groups.
+     */
+    public currentPermissions: { [id: number]: { [perm: string]: boolean } } = {};
 
     @ViewChild(`groupForm`, { static: true })
     public groupForm: UntypedFormGroup | null = null;
@@ -57,6 +69,10 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
 
     public get permissionsPerApp(): AppPermission[] {
         return PERMISSIONS;
+    }
+
+    public get hasChanges(): boolean {
+        return this.updatedGroupIds.size > 0;
     }
 
     public constructor(
@@ -139,7 +155,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
      */
     public async deleteSelectedGroup(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this group?`);
-        const content = this.translate.instant(this.selectedGroup!.name);
+        const content = this.selectedGroup!.name;
         if (await this.promptService.open(title, content)) {
             await this.repo.delete(this.selectedGroup!);
             this.cancelEditing();
@@ -156,13 +172,27 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
         this.selectedGroup = null;
     }
 
-    /**
-     * Triggers when a permission was toggled
-     * @param viewGroup
-     * @param perm
-     */
-    public togglePermission(viewGroup: ViewGroup, perm: Permission): void {
-        this.repo.togglePermission(viewGroup, perm);
+    public async discardChanges(): Promise<void> {
+        if (await this.promptService.discardChangesConfirmation()) {
+            this.currentPermissions = {};
+            this.updateRowDef();
+            this.updatedGroupIds.clear();
+        }
+    }
+
+    public onChange(group: ViewGroup, permission: string, checked: boolean): void {
+        this.updatedGroupIds.add(group.id);
+        if (checked) {
+            // select all children which come with this permission
+            for (const child of permissionChildren[permission]) {
+                this.currentPermissions[group.id][child] = true;
+            }
+        } else {
+            // deselect all parents which need this permission
+            for (const parent of permissionParents[permission]) {
+                this.currentPermissions[group.id][parent] = false;
+            }
+        }
     }
 
     /**
@@ -173,16 +203,16 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
         this.headerRowDef = [`perm`];
         this.groups.forEach(viewGroup => {
             this.headerRowDef.push(`` + viewGroup.name);
+            // build currentPermissions matrix so the ngModel directive can access it
+            if (this.currentPermissions[viewGroup.id] === undefined) {
+                this.currentPermissions[viewGroup.id] = {};
+            }
+            Object.values(Permission).forEach(perm => {
+                if (this.currentPermissions[viewGroup.id][perm] === undefined) {
+                    this.currentPermissions[viewGroup.id][perm] = viewGroup.hasPermission(perm);
+                }
+            });
         });
-    }
-
-    /**
-     * Required to detect changes in *ngFor loops
-     *
-     * @param group Corresponding group that was changed
-     */
-    public trackGroupArray(group: ViewGroup): number {
-        return group.id;
     }
 
     /**
@@ -202,15 +232,38 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit {
     }
 
     /**
-     * Clicking escape while in #newGroupForm should toggle newGroup.
+     * Clicking escape while in #newGroupForm should cancel editing.
      */
     public keyDownFunction(event: KeyboardEvent): void {
         if (event.key === `Escape`) {
-            this.newGroup = false;
+            this.cancelEditing();
         }
     }
 
-    public hasGroupPerm(group: ViewGroup, perm: DisplayPermission): boolean {
-        return group.hasPermission(perm.value);
+    public getSaveAction(): () => Promise<void> {
+        return async () => {
+            // send all changes as a bulk update
+            const payload = [...this.updatedGroupIds].map(id => ({
+                id,
+                permissions: Object.entries(this.currentPermissions[id])
+                    .filter(([_, value]) => value)
+                    .map(([key]) => key as Permission)
+            }));
+            await this.repo.bulkUpdate(...payload).catch(this.raiseError);
+            this.updatedGroupIds.clear();
+        };
+    }
+
+    /**
+     * Function to open a prompt dialog,
+     * so the user will be warned if he has made changes and not saved them.
+     *
+     * @returns The result from the prompt dialog.
+     */
+    public async canDeactivate(): Promise<boolean> {
+        if (this.hasChanges) {
+            return await this.promptService.discardChangesConfirmation();
+        }
+        return true;
     }
 }

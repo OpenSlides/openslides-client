@@ -35,4 +35,8 @@ table {
 
 .scrollable-perm-matrix {
     overflow: auto;
+
+    .raised-cell {
+        z-index: 3 !important;
+    }
 }

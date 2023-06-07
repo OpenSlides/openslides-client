@@ -4,6 +4,7 @@
             *osOmlPerms="entry.permission!"
             mat-menu-item
             class="management-router-link"
+            [ngStyle]="getCustomStyleForEntry(entry)"
             (click)="closeSidenavOnMobile()"
             [routerLink]="entry.route"
             routerLinkActive="foreground-active"

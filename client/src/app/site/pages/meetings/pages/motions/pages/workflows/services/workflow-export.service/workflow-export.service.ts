@@ -59,7 +59,7 @@ export class WorkflowExportService {
             : this.translate.instant(`Workflow`);
         const fileName = isMultiple
             ? `${workflowTranslation}.json`
-            : `${workflowTranslation}-${this.translate.instant(workflows[0].name)}.json`;
+            : `${workflowTranslation}-${workflows[0].name}.json`;
         saveAs(blob, fileName);
     }
 }

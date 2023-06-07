@@ -1,8 +1,8 @@
 import { CML } from 'src/app/domain/definitions/organization-permission';
 import { User } from 'src/app/domain/models/users/user';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
-import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewSpeaker } from '../pages/agenda';
@@ -12,24 +12,31 @@ import { ViewMotion, ViewMotionSubmitter } from '../pages/motions';
 import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
-import { BaseProjectableViewModel } from './base-projectable-model';
+import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
+
+export enum DuplicateStatus {
+    None,
+    SameEmail,
+    SameName,
+    All
+}
 
 /**
  * Form control names that are editable for all users even if they have no permissions to manage users.
  */
 export const PERSONAL_FORM_CONTROLS = [`gender`, `username`, `email`, `about_me`, `pronoun`];
 
-export class ViewUser extends BaseProjectableViewModel<User> /* implements Searchable */ {
+export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public static COLLECTION = User.COLLECTION;
 
     public get user(): User {
         return this._model;
     }
 
-    public get isLastEmailSend(): boolean {
-        return !!this.last_email_send;
+    public get isLastEmailSent(): boolean {
+        return !!this.last_email_sent;
     }
 
     public get isLastLogin(): boolean {
@@ -83,6 +90,14 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
 
     public get meeting_ids(): Id[] {
         return this.user.meeting_ids || [];
+    }
+
+    public get isInActiveMeeting(): boolean {
+        return this.meetings.some(meeting => meeting.isActive);
+    }
+
+    public get isInArchivedMeeting(): boolean {
+        return this.meetings.some(meeting => meeting.isArchived);
     }
 
     // Will be set by the repository
@@ -253,15 +268,24 @@ export class ViewUser extends BaseProjectableViewModel<User> /* implements Searc
         return `/${this.getActiveMeetingId()}/users/${this.id}`;
     }
 
-    public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.user;
-    }
-
     public canVoteFor(user: ViewUser | null): boolean {
         if (!user) {
             return false;
         }
         return this.vote_delegations_from_ids().includes(user.id);
+    }
+
+    public getDuplicateStatusInMap(data: { name: Map<string, Id[]>; email: Map<string, Id[]> }): DuplicateStatus {
+        const sameNameIds = this.getName() ? data.name.get(this.getName()) : [];
+        const sameEmailIds = this.email ? data.email.get(this.email) : [];
+        let status: number = DuplicateStatus.None;
+        if (sameNameIds?.find(id => id !== this.id)) {
+            status = DuplicateStatus.SameName;
+        }
+        if (sameEmailIds?.find(id => id !== this.id)) {
+            status = status === DuplicateStatus.SameName ? DuplicateStatus.All : DuplicateStatus.SameEmail;
+        }
+        return status;
     }
 }
 type UserManyStructuredRelation<Result> = (arg?: Id) => Result[];
@@ -270,6 +294,7 @@ interface IUserRelations {
     committees: ViewCommittee[];
     meetings: ViewMeeting[];
     organization: ViewOrganization;
+    poll_candidates: ViewPollCandidate[];
     committee_management_levels: (arg?: CML) => ViewCommittee[];
     groups: UserManyStructuredRelation<ViewGroup>;
     speakers: UserManyStructuredRelation<ViewSpeaker>;

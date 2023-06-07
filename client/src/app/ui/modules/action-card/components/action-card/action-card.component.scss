@@ -33,30 +33,30 @@
 
     mat-card-content {
         padding: 15px 15px;
-        word-wrap: break-word;
+        // word-wrap: break-word;
 
-        .content {
-            &.collapsed {
-                max-height: 76px;
-                overflow: hidden;
-                position: relative;
-                &::after {
-                    content: '';
-                    position: absolute;
-                    top: 25px;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                }
-            }
-        }
+        // .content {
+        //     &.collapsed {
+        //         max-height: 76px;
+        //         overflow: hidden;
+        //         position: relative;
+        //         &::after {
+        //             content: '';
+        //             position: absolute;
+        //             top: 25px;
+        //             bottom: 0;
+        //             left: 0;
+        //             right: 0;
+        //         }
+        //     }
+        // }
 
-        .show-entire-text {
-            text-align: end;
-            margin-top: 4px;
-            a {
-                cursor: pointer;
-            }
-        }
+        // .show-entire-text {
+        //     text-align: end;
+        //     margin-top: 4px;
+        //     a {
+        //         cursor: pointer;
+        //     }
+        // }
     }
 }

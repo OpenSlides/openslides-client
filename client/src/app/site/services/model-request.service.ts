@@ -15,6 +15,8 @@ export interface SubscribeToConfig {
     isDelayed?: boolean;
 }
 
+export const SUBSCRIPTION_SUFFIX = `:subscription`;
+
 @Injectable({
     providedIn: `root`
 })
@@ -75,6 +77,11 @@ export class ModelRequestService {
         return await this._modelSubscriptionMap[subscriptionName].receivedData;
     }
 
+    public async fetch({ modelRequest, subscriptionName }: SubscribeToConfig): Promise<ModelData> {
+        const request = await this.modelRequestBuilder.build(modelRequest);
+        return await this.autoupdateService.single(request, `${subscriptionName}:single`);
+    }
+
     private async makeSubscription({
         modelRequest,
         subscriptionName,
@@ -85,7 +92,7 @@ export class ModelRequestService {
             const request = await this.modelRequestBuilder.build(modelRequest);
             const modelSubscription = await this.autoupdateService.subscribe(
                 request,
-                `${subscriptionName}:subscription`
+                `${subscriptionName}${SUBSCRIPTION_SUFFIX}`
             );
             this._modelSubscriptionMap[subscriptionName] = modelSubscription;
             if (hideWhen) {

@@ -1,20 +1,25 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { MeetingCollectionMapperService } from 'src/app/site/pages/meetings/services/meeting-collection-mapper.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { Projectable, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { GridTileDimension } from 'src/app/ui/modules/grid';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
+import { hasListOfSpeakers, ViewListOfSpeakers } from '../../../../../agenda';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
@@ -66,6 +71,21 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      */
     public editQueue = false;
 
+    public get hasSlide(): boolean {
+        return !!this.projector.nonStableCurrentProjections;
+    }
+
+    public get currentProjectionIsLoS(): boolean {
+        for (let projection of this.projector.nonStableCurrentProjections) {
+            if (hasListOfSpeakers(projection.content_object)) {
+                return false;
+            } else if (projection.content_object.collection === `list_of_speakers`) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private _projectorId: Id | null = null;
 
     private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
@@ -85,7 +105,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         private route: ActivatedRoute,
         private durationService: DurationService,
         private promptService: PromptService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private meetingCollectionMapper: MeetingCollectionMapperService
     ) {
         super(componentServiceCollector, translate);
 
@@ -125,7 +146,16 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     /**
      * Handler to set the selected projector as the meeting reference projector
      */
-    public setProjectorAsReference(): void {
+    public async setProjectorAsReference(): Promise<void> {
+        if (this.projector.is_internal) {
+            const title = _(`Warning: This projector will be set to visible`);
+            const text = _(
+                `This projector is currently internal. Selecting such projectors as reference projectors will automatically set them to visible. Do you really want to do this?`
+            );
+            if (!(await this.promptService.open(title, text))) {
+                return;
+            }
+        }
         this.repo.setReferenceProjector(this.projector);
     }
 
@@ -189,6 +219,10 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.repo.projectPreview(projection);
     }
 
+    public getProjectPreviewFunction(projection: ViewProjection): () => void {
+        return () => this.projectPreview(projection);
+    }
+
     public unprojectCurrent(projection: ViewProjection): void {
         this.repo.toggle(projection.getProjectionBuildDescriptor(), [this.projector!]);
     }
@@ -201,8 +235,31 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.currentListOfSpeakersSlideService.toggleOn(this.projector, overlay);
     }
 
+    public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
+        return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    }
+
+    public getCurrentProjectionLoSToggleBuildDesc(): ProjectionBuildDescriptor | Projectable | null {
+        try {
+            for (let projection of this.projector.nonStableCurrentProjections) {
+                if (hasListOfSpeakers(projection.content_object)) {
+                    return projection.content_object.list_of_speakers ?? null;
+                } else if (projection.content_object.collection === `list_of_speakers`) {
+                    return (this.meetingCollectionMapper.getViewModelByFqid(
+                        (projection.content_object as ViewListOfSpeakers).content_object_id
+                    ) ?? null) as BaseViewModel<any> & Projectable;
+                }
+            }
+        } catch (e) {}
+        return null;
+    }
+
     public isChyronProjected(): boolean {
         return this.currentSpeakerChyronService.isProjectedOn(this.projector);
+    }
+
+    public getChyronBuildDesc(): ProjectionBuildDescriptor {
+        return this.currentSpeakerChyronService.getProjectionBuildDescriptor();
     }
 
     public toggleChyron(): void {

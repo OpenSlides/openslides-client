@@ -130,10 +130,10 @@
             <span>{{ getOmlVerboseName(user.organization_management_level) | translate }}</span>
         </div>
 
-        <div *ngIf="user?.isLastEmailSend">
+        <div *ngIf="user?.isLastEmailSent">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
-                <span>{{ user.last_email_send | localizedDate }}</span>
+                <span>{{ user.last_email_sent | localizedDate }}</span>
             </div>
         </div>
         <div>
@@ -209,7 +209,7 @@
     </button>
     <ng-container *osOmlPerms="OML.can_manage_users">
         <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'meetings']">
-            <mat-icon>auto_awesome_mosaic</mat-icon>
+            <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </button>
         <!-- invitation email -->

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -22,13 +23,14 @@ import { AgendaItemControllerService } from '../../../../../../services';
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
 import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
 import { TopicControllerService } from '../../../../services/topic-controller.service';
+import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pdf.service';
 
 @Component({
     selector: `os-topic-detail`,
     templateUrl: `./topic-detail.component.html`,
     styleUrls: [`./topic-detail.component.scss`]
 })
-export class TopicDetailComponent extends BaseMeetingComponent {
+export class TopicDetailComponent extends BaseMeetingComponent implements OnInit {
     public readonly COLLECTION = ViewTopic.COLLECTION;
 
     /**
@@ -88,7 +90,9 @@ export class TopicDetailComponent extends BaseMeetingComponent {
         private itemRepo: AgendaItemControllerService,
         private pollDialog: TopicPollDialogService,
         private topicPollService: TopicPollService,
-        private pollController: PollControllerService
+        private pollController: PollControllerService,
+        private topicPdfService: TopicPdfService,
+        private route: ActivatedRoute
     ) {
         super(componentServiceCollector, translate);
         this.createForm();
@@ -98,6 +102,17 @@ export class TopicDetailComponent extends BaseMeetingComponent {
             .subscribe(isEnabled => (this._isEVotingEnabled = isEnabled));
 
         this.itemObserver = this.itemRepo.getViewModelListObservable();
+    }
+
+    public ngOnInit(): void {
+        this.route.queryParams.pipe(filter(params => params[`parent`])).subscribe(params => {
+            if (!this.topicForm) {
+                this.createForm();
+            }
+            if (Number(params[`parent`])) {
+                this.topicForm!.patchValue({ agenda_parent_id: Number(params[`parent`]) });
+            }
+        });
     }
 
     /**
@@ -263,6 +278,10 @@ export class TopicDetailComponent extends BaseMeetingComponent {
     public async updateTopic(): Promise<void> {
         await this.repo.update(this.topicForm!.value, this.topic!);
         this.setEditMode(false);
+    }
+
+    public onDownloadPdf() {
+        this.topicPdfService.exportSingleTopic(this.topic);
     }
 
     /**

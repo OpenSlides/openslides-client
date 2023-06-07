@@ -1,0 +1,19 @@
+:host {
+    width: 100%;
+}
+
+.wait-for-action-banner {
+    background: yellow;
+
+    span,
+    a {
+        padding: 2px;
+        color: #000000;
+        background: yellow;
+    }
+
+    a {
+        cursor: pointer;
+        font-weight: bold;
+    }
+}

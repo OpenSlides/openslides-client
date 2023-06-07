@@ -156,7 +156,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         } catch (e: any) {
             this.isWaitingOnLogin = false;
             // this.spinnerService.hide();
-            this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${e.message}`;
+            this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${this.translate.instant(e.message)}`;
         }
     }
 
@@ -180,7 +180,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         const protocol = (<any>performance.getEntriesByType(`navigation`)[0]).nextHopProtocol;
         if (location.protocol === `http:`) {
             this.raiseWarning(this.translate.instant(HTTP_WARNING));
-        } else if (protocol !== `h2` && protocol !== `h3`) {
+        } else if (protocol && protocol !== `h2` && protocol !== `h3`) {
             this.raiseWarning(this.translate.instant(HTTP_H1_WARNING));
         }
     }

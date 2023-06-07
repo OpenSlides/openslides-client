@@ -1,15 +1,23 @@
-import { ChangeDetectorRef, Directive, Input } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { IdentifiedVotingData, PollPropertyVerbose, VoteValue, VotingData } from 'src/app/domain/models/poll';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import {
+    IdentifiedVotingData,
+    PollContentObject,
+    PollPropertyVerbose,
+    VoteValue,
+    VotingData
+} from 'src/app/domain/models/poll';
+import { BaseComponent } from 'src/app/site/base/base.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
+import { VoteControllerService } from '../services/vote-controller.service';
 import { VotingProhibition, VotingService } from '../services/voting.service';
 
 export interface VoteOption {
@@ -20,11 +28,11 @@ export interface VoteOption {
 }
 
 @Directive()
-export abstract class BasePollVoteComponent<C extends BaseViewModel = any> extends BaseUiComponent {
+export abstract class BasePollVoteComponent<C extends PollContentObject = any> extends BaseComponent {
     @Input()
     public set poll(value: ViewPoll<C>) {
         this._poll = value;
-        this.setupHasVotedSubscription();
+        this.updatePoll();
     }
 
     public get poll(): ViewPoll<C> {
@@ -61,20 +69,29 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     private _delegationsMap: { [userId: number]: ViewUser } = {};
     private _canVoteForSubjectMap: { [userId: number]: BehaviorSubject<boolean> } = {};
 
+    private voteRepo = inject(VoteControllerService);
+
     public constructor(
         operator: OperatorService,
         protected votingService: VotingService,
         protected cd: ChangeDetectorRef,
         private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        componentServiceCollector: ComponentServiceCollectorService,
+        translate: TranslateService
     ) {
-        super();
+        super(componentServiceCollector, translate);
         this.subscriptions.push(
             operator.userObservable.pipe(debounceTime(50)).subscribe(user => {
                 if (user) {
                     this.user = user;
                     this.delegations = user.vote_delegations_from();
                     this.createVotingDataObjects();
+
+                    for (const key of Object.keys(this._canVoteForSubjectMap)) {
+                        this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
+                    }
+
                     this.cd.markForCheck();
                     this._isReady = true;
                 }
@@ -128,9 +145,20 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
         }
     }
 
+    protected updatePoll(): void {
+        this.setupHasVotedSubscription();
+    }
+
     private setupHasVotedSubscription(): void {
         this.subscriptions.push(
-            this.poll.hasVotedObservable.subscribe(() => {
+            this.voteRepo.subscribeVoted(this.poll).subscribe(() => {
+                if (this.user) {
+                    this.alreadyVoted[this.user.id] = this.poll.hasVoted;
+                    if (this.delegations) {
+                        this.setupDelegations();
+                    }
+                }
+
                 for (const key of Object.keys(this._canVoteForSubjectMap)) {
                     this._canVoteForSubjectMap[+key].next(this.canVote(this._delegationsMap[+key]));
                 }
@@ -141,9 +169,9 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
     private setupDelegations(): void {
         for (const delegation of this.delegations) {
             this._delegationsMap[delegation.id] = delegation;
+            this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
             if (!this.voteRequestData[delegation.id]) {
                 this.voteRequestData[delegation.id] = { value: {} } as VotingData;
-                this.alreadyVoted[delegation.id] = this.poll.hasVotedForDelegations(delegation.id);
                 this.deliveringVote[delegation.id] = false;
             }
         }
@@ -151,7 +179,10 @@ export abstract class BasePollVoteComponent<C extends BaseViewModel = any> exten
 
     private canVote(user: ViewUser = this.user): boolean {
         return (
-            this.votingService.canVote(this.poll, user) && !this.isDeliveringVote(user) && !this.hasAlreadyVoted(user)
+            this.votingService.canVote(this.poll, user) &&
+            !this.isDeliveringVote(user) &&
+            !this.hasAlreadyVoted(user) &&
+            this.hasAlreadyVoted(user) !== undefined
         );
     }
 }

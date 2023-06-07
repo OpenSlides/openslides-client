@@ -50,9 +50,19 @@
 
                 <ng-template #input ngProjectAs="[matInput]">
                     <input
+                        *ngIf="setting.type === 'email'"
+                        matInput
+                        osTrimOnPaste
+                        formControlName="value"
+                        [value]="internalValue"
+                        [errorStateMatcher]="matcher"
+                        [type]="formType(setting.type!)"
+                    />
+                    <input
+                        *ngIf="setting.type !== 'email'"
                         matInput
                         formControlName="value"
-                        [value]="translatedValue"
+                        [value]="internalValue"
                         [errorStateMatcher]="matcher"
                         [type]="formType(setting.type!)"
                     />
@@ -76,7 +86,7 @@
                             rows="10"
                             matInput
                             placeholder="{{ setting.label | translate }}"
-                            [value]="translatedValue"
+                            [value]="internalValue"
                         ></textarea>
                         <span matSuffix>
                             <mat-icon pull="right" class="red-warning-text" *ngIf="updateSuccessIcon">
@@ -108,6 +118,17 @@
                             <ngx-material-timepicker #timepicker></ngx-material-timepicker>
                         </mat-form-field>
                     </div>
+                </div>
+
+                <!-- daterange -->
+                <div *ngIf="setting.type === 'daterange'">
+                    <os-daterangepicker
+                        formControlName="daterange"
+                        [error]="error"
+                        [title]="setting.label"
+                        [hintText]="setting.helpText"
+                        [showUpdateSuccessIcon]="updateSuccessIcon"
+                    ></os-daterangepicker>
                 </div>
 
                 <!-- The editor -->

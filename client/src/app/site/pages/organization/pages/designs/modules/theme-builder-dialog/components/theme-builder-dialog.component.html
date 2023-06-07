@@ -1,5 +1,5 @@
 <div class="theme-builder-dialog-title">
-    <h2 mat-dialog-title>{{ 'Customize design' | translate }}</h2>
+    <h2 mat-dialog-title>{{ 'Color set' | translate }}</h2>
     <button mat-icon-button [mat-dialog-close]="null">
         <mat-icon>close</mat-icon>
     </button>
@@ -21,7 +21,7 @@
                         <os-color-form-field
                             title="{{ title | translate }}"
                             [formControlName]="createFormControlName(palette, '500')"
-                            (reset)="resetField(palette)"
+                            (resetted)="resetField(palette)"
                         ></os-color-form-field>
                     </div>
                 </div>
@@ -29,15 +29,56 @@
 
             <ng-template
                 [ngTemplateOutlet]="collapsingField"
-                [ngTemplateOutletContext]="{ palette: 'primary', title: 'Primary color' }"
+                [ngTemplateOutletContext]="{ palette: 'primary', title: 'Primary color' | translate }"
             ></ng-template>
             <ng-template
                 [ngTemplateOutlet]="collapsingField"
-                [ngTemplateOutletContext]="{ palette: 'accent', title: 'Accent color' }"
+                [ngTemplateOutletContext]="{ palette: 'accent', title: 'Accent color' | translate }"
             ></ng-template>
             <ng-template
                 [ngTemplateOutlet]="collapsingField"
-                [ngTemplateOutletContext]="{ palette: 'warn', title: 'Warn color' }"
+                [ngTemplateOutletContext]="{ palette: 'warn', title: 'Warn color' | translate }"
+            ></ng-template>
+        </div>
+        <div class="flex-vertical-center">
+            <div>
+                <div>
+                    <os-color-form-field
+                        title="{{ 'Global headbar color' | translate }}"
+                        formControlName="headbar"
+                        [defaultDisplayColor]="getDefaultColor('headbar')"
+                        (resetted)="resetField('headbar')"
+                    ></os-color-form-field>
+                </div>
+            </div>
+        </div>
+        <h3 translate>Voting colors</h3>
+        <div class="flex-vertical-center">
+            <!-- Template to streamline all the poll color forms -->
+            <ng-template #pollColorField let-place="place" let-title="title">
+                <div>
+                    <div>
+                        <os-color-form-field
+                            title="{{ title | translate }}"
+                            [formControlName]="place"
+                            [defaultDisplayColor]="getDefaultColor(place)"
+                            (resetted)="resetField(place)"
+                        ></os-color-form-field>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template
+                [ngTemplateOutlet]="pollColorField"
+                [ngTemplateOutletContext]="{ place: 'yes', title: 'Yes' }"
+            ></ng-template>
+            <ng-template
+                [ngTemplateOutlet]="pollColorField"
+                [ngTemplateOutletContext]="{ place: 'no', title: 'No' }"
+            ></ng-template>
+            <ng-template
+                [ngTemplateOutlet]="pollColorField"
+                [ngTemplateOutletContext]="{ place: 'abstain', title: 'Abstain' }"
             ></ng-template>
         </div>
     </div>

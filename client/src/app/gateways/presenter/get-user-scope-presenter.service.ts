@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Id } from 'src/app/domain/definitions/key-types';
+import { UserScope } from 'src/app/site/services/user.service';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
-
-enum UserScope {
-    MEETING = `meeting`,
-    COMMITTEE = `committee`,
-    ORGANIZATION = `organization`
-}
 
 interface GetUserScopePresenterPayload {
     user_ids: Id[];

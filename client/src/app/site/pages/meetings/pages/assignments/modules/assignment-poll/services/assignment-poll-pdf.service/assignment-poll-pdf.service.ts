@@ -5,6 +5,7 @@ import {
     AbstractPollData,
     BasePollPdfService
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
+import { PollKeyVerbosePipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
@@ -13,6 +14,8 @@ import { MediaManageService } from 'src/app/site/pages/meetings/services/media-m
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
+import { ViewAssignment } from '../../../../view-models';
+import { AssignmentPollService } from '../assignment-poll.service';
 import { AssignmentPollServiceModule } from '../assignment-poll-service.module';
 
 @Injectable({
@@ -25,10 +28,21 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         activeMeetingService: ActiveMeetingService,
         mediaManageService: MediaManageService,
         pdfService: MeetingPdfExportService,
-        private translate: TranslateService,
-        private assignmentRepo: AssignmentControllerService
+        protected override translate: TranslateService,
+        private assignmentRepo: AssignmentControllerService,
+        pollService: AssignmentPollService,
+        pollKeyVerbose: PollKeyVerbosePipe
     ) {
-        super(meetingSettingsService, userRepo, activeMeetingService, mediaManageService, pdfService);
+        super(
+            meetingSettingsService,
+            userRepo,
+            activeMeetingService,
+            mediaManageService,
+            pdfService,
+            translate,
+            pollService,
+            pollKeyVerbose
+        );
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
             .subscribe(count => (this.ballotCustomCount = count));
@@ -55,43 +69,21 @@ export class AssignmentPollPdfService extends BasePollPdfService {
             title = assignment.getTitle();
         }
         if (!subtitle) {
-            subtitle = ``;
-        }
-        if (assignment.polls.length > 1) {
-            subtitle = `${this.translate.instant(`Ballot`)} ${assignment.polls.length} ${subtitle}`;
+            subtitle = poll.getTitle();
         }
         if (subtitle.length > 90) {
             subtitle = subtitle.substring(0, 90) + `...`;
         }
-        let rowsPerPage = 1;
-        if (poll.pollmethod === PollMethod.Y) {
-            if (poll.options.length <= 2) {
-                rowsPerPage = 4;
-            } else if (poll.options.length <= 5) {
-                rowsPerPage = 3;
-            } else if (poll.options.length <= 10) {
-                rowsPerPage = 2;
-            } else {
-                rowsPerPage = 1;
-            }
-        } else {
-            if (poll.options.length <= 2) {
-                rowsPerPage = 4;
-            } else if (poll.options.length <= 3) {
-                rowsPerPage = 3;
-            } else if (poll.options.length <= 7) {
-                rowsPerPage = 2;
-            } else {
-                // up to 15 candidates
-                rowsPerPage = 1;
-            }
-        }
+        let rowsPerPage = this.getRowsPerPage(poll);
         const sheetEnd = Math.floor(417 / rowsPerPage);
         this.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: sheetEnd, title, subtitle, poll }),
-            fileName,
-            this.logoUrl
+            fileName
         );
+    }
+
+    protected getPollResultFileNamePrefix(poll: ViewPoll): string {
+        return (poll.content_object as ViewAssignment)?.getTitle();
     }
 
     /**
@@ -113,7 +105,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
                         this.getTitle(data.title),
                         this.getSubtitle(data.subtitle),
                         this.createPollHint(data.poll),
-                        this.createCandidateFields(data.poll)
+                        this.createOptionFields(data.poll)
                     ],
                     margin: [0, 0, 0, 0]
                 }
@@ -121,14 +113,19 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         };
     }
 
-    private createCandidateFields(poll: ViewPoll): object {
-        const candidates = poll.options.sort((a, b) => a.weight - b.weight);
-        const resultObject = candidates.map(cand => {
-            const candidateName = cand.content_object?.full_name;
-            if (candidateName) {
+    private createOptionFields(poll: ViewPoll): object {
+        const options = poll.options.sort((a, b) => a.weight - b.weight);
+        const resultObject = options.map(opt => {
+            let optionName = ``;
+            if (opt.isListOption) {
+                optionName = this.translate.instant(opt.content_object?.getTitle() ?? ``);
+            } else {
+                optionName = opt.content_object?.full_name;
+            }
+            if (optionName) {
                 return poll.pollmethod === PollMethod.Y
-                    ? this.createBallotOption(candidateName)
-                    : this.createYNBallotEntry(candidateName, poll.pollmethod);
+                    ? this.createBallotOption(optionName)
+                    : this.createYNBallotEntry(optionName, poll.pollmethod);
             } else {
                 throw new Error(this.translate.instant(`This ballot contains deleted users.`));
             }
@@ -165,7 +162,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         return [
             {
                 text: option,
-                margin: [40, 10, 0, 0]
+                margin: [21, 10, 0, 0]
             },
             {
                 width: `auto`,

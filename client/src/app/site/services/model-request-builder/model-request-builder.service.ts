@@ -1,4 +1,11 @@
 import { Injectable } from '@angular/core';
+import {
+    FieldDescriptor,
+    Fields,
+    GenericRelationFieldDecriptor,
+    RelationFieldDescriptor,
+    StructuredFieldDecriptor
+} from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Field, Id } from '../../../domain/definitions/key-types';
 import { BaseModel } from '../../../domain/models/base/base-model';
@@ -6,13 +13,6 @@ import { Relation } from '../../../infrastructure/definitions/relations';
 import { Deferred } from '../../../infrastructure/utils/promises';
 import { fillTemplateValueInTemplateField } from '../../../infrastructure/utils/transform-functions';
 import { BaseViewModel, ViewModelConstructor } from '../../base/base-view-model';
-import {
-    FieldDescriptor,
-    Fields,
-    GenericRelationFieldDecriptor,
-    RelationFieldDescriptor,
-    StructuredFieldDecriptor
-} from '../autoupdate';
 import { CollectionMapperService } from '../collection-mapper.service';
 import { RelationManagerService } from '../relation-manager.service';
 import { ModelRequestObject } from '.';
@@ -34,6 +34,7 @@ export interface BaseSimplifiedModelRequest<M = any> {
     fieldset?: Fieldset<M>;
     /**
      * Additional fields to be loaded. They will never be followed.
+     * @deprecated
      */
     additionalFields?: AdditionalField[];
 }
@@ -78,6 +79,8 @@ function isAllStructuredFields<M>(obj: any): obj is AllStructuredFields<M> {
 
 export interface Follow<M = any> extends BaseSimplifiedModelRequest<M> {
     idField: IdField<M> | SpecificStructuredField<M>;
+    isFullList?: boolean | undefined;
+    isExclusiveList?: boolean | undefined;
 }
 
 export type AdditionalField<M = any> = IdField<M> | SpecificStructuredField<M> | AllStructuredFields<M>;
@@ -85,6 +88,7 @@ export type AdditionalField<M = any> = IdField<M> | SpecificStructuredField<M> |
 interface DescriptorResponse<T extends FieldDescriptor> {
     descriptor: T;
     collectionsToFullListUpdate: Collection[];
+    collectionsToExclusiveListUpdate: Collection[];
 }
 
 export interface Fieldsets<M extends BaseModel> {
@@ -155,6 +159,10 @@ export class ModelRequestBuilderService {
     private addDataFields(modelRequestObject: ModelRequestObject): void {
         const fieldset = modelRequestObject.simplifiedRequest.fieldset || DEFAULT_FIELDSET;
         let fieldsetFields: AdditionalField[];
+        if (!modelRequestObject.simplifiedRequest.fieldset) {
+            console.warn(`Non explicit use of default fieldset`, [modelRequestObject], modelRequestObject.collection);
+        }
+
         if (typeof fieldset === `string`) {
             const registeredFieldsets = this.fieldsets[modelRequestObject.collection];
             if (!registeredFieldsets || !registeredFieldsets[fieldset]) {
@@ -167,11 +175,14 @@ export class ModelRequestBuilderService {
             fieldsetFields = fieldset;
         }
 
-        fieldsetFields.push(`id`); // Important: The id is used to detect, if a model was deleted, because this issues
-        // an autoupdate with id=null
-
         if (modelRequestObject.simplifiedRequest.additionalFields) {
             fieldsetFields = fieldsetFields.concat(modelRequestObject.simplifiedRequest.additionalFields);
+        }
+
+        if (fieldsetFields.length) {
+            // Important: The id is used to detect, if a model was deleted, because this issues
+            // an autoupdate with id=null
+            fieldsetFields.push(`id`);
         }
 
         // insert the fieldsetFields into fields
@@ -250,6 +261,13 @@ export class ModelRequestBuilderService {
                 collection
             )
         );
+        response.collectionsToExclusiveListUpdate.forEach(collection =>
+            modelRequestObject.addCollectionToExclusiveListUpdate(
+                modelRequestObject.collection,
+                effectiveIdField,
+                collection
+            )
+        );
     }
 
     private getRelationFieldDescriptor(
@@ -258,13 +276,20 @@ export class ModelRequestBuilderService {
     ): DescriptorResponse<RelationFieldDescriptor> {
         const foreignCollection = relation.foreignViewModel!.COLLECTION;
         const modelRequestObject = new ModelRequestObject(foreignCollection, follow, {});
-        if (relation.isFullList) {
+        if ((relation.isFullList && follow.isFullList !== false) || follow.isFullList === true) {
             modelRequestObject.addCollectionToFullListUpdate(
                 foreignCollection,
                 follow.idField as string,
                 foreignCollection
             );
+        } else if ((relation.isExclusiveList && follow.isExclusiveList !== false) || follow.isExclusiveList === true) {
+            modelRequestObject.addCollectionToExclusiveListUpdate(
+                foreignCollection,
+                follow.idField as string,
+                foreignCollection
+            );
         }
+
         this.addFields(modelRequestObject);
         return {
             descriptor: {
@@ -272,7 +297,8 @@ export class ModelRequestBuilderService {
                 collection: foreignCollection,
                 fields: modelRequestObject.getFields()
             },
-            collectionsToFullListUpdate: modelRequestObject.getFullListUpdateCollections()
+            collectionsToFullListUpdate: modelRequestObject.getFullListUpdateCollections(),
+            collectionsToExclusiveListUpdate: modelRequestObject.getExclusiveListUpdateCollections()
         };
     }
 
@@ -285,7 +311,7 @@ export class ModelRequestBuilderService {
             fields: {}
         };
         this.addGenericRelation(relation.foreignViewModelPossibilities || [], descriptor.fields, follow);
-        return { descriptor, collectionsToFullListUpdate: [] };
+        return { descriptor, collectionsToFullListUpdate: [], collectionsToExclusiveListUpdate: [] };
     }
 
     private getStructuredFieldDescriptor(
@@ -304,7 +330,11 @@ export class ModelRequestBuilderService {
         }
         descriptor.values = response.descriptor;
 
-        return { descriptor, collectionsToFullListUpdate: response.collectionsToFullListUpdate };
+        return {
+            descriptor,
+            collectionsToFullListUpdate: response.collectionsToFullListUpdate,
+            collectionsToExclusiveListUpdate: response.collectionsToExclusiveListUpdate
+        };
     }
 
     private addGenericRelation(

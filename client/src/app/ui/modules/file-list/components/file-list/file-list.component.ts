@@ -130,6 +130,14 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     @Input()
     public shouldShowFileMenuFn: (file: ViewMediafile) => boolean = () => false;
 
+    @Input()
+    public isUsedAsFontFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
+        !!file.mediafile.used_as_font_in_meeting_id();
+
+    @Input()
+    public isUsedAsLogoFn: (file: ViewMediafile) => boolean = (file: ViewMediafile) =>
+        !!file.mediafile.used_as_logo_in_meeting_id();
+
     @Output()
     public beforeEditing = new EventEmitter<BeforeEditingEvent>();
 
@@ -155,7 +163,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     private _listComponent: ListComponent<ViewMediafile> | undefined;
 
     public get directoryObservable(): Observable<ViewMediafile[]> {
-        return this._directoryBehaviorSubject.asObservable();
+        return this._directoryBehaviorSubject;
     }
 
     /**

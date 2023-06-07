@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { OML } from 'src/app/domain/definitions/organization-permission';
 import { AssignMeetingsResult } from 'src/app/gateways/repositories/users';
@@ -96,7 +96,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     }
 
     public ngOnInit(): void {
-        this.meetingsObservable = this.meetingsSubject.asObservable();
+        this.meetingsObservable = this.meetingsSubject as Observable<ViewMeeting[]>;
 
         this.subscriptions.push(
             this.osRouter.currentParamMap.subscribe(params => {
@@ -107,6 +107,13 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
             }),
             this.meetingController
                 .getViewModelListObservable()
+                .pipe(
+                    map(meetings =>
+                        this.operator.isSuperAdmin
+                            ? meetings
+                            : meetings.filter(meeting => this.operator.isInMeeting(meeting.id))
+                    )
+                )
                 .subscribe(meetings => this.meetingsSubject.next(meetings.filter(meeting => !meeting.isArchived)))
         );
     }

@@ -1,0 +1,13 @@
+<div class="projectable-title-line">
+    <h1 class="model-title" *ngIf="titleStyle === 'h1' && model"><ng-container [ngTemplateOutlet]="titleline"></ng-container></h1>
+    <h2 class="model-title" *ngIf="titleStyle === 'h2' && model"><ng-container [ngTemplateOutlet]="titleline"></ng-container></h2>
+    &nbsp;
+    <mat-icon style="margin-top: 8px" [ngClass]="{'primary-accent-by-theme': titleStyle === 'h1'}" *ngIf="isProjectedObservable | async" matTooltip="{{ 'Is being projected' | translate }}">videocam</mat-icon>
+    <ng-content select="[append]"></ng-content>
+</div>
+
+<ng-template #titleline>
+    <ng-content select="[prepend]"></ng-content>
+
+    {{ getTitleFn(model) }}
+</ng-template>

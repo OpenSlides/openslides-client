@@ -1,4 +1,12 @@
-<os-head-bar [hasMainButton]="true" [nav]="false" (mainEvent)="setEditMode(!editGroup)">
+<os-head-bar
+    [hasMainButton]="true"
+    (mainEvent)="setEditMode(!editGroup)"
+    [nav]="false"
+    [editMode]="hasChanges"
+    [isSaveButtonEnabled]="hasChanges"
+    [saveAction]="getSaveAction()"
+    (cancelEditEvent)="discardChanges()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Groups' | translate }}</h2>
@@ -6,9 +14,6 @@
 </os-head-bar>
 
 <mat-card class="spacer-bottom-60">
-    <div class="hint-text">
-        <span>{{ 'All your changes are saved immediately.' | translate }}</span>
-    </div>
     <mat-accordion *ngFor="let appPermissions of permissionsPerApp">
         <mat-expansion-panel class="mat-elevation-z0" [expanded]="true">
             <mat-expansion-panel-header>
@@ -21,7 +26,7 @@
                 <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
                     <ng-container matColumnDef="perm" sticky>
                         <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
-                        <mat-cell *matCellDef="let perm">
+                        <mat-cell *matCellDef="let perm" class="raised-cell">
                             {{ perm.display_name | translate }}
                         </mat-cell>
                     </ng-container>
@@ -34,16 +39,16 @@
                                 (click)="selectGroup(group)"
                             >
                                 <div class="inner-table">
-                                    {{ group.name | translate }}
+                                    {{ group.name }}
                                 </div>
                             </mat-header-cell>
                             <mat-cell *matCellDef="let perm">
                                 <div class="inner-table">
                                     <mat-checkbox
                                         *ngIf="!group.isAdminGroup"
-                                        [checked]="group.hasPermission(perm.value)"
-                                        [disabled]="group.hasPermissionImplicitly(perm.value)"
-                                        (change)="togglePermission(group, perm.value)"
+                                        name="cb-{{ group.id }}-{{ perm.value }}"
+                                        [(ngModel)]="currentPermissions[group.id][perm.value]"
+                                        (change)="onChange(group, perm.value, $event.checked)"
                                     ></mat-checkbox>
                                     <mat-checkbox
                                         *ngIf="group.isAdminGroup"

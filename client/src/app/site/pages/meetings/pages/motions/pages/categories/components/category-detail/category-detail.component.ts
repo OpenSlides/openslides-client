@@ -4,9 +4,11 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewMotion, ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -41,7 +43,14 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     /**
      * The one selected category
      */
-    public selectedCategory!: ViewMotionCategory;
+    public get selectedCategory(): ViewMotionCategory {
+        return this._selectedCategory;
+    }
+    public set selectedCategory(category: ViewMotionCategory) {
+        this._selectedCategory = category;
+        this.updateCategoryPrefixesSubject();
+    }
+    private _selectedCategory!: ViewMotionCategory;
 
     /**
      * All categories with the selected one and all children.
@@ -65,6 +74,8 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     private _dialogRef!: MatDialogRef<any>;
     private _categoryId: Id = -1;
 
+    private _categoryPrefixesSubject = new BehaviorSubject<string[]>([]);
+
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
@@ -77,6 +88,8 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
         private dialog: MatDialog
     ) {
         super(componentServiceCollector, translate);
+
+        this.repo.getViewModelListObservable().subscribe(categories => this.updateCategoryPrefixesSubject(categories));
     }
 
     public onIdFound(id: Id | null): void {
@@ -84,6 +97,17 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
             this._categoryId = id;
             this.loadCategoryById();
         }
+    }
+
+    private updateCategoryPrefixesSubject(categories?: ViewMotionCategory[]): void {
+        this._categoryPrefixesSubject.next(
+            (categories ?? this.repo.getViewModelList())
+                .filter(
+                    category =>
+                        category.prefix !== this.selectedCategory?.prefix && category.id !== this.selectedCategory?.id
+                )
+                .map(category => category.prefix)
+        );
     }
 
     private loadCategoryById(): void {
@@ -101,14 +125,12 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
                 this.selectedCategory = selectedCategory;
                 super.setTitle(this.selectedCategory.prefixedName);
 
-                this.categories = categories
-                    .filter(category =>
-                        [category]
-                            .concat(...category.allParents)
-                            .map(cat => cat.id)
-                            .includes(this._categoryId)
-                    )
-                    .sort((a, b) => a.level - b.level);
+                this.categories = categories.filter(category =>
+                    [category]
+                        .concat(...category.allParents)
+                        .map(cat => cat.id)
+                        .includes(this._categoryId)
+                );
 
                 // setup datasources:
                 this.categories.forEach(category => {
@@ -161,7 +183,10 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
     public save(): void {
         this.repo
             .update(this.editForm!.value, this.selectedCategory)
-            .then(() => this._dialogRef.close())
+            .then(() => {
+                this._dialogRef.close();
+                this.updateCategoryPrefixesSubject();
+            })
             .catch(this.raiseError);
     }
 
@@ -170,7 +195,7 @@ export class CategoryDetailComponent extends BaseMeetingComponent {
      */
     public toggleEditMode(): void {
         this.editForm = this.formBuilder.group({
-            prefix: [this.selectedCategory.prefix],
+            prefix: [this.selectedCategory.prefix, isUniqueAmong(this._categoryPrefixesSubject)],
             name: [this.selectedCategory.name, Validators.required]
         });
 

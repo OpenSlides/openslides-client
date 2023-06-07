@@ -21,6 +21,7 @@ import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meet
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 import { MotionPollServiceModule } from '../motion-poll-service.module';
@@ -49,11 +50,12 @@ export class MotionPollService extends PollService {
         parsePollNumber: PollParseNumberPipe,
         protected override translate: TranslateService,
         private repo: MotionPollControllerService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        themeService: ThemeService
     ) {
-        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber);
+        super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
         this.meetingSettingsService
-            .get(`motion_poll_default_100_percent_base`)
+            .get(`motion_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
         this.meetingSettingsService.get(`motion_poll_default_type`).subscribe(type => (this.defaultPollType = type));
         this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(ids => (this.defaultGroupIds = ids));

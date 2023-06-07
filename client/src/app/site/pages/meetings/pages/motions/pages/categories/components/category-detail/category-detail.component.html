@@ -102,6 +102,7 @@
         <form class="edit-form" [formGroup]="editForm" (ngSubmit)="save()" (keydown)="onKeyDown($event)">
             <mat-form-field>
                 <input matInput osAutofocus placeholder="{{ 'Prefix' | translate }}" formControlName="prefix" />
+                <mat-error>{{ 'This prefix already exists.' | translate }}</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input matInput osAutofocus placeholder="{{ 'Name' | translate }}" formControlName="name" required />

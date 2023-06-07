@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
@@ -13,18 +14,18 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
     protected storageKey = `MemberList`;
 
     private staticSortOptions: OsSortingOption<ViewUser>[] = [
-        { property: `full_name`, label: `Full name` },
-        { property: [`first_name`, `last_name`], label: `Given name` },
-        { property: [`last_name`, `first_name`], label: `Surname` },
-        { property: `is_active`, label: `Is active` },
-        { property: `default_number`, label: `Participant number` },
-        { property: `default_structure_level`, label: `Structure level` },
-        { property: `default_vote_weight`, label: `Vote weight` },
-        { property: `gender`, label: `Gender` },
-        { property: `id`, label: `Sequential number` },
-        { property: `numberOfMeetings`, label: `Amount of meetings` },
-        { property: `last_email_send`, label: `Last email sent` },
-        { property: `last_login`, label: `Last login` }
+        { property: `full_name`, label: _(`Full name`) },
+        { property: [`first_name`, `last_name`], label: _(`Given name`) },
+        { property: [`last_name`, `first_name`], label: _(`Surname`) },
+        { property: `is_active`, label: _(`Is active`) },
+        { property: `default_number`, label: _(`Participant number`) },
+        { property: `default_structure_level`, label: _(`Structure level`) },
+        { property: `default_vote_weight`, label: _(`Vote weight`) },
+        { property: `gender`, label: _(`Gender`) },
+        { property: `id`, label: _(`Sequential number`) },
+        { property: `numberOfMeetings`, label: _(`Amount of meetings`) },
+        { property: `last_email_sent`, label: _(`Last email sent`) },
+        { property: `last_login`, label: _(`Last login`) }
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {

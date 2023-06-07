@@ -67,85 +67,85 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
      */
     private stateFilterOptions: OsFilter<ViewMotion> = {
         property: `state_id`,
-        label: `State`,
+        label: _(`State`),
         options: []
     };
 
     private categoryFilterOptions: OsFilter<ViewMotion> = {
         property: `category_id`,
-        label: `Category`,
+        label: _(`Category`),
         options: []
     };
 
     private motionBlockFilterOptions: OsFilter<ViewMotion> = {
         property: `block_id`,
-        label: `Motion block`,
+        label: _(`Motion block`),
         options: []
     };
 
     private motionCommentFilterOptions: OsFilter<ViewMotion> = {
         property: `usedCommentSectionIds`,
-        label: `Comment`,
+        label: _(`Comment`),
         options: []
     };
 
     private recommendationFilterOptions: OsFilter<ViewMotion> = {
         property: `recommendation_id`,
-        label: `Recommendation`,
+        label: _(`Recommendation`),
         options: []
     };
 
     private tagFilterOptions: OsFilter<ViewMotion> = {
         property: `tag_ids`,
-        label: `Tags`,
+        label: _(`Tags`),
         options: []
     };
 
     private hasSpeakerOptions: OsFilter<ViewMotion> = {
         property: `hasSpeakers`,
-        label: `Speakers`,
+        label: _(`Speakers`),
         options: [
-            { condition: true, label: this.translate.instant(`Has speakers`) },
-            { condition: [false, null], label: this.translate.instant(`Has no speakers`) }
+            { condition: true, label: _(`Has speakers`) },
+            { condition: [false, null], label: _(`Has no speakers`) }
         ]
     };
 
     private AmendmentFilterOption: OsFilter<ViewMotion> = {
         property: `amendmentType`,
-        label: `Amendment`,
+        label: _(`Amendment`),
         options: [
-            { condition: AmendmentType.Amendment, label: this.translate.instant(`Is amendment`) },
-            { condition: AmendmentType.Parent, label: this.translate.instant(`Has amendments`) },
-            { condition: AmendmentType.Lead, label: this.translate.instant(`Is no amendment and has no amendments`) }
+            { condition: AmendmentType.Amendment, label: _(`Is amendment`) },
+            { condition: AmendmentType.Parent, label: _(`Has amendments`) },
+            { condition: AmendmentType.Lead, label: _(`Is no amendment and has no amendments`) }
         ]
     };
 
     private personalNoteFilterOptions: any[] = [
         {
             property: `isFavorite`,
-            label: this.translate.instant(`Favorites`),
+            label: _(`Favorites`),
             options: [
                 {
                     condition: true,
-                    label: this.translate.instant(`Is favorite`)
+                    label: _(`Is favorite`)
                 },
                 {
                     condition: [false, null],
-                    label: this.translate.instant(`Is not favorite`)
+                    label: _(`Is not favorite`)
                 }
             ]
         },
         {
             property: `hasNotes`,
-            label: this.translate.instant(`Personal notes`),
+            label: _(`Personal notes`),
             options: [
                 {
                     condition: true,
-                    label: this.translate.instant(`Has notes`)
+                    label: _(`Has notes`)
                 },
                 {
                     condition: [false, null],
-                    label: this.translate.instant(`Does not have notes`)
+                    label: _(`Does not have notes`)
                 }
             ]
         }
@@ -153,19 +153,19 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
     private forwardingFilterOptions: OsFilter<ViewMotion> = {
         property: `forwardingStatus`,
-        label: this.translate.instant(`Forwarding`),
+        label: _(`Forwarding`),
         options: [
             {
                 condition: [ForwardingStatus.wasForwarded, ForwardingStatus.both],
-                label: this.translate.instant(`Has forwardings`)
+                label: _(`Has forwardings`)
             },
             {
                 condition: [ForwardingStatus.isDerived, ForwardingStatus.both],
-                label: this.translate.instant(`Was forwarded to this meeting`)
+                label: _(`Was forwarded to this meeting`)
             },
             {
                 condition: ForwardingStatus.none,
-                label: this.translate.instant(`No forwardings`)
+                label: _(`No forwardings`)
             }
         ]
     };
@@ -188,25 +188,25 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
         this.updateFilterForRepo({
             repo: categoryRepo,
             filter: this.categoryFilterOptions,
-            noneOptionLabel: this.translate.instant(`No category set`)
+            noneOptionLabel: _(`No category set`)
         });
 
         this.updateFilterForRepo({
             repo: motionBlockRepo,
             filter: this.motionBlockFilterOptions,
-            noneOptionLabel: this.translate.instant(`No motion block set`)
+            noneOptionLabel: _(`No motion block set`)
         });
 
         this.updateFilterForRepo({
             repo: commentRepo,
             filter: this.motionCommentFilterOptions,
-            noneOptionLabel: this.translate.instant(`No comment`)
+            noneOptionLabel: _(`No comment`)
         });
 
         this.updateFilterForRepo({
             repo: tagRepo,
             filter: this.tagFilterOptions,
-            noneOptionLabel: this.translate.instant(`No tags`)
+            noneOptionLabel: _(`No tags`)
         });
 
         this.subscribeWorkflows();
@@ -242,6 +242,10 @@ export class MotionListFilterService extends BaseMeetingFilterListService<ViewMo
 
         this.meetingSettingsService.get(`motions_default_workflow_id`).subscribe(id => {
             this.enabledWorkflows.motion = +id;
+        });
+
+        this.meetingSettingsService.get(`motions_default_amendment_workflow_id`).subscribe(id => {
+            this.enabledWorkflows.amendment = +id;
         });
 
         this.meetingSettingsService.get(`motions_statutes_enabled`).subscribe(bool => {

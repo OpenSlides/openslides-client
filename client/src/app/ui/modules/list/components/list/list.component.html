@@ -1,7 +1,6 @@
 <os-view-list
     [alsoFilterByProperties]="alsoFilterByProperties"
     [alwaysShowMenu]="alwaysShowMenu"
-    [componentHeight]="componentHeight"
     [filterService]="filterService"
     [filterProps]="filterProps"
     [hiddenColumns]="hiddenColumns"
@@ -15,6 +14,7 @@
     [showMenu]="showMenu"
     [sortService]="sortService"
     [vScrollFixed]="vScrollFixed"
+    [fullScreen]="fullScreen"
     (selectedRowsChange)="selectedRowsChange.emit($event)"
     (searchFilterUpdated)="searchFilterUpdated.emit($event)"
 ></os-view-list>

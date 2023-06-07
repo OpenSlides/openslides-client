@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
 import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { DEFAULT_FIELDSET, Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -52,22 +51,5 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
 
     public delete(viewModel: Identifiable): Promise<void> {
         return this.sendActionToBackend(MotionChangeRecommendationAction.DELETE, { id: viewModel.id });
-    }
-
-    public override getFieldsets(): Fieldsets<MotionChangeRecommendation> {
-        const detailFields: (keyof MotionChangeRecommendation)[] = [
-            `id`,
-            `motion_id`,
-            `line_from`,
-            `line_to`,
-            `internal`,
-            `text`,
-            `type`,
-            `other_description`,
-            `rejected`
-        ];
-        return {
-            [DEFAULT_FIELDSET]: detailFields
-        };
     }
 }

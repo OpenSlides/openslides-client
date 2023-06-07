@@ -28,7 +28,7 @@
 
     <!-- Amount -->
     <div *osScrollingTableCell="'amount'; row as category; config: { width: 45 }" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}">{{ getMotionAmount(category) }}</span>
+        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}" matTooltipPosition="left">{{ getMotionAmount(category) }}</span>
     </div>
 </os-projectable-list>
 
@@ -50,6 +50,7 @@
             <p>
                 <mat-form-field>
                     <input formControlName="prefix" matInput placeholder="{{ 'Prefix' | translate }}" />
+                    <mat-error>{{ 'This prefix already exists' | translate }}</mat-error>
                 </mat-form-field>
             </p>
 

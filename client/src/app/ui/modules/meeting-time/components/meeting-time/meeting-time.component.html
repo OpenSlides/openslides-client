@@ -12,12 +12,5 @@
 </span>
 
 <ng-template #timeTemplate let-startTime="startTime" let-endTime="endTime">
-    <ng-container *ngIf="startTime === endTime">
-        <span>{{ startTime | localizedDate: 'll' }}</span>
-    </ng-container>
-    <ng-container *ngIf="startTime !== endTime">
-        <span *ngIf="startTime">{{ startTime | localizedDate: 'll' }}</span>
-        <span *ngIf="startTime && endTime">&nbsp;-&nbsp;</span>
-        <span *ngIf="endTime">{{ endTime | localizedDate: 'll' }}</span>
-    </ng-container>
+    <span>{{ { start: startTime, end: endTime } | localizedDateRange: 'PP' }}</span>
 </ng-template>

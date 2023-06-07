@@ -32,8 +32,8 @@
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
-        <div style="overflow: hidden" class="flex-vertical-center">
-            <div style="overflow: hidden" class="nameCell">
+        <div class="flex-vertical-center overflow-hidden">
+            <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
                     <span class="ellipsis-overflow">{{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')'  : '') }}</span>
                     <div style="float: right; display: inline-flex">
@@ -76,8 +76,8 @@
         <div class="flex-center">
             <os-icon-container
                 icon="mail"
-                *ngIf="user.isLastEmailSend"
-                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_send | localizedDate }})"
+                *ngIf="user.isLastEmailSent"
+                matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                 matTooltipPosition="left"
             >
             </os-icon-container>
@@ -116,7 +116,7 @@
             <span>{{ 'Edit' | translate }}</span>
         </a>
         <a mat-menu-item [routerLink]="[member.id, 'meetings']" *osOmlPerms="OML.can_manage_users">
-            <mat-icon>auto_awesome_mosaic</mat-icon>
+            <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </a>
         <button mat-menu-item class="red-warning-text" (click)="deleteUsers([member])">
@@ -152,7 +152,7 @@
             (deleting)="deleteUsers()"
         >
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="assignMeetingToUsers()">
-                <mat-icon>auto_awesome_mosaic</mat-icon>
+                <mat-icon>event_available</mat-icon>
                 <span>{{ 'Set/remove meeting' | translate }} ...</span>
             </button>
             <button mat-menu-item [disabled]="!selectedRows.length" (click)="changeActiveState()">

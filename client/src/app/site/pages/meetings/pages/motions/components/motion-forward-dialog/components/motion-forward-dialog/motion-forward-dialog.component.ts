@@ -15,7 +15,7 @@ import { ViewMotion } from '../../../../view-models';
 })
 export class MotionForwardDialogComponent implements OnInit {
     public get committeesObservable(): Observable<GetForwardingMeetingsPresenter[]> {
-        return this.committeesSubject.asObservable();
+        return this.committeesSubject;
     }
 
     public readonly checkboxStateMap: { [id: string]: boolean } = {};

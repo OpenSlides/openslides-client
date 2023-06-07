@@ -1,3 +1,5 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 export interface WaitForActionData {
     workerId: number;
     workerName: string;
@@ -11,12 +13,12 @@ export const waitForActionReason = {
 
 export type WaitForActionReasonKeys = keyof typeof waitForActionReason;
 
-export type WaitForActionReason = typeof waitForActionReason[WaitForActionReasonKeys];
+export type WaitForActionReason = (typeof waitForActionReason)[WaitForActionReasonKeys];
 
 export const titleVerbose: { [key: number]: string } = {
-    [waitForActionReason.notWritten]: `A server action could not be written to the database`,
-    [waitForActionReason.inactive]: `A server action may have stopped working`,
-    [waitForActionReason.slow]: `A server action seems to be slow`
+    [waitForActionReason.notWritten]: _(`The process will be started. Please wait!`),
+    [waitForActionReason.slow]: _(`The process is still running. Please wait!`),
+    [waitForActionReason.inactive]: _(`The process may have stopped running.`)
 };
 
 export const multiActionVerbose: { [key: number]: { wait: string; stop: string } } = {

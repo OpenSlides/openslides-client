@@ -12,7 +12,11 @@ module.exports = {
                 createDefaultProgram: true
             },
             plugins: ['simple-import-sort', 'unused-imports'],
-            extends: ['plugin:@angular-eslint/recommended', 'plugin:@angular-eslint/template/process-inline-templates'],
+            extends: [
+                'plugin:@angular-eslint/recommended',
+                'plugin:@angular-eslint/template/process-inline-templates',
+                'plugin:prettier/recommended'
+            ],
             rules: {
                 '@angular-eslint/component-selector': [
                     'error',
@@ -71,6 +75,10 @@ module.exports = {
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
+                'no-restricted-properties': ['error', {
+                    'property': 'asObservable',
+                    'message': 'Please use a typecast or explicitly instantiate a new Observable.'
+                }]
             }
         },
         {

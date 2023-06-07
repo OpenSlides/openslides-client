@@ -11,9 +11,11 @@ import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
+import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';
 import { MotionFormatService } from '../../../services/common/motion-format.service';
 import { ViewMotion } from '../../../view-models';
 import { MotionForwardDialogComponent } from '../components/motion-forward-dialog/motion-forward-dialog.component';
@@ -24,7 +26,7 @@ import { MotionForwardDialogModule } from '../motion-forward-dialog.module';
 })
 export class MotionForwardDialogService extends BaseDialogService<MotionForwardDialogComponent, ViewMotion[], Ids> {
     public get forwardingCommitteesObservable(): Observable<(Partial<ViewCommittee> & Selectable)[]> {
-        return this._forwardingCommitteesSubject.asObservable();
+        return this._forwardingCommitteesSubject;
     }
 
     private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);
@@ -40,7 +42,8 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         private snackbar: MatSnackBar,
         private presenter: GetForwardingMeetingsPresenterService,
         private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService
+        private operator: OperatorService,
+        private modelRequest: ModelRequestService
     ) {
         super(dialog);
 
@@ -74,7 +77,11 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
         const toMeetingIds = (await firstValueFrom(dialogRef.afterClosed())) as Ids;
         if (toMeetingIds) {
             try {
-                const forwardMotions = toForward.map(motion => this.formatService.formatMotionForForward(motion));
+                const motionIds = toForward.map(motion => motion.id);
+                await this.modelRequest.fetch(getMotionForwardDataSubscriptionConfig(...motionIds));
+                const forwardMotions = toForward.map(motion =>
+                    this.formatService.formatMotionForForward(this.repo.getViewModel(motion.id))
+                );
                 const result = await this.repo.createForwarded(toMeetingIds, ...forwardMotions);
                 this.snackbar.open(this.createForwardingSuccessMessage(motions.length, result), `Ok`);
             } catch (e: any) {
@@ -84,7 +91,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     }
 
     private async updateForwardMeetings(): Promise<void> {
-        if (this._forwardingMeetingsUpdateRequired) {
+        if (this._forwardingMeetingsUpdateRequired && !this.activeMeeting.meeting.isArchived) {
             const meetings = this.operator.hasPerms(Permission.motionCanManage)
                 ? await this.presenter.call({ meeting_id: this.activeMeeting.meetingId! })
                 : [];

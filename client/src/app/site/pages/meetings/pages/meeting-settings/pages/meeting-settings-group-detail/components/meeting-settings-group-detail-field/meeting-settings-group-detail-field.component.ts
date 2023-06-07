@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { Moment, unix as moment } from 'moment';
+import { fromUnixTime, getHours, getMinutes, getUnixTime, setHours, setMinutes } from 'date-fns';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { BaseComponent } from 'src/app/site/base/base.component';
@@ -26,7 +26,7 @@ import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/vali
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 
 export interface SettingsFieldUpdate {
-    key: keyof Settings;
+    key: keyof Settings | (keyof Settings)[];
     value: any;
 }
 
@@ -58,9 +58,9 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     public error: string | null = null;
 
     /**
-     * Translated config value for template
+     * Current value for internal use
      */
-    public translatedValue!: any;
+    public internalValue!: any;
 
     /**
      * The settings item for this component.
@@ -180,29 +180,33 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         this.form = this.formBuilder.group({
             value: [``, this.setting.validators ?? []],
             date: [``],
-            time: [``]
+            time: [``],
+            daterange: {
+                start: [null],
+                end: [null]
+            }
         });
-        this.translatedValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
-        if (
-            (typeof this.value === `string` && this.value !== `` && this.setting.type !== `choice`) ||
-            this.setting.type === `string` ||
-            this.setting.type === `markupText` ||
-            this.setting.type === `text`
-        ) {
-            this.translatedValue = this.translate.instant(this.value);
-        }
+        this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
             this.form.patchValue(datetimeObj);
         }
+        if (this.setting.type === `daterange` && this.value) {
+            const daterangeObj = {
+                start: this.getRestrictedValue(this.value[0] ? new Date(this.value[0] * 1000) : null),
+                end: this.getRestrictedValue(this.value[1] ? new Date(this.value[1] * 1000) : null)
+            };
+            this.form.get(`daterange`).patchValue(daterangeObj);
+        }
         this.form.patchValue({
-            value: this.getRestrictedValue(this.translatedValue)
+            value: this.getRestrictedValue(this.internalValue)
         });
         this.form.valueChanges
             // The editor fires changes whenever content was changed. Even by AutoUpdate.
             // This checks for discting content
             .pipe(
                 distinctUntilChanged((previous, next) => {
+                    this._comparedForm = true;
                     if (this.setting.type === `groups`) {
                         return JSON.stringify(this._firstValue) === JSON.stringify(next.value);
                     }
@@ -210,9 +214,13 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 })
             )
             .subscribe(form => {
-                this.onChange(form.value);
+                if (this._comparedForm || String(form.value) !== String(this._firstValue)) {
+                    this.onChange(form.value);
+                }
             });
     }
+
+    private _comparedForm = false;
 
     /**
      * Stops the change detection
@@ -237,41 +245,48 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(newValue as number));
             this.form.patchValue(datetimeObj);
         }
+        if (this.setting.type === `daterange` && newValue) {
+            const daterangeObj = {
+                start: this.getRestrictedValue(newValue[0] ? new Date(newValue[0]) : null),
+                end: this.getRestrictedValue(newValue[1] ? new Date(newValue[1]) : null)
+            };
+            this.form.get(`daterange`).patchValue(daterangeObj);
+        }
         this.form.patchValue({
             value: this.getRestrictedValue(newValue)
         });
     }
 
     /**
-     * Helper function to split a unix timestamp into a date as a moment object and a time string in the form of HH:SS
+     * Helper function to split a unix timestamp into a date as a date object and a time string in the form of HH:SS
      *
      * @param unix the timestamp
      *
      * @return an object with a date and a time field
      */
-    private unixToDateAndTime(unix: number): { date: Moment; time: string } {
-        const date = moment(unix);
-        const time = date.hours() + `:` + date.minutes();
+    private unixToDateAndTime(unix: number): { date: Date; time: string } {
+        const date = fromUnixTime(unix);
+        const time = getHours(date) + `:` + getMinutes(date);
         return { date, time };
     }
 
     /**
-     * Helper function to fuse a moment object as the date part and a time string (HH:SS) as the time part.
+     * Helper function to fuse a date object as the date part and a time string (HH:SS) as the time part.
      *
-     * @param date the moment date object
+     * @param date the date object
      * @param time the time string
      *
      * @return a unix timestamp
      */
-    private dateAndTimeToUnix(date: Moment, time: string): number | null {
+    private dateAndTimeToUnix(date: Date, time: string): number | null {
         if (date) {
             if (time) {
                 const timeSplit = time.split(`:`);
                 // + is faster than parseint and number(). ~~ would be fastest but prevented by linter...
-                date.hour(+timeSplit[0]);
-                date.minute(+timeSplit[1]);
+                setHours(date, +timeSplit[0]);
+                setMinutes(date, +timeSplit[1]);
             }
-            return date.unix();
+            return getUnixTime(date);
         } else {
             return null;
         }
@@ -291,6 +306,12 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 const date = this.form.get(`date`)!.value;
                 const time = this.form.get(`time`)!.value;
                 value = this.dateAndTimeToUnix(date, time);
+                break;
+            case `daterange`:
+                // daterange has to be formatted
+                const start = this.form.get(`daterange`)!.value.start;
+                const end = this.form.get(`daterange`)!.value.end;
+                value = [start, end];
                 break;
             case `groups`:
                 // we have to check here explicitly if nothing changed because of the search value selector
@@ -361,7 +382,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = [`boolean`, `markupText`, `text`, `translations`, `datetime`, `date`];
+        const excluded = [`boolean`, `markupText`, `text`, `translations`, `datetime`, `date`, `daterange`];
         return excluded.includes(type);
     }
 
@@ -375,7 +396,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         return {
             setup: (editor: any) => {
                 editor.on(`Blur`, (ev: any) => {
-                    if (ev.target.getContent() !== this.translatedValue) {
+                    if (ev.target.getContent() !== this.internalValue) {
                         this.sendUpdate(ev.target.getContent());
                     }
                 });

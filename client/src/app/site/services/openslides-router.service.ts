@@ -30,7 +30,7 @@ enum UrlTarget {
 })
 export class OpenSlidesRouterService {
     public get currentParamMap(): Observable<{ [paramName: string]: any }> {
-        return this._currentParamMap.asObservable();
+        return this._currentParamMap;
     }
 
     public get beforeSignoutObservable(): Observable<boolean> {

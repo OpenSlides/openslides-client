@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { ModelRequestService } from 'src/app/site/services/model-request.service';
 import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
+import { getMotionDetailSubscriptionConfig } from '../../../motions.subscription';
+import { AmendmentControllerService } from '../../../services/common/amendment-controller.service';
+import { MotionLineNumberingService } from '../../../services/common/motion-line-numbering.service';
 import { MotionExportInfo } from '../../../services/export/motion-export.service';
 import { MotionExportService } from '../../../services/export/motion-export.service';
 import { ViewMotion } from '../../../view-models';
@@ -18,7 +23,14 @@ export class MotionExportDialogService extends BaseDialogService<
     ViewMotion[],
     MotionExportInfo
 > {
-    public constructor(dialog: MatDialog, private exportService: MotionExportService) {
+    public constructor(
+        dialog: MatDialog,
+        private exportService: MotionExportService,
+        private modelRequestService: ModelRequestService,
+        private motionRepo: MotionRepositoryService,
+        private amendmentRepo: AmendmentControllerService,
+        private motionLineNumbering: MotionLineNumberingService
+    ) {
         super(dialog);
     }
 
@@ -30,8 +42,19 @@ export class MotionExportDialogService extends BaseDialogService<
     public async export(motions: ViewMotion[]): Promise<void> {
         const dialogRef = await this.open(motions);
         const exportInfo = await firstValueFrom(dialogRef.afterClosed());
+
         if (exportInfo) {
-            this.exportService.evaluateExportRequest(exportInfo, motions);
+            await this.modelRequestService.fetch(getMotionDetailSubscriptionConfig(...motions.map(m => m.id)));
+            const amendments = this.amendmentRepo.getViewModelList();
+            this.motionLineNumbering.resetAmendmentChangeRecoListeners(amendments);
+
+            // The timeout is needed for the repos to update their view model list subjects
+            setTimeout(() => {
+                this.exportService.evaluateExportRequest(
+                    exportInfo,
+                    motions.map(m => this.motionRepo.getViewModel(m.id))
+                );
+            }, 2000);
         }
     }
 }

@@ -1,27 +1,16 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, timer } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
 import { idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 import { WaitForActionReason, waitForActionReason } from 'src/app/site/modules/wait-for-action-dialog/definitions';
 import { WaitForActionDialogService } from 'src/app/site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';
 import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ActionWorkerRepositoryService } from '../repositories/action-worker/action-worker-repository.service';
 import { ViewActionWorker } from '../repositories/action-worker/view-action-worker';
-
-const getActionWorkerSubscriptionConfig = (ids: Id[]) => ({
-    modelRequest: {
-        viewModelCtor: ViewActionWorker,
-        ids: ids,
-        fieldset: DEFAULT_FIELDSET
-    },
-    subscriptionName: ACTION_WORKER_SUBSCRIPTION
-});
-
-const ACTION_WORKER_SUBSCRIPTION = `action_worker`;
+import { ACTION_WORKER_SUBSCRIPTION, getActionWorkerSubscriptionConfig } from './action-worker-watch.subscription';
 
 @Injectable({
     providedIn: `root`
@@ -38,7 +27,7 @@ export class ActionWorkerWatchService {
 
     private _currentWorkerIds: Id[] = [];
     private _workerSubject = new BehaviorSubject<ViewActionWorker[]>([]);
-    private _workerObservable = this._workerSubject.asObservable();
+    private _workerObservable = this._workerSubject as Observable<ViewActionWorker[]>;
 
     private _toBeDeleted: { workerId: number; timestamp: number }[] = [];
 
@@ -192,7 +181,7 @@ export class ActionWorkerWatchService {
      */
     private refreshAutoupdateSubscription(oldIds?: number[]): void {
         if (this._currentWorkerIds && this._currentWorkerIds.length) {
-            this.modelRequestService.updateSubscribeTo(getActionWorkerSubscriptionConfig(this._currentWorkerIds));
+            this.modelRequestService.updateSubscribeTo(getActionWorkerSubscriptionConfig(...this._currentWorkerIds));
         } else {
             this.modelRequestService.closeSubscription(ACTION_WORKER_SUBSCRIPTION);
         }
@@ -224,7 +213,7 @@ export class ActionWorkerWatchService {
                     map(data => data[0]),
                     filter(data => {
                         const date = data.find(worker => worker.id === id);
-                        if (date && watchActivity) {
+                        if (date && watchActivity && !date.hasPassedDeathThreshold) {
                             let reason: WaitForActionReason;
                             if (!hasReportedSlowness && date.isSlow) {
                                 hasReportedSlowness = true;
@@ -248,6 +237,10 @@ export class ActionWorkerWatchService {
                                 this.openWaitingPrompt(id, reason, date.name);
                             }
                         }
+                        if (date && date.hasPassedDeathThreshold) {
+                            this.showClosingPrompt(date);
+                            throw new Error(`Process has been assumed to be dead`);
+                        }
                         return date && date.state !== ActionWorkerState.running;
                     })
                 )
@@ -256,7 +249,20 @@ export class ActionWorkerWatchService {
         return actionWorker;
     }
 
-    private openWaitingPrompt(workerId: number, reason: WaitForActionReason, workerName?: string) {
+    private showClosingPrompt(worker: ViewActionWorker): void {
+        const snapshot = {
+            id: worker.id,
+            name: worker.name,
+            state: worker.state,
+            created: worker.created,
+            timestamp: worker.timestamp,
+            closed: Date.now()
+        };
+        this.dialogService.removeAllDates(snapshot.id);
+        this.dialogService.openClosingPrompt(snapshot);
+    }
+
+    private openWaitingPrompt(workerId: number, reason: WaitForActionReason, workerName?: string): void {
         const name = workerName || this.actionWorkerRepo.getViewModel(workerId)?.name;
         if (!this._noDialogActionNames.find(actionName => actionName === name)) {
             this.dialogService.addNewDialog(reason, { workerId, workerName: name });
