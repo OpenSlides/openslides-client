@@ -1,4 +1,4 @@
-<ng-container *osPerms="permission.listOfSpeakersCanSee; and: hasInitialized">
+<ng-container *osPerms="[permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]; and: hasInitialized">
     <ng-container *ngIf="currentListOfSpeakersObservable | async as listOfSpeakers">
         <os-detail-view-navigator [model]="listOfSpeakers">
             <button

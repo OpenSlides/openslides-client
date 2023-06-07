@@ -144,7 +144,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         }
 
         if (hideWhenDestroyed === true) {
-            observables.push(this._destroyed.asObservable().pipe(startWith(false)));
+            observables.push(this._destroyed.pipe(startWith(false)));
         }
 
         if (hideWhenMeetingChanged) {
