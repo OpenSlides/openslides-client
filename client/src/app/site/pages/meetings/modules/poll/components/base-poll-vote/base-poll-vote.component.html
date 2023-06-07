@@ -30,7 +30,13 @@
             <div>
                 <div *ngIf="poll.type !== PollType.Analog">
                     <!-- global yes/no/abstain -->
-                    <ng-container *ngIf="!settings.hideGlobalOptions && (poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
+                    <ng-container
+                        *ngIf="
+                            !settings.hideGlobalOptions &&
+                            (poll.isMethodY || poll.isMethodN) &&
+                            poll.hasGlobalOptionEnabled
+                        "
+                    >
                         <div
                             *ngIf="!settings.isSplitSingleOption"
                             [ngClass]="{
@@ -64,32 +70,32 @@
                                     [ngClass]="getGlobalCSSClass(option, delegation)"
                                     [disabled]="isDeliveringVote(delegation)"
                                 >
-                                    <mat-icon>{{option.icon}}</mat-icon>
+                                    <mat-icon>{{ option.icon }}</mat-icon>
                                 </button>
                             </div>
                         </div>
                     </ng-container>
 
                     <div
-                        *ngIf="!settings.hideLeftoverVotes && (poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled"
+                        *ngIf="
+                            !settings.hideLeftoverVotes &&
+                            (poll.isMethodY || poll.isMethodN) &&
+                            poll.hasGlobalOptionEnabled
+                        "
                         class="or-divider-grid"
                     >
                         <div class="hr-wrapper">
-                            <hr>
+                            <hr />
                         </div>
-                        <div translate>
-                            OR
-                        </div>
+                        <div translate>OR</div>
                         <div class="hr-wrapper">
-                            <hr>
+                            <hr />
                         </div>
                     </div>
 
                     <!-- Leftover votes -->
                     <div class="option-list-information-grid" *ngIf="showAvailableVotes && !settings.hideLeftoverVotes">
-                        <b>
-                            {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
-                        </b>
+                        <b>{{ poll.option_ids.length }} {{ optionPluralLabel | translate }}</b>
                         <div></div>
                         <b>
                             {{ 'Available votes' | translate }}:
@@ -116,78 +122,98 @@
                             'yna-grid': poll.isMethodYNA,
                             'yn-grid': poll.isMethodYN,
                             'single-vote-grid': (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
-                            'single-multi-vote-grid': (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option > 1
+                            'single-multi-vote-grid':
+                                (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option > 1
                         }"
                     >
                         <div *ngIf="showAvailableVotes"></div>
                         <b *ngIf="!showAvailableVotes">
                             {{ poll.option_ids.length }} {{ optionPluralLabel | translate }}
                         </b>
-                        <b class="poll-option-title" *ngFor="let action of (voteActions.length ? voteActions : voteOptions)">
+                        <b
+                            class="poll-option-title"
+                            *ngFor="let action of voteActions.length ? voteActions : voteOptions"
+                        >
                             {{ action.label | translate }}
                         </b>
                     </div>
                     <ng-container *ngFor="let option of poll.options; let i = index">
-                    <div
-                        [ngClass]="{
-                            'split-grid': settings.isSplitSingleOption,
-                            'yna-grid': !settings.isSplitSingleOption && poll.isMethodYNA,
-                            'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
-                            'single-vote-grid': !settings.isSplitSingleOption && (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option <= 1,
-                            'single-multi-vote-grid': !settings.isSplitSingleOption && (poll.isMethodY || poll.isMethodN) && poll.max_votes_per_option > 1
-                        }"
-                    >
-                        <div class="vote-option-title" *ngIf="!settings.isSplitSingleOption && !option.isListOption">
-                            <span *ngIf="option.content_object">
-                                <span>{{ option.content_object.short_name }}</span>
-                                <div class="user-subtitle" *ngIf="option.content_object.getLevelAndNumber()">
-                                    {{ option.content_object.getLevelAndNumber() }}
-                                </div>
-                            </span>
-                            <span *ngIf="option.text">
-                                <span>{{ option.text }}</span>
-                            </span>
-                            <i *ngIf="!option.content_object && !option.text">{{ noDataLabel | translate }}</i>
-                        </div>
-                        <div class="vote-option-title" *ngIf="!settings.isSplitSingleOption && option.isListOption">
-                            <span *ngIf="option.content_object">
-                                <span>{{ option.content_object.getTitle() | translate }}</span>
-                            </span>
-                        </div>
-
-                        <ng-container *ngIf="!poll.max_votes_per_option || poll.max_votes_per_option <= 1">
-                            <div class="vote-button-area" *ngFor="let action of (voteActions.length ? voteActions : voteOptions)">
-                                <button
-                                    class="vote-button"
-                                    mat-raised-button
-                                    (click)="saveSingleVote(option.id, action.vote, delegation)"
-                                    [disabled]="isDeliveringVote(delegation)"
-                                    [ngClass]="getActionButtonClass(action, option, delegation)"
-                                >
-                                    <mat-icon>{{ action.icon }}</mat-icon>
-                                </button>
-                                <span *ngIf="settings.isSplitSingleOption" class="vote-label">
-                                    {{ action.label | translate }}
+                        <div
+                            [ngClass]="{
+                                'split-grid': settings.isSplitSingleOption,
+                                'yna-grid': !settings.isSplitSingleOption && poll.isMethodYNA,
+                                'yn-grid': !settings.isSplitSingleOption && poll.isMethodYN,
+                                'single-vote-grid':
+                                    !settings.isSplitSingleOption &&
+                                    (poll.isMethodY || poll.isMethodN) &&
+                                    poll.max_votes_per_option <= 1,
+                                'single-multi-vote-grid':
+                                    !settings.isSplitSingleOption &&
+                                    (poll.isMethodY || poll.isMethodN) &&
+                                    poll.max_votes_per_option > 1
+                            }"
+                        >
+                            <div
+                                class="vote-option-title"
+                                *ngIf="!settings.isSplitSingleOption && !option.isListOption"
+                            >
+                                <span *ngIf="option.content_object">
+                                    <span>{{ option.content_object.short_name }}</span>
+                                    <div class="user-subtitle" *ngIf="option.content_object.getLevelAndNumber()">
+                                        {{ option.content_object.getLevelAndNumber() }}
+                                    </div>
+                                </span>
+                                <span *ngIf="option.text">
+                                    <span>{{ option.text }}</span>
+                                </span>
+                                <i *ngIf="!option.content_object && !option.text">{{ noDataLabel | translate }}</i>
+                            </div>
+                            <div class="vote-option-title" *ngIf="!settings.isSplitSingleOption && option.isListOption">
+                                <span *ngIf="option.content_object">
+                                    <span>{{ option.content_object.getTitle() | translate }}</span>
                                 </span>
                             </div>
-                        </ng-container>
-                        <mat-form-field appearance="outline" *ngIf="poll.max_votes_per_option > 1" class="vote-input">
-                            <input
-                                type="number"
-                                matInput
-                                [formControl]="getFormControl(option.id)"
-                                (change)="saveMultipleVotes(option.id, $event, delegation)"
-                                min="0"
-                                max="{{ poll.max_votes_per_option }}"
-                                value="0"
-                                required
-                            />
-                            <mat-error>
-                                {{ getErrorInVoteEntry(option.id) }}
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
+
+                            <ng-container *ngIf="!poll.max_votes_per_option || poll.max_votes_per_option <= 1">
+                                <div
+                                    class="vote-button-area"
+                                    *ngFor="let action of voteActions.length ? voteActions : voteOptions"
+                                >
+                                    <button
+                                        class="vote-button"
+                                        mat-raised-button
+                                        (click)="saveSingleVote(option.id, action.vote, delegation)"
+                                        [disabled]="isDeliveringVote(delegation)"
+                                        [ngClass]="getActionButtonClass(action, option, delegation)"
+                                    >
+                                        <mat-icon>{{ action.icon }}</mat-icon>
+                                    </button>
+                                    <span *ngIf="settings.isSplitSingleOption" class="vote-label">
+                                        {{ action.label | translate }}
+                                    </span>
+                                </div>
+                            </ng-container>
+                            <mat-form-field
+                                appearance="outline"
+                                *ngIf="poll.max_votes_per_option > 1"
+                                class="vote-input"
+                            >
+                                <input
+                                    type="number"
+                                    matInput
+                                    [formControl]="getFormControl(option.id)"
+                                    (change)="saveMultipleVotes(option.id, $event, delegation)"
+                                    min="0"
+                                    max="{{ poll.max_votes_per_option }}"
+                                    value="0"
+                                    required
+                                />
+                                <mat-error>
+                                    {{ getErrorInVoteEntry(option.id) }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <mat-divider *ngIf="poll.options.length - 1 > i"></mat-divider>
                     </ng-container>
                 </div>
             </div>
@@ -205,7 +231,7 @@
             [delegationUser]="delegation"
             [hasAlreadyVoted]="hasAlreadyVoted(delegation)"
             [isDeliveringVote]="isDeliveringVote(delegation)"
-            [hasDelegations]="!(delegations.length)"
+            [hasDelegations]="!delegations.length"
         ></os-poll-cannot-vote-message>
     </ng-container>
 </ng-template>
