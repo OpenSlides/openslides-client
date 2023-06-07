@@ -175,11 +175,14 @@ export class ModelRequestBuilderService {
             fieldsetFields = fieldset;
         }
 
-        fieldsetFields.push(`id`); // Important: The id is used to detect, if a model was deleted, because this issues
-        // an autoupdate with id=null
-
         if (modelRequestObject.simplifiedRequest.additionalFields) {
             fieldsetFields = fieldsetFields.concat(modelRequestObject.simplifiedRequest.additionalFields);
+        }
+
+        if (fieldsetFields.length) {
+            // Important: The id is used to detect, if a model was deleted, because this issues
+            // an autoupdate with id=null
+            fieldsetFields.push(`id`);
         }
 
         // insert the fieldsetFields into fields

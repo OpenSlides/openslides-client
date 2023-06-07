@@ -43,7 +43,7 @@ export class MotionBlockListComponent extends BaseMeetingListViewComponent<ViewM
      * @returns true if the user may alter motions or their metadata
      */
     public get canEdit(): boolean {
-        return this.operator.hasPerms(Permission.motionCanManage, Permission.motionCanManageMetadata);
+        return this.operator.hasPerms(Permission.motionCanManage);
     }
 
     public constructor(

@@ -31,7 +31,7 @@ export class ThemeService {
     public static readonly DEFAULT_WARN_COLOR = `#f06400`;
 
     public get isDarkModeObservable(): Observable<boolean> {
-        return this._isDarkModeSubject.asObservable();
+        return this._isDarkModeSubject;
     }
 
     public set isDarkMode(useDarkMode: boolean) {

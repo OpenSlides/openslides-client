@@ -57,7 +57,7 @@ export class DataStoreService {
      * @return an observable for changed and deleted objects.
      */
     public get modifiedObservable(): Observable<void> {
-        return this.modifiedSubject.asObservable();
+        return this.modifiedSubject;
     }
 
     /**
@@ -71,7 +71,7 @@ export class DataStoreService {
      * @return an observable for changed and deleted objects.
      */
     public get clearObservable(): Observable<string[]> {
-        return this.clearEvent.asObservable();
+        return this.clearEvent;
     }
 
     public constructor(
@@ -90,7 +90,7 @@ export class DataStoreService {
         if (!this.changedSubjects[collection]) {
             this.changedSubjects[collection] = new Subject();
         }
-        return this.changedSubjects[collection].asObservable() as Observable<T>;
+        return this.changedSubjects[collection] as Observable<any>;
     }
 
     /**
