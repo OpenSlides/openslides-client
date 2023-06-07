@@ -122,7 +122,8 @@
                     [class.line-numbers-none]="isLineNumberingNone()"
                     [class.line-numbers-inline]="isLineNumberingInline()"
                     [class.line-numbers-outside]="isLineNumberingOutside()"
-                    *ngIf="data.data.text" [innerHtml]="getTextBasedAmendmentLines() | trust: 'html'"
+                    *ngIf="data.data.text"
+                    [innerHtml]="getTextBasedAmendmentLines() | trust : 'html'"
                 ></div>
                 <div
                     *ngFor="let paragraph of getAmendedParagraphs()"

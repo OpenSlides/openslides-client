@@ -40,14 +40,13 @@
             </div>
 
             <div>
-                <div class="option-list"  (scroll)="scrolled($event)" #scrollframe>
+                <div class="option-list" (scroll)="scrolled($event)" #scrollframe>
                     <os-sorting-list
                         *ngIf="newOptions.length"
                         [input]="optionsSubject"
                         [live]="true"
                         (sortEvent)="onSortingChange($event)"
-                        >
-
+                    >
                         <!-- implicit item references into the component using ng-template slot -->
                         <ng-template let-item>
                             <div class="single-option-line" #item>
@@ -57,7 +56,8 @@
                                         mat-icon-button
                                         matTooltip="{{ 'Remove option' | translate }}"
                                         matTooltipPosition="left"
-                                        (click)="removeOption(item)">
+                                        (click)="removeOption(item)"
+                                    >
                                         <mat-icon>clear</mat-icon>
                                     </button>
                                 </span>
