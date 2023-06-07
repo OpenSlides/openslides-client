@@ -55,9 +55,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
         }
         const trimmedInput = this._currentSearchFilter?.trim();
         const nextOutput = this._source.filter(item => {
-            const idString = String(item.id);
-            const foundId = idString.trim().toLowerCase().indexOf(trimmedInput) !== -1;
-            if (!trimmedInput || foundId) {
+            if (!trimmedInput) {
                 return true;
             }
 
