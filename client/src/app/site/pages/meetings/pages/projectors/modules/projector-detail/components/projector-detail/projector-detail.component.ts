@@ -1,6 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -145,7 +146,16 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
     /**
      * Handler to set the selected projector as the meeting reference projector
      */
-    public setProjectorAsReference(): void {
+    public async setProjectorAsReference(): Promise<void> {
+        if (this.projector.is_internal) {
+            const title = _(`Warning: This projector will be set to visible`);
+            const text = _(
+                `This projector is currently internal. Selecting such projectors as reference projectors will automatically set them to visible. Do you really want to do this?`
+            );
+            if (!(await this.promptService.open(title, text))) {
+                return;
+            }
+        }
         this.repo.setReferenceProjector(this.projector);
     }
 

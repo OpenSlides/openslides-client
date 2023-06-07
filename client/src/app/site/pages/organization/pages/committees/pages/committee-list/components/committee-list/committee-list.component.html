@@ -34,16 +34,16 @@
     [filterService]="filterService"
     [(selectedRows)]="selectedRows"
 >
-    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot">
+    <div *osScrollingTableCell="'name'; row as committee" class="cell-slot fill">
         <a
             class="stretch-to-fill-parent"
             [routerLink]="committee.id"
             *ngIf="!isMultiSelect && committee.canAccess()"
         ></a>
-        <div>
+        <div class="overflow-hidden">
             <div class="title-line ellipsis-overflow">
                 {{ committee.name }}
-                <div class="subtitle" *ngIf="committee.description?.trim()">
+                <div class="subtitle ellipsis-overflow" *ngIf="committee.description?.trim()">
                     {{ committee.description }}
                 </div>
             </div>
@@ -86,7 +86,11 @@
     <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
         <div>
             <div *ngIf="committee.meetingAmount">
-                <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" iconTooltipPosition="right" icon="event_available">
+                <os-icon-container
+                    iconTooltip="{{ 'Meetings' | translate }}"
+                    iconTooltipPosition="right"
+                    icon="event_available"
+                >
                     {{ committee.meetingAmount }}
                 </os-icon-container>
             </div>
@@ -96,7 +100,11 @@
                 </os-icon-container>
             </div>
             <div *ngIf="committee.managerAmount">
-                <os-icon-container iconTooltip="{{ 'Committee management' | translate }}" iconTooltipPosition="right" icon="engineering">
+                <os-icon-container
+                    iconTooltip="{{ 'Committee management' | translate }}"
+                    iconTooltipPosition="right"
+                    icon="engineering"
+                >
                     {{ committee.managerAmount }}
                 </os-icon-container>
             </div>

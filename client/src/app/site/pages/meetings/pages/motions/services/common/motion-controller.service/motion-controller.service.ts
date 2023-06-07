@@ -241,5 +241,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         } else {
             viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode) => [];
         }
+        viewModel.getExtendedStateLabel = () => this.getExtendedStateLabel(viewModel);
+        viewModel.getExtendedRecommendationLabel = () => this.getExtendedRecommendationLabel(viewModel);
     }
 }

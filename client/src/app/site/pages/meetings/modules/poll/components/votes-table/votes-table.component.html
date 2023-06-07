@@ -1,10 +1,6 @@
 <div *osPerms="permission.userCanSee">
     <div *ngIf="isViewingThis">
-        <os-list
-            [listObservable]="votesDataObservable"
-            [filterProps]="filterProps"
-            [fullScreen]="false"
-        >
+        <os-list [listObservable]="votesDataObservable" [filterProps]="filterProps" [fullScreen]="false">
             <!-- Content -->
             <div *osScrollingTableCell="'user'; row as vote">
                 <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
@@ -34,7 +30,7 @@
                     <i>{{ 'Anonymous' | translate }}</i>
                 </div>
             </div>
-            <div *ngIf="getTemplateType()==='default'">
+            <div *ngIf="getTemplateType() === 'default'">
                 <div *osScrollingTableCell="'vote'; row as vote" class="vote-cell">
                     <div *osScrollingTableCellLabel>{{ 'Vote' | translate }}</div>
                     <div class="vote-cell-icon-container" [ngClass]="getVoteCSS(vote.value)">
@@ -43,7 +39,7 @@
                     <div>{{ vote.valueVerbose | translate }}</div>
                 </div>
             </div>
-            <div *ngIf="getTemplateType()==='assignment'">
+            <div *ngIf="getTemplateType() === 'assignment'">
                 <div *osScrollingTableCell="'votes'; row as vote">
                     <div *osScrollingTableCellLabel>{{ 'Votes' | translate }}</div>
                     <div class="single-vote-result" *ngFor="let candidate of vote.votes">

@@ -21,7 +21,7 @@
         TODO: Tooltips do not work when hidden under the absolute link, but they can't be above it either,
         because for some reason they don't delegate the click event. So no tooltips for now
         -->
-        <div class="innerTable">
+        <div class="innerTable overflow-hidden">
             <os-icon-container
                 [noWrap]="true"
                 [icon]="getIndicatingIcon(block)"
@@ -45,7 +45,9 @@
 
     <!-- Amount -->
     <div *osScrollingTableCell="'amount'; row as block; config: { width: 60 }" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}" matTooltipPosition="left">{{ getMotionAmount(block) }}</span>
+        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}" matTooltipPosition="left">
+            {{ getMotionAmount(block) }}
+        </span>
     </div>
 
     <!-- Menu -->

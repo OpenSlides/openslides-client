@@ -601,7 +601,7 @@ export class PdfDocumentService {
                 ? new Date(start_time * 1000).toLocaleDateString(this.translate.currentLang)
                 : ``;
             const end_date = end_time ? new Date(end_time * 1000).toLocaleDateString(this.translate.currentLang) : ``;
-            const date = [start_date, end_date].filter(Boolean).join(` - `);
+            const date = start_date !== end_date ? [start_date, end_date].filter(Boolean).join(` - `) : start_date;
             const line1 = [name, description].filter(Boolean).join(` - `);
             const line2 = [location, date].filter(Boolean).join(`, `);
             text = [line1, line2].join(`\n`);
