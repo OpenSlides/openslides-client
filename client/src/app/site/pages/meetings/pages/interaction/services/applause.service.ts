@@ -53,12 +53,12 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
     private applauseTimeout = 0;
 
     private sendsApplauseSubject: Subject<boolean> = new Subject<boolean>();
-    public sendsApplauseObservable: Observable<boolean> = this.sendsApplauseSubject.asObservable();
+    public sendsApplauseObservable: Observable<boolean> = this.sendsApplauseSubject as Observable<boolean>;
 
     public showApplauseObservable: Observable<boolean>;
     private showApplauseLevelConfigObservable: Observable<boolean>;
     private applauseLevelSubject: Subject<number> = new Subject<number>();
-    public applauseLevelObservable: Observable<number> = this.applauseLevelSubject.asObservable();
+    public applauseLevelObservable: Observable<number> = this.applauseLevelSubject as Observable<number>;
 
     private get maxApplause(): number {
         return this.maxApplauseLevel || this.presentApplauseUsers || 0;

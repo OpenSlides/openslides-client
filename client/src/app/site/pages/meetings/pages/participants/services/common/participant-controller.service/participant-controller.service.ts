@@ -86,7 +86,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     }
 
     public override getViewModelListObservable(): Observable<ViewUser[]> {
-        return this._participantListSubject.asObservable();
+        return this._participantListSubject;
     }
 
     public create(...participants: Partial<User>[]): Promise<Identifiable[]> {

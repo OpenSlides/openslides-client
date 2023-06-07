@@ -48,6 +48,10 @@
         padding-left: 12px;
     }
 
+    .central-button {
+        justify-content: center;
+    }
+
     .clickable {
         cursor: pointer;
     }
@@ -714,6 +718,10 @@ button.mat-menu-item.selected {
     @extend .one-line;
     padding-right: 0px;
     margin-right: 0px;
+}
+
+.overflow-hidden {
+    overflow: hidden;
 }
 
 .nowrap {

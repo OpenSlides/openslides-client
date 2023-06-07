@@ -145,6 +145,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             show_title: [],
             show_logo: [],
             show_clock: [],
+            is_internal: [],
             projectiondefault_ids: [[]]
         });
 
@@ -167,7 +168,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         if (this.projector) {
             this.updateForm.patchValue(this.projector.projector);
             this.updateForm.patchValue({
-                name: this.translate.instant(this.projector.name),
+                name: this.projector.name,
                 aspectRatio: this.projector.aspectRatio
             });
         }

@@ -6,7 +6,7 @@
 </os-head-bar>
 
 
-<div *ngIf="!organizationDescription" class="meeting-list-container">
+<div *ngIf="!organizationDescription" class="meeting-list-container-empty">
     <div class="meeting-spacer"></div>
 </div>
 
@@ -21,8 +21,8 @@
 <ng-container *ngIf="!noMeetingsToShow">
     <div class="padding-right-8">
         <!-- active meetings -->
-        <div *ngIf="organizationDescription" class="meeting-list-container">
-            <div class="organization-description" [innerHTML]="organizationDescription | translate"></div>
+        <div *ngIf="organizationDescription" class="meeting-list-container-description meeting-list-container">
+            <div class="organization-description" [innerHTML]="organizationDescription"></div>
         </div>
 
         <div id="active-meetings" class="meeting-list-container">
@@ -52,8 +52,8 @@
 
         <!-- future meetings -->
         <div id="future-meetings" class="meeting-list-container">
-            <div class="meeting-icon-wrapper foreground-primary">
-                <mat-icon color="primary">update</mat-icon>
+            <div class="meeting-icon-wrapper">
+                <mat-icon>update</mat-icon>
                 <span>{{ 'future' | translate }}</span>
             </div>
             <ng-container
@@ -89,7 +89,7 @@
         </div>
 
         <!-- meetings with no date -->
-        <div id="no-date-meetings" class="meeting-list-container">
+        <div *ngIf="!noNoDateMeetingsToShow" id="no-date-meetings" class="meeting-list-container">
             <div class="meeting-icon-wrapper">
                 <mat-icon aria-hidden="true">watch_later</mat-icon>
                 <span>{{ 'dateless' | translate }}</span>
@@ -140,7 +140,7 @@
                 <div class="meeting-box--mid one-line">
                     {{ meeting.name }}
                 </div>
-                <div>
+                <div class="one-line">
                     <span [ngClass]="context?.subtitleCssClass" *ngIf="meeting.location">{{ meeting.location }}</span>
                     <span
                         [ngClass]="context?.subtitleCssClass"
@@ -158,11 +158,12 @@
             archive
         </mat-icon>
         <a
+            class="show-committee-link"
             mat-icon-button
             [routerLink]="['/', 'committees', meeting.committee_id]"
             matTooltip="{{ 'Show committee' | translate }}"
         >
-            <mat-icon>layers</mat-icon>
+            <mat-icon class="show-committee-icon">layers</mat-icon>
         </a>
     </div>
 </ng-template>

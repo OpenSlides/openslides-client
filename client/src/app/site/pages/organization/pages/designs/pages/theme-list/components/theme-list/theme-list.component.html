@@ -19,7 +19,7 @@
         class="cell-slot fill pointer"
         (click)="openThemeBuilderDialog(theme)"
     >
-        <div>
+        <div class="ellipsis-overflow">
             {{ theme.name }}
         </div>
     </div>
@@ -34,14 +34,14 @@
             <div class="fake-button-no-touch" [ngStyle]="{ background: theme.warn_500 }"></div>
         </div>
     </div>
-    <div *osScrollingTableCell="'is_active'; row as theme; config: { width: 40 }" class="cell-slot fill">
-        <mat-icon
-            class="padding-left-8 padding-right-8"
-            *ngIf="isThemeUsed(theme)"
-            matTooltip="{{ 'Is active' | translate }}"
-        >
-            done
-        </mat-icon>
+    <div *osScrollingTableCell="'is_active'; row as theme; config: { width: 30 }" class="cell-slot fill central-button">
+        <os-prompt-checkbox
+            [checked]="isThemeUsed(theme)"
+            [disabled]="isThemeUsed(theme)"
+            [title]="'Change color set' | translate"
+            [content]="'Are you sure you want to activate this color set? This will change the colors in all meetings.' | translate"
+            (selected)="changeCurrentTheme($event, theme)"
+        ></os-prompt-checkbox>
     </div>
     <div *osScrollingTableCell="'menu'; row as theme; config: { width: 40 }" class="cell-slot fill">
         <button mat-icon-button [matMenuTriggerFor]="themeMenu" [matMenuTriggerData]="{ theme: theme }">
@@ -52,10 +52,6 @@
 
 <mat-menu #themeMenu="matMenu">
     <ng-template matMenuContent let-theme="theme">
-        <button mat-menu-item [disabled]="isThemeUsed(theme)" (click)="changeCurrentTheme(theme)">
-            <mat-icon>{{ isThemeUsed(theme) ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-            <span>{{ 'Is active' | translate }}</span>
-        </button>
         <button mat-menu-item (click)="openThemeBuilderDialog(theme)">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>

@@ -4,7 +4,7 @@
         <div *ngIf="amendmentLines">
             <div class="alert alert-info" *ngIf="amendmentLines.length === 0">
                 <i *ngIf="motion.lead_motion">{{ 'No changes at the text.' | translate }}</i>
-                <i *ngIf="!motion.lead_motion">{{ 'The parent motion was deleted.' | translate }}</i>
+                <i *ngIf="!motion.lead_motion">{{ 'The parent motion is not available.' | translate }}</i>
             </div>
             <div class="alert alert-info alert-inconsistency" *ngIf="amendmentErrorMessage">
                 <i [innerHTML]="amendmentErrorMessage"></i>
@@ -28,6 +28,7 @@
                             (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed)
                         "
                         [html]="getAmendmentDiffTextWithContext(paragraph)"
+                        [motionId]="motion.id"
                         [changeRecommendations]="changeRecommendations"
                         (gotoChangeRecommendation)="gotoChangeRecommendation($event)"
                         (createChangeRecommendation)="createChangeRecommendation.emit($event)"
@@ -65,7 +66,7 @@
     <div *ngIf="changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed">
         <mat-checkbox
             (change)="showAmendmentContext = !showAmendmentContext"
-            *ngIf="motion && motion.isParagraphBasedAmendment()"
+            *ngIf="motion && motion.isParagraphBasedAmendment() && motion.lead_motion"
             class="show-entire-text-check"
         >
             <span>{{ 'Show entire motion text' | translate }}</span>

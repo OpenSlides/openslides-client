@@ -75,7 +75,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
-                property: `isLastEmailSend`,
+                property: `isLastEmailSent`,
                 label: this.translate.instant(`Last email sent`),
                 options: [
                     { condition: true, label: this.translate.instant(`Got an email`) },

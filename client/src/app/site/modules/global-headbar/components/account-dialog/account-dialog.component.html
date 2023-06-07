@@ -78,7 +78,7 @@
                             class="flex-vertical-center"
                             *ngFor="let group of getGroupsForMeeting(meeting); let last = last"
                         >
-                            {{ group.name | translate }}
+                            {{ group.name }}
                             <span *ngIf="!last">,&nbsp;</span>
                         </span>
                     </div>

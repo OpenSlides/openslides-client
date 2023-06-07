@@ -23,7 +23,8 @@ export type SettingsType =
     | 'date'
     | 'datetime'
     | 'translations'
-    | 'groups';
+    | 'groups'
+    | 'daterange';
 
 export interface ChoicesMap {
     [name: string]: string | number;
@@ -41,7 +42,7 @@ export interface ChoicesFunctionDefinition<V> {
 }
 
 export interface SettingsItem<V = any> {
-    key: keyof Settings;
+    key: keyof Settings | (keyof Settings)[]; // Array can be used with fields that require multiple values (like then type === 'daterange')
     label: string;
     type?: SettingsType; // default: text
     // if true, the default value will not be translated
@@ -117,30 +118,15 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Event location`)
                     },
                     {
-                        key: `start_time`,
-                        label: _(`Start date`),
-                        type: `date`,
+                        key: [`start_time`, `end_time`],
+                        label: _(`Meeting date`),
+                        type: `daterange`,
                         automaticChangesSetting: {
                             watchProperties: [`end_time`],
                             getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
                                 return currentValue &&
                                     currentWatchPropertyValues.length &&
                                     currentValue > currentWatchPropertyValues[0]
-                                    ? currentWatchPropertyValues[0]
-                                    : currentValue;
-                            }
-                        }
-                    },
-                    {
-                        key: `end_time`,
-                        label: _(`End date`),
-                        type: `date`,
-                        automaticChangesSetting: {
-                            watchProperties: [`start_time`],
-                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
-                                return currentValue &&
-                                    currentWatchPropertyValues.length &&
-                                    currentValue < currentWatchPropertyValues[0]
                                     ? currentWatchPropertyValues[0]
                                     : currentValue;
                             }
@@ -291,6 +277,16 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     }
                 ]
+            },
+            {
+                label: _(`Voting and ballot papers`),
+                settings: [
+                    {
+                        key: `topic_poll_default_group_ids`,
+                        label: _(`Default groups with voting rights`),
+                        type: `groups`
+                    }
+                ]
             }
         ]
     },
@@ -313,7 +309,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_can_set_contribution_self`,
-                        label: _(`Enable star icon to mark speaker (e.g. for contribution)`),
+                        label: _(`Enable star icon usage by speakers`),
                         type: `boolean`
                     },
                     {
@@ -510,7 +506,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Sort motions by`),
                         type: `choice`,
                         choices: {
-                            number: _(`Motion number`),
+                            number: _(`Number`),
                             weight: _(`Call list`)
                         }
                     }
@@ -617,7 +613,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `motion_poll_default_100_percent_base`,
+                        key: `motion_poll_default_onehundred_percent_base`,
                         label: _(`Default 100 % base of a voting result`),
                         type: `choice`,
                         choices: PollPercentBaseVerbose
@@ -717,7 +713,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `assignment_poll_default_100_percent_base`,
+                        key: `assignment_poll_default_onehundred_percent_base`,
                         label: _(`Default 100 % base of an election result`),
                         type: `choice`,
                         choices: PollPercentBaseVerbose

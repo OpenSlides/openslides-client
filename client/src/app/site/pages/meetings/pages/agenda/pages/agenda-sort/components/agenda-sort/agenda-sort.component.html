@@ -22,31 +22,21 @@
         </div>
     </div>
     <div class="button-menu right">
-        <button mat-button (click)="visibilityFilter.opened ? visibilityFilter.close() : visibilityFilter.open()">
-            Filter
-        </button>
-        <mat-drawer #visibilityFilter mode="over" position="end">
-            <section class="sort-drawer-content">
-                <button mat-button (click)="visibilityFilter.toggle()">
-                    <mat-icon>keyboard_arrow_right</mat-icon>
-                </button>
-                <span class="sort-grid">
-                    <div class="hint">{{ 'Visibility' | translate }}</div>
-                    <div>
-                        <mat-checkbox
-                            *ngFor="let option of filterOptions"
-                            [(ngModel)]="option.state"
-                            (change)="onFilterChange(option.id)"
-                        >
-                            <mat-icon matTooltip="{{ option.label | translate }}" class="icon-16">
-                                {{ getIcon(option.id) }}
-                            </mat-icon>
-                            {{ option.label | translate }}
-                        </mat-checkbox>
-                    </div>
-                </span>
-            </section>
-        </mat-drawer>
+        <button mat-button [matMenuTriggerFor]="menu">Filter</button>
+        <mat-menu #menu>
+            <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
+            <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
+                <mat-list-option
+                    *ngFor="let option of filterOptions"
+                    [value]="option.id"
+                    [selected]="option.state">
+                    <mat-icon matListIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
+                        {{ getIcon(option.id) }}
+                    </mat-icon>
+                    <p matLine>{{ option.label | translate }}</p>
+                </mat-list-option>
+            </mat-selection-list>
+        </mat-menu>
     </div>
 </div>
 <mat-card>
