@@ -23,7 +23,7 @@
             class="background-card"
             [formControl]="searchValueForm"
             placeholder="{{ 'Search' | translate }}"
-            (keydown)="$event.stopPropagation()"
+            (keydown)="onSearchKeydown($event)"
         />
     </div>
     <ng-container *ngIf="multiple && showChips">
@@ -68,6 +68,7 @@
             [value]="selectableItem.id"
             [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
+            matTooltipPosition="left"
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
             (click)="keepOpen ? matSelect.open() : null"
         >

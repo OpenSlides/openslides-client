@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, timer } from 'rxjs';
 import { Id, Ids } from 'src/app/domain/definitions/key-types';
 import { ActionWorkerState } from 'src/app/domain/models/action-worker/action-worker';
 import { idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
@@ -27,7 +27,7 @@ export class ActionWorkerWatchService {
 
     private _currentWorkerIds: Id[] = [];
     private _workerSubject = new BehaviorSubject<ViewActionWorker[]>([]);
-    private _workerObservable = this._workerSubject.asObservable();
+    private _workerObservable = this._workerSubject as Observable<ViewActionWorker[]>;
 
     private _toBeDeleted: { workerId: number; timestamp: number }[] = [];
 

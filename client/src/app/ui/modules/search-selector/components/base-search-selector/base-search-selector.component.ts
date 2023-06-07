@@ -194,7 +194,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public get filteredItemsObservable(): Observable<Selectable[]> {
-        return this.filteredItemsSubject.asObservable();
+        return this.filteredItemsSubject;
     }
 
     public selectedIds: Id[] = [];
@@ -289,15 +289,17 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
 
             this.cdkVirtualScrollViewPort.scrollToIndex(0);
             this.cdkVirtualScrollViewPort.checkViewportSize();
+        } else {
+            this.searchValueForm.setValue(``);
         }
     }
 
     public onSelectionChange(value: Selectable, change: MatOptionSelectionChange): void {
-        if (change.isUserInput && this.multiple) {
+        if (change.isUserInput) {
             if (this.multiple) {
                 this.addOrRemoveId(value.id);
+                this.selectionChanged.emit({ value, selected: change.source.selected });
             }
-            this.selectionChanged.emit({ value, selected: change.source.selected });
         }
     }
 
@@ -307,6 +309,13 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             return;
         }
         this.matSelect.open();
+    }
+
+    public onSearchKeydown(event: any): void {
+        // Only propagate enter, up, down
+        if ([13, 38, 40].indexOf(event.keyCode) === -1) {
+            event.stopPropagation();
+        }
     }
 
     /**

@@ -145,6 +145,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             show_title: [],
             show_logo: [],
             show_clock: [],
+            is_internal: [],
             projectiondefault_ids: [[]]
         });
 

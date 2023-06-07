@@ -39,7 +39,7 @@ export abstract class BaseSideImportHandler<MainModel, SideModel>
     implements SideImportHandler<MainModel, SideModel>
 {
     public get modelsToCreateObservable(): Observable<CsvMapping<SideModel>[]> {
-        return this._modelsToCreateSubject.asObservable();
+        return this._modelsToCreateSubject;
     }
 
     public get phaseObservable(): Observable<ImportStepPhase> {
