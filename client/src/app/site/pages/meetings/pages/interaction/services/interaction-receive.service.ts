@@ -38,7 +38,7 @@ interface InteractionReceiveSetupServices {
 })
 export class InteractionReceiveService {
     private conferenceStateSubject = new BehaviorSubject<ConferenceState>(ConferenceState.none);
-    public conferenceStateObservable = this.conferenceStateSubject.asObservable();
+    public conferenceStateObservable = this.conferenceStateSubject as Observable<ConferenceState>;
 
     public get showLiveConfObservable(): Observable<boolean> {
         if (!this._showLiveConfObservable) {

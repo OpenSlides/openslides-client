@@ -8,17 +8,8 @@
     <div class="assign-meetings-element">
         <h2>{{ 'Add to meetings' | translate }}: {{ user?.getFullName() }}</h2>
         <div class="assign-meetings-subtext">
-            <p translate>
-                Please select your target meetings and state the name of the group, which the user should be assigned to
-                in each meeting.
-            </p>
-            <p *ngIf="showLanguageWarning">
-                <i translate>
-                    Regardless of current language settings, the entered group name must be consistent with original
-                    group name (for the built-in groups it is the English group name).
-                </i>
-            </p>
-            <br />
+            <p translate>Please select your target meetings and state the name of the group, which the user should be assigned to in each meeting.</p>
+            <br>
             <p>
                 <i>
                     <span translate>Meetings selected</span>

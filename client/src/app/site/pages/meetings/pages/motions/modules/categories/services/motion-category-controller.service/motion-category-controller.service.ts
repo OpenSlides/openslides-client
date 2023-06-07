@@ -34,7 +34,7 @@ export class MotionCategoryControllerService extends BaseMeetingControllerServic
     }
 
     public override getViewModelListObservable(): Observable<ViewMotionCategory[]> {
-        return this._currentCategoriesSubject.asObservable();
+        return this._currentCategoriesSubject;
     }
 
     public create(...categories: Partial<MotionCategory>[]): Promise<Identifiable[]> {

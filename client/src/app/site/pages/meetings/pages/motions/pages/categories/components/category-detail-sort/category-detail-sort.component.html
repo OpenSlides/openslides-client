@@ -21,12 +21,11 @@
                         {{ motion.getTitle() }}
                     </span>
                     <span>
-                        <mat-basic-chip
-                            class="bluegrey"
-                            disableRipple
+                        <mat-basic-chip class="bluegrey" disableRipple
                             matTooltip="{{ 'Sequential number' | translate }}"
+                            matTooltipPosition="left"
                         >
-                            {{ motion.id }}
+                            {{ motion.sequential_number }}
                         </mat-basic-chip>
                     </span>
                 </div>

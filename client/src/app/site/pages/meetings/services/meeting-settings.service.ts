@@ -56,6 +56,6 @@ export class MeetingSettingsService {
         if (!this.settingSubjects[key]) {
             this.settingSubjects[key] = new BehaviorSubject<any>(this.instant(key));
         }
-        return this.settingSubjects[key].asObservable() as Observable<Settings[T]>;
+        return this.settingSubjects[key] as Observable<Settings[T]>;
     }
 }

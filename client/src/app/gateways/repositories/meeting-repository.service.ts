@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { isMoment, Moment } from 'moment';
+import { getUnixTime } from 'date-fns';
 import { Action } from 'src/app/gateways/actions';
 
 import { Id } from '../../domain/definitions/key-types';
@@ -68,7 +68,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `default_group_id`,
             `admin_group_id`,
             `committee_id`,
-            `group_ids`
+            `group_ids`,
+            `language`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
             `is_template`,
@@ -240,13 +241,11 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
      * MOMENT
      * using the date picker will send a moment object
      */
-    private anyDateToUnix(date: Date | Moment | number | null): number | null {
+    private anyDateToUnix(date: Date | number | null): number | null {
         if (date instanceof Date) {
-            return Math.round(date.getTime() / 1000);
+            return getUnixTime(date);
         } else if (typeof date === `number`) {
             return date;
-        } else if (isMoment(date)) {
-            return date.unix();
         } else if (date === null) {
             return null;
         }

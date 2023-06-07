@@ -5,12 +5,13 @@
     </div>
 </os-head-bar>
 
-<div *ngIf="!organizationDescription" class="meeting-list-container">
+
+<div *ngIf="!organizationDescription" class="meeting-list-container-empty">
     <div class="meeting-spacer"></div>
 </div>
 
 <mat-card *ngIf="noMeetingsToShow && ready" class="no-content os-card">
-    <i>{{ 'No meetings available' | translate }}</i>
+    <i>{{ 'No meetings' | translate }}</i>
 </mat-card>
 
 <div *ngIf="noMeetingsToShow && !ready" class="no-content">
@@ -20,7 +21,7 @@
 <ng-container *ngIf="!noMeetingsToShow">
     <div class="padding-right-8">
         <!-- active meetings -->
-        <div *ngIf="organizationDescription" class="meeting-list-container">
+        <div *ngIf="organizationDescription" class="meeting-list-container-description meeting-list-container">
             <div class="organization-description" [innerHTML]="organizationDescription"></div>
         </div>
 
@@ -31,7 +32,7 @@
             </div>
             <div class="meeting-list background-card">
                 <mat-card class="no-meetings-card" *ngIf="!currentMeetings.length">
-                    {{ 'No meetings available' | translate }}
+                    {{ 'No meetings' | translate }}
                 </mat-card>
                 <ng-container *ngFor="let meeting of currentMeetings; let last = last">
                     <ng-container
@@ -51,8 +52,8 @@
 
         <!-- future meetings -->
         <div id="future-meetings" class="meeting-list-container">
-            <div class="meeting-icon-wrapper foreground-primary">
-                <mat-icon color="primary">update</mat-icon>
+            <div class="meeting-icon-wrapper">
+                <mat-icon>update</mat-icon>
                 <span>{{ 'future' | translate }}</span>
             </div>
             <ng-container
@@ -88,7 +89,7 @@
         </div>
 
         <!-- meetings with no date -->
-        <div id="no-date-meetings" class="meeting-list-container">
+        <div *ngIf="!noNoDateMeetingsToShow" id="no-date-meetings" class="meeting-list-container">
             <div class="meeting-icon-wrapper">
                 <mat-icon aria-hidden="true">watch_later</mat-icon>
                 <span>{{ 'dateless' | translate }}</span>
@@ -111,7 +112,7 @@
         [ngStyle]="{ height: getHeightByMeetings(meetingList) }"
     >
         <mat-card class="no-meetings-card" *ngIf="!meetingList.length">
-            {{ 'No meetings available' | translate }}
+            {{ 'No meetings' | translate }}
         </mat-card>
         <cdk-virtual-scroll-viewport [itemSize]="60" *ngIf="!!meetingList.length" class="meeting-list-viewport">
             <ng-container *cdkVirtualFor="let meeting of meetingList; let odd = odd; let last = last">
@@ -144,7 +145,7 @@
                 <div class="meeting-box--mid one-line">
                     {{ meeting.name }}
                 </div>
-                <div>
+                <div class="one-line">
                     <span [ngClass]="context?.subtitleCssClass" *ngIf="meeting.location">{{ meeting.location }}</span>
                     <span
                         [ngClass]="context?.subtitleCssClass"
@@ -162,11 +163,12 @@
             archive
         </mat-icon>
         <a
+            class="show-committee-link"
             mat-icon-button
             [routerLink]="['/', 'committees', meeting.committee_id]"
             matTooltip="{{ 'Show committee' | translate }}"
         >
-            <mat-icon>layers</mat-icon>
+            <mat-icon class="show-committee-icon">layers</mat-icon>
         </a>
     </div>
 </ng-template>

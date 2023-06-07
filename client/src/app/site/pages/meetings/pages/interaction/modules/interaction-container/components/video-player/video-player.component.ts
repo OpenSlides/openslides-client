@@ -15,7 +15,6 @@ import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import videojs from 'video.js';
 
 enum MimeType {
     mp4 = `video/mp4`,
@@ -46,6 +45,8 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     public isStable = false;
     private afterViewInitDone = false;
 
+    private nanoPlayer: any = undefined;
+
     private youtubeQuerryParams = `?rel=0&iv_load_policy=3&modestbranding=1&autoplay=1`;
 
     @Input()
@@ -56,19 +57,29 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         this._videoUrl = value.trim();
         this.playerType = this.determinePlayer(this.videoUrl);
 
+        if (!this.usingVjs) {
+            this.stopVJS();
+            this.unloadVjs();
+        }
+        if (this.nanoPlayer) {
+            this.nanoPlayer.destroy();
+        }
+
         if (this.usingVjs) {
             this.mimeType = this.determineContentTypeByUrl(this.videoUrl);
             if (this.afterViewInitDone) {
                 this.initVjs();
             }
+        } else if (this.usingNanocosmos) {
+            this.videoId = this.getNanocosmosVideoId(this.videoUrl);
+
+            this.loadNanoplayer().then(() => {
+                this.updateNano();
+            });
         } else {
-            this.stopVJS();
-            this.unloadVjs();
             this.videoId = this.getYouTubeVideoId(this.videoUrl);
             if (this.usingYouTube) {
                 this.videoId = this.getYouTubeVideoId(this.videoUrl);
-            } else if (this.usingNanocosmos) {
-                this.videoId = this.getNanocosmosVideoId(this.videoUrl);
             }
         }
         this.cd.markForCheck();
@@ -79,7 +90,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     public posterUrl!: string;
-    public vjsPlayer: videojs.Player | null = null;
+    public vjsPlayer: any | null = null;
     public videoId!: string;
     public isUrlOnline!: boolean;
     private playerType!: Player;
@@ -102,10 +113,6 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
 
     public get youTubeVideoUrl(): string {
         return `https://www.youtube.com/embed/${this.videoId}${this.youtubeQuerryParams}`;
-    }
-
-    public get nanocosmosVideoUrl(): string {
-        return `https://demo.nanocosmos.de/nanoplayer/embed/1.0.0/nanoplayer.html?entry.rtmp.streamname=${this.videoId}`;
     }
 
     public constructor(
@@ -141,7 +148,13 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.unloadVjs();
+        if (this.usingVjs) {
+            this.unloadVjs();
+        }
+
+        if (this.nanoPlayer) {
+            this.nanoPlayer.destroy();
+        }
     }
 
     private stopVJS(): void {
@@ -163,7 +176,10 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
          * if a Ressource switches from online to offline
          */
         const ajaxResponse: AjaxResponse<any> = await firstValueFrom(
-            ajax(this.videoUrl).pipe(
+            ajax({
+                url: this.videoUrl,
+                crossDomain: true
+            }).pipe(
                 map(response => response),
                 catchError(error => of(error))
             )
@@ -184,9 +200,67 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         this.playVjsVideo();
     }
 
+    public async updateNano(): Promise<void> {
+        let entry: any = {
+            bintu: {
+                streamid: this.videoId
+            }
+        };
+
+        // TODO: Including via rtmp streams is deprecated.
+        if (!this.videoUrl.includes(`bintu`)) {
+            entry = {
+                h5live: {
+                    rtmp: {
+                        streamname: this.videoId
+                    }
+                }
+            };
+        }
+
+        let style: any = {};
+        if (this.posterUrl) {
+            style.poster = this.posterUrl;
+        }
+
+        this.nanoPlayer.setup({
+            source: {
+                defaults: {
+                    service: `bintu`
+                },
+                entries: [entry]
+            },
+            playback: {
+                autoplay: true,
+                automute: true,
+                muted: false
+            },
+            style
+        });
+    }
+
+    private loadNanoplayer(): Promise<void> {
+        return new Promise(resolve => {
+            if (!this.nanoPlayer) {
+                const script = document.createElement(`script`);
+                script.type = `text/javascript`;
+                script.src = `https://demo.nanocosmos.de/nanoplayer/api/release/nanoplayer.4.min.js`;
+                script.onload = () => {
+                    // @ts-ignore
+                    this.nanoPlayer = new NanoPlayer(`nanocosmosPlayer`);
+                    resolve();
+                };
+                document.getElementsByTagName(`head`)[0].appendChild(script);
+            } else {
+                resolve();
+            }
+        });
+    }
+
     private async initVjs(): Promise<void> {
         await this.isUrlReachable();
         if (!this.vjsPlayer && this.usingVjs && this.vjsPlayerElementRef) {
+            const videojs = (await import(`video.js`)).default;
             this.vjsPlayer = videojs(this.vjsPlayerElementRef.nativeElement, {
                 textTrackSettings: { persistTextTrackSettings: false },
                 fluid: true,
@@ -231,11 +305,17 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     private getNanocosmosVideoId(url: string): string {
-        const urlParts: String[] = url.split(`=`);
-        if (urlParts?.length && typeof urlParts[1] === `string`) {
-            return urlParts[1];
+        if (!url.includes(`bintu`)) {
+            const urlParts: String[] = url.split(`=`);
+            if (urlParts?.length && typeof urlParts[1] === `string`) {
+                return urlParts[1];
+            }
+
+            return ``;
         }
-        return ``;
+
+        const urlParts: string[] = url.split(`/`);
+        return urlParts[urlParts.length - 1];
     }
 
     private determineContentTypeByUrl(url: string): MimeType {

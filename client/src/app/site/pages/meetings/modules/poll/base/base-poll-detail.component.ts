@@ -75,12 +75,12 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
     // The observable for the votes-per-user table
     public get votesDataObservable(): Observable<BaseVoteData[]> {
-        return this._votesDataSubject.asObservable();
+        return this._votesDataSubject;
     }
 
     // The observable for the entitled-users-table
     public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
-        return this._entitledUsersSubject.asObservable();
+        return this._entitledUsersSubject;
     }
 
     public get self(): BasePollDetailComponent<V, S> {

@@ -32,8 +32,8 @@
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
-        <div style="overflow: hidden" class="flex-vertical-center">
-            <div style="overflow: hidden" class="nameCell">
+        <div class="flex-vertical-center overflow-hidden">
+            <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
                     <span class="ellipsis-overflow">
                         {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}

@@ -1,0 +1,22 @@
+<div class="os-datetimepicker-container">
+    <mat-form-field class="datepicker-form-field">
+        <mat-label *ngIf="title">{{ title | translate }}</mat-label>
+        <mat-date-range-input [formGroup]="contentForm" (click)="picker.open()" [rangePicker]="picker">
+            <input matStartDate readonly formControlName="start" placeholder="Start date">
+            <input matEndDate readonly formControlName="end" placeholder="End date">
+        </mat-date-range-input>
+        <mat-hint *ngIf="hintText">{{ hintText | translate }}</mat-hint>
+        <div class="suffix-wrapper" matSuffix>
+            <mat-icon class="red-warning-text" *ngIf="showUpdateSuccessIcon">check_circle</mat-icon>
+            <mat-datepicker-toggle [for]="picker" (click)="$event.preventDefault()"></mat-datepicker-toggle>
+        </div>
+        <mat-error *ngIf="error">{{ error }}</mat-error>
+        <mat-date-range-picker #picker>
+            <mat-datepicker-actions>
+                <button mat-button (click)="updateForm({ start: null, end: null })" matDatepickerCancel color="warn">{{ 'Clear' | translate }}</button>
+                <button mat-button matDatepickerCancel>{{ 'Cancel' | translate }}</button>
+                <button mat-raised-button color="primary" matDatepickerApply>{{ 'Apply' | translate }}</button>
+            </mat-datepicker-actions>
+        </mat-date-range-picker>
+    </mat-form-field>
+</div>

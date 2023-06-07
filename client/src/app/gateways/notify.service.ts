@@ -130,7 +130,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
      * Returns a general observalbe of all notify messages.
      */
     public getObservable(): Observable<NotifyResponse<any>> {
-        return this.notifySubject.asObservable();
+        return this.notifySubject;
     }
 
     /**
@@ -141,7 +141,7 @@ export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | Not
         if (!this.messageSubjects[name]) {
             this.messageSubjects[name] = new Subject<NotifyResponse<any>>();
         }
-        return this.messageSubjects[name].asObservable() as Observable<NotifyResponse<T>>;
+        return this.messageSubjects[name] as Observable<NotifyResponse<T>>;
     }
 
     /**

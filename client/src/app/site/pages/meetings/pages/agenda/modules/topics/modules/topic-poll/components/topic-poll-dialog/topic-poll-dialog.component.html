@@ -40,18 +40,30 @@
             </div>
 
             <div>
-                <!-- Enter new option -->
-                <div>
-                    <mat-form-field>
-                        <input
-                            require
-                            matInput
-                            [(ngModel)]="optionInput"
-                            type="text"
-                            [placeholder]="'New option' | translate"
-                        />
-                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                    </mat-form-field>
+                <div class="option-list"  (scroll)="scrolled($event)" #scrollframe>
+                    <os-sorting-list
+                        *ngIf="newOptions.length"
+                        [input]="optionsSubject"
+                        [live]="true"
+                        (sortEvent)="onSortingChange($event)"
+                        >
+
+                        <!-- implicit item references into the component using ng-template slot -->
+                        <ng-template let-item>
+                            <div class="single-option-line" #item>
+                                <span>{{ item.getTitle() }}</span>
+                                <span class="delete-button">
+                                    <button
+                                        mat-icon-button
+                                        matTooltip="{{ 'Remove option' | translate }}"
+                                        matTooltipPosition="left"
+                                        (click)="removeOption(item)">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                </span>
+                            </div>
+                        </ng-template>
+                    </os-sorting-list>
                 </div>
 
                 <!-- Add option -->

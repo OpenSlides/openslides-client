@@ -2,10 +2,11 @@ import { ApplicationRef, Component, OnInit, ViewContainerRef } from '@angular/co
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { locale } from 'moment';
+import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
 import { StorageService } from 'src/app/gateways/storage.service';
+import { langToTimeLocale } from 'src/app/infrastructure/utils';
 import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { LifecycleService } from 'src/app/site/services/lifecycle.service';
@@ -33,7 +34,8 @@ export class OpenSlidesMainComponent implements OnInit {
         private openslidesStatus: OpenSlidesStatusService,
         private matIconRegistry: MatIconRegistry,
         private translate: TranslateService,
-        private storageService: StorageService
+        private storageService: StorageService,
+        private config: DateFnsConfigurationService
     ) {
         overloadJsFunctions();
         this.waitForAppLoaded();
@@ -58,17 +60,23 @@ export class OpenSlidesMainComponent implements OnInit {
                 this.translate.use(this.translate.getLangs().includes(browserLang) ? browserLang : `en`);
             }
 
-            // set moment locale
-            locale(this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang);
+            // set date-fns locale
+            this.updateLocaleByName(
+                this.translate.currentLang ? this.translate.currentLang : this.translate.defaultLang
+            );
         });
 
         // listen for language changes
         this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
             this.storageService.set(CURRENT_LANGUAGE_STORAGE_KEY, event.lang);
 
-            // update moment locale
-            locale(event.lang);
+            // update date-fns locale
+            this.updateLocaleByName(event.lang);
         });
+    }
+
+    private async updateLocaleByName(name: string): Promise<void> {
+        this.config.setLocale(await langToTimeLocale(name));
     }
 
     private async waitForAppLoaded(): Promise<void> {

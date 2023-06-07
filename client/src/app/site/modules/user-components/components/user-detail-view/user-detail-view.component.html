@@ -88,6 +88,7 @@
             <!-- Pronoun -->
             <mat-form-field class="width-16p force-min-width">
                 <input type="text" matInput placeholder="{{ 'Pronoun' | translate }}" formControlName="pronoun" />
+                <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
             </mat-form-field>
 
             <!-- Gender -->
@@ -112,6 +113,7 @@
                     mat-button
                     mat-icon-button
                     [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                    matTooltipPosition="above"
                 >
                     <mat-icon>help</mat-icon>
                 </button>

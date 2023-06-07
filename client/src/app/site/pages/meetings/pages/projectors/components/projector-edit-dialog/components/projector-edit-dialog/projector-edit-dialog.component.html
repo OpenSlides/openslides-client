@@ -13,6 +13,12 @@
                 </mat-error>
             </mat-form-field>
 
+            <div *ngIf="!projector.used_as_reference_projector_meeting_id">
+                <mat-checkbox formControlName="is_internal">
+                    <span>{{ 'Internal' | translate }}</span>
+                </mat-checkbox>
+            </div>
+
             <h3>{{ 'Resolution and size' | translate }}</h3>
             <!-- Aspect ratio field -->
             <div>

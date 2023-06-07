@@ -37,7 +37,7 @@ export class CurrentListOfSpeakersService {
 
     private currentListOfSpeakerSubject = new BehaviorSubject<ViewListOfSpeakers | null>(null);
 
-    public currentListOfSpeakersObservable = this.currentListOfSpeakerSubject.asObservable();
+    public currentListOfSpeakersObservable = this.currentListOfSpeakerSubject as Observable<ViewListOfSpeakers | null>;
 
     public constructor(
         private projectorRepo: ProjectorControllerService,
@@ -76,7 +76,7 @@ export class CurrentListOfSpeakersService {
         if (!this.currentListOfSpeakers[projector.id]) {
             this.setListOfSpeakersForProjector(projector);
         }
-        return this.currentListOfSpeakers[projector.id].asObservable();
+        return this.currentListOfSpeakers[projector.id];
     }
 
     /**

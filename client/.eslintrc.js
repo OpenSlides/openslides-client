@@ -75,6 +75,10 @@ module.exports = {
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
+                'no-restricted-properties': ['error', {
+                    'property': 'asObservable',
+                    'message': 'Please use a typecast or explicitly instantiate a new Observable.'
+                }]
             }
         },
         {

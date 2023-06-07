@@ -11,7 +11,7 @@ export class UpdateService {
      * @returns the updateSubscription
      */
     public get updateObservable(): Observable<void> {
-        return this._nextVersionAvailableSubject.asObservable();
+        return this._nextVersionAvailableSubject;
     }
 
     private _nextVersionAvailableSubject = new Subject<void>();

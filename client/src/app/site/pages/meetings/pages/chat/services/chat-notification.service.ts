@@ -31,7 +31,7 @@ const STORAGE_KEY = `os4-chat-notifications`;
 })
 export class ChatNotificationService {
     public get allChatGroupsNotificationsObservable(): Observable<number> {
-        return this._allGroupsNotificationsSubject.asObservable();
+        return this._allGroupsNotificationsSubject;
     }
 
     private _allGroupsNotificationsSubject = new BehaviorSubject<number>(0);
@@ -69,7 +69,7 @@ export class ChatNotificationService {
     }
 
     public getChatGroupNotificationsEvent(chatGroupId: Id): Observable<number> {
-        return this.getChatGroupNotificationSubject(chatGroupId).asObservable();
+        return this.getChatGroupNotificationSubject(chatGroupId);
     }
 
     private async setup(): Promise<void> {

@@ -258,7 +258,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this.personalInfoForm = this.fb.group(
             {
                 username: [``, this.isNewUser ? [] : [Validators.required]],
-                pronoun: [``],
+                pronoun: [``, Validators.maxLength(32)],
                 title: [``],
                 first_name: [``],
                 last_name: [``],
@@ -294,6 +294,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             Object.keys(data).forEach(key => {
                 newData[key] =
                     this._checkIfDeletedProperties.includes(key) && !data[key] && !!this.user[key] ? null : data[key];
+                if (newData[key] !== null) {
+                    this.personalInfoForm.get(key).markAsTouched();
+                }
             });
             return newData;
         }
