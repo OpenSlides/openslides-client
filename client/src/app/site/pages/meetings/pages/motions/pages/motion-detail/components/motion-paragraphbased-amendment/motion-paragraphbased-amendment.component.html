@@ -38,7 +38,7 @@
                             lineNumberingMode !== LineNumberingMode.Outside ||
                             !(changeRecoMode !== ChangeRecoMode.Original && changeRecoMode !== ChangeRecoMode.Changed)
                         "
-                        [innerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust: 'html'"
+                        [innerHTML]="getAmendmentDiffTextWithContext(paragraph) | trust : 'html'"
                     ></div>
                     <!-- the <div> element is only a placeholder -> outerHTML to replace it -->
                 </div>
@@ -95,7 +95,7 @@
             <em class="red-warning-text">
                 {{ 'This paragraph does not exist in the main motion anymore:' | translate }}
             </em>
-            <div class="motion-text" [innerHTML]="paragraph | trust: 'html'"></div>
+            <div class="motion-text" [innerHTML]="paragraph | trust : 'html'"></div>
         </section>
     </form>
 </ng-container>
