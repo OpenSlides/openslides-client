@@ -1,11 +1,15 @@
-<os-action-card [showActionRow]="canBeEdited || hasSubmitterEditRights" [disableExpandControl]="isEditing" icon="comment">
+<os-action-card
+    [showActionRow]="canBeEdited || hasSubmitterEditRights"
+    [disableExpandControl]="isEditing"
+    icon="comment"
+>
     <ng-container class="meta-text-block-title">
         <span>{{ section?.getTitle() }}</span>
     </ng-container>
 
     <ng-container class="meta-text-block-content">
         <ng-container *ngIf="!isEditing">
-            <div *ngIf="comment" [innerHTML]="comment.comment | trust: 'html'"></div>
+            <div *ngIf="comment" [innerHTML]="comment.comment | trust : 'html'"></div>
             <div class="no-content" *ngIf="!comment">
                 {{ 'No comment' | translate }}
             </div>

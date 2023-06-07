@@ -15,8 +15,12 @@
         <div formGroupName="options">
             <div *ngFor="let option of options" class="votes-grid">
                 <div class="candidate">
-                    <span *ngIf="option.content_object && option.content_object['getFullName']">{{ option.content_object | toString: 'getFullName' }}</span>
-                    <i *ngIf="!option.content_object && !option.poll_candidate_user_ids">{{ unknownUserLabel | translate }}</i>
+                    <span *ngIf="option.content_object && option.content_object['getFullName']">
+                        {{ option.content_object | toString : 'getFullName' }}
+                    </span>
+                    <i *ngIf="!option.content_object && !option.poll_candidate_user_ids">
+                        {{ unknownUserLabel | translate }}
+                    </i>
                 </div>
 
                 <div class="amount">

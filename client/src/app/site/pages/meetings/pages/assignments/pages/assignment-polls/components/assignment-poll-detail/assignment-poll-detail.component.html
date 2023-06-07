@@ -34,7 +34,10 @@
             <!-- Result -->
             <os-assignment-poll-detail-content [poll]="poll"></os-assignment-poll-detail-content>
 
-            <mat-tab-group *ngIf="showResults && poll.stateHasVotes && poll.isEVoting"  (selectedTabChange)="onTabChange()">
+            <mat-tab-group
+                *ngIf="showResults && poll.stateHasVotes && poll.isEVoting"
+                (selectedTabChange)="onTabChange()"
+            >
                 <mat-tab label="{{ 'Single votes' | translate }}">
                     <!-- Single Votes Table -->
                     <div class="named-result-table">
@@ -45,8 +48,7 @@
                             [isViewingThis]="isViewingVoteslist"
                             [parent]="self"
                             [templateType]="'assignment'"
-                        >
-                        </os-votes-table>
+                        ></os-votes-table>
                     </div>
                 </mat-tab>
                 <mat-tab label="{{ 'Entitled users' | translate }}">

@@ -1,24 +1,15 @@
 <!-- A summary of all changes -->
 <div class="change-recommendation-summary outlined-border" *ngIf="changes?.length">
-    <strong [matBadge]="changes.length" matBadgeOverlap="false">
-        {{ 'Summary of changes' | translate }}&nbsp;
-    </strong>
+    <strong [matBadge]="changes.length" matBadgeOverlap="false">{{ 'Summary of changes' | translate }}&nbsp;</strong>
 
-    <cdk-virtual-scroll-viewport
-        itemSize="22"
-        minBufferPx="100"
-        maxBufferPx="300"
-        class="summary-of-changes-scroll"
-    >
+    <cdk-virtual-scroll-viewport itemSize="22" minBufferPx="100" maxBufferPx="300" class="summary-of-changes-scroll">
         <ul>
             <li *cdkVirtualFor="let change of changes; let index = index">
                 <span class="one-line">
                     <a href="" (click)="scrollToChangeClicked(change, $event)" *ngIf="!change.isTitleChange()">
                         <span>{{ 'Line' | translate }} {{ formatLineRange(change) }}</span>
                         <span *ngIf="change.isTitleChange()">{{ 'Title' | translate }}</span>
-                        <span *ngIf="isChangeRecommendation(change)">
-                            ({{ 'Change recommendation' | translate }})
-                        </span>
+                        <span *ngIf="isChangeRecommendation(change)">({{ 'Change recommendation' | translate }})</span>
                         <span *ngIf="isAmendment(change)">
                             ({{ 'Amendment' | translate }} {{ change.getIdentifier() }})
                         </span>
