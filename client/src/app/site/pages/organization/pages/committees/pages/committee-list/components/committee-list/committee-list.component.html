@@ -86,7 +86,11 @@
     <div *osScrollingTableCell="'meta'; row as committee; config: { width: 75 }">
         <div>
             <div *ngIf="committee.meetingAmount">
-                <os-icon-container iconTooltip="{{ 'Meetings' | translate }}" iconTooltipPosition="right" icon="event_available">
+                <os-icon-container
+                    iconTooltip="{{ 'Meetings' | translate }}"
+                    iconTooltipPosition="right"
+                    icon="event_available"
+                >
                     {{ committee.meetingAmount }}
                 </os-icon-container>
             </div>
@@ -96,7 +100,11 @@
                 </os-icon-container>
             </div>
             <div *ngIf="committee.managerAmount">
-                <os-icon-container iconTooltip="{{ 'Committee management' | translate }}" iconTooltipPosition="right" icon="engineering">
+                <os-icon-container
+                    iconTooltip="{{ 'Committee management' | translate }}"
+                    iconTooltipPosition="right"
+                    icon="engineering"
+                >
                     {{ committee.managerAmount }}
                 </os-icon-container>
             </div>

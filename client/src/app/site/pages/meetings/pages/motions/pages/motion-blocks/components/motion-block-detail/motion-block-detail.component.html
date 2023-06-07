@@ -37,7 +37,10 @@
                 (click)="onFollowRecButton()"
                 [disabled]="isFollowButtonDisabledObservable() | async"
             >
-                <os-icon-container icon="done_all" [iconTooltip]="'Follow recommendations for all motions' | translate"></os-icon-container>
+                <os-icon-container
+                    icon="done_all"
+                    [iconTooltip]="'Follow recommendations for all motions' | translate"
+                ></os-icon-container>
             </button>
         </div>
     </os-head-bar>

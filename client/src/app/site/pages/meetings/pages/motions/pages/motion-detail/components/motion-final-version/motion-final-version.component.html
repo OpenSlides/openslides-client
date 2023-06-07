@@ -1,6 +1,6 @@
 <ng-container *ngIf="isEditMode; then editTemplate; else viewTemplate"></ng-container>
 <ng-template #viewTemplate>
-    <div [innerHTML]="formattedText | trust: 'html'"></div>
+    <div [innerHTML]="formattedText | trust : 'html'"></div>
 </ng-template>
 <ng-template #editTemplate>
     <form [formGroup]="contentForm">

@@ -17,7 +17,7 @@
     </div>
     <div>
         <ng-container *ngIf="!isEditing">
-            <div *ngIf="legalNotice" class="legal-notice-text" [innerHtml]="legalNotice | trust: 'html'"></div>
+            <div *ngIf="legalNotice" class="legal-notice-text" [innerHtml]="legalNotice | trust : 'html'"></div>
             <div *ngIf="!legalNotice">
                 {{ 'The event manager has not set up a legal notice yet.' | translate }}
             </div>
