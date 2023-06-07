@@ -10,7 +10,9 @@
         <mat-error *ngIf="error">{{ error }}</mat-error>
         <mat-datepicker #picker>
             <mat-datepicker-actions>
-                <button mat-button (click)="updateForm(null)" matDatepickerCancel color="warn">{{ 'Clear' | translate }}</button>
+                <button mat-button (click)="updateForm(null)" matDatepickerCancel color="warn">
+                    {{ 'Clear' | translate }}
+                </button>
                 <button mat-button matDatepickerCancel>{{ 'Cancel' | translate }}</button>
                 <button mat-raised-button color="primary" matDatepickerApply>{{ 'Apply' | translate }}</button>
             </mat-datepicker-actions>

@@ -19,7 +19,7 @@
                 <h1>{{ welcomeTitle }}</h1>
             </ng-container>
             <ng-container *ngIf="welcomeTextObservable | async as welcomeText">
-                <div [innerHTML]="welcomeText | trust: 'html'"></div>
+                <div [innerHTML]="welcomeText | trust : 'html'"></div>
             </ng-container>
         </div>
     </ng-container>
