@@ -46,8 +46,8 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
     }
 
     public async deleteTheme(theme: ViewTheme): Promise<void> {
-        const promptDialogTitle = _(`Delete theme`);
-        const subtitle = _(`Do you really want to delete this theme?`);
+        const promptDialogTitle = _(`Delete color set`);
+        const subtitle = _(`Do you really want to delete this color set?`);
         if (await this.prompt.open(promptDialogTitle, subtitle)) {
             await this.repo.delete(theme.id);
         }
