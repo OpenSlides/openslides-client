@@ -90,13 +90,13 @@
     </ng-container>
     <ng-container *ngIf="!multiple">
         <mat-option class="selected-options-hidden" *ngIf="contentForm.value" [value]="contentForm.value" disabled>
-            <ng-container *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"></ng-container>
+            <ng-container
+                *ngTemplateOutlet="optionContent; context: { item: getItemById(contentForm.value) }"
+            ></ng-container>
         </mat-option>
     </ng-container>
 </mat-select>
 
 <ng-template #optionContent let-item="item">
-    <ng-container *ngIf="item">
-        {{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}
-    </ng-container>
+    <ng-container *ngIf="item">{{ item.getTitle() | translate }} {{ getItemAdditionalInfoFn(item) }}</ng-container>
 </ng-template>
