@@ -147,8 +147,9 @@ export class SortFilterBarComponent<V extends Identifiable> {
      * on Click, remove Filter
      * @param filter
      */
-    public removeFilterFromStack(filter: OsFilterIndicator<V>): void {
+    public removeFilterFromStack(filter: OsFilterIndicator<V>, event: Event): void {
         this.filterService!.toggleFilterOption(filter.property, filter.option);
+        event.stopPropagation();
     }
 
     /**
