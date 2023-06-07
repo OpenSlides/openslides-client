@@ -77,8 +77,9 @@ export class MeetingSettingsGroupDetailComponent
      * Updates the specified settings item indicated by the given key.
      */
     public updateSetting(update: SettingsFieldUpdate): void {
-        const keys = Array.isArray(update.key) ? update.key : [update.key];
-        const values = Array.isArray(update.value) ? update.value : [update.value];
+        const { keys, values } = Array.isArray(update.key)
+            ? { keys: update.key, values: update.value }
+            : { keys: [update.key], values: [update.value] };
         for (let i = 0; i < keys.length; i++) {
             this.changedSettings[keys[i]] = values[i];
         }
