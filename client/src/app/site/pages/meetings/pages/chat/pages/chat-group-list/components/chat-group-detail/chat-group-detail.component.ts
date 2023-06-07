@@ -52,7 +52,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     }
 
     public get toEditChatMessageObservable(): Observable<ViewChatMessage | null> {
-        return this._toEditChatMessageSubject.asObservable();
+        return this._toEditChatMessageSubject;
     }
 
     public get hasWritePermissionsObservable(): Observable<boolean> {
@@ -64,7 +64,7 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
     }
 
     public get isMobileObservable(): Observable<boolean> {
-        return this.vp.isMobileSubject.asObservable();
+        return this.vp.isMobileSubject;
     }
 
     private get isOnBottomOfChat(): boolean {

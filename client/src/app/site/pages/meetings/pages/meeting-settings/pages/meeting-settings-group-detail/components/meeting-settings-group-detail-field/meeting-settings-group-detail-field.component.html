@@ -120,6 +120,17 @@
                     </div>
                 </div>
 
+                <!-- daterange -->
+                <div *ngIf="setting.type === 'daterange'">
+                    <os-daterangepicker
+                        formControlName="daterange"
+                        [error]="error"
+                        [title]="setting.label"
+                        [hintText]="setting.helpText"
+                        [showUpdateSuccessIcon]="updateSuccessIcon"
+                    ></os-daterangepicker>
+                </div>
+
                 <!-- The editor -->
                 <div *ngIf="setting.type === 'markupText'">
                     <h4>{{ setting.label | translate }}</h4>

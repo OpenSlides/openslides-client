@@ -4,7 +4,10 @@ import { Topic } from 'src/app/domain/models/topics/topic';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
 
-import { getTopicDetailSubscriptionConfig } from '../../../../../../agenda.subscription';
+import {
+    getAgendaListMinimalSubscriptionConfig,
+    getTopicDetailSubscriptionConfig
+} from '../../../../../../agenda.subscription';
 
 @Component({
     selector: `os-topic-detail-main`,
@@ -30,6 +33,8 @@ export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
                     if (id && this._currentTopicId !== id) {
                         this._currentTopicId = id;
                         this.loadTopicDetail();
+                    } else if (!id) {
+                        this.loadTopicList(+params[`meetingId`]);
                     }
                 });
         }
@@ -37,5 +42,9 @@ export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
 
     private loadTopicDetail(): void {
         this.updateSubscribeTo(getTopicDetailSubscriptionConfig(this._currentTopicId), { hideWhenDestroyed: true });
+    }
+
+    private loadTopicList(meetingId: number): void {
+        this.updateSubscribeTo(getAgendaListMinimalSubscriptionConfig(meetingId));
     }
 }

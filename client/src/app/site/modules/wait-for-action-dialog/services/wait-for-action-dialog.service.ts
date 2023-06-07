@@ -30,7 +30,7 @@ export class WaitForActionDialogService {
     }
 
     public get snapshotsObservable(): Observable<(Partial<ActionWorker> & { closed: number })[]> {
-        return this._snapshots.asObservable();
+        return this._snapshots;
     }
 
     private get workerWatch(): ActionWorkerWatchService {
@@ -56,9 +56,9 @@ export class WaitForActionDialogService {
     private _workerWatch: ActionWorkerWatchService;
 
     private _currentReasonSubject = new BehaviorSubject<WaitForActionReason>(null);
-    private _currentReasonObservable = this._currentReasonSubject.asObservable();
+    private _currentReasonObservable = this._currentReasonSubject as Observable<WaitForActionReason>;
     private _dataSubject = new BehaviorSubject<Map<WaitForActionReason, WaitForActionData[]>>(new Map([]));
-    private _dataObservable = this._dataSubject.asObservable();
+    private _dataObservable = this._dataSubject as Observable<Map<WaitForActionReason, WaitForActionData[]>>;
 
     private _dialog: MatDialogRef<StoppedWaitingForActionDialogComponent>;
     private _closingSubscription: Subscription;

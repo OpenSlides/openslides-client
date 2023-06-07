@@ -163,7 +163,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     private _listComponent: ListComponent<ViewMediafile> | undefined;
 
     public get directoryObservable(): Observable<ViewMediafile[]> {
-        return this._directoryBehaviorSubject.asObservable();
+        return this._directoryBehaviorSubject;
     }
 
     /**

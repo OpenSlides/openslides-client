@@ -21,3 +21,20 @@ export function langToLocale(lang: string): string {
         }
     }
 }
+
+export async function langToTimeLocale(lang: string): Promise<Locale> {
+    switch (lang) {
+        case `es`:
+            return (await import(`date-fns/locale/es`)).default;
+        case `de`:
+            return (await import(`date-fns/locale/de`)).default;
+        case `cs`:
+            return (await import(`date-fns/locale/cs`)).default;
+        case `it`:
+            return (await import(`date-fns/locale/it`)).default;
+        case `ru`:
+            return (await import(`date-fns/locale/ru`)).default;
+        default:
+            return (await import(`date-fns/locale/en-US`)).default;
+    }
+}

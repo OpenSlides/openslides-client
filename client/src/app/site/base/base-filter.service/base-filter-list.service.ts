@@ -84,7 +84,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @return Observable data for the filtered output subject
      */
     public get outputObservable(): Observable<V[]> {
-        return this._outputSubject.asObservable();
+        return this._outputSubject;
     }
 
     /**

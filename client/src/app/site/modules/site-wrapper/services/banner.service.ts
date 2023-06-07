@@ -24,7 +24,7 @@ export class BannerService {
     private readonly _activeBanners: BehaviorSubject<BannerDefinition[]> = new BehaviorSubject<BannerDefinition[]>([]);
 
     public getActiveBannersObservable(): Observable<BannerDefinition[]> {
-        return this._activeBanners.asObservable();
+        return this._activeBanners;
     }
 
     /**

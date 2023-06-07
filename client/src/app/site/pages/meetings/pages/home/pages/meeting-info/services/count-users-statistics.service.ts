@@ -84,7 +84,7 @@ export class CountUsersStatisticsService {
             this.runningCounts[token].next(stats);
         });
 
-        return [token, this.runningCounts[token].asObservable()];
+        return [token, this.runningCounts[token]];
     }
 
     /**

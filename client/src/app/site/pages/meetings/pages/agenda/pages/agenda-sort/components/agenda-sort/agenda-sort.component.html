@@ -30,7 +30,7 @@
                     *ngFor="let option of filterOptions"
                     [value]="option.id"
                     [selected]="option.state">
-                    <mat-icon matListIcon matTooltip="{{ option.label | translate }}">
+                    <mat-icon matListIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
                         {{ getIcon(option.id) }}
                     </mat-icon>
                     <p matLine>{{ option.label | translate }}</p>

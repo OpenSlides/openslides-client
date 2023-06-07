@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
     selector: `os-icon-container`,
@@ -59,6 +60,12 @@ export class IconContainerComponent {
      */
     @Input()
     public iconTooltip: string = ``;
+
+    /**
+     * Optional string as tooltip for icon.
+     */
+    @Input()
+    public iconTooltipPosition: TooltipPosition = `below`;
 
     /**
      * Uses a css class for nowrap
