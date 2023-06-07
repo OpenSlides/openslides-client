@@ -13,6 +13,10 @@ os-dashboard {
         }
     }
 
+    .meeting-list-container-empty {
+        margin: 0;
+    }
+    
     .meeting-list-viewport {
         max-width: 100%;
 
@@ -76,7 +80,7 @@ os-dashboard {
 
     .meeting-list-container-description {
         display: flex;
-        margin: 25px auto 40px auto;
+        margin: 25px auto 25px auto;
 
         @include phone {
             flex-direction: column;
@@ -321,7 +325,14 @@ os-dashboard {
     }
 
     #active-meetings {
+        margin-top: 0;
+
+        .meeting-icon-wrapper {
+            margin-top: 0;
+        }
+
         .meeting-list {
+            margin-top: 0;
             height: fit-content;
 
             .meeting-box {
