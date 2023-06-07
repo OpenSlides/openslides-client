@@ -12,5 +12,8 @@
 <div mat-dialog-actions>
     <button mat-button mat-dialog-close>{{ 'OK' | translate }}</button>
     <button mat-button *ngIf="!showSnapshots" (click)="showReport()">{{ 'Show report' | translate }}</button>
-    <button mat-button *ngIf="showSnapshots" (click)="copySnapshots()"><mat-icon>content_copy</mat-icon>{{ 'Copy report to clipboard' | translate }}</button>
+    <button mat-button *ngIf="showSnapshots" (click)="copySnapshots()">
+        <mat-icon>content_copy</mat-icon>
+        {{ 'Copy report to clipboard' | translate }}
+    </button>
 </div>
