@@ -75,7 +75,13 @@
         </div>
     </ng-template>
     <ng-template #isNotSavingTemplate>
-        <button mat-button *ngIf="editMode" data-cy="headbarSaveButton" [disabled]="!isSaveButtonEnabled" (click)="save()">
+        <button
+            mat-button
+            *ngIf="editMode"
+            data-cy="headbarSaveButton"
+            [disabled]="!isSaveButtonEnabled"
+            (click)="save()"
+        >
             <strong class="upper">{{ saveText | translate }}</strong>
         </button>
     </ng-template>
