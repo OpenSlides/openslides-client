@@ -19,7 +19,7 @@
         </div>
 
         <!-- Menu -->
-        <div class="menu-slot" *osPerms="[permission.agendaItemCanManage, permission.listOfSpeakersCanSee]">
+        <div class="menu-slot" *osPerms="[permission.agendaItemCanManage, permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]">
             <button type="button" mat-icon-button [matMenuTriggerFor]="topicExtraMenu" *ngIf="topic">
                 <mat-icon>more_vert</mat-icon>
             </button>

@@ -15,7 +15,7 @@
 
     <!-- List of speakers -->
     <os-list-of-speakers-content
-        *osPerms="permission.listOfSpeakersCanSee; and: !!listOfSpeakers"
+        *osPerms="[permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]; and: !!listOfSpeakers"
         [listOfSpeakers]="listOfSpeakers!"
         (canReaddLastSpeakerEvent)="canReaddLastSpeaker = $event"
     >

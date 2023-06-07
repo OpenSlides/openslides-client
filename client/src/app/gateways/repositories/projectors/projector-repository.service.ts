@@ -58,7 +58,8 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
             show_header_footer: projector.show_header_footer,
             show_title: projector.show_title,
             show_logo: projector.show_logo,
-            show_clock: projector.show_clock
+            show_clock: projector.show_clock,
+            is_internal: projector.is_internal
         };
     }
 
