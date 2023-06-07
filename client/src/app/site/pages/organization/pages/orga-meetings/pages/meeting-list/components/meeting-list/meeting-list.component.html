@@ -41,8 +41,8 @@
             [routerLink]="getMeetingUrl(meeting)"
             *ngIf="!isMultiSelect && meeting.canAccess()"
         ></a>
-        <div style="overflow: hidden" class="flex-vertical-center">
-            <div style="overflow: hidden" class="nameCell">
+        <div class="flex-vertical-center overflow-hidden">
+            <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
                     <!-- Is Archived -->
                     <span class="icon-prefix" *ngIf="meeting.isArchived">
