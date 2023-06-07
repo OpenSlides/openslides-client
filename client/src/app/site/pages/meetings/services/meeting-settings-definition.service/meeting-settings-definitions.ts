@@ -23,7 +23,8 @@ export type SettingsType =
     | 'date'
     | 'datetime'
     | 'translations'
-    | 'groups';
+    | 'groups'
+    | 'daterange';
 
 export interface ChoicesMap {
     [name: string]: string | number;
@@ -41,7 +42,7 @@ export interface ChoicesFunctionDefinition<V> {
 }
 
 export interface SettingsItem<V = any> {
-    key: keyof Settings;
+    key: keyof Settings | (keyof Settings)[]; // Array can be used with fields that require multiple values (like then type === 'daterange')
     label: string;
     type?: SettingsType; // default: text
     // if true, the default value will not be translated
@@ -117,30 +118,15 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Event location`)
                     },
                     {
-                        key: `start_time`,
-                        label: _(`Start date`),
-                        type: `date`,
+                        key: [`start_time`, `end_time`],
+                        label: _(`Meeting date`),
+                        type: `daterange`,
                         automaticChangesSetting: {
                             watchProperties: [`end_time`],
                             getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
                                 return currentValue &&
                                     currentWatchPropertyValues.length &&
                                     currentValue > currentWatchPropertyValues[0]
-                                    ? currentWatchPropertyValues[0]
-                                    : currentValue;
-                            }
-                        }
-                    },
-                    {
-                        key: `end_time`,
-                        label: _(`End date`),
-                        type: `date`,
-                        automaticChangesSetting: {
-                            watchProperties: [`start_time`],
-                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
-                                return currentValue &&
-                                    currentWatchPropertyValues.length &&
-                                    currentValue < currentWatchPropertyValues[0]
                                     ? currentWatchPropertyValues[0]
                                     : currentValue;
                             }
