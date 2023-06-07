@@ -36,7 +36,8 @@
                             matTooltipPosition="after"
                             (mouseenter)="$event.stopImmediatePropagation()"
                             (mouseleave)="tooltip.hide()"
-                            (click)="tooltip.toggle()">
+                            (click)="tooltip.toggle()"
+                        >
                             {{ perm.display_name | translate }}
                         </mat-cell>
                     </ng-container>

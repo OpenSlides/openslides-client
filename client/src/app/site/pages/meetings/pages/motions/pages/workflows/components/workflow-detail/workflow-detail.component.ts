@@ -142,7 +142,14 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Recommendation label`),
             help_text: _(
-                `Defines the wording of the recommendation that belongs to this status. To activate the recommendation system, a recommender (for example, a motion committee) must be defined under > Settings > Motions > Name of recommender.`
+                `Defines the wording of the recommendation that belongs to this state.
+Example: State = Accepted / Recommendation = Acceptance. 
+
+To activate the recommendation system, a recommender (for example, a motion committee) must be defined under > [Settings] > [Motions] > [Name of recommender].
+Example recommender: motion committee
+
+Additional information:
+In combination with motion blocks, the recommendation of multiple motions can be followed simultaneously.`
             ),
             selector: `recommendation_label`,
             type: `input`
@@ -150,27 +157,34 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Allow support`),
             help_text: _(
-                `Enables the support function for motions in the selected state. The support function must be enabled under > Settings > Motions as well as defined for the corresponding groups under > Participants > Groups.`
+                `Enables the support function for motions in the selected state. The support function must be activated under > [Settings] > [Motions] as well as the corresponding group permission in > [Participants] > [Groups] > [Motions] > [Can support motions].`
             ),
             selector: `allow_support`,
             type: `check`
         },
         {
             name: _(`Allow create poll`),
-            help_text: _(`Enables the ability to create ballots for motions in this state.`),
+            help_text: _(`Enables the ability to create votings for motions in this state.`),
             selector: `allow_create_poll`,
             type: `check`
         },
         {
             name: _(`Allow submitter edit`),
-            help_text: _(`Enables the editing of the motion text and reasons by submitters in the selected state.`),
+            help_text: _(
+                `Enables the editing of the motion text and reason by submitters in the selected state after the motion has been created.`
+            ),
             selector: `allow_submitter_edit`,
             type: `check`
         },
         {
             name: _(`Allow forwarding of motions`),
             help_text: _(
-                `Enables the forwarding of motions to other events within the OpenSlides instance in the selected state. Target committees must be defined at organisation level under > Committees > Edit committee.`
+                `Enables the forwarding of motions to other meetings within the OpenSlides instance in the selected state. 
+
+Prerequisites:
+1. forwarding hierarchy must be set at the organizational level in the committee. 
+2. target meeting must be created.
+3. user must have group permission for forwarding.`
             ),
             selector: `allow_motion_forwarding`,
             type: `check`
@@ -178,7 +192,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Set number`),
             help_text: _(
-                `Activates the automatic setting of an identifier for motions that reach this status. The scheme for numbering can be customized under > Settings > Motions.`
+                `Activates the automatic setting of a number for motions that reach this state. The scheme for numbering can be customized under > [Settings] > [Motions].`
             ),
             selector: `set_number`,
             type: `check`
@@ -186,7 +200,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Set timestamp of creation`),
             help_text: _(
-                `Activates the automatic logging of the date and time when this status was first reached. A set time stamp cannot be removed again.`
+                `Activates the automatic logging of the date and time when this state was first reached. A set time stamp cannot be removed.`
             ),
             selector: `set_created_timestamp`,
             type: `check`
@@ -194,7 +208,9 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Show state extension field`),
             help_text: _(
-                `Activates the extension field for the selected status, which can be filled with free text as desired.`
+                `Activates the extension field for the selected state, which can be filled with free text as desired.
+
+Example: When activated, the state "in progress" can be expanded to e.g. "in progress by the motion committee".`
             ),
             selector: `show_state_extension_field`,
             type: `check`
@@ -202,7 +218,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Show recommendation extension field`),
             help_text: _(
-                `Activates the extension field of the recommendation in this status, which can be filled with text or extended with references to other motions or committees as desired.`
+                `Activates the extension field of the recommendation in this state, which can be filled with free text or extended with references to other motions or committees as desired.`
             ),
             selector: `show_recommendation_extension_field`,
             type: `check`
@@ -210,7 +226,9 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Show amendment in parent motion`),
             help_text: _(
-                `Enables the visibility of amendments directly in the corresponding main motion. The text of amendments is embedded within the text of the motion.`
+                `Enables the visibility of amendments directly in the corresponding main motion. The text of amendments is embedded within the text of the motion.
+
+Note: Does not affect the visibility of change recommendations.`
             ),
             selector: `merge_amendment_into_final`,
             type: `amendment`
@@ -218,7 +236,9 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Restrictions`),
             help_text: _(
-                `Defines for the selected state which groups have access:\n- If no option is selected, the motions in the selected state are visible to all; prerequisite: "Can see motions".\n- Selecting one or more options restricts access to those groups for which the selected authorisation option is defined under Participants > Groups.`
+                `Defines for the selected state which groups have access:
+- If no option is selected, the motions in the selected state are visible to all; The prerequisite for this is group permission: [Can see motions].
+- Selecting one or more options restricts access to those groups for which the selected authorization option is defined under > [Participants] > [Groups].`
             ),
             selector: `restrictions`,
             type: `restrictions`
@@ -238,7 +258,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         {
             name: _(`Submitter may set state to`),
             help_text: _(
-                `Enables submitters to only change the state of the motion. Other administrative functions are excluded.`
+                `Enables for the selected state the possibility for submitters to change the state of the motion. Other administrative functions are excluded.`
             ),
             selector: `submitter_withdraw_state_id`,
             type: `submitter_withdraw_state`

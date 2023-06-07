@@ -21,12 +21,14 @@ export const PERMISSIONS: AppPermission[] = [
         permissions: [
             {
                 display_name: _(`Can see the projector`),
-                help_text: _(`Can see all projectors`),
+                help_text: _(
+                    `Can see the Projector menu item and all projectors (in the Autopilot as well as in the Projector menu item)`
+                ),
                 value: Permission.projectorCanSee
             },
             {
                 display_name: _(`Can manage the projector`),
-                help_text: _(`Can create, customise, control and delete projectors.`),
+                help_text: _(`Can create, configure, control and delete projectors.`),
                 value: Permission.projectorCanManage
             }
         ]
@@ -36,7 +38,7 @@ export const PERMISSIONS: AppPermission[] = [
         permissions: [
             {
                 display_name: _(`Can see agenda`),
-                help_text: _(`Can see all public topics in the agenda.`),
+                help_text: _(`Can see the Agenda menu item and all public topics in the agenda.`),
                 value: Permission.agendaItemCanSee
             },
             {
@@ -47,21 +49,28 @@ export const PERMISSIONS: AppPermission[] = [
             {
                 display_name: _(`Can manage agenda`),
                 help_text: _(
-                    `Can create, modify and delete topics, add motions and assignments to the agenda, sort, number and keyword agenda items.`
+                    `Can create, modify and delete topics, add motions and elections to the agenda, sort, number and tag agenda items.`
                 ),
                 value: Permission.agendaItemCanManage
             },
-            { display_name: _(`Can see list of speakers`), value: Permission.listOfSpeakersCanSee },
+            {
+                display_name: _(`Can see list of speakers`),
+                help_text: _(`Can see all lists of speakers`),
+                value: Permission.listOfSpeakersCanSee
+            },
             {
                 display_name: _(`Can manage list of speakers`),
                 help_text: _(
-                    `Can add speakers to the speaking list, mark, sort, start/stop and open/close the speaking list.`
+                    `Can add or delete speakers to or from the list of speakers, mark, sort, start/stop and open/close the list of speakers.`
                 ),
                 value: Permission.listOfSpeakersCanManage
             },
             {
                 display_name: _(`Can put oneself on the list of speakers`),
-                help_text: _(`Can add him/herself to the list of speakers, provided that he/she is present.`),
+                help_text: _(`Is allowed to add himself/herself to the list of speakers. 
+
+Note:
+Optional combination of requests to speak with presence status is possible. ( > [Settings] > [List of speakers] > [General] )`),
                 value: Permission.listOfSpeakersCanBeSpeaker
             },
             {
@@ -76,13 +85,17 @@ export const PERMISSIONS: AppPermission[] = [
         permissions: [
             {
                 display_name: _(`Can see motions`),
-                help_text: _(`Can see all motions unless limited by access restrictions in the workflow.`),
+                help_text: _(
+                    `Can see the Motions menu item and all motions unless they are limited by access restrictions in the workflow.`
+                ),
                 value: Permission.motionCanSee
             },
             {
                 display_name: _(`Can see motions in internal state`),
                 help_text: _(
-                    `Can see motions in the internal state that are limited in the workflow with the same access restriction.`
+                    `Can see motions in the internal state that are limited in the workflow under Restrictions with the same description.
+
+Tip: Cross-check desired visibility of motions with test delegate account. `
                 ),
                 value: Permission.motionCanSeeInternal
             },
@@ -103,34 +116,39 @@ export const PERMISSIONS: AppPermission[] = [
             {
                 display_name: _(`Can forward motions`),
                 help_text: _(
-                    `Can forward motions to other events within the OpenSlides instance. Target events must be defined at the organisation level under Committees > Edit Committee. Motions must be in a state where forwarding is allowed.`
+                    `Can forward motions to other meetings within the OpenSlides instance. 
+
+Further requirements:
+1. forwarding hierarchy must be set at the organizational level in the committee. 
+2. target meeting must be created.
+3. forwarding must be activated in the workflow in the state.`
                 ),
                 value: Permission.motionCanForward
             },
             {
                 display_name: _(`Can support motions`),
                 help_text: _(
-                    `Can support motions. The support function must be enabled both in > Settings > Motions and for the corresponding state in > Workflow.`
+                    `Can support motions. The support function must be enabled in > [Settings] > [Motions] as well as for the corresponding state in > [Workflow].`
                 ),
                 value: Permission.motionCanSupport
             },
             {
                 display_name: _(`Can manage motions`),
                 help_text: _(
-                    `Can create, modify and delete motions and votes, amendments and recommended amendments, and edit the metadata of a motion. Including the management of categories, request blocks, keywords, workflows, comment fields.`
+                    `Can create, modify and delete motions and votings, amendments and change recommendations, and edit the metadata of a motion. Including the management of categories, motion blocks, tags, workflows and comment fields.`
                 ),
                 value: Permission.motionCanManage
             },
             {
                 display_name: _(`Can manage motion metadata`),
                 help_text: _(
-                    `Can edit and assign motion metadata: Submitter, state, recommendation, category, block, keywords, supports.`
+                    `Can edit and assign the following motion metadata: Submitter, state, recommendation, category, motion blocks and tags.`
                 ),
                 value: Permission.motionCanManageMetadata
             },
             {
                 display_name: _(`Can manage motion polls`),
-                help_text: _(`Can create, modify, start/stop and delete votes.`),
+                help_text: _(`Can create, modify, start/stop and delete votings.`),
                 value: Permission.motionCanManagePolls
             }
         ]
@@ -141,25 +159,29 @@ export const PERMISSIONS: AppPermission[] = [
             {
                 display_name: _(`Can see elections`),
                 help_text: _(
-                    `Can see assignments, including the list of candidates and results. Note: Voting rights are defined directly in the ballot.`
+                    `Can see the menu item Elections, including the list of candidates and results. 
+
+Note: The right to vote is defined directly in the ballot.`
                 ),
                 value: Permission.assignmentCanSee
             },
             {
                 display_name: _(`Can manage elections`),
                 help_text: _(
-                    `Can create, modify and delete assignments and candidate lists, as well as start/stop and reset ballots. `
+                    `Can create, modify and delete elections and candidate lists, as well as start/stop and reset ballots. `
                 ),
                 value: Permission.assignmentCanManage
             },
             {
                 display_name: _(`Can nominate another participant`),
-                help_text: _(`Can nominate other participants as candidates. Requirement: Can see participants.`),
+                help_text: _(`Can nominate other participants as candidates. 
+
+Requires group permission: [Can see participants]`),
                 value: Permission.assignmentCanNominateOther
             },
             {
                 display_name: _(`Can nominate oneself`),
-                help_text: _(`Can add their name to the list of candidates in the "Search for candidates" phase.`),
+                help_text: _(`Can add their name to the list of candidates in the [Search for candidates] phase.`),
                 value: Permission.assignmentCanNominateSelf
             }
         ]
@@ -170,18 +192,20 @@ export const PERMISSIONS: AppPermission[] = [
             {
                 display_name: _(`Can see participants`),
                 help_text: _(
-                    `Can see the following data of all participants: Personal data like Name, pronoun, gender. Event-specific information like Structure level, Group, Participant number, About me, Attendance status.`
+                    `Can see the menu item Participants and therefore the following data from all participants: 
+Personal data: Name, pronoun, gender. 
+Meeting specific information: Structure level, Group, Participant number, About me, Presence status.`
                 ),
                 value: Permission.userCanSee
             },
             {
                 display_name: _(`Can manage presence of others`),
-                help_text: _(`Can change the attendance status of other participants.`),
+                help_text: _(`Can change the presence status of other participants.`),
                 value: Permission.userCanManagePresence
             },
             {
                 display_name: _(`Can manage participants`),
-                help_text: _(`Can create, modify, delete participant records and edit group permissions.`),
+                help_text: _(`Can create, modify, delete participant datasets and administrate group permissions.`),
                 value: Permission.userCanManage
             }
         ]
@@ -191,17 +215,21 @@ export const PERMISSIONS: AppPermission[] = [
         permissions: [
             {
                 display_name: _(`Can see the list of files`),
-                help_text: _(`Can see the menu folder and all files shared with the group.`),
+                help_text: _(`Can see the Files menu item and all shared folders and files.
+
+Note: Sharing of folders and files may be restricted by group assignment.`),
                 value: Permission.mediafileCanSee
             },
             {
                 display_name: _(`Can manage logos and fonts`),
-                help_text: _(`Can activate and deactivate logos and fonts under > Files.`),
+                help_text: _(`Can activate and deactivate logos and fonts under > [Files].`),
                 value: Permission.meetingCanManageLogosAndFonts
             },
             {
                 display_name: _(`Can manage files`),
-                help_text: _(`Can upload, modify and delete files, create folders and change access restrictions.`),
+                help_text: _(
+                    `Can upload, modify and delete files, administrate folders and change access restrictions.`
+                ),
                 value: Permission.mediafileCanManage
             }
         ]
@@ -211,39 +239,49 @@ export const PERMISSIONS: AppPermission[] = [
         permissions: [
             {
                 display_name: _(`Can see the front page`),
-                help_text: _(`Can see the start page.`),
+                help_text: _(`Can see the Home menu item.`),
                 value: Permission.meetingCanSeeFrontpage
             },
             {
                 display_name: _(`Can see the autopilot`),
-                help_text: _(`Can see the autopilot, as well as all content for which permissions are defined.`),
+                help_text: _(
+                    `Can see the Autopilot menu item with all content for which appropriate permissions are set.`
+                ),
                 value: Permission.meetingCanSeeAutopilot
             },
             {
                 display_name: _(`Can see the live stream`),
-                help_text: _(`Can see the livestream when a > Livestream is defined under > Settings.`),
+                help_text: _(
+                    `Can see the livestream if there is a livestream URL entered in > [Settings] > [Livestream].`
+                ),
                 value: Permission.meetingCanSeeLivestream
             },
             {
                 display_name: _(`Can see history`),
                 help_text: _(
-                    `Can see the history of processing timestamps for motions, assignments and participants. Note: For privacy reasons, it is recommended to limit the rights to view the chronicle significantly.`
+                    `Can see the History menu item with the history of processing timestamps for motions, elections and participants. 
+
+Note: For privacy reasons, it is recommended to limit the rights to view the History significantly.`
                 ),
                 value: Permission.meetingCanSeeHistory
             },
             {
                 display_name: _(`Can manage settings`),
-                help_text: _(`Can edit all settings and the start page of the event.`),
+                help_text: _(
+                    `Can see the Settings menu item and edit all settings as well as the start page of the meeting.`
+                ),
                 value: Permission.meetingCanManageSettings
             },
             {
                 display_name: _(`Can manage tags`),
-                help_text: _(`Can create, change, delete keywords for the agenda and for motions.`),
+                help_text: _(`Can create, change, delete tags for the agenda and for motions.`),
                 value: Permission.tagCanManage
             },
             {
                 display_name: _(`Can manage the chat`),
-                help_text: _(`Can create, modify, delete chat groups and define permissions.`),
+                help_text: _(`Can create, modify, delete chat groups and define permissions.
+
+Note: The chat menu item becomes visible to all participants, except admins, as soon as a chat has been created.`),
                 value: Permission.chatCanManage
             }
         ]
