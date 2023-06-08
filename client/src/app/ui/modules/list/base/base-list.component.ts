@@ -195,6 +195,7 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
         }
 
         hidden = hidden.concat(this.toHideFn());
+        console.log(`HIDDEN`, hidden);
 
         return hidden;
     }
