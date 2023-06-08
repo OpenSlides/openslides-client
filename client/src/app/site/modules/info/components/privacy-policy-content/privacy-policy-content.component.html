@@ -16,7 +16,7 @@
         </div>
     </div>
     <ng-container *ngIf="!isEditing">
-        <div class="underlined-link" *ngIf="privacyPolicy" [innerHtml]="privacyPolicy | trust : 'html'"></div>
+        <div class="underlined-links" *ngIf="privacyPolicy" [innerHtml]="privacyPolicy | trust : 'html'"></div>
         <div *ngIf="!privacyPolicy">
             {{ 'The event manager has not set up a privacy policy yet.' | translate }}
         </div>

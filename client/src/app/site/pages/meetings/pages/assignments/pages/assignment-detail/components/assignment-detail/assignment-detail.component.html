@@ -108,7 +108,7 @@
         <os-projectable-title *ngIf="!isEditing && assignment.getTitle" [model]="assignment"></os-projectable-title>
         <div *ngIf="assignment">
             <div
-                class="underlined-link"
+                class="underlined-links"
                 *ngIf="assignment.assignment.description"
                 [innerHTML]="assignment.assignment.description | trust : 'html'"
             ></div>

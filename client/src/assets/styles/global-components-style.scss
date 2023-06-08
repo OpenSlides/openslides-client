@@ -22,7 +22,7 @@
         color: mat.get-color-from-palette(if($is-dark-theme, $accent, $primary));
     }
 
-    .underlined-link a {
+    .underlined-links a {
         color: inherit;
         text-decoration: solid underline mix(mat.get-color-from-palette($foreground, text), mat.get-color-from-palette($background, background), 50%) 2px;
 

@@ -10,7 +10,7 @@
     <span class="text-prefix-label" *ngIf="showPreamble">{{ preamble }}</span>
 
     <!-- The actual diff view -->
-    <div class="motion-text-with-diffs underlined-link">
+    <div class="motion-text-with-diffs underlined-links">
         <div *ngIf="getTitleChangingObject() as changedTitle">
             <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
                 <div class="action-row" *osPerms="permission.motionCanManage">

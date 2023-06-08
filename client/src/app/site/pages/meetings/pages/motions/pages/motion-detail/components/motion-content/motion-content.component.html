@@ -6,7 +6,7 @@
     </span>
     <div
         *ngIf="changeRecoMode !== ChangeRecoMode.Diff && !isFinalEdit"
-        class="motion-text underlined-link"
+        class="motion-text underlined-links"
         [class.line-numbers-none]="lineNumberingMode === LineNumberingMode.None"
         [class.line-numbers-inline]="lineNumberingMode === LineNumberingMode.Inside"
         [class.line-numbers-outside]="lineNumberingMode === LineNumberingMode.Outside"
@@ -98,7 +98,7 @@
 
     <!-- formatted statute amendment -->
     <div
-        class="motion-text line-numbers-none underlined-link"
+        class="motion-text line-numbers-none underlined-links"
         *ngIf="!editMotion && motion?.isStatuteAmendment()"
         [innerHTML]="getFormattedStatuteAmendment() | trust : 'html'"
     ></div>
@@ -150,7 +150,7 @@
             <span *ngIf="reasonRequired && editMotion">*</span>
         </h3>
         <div
-            class="motion-text underlined-link"
+            class="motion-text underlined-links"
             *ngIf="!editMotion"
             [innerHtml]="motion?.reason | trust : 'html'"
         ></div>
