@@ -41,13 +41,15 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
         }
     }
 
-    public async changeCurrentTheme(theme: ViewTheme): Promise<void> {
-        this.repo.changeCurrentTheme(theme);
+    public async changeCurrentTheme(confirmed: boolean, theme: ViewTheme): Promise<void> {
+        if (confirmed) {
+            this.repo.changeCurrentTheme(theme);
+        }
     }
 
     public async deleteTheme(theme: ViewTheme): Promise<void> {
-        const promptDialogTitle = _(`Delete theme`);
-        const subtitle = _(`Do you really want to delete this theme?`);
+        const promptDialogTitle = _(`Delete color set`);
+        const subtitle = _(`Do you really want to delete this color set?`);
         if (await this.prompt.open(promptDialogTitle, subtitle)) {
             await this.repo.delete(theme.id);
         }

@@ -45,6 +45,7 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
         { property: `block_id`, label: `Motion block` },
         { property: `state` },
         { property: `created`, label: _(`Creation date`) },
+        { property: `sequential_number`, label: _(`Sequential number`) },
         { property: `last_modified`, label: _(`Last modified`) }
     ];
 

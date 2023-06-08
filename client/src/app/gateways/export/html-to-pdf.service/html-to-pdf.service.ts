@@ -315,7 +315,7 @@ export class HtmlToPdfService {
         // Fixes nested lists being placed inside `text` elements
         if (
             children.length === 1 &&
-            (<any>children[0])?.text.length &&
+            (<any>children[0])?.text?.length &&
             (<any>children[0])?.text.find((el: any) => !!el.ul)
         ) {
             // @ts-ignore

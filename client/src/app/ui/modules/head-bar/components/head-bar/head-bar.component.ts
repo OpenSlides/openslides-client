@@ -199,7 +199,7 @@ export class HeadBarComponent implements OnInit, AfterViewInit {
     }
 
     public get isSavingObservable(): Observable<boolean> {
-        return this._isSavingSubject.asObservable();
+        return this._isSavingSubject;
     }
 
     private _isSavingSubject = new BehaviorSubject(false);

@@ -23,7 +23,10 @@
                 <ng-container *ngTemplateOutlet="showTemplate"></ng-container>
             </mat-card>
             <ng-container *ngIf="showView">
-                <mat-card [ngClass]="{'os-card': true, 'margin-bottom-60': isLast}" *ngFor="let showViewElement of showView; last as isLast">
+                <mat-card
+                    [ngClass]="{ 'os-card': true, 'margin-bottom-60': isLast }"
+                    *ngFor="let showViewElement of showView; last as isLast"
+                >
                     <ng-container *ngTemplateOutlet="showViewElement; context: { user: user }"></ng-container>
                 </mat-card>
             </ng-container>
@@ -85,7 +88,7 @@
             <!-- Pronoun -->
             <mat-form-field class="width-16p force-min-width">
                 <input type="text" matInput placeholder="{{ 'Pronoun' | translate }}" formControlName="pronoun" />
-                <mat-error>{{ 'Pronoun can only have 32 letters' | translate }}</mat-error>
+                <mat-error>{{ 'max. 32 characters allowed' | translate }}</mat-error>
             </mat-form-field>
 
             <!-- Gender -->
@@ -110,6 +113,7 @@
                     mat-button
                     mat-icon-button
                     [matTooltip]="'Leave blank to automatically generate the username.' | translate"
+                    matTooltipPosition="above"
                 >
                     <mat-icon>help</mat-icon>
                 </button>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs';
 import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
@@ -25,7 +25,7 @@ export class ProjectableTitleComponent {
         map(_ => this.isBeingProjected())
     );
 
-    constructor(private projectorService: ProjectorControllerService) {}
+    constructor(private projectorService: ProjectorControllerService, private cd: ChangeDetectorRef) {}
 
     public isBeingProjected(): boolean {
         if (!this.model) {
@@ -33,5 +33,9 @@ export class ProjectableTitleComponent {
         }
 
         return this.projectorService.isProjected(this.model);
+    }
+
+    public update(): void {
+        this.cd.markForCheck();
     }
 }

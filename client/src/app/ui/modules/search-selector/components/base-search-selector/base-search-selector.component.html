@@ -23,7 +23,7 @@
             class="background-card"
             [formControl]="searchValueForm"
             placeholder="{{ 'Search' | translate }}"
-            (keydown)="$event.stopPropagation()"
+            (keydown)="onSearchKeydown($event)"
         />
     </div>
     <ng-container *ngIf="multiple && showChips">
@@ -54,7 +54,13 @@
             <ng-container *ngTemplateOutlet="notFoundTemplate"></ng-container>
         </button>
     </ng-container>
-    <cdk-virtual-scroll-viewport [ngStyle]="{ height: panelHeight + 'px' }" class="vscroll-viewport" minBufferPx="400" maxBufferPx="600" [itemSize]="50">
+    <cdk-virtual-scroll-viewport
+        [ngStyle]="{ height: panelHeight + 'px' }"
+        class="vscroll-viewport"
+        minBufferPx="400"
+        maxBufferPx="600"
+        [itemSize]="50"
+    >
         <mat-option
             *ngIf="(filteredItemsObservable | async)?.length === 0"
             class="os-search-selector--no-options"
@@ -68,6 +74,7 @@
             [value]="selectableItem.id"
             [disabled]="disableOptionWhenFn(selectableItem) || selectableItem.disabled"
             [matTooltip]="tooltipFn(selectableItem, currentOption)"
+            matTooltipPosition="left"
             (onSelectionChange)="onSelectionChange(selectableItem, $event)"
             (click)="keepOpen ? matSelect.open() : null"
         >

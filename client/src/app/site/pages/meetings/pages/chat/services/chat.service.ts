@@ -12,7 +12,7 @@ import { ChatGroupControllerService } from './chat-group-controller.service';
 })
 export class ChatService {
     public get canSeeChatObservable(): Observable<boolean> {
-        return this._canSeeChatSubject.asObservable();
+        return this._canSeeChatSubject;
     }
 
     private _canSeeChatSubject = new BehaviorSubject<boolean>(false);

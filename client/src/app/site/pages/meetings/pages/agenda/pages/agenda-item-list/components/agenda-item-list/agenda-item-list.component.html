@@ -222,12 +222,7 @@
 
             <mat-divider></mat-divider>
 
-            <button
-                *ngIf="tags.length"
-                mat-menu-item
-                [disabled]="!selectedRows.length"
-                (click)="changeSelectedTags()"
-            >
+            <button *ngIf="tags.length" mat-menu-item [disabled]="!selectedRows.length" (click)="changeSelectedTags()">
                 <mat-icon>local_offer</mat-icon>
                 <span>{{ 'Set tags' | translate }} ...</span>
             </button>
@@ -286,6 +281,11 @@
             <button mat-menu-item (click)="openEditInfo(item)">
                 <mat-icon>edit</mat-icon>
                 <span>{{ 'Edit details' | translate }}</span>
+            </button>
+
+            <button mat-menu-item (click)="onPlusButton(item.id)">
+                <mat-icon>add_circle</mat-icon>
+                <span>{{ 'Create subitem' | translate }}</span>
             </button>
 
             <!-- Duplicate button -->

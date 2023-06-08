@@ -72,10 +72,18 @@
 
     <ng-container *ngIf="hasAlreadyVoted(delegation) !== undefined">
         <!-- Error -->
-        <div *ngIf="!hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !(!isUserPresent && delegations.length)">
+        <div
+            *ngIf="
+                !hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !(!isUserPresent && delegations.length)
+            "
+        >
             <span>{{ getVotingError(delegation) | translate }}</span>
         </div>
-        <div *ngIf="!hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !isUserPresent && delegations.length">
+        <div
+            *ngIf="
+                !hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !isUserPresent && delegations.length
+            "
+        >
             <span>{{ getVotingErrorFromName('USER_NOT_PRESENT') | translate }}</span>
         </div>
     </ng-container>

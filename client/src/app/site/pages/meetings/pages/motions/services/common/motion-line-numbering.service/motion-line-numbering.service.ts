@@ -268,17 +268,17 @@ export class MotionLineNumberingService {
         const baseParagraphs = this.getTextParagraphs(motion, true, lineLength);
 
         let amendmentParagraphs: string[] = [];
-        if (crMode === ChangeRecoMode.Changed) {
+        if (crMode === ChangeRecoMode.Original) {
+            amendmentParagraphs = baseParagraphs.map(
+                (_: string, paraNo: number) => amendment.amendment_paragraph(paraNo) as string
+            );
+        } else {
             amendmentParagraphs = this.applyChangesToAmendment(
                 amendment,
                 lineLength,
                 changeRecommendations,
                 true
             ) as string[];
-        } else {
-            amendmentParagraphs = baseParagraphs.map(
-                (_: string, paraNo: number) => amendment.amendment_paragraph(paraNo) as string
-            );
         }
 
         return amendmentParagraphs

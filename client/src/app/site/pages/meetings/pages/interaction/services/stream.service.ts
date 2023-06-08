@@ -26,10 +26,10 @@ export class StreamService {
     public streamLoadedOnceObservable: Observable<boolean>;
 
     private isStreamRunningSubject = new BehaviorSubject<boolean>(false);
-    public isStreamRunningObservable = this.isStreamRunningSubject.asObservable();
+    public isStreamRunningObservable = this.isStreamRunningSubject as Observable<boolean>;
 
     private canSeeLiveStreamSubject = new BehaviorSubject<boolean>(false);
-    public canSeeLiveStreamObservable = this.canSeeLiveStreamSubject.asObservable();
+    public canSeeLiveStreamObservable = this.canSeeLiveStreamSubject as Observable<boolean>;
 
     public constructor(
         private storageMap: StorageMap,

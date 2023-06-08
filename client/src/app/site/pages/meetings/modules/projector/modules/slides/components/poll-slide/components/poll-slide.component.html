@@ -6,8 +6,18 @@
         </ng-container>
     </div>
     <div *ngIf="polldata">
-        <os-motion-poll-detail-content *ngIf="pollContentObjectType===PollContentObjectType.Motion" [poll]="polldata" iconSize="gigantic"></os-motion-poll-detail-content>
-        <os-assignment-poll-detail-content *ngIf="pollContentObjectType===PollContentObjectType.Assignment" [poll]="polldata"></os-assignment-poll-detail-content>
-        <os-topic-poll-detail-content *ngIf="pollContentObjectType===PollContentObjectType.Topic" [poll]="polldata"></os-topic-poll-detail-content>
+        <os-motion-poll-detail-content
+            *ngIf="pollContentObjectType === PollContentObjectType.Motion"
+            [poll]="polldata"
+            iconSize="gigantic"
+        ></os-motion-poll-detail-content>
+        <os-assignment-poll-detail-content
+            *ngIf="pollContentObjectType === PollContentObjectType.Assignment"
+            [poll]="polldata"
+        ></os-assignment-poll-detail-content>
+        <os-topic-poll-detail-content
+            *ngIf="pollContentObjectType === PollContentObjectType.Topic"
+            [poll]="polldata"
+        ></os-topic-poll-detail-content>
     </div>
 </ng-container>

@@ -1,6 +1,10 @@
 <div *ngIf="data">
-    <div *ngIf="isImage" [ngClass]="isFullscreen ? 'fullscreen' : 'nofullscreen'" [ngStyle]="{ 'background': isFullscreen ? '#000' : '#ffffff' }">
-        <img [src]="url | trust: 'url'" alt="" />
+    <div
+        *ngIf="isImage"
+        [ngClass]="isFullscreen ? 'fullscreen' : 'nofullscreen'"
+        [ngStyle]="{ background: isFullscreen ? '#000' : '#ffffff' }"
+    >
+        <img [src]="url | trust : 'url'" alt="" />
     </div>
     <div *ngIf="isPdf && url" class="fullscreen">
         <pdf-viewer
@@ -11,7 +15,7 @@
             [page]="page"
             [zoom]="zoom"
             [src]="url"
-            [ngStyle]="{'top': -scroll + 'px'}"
+            [ngStyle]="{ top: -scroll + 'px' }"
         ></pdf-viewer>
     </div>
 </div>

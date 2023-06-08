@@ -36,12 +36,7 @@
 </mat-card>
 
 <ng-template #tableTemplate>
-    <os-scrolling-table
-        vScrollFixed="50"
-        [showHeader]="true"
-        [dataSource]="dataSource"
-        [tableHeight]="tableHeight"
-    >
+    <os-scrolling-table vScrollFixed="50" [showHeader]="true" [dataSource]="dataSource" [tableHeight]="tableHeight">
         <div *osScrollingTableCell="'remove'; row as file; config: { width: 24 }">
             <button mat-icon-button (click)="onRemoveButton(file)" matTooltip="{{ 'Remove file' | translate }}">
                 <mat-icon>close</mat-icon>

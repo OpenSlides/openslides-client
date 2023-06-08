@@ -294,6 +294,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             Object.keys(data).forEach(key => {
                 newData[key] =
                     this._checkIfDeletedProperties.includes(key) && !data[key] && !!this.user[key] ? null : data[key];
+                if (newData[key] !== null) {
+                    this.personalInfoForm.get(key).markAsTouched();
+                }
             });
             return newData;
         }

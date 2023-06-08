@@ -1,6 +1,4 @@
-<os-head-bar
-    [multiSelectMode]="isMultiSelect"
->
+<os-head-bar [multiSelectMode]="isMultiSelect">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Meetings' | translate }}</h2>
@@ -41,8 +39,8 @@
             [routerLink]="getMeetingUrl(meeting)"
             *ngIf="!isMultiSelect && meeting.canAccess()"
         ></a>
-        <div style="overflow: hidden" class="flex-vertical-center">
-            <div style="overflow: hidden" class="nameCell">
+        <div class="flex-vertical-center overflow-hidden">
+            <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
                     <!-- Is Archived -->
                     <span class="icon-prefix" *ngIf="meeting.isArchived">
@@ -50,18 +48,27 @@
                     </span>
 
                     <!-- Is Template -->
-                    <span class="icon-prefix" *osCmlPerms="CML.can_manage; committeeId: meeting.committee_id; nonAdminCheck: true; and: meeting.isTemplate">
+                    <span
+                        class="icon-prefix"
+                        *osCmlPerms="
+                            CML.can_manage;
+                            committeeId: meeting.committee_id;
+                            nonAdminCheck: true;
+                            and: meeting.isTemplate
+                        "
+                    >
                         <mat-icon [matTooltip]="'Public template' | translate">star</mat-icon>
                     </span>
 
                     <span class="ellipsis-overflow">{{ meeting.name | translate }}</span>
                 </div>
 
-                <div class="subtitle ellipsis-overflow" *ngIf="meeting.location || meeting.start_time || meeting.end_time">
+                <div
+                    class="subtitle ellipsis-overflow"
+                    *ngIf="meeting.location || meeting.start_time || meeting.end_time"
+                >
                     <span *ngIf="meeting.location">{{ meeting.location }}</span>
-                    <span
-                        *ngIf="meeting.location && (meeting.start_time || meeting.end_time)"
-                    >
+                    <span *ngIf="meeting.location && (meeting.start_time || meeting.end_time)">
                         &nbsp;&middot;&nbsp;
                     </span>
                     <span *ngIf="meeting.start_time || meeting.end_time">
@@ -80,11 +87,7 @@
                     [routerLink]="getCommitteeForMeetingUrl(meeting)"
                     *ngIf="!this.isMultiSelect && meeting.committee?.canAccess()"
                 ></a>
-                <os-icon-container
-                    icon="layers"
-                    class="committee"
-                    *ngIf="meeting.committee?.name"
-                >
+                <os-icon-container icon="layers" class="committee" *ngIf="meeting.committee?.name">
                     {{ meeting.committee?.name | translate }}
                 </os-icon-container>
             </div>
@@ -106,12 +109,20 @@
         ></a>
         <div>
             <div *ngIf="meeting.userAmount">
-                <os-icon-container iconTooltip="{{ 'Participants' | translate }}" icon="group">
+                <os-icon-container
+                    iconTooltip="{{ 'Participants' | translate }}"
+                    iconTooltipPosition="right"
+                    icon="group"
+                >
                     {{ meeting.userAmount }}
                 </os-icon-container>
             </div>
             <div *ngIf="meeting.motionsAmount">
-                <os-icon-container iconTooltip="{{ 'Motions' | translate }}" icon="assignment">
+                <os-icon-container
+                    iconTooltip="{{ 'Motions' | translate }}"
+                    iconTooltipPosition="right"
+                    icon="assignment"
+                >
                     {{ meeting.motionsAmount }}
                 </os-icon-container>
             </div>

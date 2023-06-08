@@ -78,7 +78,11 @@
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="getRowDef()"></mat-header-row>
-        <mat-row [ngClass]="{'links-disabled': !isSuperadmin}" *matRowDef="let row; columns: getRowDef()" (click)="onClickRow(row)"></mat-row>
+        <mat-row
+            [ngClass]="{ 'links-disabled': !isSuperadmin }"
+            *matRowDef="let row; columns: getRowDef()"
+            (click)="onClickRow(row)"
+        ></mat-row>
     </mat-table>
 
     <mat-paginator [pageSizeOptions]="pageSizes"></mat-paginator>
