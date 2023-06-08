@@ -41,7 +41,7 @@ export class ViewSpeaker extends BaseViewModel<Speaker> {
     }
 
     public get userId(): Id {
-        return this.user.user.id;
+        return this.user?.user.id;
     }
 
     public get gender(): string {
