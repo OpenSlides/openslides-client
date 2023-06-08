@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { User } from 'src/app/domain/models/users/user';
 import { SearchUsersPresenterService } from 'src/app/gateways/presenter/search-users-presenter.service';
@@ -156,6 +156,16 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                 validators: [OneOfValidator.validation([`username`, `first_name`, `last_name`, `email`], `name`)]
             }
         );
+        this.createUserForm.valueChanges.pipe(distinctUntilChanged()).subscribe(val => {
+            if (this._accountId) {
+                this.detailView?.enableSelfUpdate();
+                this.flickerSubject.next(true);
+                this.account = null;
+                this._accountId = null;
+                this._isUserInScope = false;
+                this.flickerSubject.next(false);
+            }
+        });
     }
 
     public ngOnInit(): void {
@@ -210,9 +220,10 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     }
 
     public async onAccountSelected(account: Partial<User>): Promise<void> {
+        this.detailView?.enableSelfUpdate(false);
         this.flickerSubject.next(true);
         const shouldReset = !!this.detailView;
-        this.createUserForm.patchValue(account);
+        this.createUserForm.patchValue(account, { emitEvent: false });
         this._accountId = account.id || null;
         this._stepper.next();
         await this.checkScope();
