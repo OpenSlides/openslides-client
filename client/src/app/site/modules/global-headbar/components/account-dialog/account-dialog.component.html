@@ -71,7 +71,7 @@
     <div>
         <cdk-virtual-scroll-viewport [itemSize]="50">
             <ng-container *cdkVirtualFor="let meeting of getAllMeetings()">
-                <div class="meeting-group-block underlined-link">
+                <div class="meeting-group-block">
                     <a (click)="closeDialog()" [routerLink]="[meeting.id]">{{ meeting.name }}</a>
                     <div class="flex-vertical-center">
                         <os-comma-separated-listing [list]="getGroupsForMeeting(meeting)">

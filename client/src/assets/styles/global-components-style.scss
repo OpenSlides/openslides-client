@@ -23,7 +23,7 @@
     }
 
     .underlined-link a {
-        color: mat.get-color-from-palette($foreground, text);
+        color: inherit;
         text-decoration: solid underline mix(mat.get-color-from-palette($foreground, text), mat.get-color-from-palette($background, background), 50%) 2px;
 
         &:hover {
