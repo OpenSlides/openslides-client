@@ -36,7 +36,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @returns the sorted output subject as observable
      */
     public get outputObservable(): Observable<V[]> {
-        return this.outputSubject.asObservable();
+        return this.outputSubject;
     }
 
     /**

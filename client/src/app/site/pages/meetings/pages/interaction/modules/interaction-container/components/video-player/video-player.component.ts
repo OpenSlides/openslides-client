@@ -15,7 +15,6 @@ import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import videojs from 'video.js';
 
 enum MimeType {
     mp4 = `video/mp4`,
@@ -91,7 +90,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     public posterUrl!: string;
-    public vjsPlayer: videojs.Player | null = null;
+    public vjsPlayer: any | null = null;
     public videoId!: string;
     public isUrlOnline!: boolean;
     private playerType!: Player;
@@ -177,7 +176,10 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
          * if a Ressource switches from online to offline
          */
         const ajaxResponse: AjaxResponse<any> = await firstValueFrom(
-            ajax(this.videoUrl).pipe(
+            ajax({
+                url: this.videoUrl,
+                crossDomain: true
+            }).pipe(
                 map(response => response),
                 catchError(error => of(error))
             )
@@ -258,6 +260,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
     private async initVjs(): Promise<void> {
         await this.isUrlReachable();
         if (!this.vjsPlayer && this.usingVjs && this.vjsPlayerElementRef) {
+            const videojs = (await import(`video.js`)).default;
             this.vjsPlayer = videojs(this.vjsPlayerElementRef.nativeElement, {
                 textTrackSettings: { persistTextTrackSettings: false },
                 fluid: true,

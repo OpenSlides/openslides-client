@@ -28,7 +28,7 @@
                 class="room-list-applause-particles"
             ></os-applause-particle-display>
             <ol class="member-list">
-                <li *ngFor="let member of memberObservable | async | entries: valueNameOrder; trackBy: trackByIndex">
+                <li *ngFor="let member of memberObservable | async | entries : valueNameOrder; trackBy: trackByIndex">
                     <div class="member-list-entry">
                         {{ member.value.name }}
                     </div>

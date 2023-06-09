@@ -1,4 +1,3 @@
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
     ContentChild,
     Directive,
@@ -25,8 +24,8 @@ import { ParentErrorStateMatcher } from '../../validators';
 
 @Directive()
 export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlComponent<Selectable> implements OnInit {
-    @ViewChild(CdkVirtualScrollViewport, { static: true })
-    public cdkVirtualScrollViewPort!: CdkVirtualScrollViewport;
+    @ViewChild(`scrollViewport`, { static: true })
+    public scrollViewport!: ElementRef<HTMLElement>;
 
     @ViewChild(`matSelect`)
     public matSelect!: MatSelect;
@@ -191,7 +190,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     }
 
     public get filteredItemsObservable(): Observable<Selectable[]> {
-        return this.filteredItemsSubject.asObservable();
+        return this.filteredItemsSubject;
     }
 
     public selectedIds: Id[] = [];
@@ -270,17 +269,18 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     public onOpenChanged(event: boolean): void {
         this.openedChange.emit(event);
         if (event) {
-            this.cdkVirtualScrollViewPort.scrollToIndex(0);
-            this.cdkVirtualScrollViewPort.checkViewportSize();
+            this.scrollViewport.nativeElement.scroll({ top: 0 });
+        } else {
+            this.searchValueForm.setValue(``);
         }
     }
 
     public onSelectionChange(value: Selectable, change: MatOptionSelectionChange): void {
-        if (change.isUserInput && this.multiple) {
+        if (change.isUserInput) {
             if (this.multiple) {
                 this.addOrRemoveId(value.id);
+                this.selectionChanged.emit({ value, selected: change.source.selected });
             }
-            this.selectionChanged.emit({ value, selected: change.source.selected });
         }
     }
 
@@ -290,6 +290,13 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
             return;
         }
         this.matSelect.open();
+    }
+
+    public onSearchKeydown(event: any): void {
+        // Only propagate enter, up, down
+        if ([13, 38, 40].indexOf(event.keyCode) === -1) {
+            event.stopPropagation();
+        }
     }
 
     /**

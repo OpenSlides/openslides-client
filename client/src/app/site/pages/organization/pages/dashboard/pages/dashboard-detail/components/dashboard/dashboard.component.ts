@@ -27,6 +27,10 @@ export class DashboardComponent extends BaseComponent {
         );
     }
 
+    public get noNoDateMeetingsToShow(): boolean {
+        return !this.noDateMeetings.length;
+    }
+
     public get isDarkModeObservable(): Observable<boolean> {
         return this.themeService.isDarkModeObservable;
     }

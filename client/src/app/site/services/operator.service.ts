@@ -103,7 +103,7 @@ export class OperatorService {
     private operatorIdSubject: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
 
     public get operatorIdObservable(): Observable<number | null> {
-        return this.operatorIdSubject.asObservable();
+        return this.operatorIdSubject;
     }
 
     /**
@@ -111,11 +111,11 @@ export class OperatorService {
      * Either the operator itself changed or the model or permission changed.
      */
     public get operatorUpdated(): Observable<void> {
-        return this._operatorUpdatedSubject.asObservable();
+        return this._operatorUpdatedSubject;
     }
 
     public get operatorShortNameObservable(): Observable<string | null> {
-        return this._operatorShortNameSubject.asObservable();
+        return this._operatorShortNameSubject;
     }
 
     public get user(): ViewUser {
@@ -126,7 +126,7 @@ export class OperatorService {
     }
 
     public get userObservable(): Observable<ViewUser | null> {
-        return this._userSubject.asObservable();
+        return this._userSubject;
     }
 
     public get ready(): Deferred<void> {
@@ -142,11 +142,11 @@ export class OperatorService {
     }
 
     public get isReadyObservable(): Observable<boolean> {
-        return this._operatorReadySubject.asObservable();
+        return this._operatorReadySubject;
     }
 
     public get permissionsObservable(): Observable<Permission[] | undefined> {
-        return this._permissionsSubject.asObservable();
+        return this._permissionsSubject;
     }
 
     private get activeMeetingId(): number | null {

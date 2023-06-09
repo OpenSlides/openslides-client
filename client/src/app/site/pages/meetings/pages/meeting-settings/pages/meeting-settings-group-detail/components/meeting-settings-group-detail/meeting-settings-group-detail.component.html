@@ -31,7 +31,7 @@
                     #settingsFields
                     (update)="updateSetting($event)"
                     [setting]="setting"
-                    [value]="meeting && meeting[setting.key]"
+                    [value]="meeting && getDetailFieldValue(meeting, setting)"
                 ></os-meeting-settings-group-detail-field>
             </ng-container>
         </ng-container>

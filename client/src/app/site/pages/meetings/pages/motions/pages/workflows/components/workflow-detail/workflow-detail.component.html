@@ -193,7 +193,11 @@
 <mat-menu matMenuContent #submitterWithdrawStateMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         <div *ngFor="let workflowState of workflow.states">
-            <button mat-menu-item *ngIf="workflowState.name !== state.name" (click)="onSetSubmitterWithdrawState(workflowState, state)">
+            <button
+                mat-menu-item
+                *ngIf="workflowState.name !== state.name"
+                (click)="onSetSubmitterWithdrawState(workflowState, state)"
+            >
                 <mat-icon *ngIf="state.submitter_withdraw_state_id === workflowState.id">check</mat-icon>
                 <span>{{ workflowState.name }}</span>
             </button>

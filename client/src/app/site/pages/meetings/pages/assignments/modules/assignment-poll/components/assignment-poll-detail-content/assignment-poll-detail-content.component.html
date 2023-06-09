@@ -42,7 +42,7 @@
                     <div class="single-result" [ngClass]="getVoteClass(vote)">
                         <span>
                             <span *ngIf="vote.showPercent">
-                                {{ getVoteAmount(vote, row) | pollPercentBase: poll:row }}
+                                {{ getVoteAmount(vote, row) | pollPercentBase : poll : row }}
                             </span>
                             <span *ngIf="['user', 'list'].includes(row.class)">
                                 {{ getVoteAmount(vote, row) | pollParseNumber }}
@@ -60,7 +60,7 @@
                 <td class="result">
                     <div class="single-result">
                         <span>
-                            {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
+                            {{ poll.entitled_users_at_stop.length | pollPercentBase : poll }}
                         </span>
                         <span>
                             {{ poll.entitled_users_at_stop.length }}
@@ -77,7 +77,7 @@
             <span class="candidate-name">
                 {{ tableData[0].votingOption | pollKeyVerbose | translate }}
             </span>
-            <br>
+            <br />
             <span class="user-subtitle" *ngIf="tableData[0].votingOptionSubtitle">
                 ({{ tableData[0].votingOptionSubtitle }})
             </span>
@@ -93,8 +93,8 @@
                 [tableData]="reformedTableData"
                 [pollService]="assignmentPollService"
                 iconSize="gigantic"
-                [shouldShowEntitled]="isPercentBaseEntitled">
-            </os-single-option-chart-table>
+                [shouldShowEntitled]="isPercentBaseEntitled"
+            ></os-single-option-chart-table>
         </ng-container>
     </div>
 
@@ -120,9 +120,7 @@
                 <span class="candidate-name">
                     {{ date.title }}
                 </span>
-                <span class="user-subtitle" *ngIf="date.subtitle">
-                    ({{ date.subtitle }})
-                </span>
+                <span class="user-subtitle" *ngIf="date.subtitle">({{ date.subtitle }})</span>
             </li>
         </ul>
         <ol *ngIf="enumerateCandidates">
@@ -130,9 +128,7 @@
                 <span class="candidate-name">
                     {{ date.title }}
                 </span>
-                <span class="user-subtitle" *ngIf="date.subtitle">
-                    ({{ date.subtitle }})
-                </span>
+                <span class="user-subtitle" *ngIf="date.subtitle">({{ date.subtitle }})</span>
             </li>
         </ol>
     </div>

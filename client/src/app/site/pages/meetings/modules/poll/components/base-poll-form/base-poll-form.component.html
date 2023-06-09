@@ -50,7 +50,10 @@
                         formControlName="pollmethod"
                         required
                     >
-                        <mat-option *ngFor="let option of filteredPollMethods | keyvalue: keepEntryOrder" [value]="option.key">
+                        <mat-option
+                            *ngFor="let option of filteredPollMethods | keyvalue : keepEntryOrder"
+                            [value]="option.key"
+                        >
                             {{ option.value | translate }}
                         </mat-option>
                     </mat-select>
@@ -92,8 +95,11 @@
                 </ng-container>
 
                 <!-- Second row with span over 2nd and 3rd column if max amount of votes per option is enabled-->
-                <div *ngIf="pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)" class="third-option">
-                    <ng-container formGroupName="votes_amount" >
+                <div
+                    *ngIf="pollService.isMaxVotesPerOptionEnabled() && isEVotingSelected && showMaxVotesPerOption(data)"
+                    class="third-option"
+                >
+                    <ng-container formGroupName="votes_amount">
                         <!-- Max Amount of Votes per Option -->
                         <mat-form-field>
                             <input
@@ -130,8 +136,15 @@
                     formControlName="onehundred_percent_base"
                     required
                 >
-                    <ng-container *ngFor="let option of validPercentBases | keyvalue: keepEntryOrder">
-                        <mat-option [value]="option.key">{{ ((isCreatedList || pollMethod === 'yna') ? alternativePercentBases[option.key] : option.value) | translate }}</mat-option>
+                    <ng-container *ngFor="let option of validPercentBases | keyvalue : keepEntryOrder">
+                        <mat-option [value]="option.key">
+                            {{
+                                (isCreatedList || pollMethod === 'yna'
+                                    ? alternativePercentBases[option.key]
+                                    : option.value
+                                ) | translate
+                            }}
+                        </mat-option>
                     </ng-container>
                 </mat-select>
             </mat-form-field>

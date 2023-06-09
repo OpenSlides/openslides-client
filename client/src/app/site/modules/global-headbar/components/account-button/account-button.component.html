@@ -26,6 +26,7 @@
                         matTooltip="{{
                             ((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate
                         }}"
+                        matTooltipPosition="left"
                     >
                         <mat-icon>
                             {{ (isDarkModeActiveObservable | async) ? 'light_mode' : 'dark_mode' }}

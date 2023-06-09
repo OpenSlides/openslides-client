@@ -1,6 +1,16 @@
 <os-action-card class="projector-tile" [showActionRow]="true" *ngIf="projector" [disableExpandControl]="true">
     <ng-container class="meta-text-block-title">
-        {{ projector.getTitle() | translate }}
+        <os-icon-container
+            [noWrap]="true"
+            icon="lock"
+            size="large"
+            [showIcon]="projector.is_internal"
+            [iconTooltip]="'Internal' | translate"
+        >
+            <div class="ellipsis-overflow">
+                {{ projector.getTitle() | translate }}
+            </div>
+        </os-icon-container>
     </ng-container>
     <ng-container class="meta-text-block-action-row" *osPerms="permission.projectorCanManage">
         <button

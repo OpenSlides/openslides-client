@@ -28,7 +28,7 @@ export class WorkflowDetailSortComponent extends BaseModelRequestHandlerComponen
     public sortingList!: SortingListComponent;
 
     public get workflowStatesObservable(): Observable<ViewMotionState[]> {
-        return this._workflowStatesSubject.asObservable();
+        return this._workflowStatesSubject;
     }
 
     public get hasChanges(): boolean {

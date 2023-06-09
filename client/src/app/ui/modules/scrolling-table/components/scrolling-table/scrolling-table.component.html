@@ -35,7 +35,11 @@
                         (click)="onRowClick($event, item)"
                     >
                         <div *ngIf="isSelectionMode" class="selection-cell scrolling-table-cell flex-vertical-center">
-                            <mat-checkbox [class.mat-checkbox-disabled]="false" [checked]="isSelected(item)" disabled></mat-checkbox>
+                            <mat-checkbox
+                                [class.mat-checkbox-disabled]="false"
+                                [checked]="isSelected(item)"
+                                disabled
+                            ></mat-checkbox>
                         </div>
                         <ng-container *ngFor="let definition of definitions">
                             <div
