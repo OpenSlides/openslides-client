@@ -21,7 +21,6 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
@@ -74,14 +73,15 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         return this.operator.hasPerms(Permission.agendaItemCanManage);
     }
 
-    public itemListSlide: ProjectionBuildDescriptor | null = null;
+    public get canSeeMenu(): boolean {
+        return this.operator.hasPerms(
+            Permission.agendaItemCanManage,
+            Permission.listOfSpeakersCanBeSpeaker,
+            Permission.listOfSpeakersCanSee
+        );
+    }
 
-    public restrictedColumns: ColumnRestriction<Permission>[] = [
-        {
-            columnName: `menu`,
-            permission: Permission.agendaItemCanManage
-        }
-    ];
+    public itemListSlide: ProjectionBuildDescriptor | null = null;
 
     /**
      * Define extra filter properties
