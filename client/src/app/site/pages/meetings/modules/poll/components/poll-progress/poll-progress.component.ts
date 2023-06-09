@@ -70,7 +70,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
                              * They are in one of the voting groups
                              */
                             return users.filter(user => {
-                                const countable = user.isVoteCountable;
+                                const countable = user.getIsVoteCountable(this.activeMeeting.meeting.present_user_ids);
                                 const inVoteGroup = this.poll.entitled_group_ids.intersect(user.group_ids()).length;
 
                                 return countable && inVoteGroup;

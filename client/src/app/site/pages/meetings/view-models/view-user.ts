@@ -264,6 +264,17 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
     // ### block end.
 
+    public getIsVoteCountable(presentUserIds?: number[]) {
+        if (!presentUserIds) {
+            return this.isVoteCountable;
+        }
+        const delegateId = this.vote_delegated_to_id();
+        if (delegateId) {
+            return presentUserIds.includes(delegateId);
+        }
+        return this.isPresentInMeeting();
+    }
+
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/users/${this.id}`;
     }
