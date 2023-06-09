@@ -3,8 +3,7 @@
         {{ 'Groups' | translate }}:
 
         <span *ngFor="let group of poll.entitled_groups; let last = last">
-            {{ group.getTitle() | translate }}
-            <span *ngIf="!last">,</span>
+            {{ group.getTitle() | translate }}{{ !last ? ',' : '' }}
         </span>
     </small>
     <small>{{ '100% base' | translate }}: {{ poll.percentBaseVerbose | translate }}</small>
