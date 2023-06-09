@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
-import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
+import { OpenslidesHtmlToPdfService } from 'src/app/gateways/export/openslides-html-to-pdf';
 import {
     PollKeyVerbosePipe,
     PollParseNumberPipe,
@@ -21,7 +21,7 @@ import { TopicCommonServiceModule } from '../topic-common-service.module';
 export class TopicPdfService {
     public constructor(
         private translate: TranslateService,
-        private htmlToPdfService: HtmlToPdfService,
+        private htmlToPdfService: OpenslidesHtmlToPdfService,
         private pdfDocumentService: MeetingPdfExportService,
         private pollKeyVerbose: PollKeyVerbosePipe,
         private parsePollNumber: PollParseNumberPipe,

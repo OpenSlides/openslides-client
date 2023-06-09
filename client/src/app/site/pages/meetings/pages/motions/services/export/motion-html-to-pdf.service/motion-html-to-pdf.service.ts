@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import {
-    ChildNodeParagraphPayload,
-    CreateSpecificParagraphPayload,
-    HtmlToPdfService
-} from 'src/app/gateways/export/html-to-pdf.service';
+import { ChildNodeParagraphPayload, CreateSpecificParagraphPayload } from 'src/app/gateways/export/html-to-pdf.service';
+import { OpenslidesHtmlToPdfService } from 'src/app/gateways/export/openslides-html-to-pdf';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { MotionsExportModule } from '../motions-export.module';
 
@@ -31,11 +29,24 @@ interface HtmlToPdfConfig {
 @Injectable({
     providedIn: MotionsExportModule
 })
-export class MotionHtmlToPdfService extends HtmlToPdfService {
+export class MotionHtmlToPdfService extends OpenslidesHtmlToPdfService {
     /**
      * holds the desired line number mode
      */
     private lineNumberingMode: LineNumberingMode = LineNumberingMode.Outside;
+
+    public constructor(theme: ThemeService) {
+        super(theme);
+        this.registerElementStyles({
+            del: [`color:red`, `text-decoration:line-through`],
+            ins: [`color:green`, `text-decoration:underline`]
+        });
+        this.registerClassStyles({
+            delete: [`color:red`, `text-decoration:line-through`],
+            insert: [`color:green`, `text-decoration:underline`],
+            paragraphcontext: [`color:grey`]
+        });
+    }
 
     public override addPlainText(htmlText: string): object {
         return {

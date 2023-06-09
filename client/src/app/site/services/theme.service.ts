@@ -48,6 +48,11 @@ export class ThemeService {
         return this._currentTheme?.accent_500 ?? ThemeService.DEFAULT_ACCENT_COLOR;
     }
 
+    public get currentPrimaryObservable(): Observable<HtmlColor> {
+        return this._currentPrimarySubject;
+    }
+    private _currentPrimarySubject = new BehaviorSubject<HtmlColor>(ThemeService.DEFAULT_PRIMARY_COLOR);
+
     /**
      * Subject that contains the current colors for the headbar, and the yes, no and abstain poll options.
      *
@@ -150,6 +155,7 @@ export class ThemeService {
         headbar,
         ..._
     }: Partial<ThemeRequiredValues & ThemeGeneralColors> = {}): void {
+        this._currentPrimarySubject.next(primary);
         this._primaryColorPalette = this.colorService.generateColorPaletteByHex(primary);
         const accentColorPalette = this.colorService.generateColorPaletteByHex(accent);
         const warnColorPalette = this.colorService.generateColorPaletteByHex(warn);

@@ -64,20 +64,15 @@ export class HtmlToPdfService {
         h6: [`font-size:10`],
         a: [`color:blue`, `text-decoration:underline`],
         strike: [`text-decoration:line-through`],
-        // Pretty specific stuff that might be excluded for other projects than OpenSlides
-        del: [`color:red`, `text-decoration:line-through`],
-        ins: [`color:green`, `text-decoration:underline`]
+        del: [`text-decoration:line-through`],
+        ins: [`text-decoration:underline`]
     };
 
     /**
      * Treatment of required CSS-Classes
      * Checking CSS is not possible
      */
-    private classStyles: any = {
-        delete: [`color:red`, `text-decoration:line-through`],
-        insert: [`color:green`, `text-decoration:underline`],
-        paragraphcontext: [`color:grey`]
-    };
+    private classStyles: any = {};
 
     /**
      * Function to convert plain html text without linenumbering.
@@ -212,6 +207,32 @@ export class HtmlToPdfService {
             }
         }
         return newParagraph;
+    }
+
+    /**
+     * May be used by subclasses to add styles for various element types.
+     *
+     * This will overwrite any pre-existing styles.
+     * @param newStyles the styles which should be used now
+     */
+    protected registerElementStyles(newStyles: { [key: string]: string[] }): void {
+        const keys = Object.keys(newStyles);
+        for (let key of keys) {
+            this.elementStyles[key] = newStyles[key];
+        }
+    }
+
+    /**
+     * May be used by subclasses to add styles for various element types.
+     *
+     * This will overwrite any pre-existing styles.
+     * @param newStyles the styles which should be used now
+     */
+    protected registerClassStyles(newClassStyles: { [key: string]: string[] }): void {
+        const keys = Object.keys(newClassStyles);
+        for (let key of keys) {
+            this.classStyles[key] = newClassStyles[key];
+        }
     }
 
     /**
