@@ -16,12 +16,14 @@
 .main-content-wrapper {
     display: flex;
     flex: 1 1 auto;
+    max-width: 100%;
     .navigation {
         position: sticky;
         flex: 1 0 auto;
     }
     .content {
         width: 100%;
+        height: 100%;
         overflow: auto;
     }
 }
@@ -76,14 +78,14 @@ mat-sidenav-container {
         box-shadow: 3px 0px 10px 0px rgba(0, 0, 0, 0.2);
         width: 260px;
         overflow-x: hidden;
-        z-index: 3;
+        z-index: 102;
     }
 }
 
 // CSS for the toggle button
 .nav-toggle-button-container {
     position: sticky;
-    z-index: 99;
+    z-index: 103;
     bottom: 24px;
     & > div {
         position: relative;

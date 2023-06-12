@@ -156,11 +156,16 @@ export class User extends BaseDecimalModel<User> {
     }
 
     public vote_delegated_to_id(meetingId: Id): Id {
-        return (this as any)[`vote_delegated_$${meetingId}_to_id`];
+        return this.vote_delegated_$_to_id?.includes(`${meetingId}`)
+            ? (this as any)[`vote_delegated_$${meetingId}_to_id`]
+            : undefined;
     }
 
     public vote_delegations_from_ids(meetingId: Id): Id[] {
-        return (this as any)[`vote_delegations_$${meetingId}_from_ids`] || [];
+        if (this.vote_delegations_$_from_ids?.includes(`${meetingId}`)) {
+            return (this as any)[`vote_delegations_$${meetingId}_from_ids`] || [];
+        }
+        return [];
     }
 
     /**

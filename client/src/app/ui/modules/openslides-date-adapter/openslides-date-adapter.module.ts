@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
 import { TranslateService } from '@ngx-translate/core';
 
 import { OpenSlidesDateAdapter } from './openslides-date-adapter';
@@ -11,13 +11,13 @@ const EXPORTS = [MatDatepickerModule];
 
 @NgModule({
     declarations: [],
-    imports: [CommonModule, MatMomentDateModule, ...EXPORTS],
+    imports: [CommonModule, MatDateFnsModule, ...EXPORTS],
     exports: EXPORTS,
     providers: [
         {
             provide: DateAdapter,
             useClass: OpenSlidesDateAdapter,
-            deps: [TranslateService, MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+            deps: [TranslateService, MAT_DATE_LOCALE]
         } // see remarks in OpenSlidesDateAdapter
     ]
 })

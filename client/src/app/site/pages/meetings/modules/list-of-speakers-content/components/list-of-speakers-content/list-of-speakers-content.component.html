@@ -15,7 +15,7 @@
         <mat-list>
             <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
                 <div class="finished-speakers-grid">
-                    <div>{{ number + 1 }}.</div>
+                    <div *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
                     <div class="finished-speaker-info">
                         <div>
                             <div>{{ speaker.getTitle() }}</div>
@@ -35,6 +35,7 @@
                         <button
                             mat-icon-button
                             matTooltip="{{ 'Remove' | translate }}"
+                            matTooltipPosition="left"
                             *osPerms="permission.listOfSpeakersCanManage"
                             (click)="removeSpeaker(speaker)"
                         >
@@ -77,6 +78,7 @@
                 *ngIf="canManage"
                 mat-icon-button
                 matTooltip="{{ 'End speech' | translate }}"
+                matTooltipPosition="left"
                 (click)="onStopButton()"
             >
                 <mat-icon>stop</mat-icon>
@@ -99,7 +101,7 @@
         <os-sorting-list
             [live]="true"
             [input]="waitingSpeakers"
-            [count]="true"
+            [count]="canSee"
             [enable]="canManage && (isSortMode || !isMobile)"
             (sortEvent)="onSortingChanged($event)"
         >
@@ -198,6 +200,7 @@
                             <button
                                 mat-icon-button
                                 matTooltip="{{ 'Begin speech' | translate }}"
+                                matTooltipPosition="left"
                                 (click)="onStartButton(speaker)"
                             >
                                 <mat-icon>play_arrow</mat-icon>

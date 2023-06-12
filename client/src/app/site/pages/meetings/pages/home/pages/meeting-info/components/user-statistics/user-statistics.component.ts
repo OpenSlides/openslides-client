@@ -34,7 +34,7 @@ export class UserStatisticsComponent extends BaseComponent implements OnInit {
      * structure-level.
      */
     public get statisticsByStructureLevelObservable(): Observable<IdentifiedSpeakingTimeStructureLevelObject[]> {
-        return this.relationSpeakingTimeStructureLevelSubject.asObservable();
+        return this.relationSpeakingTimeStructureLevelSubject;
     }
 
     /**
