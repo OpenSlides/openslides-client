@@ -67,7 +67,8 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
         super(componentServiceCollector, translate);
 
         this.createForm = this.formBuilder.group({
-            name: [``, Validators.required]
+            name: [``, Validators.required],
+            is_internal: []
         });
 
         this.installUpdater();
@@ -101,9 +102,7 @@ export class ProjectorListComponent extends BaseMeetingComponent implements OnIn
         const dialogRef = this.dialogService.open(dialog, { ...infoDialogSettings, disableClose: true });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                const projectorToCreate: Partial<Projector> = {
-                    name: this.createForm.value.name
-                };
+                const projectorToCreate: Partial<Projector> = this.createForm.value;
 
                 this.repo.create(projectorToCreate as Projector).then(() => {
                     this.cd.detectChanges();

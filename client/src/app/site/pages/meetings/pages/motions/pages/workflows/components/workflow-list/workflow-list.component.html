@@ -42,7 +42,10 @@
     </div>
 
     <!-- Delete column -->
-    <div *osScrollingTableCell="'delete'; row as workflow" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'delete'; row as workflow; config: { width: 40, position: END_POSITION }"
+        class="cell-slot fill"
+    >
         <button type="button" mat-icon-button (click)="onDeleteWorkflow(workflow)">
             <mat-icon color="warn">delete</mat-icon>
         </button>
