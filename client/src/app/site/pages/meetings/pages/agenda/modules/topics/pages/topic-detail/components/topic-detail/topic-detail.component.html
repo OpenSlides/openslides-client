@@ -2,6 +2,7 @@
     <os-head-bar
         [hasMainButton]="isAllowed('edit') && !!topic"
         mainButtonIcon="edit"
+        [mainActionTooltip]="'Edit topic' | translate"
         [nav]="false"
         [goBack]="true"
         [editMode]="editTopic"

@@ -3,6 +3,7 @@
         <os-head-bar
             [hasMainButton]="hasPerms('manage') && !!assignment"
             mainButtonIcon="edit"
+            [mainActionTooltip]="'Edit election' | translate"
             [nav]="false"
             [editMode]="isEditing"
             [isSaveButtonEnabled]="assignmentForm.valid"
