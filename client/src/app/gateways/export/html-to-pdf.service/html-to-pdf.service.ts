@@ -216,10 +216,7 @@ export class HtmlToPdfService {
      * @param newStyles the styles which should be used now
      */
     protected registerElementStyles(newStyles: { [key: string]: string[] }): void {
-        const keys = Object.keys(newStyles);
-        for (let key of keys) {
-            this.elementStyles[key] = newStyles[key];
-        }
+        Object.assign(this.elementStyles, newStyles);
     }
 
     /**
@@ -229,10 +226,7 @@ export class HtmlToPdfService {
      * @param newStyles the styles which should be used now
      */
     protected registerClassStyles(newClassStyles: { [key: string]: string[] }): void {
-        const keys = Object.keys(newClassStyles);
-        for (let key of keys) {
-            this.classStyles[key] = newClassStyles[key];
-        }
+        Object.assign(this.classStyles, newClassStyles);
     }
 
     /**
