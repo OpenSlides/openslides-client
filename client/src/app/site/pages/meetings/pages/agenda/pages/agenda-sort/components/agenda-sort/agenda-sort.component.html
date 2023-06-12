@@ -26,10 +26,7 @@
         <mat-menu #menu>
             <div class="filter-hint hint">{{ 'Visibility' | translate }}</div>
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
-                <mat-list-option
-                    *ngFor="let option of filterOptions"
-                    [value]="option.id"
-                    [selected]="option.state">
+                <mat-list-option *ngFor="let option of filterOptions" [value]="option.id" [selected]="option.state">
                     <mat-icon matListIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
                         {{ getIcon(option.id) }}
                     </mat-icon>

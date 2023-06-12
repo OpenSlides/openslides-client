@@ -29,18 +29,30 @@
                 </span>
 
                 <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
-                    <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}" matTooltipPosition="above">
+                    <mat-icon
+                        *ngIf="isLosClosed"
+                        matTooltip="{{ 'The list of speakers is closed.' | translate }}"
+                        matTooltipPosition="above"
+                    >
                         lock
                     </mat-icon>
                 </ng-container>
 
                 <ng-container *osPerms="permission.listOfSpeakersCanManage">
                     <button mat-icon-button (click)="toggleListOfSpeakersOpen()">
-                        <mat-icon *ngIf="isLosClosed" matTooltip="{{ 'The list of speakers is closed.' | translate }}" matTooltipPosition="above">
+                        <mat-icon
+                            *ngIf="isLosClosed"
+                            matTooltip="{{ 'The list of speakers is closed.' | translate }}"
+                            matTooltipPosition="above"
+                        >
                             lock
                         </mat-icon>
 
-                        <mat-icon *ngIf="!isLosClosed" matTooltip="{{ 'The list of speakers is open.' | translate }}" matTooltipPosition="above">
+                        <mat-icon
+                            *ngIf="!isLosClosed"
+                            matTooltip="{{ 'The list of speakers is open.' | translate }}"
+                            matTooltipPosition="above"
+                        >
                             lock_open
                         </mat-icon>
                     </button>

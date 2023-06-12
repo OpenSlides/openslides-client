@@ -28,7 +28,7 @@
                     <mat-select formControlName="value" [errorStateMatcher]="matcher">
                         <ng-container *ngIf="getRestrictedValue(setting.choices)">
                             <mat-option
-                                *ngFor="let choice of getRestrictedValue(setting.choices) | keyvalue: keepEntryOrder"
+                                *ngFor="let choice of getRestrictedValue(setting.choices) | keyvalue : keepEntryOrder"
                                 [value]="choice.key"
                             >
                                 {{ choice.value | toString | translate }}

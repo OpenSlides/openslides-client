@@ -7,7 +7,8 @@
             [multiple]="false"
             placeholder="{{ placeholder | translate }}"
             [inputListValues]="filteredUsersSubject"
-            (clickNotFound)="createNewSelectedUser($event)">
+            (clickNotFound)="createNewSelectedUser($event)"
+        >
             <ng-template osSearchSelectorNotFoundTemplate *osPerms="permission.userCanManage">
                 <div>
                     <mat-icon class="os-not-found-button-content">add</mat-icon>

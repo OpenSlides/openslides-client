@@ -48,19 +48,17 @@
         *ngIf="viewListOfSpeakers && projectors && projectors.length > 1"
         [object]="getClosSlide()"
         [menuItem]="true"
-    >{{ 'Current list of speakers (as slide)' | translate }}</os-projector-button>
+    >
+        {{ 'Current list of speakers (as slide)' | translate }}
+    </os-projector-button>
 
-    <os-projector-button
-        *ngIf="viewListOfSpeakers"
-        [object]="viewListOfSpeakers"
-        [menuItem]="true"
-    >{{ 'List of speakers' | translate }}</os-projector-button>
+    <os-projector-button *ngIf="viewListOfSpeakers" [object]="viewListOfSpeakers" [menuItem]="true">
+        {{ 'List of speakers' | translate }}
+    </os-projector-button>
 
-    <os-projector-button
-        *ngIf="viewListOfSpeakers"
-        [object]="viewListOfSpeakers.content_object!"
-        [menuItem]="true"
-    >{{ getContentObjectProjectorButtonText() | translate }}</os-projector-button>
+    <os-projector-button *ngIf="viewListOfSpeakers" [object]="viewListOfSpeakers.content_object!" [menuItem]="true">
+        {{ getContentObjectProjectorButtonText() | translate }}
+    </os-projector-button>
 
     <button mat-menu-item (click)="setLosClosed(!isListOfSpeakersClosed)">
         <ng-container *ngIf="isListOfSpeakersClosed">
@@ -75,12 +73,22 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-menu-item (click)="clearPreviousSpeakerList()" [disabled]="isPreviousListOfSpeakersEmpty" class="red-warning-text">
+    <button
+        mat-menu-item
+        (click)="clearPreviousSpeakerList()"
+        [disabled]="isPreviousListOfSpeakersEmpty"
+        class="red-warning-text"
+    >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all previous speakers' | translate }}</span>
     </button>
 
-    <button mat-menu-item (click)="clearNextSpeakerList()" [disabled]="isNextListOfSpeakersEmpty" class="red-warning-text">
+    <button
+        mat-menu-item
+        (click)="clearNextSpeakerList()"
+        [disabled]="isNextListOfSpeakersEmpty"
+        class="red-warning-text"
+    >
         <mat-icon>delete</mat-icon>
         <span>{{ 'Remove all next speakers' | translate }}</span>
     </button>
