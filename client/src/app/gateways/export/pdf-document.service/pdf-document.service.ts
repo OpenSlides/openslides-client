@@ -6,6 +6,7 @@ import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.consta
 import { Functionable } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { HttpService } from '../../http.service';
 import { ExportServiceModule } from '../export-service.module';
@@ -299,7 +300,8 @@ export class PdfDocumentService {
         private progressService: ProgressSnackBarControlService,
         private pdfImagesService: PdfImagesService,
         private mediaManageService: MediaManageService,
-        private meetingSettingsService: MeetingSettingsService
+        private meetingSettingsService: MeetingSettingsService,
+        private theme: ThemeService
     ) {
         this.makeSettingsSubscriptions();
     }
@@ -779,7 +781,7 @@ export class PdfDocumentService {
             title: {
                 fontSize: pageSize === `A5` ? 14 : 16,
                 margin: [0, 0, 0, 20],
-                bold: true
+                color: this.theme.currentPrimaryColor
             },
             subtitle: {
                 fontSize: 9,
@@ -806,12 +808,24 @@ export class PdfDocumentService {
             },
             heading2: {
                 fontSize: pageSize === `A5` ? 12 : 14,
-                margin: [0, 0, 0, 10],
-                bold: true
+                margin: [0, 0, 0, 10]
             },
             heading3: {
                 fontSize: pageSize === `A5` ? 10 : 12,
-                margin: [0, 10, 0, 0],
+                margin: [0, 10, 0, 0]
+            },
+            heading4: {
+                fontSize: pageSize === `A5` ? 7 : 9,
+                margin: [0, 5, 0, 5]
+            },
+            heading5: {
+                fontSize: pageSize === `A5` ? 6 : 8,
+                margin: [0, 0, 0, 10],
+                bold: true
+            },
+            heading6: {
+                fontSize: pageSize === `A5` ? 5 : 7,
+                margin: [0, 0, 0, 10],
                 bold: true
             },
             userDataHeading: {

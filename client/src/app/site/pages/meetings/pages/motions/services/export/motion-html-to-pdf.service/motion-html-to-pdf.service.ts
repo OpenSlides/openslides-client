@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 import { ChildNodeParagraphPayload, CreateSpecificParagraphPayload } from 'src/app/gateways/export/html-to-pdf.service';
 import { OpenslidesHtmlToPdfService } from 'src/app/gateways/export/openslides-html-to-pdf';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { MotionsExportModule } from '../motions-export.module';
 
@@ -35,8 +34,8 @@ export class MotionHtmlToPdfService extends OpenslidesHtmlToPdfService {
      */
     private lineNumberingMode: LineNumberingMode = LineNumberingMode.Outside;
 
-    public constructor(theme: ThemeService) {
-        super(theme);
+    public constructor() {
+        super();
         this.registerElementStyles({
             del: [`color:red`, `text-decoration:line-through`],
             ins: [`color:green`, `text-decoration:underline`]

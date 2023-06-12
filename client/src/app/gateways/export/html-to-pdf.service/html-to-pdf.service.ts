@@ -536,6 +536,10 @@ export class HtmlToPdfService {
                             styleObject.background = this.parseColor(value);
                             break;
                         }
+                        case `style`: {
+                            styleObject.style = value;
+                            break;
+                        }
                     }
                 }
             }
