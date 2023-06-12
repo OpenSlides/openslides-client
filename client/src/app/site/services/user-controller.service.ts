@@ -197,7 +197,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         const response = (await this.repo.sendInvitationEmails(users, meetingId).resolve()) as EmailSentResult[];
 
         const numEmails = response.filter(email => email.sent).length;
-        const noEmails = response.filter(email => !email.sent && email.message.includes(`has no email address`));
+        const noEmails = response.filter(email => !email.sent && email.type === `user_error`);
         const notSent = response.filter(email => !email.sent);
         let responseMessage: string;
         if (numEmails === 0) {

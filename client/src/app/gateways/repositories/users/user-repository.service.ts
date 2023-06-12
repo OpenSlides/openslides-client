@@ -39,7 +39,10 @@ export interface ShortNameInformation extends NameInformation {
 
 export type UserPatchFn = { [key in keyof User]?: any } | ((user: ViewUser) => { [key in keyof User]?: any });
 
+export type EmailSentResultType = 'user_error' | 'settings_error' | 'configuration_error' | 'other_error';
+
 export interface EmailSentResult {
+    type: EmailSentResultType;
     message?: string;
     sent: boolean;
     recipient_user_id: Id;
