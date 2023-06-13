@@ -189,7 +189,7 @@
 
 <ng-template #desktopView>
     <div class="desktop-view" *ngIf="motion || newMotion">
-        <div class="desktop-left spacer-bottom-60">
+        <div class="desktop-left" [ngClass]="{ 'spacer-bottom-60': !editMotion }">
             <!-- Meta Info -->
             <div *ngIf="!newMotion">
                 <ng-container *ngTemplateOutlet="metaInfoTemplate"></ng-container>
