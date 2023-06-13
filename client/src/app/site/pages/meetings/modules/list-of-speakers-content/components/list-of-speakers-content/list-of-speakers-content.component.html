@@ -1,4 +1,4 @@
-<mat-card class="os-card">
+<mat-card class="os-card" [ngClass]="{ 'spacer-bottom-60': addBottomSpacer }">
     <!-- Title -->
     <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
         <mat-icon
