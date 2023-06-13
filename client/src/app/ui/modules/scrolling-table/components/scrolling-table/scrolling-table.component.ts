@@ -101,18 +101,14 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         }
     }
 
+    @Input()
+    public addBottomSpacer = false;
+
     @Output()
     public selectionChanged = new EventEmitter<ScrollingTableSelectionChangeEvent<T>>();
 
     public get hasDataObservable(): Observable<boolean> {
         return this.dataSource.pipe(map(items => !!items.length));
-    }
-
-    public get ngStyle(): object {
-        return {
-            height: `${this.rowHeight}px`,
-            maxHeight: `${this.rowHeight}px`
-        };
     }
 
     public get isSelectionMode(): boolean {
@@ -175,6 +171,28 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
 
     public deselectAll(): void {
         this.changeSelection(this._fullSource, false);
+    }
+
+    public getNgStyle(isLast = false): object {
+        return {
+            height: `${this.rowHeight}px`,
+            maxHeight: `${this.rowHeight}px`,
+            ...(this.addBottomSpacer && isLast ? { marginBottom: `50px` } : {})
+        };
+    }
+
+    public getRowClass(isLast = false): string | string[] | object | undefined {
+        if (isLast && this.addBottomSpacer) {
+            return this.rowClass;
+        }
+        if (!this.rowClass) {
+            return `divider-bottom`;
+        } else if (Array.isArray(this.rowClass)) {
+            return [...this.rowClass, `divider-bottom`];
+        } else if (typeof this.rowClass === `object`) {
+            return { ...this.rowClass, [`divider-bottom`]: true };
+        }
+        return this.rowClass + ` divider-bottom`;
     }
 
     private select(rows: T[]): void {
