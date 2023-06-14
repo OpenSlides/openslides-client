@@ -268,7 +268,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 end: [currentDate]
             },
             admin_ids: [[], Validators.minLength(1)],
-            organization_tag_ids: [[]]
+            organization_tag_ids: [[]],
+            external_id: [``]
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
