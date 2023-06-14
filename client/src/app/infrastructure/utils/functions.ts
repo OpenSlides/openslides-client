@@ -302,3 +302,45 @@ export function splitTypedArray<
 
     return res;
 }
+
+/**
+ * Takes an object and formats it into a human-readable string JSON representation using line breaks and spaces
+ *
+ * @param jsonOrObject Either an object or a stringified json representation of an object, invalid json will lead to strange formattings
+ */
+export function objectToFormattedString(jsonOrObject: string | object): string {
+    if (!jsonOrObject) {
+        return undefined;
+    }
+    let json =
+        jsonOrObject && typeof jsonOrObject !== `string` ? JSON.stringify(jsonOrObject) : (jsonOrObject as string);
+    const openers = [`[`, `{`];
+    const closers = [`]`, `}`];
+    for (let symbol of [...openers, ...closers]) {
+        json = json.split(symbol).join(`\n` + symbol + `\n`);
+    }
+    json = json.split(`,`).join(`,\n`).trim();
+    const jsonArray = json.split(`\n`);
+    let resultArray: string[] = [];
+    let level = 0;
+    for (let element of jsonArray) {
+        if (openers.includes(element)) {
+            resultArray.push(getSpacer(level) + element);
+            level++;
+            continue;
+        } else if (closers.includes(element) && level > 0) {
+            level--;
+        }
+        resultArray.push(getSpacer(level) + element);
+    }
+    resultArray = resultArray.filter(line => !!line.trim());
+    return resultArray.join(`\n`);
+}
+
+function getSpacer(level: number): string {
+    let spacer = ``;
+    for (let i = 0; i < level; i++) {
+        spacer = spacer + `   `;
+    }
+    return spacer;
+}
