@@ -83,7 +83,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
                         typeof this._currentOrgaSettings.saml_attr_mapping !== `string`
                             ? JSON.stringify(this._currentOrgaSettings.saml_attr_mapping)
                             : this._currentOrgaSettings.saml_attr_mapping
-                    ]
+                    ],
+                    saml_metadata_idp: [this._currentOrgaSettings.saml_metadata_idp],
+                    saml_metadata_sp: [this._currentOrgaSettings.saml_metadata_sp],
+                    saml_private_key: [this._currentOrgaSettings.saml_private_key]
                 };
             }
         } else {

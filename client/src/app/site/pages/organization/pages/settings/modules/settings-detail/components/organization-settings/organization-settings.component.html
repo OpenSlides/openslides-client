@@ -150,6 +150,27 @@
                     <textarea matInput formControlName="saml_attr_mapping"></textarea>
                 </mat-form-field>
             </section>
+            <!-- SSO login button text -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'SSO IDP' | translate }}</mat-label>
+                    <input matInput formControlName="saml_metadata_idp" />
+                </mat-form-field>
+            </section>
+            <!-- SSO login button text -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'SSO SP' | translate }}</mat-label>
+                    <input matInput formControlName="saml_metadata_sp" />
+                </mat-form-field>
+            </section>
+            <!-- SSO login button text -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'SSO private key' | translate }}</mat-label>
+                    <input matInput formControlName="saml_private_key" />
+                </mat-form-field>
+            </section>
         </div>
     </mat-card>
 </form>
