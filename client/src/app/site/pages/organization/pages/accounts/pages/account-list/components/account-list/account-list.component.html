@@ -50,6 +50,11 @@
                             *ngIf="!user.is_active"
                             matTooltip="{{ 'Inactive' | translate }}"
                         ></os-icon-container>
+                        <os-icon-container
+                            icon="fingerprint"
+                            *ngIf="user.hasSamlId"
+                            matTooltip="{{ 'Has SSO identification' | translate }}"
+                        ></os-icon-container>
                     </div>
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">

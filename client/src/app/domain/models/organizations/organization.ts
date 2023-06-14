@@ -30,6 +30,9 @@ export class OrganizationSetting {
     public saml_enabled!: boolean; // default: false
     public saml_login_button_text!: string;
     public saml_attr_mapping!: Object;
+    public saml_metadata_idp!: string;
+    public saml_metadata_sp!: string;
+    public saml_private_key!: string;
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -65,6 +68,12 @@ export class Organization extends BaseModel<Organization> {
         `limit_of_meetings`,
         `limit_of_users`,
         `default_language`,
+        `saml_enabled`,
+        `saml_login_button_text`,
+        `saml_attr_mapping`,
+        `saml_metadata_idp`,
+        `saml_metadata_sp`,
+        `saml_private_key`,
         `committee_ids`,
         `active_meeting_ids`,
         `archived_meeting_ids`,
@@ -78,10 +87,7 @@ export class Organization extends BaseModel<Organization> {
         `users_email_replyto`,
         `users_email_subject`,
         `users_email_body`,
-        `url`,
-        `saml_enabled`,
-        `saml_login_button_text`,
-        `saml_attr_mapping`
+        `url`
     ];
 }
 

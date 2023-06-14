@@ -183,6 +183,12 @@
                 >
                     account_balance
                 </mat-icon>
+                <mat-icon
+                    *ngIf="user.hasSamlId && isAllowed('manage')"
+                    matTooltip="{{ 'Has SSO identification' | translate }}"
+                >
+                    fingerprint
+                </mat-icon>
             </span>
         </div>
 

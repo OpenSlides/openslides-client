@@ -90,7 +90,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `default_vote_weight`,
             `is_physical_person`,
             `is_active`,
-            `meeting_ids`
+            `meeting_ids`,
+            `saml_id`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
