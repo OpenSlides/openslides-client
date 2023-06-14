@@ -26,6 +26,10 @@ export class OrganizationSetting {
     public users_email_subject!: string; // default: OpenSlides access data
     public users_email_replyto!: string;
     public users_email_body!: UnsafeHtml;
+
+    public saml_enabled!: boolean; // default: false
+    public saml_login_button_text!: string;
+    public saml_attr_mapping!: Object;
 }
 
 export class Organization extends BaseModel<Organization> {
@@ -74,7 +78,10 @@ export class Organization extends BaseModel<Organization> {
         `users_email_replyto`,
         `users_email_subject`,
         `users_email_body`,
-        `url`
+        `url`,
+        `saml_enabled`,
+        `saml_login_button_text`,
+        `saml_attr_mapping`
     ];
 }
 
