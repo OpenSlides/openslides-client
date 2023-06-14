@@ -198,6 +198,9 @@ export class Settings {
     poll_default_onehundred_percent_base: PollPercentBase;
     poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     poll_default_backend: PollBackendDurationType;
+
+    //SSO
+    public external_id!: string;
 }
 
 export class Meeting extends BaseModel<Meeting> {
@@ -280,6 +283,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof Meeting | { templateField: string })[] = [
         `id`,
+        `external_id`,
         `welcome_title`,
         `welcome_text`,
         `name`,
