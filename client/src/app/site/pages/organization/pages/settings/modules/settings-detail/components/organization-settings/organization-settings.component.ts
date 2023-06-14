@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { objectToFormattedString } from 'src/app/infrastructure/utils';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
@@ -24,6 +25,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public get hasEdits(): boolean {
         return this.orgaSettingsForm?.dirty || false;
     }
+
+    public get ssoConfigRows(): number {
+        return this._ssoConfigRows;
+    }
+
+    private _ssoConfigRows: number = 3;
 
     private _currentOrgaSettings: ViewOrganization | null = null;
 
@@ -111,15 +118,15 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this.orgaSettingsForm = this.createForm();
         }
         const patchMeeting: any = viewOrganization.organization;
-        patchMeeting.saml_attr_mapping =
-            patchMeeting.saml_attr_mapping && typeof patchMeeting.saml_attr_mapping !== `string`
-                ? JSON.stringify(patchMeeting.saml_attr_mapping)
-                : patchMeeting.saml_attr_mapping;
+        const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
+        patchMeeting.saml_attr_mapping = attrMapping;
+        this._ssoConfigRows = attrMapping.split(`\n`).length;
         this.orgaSettingsForm!.patchValue(patchMeeting);
     }
 
     public onSubmit(): void {
         const payload: any = this.orgaSettingsForm!.value;
+        payload.saml_attr_mapping = (payload.saml_attr_mapping as string).split(/\n|\s/).join(``);
         this.controller
             .update(payload)
             .then(() => this.markFormAsClean())

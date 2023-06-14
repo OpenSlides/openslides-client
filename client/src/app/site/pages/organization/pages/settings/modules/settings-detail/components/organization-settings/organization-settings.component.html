@@ -147,7 +147,7 @@
             <section>
                 <mat-form-field>
                     <mat-label>{{ 'JSON source attribute' | translate }}</mat-label>
-                    <textarea matInput formControlName="saml_attr_mapping"></textarea>
+                    <textarea matInput formControlName="saml_attr_mapping" [rows]="ssoConfigRows"></textarea>
                 </mat-form-field>
             </section>
         </div>
