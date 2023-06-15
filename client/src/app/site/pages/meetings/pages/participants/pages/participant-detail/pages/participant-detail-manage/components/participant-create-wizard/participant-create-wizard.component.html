@@ -36,7 +36,7 @@
         <mat-step>
             <ng-template matStepLabel>{{ 'Enter' | translate }}</ng-template>
             <ng-template matStepContent>
-                <mat-card class="os-card">
+                <mat-card class="os-card spacer-bottom-60">
                     <div>
                         <h2>{{ 'Personal information' | translate }}</h2>
                         <div class="full-width first-line">
@@ -101,7 +101,7 @@
             <ng-template matStepContent>
                 <ng-container *ngIf="suitableAccountList.length">
                     <h3>{{ 'Suitable accounts found' | translate }}</h3>
-                    <mat-list>
+                    <mat-list class="spacer-bottom-60">
                         <ng-container *ngFor="let user of suitableAccountList; let last = last">
                             <mat-list-item>
                                 <div class="action-title full-width">
