@@ -159,11 +159,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         this.createUserForm.valueChanges.pipe(distinctUntilChanged()).subscribe(val => {
             if (this._accountId) {
                 this.detailView?.enableSelfUpdate();
-                this.flickerSubject.next(true);
                 this.account = null;
                 this._accountId = null;
                 this._isUserInScope = false;
-                this.flickerSubject.next(false);
             }
         });
     }

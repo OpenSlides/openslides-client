@@ -241,8 +241,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
             personalInfoPatch[ctrl] = this.user[ctrl] ?? config[ctrl][0];
         });
-        this.personalInfoForm.patchValue(personalInfoPatch, { emitEvent: false });
+        this.personalInfoForm.patchValue(personalInfoPatch);
         this._initialState = personalInfoPatch;
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
     }
 
     private getFormValuePatch(controlName: keyof ViewUser): any {
