@@ -23,7 +23,7 @@ export class MeetingCollectionMapperService extends CollectionMapperService impl
     }
 
     public getAllRepositoriesObservable(): Observable<BaseMeetingRelatedRepository<any, any>[]> {
-        return this._meetingRepositoriesSubject.asObservable();
+        return this._meetingRepositoriesSubject;
     }
 
     public isMeetingSpecificCollection(obj: CollectionType): obj is BaseMeetingRelatedRepository<any, any> {

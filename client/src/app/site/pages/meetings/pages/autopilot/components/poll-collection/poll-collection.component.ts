@@ -1,14 +1,17 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { PollContentObject } from 'src/app/domain/models/poll';
 import { PollClassType } from 'src/app/domain/models/poll/poll-constants';
 import { BaseComponent } from 'src/app/site/base/base.component';
+import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
+import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';
 
 @Component({
@@ -16,10 +19,12 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`]
 })
-export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit {
+export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {
     public polls: ViewPoll[] = [];
 
     public lastPublishedPoll: ViewPoll | null = null;
+
+    public currentSubscribed: Id | null = null;
 
     private _currentProjection: Partial<HasPolls<C>> | null = null;
 
@@ -79,6 +84,14 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         );
     }
 
+    public override ngOnDestroy(): void {
+        if (this.currentSubscribed) {
+            this.modelRequestService.closeSubscription(`${POLL_DETAIL_SUBSCRIPTION}_${this.currentSubscribed}`);
+        }
+
+        super.ngOnDestroy();
+    }
+
     public identifyPoll(index: number, poll: ViewPoll): number {
         return poll.id;
     }
@@ -117,6 +130,24 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     private updateLastPublished(): void {
         const lastPublished = this.getLastfinshedPoll(this.currentProjection!);
         if (lastPublished !== this.lastPublishedPoll) {
+            if (
+                (<BaseViewModel>this.currentProjection)?.collection === `meeting` &&
+                lastPublished &&
+                lastPublished.id !== this.currentSubscribed
+            ) {
+                this.modelRequestService.subscribeTo({
+                    ...getPollDetailSubscriptionConfig(lastPublished.id),
+                    subscriptionName: `${POLL_DETAIL_SUBSCRIPTION}_${lastPublished.id}`
+                });
+                if (this.currentSubscribed) {
+                    this.modelRequestService.closeSubscription(`${POLL_DETAIL_SUBSCRIPTION}_${this.currentSubscribed}`);
+                }
+                this.currentSubscribed = lastPublished.id;
+            } else if (this.currentSubscribed && lastPublished?.id !== this.currentSubscribed) {
+                this.modelRequestService.closeSubscription(`${POLL_DETAIL_SUBSCRIPTION}_${this.currentSubscribed}`);
+                this.currentSubscribed = null;
+            }
+
             this.lastPublishedPoll = lastPublished;
             this.cd.markForCheck();
         }

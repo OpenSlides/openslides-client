@@ -18,17 +18,23 @@ export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerat
         follow: [
             {
                 idField: `meeting_user_ids`,
-                fieldset: [`group_ids`, `vote_delegated_to_id`, `vote_delegations_from_ids`, `vote_weight`],
+                fieldset: [`group_ids`, `vote_delegations_from_ids`, `vote_weight`, `meeting_id`],
                 follow: [
                     {
-                        idField: `user_ids`,
+                        idField: `user_id`,
                         fieldset: [
                             `default_vote_weight`,
                             `is_physical_person`,
                             `is_active`,
                             `meeting_ids`,
+                            `meeting_user_ids`,
                             `is_present_in_meeting_ids`
                         ]
+                    },
+                    {
+                        idField: `vote_delegated_to_id`,
+                        follow: [{ idField: `user_id`, fieldset: [`is_present_in_meeting_ids`, `meeting_user_ids`] }],
+                        fieldset: [`meeting_id`]
                     }
                 ]
             }

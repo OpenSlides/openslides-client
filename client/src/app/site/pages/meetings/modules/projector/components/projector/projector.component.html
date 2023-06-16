@@ -18,7 +18,7 @@
                 >
                     <div
                         *ngIf="eventData.eventName"
-                        class="event-name"
+                        class="event-name ellipsis-overflow"
                         [ngClass]="{ titleonly: !eventData.eventDescription }"
                         [innerHTML]="eventData.eventName"
                     ></div>

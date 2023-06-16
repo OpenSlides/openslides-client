@@ -44,7 +44,8 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
         return this.repo.delete(projector);
     }
 
-    public setReferenceProjector(projector: Identifiable): Promise<void> {
+    public async setReferenceProjector(projector: Identifiable): Promise<void> {
+        await this.update({ is_internal: false }, projector);
         return this.meetingRepo.update({ reference_projector_id: projector.id }, this.activeMeetingService.meeting!);
     }
 

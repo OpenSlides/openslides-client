@@ -241,6 +241,8 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     public getParagraphTitleByParagraph!: (paragraph: DiffLinesInParagraph) => string | null;
     // This is set by the repository
     public getNumberOrTitle!: () => string;
+    public getExtendedStateLabel!: () => string;
+    public getExtendedRecommendationLabel!: () => string;
 
     public getPersonalNote(): ViewPersonalNote | null {
         if (this.personal_notes?.length) {

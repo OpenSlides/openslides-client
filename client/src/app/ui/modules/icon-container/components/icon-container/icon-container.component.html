@@ -1,5 +1,5 @@
 <ng-container *ngIf="!swap && showIcon; then iconTemplate"></ng-container>
-<span class="content-node" [ngClass]="{'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap}">
+<span class="content-node" [ngClass]="{ 'single-line': noWrap, 'break-lines': !noWrap, 'content-swapped': swap }">
     <ng-content></ng-content>
     <ng-content select="[afterContent]"></ng-content>
 </span>
@@ -9,6 +9,7 @@
     <mat-icon
         [inline]="inline"
         [matTooltip]="iconTooltip"
+        [matTooltipPosition]="iconTooltipPosition"
         [ngClass]="{ pointer: iconAction, mirrored: mirrored }"
         [ngStyle]="{ transform: getRotation() }"
         (click)="iconClick()"

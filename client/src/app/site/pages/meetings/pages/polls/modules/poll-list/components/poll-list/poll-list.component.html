@@ -7,6 +7,7 @@
     [vScrollFixed]="64"
     [filterProps]="filterProps"
     [filterService]="filterService"
+    [showListOfSpeakers]="false"
 >
     <!-- Poll Title -->
     <div *osScrollingTableCell="'title'; row as poll; rowContext as context" class="cell-slot fill">
@@ -21,13 +22,19 @@
     </div>
 
     <!-- State -->
-    <div *osScrollingTableCell="'state'; row as poll" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'state'; row as poll; config: { maxWidth: 200, position: END_POSITION }"
+        class="cell-slot fill"
+    >
         <os-detail-view-navigator [model]="poll" *ngIf="!isMultiSelect"></os-detail-view-navigator>
         <span>{{ poll.stateVerbose | translate }}</span>
     </div>
 
     <!-- Voted Indicator -->
-    <div *osScrollingTableCell="'votability'; row as poll" class="cell-slot fill">
+    <div
+        *osScrollingTableCell="'votability'; row as poll; config: { width: 40, position: END_POSITION }"
+        class="cell-slot fill"
+    >
         <ng-container *ngIf="canBeVoteFor(poll); then inProgress; else notInProgress"></ng-container>
     </div>
 </os-projectable-list>

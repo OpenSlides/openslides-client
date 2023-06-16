@@ -7,10 +7,13 @@
 
 <mat-dialog-content *ngIf="projectors && projectors.length">
     <div class="content-wrapper">
-        <div class="projectors" *ngFor="let projector of projectors"
-            [ngClass]="isProjectedOn(projector) ? 'projected' : ''">
+        <div
+            class="projectors"
+            *ngFor="let projector of projectors"
+            [ngClass]="isProjectedOn(projector) ? 'projected' : ''"
+        >
             <mat-checkbox [checked]="isProjectorSelected(projector)" (change)="toggleProjector(projector)">
-                {{ projector.name | translate }}
+                {{ projector.name }}
             </mat-checkbox>
             <span *ngIf="isProjectedOn(projector)" class="right">
                 <mat-icon matTooltip="{{ 'Is already projected' | translate }}" matTooltipPosition="above">
@@ -27,7 +30,8 @@
             <div *ngIf="isDecisionOption(option)" class="spacer-top-10 spacer-left-10">
                 <mat-checkbox
                     [checked]="optionValues[option.key]"
-                    (change)="optionValues[option.key] = !optionValues[option.key]">
+                    (change)="optionValues[option.key] = !optionValues[option.key]"
+                >
                     {{ option.displayName | translate }}
                 </mat-checkbox>
             </div>

@@ -865,7 +865,7 @@ describe(`MotionDiffService`, () => {
             expect(diff).toBe(expected);
         }));
 
-        it(`handles insterted paragraphs infront of list`, inject([MotionDiffService], (service: MotionDiffService) => {
+        it(`handles inserted paragraphs in front of list`, inject([MotionDiffService], (service: MotionDiffService) => {
             // Hint: line number should be moved into first element
             const before = `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
                 after = `<p>Add before UL</p><ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
@@ -874,6 +874,81 @@ describe(`MotionDiffService`, () => {
             const diff = service.diff(before, after);
             expect(diff).toBe(expected);
         }));
+
+        it(`handles inserted list items at the end of nested lists`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                // Hint: line number should be moved into first element
+                const before =
+                        `<ul><li><ol>` +
+                        `<li><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>c</li>` +
+                        `</ol></li></ul>`,
+                    after =
+                        `<UL><LI><OL>` +
+                        `<LI><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>c</LI>` +
+                        `<LI>d</LI>` +
+                        `<LI>e</LI>` +
+                        `</OL></LI></UL>`,
+                    expected =
+                        `<ul><li><ol>` +
+                        `<li><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>c</li>` +
+                        `<li class="insert">d</li>` +
+                        `<li class="insert">e</li>` +
+                        `</ol></li></ul>`;
+
+                const diff = service.diff(before, after);
+                expect(diff).toBe(expected);
+            }
+        ));
+
+        it(`handles changed text within nested lists`, inject([MotionDiffService], (service: MotionDiffService) => {
+            // Hint: line number should be moved into first element
+            const before =
+                    `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="os-line-number line-number-2" data-line-number="2" contenteditable="false">&nbsp;</span>Ebene 2` +
+                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>Ebene 3` +
+                    `<ul><li><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span>Ebene 4</li>` +
+                    `</ul></li></ul></li></ul></li></ul>`,
+                after =
+                    `<ul><li>Ebene 1` +
+                    `<ul><li>Ebene 2` +
+                    `<ul><li>Ebene 3a` +
+                    `<ul><li>Ebene 4</li></ul>` +
+                    `</li></ul></li></ul></li></ul>`,
+                expected =
+                    `<ul><li><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Ebene 1` +
+                    `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Ebene 2` +
+                    `<ul><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>` +
+                    `<del>Ebene 3</del><ins>Ebene 3a</ins>` +
+                    `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Ebene 4</li>` +
+                    `</ul></li></ul></li></ul></li></ul>`;
+
+            const diff = service.diff(before, after);
+            expect(diff).toBe(expected);
+        }));
+
+        it(`handles replaced text at the end of nested lists`, inject(
+            [MotionDiffService],
+            (service: MotionDiffService) => {
+                // Hint: line number should be moved into first element
+                const before =
+                        `<ul><li><ul><li><ol>` +
+                        `<li><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>Test 1</li>` +
+                        `</ol></li></ul></li></ul>`,
+                    after =
+                        `<UL><LI><UL><LI><OL>` +
+                        `<LI><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>Test 2</LI>` +
+                        `</OL></LI></UL></LI></UL>`,
+                    expected =
+                        `<ul><li><ul><li><ol>` +
+                        `<li><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>` +
+                        `Test <del>1</del><ins>2</ins></li>` +
+                        `</ol></li></ul></li></ul>`;
+
+                const diff = service.diff(before, after);
+                expect(diff).toBe(expected);
+            }
+        ));
 
         it(`handles completely deleted paragraphs`, inject([MotionDiffService], (service: MotionDiffService) => {
             const before = `<P>Ihr könnt ohne Sorge fortgehen.'Da meckerte die Alte und machte sich getrost auf den Weg.</P>`,

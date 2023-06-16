@@ -30,9 +30,11 @@
     "cleanup": "npm run prettify-write && npm run lint-write",
     "prettify-check": "prettier --list-different \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
     "prettify-write": "prettier --list-different --write \"src/{app,environments}/**/*{.js,.json,.css,.scss}\" cli/*{.ts,.json} \"tests/**/*.ts\"",
-    "generate-defaults": "ts-node -s -r tsconfig-paths/register cli/generate-settings-defaults.ts && prettier --write src/app/domain/definitions/meeting-settings-defaults.ts",
-    "generate-permissions": "ts-node -s -r tsconfig-paths/register cli/generate-permissions.ts && prettier --write src/app/domain/definitions/permission*.ts",
-    "generate-models": "ts-node -s -r tsconfig-paths/register cli/generate-models.ts && ng lint --fix --lint-file-patterns=src/app/domain/models/**/*.ts"
+    "ts": "ts-node -s -r tsconfig-paths/register",
+    "generate-defaults": "npm run ts -- cli/generate-settings-defaults.ts && prettier --write src/app/domain/definitions/meeting-settings-defaults.ts",
+    "generate-permissions": "npm run ts -- cli/generate-permissions.ts && prettier --write src/app/domain/definitions/permission*.ts",
+    "generate-models": "npm run ts -- cli/generate-models.ts && ng lint --fix --lint-file-patterns=src/app/domain/models/**/*.ts",
+    "get-available-languages": "npm run ts -- cli/get-available-languages.ts"
   },
   "dependencies": {
     "@angular/animations": "^14.3.0",
@@ -42,7 +44,7 @@
     "@angular/core": "^14.3.0",
     "@angular/forms": "^14.3.0",
     "@angular/material": "^14.2.7",
-    "@angular/material-moment-adapter": "^14.2.7",
+    "@angular/material-date-fns-adapter": "^14.2.7",
     "@angular/platform-browser": "^14.3.0",
     "@angular/platform-browser-dynamic": "^14.3.0",
     "@angular/router": "^14.3.0",
@@ -57,20 +59,21 @@
     "broadcast-channel": "^4.18.0",
     "chart.js": "^3.9.1",
     "core-js": "^3.25.5",
+    "date-fns": "^2.30.0",
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "fzstd": "^0.0.4",
     "jszip": "^3.10.1",
     "lz4js": "^0.2.0",
     "material-design-icons-iconfont": "^6.7.0",
-    "moment": "^2.29.4",
     "ng-particles": "~2.42.4",
     "ng2-charts": "^4.0.1",
-    "ng2-pdf-viewer": "^9.1.2",
+    "ng2-pdf-viewer": "^9.1.5",
+    "ngx-date-fns": "^10.0.1",
     "ngx-device-detector": "^4.0.1",
     "ngx-file-drop": "^14.0.1",
     "ngx-material-timepicker": "^5.5.2",
-    "ngx-papaparse": "^5.0.0",
+    "ngx-papaparse": "^6.0.2",
     "pdfmake": "^0.2.6",
     "pofile": "^1.1.4",
     "rxjs": "~7.5.7",
@@ -123,9 +126,9 @@
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^4.1.0",
     "typescript": "~4.7.3",
-    "webpack-bundle-analyzer": "^4.5.0"
+    "webpack-bundle-analyzer": "^4.8.0"
   },
   "browser": {
-      "fs": false
+    "fs": false
   }
 }

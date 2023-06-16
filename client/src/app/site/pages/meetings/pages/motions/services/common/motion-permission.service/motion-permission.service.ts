@@ -32,7 +32,11 @@ export class MotionPermissionService {
      * in mobile mode
      */
     public canAccessMobileDotMenu(): boolean {
-        return this.operator.hasPerms(Permission.listOfSpeakersCanSee, Permission.projectorCanManage);
+        return this.operator.hasPerms(
+            Permission.listOfSpeakersCanSee,
+            Permission.listOfSpeakersCanBeSpeaker,
+            Permission.projectorCanManage
+        );
     }
 
     /**

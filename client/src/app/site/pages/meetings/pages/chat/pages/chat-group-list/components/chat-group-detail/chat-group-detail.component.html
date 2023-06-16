@@ -14,7 +14,7 @@
                 *ngIf="group.write_groups.length"
                 matTooltip="{{ 'Groups with write permissions' | translate }}"
             >
-                <span *ngFor="let userGroup of group.write_groups | slice: 0:3; let last = last">
+                <span *ngFor="let userGroup of group.write_groups | slice : 0 : 3; let last = last">
                     <span>{{ userGroup.getTitle() | translate }}</span>
                     <span *ngIf="!last">,&nbsp;</span>
                     <span *ngIf="last && group.write_groups.length > 3">...</span>
@@ -28,7 +28,7 @@
                 *ngIf="getReadonlyGroups(group).length"
                 matTooltip="{{ 'Groups with read permissions' | translate }}"
             >
-                <span *ngFor="let userGroup of getReadonlyGroups(group) | slice: 0:3; let last = last">
+                <span *ngFor="let userGroup of getReadonlyGroups(group) | slice : 0 : 3; let last = last">
                     <span>{{ userGroup.getTitle() | translate }}</span>
                     <span *ngIf="!last">,&nbsp;</span>
                     <span *ngIf="last && group.read_groups.length > 3">...</span>

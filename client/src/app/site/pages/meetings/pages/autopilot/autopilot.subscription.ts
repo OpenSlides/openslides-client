@@ -1,11 +1,14 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { SubscriptionConfig, SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-import { agendaItemFollow } from '../agenda/agenda.subscription';
+import { pollModelRequest } from '../polls/polls.subscription';
+import { ViewProjection } from '../projectors';
 
 export const AUTOPILOT_SUBSCRIPTION = `autopilot`;
+export const AUTOPILOT_CONTENT_SUBSCRIPTION = `autopilot_content`;
 
 export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
     modelRequest: {
@@ -22,8 +25,7 @@ export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: 
                         follow: [
                             {
                                 idField: `content_object_id`,
-                                fieldset: [`title`, `owner_id`, ...MEETING_ROUTING_FIELDS],
-                                follow: [...agendaItemFollow]
+                                fieldset: [`number`, `title`, `owner_id`, ...MEETING_ROUTING_FIELDS]
                             }
                         ]
                     }
@@ -32,4 +34,40 @@ export const getAutopilotSubscriptionConfig: SubscriptionConfigGenerator = (id: 
         ]
     },
     subscriptionName: AUTOPILOT_SUBSCRIPTION
+});
+
+export const getAutopilotContentSubscriptionConfig = (id: Id): SubscriptionConfig<any> => ({
+    modelRequest: {
+        viewModelCtor: ViewProjection,
+        ids: [id],
+        follow: [
+            {
+                idField: `content_object_id`,
+                fieldset: [`title`, `owner_id`, ...MEETING_ROUTING_FIELDS],
+                follow: [
+                    {
+                        idField: `poll_ids`,
+                        ...pollModelRequest
+                    },
+                    {
+                        idField: `list_of_speakers_id`,
+                        fieldset: [`closed`, ...MEETING_ROUTING_FIELDS],
+                        follow: [
+                            {
+                                idField: `speaker_ids`,
+                                fieldset: FULL_FIELDSET,
+                                follow: [
+                                    {
+                                        idField: `user_id`,
+                                        ...UserFieldsets.FullNameSubscription
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    subscriptionName: AUTOPILOT_CONTENT_SUBSCRIPTION
 });

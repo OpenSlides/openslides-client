@@ -30,8 +30,8 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this._model;
     }
 
-    public get isLastEmailSend(): boolean {
-        return !!this.last_email_send;
+    public get isLastEmailSent(): boolean {
+        return !!this.last_email_sent;
     }
 
     public get isLastLogin(): boolean {

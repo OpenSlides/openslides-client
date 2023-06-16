@@ -8,7 +8,15 @@
     >
         <!-- Title -->
         <div class="title-slot" *ngIf="projector">
-            <h2>{{ projector.name | translate }}</h2>
+            <os-icon-container
+                [noWrap]="true"
+                icon="lock"
+                size="large"
+                [showIcon]="projector.is_internal"
+                [iconTooltip]="'Internal' | translate"
+            >
+                <h2>{{ projector.name }}</h2>
+            </os-icon-container>
         </div>
 
         <!-- Menu -->
@@ -171,7 +179,11 @@
                                 class="current-element backgroundColorAccent"
                             >
                                 <div class="emelent-grid">
-                                    <os-projector-button [object]="projection.getProjectionBuildDescriptor()" [blendIn]="true" [projector]="projector"></os-projector-button>
+                                    <os-projector-button
+                                        [object]="projection.getProjectionBuildDescriptor()"
+                                        [blendIn]="true"
+                                        [projector]="projector"
+                                    ></os-projector-button>
 
                                     <!-- Slide title and subtitle -->
                                     <span class="ellipsis-overflow current-element-text">
@@ -221,7 +233,11 @@
                                         <mat-icon>drag_indicator</mat-icon>
                                     </div>
                                     <div class="drag-handle no-drag" *ngIf="!editQueue">
-                                        <os-projector-button [object]="projection.getProjectionBuildDescriptor()" [blendIn]="true" [onClickFn]="getProjectPreviewFunction(projection)"></os-projector-button>
+                                        <os-projector-button
+                                            [object]="projection.getProjectionBuildDescriptor()"
+                                            [blendIn]="true"
+                                            [onClickFn]="getProjectPreviewFunction(projection)"
+                                        ></os-projector-button>
                                     </div>
                                     <!-- Slide title ans subtitle -->
                                     <div class="name">
@@ -322,7 +338,10 @@
                             <!-- Slide-->
                             <mat-list *ngIf="projectorCount > 1 && !projector.isReferenceProjector">
                                 <mat-list-item>
-                                    <os-projector-button [object]="getCurrentLoSBuildDesc(false)" [projector]="projector"></os-projector-button>
+                                    <os-projector-button
+                                        [object]="getCurrentLoSBuildDesc(false)"
+                                        [projector]="projector"
+                                    ></os-projector-button>
                                     <span class="spacer-left-10">{{ 'Slide' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
@@ -330,7 +349,10 @@
                             <!-- Overlay -->
                             <mat-list>
                                 <mat-list-item>
-                                    <os-projector-button [object]="getCurrentLoSBuildDesc(true)" [projector]="projector"></os-projector-button>
+                                    <os-projector-button
+                                        [object]="getCurrentLoSBuildDesc(true)"
+                                        [projector]="projector"
+                                    ></os-projector-button>
                                     <span class="spacer-left-10">{{ 'Overlay' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
@@ -338,7 +360,10 @@
                             <!-- Chyron -->
                             <mat-list>
                                 <mat-list-item>
-                                    <os-projector-button [object]="getChyronBuildDesc()" [projector]="projector"></os-projector-button>
+                                    <os-projector-button
+                                        [object]="getChyronBuildDesc()"
+                                        [projector]="projector"
+                                    ></os-projector-button>
                                     <span class="spacer-left-10">{{ 'Chyron' | translate }}</span>
                                 </mat-list-item>
                             </mat-list>
@@ -353,8 +378,17 @@
                             <!-- Toggle -->
                             <mat-list *ngIf="getCurrentProjectionLoSToggleBuildDesc()">
                                 <mat-list-item>
-                                    <os-projector-button [object]="getCurrentProjectionLoSToggleBuildDesc()" [projector]="projector"></os-projector-button>
-                                    <span class="spacer-left-10">{{ currentProjectionIsLoS ? ('Toggle to parent item' | translate) : ('Toggle to list of speakers' | translate) }}</span>
+                                    <os-projector-button
+                                        [object]="getCurrentProjectionLoSToggleBuildDesc()"
+                                        [projector]="projector"
+                                    ></os-projector-button>
+                                    <span class="spacer-left-10">
+                                        {{
+                                            currentProjectionIsLoS
+                                                ? ('Toggle to parent item' | translate)
+                                                : ('Toggle to list of speakers' | translate)
+                                        }}
+                                    </span>
                                 </mat-list-item>
                             </mat-list>
                         </mat-expansion-panel>

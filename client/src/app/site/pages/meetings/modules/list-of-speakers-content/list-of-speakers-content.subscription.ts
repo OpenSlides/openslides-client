@@ -9,7 +9,7 @@ export const getLosFirstContributionSubscriptionConfig: SubscriptionConfigGenera
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `speaker_ids`, fieldset: [`user_id`, `state`] }]
+        follow: [{ idField: `speaker_ids`, fieldset: [`meeting_user_id`, `state`] }]
     },
     subscriptionName: LOS_FIRST_CONTRIBUTION_SUBSCRIPTION
 });

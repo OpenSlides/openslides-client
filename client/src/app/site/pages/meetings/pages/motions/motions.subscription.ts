@@ -179,7 +179,8 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             { idField: `lead_motion_id`, fieldset: [`text`] },
             {
                 idField: `amendment_ids`,
-                fieldset: [`text`, `modified_final_version`]
+                fieldset: [`text`, `modified_final_version`, `amendment_paragraph`],
+                follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
             },
             { idField: `comment_ids`, fieldset: FULL_FIELDSET },
             {
@@ -224,11 +225,33 @@ export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (
                     {
                         idField: `amendment_ids`,
                         fieldset: [`text`, `amendment_paragraph`],
-                        follow: [{ idField: `lead_motion_id`, fieldset: [`text`, `modified_final_version`] }]
+                        follow: [
+                            { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
+                            { idField: `lead_motion_id`, fieldset: [`text`, `modified_final_version`] }
+                        ]
                     }
                 ]
             }
         ]
     },
     subscriptionName: AMENDMENT_LIST_SUBSCRIPTION
+});
+
+export const MOTION_FORWARD_DATA_SUBSCRIPTION = `motion_forward_data`;
+
+export const getMotionForwardDataSubscriptionConfig: SubscriptionConfigGenerator = (...ids: Id[]) => ({
+    modelRequest: {
+        ids,
+        viewModelCtor: ViewMotion,
+        follow: [
+            {
+                idField: `amendment_ids`,
+                fieldset: [`text`, `modified_final_version`, `amendment_paragraph`],
+                follow: [{ idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }]
+            },
+            { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET }
+        ],
+        fieldset: [`reason`, `text`, `modified_final_version`, `all_origin_ids`]
+    },
+    subscriptionName: MOTION_FORWARD_DATA_SUBSCRIPTION
 });

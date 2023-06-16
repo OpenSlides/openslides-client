@@ -89,6 +89,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                     { condition: `female`, label: this.translate.instant(`female`) },
                     { condition: `male`, label: this.translate.instant(`male`) },
                     { condition: `diverse`, label: this.translate.instant(`diverse`) },
+                    { condition: `non-binary`, label: this.translate.instant(`non-binary`) },
                     { condition: null, label: this.translate.instant(`unknown`) }
                 ]
             },
@@ -101,7 +102,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
-                property: `isLastEmailSend`,
+                property: `isLastEmailSent`,
                 label: this.translate.instant(`Last email sent`),
                 options: [
                     { condition: true, label: this.translate.instant(`Got an email`) },
