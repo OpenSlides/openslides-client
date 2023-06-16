@@ -159,7 +159,7 @@
         <mat-checkbox
             class="mat-menu-item"
             (change)="setPresent(user)"
-            [checked]="user.is_present"
+            [checked]="isUserPresent(user)"
             [disabled]="isPresentToggleDisabled(user)"
         >
             <span>{{ 'Present' | translate }}</span>
