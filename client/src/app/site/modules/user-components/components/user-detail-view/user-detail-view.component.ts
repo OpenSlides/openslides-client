@@ -43,6 +43,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this._user = user;
         if (!oldUser) {
             this.prepareForm();
+        } else if (this.selfUpdateEnabled) {
+            this.performSelfUpdate();
         }
     }
 
@@ -134,6 +136,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private _checkIfDeletedProperties = [`pronoun`, `default_password`];
 
+    private selfUpdateEnabled = false;
+
     public constructor(private fb: UntypedFormBuilder, private operator: OperatorService) {
         super();
     }
@@ -171,6 +175,14 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public markAsPristine(): void {
         this._initialState = this.personalInfoForm.value;
         this._hasChanges = false;
+    }
+
+    public resetEditMode(): void {
+        this.enterEditMode();
+    }
+
+    public enableSelfUpdate(isEnabled = true): void {
+        this.selfUpdateEnabled = isEnabled;
     }
 
     private enterEditMode(): void {
@@ -223,6 +235,17 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this._initialState = personalInfoPatch;
     }
 
+    private performSelfUpdate(): void {
+        const config = this.getCreateFormControlsConfig();
+        const personalInfoPatch: any = {};
+        Object.keys(this.personalInfoForm.controls).forEach(ctrl => {
+            personalInfoPatch[ctrl] = this.user[ctrl] ?? config[ctrl][0];
+        });
+        this.personalInfoForm.patchValue(personalInfoPatch);
+        this._initialState = personalInfoPatch;
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+    }
+
     private getFormValuePatch(controlName: keyof ViewUser): any {
         let patchValue = this.patchFormValueFn(controlName, this.user!);
         if (!patchValue) {
@@ -240,13 +263,13 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
         // Enable all controls.
         formControlNames.forEach(formControlName => {
-            this.personalInfoForm.get(formControlName)!.enable();
+            setTimeout(() => this.personalInfoForm.get(formControlName)!.enable(), 1000);
         });
 
         // Disable not permitted controls
         formControlNames.forEach(formControlName => {
             if (!fn(formControlName)) {
-                this.personalInfoForm.get(formControlName)!.disable();
+                setTimeout(() => this.personalInfoForm.get(formControlName)!.disable(), 1000);
             }
         });
     }
@@ -255,28 +278,29 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
      * initialize the form with default values
      */
     private createForm(): void {
-        this.personalInfoForm = this.fb.group(
-            {
-                username: [``, this.isNewUser ? [] : [Validators.required]],
-                pronoun: [``, Validators.maxLength(32)],
-                title: [``],
-                first_name: [``],
-                last_name: [``],
-                gender: [``],
-                email: [``],
-                last_email_sent: [``],
-                default_password: [``],
-                is_active: [true],
-                is_physical_person: [true],
-                ...this._additionalFormControls
-            },
-            {
-                validators: [
-                    OneOfValidator.validation([`username`, `first_name`, `last_name`], `name`),
-                    ...this._additionalValidators
-                ]
-            }
-        );
+        this.personalInfoForm = this.fb.group(this.getCreateFormControlsConfig(), {
+            validators: [
+                OneOfValidator.validation([`username`, `first_name`, `last_name`], `name`),
+                ...this._additionalValidators
+            ]
+        });
+    }
+
+    private getCreateFormControlsConfig(): { [key: string]: any } {
+        return {
+            username: [``, this.isNewUser ? [] : [Validators.required]],
+            pronoun: [``, Validators.maxLength(32)],
+            title: [``],
+            first_name: [``],
+            last_name: [``],
+            gender: [``],
+            email: [``],
+            last_email_sent: [``],
+            default_password: [``],
+            is_active: [true],
+            is_physical_person: [true],
+            ...this._additionalFormControls
+        };
     }
 
     private propagateValues(): void {
