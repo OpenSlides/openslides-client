@@ -46,6 +46,13 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         }
     ];
 
+    public get filteredMenuItems(): MenuItem[] {
+        if (!this.operator.user.saml_id) {
+            return this.menuItems;
+        }
+        return this.menuItems.filter(item => item.name !== MenuItems.CHANGE_PASSWORD);
+    }
+
     public readonly menuItemsRef = MenuItems;
 
     public get self(): ViewUser | null {

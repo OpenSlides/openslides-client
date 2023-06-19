@@ -47,6 +47,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
      */
     public hide: boolean = false;
 
+    public loginAreaExpanded = false;
+
     private checkBrowser = true;
 
     /**
@@ -186,6 +188,10 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
      */
     public resetPassword(): void {
         this.router.navigate([`./forget-password`], { relativeTo: this.route });
+    }
+
+    public toggleLoginAreaExpansion(): void {
+        this.loginAreaExpanded = !this.loginAreaExpanded;
     }
 
     private formatLoginInputValues(info: LoginValues): LoginValues {

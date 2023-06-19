@@ -238,7 +238,7 @@
 </ng-template>
 
 <mat-menu #userExtraMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">
+    <button *ngIf="user?.saml_id" mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">
         <mat-icon>security</mat-icon>
         <span>{{ 'Change password' | translate }}</span>
     </button>

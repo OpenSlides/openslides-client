@@ -17,8 +17,47 @@
         <mat-card [innerHTML]="installationNotice | translate"></mat-card>
     </div>
 
-    <!-- login form -->
-    <form [formGroup]="loginForm" class="login-container" (ngSubmit)="formLogin()">
+    <ng-container *ngIf="!samlEnabled">
+        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true, autofocus: true }"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="samlEnabled">
+        <div class="login-container">
+            <button
+                osAutofocus
+                mat-raised-button
+                *ngIf="samlEnabled"
+                class="login-button"
+                type="button"
+                (click)="samlLogin()"
+                color="primary"
+            >
+                {{ samlLoginButtonText || 'SAML Login' | translate }}
+            </button>
+
+            <br />
+            <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">
+                {{ 'Login as guest' | translate }}
+            </button>
+
+            <br />
+            <mat-card>
+                <button mat-button (click)="toggleLoginAreaExpansion()">
+                    <mat-icon *ngIf="!loginAreaExpanded">expand_more</mat-icon>
+                    <mat-icon *ngIf="loginAreaExpanded">expand_less</mat-icon>
+                    {{ 'Internal login' | translate }}
+                </button>
+                <div class="padding-bottom" *ngIf="loginAreaExpanded">
+                    <ng-container
+                        *ngTemplateOutlet="loginform; context: { showExtra: false, autofocus: false }"
+                    ></ng-container>
+                </div>
+            </mat-card>
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #loginform let-showExtra="showExtra" let-autofocus="autofocus">
+    <form [formGroup]="loginForm" [ngClass]="{ 'login-container': showExtra }" (ngSubmit)="formLogin()">
         <mat-form-field>
             <input
                 matInput
@@ -59,12 +98,14 @@
             <span *ngIf="!isWaitingOnLogin">{{ 'Login' | translate }}</span>
             <os-spinner *ngIf="isWaitingOnLogin" [width]="20" [height]="20" [showText]="false"></os-spinner>
         </button>
-        <button mat-stroked-button *ngIf="guestsEnabled" class="login-button" type="button" (click)="guestLogin()">
+        <button
+            mat-stroked-button
+            *ngIf="guestsEnabled && showExtra"
+            class="login-button"
+            type="button"
+            (click)="guestLogin()"
+        >
             {{ 'Login as guest' | translate }}
-        </button>
-
-        <button mat-stroked-button *ngIf="samlEnabled" class="login-button" type="button" (click)="samlLogin()">
-            {{ samlLoginButtonText || 'SAML Login' | translate }}
         </button>
 
         <!-- forgot password button -->
@@ -73,4 +114,4 @@
             {{ 'Forgot Password?' | translate }}
         </button>
     </form>
-</div>
+</ng-template>

@@ -121,7 +121,7 @@
             </mat-form-field>
         </div>
 
-        <div *ngIf="isAllowed('manage')">
+        <div *ngIf="isAllowed('manage') && !user?.saml_id">
             <!-- Initial Password -->
             <mat-form-field class="full-width">
                 <input
@@ -214,7 +214,7 @@
             </div>
 
             <!-- Initial Password -->
-            <div *ngIf="user.default_password">
+            <div *ngIf="user.default_password && !user.saml_id">
                 <h4>{{ 'Initial password' | translate }}</h4>
                 <span>{{ user.default_password }}</span>
             </div>
