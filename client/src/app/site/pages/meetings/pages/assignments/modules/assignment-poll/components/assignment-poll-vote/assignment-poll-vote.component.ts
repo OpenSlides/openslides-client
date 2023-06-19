@@ -235,6 +235,65 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         }
     }
 
+    public async submitVotes(users: ViewUser[]): Promise<void> {
+        let maxVotesAmount = 0;
+        let pollMaximum = 0;
+
+        if (!this.hasAlreadyVoted() && !(this.getVotingError() === `You do not have the permission to vote.`)) {
+            maxVotesAmount = this.getVotesCount();
+            pollMaximum = this.poll.max_votes_amount;
+        }
+        for (let user of users) {
+            if (
+                !this.hasAlreadyVoted(user) &&
+                !(this.getVotingError(user) === `You do not have the permission to vote.`)
+            ) {
+                if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
+                    this.raiseError(this.translate.instant(`There is an error in your vote.`));
+                    return;
+                }
+                maxVotesAmount += this.getVotesCount(user);
+                pollMaximum += this.poll.max_votes_amount;
+            }
+        }
+        const title = this.translate.instant(`Submit selection now?`);
+        const content =
+            this.translate.instant(`Your votes`) +
+            `: ${maxVotesAmount}/${pollMaximum}<br>` +
+            this.translate.instant(`Your decision cannot be changed afterwards.`);
+
+        const confirmed = await this.promptService.open(title, content);
+        const value = this.voteRequestData[this.user.id].value;
+        if (confirmed) {
+            if (!this.hasAlreadyVoted() && !(this.getVotingError() === `You do not have the permission to vote.`)) {
+                this.deliveringVote[this.user.id] = true;
+                this.cd.markForCheck();
+
+                const votePayload = {
+                    value: value,
+                    user_id: this.user.id
+                };
+                await this.sendVote(this.user.id, votePayload);
+            }
+            for (let user of users) {
+                if (
+                    !this.hasAlreadyVoted(user) &&
+                    !(this.getVotingError(user) === `You do not have the permission to vote.`)
+                ) {
+                    this.deliveringVote[user.id] = true;
+                    this.cd.markForCheck();
+
+                    const votePayload = {
+                        value: value,
+                        user_id: user.id
+                    };
+
+                    await this.sendVote(user.id, votePayload);
+                }
+            }
+        }
+    }
+
     public saveSingleVote(optionId: number, vote?: VoteValue, user: ViewUser = this.user): void {
         if (!this.voteRequestData[user.id]) {
             throw new Error(`The user for your voting request does not exist`);
@@ -265,11 +324,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
             if (countedVotes <= maxVotesAmount) {
                 this.voteRequestData[user.id].value = tmpVoteRequest;
-
-                // if you have no options anymore, try to send
-                if (this.getVotesCount(user) === maxVotesAmount) {
-                    this.submitVote(user);
-                }
             } else {
                 this.raiseError(
                     this.translate.instant(`You reached the maximum amount of votes. Deselect somebody first.`)
@@ -391,5 +445,27 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 this.formControlMap[key].disable();
             }
         }
+    }
+
+    protected compareMinAllVotes(delegations: ViewUser[]): boolean {
+        let reachedMinValue = false;
+        const minVote = this.minVotes;
+        if (!(this.getVotingError() === `You do not have the permission to vote.`)) {
+            if (!this.hasAlreadyVoted()) {
+                if (this.getVotesCount() < minVote) {
+                    reachedMinValue = true;
+                }
+            }
+        }
+        for (let delegation of delegations) {
+            if (!(this.getVotingError(delegation) === `You do not have the permission to vote.`)) {
+                if (!this.hasAlreadyVoted(delegation)) {
+                    if (this.getVotesCount(delegation) < minVote) {
+                        reachedMinValue = true;
+                    }
+                }
+            }
+        }
+        return reachedMinValue;
     }
 }

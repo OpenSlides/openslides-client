@@ -107,6 +107,25 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return this.alreadyVoted[user?.id];
     }
 
+    public canStillVote(): boolean {
+        let hasVoted = true;
+        if (!(this.getVotingError() === `You do not have the permission to vote.`)) {
+            hasVoted = this.hasAlreadyVoted();
+        }
+        if (this.delegations.length === 0) {
+            hasVoted = true;
+        } else {
+            for (let delegation of this.delegations) {
+                if (!(this.getVotingError(delegation) === `You do not have the permission to vote.`)) {
+                    if (!this.hasAlreadyVoted(delegation)) {
+                        hasVoted = false;
+                    }
+                }
+            }
+        }
+        return hasVoted;
+    }
+
     public canVoteForObservable(user: ViewUser = this.user): Observable<boolean> {
         if (!this._canVoteForSubjectMap[user.id]) {
             this._canVoteForSubjectMap[user.id] = new BehaviorSubject(this.canVote(user));

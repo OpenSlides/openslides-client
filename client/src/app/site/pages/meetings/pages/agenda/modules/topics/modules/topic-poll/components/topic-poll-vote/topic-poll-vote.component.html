@@ -12,6 +12,11 @@
                 [ngTemplateOutletContext]="{ delegation: delegation }"
             ></ng-container>
         </div>
+        <!-- Submit Votes -->
+        <ng-container
+            [ngTemplateOutlet]="sendAll"
+            [ngTemplateOutletContext]="{ delegation: delegations }"
+        ></ng-container>
     </ng-container>
 </ng-container>
 
@@ -171,5 +176,23 @@
                 {{ 'Submit vote now' | translate }}
             </span>
         </button>
+    </div>
+</ng-template>
+
+<ng-template #sendAll let-delegation="delegations">
+    <div *ngIf="!canStillVote()">
+        <div class="centered-button-wrapper margin-top">
+            <button
+                mat-flat-button
+                color="accent"
+                (click)="submitVotes(delegations)"
+                [disabled]="compareMinAllVotes(delegations)"
+            >
+                <mat-icon>how_to_vote</mat-icon>
+                <span>
+                    {{ 'Submit all votes now' | translate }}
+                </span>
+            </button>
+        </div>
     </div>
 </ng-template>
