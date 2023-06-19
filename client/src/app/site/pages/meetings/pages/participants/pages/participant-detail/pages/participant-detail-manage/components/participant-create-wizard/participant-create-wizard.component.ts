@@ -207,15 +207,26 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
     public getSaveAction(): () => Promise<void> {
         this.checkFields(this.personalInfoFormValue);
         return async () => {
+            const payload = {
+                ...this.personalInfoFormValue,
+                vote_delegated_to_id: this.personalInfoFormValue.vote_delegated_to_id
+                    ? this.repo.getViewModel(this.personalInfoFormValue.vote_delegated_to_id).getMeetingUser().id
+                    : undefined,
+                vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
+                    ? this.personalInfoFormValue.vote_delegations_from_ids
+                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter(id => !!id)
+                    : []
+            };
             if (this._accountId) {
                 this.repo
-                    .update(this.personalInfoFormValue, {
-                        ...this.personalInfoFormValue,
+                    .update(payload, {
+                        ...payload,
                         id: this._accountId
                     })
                     .resolve();
             } else {
-                this.repo.create(this.personalInfoFormValue);
+                this.repo.create(payload);
             }
             this.onCancel();
         };

@@ -114,7 +114,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         const motion = this.motionId ? this.controller.getViewModel(this.motionId) : undefined;
         return (
             !!this.dataLoaded ||
-            (motion ? !!motion?.text || !!motion?.amendment_paragraph || !!motion.statute_paragraph : false)
+            (motion ? !!motion?.text || !!motion?.amendment_paragraphs || !!motion.statute_paragraph : false)
         );
     }
 
