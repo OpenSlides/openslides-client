@@ -312,8 +312,11 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     if (!jsonOrObject) {
         return undefined;
     }
-    let json =
-        jsonOrObject && typeof jsonOrObject !== `string` ? JSON.stringify(jsonOrObject) : (jsonOrObject as string);
+    let json = (
+        jsonOrObject && typeof jsonOrObject !== `string` ? JSON.stringify(jsonOrObject) : (jsonOrObject as string)
+    )
+        .split(/\n|\s/)
+        .join(``);
     const openers = [`[`, `{`];
     const closers = [`]`, `}`];
     for (let symbol of [...openers, ...closers]) {
