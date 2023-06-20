@@ -26,7 +26,11 @@
                 {{ availableFilters[category.key] | translate }}
             </span>
         </h2>
-        <ng-container *ngFor="let result of category.value">
+        <div 
+            *ngFor="let result of category.value; let index = index"
+            class="search-results-entry-container"
+            [ngClass]="{'background-dark': 0 !== index % 2 && (isDarkModeObservable | async), 'background-dark-brighter': 0 === index % 2 && (isDarkModeObservable | async)}"
+            >
             <a
                 *ngIf="result.fqid.startsWith('mediafile')"
                 class="search-results-entry"
@@ -45,6 +49,6 @@
                 <h3 *ngIf="result.title">{{ result.title }}</h3>
                 <p *ngIf="result.text" [innerHtml]="result.text"></p>
             </router-link>
-        </ng-container>
+        </div>
     </section>
 </mat-dialog-content>
