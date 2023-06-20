@@ -76,7 +76,13 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
     public getColumnsHiddenInMobile(): string[] {
         const hiddenInMobile = [`phase`, `candidates`];
 
-        if (!this.operator.hasPerms(Permission.listOfSpeakersCanSee, Permission.projectorCanManage)) {
+        if (
+            !this.operator.hasPerms(
+                Permission.listOfSpeakersCanSee,
+                Permission.listOfSpeakersCanBeSpeaker,
+                Permission.projectorCanManage
+            )
+        ) {
             hiddenInMobile.push(`menu`);
         }
 
