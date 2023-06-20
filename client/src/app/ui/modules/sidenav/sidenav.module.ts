@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
@@ -32,6 +33,7 @@ const EXPORTS = [SidenavComponent, SidenavMainContentDirective, SidenavDrawerCon
         MatDialogModule,
         MatMenuModule,
         MatButtonModule,
+        MatTooltipModule,
         EasterEggModule,
         PipesModule,
         OpenSlidesTranslationModule.forChild()

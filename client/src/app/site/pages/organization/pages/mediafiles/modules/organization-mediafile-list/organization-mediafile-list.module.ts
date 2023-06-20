@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MediafileListServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-service.module';
 import { MediafileCommonServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common-service.module';
@@ -36,7 +37,8 @@ import { OrganizationMediafileListRoutingModule } from './organization-mediafile
         MediafileCommonServiceModule,
         MediafileListServiceModule,
         PromptDialogModule,
-        DirectivesModule
+        DirectivesModule,
+        MatTooltipModule
     ]
 })
 export class OrganizationMediafileListModule {}

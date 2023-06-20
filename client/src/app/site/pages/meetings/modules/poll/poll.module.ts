@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgChartsModule } from 'ng2-charts';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -49,6 +50,7 @@ const COMPONENTS = [
         MatCheckboxModule,
         MatRadioModule,
         ReactiveFormsModule,
+        MatTooltipModule,
         IconContainerModule,
         FormsModule,
         VotingPrivacyDialogModule,

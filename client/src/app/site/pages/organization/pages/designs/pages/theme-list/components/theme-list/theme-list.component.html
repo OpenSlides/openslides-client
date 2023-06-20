@@ -1,4 +1,8 @@
-<os-head-bar [hasMainButton]="true" (mainEvent)="openThemeBuilderDialog()">
+<os-head-bar
+    [hasMainButton]="true"
+    [mainActionTooltip]="'Create new design' | translate"
+    (mainEvent)="openThemeBuilderDialog()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Design' | translate }}</h2>
@@ -28,7 +32,7 @@
         class="cell-slot fill pointer"
         (click)="openThemeBuilderDialog(theme)"
     >
-        <div class="button-group">
+        <div class="button-group" [matTooltip]="'Modify design' | translate">
             <div class="fake-button-no-touch" [ngStyle]="{ background: theme.primary_500 }"></div>
             <div class="fake-button-no-touch" [ngStyle]="{ background: theme.accent_500 }"></div>
             <div class="fake-button-no-touch" [ngStyle]="{ background: theme.warn_500 }"></div>
@@ -39,6 +43,7 @@
             [checked]="isThemeUsed(theme)"
             [disabled]="isThemeUsed(theme)"
             [title]="'Change color set' | translate"
+            [matTooltip]="'Activate design' | translate"
             [content]="
                 'Are you sure you want to activate this color set? This will change the colors in all meetings.'
                     | translate

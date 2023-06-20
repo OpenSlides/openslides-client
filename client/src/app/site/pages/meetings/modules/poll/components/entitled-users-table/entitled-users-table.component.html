@@ -28,7 +28,7 @@
             </div>
             <div *osScrollingTableCell="'voted'; row as entry; config: { width: 24 }">
                 <div *osScrollingTableCellLabel>{{ 'Voted' | translate }}</div>
-                <mat-icon *ngIf="entry.voted">how_to_vote</mat-icon>
+                <mat-icon *ngIf="entry.voted" [matTooltip]="'Vote submittet' | translate">how_to_vote</mat-icon>
             </div>
         </os-list>
     </div>
