@@ -9,6 +9,7 @@ import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/gl
 })
 export class GlobalSearchComponent {
     public searchTerm = ``;
+    public noResults = false;
 
     public readonly availableFilters = {
         committee: `Committees`,
@@ -38,6 +39,7 @@ export class GlobalSearchComponent {
                 field => this.currentFilters.get(field) && this.currentFilters.get(field).getRawValue()
             )
         );
+        this.noResults = !Object.keys(this.results).length;
         this.cd.markForCheck();
     }
 }
