@@ -81,6 +81,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public isWaitingOnLogin = false;
 
+    public loading = true;
+
     /**
      * The message, that should appear, when the user logs in.
      */
@@ -136,8 +138,9 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
         // check if global saml auth is enabled
         this.subscriptions.push(
-            this.orgaSettings.get(`saml_enabled`).subscribe(enabled => {
+            this.orgaSettings.getSafe(`saml_enabled`).subscribe(enabled => {
                 this.samlEnabled = enabled;
+                this.loading = false;
             }),
             this.orgaSettings.get(`saml_login_button_text`).subscribe(text => {
                 this.samlLoginButtonText = text;
@@ -192,6 +195,10 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public toggleLoginAreaExpansion(): void {
         this.loginAreaExpanded = !this.loginAreaExpanded;
+    }
+
+    public setLoginAreaExpansion(expanded: boolean): void {
+        this.loginAreaExpanded = expanded;
     }
 
     private formatLoginInputValues(info: LoginValues): LoginValues {

@@ -17,10 +17,10 @@
         <mat-card [innerHTML]="installationNotice | translate"></mat-card>
     </div>
 
-    <ng-container *ngIf="!samlEnabled">
-        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true, autofocus: true }"></ng-container>
+    <ng-container *ngIf="!samlEnabled && !loading">
+        <ng-container *ngTemplateOutlet="loginform; context: { showExtra: true }"></ng-container>
     </ng-container>
-    <ng-container *ngIf="samlEnabled">
+    <ng-container *ngIf="samlEnabled && !loading">
         <div class="login-container">
             <button
                 osAutofocus
@@ -40,23 +40,36 @@
             </button>
 
             <br />
-            <mat-card>
-                <button mat-button (click)="toggleLoginAreaExpansion()">
+            <mat-expansion-panel
+                style="border-radius: 4px !important"
+                class="spacer-bottom-10"
+                (afterExpand)="setLoginAreaExpansion(true)"
+                (afterCollapse)="setLoginAreaExpansion(false)"
+            >
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ 'Internal login' | translate }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngIf="loginAreaExpanded">
+                    <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
+                </div>
+            </mat-expansion-panel>
+            <!-- <mat-card>
+                <button class="expansion-button" mat-flat-button disableRipple (click)="toggleLoginAreaExpansion()">
                     <mat-icon *ngIf="!loginAreaExpanded">expand_more</mat-icon>
                     <mat-icon *ngIf="loginAreaExpanded">expand_less</mat-icon>
                     {{ 'Internal login' | translate }}
                 </button>
-                <div class="padding-bottom" *ngIf="loginAreaExpanded">
-                    <ng-container
-                        *ngTemplateOutlet="loginform; context: { showExtra: false, autofocus: false }"
-                    ></ng-container>
+                <div class="expandable-area" *ngIf="loginAreaExpanded">
+                    <ng-container *ngTemplateOutlet="loginform; context: { showExtra: false }"></ng-container>
                 </div>
-            </mat-card>
+            </mat-card> -->
         </div>
     </ng-container>
 </div>
 
-<ng-template #loginform let-showExtra="showExtra" let-autofocus="autofocus">
+<ng-template #loginform let-showExtra="showExtra">
     <form [formGroup]="loginForm" [ngClass]="{ 'login-container': showExtra }" (ngSubmit)="formLogin()">
         <mat-form-field>
             <input
