@@ -39,7 +39,10 @@
             [checked]="isThemeUsed(theme)"
             [disabled]="isThemeUsed(theme)"
             [title]="'Change color set' | translate"
-            [content]="'Are you sure you want to activate this color set? This will change the colors in all meetings.' | translate"
+            [content]="
+                'Are you sure you want to activate this color set? This will change the colors in all meetings.'
+                    | translate
+            "
             (selected)="changeCurrentTheme($event, theme)"
         ></os-prompt-checkbox>
     </div>

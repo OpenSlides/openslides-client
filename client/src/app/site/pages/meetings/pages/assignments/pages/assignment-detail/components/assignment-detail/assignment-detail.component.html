@@ -109,7 +109,7 @@
         <div *ngIf="assignment">
             <div
                 *ngIf="assignment.assignment.description"
-                [innerHTML]="assignment.assignment.description | trust: 'html'"
+                [innerHTML]="assignment.assignment.description | trust : 'html'"
             ></div>
         </div>
         <div [ngClass]="{ 'meta-info-grid': assignment.open_posts }">
@@ -121,7 +121,12 @@
                 <h4>{{ 'Phase' | translate }}</h4>
 
                 <os-chip-select [canOpen]="hasPerms('manage')" chipClass="bluegrey">
-                    <button menu mat-menu-item *ngFor="let option of phaseOptions" (click)="onSetPhaseButton(option.value)">
+                    <button
+                        menu
+                        mat-menu-item
+                        *ngFor="let option of phaseOptions"
+                        (click)="onSetPhaseButton(option.value)"
+                    >
                         {{ option.display_name | translate }}
                     </button>
 
@@ -175,12 +180,7 @@
                 <!-- Add Candidates -->
                 <div class="add-candidates">
                     <!-- Search for candidates -->
-                    <div
-                        class="search-new-speaker-form"
-                        *ngIf="
-                            hasPerms('addOthers')
-                        "
-                    >
+                    <div class="search-new-speaker-form" *ngIf="hasPerms('addOthers')">
                         <os-participant-search-selector
                             [nonSelectableUserIds]="candidateUserIds"
                             placeholder="{{ 'Select or search new candidate ...' | translate }}"
