@@ -213,7 +213,9 @@
             </ng-container>
         </ng-container>
         <ng-container *ngIf="!isArray(entry[def])">
-            <ng-container *ngIf="!isObject(entry[def]) && type !== 'boolean'">{{ entry[def] | translate }}</ng-container>
+            <ng-container *ngIf="!isObject(entry[def]) && type !== 'boolean'">
+                {{ entry[def] | translate }}
+            </ng-container>
             <mat-checkbox *ngIf="type === 'boolean'" [checked]="isTrue(entry[def])" disabled></mat-checkbox>
             <ng-container *ngIf="isObject(entry[def])">
                 <ng-container *ngTemplateOutlet="modelNameTemplate; context: { model: entry[def] }"></ng-container>
@@ -283,7 +285,10 @@
                 <div *osScrollingTableCellLabel>{{ column.label | translate }}</div>
                 <!-- row is `ImportModel`, entry is the csv data as object, def is the "property" -->
                 <ng-container
-                    *ngTemplateOutlet="entryTemplate; context: { entry: row.model, def: def, row: row, type: column.type }"
+                    *ngTemplateOutlet="
+                        entryTemplate;
+                        context: { entry: row.model, def: def, row: row, type: column.type }
+                    "
                 ></ng-container>
             </div>
         </ng-container>

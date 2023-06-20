@@ -17,10 +17,7 @@
         <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
     </mat-sidenav>
     <mat-sidenav-content>
-        <ng-container
-            *ngIf="!isOpen"
-            [ngTemplateOutlet]="sideNavToggleButton"
-        ></ng-container>
+        <ng-container *ngIf="!isOpen" [ngTemplateOutlet]="sideNavToggleButton"></ng-container>
         <div class="main-content-wrapper">
             <div *ngIf="!isMobile && isOpen" class="navigation sidenav-background">
                 <ng-container *ngTemplateOutlet="sideNavContent"></ng-container>
@@ -76,9 +73,6 @@
                 </span>
             </a>
         </div>
-        <ng-container
-            *ngIf="isOpen"
-            [ngTemplateOutlet]="sideNavToggleButton"
-        ></ng-container>
+        <ng-container *ngIf="isOpen" [ngTemplateOutlet]="sideNavToggleButton"></ng-container>
     </div>
 </ng-template>

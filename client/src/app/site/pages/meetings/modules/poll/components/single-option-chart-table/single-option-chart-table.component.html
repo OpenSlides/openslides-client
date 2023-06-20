@@ -19,7 +19,7 @@
                         <td>
                             <div class="result-cell-definition">
                                 <span *ngIf="row.value[0].showPercent" [class]="textSizeClass">
-                                    {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase: poll }}
+                                    {{ getVoteAmount(row.value[0].amount, row) | pollPercentBase : poll }}
                                 </span>
                             </div>
                         </td>
@@ -47,7 +47,7 @@
                         <!-- Percent numbers -->
                         <td class="result-cell-definition">
                             <span *ngIf="row.value[0].showPercent" [class]="textSizeClass">
-                                {{ row.value[0].amount! | pollPercentBase: poll }}
+                                {{ row.value[0].amount! | pollPercentBase : poll }}
                             </span>
                         </td>
 
@@ -61,7 +61,7 @@
             <tr *ngIf="shouldShowEntitled" class="entitled-users-row">
                 <td>{{ 'Entitled users' | translate }}</td>
                 <td class="result-cell-definition">
-                    {{ poll.entitled_users_at_stop.length | pollPercentBase: poll }}
+                    {{ poll.entitled_users_at_stop.length | pollPercentBase : poll }}
                 </td>
                 <td class="result-cell-definition">
                     {{ poll.entitled_users_at_stop.length }}

@@ -197,12 +197,25 @@
 
         <ng-container *ngIf="hasAlreadyVoted(delegation) !== undefined">
             <!-- Permission error error -->
-            <div *ngIf="!hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !(!isUserPresent && delegations.length)">
+            <div
+                *ngIf="
+                    !hasAlreadyVoted(delegation) &&
+                    !isDeliveringVote(delegation) &&
+                    !(!isUserPresent && delegations.length)
+                "
+            >
                 <span>{{ getVotingError(delegation) | translate }}</span>
             </div>
 
             <!-- Delegation not present vote error -->
-            <div *ngIf="!hasAlreadyVoted(delegation) && !isDeliveringVote(delegation) && !isUserPresent && delegations.length">
+            <div
+                *ngIf="
+                    !hasAlreadyVoted(delegation) &&
+                    !isDeliveringVote(delegation) &&
+                    !isUserPresent &&
+                    delegations.length
+                "
+            >
                 <span>{{ getVotingErrorFromName('USER_NOT_PRESENT') | translate }}</span>
             </div>
         </ng-container>
