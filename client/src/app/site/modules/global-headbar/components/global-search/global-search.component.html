@@ -5,7 +5,8 @@
             [(ngModel)]="searchTerm"
             (change)="searchChange()"
             placeholder="{{ 'Search' | translate }}"
-            autofocus>
+            autofocus
+        />
         <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
@@ -21,28 +22,33 @@
 <mat-dialog-content class="search-results">
     <section *ngFor="let category of results | keyvalue" class="search-results-category">
         <h2>
-            <span
-                [matBadge]="category.value.length < 100 ? category.value.length : '99+'"
-                [matBadgeOverlap]="false">{{ availableFilters[category.key] | translate }}</span>
+            <span [matBadge]="category.value.length < 100 ? category.value.length : '99+'" [matBadgeOverlap]="false">
+                {{ availableFilters[category.key] | translate }}
+            </span>
         </h2>
-        <div 
+        <div
             *ngFor="let result of category.value; let index = index"
             class="search-results-entry-container"
-            [ngClass]="{'background-dark': 0 !== index % 2 && (isDarkModeObservable | async), 'background-dark-brighter': 0 === index % 2 && (isDarkModeObservable | async)}"
-            >
+            [ngClass]="{
+                'background-dark': 0 !== index % 2 && (isDarkModeObservable | async),
+                'background-dark-brighter': 0 === index % 2 && (isDarkModeObservable | async)
+            }"
+        >
             <a
                 *ngIf="result.fqid.startsWith('mediafile')"
                 class="search-results-entry"
                 [href]="result.url"
                 target="blank"
-                mat-dialog-close>
+                mat-dialog-close
+            >
                 <h3 *ngIf="result.title">{{ result.title }}</h3>
             </a>
             <router-link
                 *ngIf="!result.fqid.startsWith('mediafile')"
                 class="search-results-entry"
                 [routerLink]="result.url"
-                mat-dialog-close>
+                mat-dialog-close
+            >
                 <h3 *ngIf="result.title">{{ result.title }}</h3>
                 <p *ngIf="result.text" [innerHtml]="result.text"></p>
             </router-link>
