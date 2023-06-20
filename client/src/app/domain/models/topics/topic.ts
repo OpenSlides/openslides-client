@@ -31,7 +31,6 @@ export class Topic extends BaseModel<Topic> {
         `agenda_item_id`,
         `list_of_speakers_id`,
         `tag_ids`,
-        `poll_ids`,
         `meeting_id`
     ];
 }

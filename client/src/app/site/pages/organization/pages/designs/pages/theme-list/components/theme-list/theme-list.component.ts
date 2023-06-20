@@ -41,8 +41,10 @@ export class ThemeListComponent extends BaseListViewComponent<ViewTheme> {
         }
     }
 
-    public async changeCurrentTheme(theme: ViewTheme): Promise<void> {
-        this.repo.changeCurrentTheme(theme);
+    public async changeCurrentTheme(confirmed: boolean, theme: ViewTheme): Promise<void> {
+        if (confirmed) {
+            this.repo.changeCurrentTheme(theme);
+        }
     }
 
     public async deleteTheme(theme: ViewTheme): Promise<void> {
