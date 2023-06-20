@@ -218,6 +218,12 @@
                 <h4>{{ 'Initial password' | translate }}</h4>
                 <span>{{ user.default_password }}</span>
             </div>
+
+            <!-- SAML id -->
+            <div *ngIf="user.saml_id">
+                <h4>{{ 'SSO Identification' | translate }}</h4>
+                <span>{{ user.saml_id }}</span>
+            </div>
         </div>
     </ng-container>
 </ng-template>
