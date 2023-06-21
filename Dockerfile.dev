@@ -1,5 +1,5 @@
-FROM node:18.13-alpine
-ENV NODE_VERSION=18.13.0
+FROM node:18.16-alpine
+ENV NODE_VERSION=18.16.0
 
 RUN apk add --no-cache git
 
