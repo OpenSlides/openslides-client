@@ -85,7 +85,8 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public get relatedTime(): RelatedTime {
-        if ((this.start_time ?? this.end_time) === undefined) {
+        const referenceTime = this.start_time ?? this.end_time;
+        if (!referenceTime && referenceTime !== 0) {
             return RelatedTime.Dateless;
         }
         const current = new Date();

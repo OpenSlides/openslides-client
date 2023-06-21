@@ -155,13 +155,11 @@
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
     <ng-template matMenuContent let-user="user">
-        <os-projector-button [object]="user" [menuItem]="true"></os-projector-button>
-
         <!-- Presence -->
         <mat-checkbox
             class="mat-menu-item"
             (change)="setPresent(user)"
-            [checked]="user.is_present"
+            [checked]="isUserPresent(user)"
             [disabled]="isPresentToggleDisabled(user)"
         >
             <span>{{ 'Present' | translate }}</span>
