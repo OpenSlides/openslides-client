@@ -129,7 +129,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     public onSubmit(): void {
         const payload: any = this.orgaSettingsForm!.value;
-        payload.saml_attr_mapping = (payload.saml_attr_mapping as string).split(/\n|\s/).join(``);
+        payload.saml_attr_mapping = JSON.stringify(JSON.parse(payload.saml_attr_mapping as string));
         this.controller
             .update(payload)
             .then(() => this.markFormAsClean())
