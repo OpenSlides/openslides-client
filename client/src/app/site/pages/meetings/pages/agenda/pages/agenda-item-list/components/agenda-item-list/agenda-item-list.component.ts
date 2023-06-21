@@ -135,7 +135,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                                 default: false
                             }
                         ],
-                        projectionDefault: PROJECTIONDEFAULT.agendaAllItems,
+                        projectionDefault: PROJECTIONDEFAULT.agendaItemList,
                         getDialogTitle: () => this.translate.instant(`Agenda`)
                     };
                 } else {

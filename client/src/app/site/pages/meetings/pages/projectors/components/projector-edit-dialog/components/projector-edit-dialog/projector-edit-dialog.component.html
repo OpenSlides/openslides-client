@@ -106,7 +106,10 @@
                     placeholder="{{ 'Projection defaults' | translate }}"
                     [multiple]="true"
                 >
-                    <mat-option *ngFor="let pd of projectiondefaultVerbose | keyvalue" [value]="pd.key">
+                    <mat-option
+                        *ngFor="let pd of projectiondefaultVerbose | keyvalue"
+                        [value]="projectiondefaultKeys[pd.key]"
+                    >
                         {{ pd.value | translate }}
                     </mat-option>
                 </mat-select>
