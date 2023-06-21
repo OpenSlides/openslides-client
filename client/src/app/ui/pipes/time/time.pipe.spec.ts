@@ -20,11 +20,11 @@ describe(`TimePipe`, () => {
     });
 
     it(`test with timestamp 0`, () => {
-        expect(pipe.transform(0)).toBe(`1/1/1970, 1:00:00 AM`);
+        expect(pipe.transform(0)).toBe(`1/1/1970, 12:00:00 AM`);
     });
 
     it(`test with timestamp past 1970`, () => {
-        expect(pipe.transform(42424242)).toBe(`5/7/1971, 1:30:42 AM`);
+        expect(pipe.transform(42424242)).toBe(`5/7/1971, 12:30:42 AM`);
     });
 
     it(`test with invalid parameters`, () => {
