@@ -331,6 +331,23 @@
                             </mat-action-row>
                         </mat-expansion-panel>
 
+                        <!-- WiFi access data -->
+                        <mat-expansion-panel *ngIf="hasWiFiData">
+                            <mat-expansion-panel-header>
+                                <span>{{ 'WiFi access data' | translate }}</span>
+                            </mat-expansion-panel-header>
+                            <!-- Slide-->
+                            <mat-list>
+                                <mat-list-item>
+                                    <os-projector-button
+                                        [object]="wifiDataBuildDesc()"
+                                        [projector]="projector"
+                                    ></os-projector-button>
+                                    <span class="spacer-left-10">{{ 'Project' | translate }}</span>
+                                </mat-list-item>
+                            </mat-list>
+                        </mat-expansion-panel>
+
                         <!-- Current list of speakers -->
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
