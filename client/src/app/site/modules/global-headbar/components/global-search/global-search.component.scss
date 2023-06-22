@@ -5,6 +5,10 @@
 .search-results {
     padding: 0;
 
+    .search-no-results {
+        padding: 0 24px;
+    }
+
     .search-results-category h2 {
         padding: 0 24px;
         margin-top: 1em;
