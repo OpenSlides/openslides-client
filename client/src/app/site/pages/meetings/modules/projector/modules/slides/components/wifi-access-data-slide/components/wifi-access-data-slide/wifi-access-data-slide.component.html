@@ -1,16 +1,22 @@
 <div *ngIf="data">
     <h1 class="projector_h1">{{ 'WiFi access data' | translate }}</h1>
 
-    <div *ngIf="ssid">
-        <h3 translate>Network (SSID)</h3>
-        {{ ssid }}
-    </div>
-    <div *ngIf="password">
-        <h3 translate>Password</h3>
-        {{ password }}
-    </div>
-    <div *ngIf="encryption">
-        <h3 translate>Encryption</h3>
-        {{ encryption | translate }}
+    <div class="wifi-slide-content">
+        <os-qr-code *ngIf="ssid && encryption" [edgeLength]="450" [text]="qrCodeText"></os-qr-code>
+
+        <div>
+            <div *ngIf="ssid">
+                <h3 translate>Network (SSID)</h3>
+                {{ ssid }}
+            </div>
+            <div *ngIf="password">
+                <h3 translate>Password</h3>
+                {{ password }}
+            </div>
+            <div *ngIf="encryption">
+                <h3 translate>Encryption</h3>
+                {{ encryption | translate }}
+            </div>
+        </div>
     </div>
 </div>

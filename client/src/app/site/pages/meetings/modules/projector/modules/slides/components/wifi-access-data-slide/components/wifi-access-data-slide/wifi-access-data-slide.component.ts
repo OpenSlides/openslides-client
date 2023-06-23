@@ -29,4 +29,8 @@ export class WifiAccessDataSlideComponent extends BaseSlideComponent<WifiAccessD
                 return undefined;
         }
     }
+
+    public get qrCodeText(): string {
+        return `WIFI:S:` + this.ssid + `;T:` + this.data.data.users_pdf_wlan_encryption + `;P:` + this.password + `;;`;
+    }
 }
