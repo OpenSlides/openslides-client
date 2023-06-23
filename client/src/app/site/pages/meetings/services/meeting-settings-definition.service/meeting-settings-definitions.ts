@@ -23,6 +23,7 @@ export type SettingsType =
     | 'date'
     | 'datetime'
     | 'translations'
+    | 'ranking'
     | 'groups'
     | 'daterange';
 

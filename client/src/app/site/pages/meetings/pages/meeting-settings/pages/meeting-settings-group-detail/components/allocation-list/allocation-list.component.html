@@ -1,23 +1,23 @@
-<form [formGroup]="translationForm">
+<form [formGroup]="allocationListForm">
     <div
         class="inline-form"
-        formArrayName="translationBoxes"
-        *ngFor="let translation of translationBoxes.controls; let i = index"
+        formArrayName="allocationBoxes"
+        *ngFor="let allocation of allocationBoxes.controls; let i = index"
     >
         <ng-container [formGroupName]="i">
             <mat-form-field>
-                <input formControlName="original" matInput placeholder="{{ 'Original' | translate }}" />
+                <input formControlName="entry" matInput placeholder="{{ entryLabel | translate }}" />
                 <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
             </mat-form-field>
             <mat-icon>arrow_forward</mat-icon>
             <mat-form-field>
-                <input formControlName="translation" matInput placeholder="{{ 'Translation' | translate }}" />
+                <input formControlName="allocation" matInput placeholder="{{ allocationLabel | translate }}" />
                 <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
             </mat-form-field>
             <button
                 mat-icon-button
                 type="button"
-                (click)="onRemoveTranslation(i)"
+                (click)="onRemoveAllocation(i)"
                 matTooltip="{{ 'Cancel' | translate }}"
                 matTooltipPosition="left"
             >
@@ -27,8 +27,8 @@
     </div>
 </form>
 
-<!-- Add new translation button -->
-<button mat-button (click)="addNewTranslation()">
+<!-- Add new allocation button -->
+<button mat-button (click)="addNewAllocation()">
     <mat-icon>add</mat-icon>
-    {{ 'Add new custom translation' | translate }}
+    {{ addButtonLabel | translate }}
 </button>

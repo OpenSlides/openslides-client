@@ -10,6 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { fromUnixTime, getHours, getMinutes, getUnixTime, setHours, setMinutes } from 'date-fns';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
@@ -24,6 +25,7 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
+import { AllocationListConfig } from '../allocation-list/allocation-list.component';
 
 export interface SettingsFieldUpdate {
     key: keyof Settings | (keyof Settings)[];
@@ -126,6 +128,19 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             ((currentValue, currentWatchPropertyValues) => currentValue)
         );
     }
+
+    public readonly TRANSLATION_CONFIG: AllocationListConfig = {
+        entryLabel: _(`Original`),
+        allocationLabel: _(`Translation`),
+        addButtonLabel: _(`Add new custom translation`)
+    };
+
+    public readonly RANKING_CONFIG: AllocationListConfig = {
+        entryLabel: _(`Name`),
+        allocationLabel: _(`Rank`),
+        addButtonLabel: _(`Add new entry`),
+        isNumberAllocation: true
+    };
 
     /**
      * The current value of this setting. It is usually the first value, but this does not work for groups...
@@ -382,7 +397,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = [`boolean`, `markupText`, `text`, `translations`, `datetime`, `date`, `daterange`];
+        const excluded = [`boolean`, `markupText`, `text`, `translations`, `ranking`, `datetime`, `date`, `daterange`];
         return excluded.includes(type);
     }
 
