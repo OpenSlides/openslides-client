@@ -236,7 +236,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             this.translate.instant(`Your decision cannot be changed afterwards.`);
 
         const confirmed = await this.promptService.open(title, content);
-        const value = this.voteRequestData[this.user.id].value;
+        let value = this.voteRequestData[this.user.id].value;
         if (confirmed) {
             if (!this.hasAlreadyVoted() && !(this.getVotingError() === `You do not have the permission to vote.`)) {
                 this.deliveringVote[this.user.id] = true;
@@ -249,6 +249,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
                 await this.sendVote(this.user.id, votePayload);
             }
             for (let user of users) {
+                let value = this.voteRequestData[user.id].value;
                 if (
                     !this.hasAlreadyVoted(user) &&
                     !(this.getVotingError(user) === `You do not have the permission to vote.`)

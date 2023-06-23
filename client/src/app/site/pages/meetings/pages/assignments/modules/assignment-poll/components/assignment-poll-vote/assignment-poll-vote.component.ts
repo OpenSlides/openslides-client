@@ -238,6 +238,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     public async submitVotes(users: ViewUser[]): Promise<void> {
         let maxVotesAmount = 0;
         let pollMaximum = 0;
+        let isListOpt = false;
 
         if (!this.hasAlreadyVoted() && !(this.getVotingError() === `You do not have the permission to vote.`)) {
             maxVotesAmount = this.getVotesCount();
@@ -256,6 +257,15 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 pollMaximum += this.poll.max_votes_amount;
             }
         }
+        for (let option of this.poll.options) {
+            if (option.isListOption) {
+                isListOpt = true;
+            }
+        }
+        if ((this.poll.isMethodYNA && !isListOpt) || this.poll.isMethodYN) {
+            pollMaximum *= users.length;
+        }
+
         const title = this.translate.instant(`Submit selection now?`);
         const content =
             this.translate.instant(`Your votes`) +
@@ -263,8 +273,8 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             this.translate.instant(`Your decision cannot be changed afterwards.`);
 
         const confirmed = await this.promptService.open(title, content);
-        const value = this.voteRequestData[this.user.id].value;
         if (confirmed) {
+            let value = this.voteRequestData[this.user.id].value;
             if (!this.hasAlreadyVoted() && !(this.getVotingError() === `You do not have the permission to vote.`)) {
                 this.deliveringVote[this.user.id] = true;
                 this.cd.markForCheck();
@@ -276,6 +286,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 await this.sendVote(this.user.id, votePayload);
             }
             for (let user of users) {
+                value = this.voteRequestData[user.id].value;
                 if (
                     !this.hasAlreadyVoted(user) &&
                     !(this.getVotingError(user) === `You do not have the permission to vote.`)
@@ -338,11 +349,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 delete (this.voteRequestData[user.id] as any).value[optionId];
             } else {
                 (this.voteRequestData[user.id] as any).value[optionId] = vote;
-            }
-
-            // if a user filled out every option, try to send
-            if (Object.keys(this.voteRequestData[user.id].value).length === this.poll.options.length) {
-                this.submitVote(user);
             }
         }
     }
