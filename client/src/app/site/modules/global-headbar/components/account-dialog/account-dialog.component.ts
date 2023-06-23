@@ -34,7 +34,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     @ViewChild(`changePasswordComponent`, { static: false })
     public changePasswordComponent!: PasswordFormComponent;
 
-    public readonly menuItems: MenuItem[] = [
+    private readonly menuItems: MenuItem[] = [
         {
             name: MenuItems.SHOW_PROFILE
         },

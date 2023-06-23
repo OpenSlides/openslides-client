@@ -20,11 +20,7 @@
     </div>
     <mat-divider *ngIf="ref.children.length"></mat-divider>
 
-    <button
-        mat-menu-item
-        [disabled]="!selectedUsers.length || !hasSelectedNonSamlUsers"
-        (click)="sendInvitationEmailSelected()"
-    >
+    <button mat-menu-item [disabled]="!selectedUsers.length" (click)="sendInvitationEmailSelected()">
         <mat-icon>mail</mat-icon>
         <span>{{ 'Send invitation email' | translate }}</span>
     </button>
@@ -38,7 +34,11 @@
         <span>{{ 'Reset passwords to the default ones' | translate }}</span>
     </button>
 
-    <button mat-menu-item [disabled]="!selectedUsers.length" (click)="generateNewPasswordsPasswordsSelected()">
+    <button
+        mat-menu-item
+        [disabled]="!selectedUsers.length || !hasSelectedNonSamlUsers"
+        (click)="generateNewPasswordsPasswordsSelected()"
+    >
         <mat-icon>vpn_key</mat-icon>
         <span>{{ 'Generate new passwords' | translate }}</span>
     </button>
