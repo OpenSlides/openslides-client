@@ -53,3 +53,22 @@
         overflow: visible;
     }
 }
+
+.centered-button-wrapper {
+    display: flex;
+    text-align: center;
+    > * {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .vote-submitted {
+        color: $votes-yes-color;
+        font-size: 200%;
+        overflow: visible;
+    }
+}
+
+.margin-top {
+    margin-top: 15px;
+}

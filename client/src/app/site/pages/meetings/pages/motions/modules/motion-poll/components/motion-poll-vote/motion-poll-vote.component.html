@@ -12,6 +12,11 @@
                 [ngTemplateOutletContext]="{ delegation: delegation }"
             ></ng-container>
         </div>
+        <!-- Submit Votes -->
+        <ng-container
+            [ngTemplateOutlet]="sendAll"
+            [ngTemplateOutletContext]="{ delegation: delegations }"
+        ></ng-container>
     </ng-container>
 </ng-container>
 
@@ -22,21 +27,28 @@
     </h4>
 
     <ng-container *ngIf="{ canVote: canVoteForObservable(delegation) | async } as voting">
-        <div *ngIf="voting.canVote" class="vote-button-grid">
-            <!-- Voting -->
-            <ng-container *ngFor="let id of poll.option_ids">
-                <div class="vote-button" *ngFor="let option of voteOptions">
-                    <button
-                        mat-raised-button
-                        (click)="saveVote(option.vote!, id, delegation)"
-                        [ngClass]="getActionButtonClass(option, delegation)"
-                        [disabled]="isDeliveringVote(delegation)"
-                    >
-                        <mat-icon>{{ option.icon }}</mat-icon>
-                    </button>
-                    <span class="vote-label">{{ option.label | translate }}</span>
-                </div>
-            </ng-container>
+        <div *ngIf="voting.canVote">
+            <div class="vote-button-grid">
+                <!-- Voting -->
+                <ng-container *ngFor="let id of poll.option_ids">
+                    <div class="vote-button" *ngFor="let option of voteOptions">
+                        <button
+                            mat-raised-button
+                            (click)="saveVote(id, option.vote!, delegation)"
+                            [disabled]="isDeliveringVote(delegation)"
+                            [ngClass]="getActionButtonClass(option, id, delegation)"
+                        >
+                            <mat-icon>{{ option.icon }}</mat-icon>
+                        </button>
+                        <span class="vote-label">{{ option.label | translate }}</span>
+                    </div>
+                </ng-container>
+            </div>
+            <!-- Submit Vote -->
+            <ng-container
+                [ngTemplateOutlet]="sendNow"
+                [ngTemplateOutletContext]="{ delegation: delegation }"
+            ></ng-container>
         </div>
 
         <ng-container
@@ -87,4 +99,36 @@
             <span>{{ getVotingErrorFromName('USER_NOT_PRESENT') | translate }}</span>
         </div>
     </ng-container>
+</ng-template>
+
+<ng-template #sendNow let-delegation="delegation">
+    <div class="centered-button-wrapper">
+        <button
+            mat-flat-button
+            color="accent"
+            (click)="submitVote(delegation)"
+            [disabled]="getVotesCount(delegation) < minVotes"
+        >
+            <mat-icon>how_to_vote</mat-icon>
+            <span>
+                {{ 'Submit vote now' | translate }}
+            </span>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #sendAll let-delegation="delegations">
+    <div *ngIf="!canStillVote()" class="centered-button-wrapper margin-top">
+        <button
+            mat-flat-button
+            color="accent"
+            (click)="submitVotes(delegations)"
+            [disabled]="compareMinAllVotes(delegations)"
+        >
+            <mat-icon>how_to_vote</mat-icon>
+            <span>
+                {{ 'Submit all votes now' | translate }}
+            </span>
+        </button>
+    </div>
 </ng-template>
