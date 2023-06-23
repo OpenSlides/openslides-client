@@ -109,7 +109,7 @@ function findChildFromDebugElement(element: DebugElement, ...nodenames: string[]
 
 const QR_COMPONENT_PATH = `os-wifi-access-data-slide.div.div.os-qr-code`;
 
-fdescribe(`WifiAccessDataSlideComponent`, () => {
+describe(`WifiAccessDataSlideComponent`, () => {
     let testBed: TestBed;
     let component: WifiAccessDataSlideComponent;
     let testComponent: TestComponent;
