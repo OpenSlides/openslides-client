@@ -11,7 +11,13 @@
             </mat-form-field>
             <mat-icon>arrow_forward</mat-icon>
             <mat-form-field>
-                <input formControlName="allocation" matInput placeholder="{{ allocationLabel | translate }}" />
+                <input
+                    *ngIf="config"
+                    formControlName="allocation"
+                    [type]="isNumberAllocation ? 'number' : 'text'"
+                    matInput
+                    placeholder="{{ allocationLabel | translate }}"
+                />
                 <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
             </mat-form-field>
             <button

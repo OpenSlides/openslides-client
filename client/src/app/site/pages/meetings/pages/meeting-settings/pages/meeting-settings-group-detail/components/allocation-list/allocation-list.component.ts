@@ -63,6 +63,10 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         return this.config?.addButtonLabel;
     }
 
+    public get isNumberAllocation(): boolean {
+        return this.config?.isNumberAllocation;
+    }
+
     /**
      * The parent form-group.
      */
@@ -161,7 +165,7 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
             this.formBuilder.group({
                 entry: [entry, Validators.required],
                 allocation: [
-                    this.config.isNumberAllocation ? this.getNumber(allocation) : String(allocation),
+                    this.isNumberAllocation ? this.getNumber(allocation) : String(allocation),
                     Validators.required
                 ]
             })
