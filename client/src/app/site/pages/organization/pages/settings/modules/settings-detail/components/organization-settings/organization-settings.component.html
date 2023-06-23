@@ -160,21 +160,21 @@
             <section>
                 <mat-form-field>
                     <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>
-                    <input matInput formControlName="saml_metadata_idp" />
+                    <textarea matInput formControlName="saml_metadata_idp" [rows]="6" wrap="hard"></textarea>
                 </mat-form-field>
             </section>
             <!-- SSO login button text -->
             <section>
                 <mat-form-field>
                     <mat-label>{{ 'Metadata of Service Provider (SP)' | translate }}</mat-label>
-                    <input matInput formControlName="saml_metadata_sp" />
+                    <textarea matInput formControlName="saml_metadata_sp" [rows]="6" wrap="hard"></textarea>
                 </mat-form-field>
             </section>
             <!-- SSO login button text -->
             <section>
                 <mat-form-field>
                     <mat-label>{{ 'Private key of Service Provider (SP)' | translate }}</mat-label>
-                    <input matInput formControlName="saml_private_key" />
+                    <textarea matInput formControlName="saml_private_key" [rows]="6" wrap="hard"></textarea>
                 </mat-form-field>
             </section>
         </div>
