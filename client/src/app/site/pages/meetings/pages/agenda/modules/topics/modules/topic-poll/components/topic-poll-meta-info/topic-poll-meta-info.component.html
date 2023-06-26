@@ -24,7 +24,7 @@
 
             <span *ngFor="let group of poll.entitled_groups; let last = last">
                 <span>{{ group.getTitle() | translate }}</span>
-                <span *ngIf="!last">,&nbsp;</span>
+                <span *ngIf="!last">,&ensp;</span>
             </span>
             <br />
         </small>
