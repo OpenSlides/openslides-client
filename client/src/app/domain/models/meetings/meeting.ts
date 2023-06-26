@@ -462,6 +462,7 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_countdown_id`,
         `poll_countdown_id`,
         `projection_ids`,
+        `default_projector_agenda_item_list_ids`,
         `default_projector_topic_ids`,
         `default_projector_list_of_speakers_ids`,
         `default_projector_current_list_of_speakers_ids`,
