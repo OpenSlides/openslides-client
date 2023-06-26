@@ -312,14 +312,46 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     if (!jsonOrObject) {
         return undefined;
     }
-    let json =
-        jsonOrObject && typeof jsonOrObject !== `string` ? JSON.stringify(jsonOrObject) : (jsonOrObject as string);
+    let json = JSON.stringify(
+        JSON.parse(
+            jsonOrObject && typeof jsonOrObject !== `string` ? JSON.stringify(jsonOrObject) : (jsonOrObject as string)
+        )
+    );
+
+    // Extract strings from JSON
+    const stringRegex = /\"([^\"]+)\"/g;
+    const stringReplacement = `#`;
+    let strings: string[] = [...json.match(stringRegex)];
+    while (stringRegex.test(json)) {
+        json = json.replace(stringRegex, stringReplacement);
+    }
+
+    // If the json actually represents an object or array, format the JSON skeleton
+    const separators = [`[`, `{`, `]`, `}`];
+    if (separators.some(separator => !json.includes(separator))) {
+        for (let symbol of [`[`, `{`, `]`, `}`]) {
+            json = json.split(symbol).join(`\n` + symbol + `\n`);
+        }
+        json = json.split(`,`).join(`,\n`).split(`:`).join(`: `).trim();
+        json = addSpacersToMultiLineJson(json);
+    }
+
+    // Merge strings back with json skeleton
+    let result = ``;
+    let jsonArray = json.split(stringReplacement);
+    while (jsonArray.length) {
+        result = result + jsonArray[0] + (strings.length ? strings[0] : ``);
+        jsonArray = jsonArray.slice(1);
+        if (strings.length) {
+            strings = strings.slice(1);
+        }
+    }
+    return result;
+}
+
+function addSpacersToMultiLineJson(json: string): string {
     const openers = [`[`, `{`];
     const closers = [`]`, `}`];
-    for (let symbol of [...openers, ...closers]) {
-        json = json.split(symbol).join(`\n` + symbol + `\n`);
-    }
-    json = json.split(`,`).join(`,\n`).trim();
     const jsonArray = json.split(`\n`);
     let resultArray: string[] = [];
     let level = 0;
@@ -333,8 +365,7 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
         }
         resultArray.push(getSpacer(level) + element);
     }
-    resultArray = resultArray.filter(line => !!line.trim());
-    return resultArray.join(`\n`);
+    return resultArray.filter(line => !!line.trim()).join(`\n`);
 }
 
 function getSpacer(level: number): string {

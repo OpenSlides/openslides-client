@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">
-                    {{ user.username }}
+                    {{ user.saml_id || user.username }}
                     <ng-container *ngIf="user.email">· {{ user.email }}</ng-container>
                 </div>
             </div>
