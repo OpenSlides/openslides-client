@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { formatWiFiConfig } from 'src/app/infrastructure/utils/formatting-functions';
 
 import { BaseSlideComponent } from '../../../../base/base-slide-component';
 import { WifiAccessDataSlideData } from '../../wifi-access-data-slide-data';
@@ -31,6 +32,6 @@ export class WifiAccessDataSlideComponent extends BaseSlideComponent<WifiAccessD
     }
 
     public get qrCodeText(): string {
-        return `WIFI:S:` + this.ssid + `;T:` + this.data.data.users_pdf_wlan_encryption + `;P:` + this.password + `;;`;
+        return formatWiFiConfig(this.ssid, this.data.data.users_pdf_wlan_encryption, this.password);
     }
 }

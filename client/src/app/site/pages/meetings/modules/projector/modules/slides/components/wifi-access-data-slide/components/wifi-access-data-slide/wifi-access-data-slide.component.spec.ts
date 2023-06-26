@@ -30,7 +30,7 @@ class MockQrCodeComponent {
 
 @Component({
     template: `
-        <os-wifi-access-data-slide [data]="slideData">Or not to be</os-wifi-access-data-slide>
+        <os-wifi-access-data-slide [data]="slideData"></os-wifi-access-data-slide>
     `
 })
 class TestComponent {
@@ -79,6 +79,18 @@ class TestComponent {
         noData: {
             collection: `wifi_access_data`,
             data: {},
+            stable: false,
+            type: `wifi_access_data`,
+            options: {}
+        },
+        specialChar: {
+            collection: `wifi_access_data`,
+            data: {
+                collection: `wifi_access_data`,
+                users_pdf_wlan_encryption: `WPA`,
+                users_pdf_wlan_password: `Super&StrongP455Word\\\"`,
+                users_pdf_wlan_ssid: `RandomWiWi\;\:`
+            },
             stable: false,
             type: `wifi_access_data`,
             options: {}
@@ -179,5 +191,20 @@ describe(`WifiAccessDataSlideComponent`, () => {
             QR_COMPONENT_PATH
         )?.componentInstance;
         expect(qr).toBe(undefined);
+    });
+
+    it(`should have correct data for special characters`, () => {
+        testComponent.type = `specialChar`;
+        fixture.detectChanges();
+        expect(component.ssid).toBe(`RandomWiWi\;\:`);
+        expect(component.password).toBe(`Super&StrongP455Word\\\"`);
+        expect(component.encryption).toBe(`WPA/WPA2`);
+        let qr: MockQrCodeComponent = findChildFromDebugElement(
+            fixture.debugElement,
+            QR_COMPONENT_PATH
+        )?.componentInstance;
+        expect(qr).not.toBe(undefined);
+        expect(qr.text).toBe(`WIFI:S:RandomWiWi\\;\\:;T:WPA;P:Super&StrongP455Word\\\\\\";;`);
+        expect(qr.edgeLength).toBe(450);
     });
 });

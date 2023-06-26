@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { formatWiFiConfig } from 'src/app/infrastructure/utils/formatting-functions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -121,14 +122,11 @@ export class ParticipantPdfService {
             this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) &&
             this.meetingSettingsService.instant(`users_pdf_wlan_encryption`)
         ) {
-            const wifiQrCode =
-                `WIFI:S:` +
-                this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) +
-                `;T:` +
-                this.meetingSettingsService.instant(`users_pdf_wlan_encryption`) +
-                `;P:` +
-                this.meetingSettingsService.instant(`users_pdf_wlan_password`) +
-                `;;`;
+            const wifiQrCode = formatWiFiConfig(
+                this.meetingSettingsService.instant(`users_pdf_wlan_ssid`),
+                this.meetingSettingsService.instant(`users_pdf_wlan_encryption`),
+                this.meetingSettingsService.instant(`users_pdf_wlan_password`)
+            );
             wifiColumn.push(
                 {
                     qr: wifiQrCode,
