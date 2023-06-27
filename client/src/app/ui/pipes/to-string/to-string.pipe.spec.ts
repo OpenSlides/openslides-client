@@ -1,6 +1,6 @@
 import { ToStringPipe } from './to-string.pipe';
 
-fdescribe(`ToStringPipe`, () => {
+describe(`ToStringPipe`, () => {
     it(`test number to string`, () => {
         const pipe = new ToStringPipe();
         expect(pipe.transform(1)).toEqual(`1`);
