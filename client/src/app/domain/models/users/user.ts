@@ -42,6 +42,7 @@ export class User extends BaseDecimalModel<User> {
     public readonly vote_weight_$!: number[];
     public readonly default_vote_weight!: number;
     public readonly is_demo_user!: boolean;
+    public readonly saml_id!: string;
 
     // Meeting and committee
     public meeting_ids!: Id[]; // (meeting/user_ids)[];
@@ -185,6 +186,7 @@ export class User extends BaseDecimalModel<User> {
     public static readonly REQUESTABLE_FIELDS: (keyof User | { templateField: string })[] = [
         `id`,
         `username`,
+        `saml_id`,
         `pronoun`,
         `title`,
         `first_name`,

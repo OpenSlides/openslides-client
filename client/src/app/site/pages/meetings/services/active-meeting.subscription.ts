@@ -47,7 +47,8 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                         `default_group_for_meeting_id`,
                         `name`,
                         `permissions`,
-                        `weight`
+                        `weight`,
+                        `external_id`
                     ]
                 },
                 {
