@@ -33,5 +33,7 @@ describe(`PollKeyVerbosePipe`, () => {
         expect(pipe.transform(`bad`)).toBe(`bad`);
         expect(pipe.transform(`sad`)).toBe(`sad`);
         expect(pipe.transform(`AAAAAAAAAAAAAAAAAAAAAAA`)).toBe(`AAAAAAAAAAAAAAAAAAAAAAA`);
+        expect(pipe.transform(undefined)).toBe(undefined);
+        expect(pipe.transform(null)).toBe(null);
     });
 });
