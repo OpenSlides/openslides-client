@@ -23,10 +23,12 @@ import { ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/c
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { ThemeService } from 'src/app/site/services/theme.service';
 
+import { ViewTopic } from '../../../view-models';
 import { TopicPollServiceModule } from './topic-poll-service.module';
 
 @Injectable({
@@ -42,12 +44,14 @@ export class TopicPollService extends PollService {
         organizationSettingsService: OrganizationSettingsService,
         pollKeyVerbose: PollKeyVerbosePipe,
         parsePollNumber: PollParseNumberPipe,
+        pollServiceMapper: PollServiceMapperService,
         translate: TranslateService,
         private pollRepo: PollControllerService,
         private meetingSettingsService: MeetingSettingsService,
         themeService: ThemeService
     ) {
         super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
+        pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
             .get(`topic_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base ?? PollPercentBase.Y));
