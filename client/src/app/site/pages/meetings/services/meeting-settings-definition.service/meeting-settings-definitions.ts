@@ -131,6 +131,10 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                                     : currentValue;
                             }
                         }
+                    },
+                    {
+                        key: `external_id`,
+                        label: _(`External ID`)
                     }
                 ]
             },

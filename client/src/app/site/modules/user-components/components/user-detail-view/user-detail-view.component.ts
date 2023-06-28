@@ -322,6 +322,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
                     this.personalInfoForm.get(key).markAsTouched();
                 }
             });
+            if (this.user.saml_id && newData[`default_password`]) {
+                delete newData[`default_password`];
+            }
             return newData;
         }
         return data;
