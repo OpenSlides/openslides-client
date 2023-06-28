@@ -107,7 +107,7 @@ const testPollData: { [key: string]: PollData } = {
     }
 };
 
-fdescribe(`PollPercentBasePipe`, () => {
+describe(`PollPercentBasePipe`, () => {
     let pipe: PollPercentBasePipe;
 
     beforeEach(async () => {
