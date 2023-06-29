@@ -4,11 +4,7 @@ os-dashboard {
     .organization-description {
         padding-left: 76px;
 
-        @include phone {
-            padding-left: 0;
-        }
-
-        @include tablet {
+        @media (max-width: 960px) {
             padding-left: 0;
         }
     }
@@ -55,18 +51,7 @@ os-dashboard {
             margin: 0 auto 40px auto;
         }
 
-        @include phone {
-            flex-direction: column;
-            align-items: center;
-            margin-top: 8px;
-            margin-bottom: 8px;
-
-            mat-icon {
-                display: none;
-            }
-        }
-
-        @include tablet {
+        @media (max-width: 960px) {
             flex-direction: column;
             align-items: center;
             margin-top: 8px;
@@ -82,14 +67,7 @@ os-dashboard {
         display: flex;
         margin: 25px auto 25px auto;
 
-        @include phone {
-            flex-direction: column;
-            align-items: start;
-            justify-items: center;
-            margin-bottom: 0px;
-        }
-
-        @include tablet {
+        @media (max-width: 960px) {
             flex-direction: column;
             align-items: start;
             justify-items: center;
@@ -122,23 +100,7 @@ os-dashboard {
             line-height: $size;
         }
 
-        @include phone {
-            width: calc(100% - 10px);
-            font-size: 1rem;
-            height: 35px;
-            flex-direction: row;
-            align-items: flex-end;
-            justify-content: flex-start;
-            box-sizing: border-box;
-            padding: 0;
-            margin-top: 6px;
-
-            mat-icon {
-                padding: 0;
-            }
-        }
-
-        @include tablet {
+        @media (max-width: 960px) {
             width: calc(100% - 10px);
             font-size: 1rem;
             height: 35px;
@@ -156,7 +118,7 @@ os-dashboard {
     }
 
     .show-committee-icon {
-        @include tablet {
+        @media (max-width: 960px ) {
             display: inline-block !important;
             padding-right: 20px; // Ensures that the wrapper has really a width of 40px
             $size: 20px;
@@ -165,13 +127,13 @@ os-dashboard {
             height: $size;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 700px) {
             display: none !important;
         }
     }
 
     .show-committee-link {
-        @include tablet {
+        @media (max-width: 960px) {
             display: inline-block !important;
             padding-right: 20px; // Ensures that the wrapper has really a width of 40px
             $size: 20px;
@@ -180,7 +142,7 @@ os-dashboard {
             height: $size;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 700px) {
             display: none !important;
         }
     }
@@ -188,11 +150,7 @@ os-dashboard {
     .orga-information {
         width: calc(100% - 128px);
 
-        @include phone {
-            width: calc(100% - 88px);
-        }
-
-        @include tablet {
+        @media (max-width: 960px) {
             width: calc(100% - 88px);
         }
     }
@@ -200,11 +158,7 @@ os-dashboard {
     .meeting-list {
         width: calc(100% - 80px);
 
-        @include phone {
-            width: calc(100% - 10px);
-        }
-
-        @include tablet {
+        @media (max-width: 960px) {
             width: calc(100% - 10px);
         }
     }
@@ -232,11 +186,7 @@ os-dashboard {
             border-radius: 0;
             padding: 16px 20px;
 
-            @include phone {
-                padding-left: 10px;
-            }
-
-            @include tablet {
+            @media (max-width: 960px) {
                 padding-left: 10px;
             }
         }
@@ -265,7 +215,25 @@ os-dashboard {
             }
         }
 
-        @include phone {
+        @media (max-width: 960px) {
+            > a {
+                text-decoration: none;
+
+                &:first-child {
+                    padding-left: 10px;
+                    height: 100%;
+                    width: calc(100% - 40px);
+                }
+
+                &:last-child {
+                    margin-right: 5px;
+                    padding-left: 0px;
+                    width: 16px;
+                    height: 75%;
+                }
+            }
+
+        @media (max-width: 700px) {
             > a {
                 text-decoration: none;
 
@@ -284,23 +252,6 @@ os-dashboard {
             }
         }
 
-        @include tablet {
-            > a {
-                text-decoration: none;
-
-                &:first-child {
-                    padding-left: 10px;
-                    height: 100%;
-                    width: calc(100% - 40px);
-                }
-
-                &:last-child {
-                    margin-right: 5px;
-                    padding-left: 0px;
-                    width: 16px;
-                    height: 75%;
-                }
-            }
         }
 
         &--mid {
@@ -315,11 +266,7 @@ os-dashboard {
     .meeting-box-left {
         width: calc(95% - 50px);
 
-        @include phone {
-            width: 90%;
-        }
-
-        @include tablet {
+        @media (max-width: 960px) {
             width: 90%;
         }
     }
@@ -339,11 +286,7 @@ os-dashboard {
                 &--mid {
                     font-size: 22px;
 
-                    @include phone {
-                        font-size: 18px;
-                    }
-
-                    @include tablet {
+                    @media (max-width: 960px) {
                         font-size: 18px;
                     }
                 }
@@ -351,11 +294,7 @@ os-dashboard {
                 &:last-child {
                     border: none;
 
-                    @include phone {
-                        font-size: 12px;
-                    }
-
-                    @include tablet {
+                    @media (max-width: 960px) {
                         font-size: 12px;
                     }
                 }
