@@ -92,10 +92,6 @@
         </os-committee-meta-info>
 
         <!-- Member amount -->
-        <os-committee-meta-info *ngIf="canManageUsers" icon="group" title="{{ 'Assigned accounts' | translate }}">
-            {{ getMemberAmount(committee) }}
-        </os-committee-meta-info>
-
         <os-committee-meta-info
             icon="engineering"
             title="{{ 'Committee admin' | translate }}"
