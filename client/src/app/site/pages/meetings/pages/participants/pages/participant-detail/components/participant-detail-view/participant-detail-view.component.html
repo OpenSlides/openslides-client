@@ -29,7 +29,7 @@
     </div>
 
     <mat-menu #userExtraMenu="matMenu">
-        <button mat-menu-item *ngIf="isAllowed('changePassword')" (click)="changePassword()">
+        <button mat-menu-item *ngIf="!user?.saml_id && isAllowed('changePassword')" (click)="changePassword()">
             <mat-icon>security</mat-icon>
             <span>{{ 'Change password' | translate }}</span>
         </button>

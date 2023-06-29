@@ -2,11 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { fromUnixTime } from 'date-fns';
 import { FormatPipe } from 'ngx-date-fns';
 
-interface DateInterval {
-    start: Date;
-    end: Date;
-}
-
 @Pipe({
     name: `localizedDateRange`,
     pure: false
@@ -17,13 +12,13 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
             return ``;
         }
 
-        if (!value.start) {
-            if (value.end) {
+        if (!value.start && value.start !== 0) {
+            if (value.end || value.end === 0) {
                 const date = fromUnixTime(value.end);
                 return super.transform(date, dateFormat);
             }
             return ``;
-        } else if (!value.end) {
+        } else if (!value.end && value.end !== 0) {
             const date = fromUnixTime(value.start);
             return super.transform(date, dateFormat);
         }
@@ -41,9 +36,9 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
         const start = typeof interval.start === `number` ? fromUnixTime(interval.start) : interval.start;
         const end = typeof interval.end === `number` ? fromUnixTime(interval.end) : interval.end;
         const startString = super.transform(start, dateFormat);
-        const startArray = startString.split(/[\s,.]+/);
+        const startArray = startString.split(/[\s,]+/);
         const endString = super.transform(end, dateFormat);
-        const endArray = endString.split(/[\s,.]+/);
+        const endArray = endString.split(/[\s,]+/);
         return { startString, startArray, endString, endArray };
     }
 
@@ -56,7 +51,7 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
         locale: Locale,
         dateFormat: string
     ): (startString: string, startArray: string[], endString: string, endArray: string[]) => string {
-        switch (locale.code + `#` + dateFormat) {
+        switch (locale?.code + `#` + dateFormat) {
             case `en-US#PPp`:
             case `de#PPp`:
             case `es#PPp`:
@@ -65,13 +60,11 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
                 return this.formatPPp;
             case `en-US#PP`:
                 return this.formatMDYPPwithCommaNotation;
-            case `de#PP`:
-                return this.formatDMYPPwithSingleDotNotation;
             case `es#PP`:
             case `it#PP`:
-                return this.formatDMYPP;
+            case `de#PP`:
             case `cs#PP`:
-                return this.formatDMYPPwithDoubleDotNotation;
+                return this.formatDMYPP;
             default:
                 return (startString, startArray, endString, endArray) =>
                     this.defaultTransformInterval(startString, endString);
@@ -114,33 +107,5 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
             return startArray[0] + ` ` + startArray[1] + ` - ` + endString;
         }
         return startArray[0] + ` - ` + endString;
-    };
-
-    private formatDMYPPwithSingleDotNotation = (
-        startString: string,
-        startArray: string[],
-        endString: string,
-        endArray: string[]
-    ) => {
-        if (startArray[2] !== endArray[2] || startString === endString) {
-            return this.defaultTransformInterval(startString, endString);
-        } else if (startArray[1] !== endArray[1]) {
-            return startArray[0] + `. ` + startArray[1] + ` - ` + endString;
-        }
-        return startArray[0] + `. - ` + endString;
-    };
-
-    private formatDMYPPwithDoubleDotNotation = (
-        startString: string,
-        startArray: string[],
-        endString: string,
-        endArray: string[]
-    ) => {
-        if (startArray[2] !== endArray[2] || startString === endString) {
-            return this.defaultTransformInterval(startString, endString);
-        } else if (startArray[1] !== endArray[1]) {
-            return startArray[0] + `. ` + startArray[1] + `. - ` + endString;
-        }
-        return startArray[0] + `. - ` + endString;
     };
 }

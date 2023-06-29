@@ -39,7 +39,11 @@ export interface ShortNameInformation extends NameInformation {
 
 export type UserPatchFn = { [key in keyof User]?: any } | ((user: ViewUser) => { [key in keyof User]?: any });
 
+export type EmailSentResultType = 'user_error' | 'settings_error' | 'configuration_error' | 'other_error';
+
 export interface EmailSentResult {
+    type: EmailSentResultType;
+    message?: string;
     sent: boolean;
     recipient_user_id: Id;
     recipient_meeting_id: Id;
@@ -90,7 +94,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
             `default_vote_weight`,
             `is_physical_person`,
             `is_active`,
-            `meeting_ids`
+            `meeting_ids`,
+            `saml_id`
         ];
 
         const filterableListFields: TypedFieldset<User> = listFields.concat([
