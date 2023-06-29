@@ -88,6 +88,15 @@ export class ModelRequestService {
         hideWhen,
         isDelayed = true
     }: SubscribeToConfig): Promise<void> {
+        const ids = modelRequest.ids;
+        const invalidIds = ids.filter(id => !this.isValidId(id));
+        if (invalidIds.length === ids.length) {
+            console.warn(`${subscriptionName}: No valid ids in configuration: Skipped subscription.`);
+            return;
+        } else if (invalidIds.length) {
+            console.warn(`${subscriptionName}: Skipped invalid ids in configuration.`);
+            modelRequest.ids = ids.filter(id => this.isValidId(id));
+        }
         const fn = async () => {
             const request = await this.modelRequestBuilder.build(modelRequest);
             const modelSubscription = await this.autoupdateService.subscribe(
@@ -104,26 +113,6 @@ export class ModelRequestService {
             await new Promise(r => setTimeout(r, 0));
         }
         await fn();
-    }
-
-    private async lazyLoadSubscription(
-        { modelRequest, subscriptionName, ...config }: SubscribeToConfig,
-        availableIds: Ids
-    ): Promise<void> {
-        const childModelRequest = {
-            viewModelCtor: modelRequest.lazyLoad.ownViewModelCtor,
-            ids: availableIds.slice(0, 20),
-            fieldset: modelRequest.lazyLoad.fieldset
-        };
-        const childSubscriptionName = `${subscriptionName}_1`;
-        this.makeSubscription({
-            modelRequest: childModelRequest,
-            subscriptionName: childSubscriptionName,
-            hideWhen: timer(3000).pipe(concatMap(() => of(true)))
-        });
-        setTimeout(async () => {
-            this.makeSubscription({ modelRequest, subscriptionName, ...config });
-        }, Math.floor(Math.random() * 2000) + 2000);
     }
 
     public async waitSubscriptionReady(subscriptionName: string): Promise<void> {
@@ -155,11 +144,35 @@ export class ModelRequestService {
         }
     }
 
+    private async lazyLoadSubscription(
+        { modelRequest, subscriptionName, ...config }: SubscribeToConfig,
+        availableIds: Ids
+    ): Promise<void> {
+        const childModelRequest = {
+            viewModelCtor: modelRequest.lazyLoad.ownViewModelCtor,
+            ids: availableIds.slice(0, 20),
+            fieldset: modelRequest.lazyLoad.fieldset
+        };
+        const childSubscriptionName = `${subscriptionName}_1`;
+        this.makeSubscription({
+            modelRequest: childModelRequest,
+            subscriptionName: childSubscriptionName,
+            hideWhen: timer(3000).pipe(concatMap(() => of(true)))
+        });
+        setTimeout(async () => {
+            this.makeSubscription({ modelRequest, subscriptionName, ...config });
+        }, Math.floor(Math.random() * 2000) + 2000);
+    }
+
     private setCloseFn(requestFamilyName: string, observable: Observable<boolean>): void {
         this._observableSubscriptionMap[requestFamilyName] = observable.subscribe(isTrue => {
             if (isTrue) {
                 this.closeSubscription(requestFamilyName);
             }
         });
+    }
+
+    private isValidId(id: number): boolean {
+        return !Number.isNaN(id) || id > 0;
     }
 }
