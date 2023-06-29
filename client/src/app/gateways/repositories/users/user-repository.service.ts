@@ -209,7 +209,6 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const update = typeof patch === `function` ? patch(user) : patch;
         const payload: any = {
             email: update.email,
-            about_me_$: {},
             username: update.username,
             pronoun: update.pronoun,
             gender: update.gender

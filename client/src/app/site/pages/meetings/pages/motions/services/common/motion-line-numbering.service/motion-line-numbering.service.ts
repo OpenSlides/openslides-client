@@ -179,7 +179,7 @@ export class MotionLineNumberingService {
     }
 
     /**
-     * Returns the amended paragraphs by an amendment. Correlates to the amendment_paragraph field,
+     * Returns the amended paragraphs by an amendment. Correlates to the amendment_paragraphs field,
      * but also considers relevant change recommendations.
      * The returned array includes "null" values for paragraphs that have not been changed.
      *
@@ -390,7 +390,7 @@ export class MotionLineNumberingService {
 
     /**
      * For unchanged paragraphs, this returns the original motion paragraph, including line numbers.
-     * For changed paragraphs, this returns the content of the amendment_paragraph-field,
+     * For changed paragraphs, this returns the content of the amendment_paragraphs-field,
      *     but including line numbers relative to the original motion line numbers,
      *     so they can be used for the amendment change recommendations
      *

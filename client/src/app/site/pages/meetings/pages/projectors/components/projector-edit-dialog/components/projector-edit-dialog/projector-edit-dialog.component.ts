@@ -95,6 +95,11 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     public readonly projectiondefaultVerbose = PROJECTIONDEFAULT_VERBOSE;
 
+    /**
+     * Options for the `Projection defaults`-selector
+     */
+    public readonly projectiondefaultKeys = PROJECTIONDEFAULT;
+
     public readonly colorFields = {
         color: _(`Foreground color`),
         background_color: _(`Background color`),
@@ -241,7 +246,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     private updateProjectorDefaults(meeting: ViewMeeting): void {
         for (let key of PROJECTIONDEFAULT_KEYS) {
-            const defaultProjectorIds = meeting.default_projectors(PROJECTIONDEFAULT[key]).map(p => p.id);
+            const defaultProjectorIds = meeting.default_projector_ids(key);
             this.handleChangeInDefaultProjector(key, defaultProjectorIds);
         }
     }

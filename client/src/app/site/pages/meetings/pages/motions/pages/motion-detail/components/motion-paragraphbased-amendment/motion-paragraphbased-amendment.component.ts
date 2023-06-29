@@ -13,7 +13,7 @@ import { BaseMotionDetailChildComponent } from '../../base/base-motion-detail-ch
 import { MotionDetailServiceCollectorService } from '../../services/motion-detail-service-collector.service/motion-detail-service-collector.service';
 
 interface ParagraphBasedAmendmentContent {
-    amendment_paragraph: { [paragraph_number: number]: any };
+    amendment_paragraphs: { [paragraph_number: number]: any };
     selected_paragraphs: ParagraphToChoose[];
     broken_paragraphs: string[];
 }
@@ -117,7 +117,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
             this.contentForm = null;
         }
         const contentPatch = this.createForm();
-        this.contentForm = this.fb.group(contentPatch.amendment_paragraph);
+        this.contentForm = this.fb.group(contentPatch.amendment_paragraphs);
         this.selectedParagraphs = contentPatch.selected_paragraphs;
         this.brokenParagraphs = contentPatch.broken_paragraphs;
         this.propagateChanges();
@@ -126,7 +126,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
     private createForm(): ParagraphBasedAmendmentContent {
         const contentPatch: ParagraphBasedAmendmentContent = {
             selected_paragraphs: [],
-            amendment_paragraph: {},
+            amendment_paragraphs: {},
             broken_paragraphs: []
         };
         const leadMotion = this.motion.lead_motion;
@@ -139,7 +139,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
                 const amendmentParagraph = this.motion.amendment_paragraph_text(paragraphNo);
                 if (amendmentParagraph) {
                     contentPatch.selected_paragraphs.push(paragraph);
-                    contentPatch.amendment_paragraph[paragraphNo] = [amendmentParagraph, Validators.required];
+                    contentPatch.amendment_paragraphs[paragraphNo] = [amendmentParagraph, Validators.required];
                 }
             });
             // If the motion has been shortened after the amendment has been created, we will show the paragraphs
@@ -162,7 +162,7 @@ export class MotionParagraphbasedAmendmentComponent extends BaseMotionDetailChil
             `contentForm`,
             this.contentForm!.valueChanges.subscribe(value => {
                 if (value) {
-                    this.formChanged.emit({ amendment_paragraph: value });
+                    this.formChanged.emit({ amendment_paragraphs: value });
                     this.validStateChanged.emit(this.contentForm!.valid);
                     this.cd.markForCheck();
                 }
