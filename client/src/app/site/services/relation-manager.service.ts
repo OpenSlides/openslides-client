@@ -10,6 +10,22 @@ import { ActiveMeetingIdService } from '../pages/meetings/services/active-meetin
 import { CollectionMapperService } from './collection-mapper.service';
 import { ViewModelStoreService } from './view-model-store.service';
 
+export function ensureIdField(relation: Partial<Relation>): string {
+    if (relation.ownIdField) {
+        return relation.ownIdField as string;
+    }
+
+    if (!relation.ownField) {
+        throw Error(`Couldn't ensure id field because of missing data`);
+    }
+
+    if (relation.many) {
+        return (relation.ownField as string).slice(0, -1) + `_ids`;
+    } else {
+        return (relation.ownField as string) + `_id`;
+    }
+}
+
 @Injectable({
     providedIn: `root`
 })
@@ -170,15 +186,7 @@ export class RelationManagerService {
      * for many=true: idField: `<field>s` -> `<field>_ids`
      */
     private ensureIdField(field: string, idField: string | null, many: boolean): string {
-        if (idField) {
-            return idField;
-        }
-
-        if (many) {
-            return field.slice(0, -1) + `_ids`;
-        } else {
-            return field + `_id`;
-        }
+        return ensureIdField({ ownIdField: idField, ownField: field, many });
     }
 
     // 'prefix_$_suffix' -> ['prefix_$', '_suffix']

@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { Meeting, Settings } from 'src/app/domain/models/meetings/meeting';
+import { RELATIONS } from 'src/app/infrastructure/definitions/relations';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -12,6 +13,7 @@ import {
     SettingsItem
 } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ensureIdField } from 'src/app/site/services/relation-manager.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import {
@@ -36,6 +38,11 @@ export class MeetingSettingsGroupDetailComponent
      * Map of all changed settings.
      */
     private changedSettings: { [key: string]: any } = {};
+
+    /**
+     * Map of original values for settings that were transformed.
+     */
+    private untransformedValues: { [key: string]: any } = {};
 
     /** Provides access to all created settings fields. */
     @ViewChildren(`settingsFields`) public settingsFields!: QueryList<MeetingSettingsGroupDetailFieldComponent>;
@@ -93,7 +100,21 @@ export class MeetingSettingsGroupDetailComponent
     public async saveAll(): Promise<void> {
         this.cd.detach();
         try {
-            await this.repo.update(this.changedSettings, { meeting: this.meeting });
+            await this.repo.update(
+                Object.keys(this.changedSettings).mapToObject(key => {
+                    let value: any = this.changedSettings[key];
+                    const reverseFunction = this.settingsGroup.transformableKeys[key][0]?.reverseTransformFn;
+                    if (this.settingsGroup.transformableKeys[key]?.length > 1) {
+                        console.warn(
+                            `There are multiple transform reverse functions for ${key} in this setting group. They will therefore be ignored.`
+                        );
+                    } else if (reverseFunction) {
+                        value = reverseFunction(this.changedSettings[key], this.untransformedValues[key]);
+                    }
+                    return { [key]: value };
+                }),
+                { meeting: this.meeting }
+            );
             this.changedSettings = {};
             this.cd.reattach();
             this.cd.markForCheck();
@@ -145,13 +166,17 @@ export class MeetingSettingsGroupDetailComponent
 
     public getDetailFieldValue(meeting: ViewMeeting, setting: SettingsItem): any {
         const isArray = Array.isArray(setting.key);
+        let key: keyof ViewMeeting;
         if (setting.type === `daterange`) {
             if (!isArray || setting.key.length < 2 || setting.key[0] === setting.key[1]) {
                 throw new Error(
                     `Daterange settings must always cover two different setting keys (${setting.key.toString()})`
                 );
             } else {
-                return [meeting[setting.key[0]], meeting[setting.key[1]]];
+                return [
+                    this.getValueForKey(meeting, setting.key[0] as keyof Settings, setting),
+                    this.getValueForKey(meeting, setting.key[1] as keyof Settings, setting)
+                ];
             }
         }
         if (isArray) {
@@ -161,9 +186,36 @@ export class MeetingSettingsGroupDetailComponent
             if (setting.key.length > 1) {
                 console.warn(`Additional setting keys for ${setting.key[0]} will be skipped.`);
             }
-            return meeting[setting.key[0]];
+            key = meeting[setting.key[0]] as keyof Settings;
+        } else {
+            key = setting.key as keyof Settings;
         }
-        return meeting[setting.key as keyof Settings];
+        return this.getValueForKey(meeting, key, setting);
+    }
+
+    private getValueForKey(meeting: ViewMeeting, key: keyof Settings, setting: SettingsItem): any {
+        let newKey: keyof ViewMeeting;
+        if (setting.useRelation) {
+            newKey = RELATIONS.find(
+                relation =>
+                    relation.ownViewModels.some(model => model.COLLECTION === Meeting.COLLECTION) &&
+                    ensureIdField(relation) === key
+            )?.ownField as keyof ViewMeeting;
+            if (!newKey) {
+                console.warn(`Couldn't find relation for ${key}, will instead use id values`);
+            }
+            newKey = newKey || key;
+        }
+        let result = meeting[newKey];
+        if (this.settingsGroup.transformableKeys[key]?.length > 1) {
+            console.warn(
+                `There are multiple transform functions for ${key} in this setting group. They will therefore be ignored`
+            );
+        } else if (setting.transformFn) {
+            this.untransformedValues[key] = result;
+            result = setting.transformFn(result);
+        }
+        return result;
     }
 
     /**

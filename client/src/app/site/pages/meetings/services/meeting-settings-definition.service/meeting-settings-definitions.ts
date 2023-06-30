@@ -3,6 +3,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
+import { PointOfOrderCategory } from 'src/app/domain/models/point-of-order-category/point-of-order-category';
 import {
     PollBackendDurationChoices,
     PollPercentBaseVerbose,
@@ -10,6 +11,7 @@ import {
 } from 'src/app/domain/models/poll/poll-constants';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
+import { ViewPointOfOrderCategory } from '../../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
 
 export type SettingsType =
@@ -42,7 +44,12 @@ export interface ChoicesFunctionDefinition<V> {
     labelKey: keyof V;
 }
 
-export interface SettingsItem<V = any> {
+export interface SettingsItemTransformFunctions<V = any> {
+    transformFn?: (value?: any) => V;
+    reverseTransformFn?: (value: V, original?: any) => any;
+}
+
+export interface SettingsItemData<V = any> {
     key: keyof Settings | (keyof Settings)[]; // Array can be used with fields that require multiple values (like then type === 'daterange')
     label: string;
     type?: SettingsType; // default: text
@@ -56,6 +63,7 @@ export interface SettingsItem<V = any> {
     helpText?: string; // default: ""
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
+    useRelation?: boolean; // May be set to true for relation id fields to get the relation item(s) instead if the id(s)
     /**
      * A function to restrict some values of a settings-item depending on used organization's settings
      *
@@ -65,6 +73,8 @@ export interface SettingsItem<V = any> {
      */
     restrictionFn?: <T>(orgaSettings: OrganizationSettingsService, value: T) => any;
 }
+
+export type SettingsItem<V = any> = SettingsItemData<V> & SettingsItemTransformFunctions<V>;
 
 interface SettingsItemAutomaticChangeSetting<V> {
     /**
@@ -77,7 +87,7 @@ interface SettingsItemAutomaticChangeSetting<V> {
     getChangeFn: (currentValue: V, currentWatchPropertyValues: any[]) => V;
 }
 
-export interface SettingsGroup {
+export interface SettingsGroupData {
     label: string;
     icon: string;
     subgroups: {
@@ -86,7 +96,13 @@ export interface SettingsGroup {
     }[];
 }
 
-function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
+export type SettingsGroup = SettingsGroupData & {
+    transformableKeys: {
+        [key: string]: SettingsItemTransformFunctions[];
+    };
+};
+
+function fillInSettingsDefaults(settingsGroups: SettingsGroupData[]): SettingsGroup[] {
     settingsGroups.forEach(group =>
         group.subgroups.forEach(
             subgroup =>
@@ -95,7 +111,30 @@ function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[
                 ))
         )
     );
-    return settingsGroups;
+    return settingsGroups.map(group => ({
+        ...group,
+        transformableKeys: group.subgroups
+            .flatMap(subgroup =>
+                subgroup.settings
+                    .filter(setting => setting.transformFn || setting.reverseTransformFn)
+                    .flatMap(setting =>
+                        (Array.isArray(setting.key) ? setting.key : [setting.key]).map(key => ({
+                            key: key as string,
+                            transformFn: setting.transformFn,
+                            reverseTransformFn: setting.reverseTransformFn
+                        }))
+                    )
+            )
+            .reduce<{ [key: string]: SettingsItemTransformFunctions[] }>((dictionary, current) => {
+                const { key, ...rest } = current;
+                if (Object.keys(dictionary).includes(key)) {
+                    dictionary[key].push(rest);
+                } else {
+                    dictionary[key] = [rest];
+                }
+                return dictionary;
+            }, {})
+    }));
 }
 
 export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
@@ -379,6 +418,48 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `projector_countdown_default_time`,
                         label: _(`Predefined seconds of new countdowns`),
                         type: `integer`
+                    }
+                ]
+            },
+            {
+                label: _(`Point of order categories`),
+                settings: [
+                    {
+                        key: `point_of_order_category_enabled`,
+                        label: `Enable point of order categories`,
+                        type: `boolean`
+                    },
+                    {
+                        key: `point_of_order_category_ids`,
+                        label: `Point of order categories`,
+                        type: `ranking`,
+                        useRelation: true,
+                        transformFn: (value?: ViewPointOfOrderCategory[]) =>
+                            (value ?? []).mapToObject<number>(element => ({ [element.text]: element.rank })),
+                        reverseTransformFn: (
+                            value: { [key: string]: number },
+                            original?: ViewPointOfOrderCategory[]
+                        ) => {
+                            const newTexts = Object.keys(value);
+                            const oldTexts = original?.map(entry => entry.text) ?? [];
+                            const toDelete = oldTexts
+                                .difference(newTexts)
+                                .map(text => (original ?? []).find(val => val.text === text).id);
+                            const toUpdate: Partial<PointOfOrderCategory>[] = newTexts
+                                .intersect(oldTexts)
+                                .map(text => ({
+                                    id: original?.find(val => val.text === text && val.rank !== value[text])?.id,
+                                    rank: value[text]
+                                }))
+                                .filter(update => update.id);
+                            const toCreate: { id?: number; text: string; rank: number }[] = newTexts
+                                .difference(oldTexts)
+                                .map(text => ({ text, rank: value[text] }));
+                            for (let i = 0; i < Math.min(toDelete.length, toCreate.length); i++) {
+                                toUpdate.push({ ...toCreate.pop(), id: toDelete.pop() });
+                            }
+                            return { toDelete, toUpdate, toCreate };
+                        }
                     }
                 ]
             }

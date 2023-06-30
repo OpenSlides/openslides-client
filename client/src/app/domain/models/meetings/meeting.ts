@@ -1,4 +1,4 @@
-import { Id } from '../../definitions/key-types';
+import { Id, Ids } from '../../definitions/key-types';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
@@ -31,6 +31,9 @@ export class Settings {
     public custom_translations!: {
         [original: string]: string;
     };
+
+    public point_of_order_category_enabled!: boolean;
+    public point_of_order_category_ids!: Ids;
 
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
