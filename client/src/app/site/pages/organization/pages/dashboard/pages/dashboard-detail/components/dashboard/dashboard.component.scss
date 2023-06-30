@@ -92,7 +92,7 @@ os-dashboard {
         flex-direction: column;
 
         mat-icon {
-            padding: 0 8px; // Ensures that the wrapper has really a width of 40px
+            padding: 0 8px;
             $size: 30px;
             font-size: $size;
             width: $size;
@@ -117,25 +117,11 @@ os-dashboard {
         }
     }
 
-    .show-committee-icon {
-        @media (max-width: 960px ) {
-            display: inline-block !important;
-            padding-right: 20px; // Ensures that the wrapper has really a width of 40px
-            $size: 20px;
-            font-size: $size;
-            width: 10%;
-            height: $size;
-        }
-
-        @media (max-width: 700px) {
-            display: none !important;
-        }
-    }
-
+    .show-committee-icon,
     .show-committee-link {
-        @media (max-width: 960px) {
+        @media (max-width: 960px) and (min-width: 701px) {
             display: inline-block !important;
-            padding-right: 20px; // Ensures that the wrapper has really a width of 40px
+            padding-right: 20px;
             $size: 20px;
             font-size: $size;
             width: 10%;
@@ -222,6 +208,25 @@ os-dashboard {
                 &:first-child {
                     padding-left: 10px;
                     height: 100%;
+                    width: calc(100% - 9px);
+                }
+
+                &:last-child {
+                    margin-right: 5px;
+                    padding-left: 0px;
+                    width: 0px;
+                    height: 75%;
+                }
+            }
+        }
+
+        @media (max-width: 700px) {
+            > a {
+                text-decoration: none;
+
+                &:first-child {
+                    padding-left: 10px;
+                    height: 100%;
                     width: calc(100% - 40px);
                 }
 
@@ -232,26 +237,6 @@ os-dashboard {
                     height: 75%;
                 }
             }
-
-        @media (max-width: 700px) {
-            > a {
-                text-decoration: none;
-
-                &:first-child {
-                    padding-left: 10px;
-                    height: 100%;
-                    width: calc(100% - 9px);
-                }
-
-                &:last-child {
-                    margin-right: 5px;
-                    padding-left: 0px;
-                    width: 0;
-                    height: 75%;
-                }
-            }
-        }
-
         }
 
         &--mid {

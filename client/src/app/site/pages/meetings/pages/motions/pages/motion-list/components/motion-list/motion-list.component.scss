@@ -96,7 +96,7 @@ os-grid-layout {
             font-weight: unset;
             margin-bottom: 0;
             overflow: hidden;
-            
+
             @include desktop {
                 font-size: calc(10px + 0.5vmax);
             }
