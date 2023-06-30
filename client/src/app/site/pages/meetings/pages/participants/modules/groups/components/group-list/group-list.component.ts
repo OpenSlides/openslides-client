@@ -7,6 +7,7 @@ import { Permission } from 'src/app/domain/definitions/permission';
 import { AppPermission, DisplayPermission, PERMISSIONS } from 'src/app/domain/definitions/permission.config';
 import { permissionChildren, permissionParents } from 'src/app/domain/definitions/permission-relations';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
@@ -113,9 +114,20 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
 
         const name = this.selectedGroup ? this.selectedGroup.name : ``;
         const external_id = this.selectedGroup?.external_id ?? ``;
+        const forbiddenNames = this.groups.filter(group => group.name !== name).map(group => group.name);
 
         this.groupForm = this.formBuilder.group({
-            name: [name, Validators.required],
+            name: [
+                name,
+                [
+                    Validators.required,
+                    isUniqueAmong(
+                        this.groups.map(group => group.name),
+                        (a, b) => a === b,
+                        [name]
+                    )
+                ]
+            ],
             external_id: [external_id]
         });
 
