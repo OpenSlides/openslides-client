@@ -26,25 +26,27 @@ export class PointOfOrderCategoryRepositoryService extends BaseMeetingRelatedRep
     public getTitle = (viewModel: PointOfOrderCategory): string => viewModel.text;
 
     public create(pointOfOrderCategory: any, meeting_id: Id): Action<Identifiable> {
-        const payload: any = {
-            meeting_id: pointOfOrderCategory.meeting_id || meeting_id || this.activeMeetingId,
-            text: pointOfOrderCategory.text,
-            rank: pointOfOrderCategory.rank
-        };
+        const models = Array.isArray(pointOfOrderCategory) ? pointOfOrderCategory : [pointOfOrderCategory];
+        const payload: any[] = models.map(model => ({
+            meeting_id: model.meeting_id || meeting_id || this.activeMeetingId,
+            text: model.text,
+            rank: model.rank
+        }));
         return this.createAction(PointOfOrderCategoryAction.CREATE, payload);
     }
 
-    public update(viewModel: any, id?: Id): Action<void> {
-        const payload: any = {
-            id: viewModel.id ?? id,
-            text: viewModel.text,
-            rank: viewModel.rank
-        };
+    public update(viewModel: any | any[], id?: Id): Action<void> {
+        const models = Array.isArray(viewModel) ? viewModel : [viewModel];
+        const payload: any[] = models.map(model => ({
+            id: model.id ?? id,
+            text: model.text,
+            rank: model.rank
+        }));
         return this.createAction(PointOfOrderCategoryAction.UPDATE, payload);
     }
 
-    public delete(id: Id): Action<void> {
-        const payload = { id };
+    public delete(...ids: Id[]): Action<void> {
+        const payload = ids.map(id => ({ id }));
         return this.createAction(PointOfOrderCategoryAction.DELETE, payload);
     }
 
@@ -57,9 +59,9 @@ export class PointOfOrderCategoryRepositoryService extends BaseMeetingRelatedRep
         meeting_id: Id
     ): Action<void | Identifiable> {
         return Action.from(
-            ...data.toDelete.map(id => this.delete(id)),
-            ...data.toUpdate.map(payload => this.update(payload)),
-            ...data.toCreate.map(payload => this.create(payload, meeting_id))
+            this.delete(...data.toDelete),
+            this.update(data.toUpdate),
+            this.create(data.toCreate, meeting_id)
         );
     }
 }

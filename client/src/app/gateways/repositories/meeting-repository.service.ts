@@ -11,7 +11,6 @@ import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting'
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
 import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
-import { ActionRequest } from '../actions/action-utils';
 import { BaseRepository } from './base-repository';
 import { MeetingAction } from './meetings';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
@@ -129,24 +128,21 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         return this.sendActionToBackend(MeetingAction.IMPORT, payload);
     }
 
-    public async update(update: any, meeting?: ViewMeeting, options: MeetingUserModifiedFields = {}): Promise<void> {
-        update.start_time = this.anyDateToUnix(update.start_time);
-        update.end_time = this.anyDateToUnix(update.end_time);
+    public update(update: any, meeting?: ViewMeeting, options: MeetingUserModifiedFields = {}): Action<void> {
+        if (update.start_time !== undefined || update.end_time !== undefined) {
+            update.start_time = this.anyDateToUnix(update.start_time);
+            update.end_time = this.anyDateToUnix(update.end_time);
+        }
         if (update.organization_tag_ids === null) {
             update.organization_tag_ids = [];
         }
         if (!update.id && !meeting) {
             throw new Error(`Either a meeting or an update.id has to be given`);
         }
-        const actions: ActionRequest[] = [
+        const actions: any[] = [
             {
-                action: MeetingAction.UPDATE,
-                data: [
-                    {
-                        ...update,
-                        id: update.id || meeting!.id
-                    }
-                ]
+                ...update,
+                id: update.id || meeting!.id
             }
         ];
         /**
@@ -169,15 +165,17 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             this.getNewGroupsForUsers(userUpdate, removedAdmins, meeting.id, meeting.admin_group_id);
         }
         if (Object.keys(userUpdate).length) {
-            actions.push({
-                action: UserAction.UPDATE,
-                data: Object.keys(userUpdate).map(userId => ({
+            actions.push(
+                ...Object.keys(userUpdate).map(userId => ({
                     id: parseInt(userId, 10),
                     group_$_ids: { [meeting!.id]: userUpdate[parseInt(userId, 10)] }
                 }))
-            });
+            );
         }
-        return this.sendActionsToBackend(actions);
+        return this.createAction(
+            UserAction.UPDATE,
+            actions.filter(action => Object.keys(action).length > 1)
+        );
     }
 
     public async delete(...meetings: Identifiable[]): Promise<void> {

@@ -97,7 +97,11 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         this.allocationBoxes = this.allocationListForm.get(`allocationBoxes`) as UntypedFormArray;
         this.allocationBoxes.valueChanges.subscribe((value: AllocationBox[]) => {
             if (this.allocationBoxes.valid) {
-                this.propagateChange(value.mapToObject(entry => ({ [entry.entry]: entry.allocation })));
+                this.propagateChange(
+                    value.mapToObject(entry => ({
+                        [entry.entry]: this.isNumberAllocation ? Number(entry.allocation) : entry.allocation
+                    }))
+                );
             }
         });
     }

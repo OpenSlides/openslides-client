@@ -44,6 +44,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                     follow: [{ idField: `content_object_id`, fieldset: [`title`] }],
                     fieldset: [`title`, `state`, `entitled_group_ids`]
                 },
+                `point_of_order_category_ids`,
                 {
                     idField: `group_ids`,
                     fieldset: [

@@ -435,11 +435,14 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `ranking`,
                         useRelation: true,
                         transformFn: (value?: ViewPointOfOrderCategory[]) =>
-                            (value ?? []).mapToObject<number>(element => ({ [element.text]: element.rank })),
+                            (value ?? [])
+                                .sort((a, b) => a.rank - b.rank || a.text.localeCompare(b.text))
+                                .mapToObject<number>(element => ({ [element.text]: element.rank })),
                         reverseTransformFn: (
                             value: { [key: string]: number },
                             original?: ViewPointOfOrderCategory[]
                         ) => {
+                            original = original.sort((a, b) => a.rank - b.rank || a.text.localeCompare(b.text));
                             const newTexts = Object.keys(value);
                             const oldTexts = original?.map(entry => entry.text) ?? [];
                             const toDelete = oldTexts
@@ -448,15 +451,15 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             const toUpdate: Partial<PointOfOrderCategory>[] = newTexts
                                 .intersect(oldTexts)
                                 .map(text => ({
-                                    id: original?.find(val => val.text === text && val.rank !== value[text])?.id,
+                                    id: original?.find(val => text === val.text && val.rank !== value[text])?.id,
                                     rank: value[text]
                                 }))
                                 .filter(update => update.id);
-                            const toCreate: { id?: number; text: string; rank: number }[] = newTexts
+                            const toCreate: { text: string; rank: number }[] = newTexts
                                 .difference(oldTexts)
                                 .map(text => ({ text, rank: value[text] }));
-                            for (let i = 0; i < Math.min(toDelete.length, toCreate.length); i++) {
-                                toUpdate.push({ ...toCreate.pop(), id: toDelete.pop() });
+                            while (toDelete.length && toCreate.length) {
+                                toUpdate.push({ ...toCreate.shift(), id: toDelete.shift() });
                             }
                             return { toDelete, toUpdate, toCreate };
                         }

@@ -60,8 +60,8 @@ export class MeetingControllerService extends BaseController<ViewMeeting, Meetin
                 updateData.id || config.meeting.id
             );
         }
-        await this.repo.update(update, config.meeting, config.options);
-        await pointOfOrderCategoryAction?.resolve();
+        const updateAction = this.repo.update(update, config.meeting, config.options);
+        await Action.from(updateAction, pointOfOrderCategoryAction).resolve();
     }
 
     public delete(...meetings: Identifiable[]): Promise<void> {
