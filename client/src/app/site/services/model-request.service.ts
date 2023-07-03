@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { concatMap, Observable, of, Subscription, timer } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
+import { isValidId } from 'src/app/infrastructure/utils';
 import { DataStoreService } from 'src/app/site/services/data-store.service';
 import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
@@ -89,13 +90,13 @@ export class ModelRequestService {
         isDelayed = true
     }: SubscribeToConfig): Promise<void> {
         const ids = modelRequest.ids;
-        const invalidIds = ids.filter(id => !this.isValidId(id));
+        const invalidIds = ids.filter(id => !isValidId(id));
         if (invalidIds.length === ids.length) {
             console.warn(`${subscriptionName}: No valid ids in configuration: Skipped subscription.`);
             return;
         } else if (invalidIds.length) {
             console.warn(`${subscriptionName}: Skipped invalid ids in configuration.`);
-            modelRequest.ids = ids.filter(id => this.isValidId(id));
+            modelRequest.ids = ids.filter(id => isValidId(id));
         }
         const fn = async () => {
             const request = await this.modelRequestBuilder.build(modelRequest);
@@ -170,9 +171,5 @@ export class ModelRequestService {
                 this.closeSubscription(requestFamilyName);
             }
         });
-    }
-
-    private isValidId(id: number): boolean {
-        return !Number.isNaN(id) || id > 0;
     }
 }

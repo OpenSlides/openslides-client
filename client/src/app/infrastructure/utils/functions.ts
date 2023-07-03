@@ -375,3 +375,7 @@ function getSpacer(level: number): string {
     }
     return spacer;
 }
+
+export function isValidId(id: number): boolean {
+    return !Number.isNaN(id) || id > 0;
+}
