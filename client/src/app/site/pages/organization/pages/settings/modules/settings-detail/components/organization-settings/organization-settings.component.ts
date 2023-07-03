@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,7 +14,8 @@ import { OperatorService } from 'src/app/site/services/operator.service';
 @Component({
     selector: `os-organization-settings`,
     templateUrl: `./organization-settings.component.html`,
-    styleUrls: [`./organization-settings.component.scss`]
+    styleUrls: [`./organization-settings.component.scss`],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationSettingsComponent extends BaseComponent {
     public readonly pageTitle = _(`Settings`);
@@ -121,9 +122,11 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this.orgaSettingsForm = this.createForm();
         }
         const patchMeeting: any = viewOrganization.organization;
-        const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
-        patchMeeting.saml_attr_mapping = attrMapping;
-        this._ssoConfigRows = attrMapping.split(`\n`).length;
+        if (patchMeeting.saml_attr_mapping) {
+            const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
+            patchMeeting.saml_attr_mapping = attrMapping;
+            this._ssoConfigRows = attrMapping.split(`\n`).length;
+        }
         this.orgaSettingsForm!.patchValue(patchMeeting);
     }
 
