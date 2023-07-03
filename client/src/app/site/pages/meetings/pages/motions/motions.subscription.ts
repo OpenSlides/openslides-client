@@ -181,6 +181,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             { idField: `supporter_ids`, ...UserFieldsets.FullNameSubscription }
         ],
         fieldset: [
+            `workflow_timestamp`,
             `reason`,
             `text`,
             `modified_final_version`,
