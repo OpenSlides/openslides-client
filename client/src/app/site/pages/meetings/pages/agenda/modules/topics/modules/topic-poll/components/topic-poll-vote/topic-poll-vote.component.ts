@@ -159,31 +159,11 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         return ``;
     }
 
-    public getVotesCount(user: ViewUser = this.user): number {
-        if (this.voteRequestData[user?.id]) {
-            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user)) {
-                return Object.keys(this.voteRequestData[user.id].value)
-                    .map(key => parseInt(this.voteRequestData[user.id].value[key], 10))
-                    .reduce((a, b) => a + b, 0);
-            } else {
-                return Object.keys(this.voteRequestData[user.id].value).filter(
-                    key => this.voteRequestData[user.id].value[key]
-                ).length;
-            }
-        }
-        return 0;
-    }
-
     public getVotesAvailable(user: ViewUser = this.user): number | string {
         if (this.isGlobalOptionSelected()) {
             return `-`;
         }
         return this.poll.max_votes_amount - this.getVotesCount(user);
-    }
-
-    private isGlobalOptionSelected(user: ViewUser = this.user): boolean {
-        const value = this.voteRequestData[user.id]?.value;
-        return value === `Y` || value === `N` || value === `A`;
     }
 
     public async submitVote(user: ViewUser = this.user): Promise<void> {
@@ -208,27 +188,8 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    public async submitVotes(users: ViewUser[]): Promise<void> {
-        let maxVotesAmount = 0;
-        let pollMaximum = 0;
-
-        if (!this.hasAlreadyVoted() && !(this.getVotingError() === `You do not have the permission to vote.`)) {
-            maxVotesAmount = this.getVotesCount();
-            pollMaximum = this.poll.max_votes_amount;
-        }
-        for (let user of users) {
-            if (
-                !this.hasAlreadyVoted(user) &&
-                !(this.getVotingError(user) === `You do not have the permission to vote.`)
-            ) {
-                if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
-                    this.raiseError(this.translate.instant(`There is an error in your vote.`));
-                    return;
-                }
-                maxVotesAmount += this.getVotesCount(user);
-                pollMaximum += this.poll.max_votes_amount;
-            }
-        }
+    public async submitVotes(): Promise<void> {
+        let { maxVotesAmount, pollMaximum } = this.countMaxVotesAndPoll();
         const title = this.translate.instant(`Submit selection now?`);
         const content =
             this.translate.instant(`Your votes`) +
@@ -236,36 +197,34 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             this.translate.instant(`Your decision cannot be changed afterwards.`);
 
         const confirmed = await this.promptService.open(title, content);
-        let value = this.voteRequestData[this.user.id].value;
         if (confirmed) {
-            if (!this.hasAlreadyVoted() && !(this.getVotingError() === `You do not have the permission to vote.`)) {
-                this.deliveringVote[this.user.id] = true;
-                this.cd.markForCheck();
-
-                const votePayload = {
-                    value: value,
-                    user_id: this.user.id
-                };
-                await this.sendVote(this.user.id, votePayload);
-            }
-            for (let user of users) {
-                let value = this.voteRequestData[user.id].value;
-                if (
-                    !this.hasAlreadyVoted(user) &&
-                    !(this.getVotingError(user) === `You do not have the permission to vote.`)
-                ) {
-                    this.deliveringVote[user.id] = true;
-                    this.cd.markForCheck();
-
-                    const votePayload = {
-                        value: value,
-                        user_id: user.id
-                    };
-
-                    await this.sendVote(user.id, votePayload);
+            for (let delegation of this.delegations.concat(this.user)) {
+                if (this.getVotingError() === `` && !this.isDeliveringVote[delegation.id]) {
+                    this.preparePayload(delegation);
                 }
             }
         }
+    }
+
+    private countMaxVotesAndPoll(): { maxVotesAmount: number; pollMaximum: number } {
+        let maxVotesAmount = 0;
+        let pollMaximum = 0;
+
+        if (this.getVotingError() === ``) {
+            maxVotesAmount = this.getVotesCount();
+            pollMaximum = this.poll.max_votes_amount;
+        }
+        for (let user of this.delegations) {
+            if (this.getVotingError(user) === ``) {
+                if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
+                    this.raiseError(this.translate.instant(`There is an error in your vote.`));
+                    break;
+                }
+                maxVotesAmount += this.getVotesCount(user);
+                pollMaximum += this.poll.max_votes_amount;
+            }
+        }
+        return { maxVotesAmount, pollMaximum };
     }
 
     public saveSingleVote(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
@@ -436,27 +395,5 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
                 this.formControlMap[key].disable();
             }
         }
-    }
-
-    protected compareMinAllVotes(delegations: ViewUser[]): boolean {
-        let reachedMinValue = false;
-        const minVote = this.minVotes;
-        if (!(this.getVotingError() === `You do not have the permission to vote.`)) {
-            if (!this.hasAlreadyVoted()) {
-                if (this.getVotesCount() < minVote) {
-                    reachedMinValue = true;
-                }
-            }
-        }
-        for (let delegation of delegations) {
-            if (!(this.getVotingError(delegation) === `You do not have the permission to vote.`)) {
-                if (!this.hasAlreadyVoted(delegation)) {
-                    if (this.getVotesCount(delegation) < minVote) {
-                        reachedMinValue = true;
-                    }
-                }
-            }
-        }
-        return reachedMinValue;
     }
 }

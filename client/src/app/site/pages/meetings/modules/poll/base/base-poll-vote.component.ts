@@ -107,23 +107,18 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return this.alreadyVoted[user?.id];
     }
 
-    public canStillVote(): boolean {
-        let hasVoted = true;
-        if (!(this.getVotingError() === `You do not have the permission to vote.`)) {
-            hasVoted = this.hasAlreadyVoted();
-        }
-        if (this.delegations.length === 0) {
-            hasVoted = true;
-        } else {
-            for (let delegation of this.delegations) {
-                if (!(this.getVotingError(delegation) === `You do not have the permission to vote.`)) {
+    public canSendVotes(): boolean {
+        // if there are not delegations for the user the send button for multiple votes is not necessary
+        if (this.delegations.length > 0) {
+            for (let delegation of this.delegations.concat(this.user)) {
+                if (this.getVotingError(delegation) === ``) {
                     if (!this.hasAlreadyVoted(delegation)) {
-                        hasVoted = false;
+                        return true;
                     }
                 }
             }
         }
-        return hasVoted;
+        return false;
     }
 
     public canVoteForObservable(user: ViewUser = this.user): Observable<boolean> {
@@ -203,5 +198,46 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
             !this.hasAlreadyVoted(user) &&
             this.hasAlreadyVoted(user) !== undefined
         );
+    }
+
+    protected compareMinAllVotes(minVote: number = 1): boolean {
+        for (let delegation of this.delegations.concat(this.user)) {
+            if (this.getVotingError(delegation) === `` && this.getVotesCount(delegation) < minVote) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public getVotesCount(user: ViewUser = this.user): number {
+        if (this.voteRequestData[user?.id]) {
+            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user)) {
+                return Object.keys(this.voteRequestData[user.id].value)
+                    .map(key => parseInt(this.voteRequestData[user.id].value[+key] as string, 10))
+                    .reduce((a, b) => a + b, 0);
+            } else {
+                return Object.keys(this.voteRequestData[user.id].value).filter(
+                    key => this.voteRequestData[user.id].value[+key]
+                ).length;
+            }
+        }
+        return 0;
+    }
+
+    public isGlobalOptionSelected(user: ViewUser = this.user): boolean {
+        const value = this.voteRequestData[user.id]?.value;
+        return value === `Y` || value === `N` || value === `A`;
+    }
+
+    public async preparePayload(user: ViewUser = this.user) {
+        const value = this.voteRequestData[user.id].value;
+        this.deliveringVote[user.id] = true;
+        this.cd.markForCheck();
+
+        const votePayload = {
+            value: value,
+            user_id: user.id
+        };
+        await this.sendVote(user.id, votePayload);
     }
 }

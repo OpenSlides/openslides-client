@@ -15,7 +15,12 @@
         <!-- Submit Votes -->
         <div *ngIf="canSendVotes()">
             <div class="centered-button-wrapper margin-top">
-                <button mat-flat-button color="accent" (click)="submitVotes()" [disabled]="compareMinAllVotes()">
+                <button
+                    mat-flat-button
+                    color="accent"
+                    (click)="submitVotes()"
+                    [disabled]="compareMinAllVotes(this.minVotes)"
+                >
                     <mat-icon>how_to_vote</mat-icon>
                     <span>
                         {{ 'Submit all votes now' | translate }}
