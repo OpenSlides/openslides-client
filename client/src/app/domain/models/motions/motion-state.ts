@@ -37,7 +37,7 @@ export class MotionState extends BaseModel<MotionState> {
     public allow_create_poll!: boolean;
     public allow_submitter_edit!: boolean;
     public allow_motion_forwarding!: boolean;
-    public set_created_timestamp!: boolean;
+    public set_workflow_timestamp!: boolean;
     public set_number!: boolean;
     public show_state_extension_field!: boolean;
     public merge_amendment_into_final!: MergeAmendment;
@@ -72,7 +72,7 @@ export class MotionState extends BaseModel<MotionState> {
         `show_recommendation_extension_field`,
         `merge_amendment_into_final`,
         `allow_motion_forwarding`,
-        `set_created_timestamp`,
+        `set_workflow_timestamp`,
         `submitter_withdraw_state_id`,
         `submitter_withdraw_back_ids`,
         `next_state_ids`,

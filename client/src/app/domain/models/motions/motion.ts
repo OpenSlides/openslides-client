@@ -50,6 +50,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
      */
     public tree_weight!: number;
     public created!: number;
+    public workflow_timestamp!: number;
     public forwarded!: number; // It's a timestamp
     public last_modified!: number;
     public start_line_number!: number;
@@ -106,6 +107,7 @@ export class Motion extends BaseModel<Motion> implements MotionFormattingReprese
         `sort_weight`,
         `created`,
         `last_modified`,
+        `workflow_timestamp`,
         `start_line_number`,
         `forwarded`,
         `lead_motion_id`,
