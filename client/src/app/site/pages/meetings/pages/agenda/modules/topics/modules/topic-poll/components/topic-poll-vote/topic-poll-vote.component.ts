@@ -198,11 +198,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
-            for (let delegation of this.delegations.concat(this.user)) {
-                if (this.getVotingError() === `` && !this.isDeliveringVote[delegation.id]) {
-                    this.preparePayload(delegation);
-                }
-            }
+            this.preparePayload();
         }
     }
 
@@ -210,17 +206,13 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         let maxVotesAmount = 0;
         let pollMaximum = 0;
 
-        if (this.getVotingError() === ``) {
-            maxVotesAmount = this.getVotesCount();
-            pollMaximum = this.poll.max_votes_amount;
-        }
-        for (let user of this.delegations) {
-            if (this.getVotingError(user) === ``) {
+        for (let delegation of this.delegations.concat(this.user)) {
+            if (this.getVotingError(delegation) === ``) {
                 if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
                     this.raiseError(this.translate.instant(`There is an error in your vote.`));
                     break;
                 }
-                maxVotesAmount += this.getVotesCount(user);
+                maxVotesAmount += this.getVotesCount(delegation);
                 pollMaximum += this.poll.max_votes_amount;
             }
         }

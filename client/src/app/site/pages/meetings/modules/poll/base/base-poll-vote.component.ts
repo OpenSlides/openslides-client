@@ -229,15 +229,18 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return value === `Y` || value === `N` || value === `A`;
     }
 
-    public async preparePayload(user: ViewUser = this.user) {
-        const value = this.voteRequestData[user.id].value;
-        this.deliveringVote[user.id] = true;
-        this.cd.markForCheck();
-
-        const votePayload = {
-            value: value,
-            user_id: user.id
-        };
-        await this.sendVote(user.id, votePayload);
+    public async preparePayload(): Promise<void> {
+        for (let delegation of this.delegations.concat(this.user)) {
+            if (this.getVotingError() === `` && !this.isDeliveringVote[delegation.id]) {
+                const value = this.voteRequestData[delegation.id].value;
+                this.deliveringVote[delegation.id] = true;
+                this.cd.markForCheck();
+                const votePayload = {
+                    value: value,
+                    user_id: delegation.id
+                };
+                await this.sendVote(delegation.id, votePayload);
+            }
+        }
     }
 }

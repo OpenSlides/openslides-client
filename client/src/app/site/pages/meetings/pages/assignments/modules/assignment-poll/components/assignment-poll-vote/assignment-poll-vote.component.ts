@@ -226,11 +226,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
 
         const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
-            for (let delegation of this.delegations.concat(this.user)) {
-                if (this.getVotingError() === `` && !this.isDeliveringVote[delegation.id]) {
-                    this.preparePayload(delegation);
-                }
-            }
+            this.preparePayload();
         }
     }
 
