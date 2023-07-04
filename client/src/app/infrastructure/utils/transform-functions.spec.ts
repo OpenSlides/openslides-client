@@ -1,4 +1,14 @@
-import { copy, deepCopy } from './transform-functions';
+import {
+    collectionFromFqid,
+    collectionIdFieldFromFqfield,
+    collectionIdFromFqid,
+    copy,
+    deepCopy,
+    fqfieldFromCollectionIdField,
+    fqidFromCollectionAndId,
+    idFromFqid,
+    isFqid
+} from './transform-functions';
 
 interface MixedNuts {
     pecans: string;
@@ -115,6 +125,96 @@ describe(`utils: transform-functions`, () => {
             expect(copied.juice).not.toEqual(shoppingCart.juice);
             expect(copied.mixedNuts.pecans).toEqual(`100g`);
             expect(copied.chocolate.length).toEqual(3);
+        });
+    });
+
+    describe(`fqidFromCollectionAndId function`, () => {
+        it(`test with expected data format`, () => {
+            expect(fqidFromCollectionAndId(`motion`, 42)).toBe(`motion/42`);
+            expect(fqidFromCollectionAndId(`topic`, 63)).toBe(`topic/63`);
+            expect(fqidFromCollectionAndId(`assignment`, 4)).toBe(`assignment/4`);
+        });
+    });
+
+    describe(`fqfieldFromCollectionIdField function`, () => {
+        it(`test with expected data format`, () => {
+            expect(fqfieldFromCollectionIdField(`motion`, 42, `title`)).toBe(`motion/42/title`);
+            expect(fqfieldFromCollectionIdField(`topic`, 63, `text`)).toBe(`topic/63/text`);
+            expect(fqfieldFromCollectionIdField(`assignment`, 4, `poll_ids`)).toBe(`assignment/4/poll_ids`);
+        });
+    });
+
+    describe(`collectionIdFromFqid function`, () => {
+        it(`test with expected data format`, () => {
+            expect(collectionIdFromFqid(`motion/42`)).toEqual([`motion`, 42]);
+            expect(collectionIdFromFqid(`topic/63`)).toEqual([`topic`, 63]);
+            expect(collectionIdFromFqid(`assignment/4`)).toEqual([`assignment`, 4]);
+        });
+
+        it(`test with wrong data format`, () => {
+            expect(() => collectionIdFromFqid(`motion`)).toThrowError(`The given fqid "motion" is not valid.`);
+            expect(() => collectionIdFromFqid(`motion/42/text`)).toThrowError(
+                `The given fqid "motion/42/text" is not valid.`
+            );
+        });
+    });
+
+    describe(`idFromFqid function`, () => {
+        it(`test with expected data format`, () => {
+            expect(idFromFqid(`motion/42`)).toBe(42);
+            expect(idFromFqid(`topic/63`)).toBe(63);
+            expect(idFromFqid(`assignment/4`)).toBe(4);
+        });
+
+        it(`test with wrong data format`, () => {
+            expect(() => idFromFqid(`motion`)).toThrowError(`The given fqid "motion" is not valid.`);
+            expect(() => idFromFqid(`motion/42/text`)).toThrowError(`The given fqid "motion/42/text" is not valid.`);
+        });
+    });
+
+    describe(`collectionIdFieldFromFqfield function`, () => {
+        it(`test with expected data format`, () => {
+            expect(collectionIdFieldFromFqfield(`motion/42/title`)).toEqual([`motion`, 42, `title`]);
+            expect(collectionIdFieldFromFqfield(`topic/63/text`)).toEqual([`topic`, 63, `text`]);
+            expect(collectionIdFieldFromFqfield(`assignment/4/poll_ids`)).toEqual([`assignment`, 4, `poll_ids`]);
+        });
+
+        it(`test with wrong data format`, () => {
+            expect(() => collectionIdFieldFromFqfield(`motion/text`)).toThrowError(
+                `The given fqfield "motion/text" is not valid.`
+            );
+            expect(() => collectionIdFieldFromFqfield(`motion/42/text/3`)).toThrowError(
+                `The given fqfield "motion/42/text/3" is not valid.`
+            );
+        });
+    });
+
+    describe(`collectionFromFqid function`, () => {
+        it(`test with expected data format`, () => {
+            expect(collectionFromFqid(`motion/42`)).toEqual(`motion`);
+            expect(collectionFromFqid(`topic/63`)).toEqual(`topic`);
+            expect(collectionFromFqid(`assignment/4`)).toEqual(`assignment`);
+        });
+
+        it(`test with wrong data format`, () => {
+            expect(() => collectionFromFqid(`motion`)).toThrowError(`The given fqid "motion" is not valid.`);
+            expect(() => collectionFromFqid(`motion/42/text`)).toThrowError(
+                `The given fqid "motion/42/text" is not valid.`
+            );
+        });
+    });
+
+    describe(`isFqid function`, () => {
+        it(`test with expected data format`, () => {
+            expect(isFqid(`motion/42`)).toBe(true);
+            expect(isFqid(`topic/63`)).toBe(true);
+            expect(isFqid(`assignment/4`)).toBe(true);
+        });
+
+        it(`test with wrong data format`, () => {
+            expect(isFqid(`motion`)).toBe(false);
+            expect(isFqid(`topic/63/text`)).toBe(false);
+            expect(isFqid(`assignment/poll_ids`)).toBe(false);
         });
     });
 });
