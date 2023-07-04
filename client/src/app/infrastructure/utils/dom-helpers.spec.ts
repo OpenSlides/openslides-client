@@ -1,4 +1,7 @@
 import {
+    addClassToHtmlTag,
+    addClassToLastNode,
+    addCSSClass,
     addCSSClassToFirstTag,
     fragmentToHtml,
     getNodeByName,
@@ -8,12 +11,15 @@ import {
     htmlToUppercase,
     isFirstNonemptyChild,
     isInlineElement,
+    isValidInlineHtml,
     nodesToHtml,
+    removeCSSClass,
     replaceHtmlEntities,
+    serializeTag,
     sortHtmlAttributes
 } from './dom-helpers';
 
-fdescribe(`utils: dom helpers`, () => {
+describe(`utils: dom helpers`, () => {
     describe(`replaceHtmlEntities function`, () => {
         it(`check some entities`, () => {
             const res = replaceHtmlEntities(`&uuml;&#177;`);
@@ -173,33 +179,88 @@ fdescribe(`utils: dom helpers`, () => {
         });
     });
 
-    describe(`getAllNextSiblings function`, () => {
+    xdescribe(`getAllNextSiblings function`, () => {
         it(``, () => {
             // expect(``).toBe(``);
         });
     });
 
-    describe(`getAllPrevSiblingsReversed function`, () => {
+    xdescribe(`getAllPrevSiblingsReversed function`, () => {
         it(``, () => {
             // expect(``).toBe(``);
         });
     });
 
     describe(`addCSSClass function`, () => {
-        it(``, () => {
-            // expect(``).toBe(``);
+        it(`adds a class`, () => {
+            const el = document.createElement(`div`);
+            addCSSClass(el, `foo`);
+            expect(el.outerHTML).toBe(`<div class="foo"></div>`);
+        });
+
+        it(`adds to classes`, () => {
+            const el = document.createElement(`div`);
+            el.classList.add(`bar`);
+            addCSSClass(el, `foo`);
+            expect(el.outerHTML).toBe(`<div class="bar foo"></div>`);
+        });
+
+        it(`does not add classes twice`, () => {
+            const el = document.createElement(`div`);
+            el.classList.add(`foo`);
+            addCSSClass(el, `foo`);
+            expect(el.outerHTML).toBe(`<div class="foo"></div>`);
+        });
+
+        it(`should do nothing on invalid element`, () => {
+            const el = document.createTextNode(`div`);
+            addCSSClass(el, `foo`);
+            expect(el).toEqual(document.createTextNode(`div`));
         });
     });
 
     describe(`removeCSSClass function`, () => {
-        it(``, () => {
-            // expect(``).toBe(``);
+        it(`removes class attribute if empty`, () => {
+            const el = document.createElement(`div`);
+            el.classList.add(`foo`);
+            removeCSSClass(el, `foo`);
+            expect(el.outerHTML).toBe(`<div></div>`);
+        });
+
+        it(`removes from classes`, () => {
+            const el = document.createElement(`div`);
+            el.classList.add(`bar`);
+            el.classList.add(`foo`);
+            removeCSSClass(el, `foo`);
+            expect(el.outerHTML).toBe(`<div class="bar"></div>`);
+        });
+
+        it(`should do nothing on invalid element`, () => {
+            const el = document.createTextNode(`div`);
+            removeCSSClass(el, `foo`);
+            expect(el).toEqual(document.createTextNode(`div`));
         });
     });
 
     describe(`isValidInlineHtml function`, () => {
-        it(``, () => {
-            // expect(``).toBe(``);
+        it(`recognizes invalid tag`, () => {
+            expect(isValidInlineHtml(`<1></1>`)).toBe(false);
+        });
+
+        it(`recognizes unclosed tag`, () => {
+            expect(isValidInlineHtml(`<test>`)).toBe(false);
+        });
+
+        it(`recognizes unopened tag`, () => {
+            expect(isValidInlineHtml(`</test>`)).toBe(false);
+        });
+
+        it(`recognizes invalid attribute`, () => {
+            expect(isValidInlineHtml(`<test foo="1></test>`)).toBe(false);
+        });
+
+        it(`recognizes valid tag`, () => {
+            expect(isValidInlineHtml(`<test foo="to"></test>`)).toBe(true);
         });
     });
 
@@ -218,20 +279,53 @@ fdescribe(`utils: dom helpers`, () => {
     });
 
     describe(`addClassToLastNode function`, () => {
-        it(``, () => {
-            // expect(``).toBe(``);
+        it(`adds class`, () => {
+            expect(addClassToLastNode(`<div></div>`, `bar`)).toBe(`<div class="bar"></div>`);
+        });
+
+        it(`adds class only to last node`, () => {
+            expect(addClassToLastNode(`<div></div><div class="foo"></div>`, `bar`)).toBe(
+                `<div></div><div class="foo bar"></div>`
+            );
         });
     });
 
     describe(`addClassToHtmlTag function`, () => {
-        it(``, () => {
-            // expect(``).toBe(``);
+        it(`adds class attribute and class`, () => {
+            expect(addClassToHtmlTag(`<div class="foo"></div>`, `bar`)).toBe(`<div class="foo bar"></div>`);
+        });
+
+        it(`adds class to existing attribute`, () => {
+            expect(addClassToHtmlTag(`<div></div>`, `bar`)).toBe(`<div class="bar"></div>`);
+        });
+
+        it(`adds class to multiple tags`, () => {
+            expect(addClassToHtmlTag(`<div></div><div></div>`, `bar`)).toBe(
+                `<div class="bar"></div><div class="bar"></div>`
+            );
+        });
+
+        it(`adds class to nested tags`, () => {
+            expect(addClassToHtmlTag(`<div><div class="foo"></div></div>`, `bar`)).toBe(
+                `<div class="bar"><div class="foo bar"></div></div>`
+            );
         });
     });
 
     describe(`serializeTag function`, () => {
-        it(``, () => {
-            // expect(``).toBe(``);
+        it(`converts node element`, () => {
+            const tag = document.createElement(`div`);
+            tag.setAttribute(`foo`, `bar`);
+            tag.setAttribute(`bar`, `foo`);
+            tag.textContent = `Test`;
+
+            expect(serializeTag(tag)).toBe(`<DIV foo="bar" bar="foo">`);
+        });
+
+        it(`throws error on non node element`, () => {
+            const tag = document.createTextNode(`Test`);
+
+            expect(() => serializeTag(tag)).toThrow(new Error(`Invalid node type`));
         });
     });
 
