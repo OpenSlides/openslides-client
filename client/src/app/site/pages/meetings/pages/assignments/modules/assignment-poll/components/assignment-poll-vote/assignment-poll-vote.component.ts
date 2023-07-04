@@ -238,19 +238,21 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         let maxVotesAmount = 0;
         let pollMaximum = 0;
         let isListOpt = false;
+        let countableDelegations = 0;
 
         if (this.getVotingError() === ``) {
             maxVotesAmount = this.getVotesCount();
             pollMaximum = this.poll.max_votes_amount;
         }
-        for (let user of this.delegations) {
-            if (this.getVotingError(user) === ``) {
+        for (let delegation of this.delegations) {
+            if (this.getVotingError(delegation) === ``) {
                 if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
                     this.raiseError(this.translate.instant(`There is an error in your vote.`));
                     break;
                 }
-                maxVotesAmount += this.getVotesCount(user);
+                maxVotesAmount += this.getVotesCount(delegation);
                 pollMaximum += this.poll.max_votes_amount;
+                countableDelegations += 1;
             }
         }
         for (let option of this.poll.options) {
@@ -259,7 +261,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             }
         }
         if ((this.poll.isMethodYNA && !isListOpt) || this.poll.isMethodYN) {
-            pollMaximum *= this.delegations.length;
+            pollMaximum *= countableDelegations;
         }
         return { maxVotesAmount, pollMaximum };
     }
