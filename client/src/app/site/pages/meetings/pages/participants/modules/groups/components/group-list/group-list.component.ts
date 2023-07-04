@@ -112,9 +112,11 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
         this.newGroup = newGroup;
 
         const name = this.selectedGroup ? this.selectedGroup.name : ``;
+        const external_id = this.selectedGroup?.external_id ?? ``;
 
         this.groupForm = this.formBuilder.group({
-            name: [name, Validators.required]
+            name: [name, Validators.required],
+            external_id: [external_id]
         });
 
         this.dialogRef = this.dialog.open(this.groupEditDialog!, infoDialogSettings);

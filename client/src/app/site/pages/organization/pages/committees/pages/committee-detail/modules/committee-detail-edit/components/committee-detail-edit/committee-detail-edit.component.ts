@@ -212,7 +212,8 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
             organization_tag_ids: [[]],
             user_$_management_level: [[]],
             forward_to_committee_ids: [[]],
-            receive_forwardings_from_committee_ids: [[]]
+            receive_forwardings_from_committee_ids: [[]],
+            external_id: [``]
         };
         this.committeeForm = this.formBuilder.group(partialForm);
     }

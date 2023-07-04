@@ -225,6 +225,12 @@
     <div>{{ motion.created | localizedDate }}</div>
 </div>
 
+<!-- Workflow timestamp -->
+<div *ngIf="motion?.workflow_timestamp">
+    <h4>{{ 'Submit date' | translate }}</h4>
+    <div>{{ motion.workflow_timestamp | localizedDate }}</div>
+</div>
+
 <!-- Origins - display only -->
 <div *ngIf="getOriginMotions().length">
     <h4>{{ 'Origin' | translate }}</h4>

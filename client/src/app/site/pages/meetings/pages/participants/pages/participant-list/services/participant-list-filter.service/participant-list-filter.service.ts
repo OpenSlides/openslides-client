@@ -99,6 +99,14 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
+                property: `hasSamlId`,
+                label: this.translate.instant(`SSO`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has SSO identification`) },
+                    { condition: [false, null], label: this.translate.instant(`Has no SSO identification`) }
+                ]
+            },
+            {
                 property: `delegationType`,
                 label: this.translate.instant(`Delegation of vote`),
                 options: [
