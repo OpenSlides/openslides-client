@@ -1,7 +1,11 @@
 import {
+    compareNumber,
     getLongPreview,
     getShortPreview,
+    isEasterEggTime,
+    isEmpty,
     joinTypedArrays,
+    mmToPoints,
     reconvertChars,
     splitTypedArray,
     stripHtmlTags,
@@ -182,6 +186,119 @@ describe(`utils: functions`, () => {
             );
             expect(getShortPreview(`<p>abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz</p>`).length).toBe(50);
         });
+    });
+
+    describe(`isEasterEggTime function`, () => {
+        const data: {
+            test: Date;
+            expect: boolean;
+        }[] = [
+            { test: new Date(2000, 1, 1), expect: false },
+            { test: new Date(2011, 5, 12, 13, 45, 34), expect: false },
+            { test: new Date(1782, 3, 5), expect: false },
+            { test: new Date(1969, 6, 27), expect: false },
+            { test: new Date(2066, 3, 1), expect: true },
+            { test: new Date(1567, 3, 1), expect: true }
+        ];
+        jasmine.clock().install();
+
+        for (let date of data) {
+            it(`test with ${date.test.toLocaleString()}`, () => {
+                jasmine.clock().mockDate(date.test);
+                expect(isEasterEggTime()).toBe(date.expect);
+            });
+        }
+    });
+
+    describe(`mmToPoints function`, () => {
+        const data: {
+            test: [number, number] | [number];
+            expect: number;
+        }[] = [
+            { test: [0], expect: 0 },
+            { test: [0, 0], expect: 0 },
+            { test: [1, 0], expect: 0 },
+            { test: [0, 1], expect: 0 },
+            { test: [42], expect: 119.05511811023624 },
+            { test: [42, 99], expect: 163.70078740157481 },
+            { test: [123, 45], expect: 217.91338582677167 },
+            { test: [123], expect: 348.66141732283467 },
+            { test: [-1], expect: -2.8346456692913384 },
+            { test: [Number.POSITIVE_INFINITY], expect: Number.POSITIVE_INFINITY },
+            { test: [1, Number.POSITIVE_INFINITY], expect: Number.POSITIVE_INFINITY }
+        ];
+
+        for (let date of data) {
+            it(`test with ${date.test[0]} mm and ${date.test.length === 2 ? date.test[1] : `no`} density`, () => {
+                expect(mmToPoints(date.test[0], date.test[1])).toBe(date.expect);
+            });
+        }
+    });
+
+    describe(`compareNumber function`, () => {
+        const data: {
+            test: [number, number];
+            expect?: `positive` | `negative`;
+        }[] = [
+            { test: [undefined, undefined] },
+            { test: [0, undefined], expect: `negative` },
+            { test: [undefined, 0], expect: `positive` },
+            { test: [0, 0] },
+            { test: [1, 0], expect: `negative` },
+            { test: [0, 1], expect: `positive` },
+            { test: [99, 42], expect: `negative` },
+            { test: [42, 99], expect: `positive` },
+            { test: [42, 42] },
+            { test: [42, undefined], expect: `negative` },
+            { test: [undefined, 42], expect: `positive` },
+            { test: [-1, 1], expect: `positive` },
+            { test: [1, -1], expect: `negative` },
+            { test: [Number.POSITIVE_INFINITY, 1], expect: `negative` },
+            { test: [1, Number.POSITIVE_INFINITY], expect: `positive` }
+        ];
+
+        for (let date of data) {
+            switch (date.expect) {
+                case `positive`:
+                    it(`test ${date.test[0]} and ${date.test[1]} for positive comparison`, () => {
+                        expect(compareNumber(date.test[0], date.test[1])).toBeGreaterThan(0);
+                    });
+                    break;
+                case `negative`:
+                    it(`test ${date.test[0]} and ${date.test[1]} for negative comparison`, () => {
+                        expect(compareNumber(date.test[0], date.test[1])).toBeLessThan(0);
+                    });
+                    break;
+                default:
+                    it(`test ${date.test[0]} and ${date.test[1]} for equal comparison`, () => {
+                        expect(compareNumber(date.test[0], date.test[1])).toBe(0);
+                    });
+            }
+        }
+    });
+
+    fdescribe(`isEmpty function`, () => {
+        const data: {
+            test: any;
+            expect: boolean;
+        }[] = [
+            { test: null, expect: true },
+            { test: undefined, expect: true },
+            { test: [], expect: true },
+            { test: {}, expect: true },
+            { test: 0, expect: false },
+            { test: 1, expect: false },
+            { test: ``, expect: false },
+            { test: `a`, expect: false },
+            { test: [42], expect: false },
+            { test: { derSinn: 42 }, expect: false }
+        ];
+
+        for (let date of data) {
+            it(`test with ${date.test}`, () => {
+                expect(isEmpty(date.test)).toBe(date.expect);
+            });
+        }
     });
 
     describe(`joinTypedArrays function`, () => {

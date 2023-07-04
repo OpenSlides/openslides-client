@@ -141,13 +141,13 @@ export function mmToPoints(mm: number, dense: number = 72): number {
  * @returns 0 if they are equal, a negative value if a>b, else a positive value
  */
 export function compareNumber(a: number, b: number): number {
-    if (!b) {
-        if (!a) {
+    if (b == null) {
+        if (a == null) {
             return 0;
         }
         return -1;
     }
-    if (!a) {
+    if (a == null) {
         return 1;
     }
     return b - a;
