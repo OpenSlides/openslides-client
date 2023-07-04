@@ -1,6 +1,45 @@
-import { joinTypedArrays, splitTypedArray } from './functions';
+import { joinTypedArrays, reconvertChars, splitTypedArray, stripHtmlTags, toBase64 } from './functions';
 
 describe(`utils: functions`, () => {
+    describe(`toBase64 function`, () => {
+        it(`test with a blob`, async () => {
+            const blob = new Blob([`A blobbery blobby blob blob.`]);
+            expect(await toBase64(blob)).toBe(`QSBibG9iYmVyeSBibG9iYnkgYmxvYiBibG9iLg==`);
+        });
+
+        it(`test with a file`, async () => {
+            const file = new File([`A blobbery blobby blob blob.`], `Peter`);
+            expect(await toBase64(file)).toBe(`QSBibG9iYmVyeSBibG9iYnkgYmxvYiBibG9iLg==`);
+        });
+    });
+
+    describe(`reconvertChars function`, () => {
+        it(`test every reconverted value`, () => {
+            expect(
+                reconvertChars(
+                    `&auml;&#228;&Auml;&#196;&ouml;&#246;&Ouml;&#214;&uuml;&Uuml;&aring;&#229;&Aring;&#197;&szlig;&#223;`
+                )
+            ).toBe(`ääÄÄööÖÖüÜååÅÅßß`);
+        });
+    });
+
+    fdescribe(`stripHtmlTags function`, () => {
+        it(`test with simple tags`, () => {
+            expect(stripHtmlTags(`<div>Hello World!</div> `)).toBe(`Hello World!`);
+            expect(stripHtmlTags(`<div>Hello World!<p>This is a paragraph.</p></div>`)).toBe(
+                `Hello World!This is a paragraph.`
+            );
+        });
+        it(`test with single tag`, () => {
+            expect(stripHtmlTags(`<div>Hello World!</div><span>Please enter your data:</span><input> `)).toBe(
+                `Hello World!Please enter your data:`
+            );
+            expect(
+                stripHtmlTags(`<div>Hello World!</div><span>Please enter your data:</span><input class="data" /> `)
+            ).toBe(`Hello World!Please enter your data:`);
+        });
+    });
+
     describe(`joinTypedArrays function`, () => {
         it(`join two UInt8Arrays`, () => {
             let a = Uint8Array.from([1, 2, 3, 4]);

@@ -45,7 +45,7 @@ describe(`utils: validators`, () => {
         });
     });
 
-    fdescribe(`isUniqueAmong function`, () => {
+    describe(`isUniqueAmong function`, () => {
         it(`test with number values`, () => {
             const control = new UntypedFormControl(0, isUniqueAmong([0, 2, 3, 5, 7, 9]));
             expect(control.valid).toBe(false);
