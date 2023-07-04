@@ -1,4 +1,6 @@
 import {
+    getLongPreview,
+    getShortPreview,
     joinTypedArrays,
     reconvertChars,
     splitTypedArray,
@@ -63,7 +65,7 @@ describe(`utils: functions`, () => {
         });
     });
 
-    fdescribe(`toDecimal function`, () => {
+    describe(`toDecimal function`, () => {
         it(`test with various acceptable values`, () => {
             expect(toDecimal(`1`)).toBe(`1.000000`);
             expect(toDecimal(`1.234`)).toBe(`1.234000`);
@@ -77,6 +79,108 @@ describe(`utils: functions`, () => {
         it(`test with various unacceptable values`, () => {
             expect(() => toDecimal(`1,234`)).toThrowError(`Can't convert "1,234" to number`);
             expect(() => toDecimal(`fourtytwo`)).toThrowError(`Can't convert "fourtytwo" to number`);
+        });
+    });
+
+    describe(`getLongPreview function`, () => {
+        const loremIpsum =
+            `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labor`
+                .split(` `)
+                .join(``);
+
+        it(`test with empty string`, () => {
+            expect(getLongPreview(``)).toBe(``);
+            expect(getLongPreview(``, 100)).toBe(``);
+        });
+
+        it(`test with shorter string`, () => {
+            expect(getLongPreview(loremIpsum.slice(0, 150))).toBe(loremIpsum.slice(0, 150));
+            expect(getLongPreview(loremIpsum.slice(0, 150)).length).toBe(150);
+            expect(getLongPreview(loremIpsum.slice(0, 150), 100)).toBe(
+                `Loremipsumdolorsitamet,consetetursadipscingelit [...] liquyamerat,seddiamvoluptua.Atveroeosetaccusam`
+            );
+            expect(getLongPreview(loremIpsum.slice(0, 150), 100).length).toBe(100);
+        });
+
+        it(`test with longer string`, () => {
+            expect(getLongPreview(loremIpsum)).toBe(
+                `Loremipsumdolorsitamet,consetetursadipscingelitr,seddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyamerat,seddiamvoluptua.Atveroeosetaccu [...] dgubergren,noseatakimatasanctusestLoremipsumdolorsitamet.Loremipsumdolorsitamet,consetetursadipscingelitr,seddiamnonumyeirmodtemporinviduntutlabor`
+            );
+            expect(getLongPreview(loremIpsum).length).toBe(300);
+            expect(getLongPreview(loremIpsum, 100)).toBe(
+                `Loremipsumdolorsitamet,consetetursadipscingelit [...] elitr,seddiamnonumyeirmodtemporinviduntutlabor`
+            );
+            expect(getLongPreview(loremIpsum, 100).length).toBe(100);
+        });
+
+        it(`test with string lengths around 300`, () => {
+            expect(getLongPreview(loremIpsum.slice(0, 301))).toBe(
+                `Loremipsumdolorsitamet,consetetursadipscingelitr,seddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyamerat,seddiamvoluptua.Atveroeosetaccu [...] toduodoloresetearebum.Stetclitakasdgubergren,noseatakimatasanctusestLoremipsumdolorsitamet.Loremipsumdolorsitamet,consetetursadipscingelitr,seddia`
+            );
+            expect(getLongPreview(loremIpsum.slice(0, 301)).length).toBe(300);
+            expect(getLongPreview(loremIpsum.slice(0, 300))).toBe(loremIpsum.slice(0, 300));
+            expect(getLongPreview(loremIpsum.slice(0, 300)).length).toBe(300);
+            expect(getLongPreview(loremIpsum.slice(0, 299))).toBe(loremIpsum.slice(0, 299));
+            expect(getLongPreview(loremIpsum.slice(0, 299)).length).toBe(299);
+        });
+
+        it(`test with empty spaces`, () => {
+            expect(getLongPreview(`0 1 2 3 4 5 6 7 8 9`, 16)).toBe(`0 1 2 [...] 8 9`);
+            expect(getLongPreview(`0 1 2 3 4 5 6 7 8 9`, 16).length).toBe(15);
+        });
+
+        it(`test with uneven size`, () => {
+            expect(getLongPreview(`abcdefghijklmnopqrstuvwxyz`, 15)).toBe(`abcd [...] wxyz`);
+            expect(getLongPreview(`abcdefghijklmnopqrstuvwxyz`, 15).length).toBe(15);
+        });
+
+        it(`test with html tags`, () => {
+            expect(getLongPreview(`<p>abcdefghijklmnopqrstuvwxyz</p>`, 16)).toBe(`abcde [...] wxyz`);
+            expect(getLongPreview(`<p>abcdefghijklmnopqrstuvwxyz</p>`, 16).length).toBe(16);
+        });
+    });
+
+    describe(`getShortPreview function`, () => {
+        const loremIpsum =
+            `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labor`
+                .split(` `)
+                .join(``);
+
+        it(`test with empty string`, () => {
+            expect(getShortPreview(``)).toBe(``);
+        });
+
+        it(`test with shorter string`, () => {
+            expect(getShortPreview(loremIpsum.slice(0, 20))).toBe(`Loremipsumdolorsitam`);
+            expect(getShortPreview(loremIpsum.slice(0, 20)).length).toBe(20);
+        });
+
+        it(`test with longer string`, () => {
+            expect(getShortPreview(loremIpsum)).toBe(`Loremipsumdolorsitamet,consetetursadipscingelit...`);
+            expect(getShortPreview(loremIpsum).length).toBe(50);
+        });
+
+        it(`test with string lengths around 50`, () => {
+            expect(getShortPreview(loremIpsum.slice(0, 51))).toBe(`Loremipsumdolorsitamet,consetetursadipscingelit...`);
+            expect(getShortPreview(loremIpsum.slice(0, 51)).length).toBe(50);
+            expect(getShortPreview(loremIpsum.slice(0, 50))).toBe(loremIpsum.slice(0, 50));
+            expect(getShortPreview(loremIpsum.slice(0, 50)).length).toBe(50);
+            expect(getShortPreview(loremIpsum.slice(0, 49))).toBe(loremIpsum.slice(0, 49));
+            expect(getShortPreview(loremIpsum.slice(0, 49)).length).toBe(49);
+        });
+
+        it(`test with empty spaces`, () => {
+            expect(getShortPreview(`Letters: a b c d e f g h i j k l m n o p q r s t u v w x y z`)).toBe(
+                `Letters: a b c d e f g h i j k l m n o p q r s...`
+            );
+            expect(getShortPreview(`Letters: a b c d e f g h i j k l m n o p q r s t u v w x y z`).length).toBe(49);
+        });
+
+        it(`test with html tags`, () => {
+            expect(getShortPreview(`<p>abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz</p>`)).toBe(
+                `abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstu...`
+            );
+            expect(getShortPreview(`<p>abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz</p>`).length).toBe(50);
         });
     });
 

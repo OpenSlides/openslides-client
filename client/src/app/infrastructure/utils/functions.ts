@@ -86,13 +86,14 @@ export function getLongPreview(input: string, size: number = 300): string {
     if (!input || !input.length) {
         return ``;
     }
-    if (input.length < size) {
-        return stripHtmlTags(input);
+    input = stripHtmlTags(input);
+    if (input.length <= size) {
+        return input;
     }
     return (
-        stripHtmlTags(input.substring(0, size / 2 - 3)) +
+        input.substring(0, Math.floor(size / 2) - 3).trim() +
         ` [...] ` +
-        stripHtmlTags(input.substring(input.length - size / 2, input.length))
+        input.substring(input.length - Math.ceil(size / 2) + 4, input.length).trim()
     );
 }
 
@@ -106,10 +107,11 @@ export function getShortPreview(input: string): string {
     if (!input || !input.length) {
         return ``;
     }
+    input = stripHtmlTags(input);
     if (input.length > 50) {
-        return stripHtmlTags(input.substring(0, 47)) + `...`;
+        return input.substring(0, 47).trim() + `...`;
     }
-    return stripHtmlTags(input);
+    return input;
 }
 
 export function isEasterEggTime(): boolean {
