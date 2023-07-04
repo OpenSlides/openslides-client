@@ -22,7 +22,7 @@ describe(`utils: promise: deferred`, () => {
         def.unresolve();
 
         expect(def.wasResolved).toBe(false);
-        // TODO: Check if this is a problem
+        // TODO: This fails. Check if this is a problem
         // await expectAsync(def).toBePending();
     });
 });
