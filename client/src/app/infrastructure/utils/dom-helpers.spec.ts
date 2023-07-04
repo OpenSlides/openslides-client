@@ -1,4 +1,17 @@
-import { addCSSClassToFirstTag, fragmentToHtml, getNodeByName, getNodeContextTrace, getNthOfListItem, htmlToFragment, htmlToUppercase, isFirstNonemptyChild, isInlineElement, nodesToHtml, replaceHtmlEntities, sortHtmlAttributes } from './dom-helpers';
+import {
+    addCSSClassToFirstTag,
+    fragmentToHtml,
+    getNodeByName,
+    getNodeContextTrace,
+    getNthOfListItem,
+    htmlToFragment,
+    htmlToUppercase,
+    isFirstNonemptyChild,
+    isInlineElement,
+    nodesToHtml,
+    replaceHtmlEntities,
+    sortHtmlAttributes
+} from './dom-helpers';
 
 fdescribe(`utils: dom helpers`, () => {
     describe(`replaceHtmlEntities function`, () => {
