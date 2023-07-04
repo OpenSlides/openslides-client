@@ -33,7 +33,7 @@ export class TopicDetailMainComponent extends BaseModelRequestHandlerComponent {
                     if (id && this._currentTopicId !== id) {
                         this._currentTopicId = id;
                         this.loadTopicDetail();
-                    } else if (!id) {
+                    } else if (!id && params[`meetingId`]) {
                         this.loadTopicList(+params[`meetingId`]);
                     }
                 });
