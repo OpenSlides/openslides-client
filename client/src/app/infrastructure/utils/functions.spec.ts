@@ -1,4 +1,12 @@
-import { joinTypedArrays, reconvertChars, splitTypedArray, stripHtmlTags, toBase64 } from './functions';
+import {
+    joinTypedArrays,
+    reconvertChars,
+    splitTypedArray,
+    stripHtmlTags,
+    toBase64,
+    toBoolean,
+    toDecimal
+} from './functions';
 
 describe(`utils: functions`, () => {
     describe(`toBase64 function`, () => {
@@ -8,8 +16,8 @@ describe(`utils: functions`, () => {
         });
 
         it(`test with a file`, async () => {
-            const file = new File([`A blobbery blobby blob blob.`], `Peter`);
-            expect(await toBase64(file)).toBe(`QSBibG9iYmVyeSBibG9iYnkgYmxvYiBibG9iLg==`);
+            const file = new File([`A filery fily file file.`], `Peter`);
+            expect(await toBase64(file)).toBe(`QSBmaWxlcnkgZmlseSBmaWxlIGZpbGUu`);
         });
     });
 
@@ -23,7 +31,7 @@ describe(`utils: functions`, () => {
         });
     });
 
-    fdescribe(`stripHtmlTags function`, () => {
+    describe(`stripHtmlTags function`, () => {
         it(`test with simple tags`, () => {
             expect(stripHtmlTags(`<div>Hello World!</div> `)).toBe(`Hello World!`);
             expect(stripHtmlTags(`<div>Hello World!<p>This is a paragraph.</p></div>`)).toBe(
@@ -37,6 +45,38 @@ describe(`utils: functions`, () => {
             expect(
                 stripHtmlTags(`<div>Hello World!</div><span>Please enter your data:</span><input class="data" /> `)
             ).toBe(`Hello World!Please enter your data:`);
+        });
+    });
+
+    describe(`toBoolean function`, () => {
+        it(`test with various values`, () => {
+            expect(toBoolean(`1`)).toBe(true);
+            expect(toBoolean(`on`)).toBe(true);
+            expect(toBoolean(`true`)).toBe(true);
+            expect(toBoolean(`0`)).toBe(false);
+            expect(toBoolean(`off`)).toBe(false);
+            expect(toBoolean(`false`)).toBe(false);
+            expect(toBoolean(``)).toBe(false);
+            expect(toBoolean(`A hat`)).toBe(false);
+            expect(toBoolean(`A stick`)).toBe(false);
+            expect(toBoolean(`An umbrella`)).toBe(false);
+        });
+    });
+
+    fdescribe(`toDecimal function`, () => {
+        it(`test with various acceptable values`, () => {
+            expect(toDecimal(`1`)).toBe(`1.000000`);
+            expect(toDecimal(`1.234`)).toBe(`1.234000`);
+            expect(toDecimal(`1.23456789`)).toBe(`1.234568`);
+            expect(toDecimal(1)).toBe(`1.000000`);
+            expect(toDecimal(1.234)).toBe(`1.234000`);
+            expect(toDecimal(1.23456789)).toBe(`1.234568`);
+            expect(toDecimal(undefined)).toBe(null);
+        });
+
+        it(`test with various unacceptable values`, () => {
+            expect(() => toDecimal(`1,234`)).toThrowError(`Can't convert "1,234" to number`);
+            expect(() => toDecimal(`fourtytwo`)).toThrowError(`Can't convert "fourtytwo" to number`);
         });
     });
 
