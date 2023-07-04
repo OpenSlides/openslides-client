@@ -21,7 +21,7 @@ export function deepCopy<T>(model: T): T {
         model.forEach((entry, index) => (tmp[index] = deepCopy(entry)));
     } else if (model instanceof Map) {
         return new Map(
-            Array.from(model.entries()).map(entry => entry.map(value => deepCopy(value)) as [any, any])
+            Array.from(model.entries()).map(entry => [deepCopy(entry[0]), deepCopy(entry[1])])
         ) as typeof model;
     } else if (model instanceof Object) {
         tmp = {};
