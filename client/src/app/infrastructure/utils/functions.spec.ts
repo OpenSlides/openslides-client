@@ -22,12 +22,12 @@ describe(`utils: functions`, () => {
     describe(`toBase64 function`, () => {
         it(`test with a blob`, async () => {
             const blob = new Blob([`A blobbery blobby blob blob.`]);
-            expect(await toBase64(blob)).toBe(`QSBibG9iYmVyeSBibG9iYnkgYmxvYiBibG9iLg==`);
+            await expectAsync(toBase64(blob)).toBeResolvedTo(`QSBibG9iYmVyeSBibG9iYnkgYmxvYiBibG9iLg==`);
         });
 
         it(`test with a file`, async () => {
             const file = new File([`A filery fily file file.`], `Peter`);
-            expect(await toBase64(file)).toBe(`QSBmaWxlcnkgZmlseSBmaWxlIGZpbGUu`);
+            await expectAsync(toBase64(file)).toBeResolvedTo(`QSBmaWxlcnkgZmlseSBmaWxlIGZpbGUu`);
         });
     });
 
@@ -45,16 +45,16 @@ describe(`utils: functions`, () => {
         it(`test with simple tags`, () => {
             expect(stripHtmlTags(`<div>Hello World!</div> `)).toBe(`Hello World!`);
             expect(stripHtmlTags(`<div>Hello World!<p>This is a paragraph.</p></div>`)).toBe(
-                `Hello World!This is a paragraph.`
+                `Hello World! This is a paragraph.`
             );
         });
         it(`test with single tag`, () => {
             expect(stripHtmlTags(`<div>Hello World!</div><span>Please enter your data:</span><input> `)).toBe(
-                `Hello World!Please enter your data:`
+                `Hello World! Please enter your data:`
             );
             expect(
                 stripHtmlTags(`<div>Hello World!</div><span>Please enter your data:</span><input class="data" /> `)
-            ).toBe(`Hello World!Please enter your data:`);
+            ).toBe(`Hello World! Please enter your data:`);
         });
     });
 
@@ -204,7 +204,14 @@ describe(`utils: functions`, () => {
             { test: new Date(2066, 3, 1), expect: true },
             { test: new Date(1567, 3, 1), expect: true }
         ];
-        jasmine.clock().install();
+
+        beforeEach(() => {
+            jasmine.clock().install();
+        });
+
+        afterEach(() => {
+            jasmine.clock().uninstall();
+        });
 
         for (let date of data) {
             it(`test with ${date.test.toLocaleString()}`, () => {

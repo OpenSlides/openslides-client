@@ -3,7 +3,6 @@ import { Decimal } from '../../domain/definitions/key-types';
 export function toBase64(data: File | Blob): Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsDataURL(data);
         reader.onload = () => {
             const resultStr: string = reader.result as string;
             resolve(resultStr.split(`,`)[1]);
@@ -11,6 +10,7 @@ export function toBase64(data: File | Blob): Promise<string> {
         reader.onerror = error => {
             reject(error);
         };
+        reader.readAsDataURL(data);
     });
 }
 
