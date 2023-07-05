@@ -120,6 +120,11 @@ describe(`utils: dom helpers`, () => {
             container.innerHTML = `<el1></el1><el2></el2><el3></el3>`;
             expect(isFirstNonemptyChild(container, document.createElement(`el1`))).toBe(false);
         });
+
+        it(`passed element without children`, () => {
+            const container = document.createElement(`div`);
+            expect(isFirstNonemptyChild(container, document.createElement(`el1`))).toBe(false);
+        });
     });
 
     describe(`getNthOfListItem function`, () => {
@@ -262,6 +267,14 @@ describe(`utils: dom helpers`, () => {
         it(`recognizes valid tag`, () => {
             expect(isValidInlineHtml(`<test foo="to"></test>`)).toBe(true);
         });
+
+        it(`fails if containing block elements`, () => {
+            expect(isValidInlineHtml(`<test foo="to"><div></div></test>`)).toBe(false);
+        });
+
+        it(`can handle empty input`, () => {
+            expect(isValidInlineHtml(``)).toBe(true);
+        });
     });
 
     describe(`addCSSClassToFirstTag function`, () => {
@@ -287,6 +300,10 @@ describe(`utils: dom helpers`, () => {
             expect(addClassToLastNode(`<div></div><div class="foo"></div>`, `bar`)).toBe(
                 `<div></div><div class="foo bar"></div>`
             );
+        });
+
+        it(`does nothing on empty html input`, () => {
+            expect(addClassToLastNode(``, `bar`)).toBe(``);
         });
     });
 
@@ -372,6 +389,10 @@ describe(`utils: dom helpers`, () => {
 
         it(`recognizes non inline element`, () => {
             expect(isInlineElement(document.createElement(`p`))).toBe(false);
+        });
+
+        it(`fails on empty input`, () => {
+            expect(isInlineElement(null)).toBe(false);
         });
     });
 });
