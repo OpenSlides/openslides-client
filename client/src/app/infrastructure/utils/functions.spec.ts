@@ -1,12 +1,16 @@
 import {
     compareNumber,
+    djb2hash,
+    escapeRegExp,
     getLongPreview,
     getShortPreview,
     isEasterEggTime,
     isEmpty,
     joinTypedArrays,
     mmToPoints,
+    objectToFormattedString,
     reconvertChars,
+    splitStringKeepSeperator,
     splitTypedArray,
     stripHtmlTags,
     toBase64,
@@ -277,7 +281,7 @@ describe(`utils: functions`, () => {
         }
     });
 
-    fdescribe(`isEmpty function`, () => {
+    describe(`isEmpty function`, () => {
         const data: {
             test: any;
             expect: boolean;
@@ -291,12 +295,93 @@ describe(`utils: functions`, () => {
             { test: ``, expect: false },
             { test: `a`, expect: false },
             { test: [42], expect: false },
-            { test: { derSinn: 42 }, expect: false }
+            { test: { answer: 42 }, expect: false }
         ];
 
         for (let date of data) {
             it(`test with ${date.test}`, () => {
                 expect(isEmpty(date.test)).toBe(date.expect);
+            });
+        }
+    });
+
+    describe(`escapeRegExp function`, () => {
+        const data: {
+            test: string;
+            expect: string;
+            name?: string;
+        }[] = [
+            { test: `<`, expect: `<` },
+            { test: `>`, expect: `>` },
+            { test: ` `, expect: ` `, name: `space` },
+            { test: `.`, expect: `\\.` },
+            { test: `!`, expect: `!` },
+            { test: `-`, expect: `-` },
+            { test: `\n`, expect: `\n`, name: `break-line` }
+        ];
+
+        for (let date of data) {
+            it(`test with ${date.name ?? date.test}`, () => {
+                expect(escapeRegExp(date.test)).toBe(date.expect);
+            });
+        }
+    });
+
+    describe(`splitStringKeepSeparator function`, () => {
+        const data: {
+            test: string[];
+            expect: string[];
+        }[] = [
+            {
+                test: [`>_> >.< <html tag>`, `>`, `prepend`],
+                expect: [`>_`, `> `, `>.< <html tag`, `>`]
+            },
+            {
+                test: [`. these. are a .lot of .dots .`, `.`, `append`],
+                expect: [`.`, ` these.`, ` are a .`, `lot of .`, `dots .`]
+            },
+            {
+                test: [`I don't like mondays`, `don't`, `between`],
+                expect: [`I `, `don't`, ` like mondays`]
+            },
+            {
+                test: [`Some other string`, ` `, `Some other string`],
+                expect: [`Some`, ` `, `other`, ` `, `string`]
+            },
+            {
+                test: [`1 - 2 - 3 - 5 = -9`, `-`],
+                expect: [`1 `, `-`, ` 2 `, `-`, ` 3 `, `-`, ` 5 = `, `-`, `9`]
+            }
+        ];
+
+        for (let date of data) {
+            it(`test with "${date.test[0]}"`, () => {
+                const test = date.test;
+                test.push(undefined);
+                expect(splitStringKeepSeperator(test[0], test[1], test[2])).toEqual(date.expect);
+            });
+        }
+    });
+
+    describe(`djb2hash function`, () => {
+        const data: {
+            test: string;
+            expect: string;
+        }[] = [
+            { test: ``, expect: `5381` },
+            { test: ` `, expect: `177605` },
+            { test: `Hello World`, expect: `-2022174591` },
+            { test: `Apples`, expect: `-1482141334` },
+            { test: `Lorem ipsum dolor sit amet`, expect: `-157398551` },
+            { test: `!"§$%&/()=`, expect: `2127362171` },
+            { test: `1234567890`, expect: `-276485134` },
+            { test: `ABCDEFGHIJKLMNOP`, expect: `-2596616051` },
+            { test: `abcdefg`, expect: `442645281` }
+        ];
+
+        for (let date of data) {
+            it(`test with "${date.test}"`, () => {
+                expect(djb2hash(date.test)).toBe(date.expect);
             });
         }
     });
@@ -348,6 +433,31 @@ describe(`utils: functions`, () => {
             let expected = [Uint8Array.from([1, 2, 10]), Uint8Array.from([10]), Uint8Array.from([3, 4])];
 
             expect(joined).toEqual(expected);
+        });
+    });
+
+    describe(`objectToFormattedString function`, () => {
+        const testObject = {
+            array: [`string1`, `string2`],
+            object: {
+                number: 1,
+                boolean: true
+            },
+            string: `string`
+        };
+        const expected = `{\n   "array": [\n      "string1",\n      "string2"\n   ],\n   "object": {\n      "number": 1,\n      "boolean": true\n   },\n   "string": "string"\n}`;
+        it(`test with an object`, () => {
+            expect(objectToFormattedString(testObject)).toBe(expected);
+        });
+
+        it(`test with a json string`, () => {
+            expect(objectToFormattedString(JSON.stringify(testObject))).toBe(expected);
+        });
+
+        it(`test with empty values`, () => {
+            expect(objectToFormattedString(undefined)).toBe(undefined);
+            expect(objectToFormattedString(null)).toBe(undefined);
+            expect(objectToFormattedString(``)).toBe(undefined);
         });
     });
 });

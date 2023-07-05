@@ -313,14 +313,7 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     }
 
     // If the json actually represents an object or array, format the JSON skeleton
-    const separators = [`[`, `{`, `]`, `}`];
-    if (separators.some(separator => !json.includes(separator))) {
-        for (let symbol of [`[`, `{`, `]`, `}`]) {
-            json = json.split(symbol).join(`\n` + symbol + `\n`);
-        }
-        json = json.split(`,`).join(`,\n`).split(`:`).join(`: `).trim();
-        json = addSpacersToMultiLineJson(json);
-    }
+    json = formatJsonSkeleton(json);
 
     // Merge strings back with json skeleton
     let result = ``;
@@ -335,6 +328,19 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     return result;
 }
 
+function formatJsonSkeleton(json: string): string {
+    const append = [`[`, `{`, `,`];
+    const prepend = [`]`, `}`];
+    for (let symbol of append) {
+        json = splitStringKeepSeperator(json, symbol, `append`).join(`\n`);
+    }
+    for (let symbol of prepend) {
+        json = splitStringKeepSeperator(json, symbol, `prepend`).join(`\n`);
+    }
+    json = json.split(`:`).join(`: `).trim();
+    return addSpacersToMultiLineJson(json);
+}
+
 function addSpacersToMultiLineJson(json: string): string {
     const openers = [`[`, `{`];
     const closers = [`]`, `}`];
@@ -342,11 +348,11 @@ function addSpacersToMultiLineJson(json: string): string {
     let resultArray: string[] = [];
     let level = 0;
     for (let element of jsonArray) {
-        if (openers.includes(element)) {
+        if (openers.includes(element.charAt(element.length - 1))) {
             resultArray.push(getSpacer(level) + element);
             level++;
             continue;
-        } else if (closers.includes(element) && level > 0) {
+        } else if (closers.includes(element.charAt(0)) && level > 0) {
             level--;
         }
         resultArray.push(getSpacer(level) + element);
