@@ -261,7 +261,32 @@
             mat-stroked-button
             color="warn"
             (click)="addPointOfOrder()"
-            *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
+            *ngIf="
+                (!pointOfOrderCategoriesEnabled || (pointOfOrderCategories && pointOfOrderCategories.length <= 1)) &&
+                showPointOfOrders &&
+                !isOpInWaitlist(true)
+            "
+        >
+            <mat-icon>warning</mat-icon>
+            &nbsp;
+            <span *ngIf="!pointOfOrderCategoriesEnabled || pointOfOrderCategories.length !== 1">
+                {{ 'Point of order' | translate }}
+            </span>
+            <span *ngIf="pointOfOrderCategoriesEnabled && pointOfOrderCategories.length === 1">
+                {{ pointOfOrderCategories[0].text | translate }}
+            </span>
+        </button>
+        <button
+            mat-stroked-button
+            color="warn"
+            [matMenuTriggerFor]="pointOfOrderMenu"
+            *ngIf="
+                pointOfOrderCategoriesEnabled &&
+                pointOfOrderCategories &&
+                pointOfOrderCategories.length > 1 &&
+                showPointOfOrders &&
+                !isOpInWaitlist(true)
+            "
         >
             <mat-icon>warning</mat-icon>
             &nbsp;
@@ -373,3 +398,11 @@
     </button>
     <ng-container></ng-container>
 </ng-template>
+
+<mat-menu #pointOfOrderMenu="matMenu">
+    <ng-template matMenuContent>
+        <button *ngFor="let category of pointOfOrderCategories" mat-menu-item (click)="addPointOfOrder(category)">
+            {{ category.text }}
+        </button>
+    </ng-template>
+</mat-menu>

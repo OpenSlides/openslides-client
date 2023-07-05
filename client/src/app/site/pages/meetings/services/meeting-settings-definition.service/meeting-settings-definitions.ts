@@ -13,6 +13,7 @@ import {
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { ViewPointOfOrderCategory } from '../../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
+import { AllocationBox } from '../../pages/meeting-settings/pages/meeting-settings-group-detail/components/allocation-list/allocation-list.component';
 
 export type SettingsType =
     | 'string'
@@ -435,32 +436,27 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `ranking`,
                         useRelation: true,
                         transformFn: (value?: ViewPointOfOrderCategory[]) =>
-                            (value ?? [])
-                                .sort((a, b) => a.rank - b.rank || a.text.localeCompare(b.text))
-                                .mapToObject<number>(element => ({ [element.text]: element.rank })),
-                        reverseTransformFn: (
-                            value: { [key: string]: number },
-                            original?: ViewPointOfOrderCategory[]
-                        ) => {
-                            original = original.sort((a, b) => a.rank - b.rank || a.text.localeCompare(b.text));
-                            const newTexts = Object.keys(value);
-                            const oldTexts = original?.map(entry => entry.text) ?? [];
-                            const toDelete = oldTexts
-                                .difference(newTexts)
-                                .map(text => (original ?? []).find(val => val.text === text).id);
-                            const toUpdate: Partial<PointOfOrderCategory>[] = newTexts
-                                .intersect(oldTexts)
-                                .map(text => ({
-                                    id: original?.find(val => text === val.text && val.rank !== value[text])?.id,
-                                    rank: value[text]
-                                }))
-                                .filter(update => update.id);
-                            const toCreate: { text: string; rank: number }[] = newTexts
-                                .difference(oldTexts)
-                                .map(text => ({ text, rank: value[text] }));
-                            while (toDelete.length && toCreate.length) {
-                                toUpdate.push({ ...toCreate.shift(), id: toDelete.shift() });
-                            }
+                            (value ?? []).map(element => ({
+                                entry: element.text,
+                                allocation: element.rank,
+                                id: element.id
+                            })),
+                        reverseTransformFn: (value: AllocationBox[], original?: ViewPointOfOrderCategory[]) => {
+                            const originalIds = original.map(value => value.id);
+                            const updatedIds = value.map(val => val.id).filter(id => !!id);
+                            const toDelete = originalIds.difference(updatedIds);
+                            const toUpdate: Partial<PointOfOrderCategory>[] = value
+                                .map(val => ({ text: val.entry, rank: +val.allocation, id: val.id }))
+                                .filter(val => {
+                                    if (!val.id) {
+                                        return false;
+                                    }
+                                    const former = original.find(value => value.id === val.id);
+                                    return former.text !== val.text || former.rank !== val.rank;
+                                });
+                            const toCreate: { text: string; rank: number }[] = value
+                                .filter(val => !val.id)
+                                .map(val => ({ text: val.entry, rank: +val.allocation }));
                             return { toDelete, toUpdate, toCreate };
                         }
                     }

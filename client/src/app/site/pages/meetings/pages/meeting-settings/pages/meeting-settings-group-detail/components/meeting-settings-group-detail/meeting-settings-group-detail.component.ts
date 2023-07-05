@@ -103,7 +103,7 @@ export class MeetingSettingsGroupDetailComponent
             await this.repo.update(
                 Object.keys(this.changedSettings).mapToObject(key => {
                     let value: any = this.changedSettings[key];
-                    const reverseFunction = this.settingsGroup.transformableKeys[key][0]?.reverseTransformFn;
+                    const reverseFunction = (this.settingsGroup.transformableKeys[key] ?? [])[0]?.reverseTransformFn;
                     if (this.settingsGroup.transformableKeys[key]?.length > 1) {
                         console.warn(
                             `There are multiple transform reverse functions for ${key} in this setting group. They will therefore be ignored.`

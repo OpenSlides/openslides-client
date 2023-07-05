@@ -1,4 +1,5 @@
 import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
+import { Observable } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 
@@ -166,5 +167,6 @@ interface IMeetingRelations {
     poll_countdown: ViewProjectorCountdown;
     list_of_speakers_countdown: ViewProjectorCountdown;
     point_of_order_categories: ViewPointOfOrderCategory[];
+    point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
 }
 export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle, HasOrganizationTags {}
