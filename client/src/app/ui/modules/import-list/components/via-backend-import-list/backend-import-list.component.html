@@ -39,7 +39,7 @@
                 <mat-icon>fullscreen</mat-icon>
             </button>
         </div>
-        <table>
+        <table *ngIf="!finishedSuccessfully">
             <tr *ngFor="let point of summary">
                 <td>{{ getSummaryPointTitle(point.name) | translate }}:</td>
                 <td>&nbsp;{{ point.value }}</td>

@@ -110,6 +110,13 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
      */
     protected abstract readonly errorList: { [errorKey: string]: string };
 
+    /**
+     * List of possible errors and their verbose explanation.
+     */
+    private readonly verboseGeneralErrors: { [errorKey: string]: string } = {
+        [`Duplicate`]: `Is a duplicate`
+    };
+
     protected readonly translate: TranslateService = this.importServiceCollector.translate;
     protected readonly matSnackbar: MatSnackBar = this.importServiceCollector.matSnackBar;
 
@@ -253,7 +260,7 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
      * @returns the extended error desription for that error
      */
     public verbose(error: string): string {
-        return this.errorList[error] || error;
+        return this.errorList[error] || this.verboseGeneralErrors[error] || error;
     }
 
     /**
