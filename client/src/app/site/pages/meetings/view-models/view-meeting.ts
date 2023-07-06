@@ -1,4 +1,4 @@
-import { unix } from 'moment';
+import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
@@ -85,12 +85,13 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public get relatedTime(): RelatedTime {
-        if ((this.start_time ?? this.end_time) === undefined) {
+        const referenceTime = this.start_time ?? this.end_time;
+        if (!referenceTime && referenceTime !== 0) {
             return RelatedTime.Dateless;
         }
         const current = new Date();
-        let start = unix(this.start_time).startOf(`day`).toDate() ?? unix(this.end_time).startOf(`day`).toDate();
-        const end = unix(this.end_time).endOf(`day`).toDate() ?? unix(this.start_time).endOf(`day`).toDate();
+        const start = startOfDay(fromUnixTime(this.start_time)) ?? startOfDay(fromUnixTime(this.end_time));
+        const end = endOfDay(fromUnixTime(this.end_time)) ?? endOfDay(fromUnixTime(this.start_time));
         if (current < start) {
             return RelatedTime.Future;
         } else if (current <= end) {

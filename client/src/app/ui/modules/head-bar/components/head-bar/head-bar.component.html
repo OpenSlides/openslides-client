@@ -1,100 +1,108 @@
-<mat-toolbar color="primary" [ngClass]="multiSelectMode ? 'multi-select' : ''" class="sticky-toolbar">
-    <div class="toolbar-left">
-        <ng-container *ngIf="!editMode">
-            <ng-container *ngIf="!showBackButton">
-                <!-- Toggle main nav -->
-                <button mat-icon-button *ngIf="vp.isMobile && !customMenu" (click)="clickHamburgerMenu()">
-                    <mat-icon>menu</mat-icon>
-                </button>
+<ng-template #headbarContent>
+    <mat-toolbar color="primary" [ngClass]="multiSelectMode ? 'multi-select' : ''" class="sticky-toolbar">
+        <div class="toolbar-left">
+            <ng-container *ngIf="!editMode">
+                <ng-container *ngIf="!showBackButton">
+                    <!-- Toggle main nav -->
+                    <button mat-icon-button *ngIf="vp.isMobile && !customMenu" (click)="clickHamburgerMenu()">
+                        <mat-icon>menu</mat-icon>
+                    </button>
 
-                <!-- Custom menu -->
-                <button mat-icon-button *ngIf="customMenu && !multiSelectMode" [matMenuTriggerFor]="customNavMenu">
-                    <mat-icon>menu</mat-icon>
+                    <!-- Custom menu -->
+                    <button mat-icon-button *ngIf="customMenu && !multiSelectMode" [matMenuTriggerFor]="customNavMenu">
+                        <mat-icon>menu</mat-icon>
+                    </button>
+                </ng-container>
+
+                <!-- Exit / Back button -->
+                <button mat-icon-button data-cy="headbarBackButton" *ngIf="showBackButton" (click)="onBackButton()">
+                    <mat-icon>arrow_back</mat-icon>
                 </button>
             </ng-container>
 
-            <!-- Exit / Back button -->
-            <button mat-icon-button data-cy="headbarBackButton" *ngIf="showBackButton" (click)="onBackButton()">
-                <mat-icon>arrow_back</mat-icon>
+            <!-- Cancel edit button -->
+            <button
+                mat-icon-button
+                data-cy="headbarCloseButton"
+                *ngIf="editMode"
+                (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()"
+            >
+                <mat-icon>close</mat-icon>
             </button>
-        </ng-container>
 
-        <!-- Cancel edit button -->
-        <button
-            mat-icon-button
-            data-cy="headbarCloseButton"
-            *ngIf="editMode"
-            (click)="isCancelEditUsed ? sendCancelEditEvent() : sendMainEvent()"
-        >
-            <mat-icon>close</mat-icon>
-        </button>
-
-        <div class="toolbar-left-text" *ngIf="!multiSelectMode">
-            <!-- Title slot -->
-            <ng-content select=".title-slot"></ng-content>
+            <div class="toolbar-left-text" *ngIf="!multiSelectMode">
+                <!-- Title slot -->
+                <ng-content select=".title-slot"></ng-content>
+            </div>
         </div>
-    </div>
 
-    <!-- centered information slot -->
-    <div *ngIf="!multiSelectMode" class="spacer"></div>
-    <div class="toolbar-centered" *ngIf="multiSelectMode">
-        <ng-content select=".central-info-slot"></ng-content>
-    </div>
-    <div class="spacer"></div>
+        <!-- centered information slot -->
+        <div *ngIf="!multiSelectMode" class="spacer"></div>
+        <div class="toolbar-centered" *ngIf="multiSelectMode">
+            <ng-content select=".central-info-slot"></ng-content>
+        </div>
+        <div class="spacer"></div>
 
-    <div class="toolbar-right">
-        <!-- Extra controls slot -->
-        <ng-content select=".extra-controls-slot"></ng-content>
+        <div class="toolbar-right">
+            <!-- Extra controls slot -->
+            <ng-content select=".extra-controls-slot"></ng-content>
 
-        <!-- Main action button - desktop -->
+            <!-- Main action button - desktop -->
+            <button
+                mat-icon-button
+                *ngIf="hasMainButton && !editMode && !vp.isMobile && !multiSelectMode"
+                [disabled]="!isMainButtonEnabled"
+                (click)="sendMainEvent()"
+                matTooltip="{{ mainActionTooltip | translate }}"
+                data-cy="headbarMainButton"
+            >
+                <mat-icon>{{ mainButtonIcon }}</mat-icon>
+            </button>
+
+            <!-- Save button -->
+            <ng-container
+                *ngIf="isSavingObservable | async; then isSavingTemplate; else isNotSavingTemplate"
+            ></ng-container>
+
+            <!-- Menu button slot -->
+            <ng-content *ngIf="!editMode" select=".menu-slot"></ng-content>
+        </div>
+    </mat-toolbar>
+
+    <ng-template #isSavingTemplate>
+        <div>
+            <os-spinner [width]="30" [height]="30" [showText]="false"></os-spinner>
+        </div>
+    </ng-template>
+    <ng-template #isNotSavingTemplate>
         <button
-            mat-icon-button
-            *ngIf="hasMainButton && !editMode && !vp.isMobile && !multiSelectMode"
-            [disabled]="!isMainButtonEnabled"
-            (click)="sendMainEvent()"
-            matTooltip="{{ mainActionTooltip | translate }}"
-            data-cy="headbarMainButton"
+            mat-button
+            *ngIf="editMode"
+            data-cy="headbarSaveButton"
+            [disabled]="!isSaveButtonEnabled"
+            (click)="save()"
         >
-            <mat-icon>{{ mainButtonIcon }}</mat-icon>
+            <strong class="upper">{{ saveText | translate }}</strong>
         </button>
+    </ng-template>
 
-        <!-- Save button -->
-        <ng-container
-            *ngIf="isSavingObservable | async; then isSavingTemplate; else isNotSavingTemplate"
-        ></ng-container>
+    <!-- Main action button - mobile -->
 
-        <!-- Menu button slot -->
-        <ng-content *ngIf="!editMode" select=".menu-slot"></ng-content>
-    </div>
-</mat-toolbar>
-
-<ng-template #isSavingTemplate>
-    <div>
-        <os-spinner [width]="30" [height]="30" [showText]="false"></os-spinner>
-    </div>
-</ng-template>
-<ng-template #isNotSavingTemplate>
-    <button mat-button *ngIf="editMode" data-cy="headbarSaveButton" [disabled]="!isSaveButtonEnabled" (click)="save()">
-        <strong class="upper">{{ saveText | translate }}</strong>
+    <button
+        mat-fab
+        class="head-button"
+        *ngIf="hasMainButton && !editMode && vp.isMobile && !multiSelectMode"
+        [disabled]="!isMainButtonEnabled"
+        (click)="sendMainEvent()"
+        matTooltip="{{ mainActionTooltip | translate }}"
+    >
+        <mat-icon *ngIf="mainButtonIcon === 'add_circle'">add</mat-icon>
+        <mat-icon *ngIf="mainButtonIcon !== 'add_circle'">
+            {{ mainButtonIcon }}
+        </mat-icon>
     </button>
+
+    <mat-menu #customNavMenu="matMenu">
+        <ng-content select=".custom-menu-slot"></ng-content>
+    </mat-menu>
 </ng-template>
-
-<!-- Main action button - mobile -->
-
-<button
-    mat-fab
-    class="head-button"
-    *ngIf="hasMainButton && !editMode && vp.isMobile && !multiSelectMode"
-    [disabled]="!isMainButtonEnabled"
-    (click)="sendMainEvent()"
-    matTooltip="{{ mainActionTooltip | translate }}"
->
-    <mat-icon *ngIf="mainButtonIcon === 'add_circle'">add</mat-icon>
-    <mat-icon *ngIf="mainButtonIcon !== 'add_circle'">
-        {{ mainButtonIcon }}
-    </mat-icon>
-</button>
-
-<mat-menu #customNavMenu="matMenu">
-    <ng-content select=".custom-menu-slot"></ng-content>
-</mat-menu>

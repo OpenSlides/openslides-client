@@ -107,7 +107,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (!motion.state) {
             return ``;
         }
-        let state = this.translate.instant(motion.state.name);
+        let state = motion.state.name;
         if (motion.stateExtension && motion.state.show_state_extension_field) {
             state += ` ` + this.parseMotionPlaceholders(motion.stateExtension);
         }
@@ -195,7 +195,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         if (!motion.recommendation) {
             return ``;
         }
-        let rec = this.translate.instant(motion.recommendation.recommendation_label);
+        let rec = motion.recommendation.recommendation_label;
         if (motion.recommendationExtension && motion.recommendation.show_recommendation_extension_field) {
             rec += ` ` + this.parseMotionPlaceholders(motion.recommendationExtension);
         }
@@ -241,5 +241,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         } else {
             viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode) => [];
         }
+        viewModel.getExtendedStateLabel = () => this.getExtendedStateLabel(viewModel);
+        viewModel.getExtendedRecommendationLabel = () => this.getExtendedRecommendationLabel(viewModel);
     }
 }

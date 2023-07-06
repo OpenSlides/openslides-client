@@ -30,7 +30,7 @@ export class ImportContext<ToImport> {
     }
 
     public get phaseObservable(): Observable<ImportStepPhase> {
-        return this._importStepPhaseSubject.asObservable();
+        return this._importStepPhaseSubject;
     }
 
     public set phase(value: ImportStepPhase) {

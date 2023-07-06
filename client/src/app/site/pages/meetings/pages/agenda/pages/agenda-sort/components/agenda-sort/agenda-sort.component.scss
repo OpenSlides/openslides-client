@@ -1,8 +1,11 @@
+.filter-hint {
+    padding: 0 16px;
+}
+
 .sort-header {
     display: block;
     padding: 0 8px;
     width: auto;
-    position: relative;
     text-align: center;
 
     .button-menu {
@@ -54,6 +57,11 @@
 .current-nodes {
     position: relative;
     margin-bottom: 8px;
+}
+
+.sort-node-title {
+    min-width: 100px;
+    flex: 1;
 }
 
 .sort-node-icon {

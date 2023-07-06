@@ -9,7 +9,7 @@
     <div mat-dialog-content class="account-dialog-container">
         <div class="account-dialog-menu-items">
             <mat-selection-list [multiple]="false">
-                <ng-container *ngFor="let item of menuItems">
+                <ng-container *ngFor="let item of filteredMenuItems">
                     <mat-list-option
                         [value]="item"
                         [selected]="activeMenuItem === item.name"
@@ -78,7 +78,7 @@
                             class="flex-vertical-center"
                             *ngFor="let group of getGroupsForMeeting(meeting); let last = last"
                         >
-                            {{ group.name | translate }}
+                            {{ group.name }}
                             <span *ngIf="!last">,&nbsp;</span>
                         </span>
                     </div>

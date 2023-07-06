@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { PollContentObject } from 'src/app/domain/models/poll';
 import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
@@ -16,7 +16,7 @@ import { PollControllerService } from '../services/poll-controller.service/poll-
 export abstract class BasePollComponent<C extends PollContentObject = any> extends BaseMeetingComponent {
     private stateChangePendingSubject = new BehaviorSubject<boolean>(false);
 
-    public readonly stateChangePendingObservable = this.stateChangePendingSubject.asObservable();
+    public readonly stateChangePendingObservable = this.stateChangePendingSubject as Observable<boolean>;
 
     public get poll(): ViewPoll<C> {
         return this._poll;

@@ -57,14 +57,18 @@
         <span class="trigger-menu" *ngIf="motion.state">
             <ng-container *ngIf="perms.isAllowed('change_state', motion)">
                 <button *ngFor="let state of motion.state.next_states" mat-menu-item (click)="setState(state.id)">
-                    {{ state.name | translate }}
+                    {{ state.name }}
                     <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                 </button>
                 <div>
                     <mat-divider *ngIf="motion.state.next_states.length > 0"></mat-divider>
-                    <button *ngFor="let state of motion.state.previous_states" mat-menu-item (click)="setState(state.id)">
+                    <button
+                        *ngFor="let state of motion.state.previous_states"
+                        mat-menu-item
+                        (click)="setState(state.id)"
+                    >
                         <mat-icon>arrow_back</mat-icon>
-                        {{ state.name | translate }}
+                        {{ state.name }}
                         <span *ngIf="state.show_state_extension_field">&nbsp;...</span>
                     </button>
                     <button mat-menu-item (click)="resetState()">
@@ -75,7 +79,7 @@
             </ng-container>
             <ng-container *ngIf="!perms.isAllowed('change_state', motion) && !!motion.state.submitter_withdraw_state">
                 <button mat-menu-item (click)="setState(motion.state.submitter_withdraw_state.id)">
-                    {{ motion.state.submitter_withdraw_state.name | translate }}
+                    {{ motion.state.submitter_withdraw_state.name }}
                 </button>
             </ng-container>
         </span>
@@ -121,7 +125,7 @@
                 (click)="setRecommendation(recommendation.id)"
             >
                 <mat-icon *ngIf="motion.recommendation_id === recommendation.id">check</mat-icon>
-                {{ recommendation.recommendation_label | translate }}
+                {{ recommendation.recommendation_label }}
                 <span *ngIf="recommendation.show_recommendation_extension_field">&nbsp;...</span>
             </button>
             <mat-divider></mat-divider>
@@ -140,9 +144,9 @@
 <!-- recommendation referencing motions -->
 <div *ngIf="showReferringMotions && motion?.referenced_in_motion_recommendation_extensions?.length > 0">
     <h4>{{ 'Referring motions' | translate }}</h4>
-    <span *ngFor="let motion of motion.referenced_in_motion_recommendation_extensions; let last = last">
+    <span *ngFor="let motion of referencingMotions; let last = last">
         <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
-        <span *ngIf="!last">&nbsp;·&nbsp;</span>
+        <span *ngIf="!last" class="referencelist">&nbsp;·&nbsp;</span>
     </span>
 </div>
 
@@ -154,10 +158,13 @@
     <os-chip-select
         *ngIf="perms.isAllowed('change_metadata', motion) || motion.category"
         chipClass="grey multi-line-chip"
-        [canOpen]="perms.isAllowed('change_metadata', motion)">
+        [canOpen]="perms.isAllowed('change_metadata', motion)"
+    >
         <button menu mat-menu-item *ngFor="let category of categories" (click)="setCategory(category.id)">
             <mat-icon *ngIf="motion.category_id === category.id">check</mat-icon>
-            <span [ngStyle]="{ 'padding-left': getCategorySelectionMarginLeft(category) }">{{ category.prefixedNameWithParents }}</span>
+            <span [ngStyle]="{ 'padding-left': getCategorySelectionMarginLeft(category) }">
+                {{ category.prefixedNameWithParents }}
+            </span>
         </button>
 
         <div *ngIf="motion.category">
@@ -179,7 +186,8 @@
 
     <os-chip-select
         *ngIf="perms.isAllowed('change_metadata', motion) || motion.hasTags()"
-        [canOpen]="perms.isAllowed('change_metadata', motion)">
+        [canOpen]="perms.isAllowed('change_metadata', motion)"
+    >
         <button menu mat-menu-item *ngFor="let tag of tags" (click)="setTag($event, tag.id)">
             <mat-icon *ngIf="motion.tags.includes(tag)">check</mat-icon>
             {{ tag }}
@@ -200,7 +208,8 @@
     </h4>
     <os-chip-select
         *ngIf="perms.isAllowed('change_metadata', motion) || motion.block"
-        [canOpen]="perms.isAllowed('change_metadata', motion)">
+        [canOpen]="perms.isAllowed('change_metadata', motion)"
+    >
         <button menu mat-menu-item *ngFor="let block of motionBlocks" (click)="setBlock(block.id)">
             <mat-icon *ngIf="motion.block_id === block.id">check</mat-icon>
             {{ block }}
@@ -214,6 +223,12 @@
 <div *ngIf="motion?.created">
     <h4>{{ 'Creation date' | translate }}</h4>
     <div>{{ motion.created | localizedDate }}</div>
+</div>
+
+<!-- Workflow timestamp -->
+<div *ngIf="motion?.workflow_timestamp">
+    <h4>{{ 'Submit date' | translate }}</h4>
+    <div>{{ motion.workflow_timestamp | localizedDate }}</div>
 </div>
 
 <!-- Origins - display only -->

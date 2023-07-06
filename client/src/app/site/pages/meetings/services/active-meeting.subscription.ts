@@ -2,6 +2,7 @@ import 'src/app/site/services/model-request-builder';
 
 import { Id } from 'src/app/domain/definitions/key-types';
 import { MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
+import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 
 import { ViewMeeting } from '../view-models/view-meeting';
@@ -23,6 +24,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `user_ids`,
                 `description`,
                 `location`,
+                `language`,
                 `organization_tag_ids`,
                 `welcome_title`,
                 `welcome_text`,
@@ -32,7 +34,21 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
             ],
             follow: [
                 { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
-                `chat_message_ids`, // TODO: Remove and count unread messages by chat_group_ids/chat_message_ids
+                {
+                    idField: `chat_message_ids`,
+                    follow: [
+                        {
+                            idField: `meeting_user_id`,
+                            fieldset: [],
+                            follow: [
+                                {
+                                    idField: `user_id`,
+                                    ...UserFieldsets.FullNameSubscription
+                                }
+                            ]
+                        }
+                    ]
+                }, // TODO: Remove and count unread messages by chat_group_ids/chat_message_ids
                 {
                     idField: `poll_ids`,
                     follow: [{ idField: `content_object_id`, fieldset: [`title`] }],
@@ -45,7 +61,8 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                         `default_group_for_meeting_id`,
                         `name`,
                         `permissions`,
-                        `weight`
+                        `weight`,
+                        `external_id`
                     ]
                 },
                 {

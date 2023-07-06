@@ -1,4 +1,4 @@
-<ng-container *osPerms="permission.listOfSpeakersCanSee; and: hasInitialized">
+<ng-container *osPerms="[permission.listOfSpeakersCanSee, permission.listOfSpeakersCanBeSpeaker]; and: hasInitialized">
     <ng-container *ngIf="currentListOfSpeakersObservable | async as listOfSpeakers">
         <os-detail-view-navigator [model]="listOfSpeakers">
             <button
@@ -12,7 +12,9 @@
                 class="anchor-button"
             >
                 <mat-icon
-                    [matBadge]="listOfSpeakers.waitingSpeakerAmount > 0 ? listOfSpeakers.waitingSpeakerAmount : null"
+                    [matBadge]="
+                        canSee && listOfSpeakers.waitingSpeakerAmount > 0 ? listOfSpeakers.waitingSpeakerAmount : null
+                    "
                     matBadgeColor="accent"
                 >
                     {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
@@ -23,7 +25,11 @@
                 <mat-icon>{{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}</mat-icon>
                 <span>{{ 'List of speakers' | translate }}</span>
                 <span>&nbsp;</span>
-                <mat-basic-chip disableRipple class="lightblue" *ngIf="listOfSpeakers.waitingSpeakerAmount > 0">
+                <mat-basic-chip
+                    disableRipple
+                    class="lightblue"
+                    *ngIf="canSee && listOfSpeakers.waitingSpeakerAmount > 0"
+                >
                     <span>{{ listOfSpeakers.waitingSpeakerAmount }}</span>
                 </mat-basic-chip>
             </button>

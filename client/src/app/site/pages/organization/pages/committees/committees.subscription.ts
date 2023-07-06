@@ -50,7 +50,9 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
-            `jitsi_room_password`
+            `jitsi_room_password`,
+            `language`,
+            `external_id`
         ],
         follow: [`admin_group_id`, `default_group_id`]
     },

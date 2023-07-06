@@ -29,6 +29,7 @@ export class Projector extends BaseModel<Projector> {
     public show_title!: boolean;
     public show_logo!: boolean;
     public show_clock!: boolean;
+    public is_internal!: boolean;
 
     public current_projection_ids!: Id[]; // (projection/current_projector_id)[];
     public preview_projection_ids!: Id[]; // (projection/preview_projector_id)[];
@@ -74,6 +75,7 @@ export class Projector extends BaseModel<Projector> {
     public static readonly REQUESTABLE_FIELDS: (keyof Projector)[] = [
         `id`,
         `name`,
+        `is_internal`,
         `scale`,
         `scroll`,
         `width`,

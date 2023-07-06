@@ -3,7 +3,13 @@
         <!-- navigation -->
         <mat-nav-list class="main-nav">
             <ng-container *ngIf="showMeetingNav">
-                <a [@navItemAnim] mat-list-item (click)="mobileAutoCloseNav()" [routerLink]="['/']" class="meetingNavRow">
+                <a
+                    [@navItemAnim]
+                    mat-list-item
+                    (click)="mobileAutoCloseNav()"
+                    [routerLink]="['/']"
+                    class="meetingNavRow"
+                >
                     <mat-icon>apps</mat-icon>
                     <span>{{ 'Dashboard' | translate }}</span>
                 </a>
@@ -59,14 +65,8 @@
     </ng-template>
     <ng-template osSidenavMainContent>
         <div class="content">
-            <main>
-                <div>
-                    <os-global-headbar></os-global-headbar>
-                    <div class="scrollable-content">
-                        <router-outlet #o="outlet"></router-outlet>
-                    </div>
-                </div>
-            </main>
+            <os-global-headbar></os-global-headbar>
+            <router-outlet #o="outlet"></router-outlet>
         </div>
         <div class="toolbars">
             <os-action-bar></os-action-bar>

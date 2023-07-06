@@ -1,8 +1,8 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 export const PROJECTIONDEFAULT = {
-    agendaAllItems: `agenda_all_items`,
-    topics: `topics`,
+    agendaItemList: `agenda_item_list`,
+    topics: `topic`,
     listOfSpeakers: `list_of_speakers`,
     currentListOfSpeakers: `current_list_of_speakers`,
     motion: `motion`,
@@ -10,8 +10,8 @@ export const PROJECTIONDEFAULT = {
     motionBlock: `motion_block`,
     assignment: `assignment`,
     mediafile: `mediafile`,
-    projectorMessage: `projector_message`,
-    projectorCountdown: `projector_countdowns`,
+    projectorMessage: `message`,
+    projectorCountdown: `countdown`,
     assignmentPoll: `assignment_poll`,
     motionPoll: `motion_poll`,
     poll: `poll`
@@ -22,7 +22,7 @@ export type ProjectiondefaultKey = keyof typeof PROJECTIONDEFAULT;
 export type ProjectiondefaultValue = (typeof PROJECTIONDEFAULT)[ProjectiondefaultKey];
 
 export const PROJECTIONDEFAULT_VERBOSE: { [key in ProjectiondefaultKey]: string } = {
-    agendaAllItems: _(`Agenda`),
+    agendaItemList: _(`Agenda`),
     topics: _(`Topics`),
     listOfSpeakers: _(`List of speakers`),
     currentListOfSpeakers: _(`Current list of speakers`),

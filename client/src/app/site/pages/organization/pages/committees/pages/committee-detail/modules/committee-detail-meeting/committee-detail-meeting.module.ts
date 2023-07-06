@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { AccountSearchSelectorModule } from 'src/app/site/pages/organization/modules/account-search-selector';
 import { DirectivesModule } from 'src/app/ui/directives';
@@ -30,6 +31,7 @@ import { MeetingImportComponent } from './components/meeting-import/meeting-impo
         MatFormFieldModule,
         MatCardModule,
         MatInputModule,
+        MatSelectModule,
         MatIconModule,
         AccountSearchSelectorModule,
         SearchSelectorModule,

@@ -1,7 +1,4 @@
-<os-head-bar
-    [nav]="false"
-    prevUrl="../.."
->
+<os-head-bar [nav]="false" prevUrl="../..">
     <!-- Title -->
     <div class="title-slot">
         <h2>{{ 'Import topics' | translate }}</h2>
@@ -9,13 +6,11 @@
 
     <div class="menu-slot">
         <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ tryAgain ? 'Try again' : 'Import' | translate }}</span>
+            <span class="upper">{{ tryAgain ? 'Try again' : ('Import' | translate) }}</span>
         </button>
         <div *ngIf="finishedSuccessfully || hasErrors" style="padding-top: 6px">
-            <mat-icon *ngIf="finishedSuccessfully" matTooltip="{{'Import successful' | translate}}">
-                done
-            </mat-icon>
-            <mat-icon *ngIf="hasErrors" matTooltip="{{'Can not import because of errors' | translate}}">
+            <mat-icon *ngIf="finishedSuccessfully" matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
+            <mat-icon *ngIf="hasErrors" matTooltip="{{ 'Can not import because of errors' | translate }}">
                 block
             </mat-icon>
         </div>

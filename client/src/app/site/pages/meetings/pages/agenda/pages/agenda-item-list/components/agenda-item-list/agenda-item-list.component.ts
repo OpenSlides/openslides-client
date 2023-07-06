@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
@@ -21,7 +21,6 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
@@ -74,14 +73,15 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         return this.operator.hasPerms(Permission.agendaItemCanManage);
     }
 
-    public itemListSlide: ProjectionBuildDescriptor | null = null;
+    public get canSeeMenu(): boolean {
+        return this.operator.hasPerms(
+            Permission.agendaItemCanManage,
+            Permission.listOfSpeakersCanBeSpeaker,
+            Permission.listOfSpeakersCanSee
+        );
+    }
 
-    public restrictedColumns: ColumnRestriction<Permission>[] = [
-        {
-            columnName: `menu`,
-            permission: Permission.agendaItemCanManage
-        }
-    ];
+    public itemListSlide: ProjectionBuildDescriptor | null = null;
 
     /**
      * Define extra filter properties
@@ -135,7 +135,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                                 default: false
                             }
                         ],
-                        projectionDefault: PROJECTIONDEFAULT.agendaAllItems,
+                        projectionDefault: PROJECTIONDEFAULT.agendaItemList,
                         getDialogTitle: () => this.translate.instant(`Agenda`)
                     };
                 } else {
@@ -210,8 +210,12 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
      * Handler for the plus button.
      * Comes from the HeadBar Component
      */
-    public onPlusButton(): void {
-        this.router.navigate([`topics`, `new`], { relativeTo: this.route.parent });
+    public onPlusButton(parentId?: number): void {
+        const options: NavigationExtras = { relativeTo: this.route.parent };
+        if (parentId) {
+            options.queryParams = { parent: parentId };
+        }
+        this.router.navigate([`topics`, `new`], options);
     }
 
     /**

@@ -88,6 +88,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         return this.operator.hasPerms(this.permission.listOfSpeakersCanManage);
     }
 
+    public get canSee(): boolean {
+        return this.operator.hasPerms(this.permission.listOfSpeakersCanSee);
+    }
+
     public get canAddDueToPresence(): boolean {
         return !this.onlyPresentUsers || this._currentUser!.isPresentInMeeting();
     }
@@ -221,7 +225,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (speakerToDelete && (await this.promptService.open(title))) {
             await this.speakerRepo.delete(speakerToDelete.id);
             this.filterNonAvailableUsers();
-            this.interactionService.kickUsers([speaker.user], `Removed from the list of speakers`);
+            this.interactionService.kickUsers([speakerToDelete.user], `Removed from the list of speakers`);
         }
     }
 
@@ -364,10 +368,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         const nonAvailableUsers = this.users
             .filter(
                 user =>
-                    !(!this.onlyPresentUsers || user.isPresentInMeeting()) ||
-                    this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
+                    !(!this.onlyPresentUsers || user?.isPresentInMeeting()) ||
+                    this.waitingSpeakers.some(speaker => speaker.user_id === user?.id)
             )
-            .map(user => user.id);
+            .map(user => user?.id)
+            .filter(user => !!user);
         this.nonAvailableUserIds = nonAvailableUsers;
     }
 

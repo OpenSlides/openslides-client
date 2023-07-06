@@ -24,7 +24,7 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: `gender`, label: _(`Gender`) },
         { property: `id`, label: _(`Sequential number`) },
         { property: `numberOfMeetings`, label: _(`Amount of meetings`) },
-        { property: `last_email_send`, label: _(`Last email sent`) },
+        { property: `last_email_sent`, label: _(`Last email sent`) },
         { property: `last_login`, label: _(`Last login`) }
     ];
 

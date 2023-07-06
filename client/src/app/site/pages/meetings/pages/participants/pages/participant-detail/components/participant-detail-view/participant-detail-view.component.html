@@ -29,7 +29,7 @@
     </div>
 
     <mat-menu #userExtraMenu="matMenu">
-        <button mat-menu-item *ngIf="isAllowed('changePassword')" (click)="changePassword()">
+        <button mat-menu-item *ngIf="!user?.saml_id && isAllowed('changePassword')" (click)="changePassword()">
             <mat-icon>security</mat-icon>
             <span>{{ 'Change password' | translate }}</span>
         </button>
@@ -83,6 +83,7 @@
                 <mat-checkbox
                     formControlName="is_present"
                     matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
+                    matTooltipPosition="right"
                 >
                     <span>{{ 'present' | translate }}</span>
                 </mat-checkbox>
@@ -186,10 +187,10 @@
 
     <ng-template #showView>
         <h2>{{ 'Meeting specific information' | translate }}</h2>
-        <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSend">
+        <div *ngIf="isAllowed('seePersonal') && user?.isLastEmailSent">
             <div>
                 <h4>{{ 'Last email sent' | translate }}</h4>
-                <span>{{ user.last_email_send | localizedDate }}</span>
+                <span>{{ user.last_email_sent | localizedDate }}</span>
             </div>
         </div>
 
@@ -234,7 +235,7 @@
             </div>
 
             <!-- Received Vote delegations -->
-            <div *ngIf="showVoteDelegations && (user!.vote_delegations_from().length > 0)">
+            <div *ngIf="showVoteDelegations && user!.vote_delegations_from().length > 0">
                 <h4>{{ 'Voting right received from (principals)' | translate }}</h4>
                 <span>{{ user!.vote_delegations_from() }}</span>
             </div>
@@ -250,7 +251,7 @@
             <!-- About me -->
             <div *ngIf="user?.about_me()">
                 <h4>{{ 'About me' | translate }}</h4>
-                <div [innerHTML]="user!.about_me() | trust: 'html'"></div>
+                <div [innerHTML]="user!.about_me() | trust : 'html'"></div>
             </div>
         </div>
 

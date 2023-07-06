@@ -7,7 +7,6 @@ export enum Permission {
     agendaItemCanManage = `agenda_item.can_manage`,
     agendaItemCanSee = `agenda_item.can_see`,
     agendaItemCanSeeInternal = `agenda_item.can_see_internal`,
-
     assignmentCanManage = `assignment.can_manage`,
     assignmentCanNominateOther = `assignment.can_nominate_other`,
     assignmentCanNominateSelf = `assignment.can_nominate_self`,

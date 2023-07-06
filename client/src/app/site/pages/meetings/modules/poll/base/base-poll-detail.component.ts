@@ -75,12 +75,12 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
     // The observable for the votes-per-user table
     public get votesDataObservable(): Observable<BaseVoteData[]> {
-        return this._votesDataSubject.asObservable();
+        return this._votesDataSubject;
     }
 
     // The observable for the entitled-users-table
     public get entitledUsersObservable(): Observable<EntitledUsersTableEntry[]> {
-        return this._entitledUsersSubject.asObservable();
+        return this._entitledUsersSubject;
     }
 
     public get self(): BasePollDetailComponent<V, S> {
@@ -272,7 +272,10 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
     public getUsersVoteDelegation(user: ViewUser): ViewUser | null {
         if (user.isVoteRightDelegated) {
-            return user.vote_delegated_to(this.activeMeetingId!);
+            return (
+                user.vote_delegated_to(this.activeMeetingId!) ??
+                this.userRepo.getViewModel(user.vote_delegated_to_id(this.activeMeetingId))
+            );
         }
 
         if (this._currentOperator.canVoteFor(user)) {

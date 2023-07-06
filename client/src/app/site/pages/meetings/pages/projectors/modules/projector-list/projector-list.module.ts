@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +11,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ActionCardModule } from 'src/app/ui/modules/action-card/action-card.module';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { PromptDialogModule } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
@@ -31,6 +33,7 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         MatTooltipModule,
         MatIconModule,
         MatInputModule,
+        MatCheckboxModule,
         ReactiveFormsModule,
         HeadBarModule,
         PromptDialogModule,
@@ -41,6 +44,7 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         AssignmentPollServiceModule,
         MotionPollServiceModule,
         TopicPollServiceModule,
+        IconContainerModule,
         OpenSlidesTranslationModule.forChild()
     ]
 })

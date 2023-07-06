@@ -74,7 +74,7 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
      * Observable that allows one to monitor the currenty selected file.
      */
     public get rawFileObservable(): Observable<File | null> {
-        return this._rawFileSubject.asObservable();
+        return this._rawFileSubject;
     }
 
     /**

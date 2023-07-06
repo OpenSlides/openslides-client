@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
@@ -22,6 +23,8 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
      * All agendaItems sorted by their weight {@link ViewItem.weight}
      */
     public itemsObservable: Observable<ViewAgendaItem[]>;
+
+    @ViewChild(`visibilities`) visibilitiesEl: MatSelectionList;
 
     /**
      * These are the available options for filtering the nodes.
@@ -56,14 +59,8 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
      *
      * @param filter Is the filter that was activated by the user.
      */
-    public onFilterChange(filter: SortTreeFilterId): void {
-        const value = this.activeFilters.value;
-        if (!value.includes(filter)) {
-            value.push(filter);
-        } else {
-            value.splice(value.indexOf(filter), 1);
-        }
-        this.activeFilters.next(value);
+    public onFilterChange(filter: MatListOption[]): void {
+        this.activeFilters.next(filter.map(f => f.value));
     }
 
     /**
@@ -89,6 +86,7 @@ export class AgendaSortComponent extends BaseSortTreeViewComponent<ViewAgendaIte
         for (const option of this.filterOptions) {
             option.state = false;
         }
+        this.visibilitiesEl.deselectAll();
         this.activeFilters.next([]);
     }
 

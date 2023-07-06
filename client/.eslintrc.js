@@ -75,12 +75,30 @@ module.exports = {
                 'simple-import-sort/imports': 'error',
                 'simple-import-sort/exports': 'error',
                 'unused-imports/no-unused-imports': 'error',
+                'no-restricted-properties': ['error', {
+                    'property': 'asObservable',
+                    'message': 'Please use a typecast or explicitly instantiate a new Observable.'
+                }]
+            }
+        },
+        {
+            files: ['*.spec.ts'],
+            rules: {
+                'no-restricted-globals': ['error', 'fdescribe', 'fit'],
             }
         },
         {
             files: ['*.html'],
             extends: ['plugin:@angular-eslint/template/recommended'],
             rules: {}
+        },
+        {
+            files: ['*.html'],
+            excludedFiles: ['*inline-template-*.component.html'],
+            extends: ['plugin:prettier/recommended'],
+            rules: {
+                "prettier/prettier": ["error", { "parser": "angular" }]
+            }
         }
     ]
 };

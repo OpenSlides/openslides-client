@@ -14,7 +14,7 @@ import { LifecycleService } from './lifecycle.service';
 })
 export class AuthService {
     public get authTokenObservable(): Observable<AuthToken | null> {
-        return this._authTokenSubject.asObservable();
+        return this._authTokenSubject;
     }
 
     public get authToken(): AuthToken | null {
@@ -25,14 +25,14 @@ export class AuthService {
      * "Pings" every time when a user logs out.
      */
     public get logoutObservable(): Observable<void> {
-        return this._logoutEvent.asObservable();
+        return this._logoutEvent;
     }
 
     /**
      * "Pings" every time when a user logs in.
      */
     public get loginObservable(): Observable<void> {
-        return this._loginEvent.asObservable();
+        return this._loginEvent;
     }
 
     // This is a wrapper around authTokenService.accessTokenObservable
@@ -84,6 +84,10 @@ export class AuthService {
                 this.resumeTokenSubscription();
             }
         }
+    }
+
+    public async startSamlLogin(): Promise<string> {
+        return this.authAdapter.startSamlLogin();
     }
 
     public redirectUser(meetingId: number | null): void {

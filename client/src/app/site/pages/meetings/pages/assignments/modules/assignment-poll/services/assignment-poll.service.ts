@@ -53,7 +53,7 @@ export class AssignmentPollService extends PollService {
         super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
         this.meetingSettingsService
-            .get(`assignment_poll_default_100_percent_base`)
+            .get(`assignment_poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
         this.meetingSettingsService
             .get(`assignment_poll_default_group_ids`)

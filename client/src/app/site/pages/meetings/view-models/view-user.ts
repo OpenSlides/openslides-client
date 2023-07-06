@@ -30,8 +30,8 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this._model;
     }
 
-    public get isLastEmailSend(): boolean {
-        return !!this.last_email_send;
+    public get isLastEmailSent(): boolean {
+        return !!this.last_email_sent;
     }
 
     public get isLastLogin(): boolean {
@@ -93,6 +93,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public get isInArchivedMeeting(): boolean {
         return this.meetings.some(meeting => meeting.isArchived);
+    }
+
+    public get hasSamlId(): boolean {
+        return this.saml_id !== null && this.saml_id !== undefined;
     }
 
     // Will be set by the repository

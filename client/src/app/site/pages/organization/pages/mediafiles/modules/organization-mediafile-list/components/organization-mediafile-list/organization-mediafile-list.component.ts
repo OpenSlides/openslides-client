@@ -20,10 +20,13 @@ import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/me
 import { MediafileListSortService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-sort.service';
 import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { ORGANIZATION_SUBSCRIPTION } from 'src/app/site/pages/organization/organization.subscription';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FileListComponent } from 'src/app/ui/modules/file-list/components/file-list/file-list.component';
+
+import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 
 @Component({
     selector: `os-organization-mediafile-list`,
@@ -103,7 +106,7 @@ export class OrganizationMediafileListComponent
         this.newDirectoryForm = this.formBuilder.group({
             title: [``, Validators.required]
         });
-        this.directoryObservable = this.directorySubject.asObservable();
+        this.directoryObservable = this.directorySubject as Observable<ViewMediafile[]>;
     }
 
     /**
@@ -184,7 +187,18 @@ export class OrganizationMediafileListComponent
         return this.canEdit;
     }
 
-    public changeDirectory(directoryId: number | null): void {
+    public async changeDirectory(directoryId: number | null): Promise<void> {
+        const mediafilesSubscribed = (
+            await Promise.all([
+                this.modelRequestService.subscriptionGotData(ORGANIZATION_SUBSCRIPTION),
+                this.modelRequestService.subscriptionGotData(ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION)
+            ])
+        ).some(val => !!val);
+        if (!mediafilesSubscribed) {
+            setTimeout(() => this.changeDirectory(directoryId), 50);
+            return;
+        }
+
         this.clearSubscriptions();
 
         // pipe the directory observable to the directorySubject so that the actual observable which

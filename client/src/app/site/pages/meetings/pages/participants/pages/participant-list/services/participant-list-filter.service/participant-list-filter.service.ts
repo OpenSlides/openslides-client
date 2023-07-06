@@ -75,7 +75,7 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 ]
             },
             {
-                property: `isLastEmailSend`,
+                property: `isLastEmailSent`,
                 label: this.translate.instant(`Last email sent`),
                 options: [
                     { condition: true, label: this.translate.instant(`Got an email`) },
@@ -96,6 +96,14 @@ export class ParticipantListFilterService extends BaseMeetingFilterListService<V
                 options: [
                     { condition: [false, null], label: this.translate.instant(`Has changed vote weight`) },
                     { condition: true, label: this.translate.instant(`Has unchanged vote weight`) }
+                ]
+            },
+            {
+                property: `hasSamlId`,
+                label: this.translate.instant(`SSO`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has SSO identification`) },
+                    { condition: [false, null], label: this.translate.instant(`Has no SSO identification`) }
                 ]
             },
             {

@@ -12,7 +12,7 @@ import { CollectionMappedTypes, CollectionType } from './definitions';
 })
 export class CollectionMapperService implements CollectionMapper {
     public get afterRepositoryRegistered(): Observable<CollectionMappedTypes<any, any>> {
-        return this._repositoryRegistered.asObservable();
+        return this._repositoryRegistered;
     }
 
     /**

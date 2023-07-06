@@ -95,6 +95,11 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     public readonly projectiondefaultVerbose = PROJECTIONDEFAULT_VERBOSE;
 
+    /**
+     * Options for the `Projection defaults`-selector
+     */
+    public readonly projectiondefaultKeys = PROJECTIONDEFAULT;
+
     public readonly colorFields = {
         color: _(`Foreground color`),
         background_color: _(`Background color`),
@@ -149,6 +154,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             show_title: [],
             show_logo: [],
             show_clock: [],
+            is_internal: [],
             projectiondefault_ids: [[]]
         });
 
@@ -171,7 +177,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         if (this.projector) {
             this.updateForm.patchValue(this.projector.projector);
             this.updateForm.patchValue({
-                name: this.translate.instant(this.projector.name),
+                name: this.projector.name,
                 aspectRatio: this.projector.aspectRatio
             });
         }
@@ -240,7 +246,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     private updateProjectorDefaults(meeting: ViewMeeting): void {
         for (let key of PROJECTIONDEFAULT_KEYS) {
-            const defaultProjectorIds = meeting.default_projectors(PROJECTIONDEFAULT[key]).map(p => p.id);
+            const defaultProjectorIds = meeting.default_projector_ids(key);
             this.handleChangeInDefaultProjector(key, defaultProjectorIds);
         }
     }

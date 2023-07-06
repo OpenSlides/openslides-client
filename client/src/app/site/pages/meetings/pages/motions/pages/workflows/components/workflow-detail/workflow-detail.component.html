@@ -3,7 +3,7 @@
         <!-- Title -->
         <div class="title-slot">
             <h2 *ngIf="workflow">
-                {{ workflow.name | translate }}
+                {{ workflow.name }}
             </h2>
         </div>
 
@@ -27,7 +27,7 @@
         <div class="title-line">
             <span>{{ 'First state' | translate }}</span>
             :
-            <span *ngIf="workflow.first_state">{{ workflow.first_state.name | translate }}</span>
+            <span *ngIf="workflow.first_state">{{ workflow.first_state.name }}</span>
         </div>
 
         <div class="scrollable-matrix">
@@ -49,7 +49,7 @@
                 >
                     <th mat-header-cell *matHeaderCellDef (click)="onClickStateName(state)">
                         <div class="clickable-cell stretch-to-fill-parent">
-                            <div class="inner-table">{{ state.name | translate }}</div>
+                            <div class="inner-table">{{ state.name }}</div>
                         </div>
                     </th>
                     <td mat-cell *matCellDef="let perm">
@@ -82,7 +82,7 @@
                             <div class="inner-table">
                                 <div *ngIf="!state.submitter_withdraw_state">-</div>
                                 <div *ngIf="state.submitter_withdraw_state">
-                                    {{ state.submitter_withdraw_state.name | translate }}
+                                    {{ state.submitter_withdraw_state.name }}
                                 </div>
                             </div>
                             <div
@@ -96,7 +96,7 @@
                                 <div *ngIf="!state.next_states.length">-</div>
                                 <div *ngIf="state.next_states.length">
                                     <div *ngFor="let nextstate of state.next_states; let last = last">
-                                        {{ nextstate.name | translate }}
+                                        {{ nextstate.name }}
                                         <span *ngIf="!last">,&nbsp;</span>
                                     </div>
                                 </div>
@@ -193,9 +193,13 @@
 <mat-menu matMenuContent #submitterWithdrawStateMenu="matMenu">
     <ng-template let-state="state" matMenuContent>
         <div *ngFor="let workflowState of workflow.states">
-            <button mat-menu-item *ngIf="workflowState.name !== state.name" (click)="onSetSubmitterWithdrawState(workflowState, state)">
+            <button
+                mat-menu-item
+                *ngIf="workflowState.name !== state.name"
+                (click)="onSetSubmitterWithdrawState(workflowState, state)"
+            >
                 <mat-icon *ngIf="state.submitter_withdraw_state_id === workflowState.id">check</mat-icon>
-                <span>{{ workflowState.name | translate }}</span>
+                <span>{{ workflowState.name }}</span>
             </button>
         </div>
     </ng-template>
@@ -207,7 +211,7 @@
         <div *ngFor="let nextState of workflow.states">
             <button mat-menu-item *ngIf="nextState.name !== state.name" (click)="onSetNextState(nextState, state)">
                 <mat-icon *ngIf="state.next_state_ids?.includes(nextState.id)">check</mat-icon>
-                <span>{{ nextState.name | translate }}</span>
+                <span>{{ nextState.name }}</span>
             </button>
         </div>
     </ng-template>

@@ -1,7 +1,7 @@
 import { BrowserContext, expect } from '@playwright/test';
 
 export async function os4request(context: BrowserContext, osAction: string, body: any): Promise<any> {
-    const response = await context.request.post('/system/action/handle_request', {
+    const response = await context.request.post(`/system/action/handle_request`, {
         data: [
             {
                 action: osAction,
@@ -18,10 +18,10 @@ export async function os4request(context: BrowserContext, osAction: string, body
     if (response.status() === 202) {
         await new Promise(r => setTimeout(r, 1000));
         const workerFqid = responseBody?.results[0][0].fqid;
-        const workerId = workerFqid.split('/')[1];
+        const workerId = workerFqid.split(`/`)[1];
         for (let i = 0; i <= 5; i++) {
             await new Promise(r => setTimeout(r, 1000 + i * 1000));
-            const workerStat = await context.request.post('/system/autoupdate?single=1', {
+            const workerStat = await context.request.post(`/system/autoupdate?single=1`, {
                 data: [
                     {
                         collection: `action_worker`,
@@ -32,8 +32,8 @@ export async function os4request(context: BrowserContext, osAction: string, body
             });
 
             const auBody = await workerStat.json();
-            expect(auBody[`${workerFqid}/state`]).not.toBe('aborted');
-            if (auBody[`${workerFqid}/state`] === 'end') {
+            expect(auBody[`${workerFqid}/state`]).not.toBe(`aborted`);
+            if (auBody[`${workerFqid}/state`] === `end`) {
                 const actionResponse = auBody[`${workerFqid}/response`];
                 expect(actionResponse?.status_code).toBe(200);
                 expect(actionResponse?.success).toBeTruthy();
@@ -41,7 +41,7 @@ export async function os4request(context: BrowserContext, osAction: string, body
                 return actionResponse?.results[0][0];
             }
         }
-        expect('run').not.toBe('end');
+        expect(`run`).not.toBe(`end`);
     }
 
     expect(response.status()).toBe(200);
@@ -85,6 +85,7 @@ export async function createMeeting(
     const meetingData = {
         committee_id: id,
         name,
+        language: `en`,
         admin_ids
     };
 
@@ -93,6 +94,10 @@ export async function createMeeting(
         name,
         committeeId: id
     }));
+}
+
+export async function updateOrganization(context: BrowserContext, data: { [key: string]: any }): Promise<void> {
+    await os4request(context, `organization.update`, { ...data, id: 1 });
 }
 
 export async function deleteAccounts(context: BrowserContext, ...ids: number[]): Promise<void> {

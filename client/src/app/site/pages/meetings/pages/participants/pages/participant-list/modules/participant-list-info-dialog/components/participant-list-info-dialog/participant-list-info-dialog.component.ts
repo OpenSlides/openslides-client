@@ -6,6 +6,7 @@ import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { GroupControllerService } from 'src/app/site/pages/meetings/pages/participants/modules';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
@@ -24,7 +25,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         return this.groupRepo.getViewModelListWithoutDefaultGroupObservable();
     }
 
-    public get otherParticipantsObservable(): Observable<ViewUser[]> {
+    public get otherParticipantsObservable(): Observable<ViewMeetingUser[]> {
         return this._otherParticipantsSubject;
     }
 
@@ -36,7 +37,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         return this._voteDelegationEnabled;
     }
 
-    private readonly _otherParticipantsSubject = new BehaviorSubject<ViewUser[]>([]);
+    private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
     private _isUserInScope = true;
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled: boolean = false;
@@ -59,7 +60,9 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
                 .getViewModelListObservable()
                 .subscribe(participants =>
                     this._otherParticipantsSubject.next(
-                        participants.filter(participant => participant.id !== this._currentUser.id)
+                        participants
+                            .filter(participant => participant.id !== this._currentUser.id)
+                            .map(participant => participant.getMeetingUser())
                     )
                 ),
             this.meetingSettings

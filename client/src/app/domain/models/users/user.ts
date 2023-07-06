@@ -10,9 +10,9 @@ import { BaseDecimalModel } from '../base/base-decimal-model';
 export type UserSortProperty = 'first_name' | 'last_name' | 'number';
 
 /**
- * Iterable pre selection of genders (sexes)
+ * Iterable pre selection of genders
  */
-export const GENDERS = [_(`female`), _(`male`), _(`diverse`)];
+export const GENDERS = [_(`female`), _(`male`), _(`diverse`), _(`non-binary`)];
 
 /**
  * Representation of a user in contrast to the operator.
@@ -33,10 +33,11 @@ export class User extends BaseDecimalModel<User> {
     public readonly default_number!: string;
     public readonly default_structure_level!: string;
     public readonly email!: string;
-    public readonly last_email_send!: number; // comes in seconds
+    public readonly last_email_sent!: number; // comes in seconds
     public readonly last_login!: number; // comes in seconds
     public readonly default_vote_weight!: number;
     public readonly is_demo_user!: boolean;
+    public readonly saml_id!: string;
 
     // Meeting and committee
     public meeting_ids!: Id[]; // (meeting/user_ids)[];
@@ -64,6 +65,7 @@ export class User extends BaseDecimalModel<User> {
     public static readonly REQUESTABLE_FIELDS: (keyof User)[] = [
         `id`,
         `username`,
+        `saml_id`,
         `pronoun`,
         `title`,
         `first_name`,
@@ -77,7 +79,7 @@ export class User extends BaseDecimalModel<User> {
         `default_number`,
         `default_structure_level`,
         `default_vote_weight`,
-        `last_email_send`,
+        `last_email_sent`,
         `is_demo_user`,
         `last_login`,
         `organization_management_level`,
