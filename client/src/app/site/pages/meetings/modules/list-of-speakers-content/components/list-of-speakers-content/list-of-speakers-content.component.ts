@@ -178,9 +178,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             this.meetingSettingsService
                 .get(`list_of_speakers_enable_point_of_order_categories`)
                 .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
-            this._pointOfOrderCategoriesSubject.subscribe(categories =>
-                console.log(categories?.map(category => category.pointOfOrderCategory))
-            ),
             this.activeMeeting.point_of_order_categories_as_observable.subscribe(this._pointOfOrderCategoriesSubject),
             combineLatest([
                 this.translate.get(_(`Withdraw %title%`)),
