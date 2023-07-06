@@ -36,7 +36,18 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
                 {
                     idField: `chat_message_ids`,
-                    follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                    follow: [
+                        {
+                            idField: `meeting_user_id`,
+                            fieldset: [],
+                            follow: [
+                                {
+                                    idField: `user_id`,
+                                    ...UserFieldsets.FullNameSubscription
+                                }
+                            ]
+                        }
+                    ]
                 }, // TODO: Remove and count unread messages by chat_group_ids/chat_message_ids
                 {
                     idField: `poll_ids`,
