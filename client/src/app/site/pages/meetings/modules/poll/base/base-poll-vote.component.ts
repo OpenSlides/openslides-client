@@ -227,7 +227,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     }
 
     protected async preparePayload(): Promise<void> {
-        for (let delegation of [this.user, ...this.delegations]) {
+        for (let delegation of [this.user].concat(this.delegations)) {
             if (!this.getVotingError(delegation) && !this.isDeliveringVote[delegation.id]) {
                 const value = this.voteRequestData[delegation.id].value;
                 this.deliveringVote[delegation.id] = true;
