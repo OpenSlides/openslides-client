@@ -144,7 +144,7 @@ export class WorkflowDetailComponent extends BaseMeetingComponent {
         { name: _(`Allow submitter edit`), selector: `allow_submitter_edit`, type: `check` },
         { name: _(`Allow forwarding of motions`), selector: `allow_motion_forwarding`, type: `check` },
         { name: _(`Set number`), selector: `set_number`, type: `check` },
-        { name: _(`Set timestamp of creation`), selector: `set_created_timestamp`, type: `check` },
+        { name: _(`Set timestamp`), selector: `set_workflow_timestamp`, type: `check` },
         { name: _(`Show state extension field`), selector: `show_state_extension_field`, type: `check` },
         {
             name: _(`Show recommendation extension field`),

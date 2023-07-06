@@ -51,7 +51,8 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
             `jitsi_domain`,
             `jitsi_room_name`,
             `jitsi_room_password`,
-            `language`
+            `language`,
+            `external_id`
         ],
         follow: [`admin_group_id`, `default_group_id`]
     },

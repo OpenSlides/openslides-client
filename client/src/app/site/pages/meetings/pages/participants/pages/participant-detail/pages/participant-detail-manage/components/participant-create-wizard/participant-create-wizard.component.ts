@@ -103,7 +103,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
 
     public get showVoteWeight(): boolean {
         const isVoteWeightEnabled = this._isElectronicVotingEnabled && this._isVoteWeightEnabled;
-        return this.user ? isVoteWeightEnabled && typeof this.user.vote_weight() === `number` : isVoteWeightEnabled;
+        return isVoteWeightEnabled;
     }
 
     public get showVoteDelegations(): boolean {

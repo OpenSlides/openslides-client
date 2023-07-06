@@ -13,6 +13,7 @@ export class Group extends BaseModel<Group> {
     public name!: string;
     public permissions!: Permission[];
     public weight!: number;
+    public external_id!: string;
 
     public meeting_user_ids!: Id[]; // (meeting_user/group_ids)[];
     public default_group_for_meeting_id!: Id; // meeting/default_group_id;
@@ -42,6 +43,7 @@ export class Group extends BaseModel<Group> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof Group)[] = [
         `id`,
+        `external_id`,
         `name`,
         `permissions`,
         `weight`,

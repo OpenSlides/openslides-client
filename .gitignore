@@ -4,6 +4,7 @@ dist
 /bazel-out
 /integration/bazel/bazel-*
 client/.angular/cache
+client/coverage
 .cache
 .vscode
 e2e_test.*

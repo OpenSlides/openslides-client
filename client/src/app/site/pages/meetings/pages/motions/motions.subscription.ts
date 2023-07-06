@@ -189,6 +189,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             }
         ],
         fieldset: [
+            `workflow_timestamp`,
             `reason`,
             `text`,
             `modified_final_version`,

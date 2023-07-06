@@ -51,7 +51,7 @@
     >
         <os-icon-container *ngIf="mediafile.access_groups.length" icon="group">
             <span *ngFor="let group of mediafile.access_groups | slice : 0 : 3; let last = last">
-                <span>{{ group.getTitle() | translate }}</span>
+                <span>{{ $any(group).getTitle() | translate }}</span>
                 <span *ngIf="!last">,&nbsp;</span>
                 <span *ngIf="last && mediafile.access_groups.length > 3">...</span>
             </span>
