@@ -2,6 +2,8 @@ import { PointOfOrderCategory } from 'src/app/domain/models/point-of-order-categ
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 
+import { ViewSpeaker } from './view-speaker';
+
 export class ViewPointOfOrderCategory extends BaseViewModel<PointOfOrderCategory> {
     public static COLLECTION = PointOfOrderCategory.COLLECTION;
     protected _collection = PointOfOrderCategory.COLLECTION;
@@ -10,5 +12,7 @@ export class ViewPointOfOrderCategory extends BaseViewModel<PointOfOrderCategory
         return this._model;
     }
 }
-interface IPointOfOrderCategoryRelations {}
+interface IPointOfOrderCategoryRelations {
+    speakers: ViewSpeaker[];
+}
 export interface ViewPointOfOrderCategory extends PointOfOrderCategory, IPointOfOrderCategoryRelations, HasMeeting {}

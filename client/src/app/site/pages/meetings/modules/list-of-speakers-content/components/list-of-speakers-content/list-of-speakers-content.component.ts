@@ -11,8 +11,9 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, firstValueFrom, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, map, Observable, startWith } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
@@ -122,15 +123,21 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public isCallEnabled: Observable<boolean> = this.interactionService.showLiveConfObservable;
 
-    public pointOfOrderCategoriesEnabled: boolean;
+    public pointOfOrderCategoriesEnabled: boolean = false;
 
     public get pointOfOrderCategoriesObservable(): Observable<ViewPointOfOrderCategory[]> {
         return this._pointOfOrderCategoriesSubject;
     }
 
     public get pointOfOrderCategories(): ViewPointOfOrderCategory[] {
-        return this._pointOfOrderCategoriesSubject.value;
+        return this._pointOfOrderCategoriesSubject.value.sort((a, b) => a.rank - b.rank);
     }
+
+    public get withdrawButtonText(): Observable<string> {
+        return this._withdrawButtonTextSubject;
+    }
+
+    private _withdrawButtonTextSubject = new BehaviorSubject<string>(null);
 
     private _pointOfOrderCategoriesSubject = new BehaviorSubject<ViewPointOfOrderCategory[]>(null);
 
@@ -169,12 +176,30 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
         this.subscriptions.push(
             this.meetingSettingsService
-                .get(`point_of_order_category_enabled`)
+                .get(`list_of_speakers_enable_point_of_order_categories`)
                 .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
             this._pointOfOrderCategoriesSubject.subscribe(categories =>
                 console.log(categories?.map(category => category.pointOfOrderCategory))
             ),
-            this.activeMeeting.point_of_order_categories_as_observable.subscribe(this._pointOfOrderCategoriesSubject)
+            this.activeMeeting.point_of_order_categories_as_observable.subscribe(this._pointOfOrderCategoriesSubject),
+            combineLatest([
+                this.translate.get(_(`Withdraw %title%`)),
+                this._pointOfOrderCategoriesSubject,
+                this.meetingSettingsService
+                    .get(`list_of_speakers_enable_point_of_order_categories`)
+                    .pipe(startWith(null))
+            ])
+                .pipe(
+                    map(([text, categories, enabled]) =>
+                        (text as string).replace(
+                            `%title%`,
+                            this.translate.instant(
+                                !enabled || categories.length !== 1 ? _(`point of order`) : categories[0].text
+                            )
+                        )
+                    )
+                )
+                .subscribe(this._withdrawButtonTextSubject)
         );
     }
 
@@ -254,7 +279,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public async addPointOfOrder(category?: ViewPointOfOrderCategory): Promise<void> {
         category = category ?? this.pointOfOrderCategories[0];
-        const dialogRef = await this.dialog.open(this.listOfSpeakers);
+        const dialogRef = await this.dialog.open(
+            this.listOfSpeakers,
+            this.pointOfOrderCategoriesEnabled ? category : undefined
+        );
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {

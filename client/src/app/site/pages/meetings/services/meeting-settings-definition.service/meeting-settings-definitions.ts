@@ -426,7 +426,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`Point of order categories`),
                 settings: [
                     {
-                        key: `point_of_order_category_enabled`,
+                        key: `list_of_speakers_enable_point_of_order_categories`,
                         label: `Enable point of order categories`,
                         type: `boolean`
                     },

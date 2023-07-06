@@ -22,7 +22,8 @@ export const agendaItemFollow: FollowList<any> = [
                     {
                         idField: `user_id`,
                         ...UserFieldsets.FullNameSubscription
-                    }
+                    },
+                    `point_of_order_category_id`
                 ]
             }
         ]
@@ -118,6 +119,7 @@ export const listOfSpeakersSpeakerCountSubscription = {
     follow: [
         {
             idField: `speaker_ids`,
+            follow: [`point_of_order_category_id`],
             fieldset: [`begin_time`, `end_time`]
         }
     ]
@@ -138,7 +140,8 @@ export const getListOfSpeakersDetailSubscriptionConfig: SubscriptionConfigGenera
                     {
                         idField: `user_id`,
                         ...UserFieldsets.FullNameSubscription
-                    }
+                    },
+                    `point_of_order_category_id`
                 ]
             },
             {

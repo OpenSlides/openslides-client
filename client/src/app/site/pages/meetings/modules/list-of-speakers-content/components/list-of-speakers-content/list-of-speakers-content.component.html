@@ -299,7 +299,9 @@
             *ngIf="showPointOfOrders && isOpInWaitlist(true)"
         >
             <mat-icon>remove</mat-icon>
-            <span>{{ 'Withdraw point of order' | translate }}</span>
+            <span>
+                {{ withdrawButtonText | async }}
+            </span>
         </button>
     </div>
 </mat-card>
@@ -384,6 +386,27 @@
         >
             warning
         </mat-icon>
+        <b
+            [class.foreground-warn]="!!showcolor"
+            *ngIf="
+                pointOfOrderCategoriesEnabled &&
+                speaker.point_of_order_category &&
+                ((showSpeakerNoteForEveryoneObservable | async) || canManage)
+            "
+        >
+            {{ speaker.point_of_order_category.text }}
+        </b>
+        <span
+            [class.foreground-warn]="!!showcolor"
+            *ngIf="
+                pointOfOrderCategoriesEnabled &&
+                speaker.point_of_order_category &&
+                speaker.note &&
+                ((showSpeakerNoteForEveryoneObservable | async) || canManage)
+            "
+        >
+            ·
+        </span>
         <i [class.foreground-warn]="!!showcolor" *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
             {{ speaker.note }}
         </i>

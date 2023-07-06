@@ -906,6 +906,13 @@ export const RELATIONS: Relation[] = [
         AField: `first_state`,
         BField: `first_state_of_workflow`
     }),
+    // ########## Point of order categories
+    ...makeM2O({
+        OViewModel: ViewPointOfOrderCategory,
+        MViewModel: ViewSpeaker,
+        OField: `speakers`,
+        MField: `point_of_order_category`
+    }),
     // ########## Polls
     ...makeGenericO2M({
         OViewModel: ViewPoll,
