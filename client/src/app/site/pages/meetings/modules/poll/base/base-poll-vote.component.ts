@@ -15,6 +15,7 @@ import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { VoteControllerService } from '../services/vote-controller.service';
@@ -72,6 +73,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     private voteRepo = inject(VoteControllerService);
 
     public constructor(
+        protected promptService: PromptService,
         operator: OperatorService,
         protected votingService: VotingService,
         protected cd: ChangeDetectorRef,
@@ -111,7 +113,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         // if there are not delegations for the user the send button for multiple votes is not necessary
         if (this.delegations.length > 0) {
             for (let delegation of this.delegations.concat(this.user)) {
-                if (this.getVotingError(delegation) === ``) {
+                if (!this.getVotingError(delegation)) {
                     if (!this.hasAlreadyVoted(delegation)) {
                         return true;
                     }
@@ -191,7 +193,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         }
     }
 
-    private canVote(user: ViewUser = this.user): boolean {
+    protected canVote(user: ViewUser = this.user): boolean {
         return (
             this.votingService.canVote(this.poll, user) &&
             !this.isDeliveringVote(user) &&
@@ -202,16 +204,16 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     protected compareMinAllVotes(minVote: number = 1): boolean {
         for (let delegation of this.delegations.concat(this.user)) {
-            if (this.getVotingError(delegation) === `` && this.getVotesCount(delegation) < minVote) {
+            if (!this.getVotingError(delegation) && this.getVotesCount(delegation) < minVote) {
                 return true;
             }
         }
         return false;
     }
 
-    public getVotesCount(user: ViewUser = this.user): number {
+    protected getVotesCount(user: ViewUser = this.user, boo: boolean = false): number {
         if (this.voteRequestData[user?.id]) {
-            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user)) {
+            if (boo) {
                 return Object.keys(this.voteRequestData[user.id].value)
                     .map(key => parseInt(this.voteRequestData[user.id].value[+key] as string, 10))
                     .reduce((a, b) => a + b, 0);
@@ -224,14 +226,20 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return 0;
     }
 
-    public isGlobalOptionSelected(user: ViewUser = this.user): boolean {
-        const value = this.voteRequestData[user.id]?.value;
-        return value === `Y` || value === `N` || value === `A`;
-    }
-
-    public async preparePayload(): Promise<void> {
-        for (let delegation of this.delegations.concat(this.user)) {
-            if (this.getVotingError() === `` && !this.isDeliveringVote[delegation.id]) {
+    protected async preparePayload(): Promise<void> {
+        // this.user cannot be concatenated here because the user themselves is changed
+        if (!this.getVotingError() && !this.isDeliveringVote[this.user.id]) {
+            const value = this.voteRequestData[this.user.id].value;
+            this.deliveringVote[this.user.id] = true;
+            this.cd.markForCheck();
+            const votePayload = {
+                value: value,
+                user_id: this.user.id
+            };
+            await this.sendVote(this.user.id, votePayload);
+        }
+        for (let delegation of this.delegations) {
+            if (!this.getVotingError(delegation) && !this.isDeliveringVote[delegation.id]) {
                 const value = this.voteRequestData[delegation.id].value;
                 this.deliveringVote[delegation.id] = true;
                 this.cd.markForCheck();
@@ -241,6 +249,15 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
                 };
                 await this.sendVote(delegation.id, votePayload);
             }
+        }
+    }
+
+    protected async submitVotes(dialogContent?: string): Promise<void> {
+        const title = this.translate.instant(`Submit selection now?`);
+        const content = this.translate.instant(dialogContent ?? `Your decisions cannot be changed afterwards.`);
+        const confirmed = await this.promptService.open(title, content);
+        if (confirmed) {
+            this.preparePayload();
         }
     }
 }

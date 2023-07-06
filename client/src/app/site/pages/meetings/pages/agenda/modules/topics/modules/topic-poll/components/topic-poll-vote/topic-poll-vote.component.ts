@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { GlobalVote, PollMethod, PollType, VoteValue } from 'src/app/domain/models/poll';
+import { PollMethod, PollType, VoteValue } from 'src/app/domain/models/poll';
 import {
     BasePollVoteComponent,
     VoteOption
@@ -55,7 +55,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
     }
 
     public constructor(
-        private promptService: PromptService,
+        protected override promptService: PromptService,
         operator: OperatorService,
         votingService: VotingService,
         cd: ChangeDetectorRef,
@@ -64,7 +64,16 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+        super(
+            promptService,
+            operator,
+            votingService,
+            cd,
+            pollRepo,
+            meetingSettingsService,
+            componentServiceCollector,
+            translate
+        );
     }
 
     public ngOnInit(): void {
@@ -72,39 +81,12 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         this.cd.markForCheck();
     }
 
-    public getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
+    protected getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
         if (
             this.voteRequestData[user?.id]?.value[option.id] === actions.vote ||
             this.voteRequestData[user?.id]?.value[option.id] === 1
         ) {
             return actions.css;
-        }
-        return ``;
-    }
-
-    public getGlobalYesClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === `Y`) {
-            return `voted-yes`;
-        }
-        return ``;
-    }
-
-    public getGlobalAbstainClass(user: ViewUser = this.user): string {
-        if (this.voteRequestData[user.id]?.value === `A`) {
-            return `voted-abstain`;
-        }
-        return ``;
-    }
-
-    public getGlobalNoClass(user?: ViewUser): string {
-        if (!user) {
-            if (!this.user) {
-                return ``;
-            }
-            user = this.user;
-        }
-        if (this.voteRequestData[user.id]?.value === `N`) {
-            return `voted-no`;
         }
         return ``;
     }
@@ -128,7 +110,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    public getFormControl(optionId: number): UntypedFormControl {
+    protected getFormControl(optionId: number): UntypedFormControl {
         if (!this.formControlMap[optionId]) {
             this.formControlMap[optionId] = new UntypedFormControl(0, [
                 Validators.required,
@@ -139,7 +121,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         return this.formControlMap[optionId];
     }
 
-    public isErrorInVoteEntry(): boolean {
+    private isErrorInVoteEntry(): boolean {
         for (const key in this.formControlMap) {
             if (this.formControlMap.hasOwnProperty(key) && this.formControlMap[key].invalid) {
                 return true;
@@ -148,7 +130,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         return false;
     }
 
-    public getErrorInVoteEntry(optionId: number): string {
+    protected getErrorInVoteEntry(optionId: number): string {
         if (this.formControlMap[optionId].hasError(`required`)) {
             return this.translate.instant(`This is not a number.`);
         } else if (this.formControlMap[optionId].hasError(`min`)) {
@@ -159,14 +141,16 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         return ``;
     }
 
-    public getVotesAvailable(user: ViewUser = this.user): number | string {
-        if (this.isGlobalOptionSelected()) {
-            return `-`;
-        }
+    protected getVotesAvailable(user: ViewUser = this.user): number | string {
         return this.poll.max_votes_amount - this.getVotesCount(user);
     }
 
-    public async submitVote(user: ViewUser = this.user): Promise<void> {
+    protected override getVotesCount(user: ViewUser = this.user): number {
+        const boo = this.poll.isMethodY && this.poll.max_votes_per_option > 1;
+        return super.getVotesCount(user, boo);
+    }
+
+    protected async submitVote(user: ViewUser = this.user): Promise<void> {
         const value = this.voteRequestData[user.id].value;
         if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
             this.raiseError(this.translate.instant(`There is an error in your vote.`));
@@ -188,18 +172,13 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    public async submitVotes(): Promise<void> {
+    public override async submitVotes(): Promise<void> {
         let { maxVotesAmount, pollMaximum } = this.countMaxVotesAndPoll();
-        const title = this.translate.instant(`Submit selection now?`);
         const content =
             this.translate.instant(`Your votes`) +
             `: ${maxVotesAmount}/${pollMaximum}<br>` +
             this.translate.instant(`Your decision cannot be changed afterwards.`);
-
-        const confirmed = await this.promptService.open(title, content);
-        if (confirmed) {
-            this.preparePayload();
-        }
+        await super.submitVotes(content);
     }
 
     private countMaxVotesAndPoll(): { maxVotesAmount: number; pollMaximum: number } {
@@ -207,7 +186,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         let pollMaximum = 0;
 
         for (let delegation of this.delegations.concat(this.user)) {
-            if (this.getVotingError(delegation) === ``) {
+            if (!this.getVotingError(delegation)) {
                 if (this.poll.isMethodY && this.poll.max_votes_per_option > 1 && this.isErrorInVoteEntry()) {
                     this.raiseError(this.translate.instant(`There is an error in your vote.`));
                     break;
@@ -219,13 +198,9 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         return { maxVotesAmount, pollMaximum };
     }
 
-    public saveSingleVote(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
+    protected saveSingleVote(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
         if (!this.voteRequestData[user.id]) {
             throw new Error(`The user for your voting request does not exist`);
-        }
-
-        if (this.isGlobalOptionSelected(user)) {
-            delete this.voteRequestData[user.id].value;
         }
 
         if (this.poll.isMethodY || this.poll.isMethodN) {
@@ -236,7 +211,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    public saveSingleVoteMethodYNOrYNA(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
+    private saveSingleVoteMethodYNOrYNA(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
         if (this.voteRequestData[user.id].value[optionId] && this.voteRequestData[user.id].value[optionId] === vote) {
             delete (this.voteRequestData[user.id] as any).value[optionId];
         } else {
@@ -249,14 +224,14 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
         }
     }
 
-    public saveSingleVoteMethodYOrN(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
+    private saveSingleVoteMethodYOrN(optionId: number, vote: VoteValue, user: ViewUser = this.user): void {
         const maxVotesAmount = this.poll.max_votes_amount;
         const tmpVoteRequest = this.getTMPVoteRequestYOrN(maxVotesAmount, optionId, user);
 
         this.handleVotingMethodYOrN(maxVotesAmount, tmpVoteRequest, user);
     }
 
-    public handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: {}, user: ViewUser = this.user) {
+    private handleVotingMethodYOrN(maxVotesAmount: number, tmpVoteRequest: {}, user: ViewUser = this.user) {
         // check if you can still vote
         const countedVotes = Object.keys(tmpVoteRequest).filter(key => tmpVoteRequest[key]).length;
         if (countedVotes <= maxVotesAmount) {
@@ -285,7 +260,7 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             }, {});
     }
 
-    public saveMultipleVotes(optionId: number, event: any, user: ViewUser = this.user): void {
+    protected saveMultipleVotes(optionId: number, event: any, user: ViewUser = this.user): void {
         let vote = parseInt(event.target.value, 10);
 
         if (isNaN(vote) || vote > this.poll.max_votes_per_option || vote < 0) {
@@ -294,10 +269,6 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
 
         if (!this.voteRequestData[user.id]) {
             throw new Error(`The user for your voting request does not exist`);
-        }
-
-        if (this.isGlobalOptionSelected(user)) {
-            delete this.voteRequestData[user.id].value;
         }
 
         if (this.poll.isMethodY && this.poll.max_votes_per_option > 1) {
@@ -352,40 +323,8 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
             }, {});
     }
 
-    public saveGlobalVote(globalVote: GlobalVote, user: ViewUser = this.user): void {
-        if (this.voteRequestData[user.id].value && this.voteRequestData[user.id].value === globalVote) {
-            this.voteRequestData[user.id].value = {};
-            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1) {
-                this.enableInputs();
-            }
-        } else {
-            this.voteRequestData[user.id].value = globalVote;
-            if (this.poll.isMethodY && this.poll.max_votes_per_option > 1) {
-                this.disableAndResetInputs();
-            }
-            this.submitVote(user);
-        }
-    }
-
     protected override updatePoll() {
         super.updatePoll();
         this.defineVoteOptions();
-    }
-
-    private enableInputs(): void {
-        for (const key in this.formControlMap) {
-            if (this.formControlMap.hasOwnProperty(key)) {
-                this.formControlMap[key].enable();
-            }
-        }
-    }
-
-    private disableAndResetInputs(): void {
-        for (const key in this.formControlMap) {
-            if (this.formControlMap.hasOwnProperty(key)) {
-                this.formControlMap[key].setValue(0);
-                this.formControlMap[key].disable();
-            }
-        }
     }
 }

@@ -42,7 +42,7 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
     ];
 
     public constructor(
-        private promptService: PromptService,
+        protected override promptService: PromptService,
         operator: OperatorService,
         votingService: VotingService,
         cd: ChangeDetectorRef,
@@ -51,14 +51,23 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         componentServiceCollector: ComponentServiceCollectorService,
         translate: TranslateService
     ) {
-        super(operator, votingService, cd, pollRepo, meetingSettingsService, componentServiceCollector, translate);
+        super(
+            promptService,
+            operator,
+            votingService,
+            cd,
+            pollRepo,
+            meetingSettingsService,
+            componentServiceCollector,
+            translate
+        );
     }
 
     public ngOnInit(): void {
         this.cd.markForCheck();
     }
 
-    public getActionButtonClass(voteOption: VoteOption, id: number, user: ViewUser = this.user): string {
+    protected getActionButtonClass(voteOption: VoteOption, id: number, user: ViewUser = this.user): string {
         if (
             this.voteRequestData[user?.id]?.value[id] === voteOption.vote ||
             this.voteRequestData[user?.id]?.value[id] === 1
@@ -68,11 +77,11 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         return ``;
     }
 
-    public get minVotes(): number {
+    protected get minVotes(): number {
         return this.poll.min_votes_amount;
     }
 
-    public saveVote(optionId: Id, vote: VoteValue, user: ViewUser = this.user): void {
+    protected saveVote(optionId: Id, vote: VoteValue, user: ViewUser = this.user): void {
         if (!this.voteRequestData[user.id]) {
             throw new Error(`The user for your voting request does not exist`);
         }
@@ -85,7 +94,7 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         }
     }
 
-    public async submitVote(user: ViewUser = this.user): Promise<void> {
+    protected async submitVote(user: ViewUser = this.user): Promise<void> {
         if (!this.voteRequestData[user?.id]) {
             return;
         }
@@ -106,16 +115,7 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         }
     }
 
-    public async submitVotes(): Promise<void> {
-        const title = this.translate.instant(`Submit selection now?`);
-        const content = this.translate.instant(`Your decisions cannot be changed afterwards.`);
-        const confirmed = await this.promptService.open(title, content);
-        if (confirmed) {
-            this.preparePayload();
-        }
-    }
-
-    public override getVotesCount(user: ViewUser = this.user): number {
+    protected override getVotesCount(user: ViewUser = this.user): number {
         if (this.voteRequestData[user?.id]) {
             return Object.keys(this.voteRequestData[user.id].value).filter(
                 key => this.voteRequestData[user.id].value[+key]
