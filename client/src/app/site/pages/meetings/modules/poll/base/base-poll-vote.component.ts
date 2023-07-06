@@ -227,18 +227,7 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
     }
 
     protected async preparePayload(): Promise<void> {
-        // this.user cannot be concatenated here because the user themselves is changed
-        if (!this.getVotingError() && !this.isDeliveringVote[this.user.id]) {
-            const value = this.voteRequestData[this.user.id].value;
-            this.deliveringVote[this.user.id] = true;
-            this.cd.markForCheck();
-            const votePayload = {
-                value: value,
-                user_id: this.user.id
-            };
-            await this.sendVote(this.user.id, votePayload);
-        }
-        for (let delegation of this.delegations) {
+        for (let delegation of [this.user, ...this.delegations]) {
             if (!this.getVotingError(delegation) && !this.isDeliveringVote[delegation.id]) {
                 const value = this.voteRequestData[delegation.id].value;
                 this.deliveringVote[delegation.id] = true;
