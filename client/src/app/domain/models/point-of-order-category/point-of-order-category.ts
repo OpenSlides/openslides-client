@@ -1,3 +1,4 @@
+import { Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces';
 import { BaseModel } from '../base/base-model';
 
@@ -11,6 +12,8 @@ export class PointOfOrderCategory extends BaseModel<PointOfOrderCategory> {
     public text!: string;
     public rank!: number;
 
+    public speaker_ids!: Id[];
+
     public constructor(input?: Partial<PointOfOrderCategory>) {
         super(PointOfOrderCategory.COLLECTION, input);
     }
@@ -19,7 +22,8 @@ export class PointOfOrderCategory extends BaseModel<PointOfOrderCategory> {
         `id`,
         `text`,
         `rank`,
-        `meeting_id`
+        `meeting_id`,
+        `speaker_ids`
     ];
 }
 export interface PointOfOrderCategory extends HasMeetingId {}

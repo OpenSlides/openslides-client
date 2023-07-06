@@ -345,6 +345,7 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
         `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_enable_point_of_order_categories`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,
@@ -431,6 +432,7 @@ export class Meeting extends BaseModel<Meeting> {
         `tag_ids`,
         `agenda_item_ids`,
         `list_of_speakers_ids`,
+        `point_of_order_category_ids`,
         `speaker_ids`,
         `topic_ids`,
         `group_ids`,
@@ -467,8 +469,7 @@ export class Meeting extends BaseModel<Meeting> {
         { templateField: `default_projector_$_ids` },
         `projection_ids`,
         `default_group_id`,
-        `admin_group_id`,
-        `list_of_speakers_enable_point_of_order_categories`
+        `admin_group_id`
     ];
 }
 export interface Meeting extends Settings, HasProjectionIds {}
