@@ -16,7 +16,7 @@ import { OsFilterIndicator } from 'src/app/site/base/base-filter.service';
 import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
-import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
+import { OsSortOption, SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { RoundedInputComponent } from '../../../input/components/rounded-input/rounded-input.component';
 import { SearchService } from '../../definitions/search-service';
@@ -117,8 +117,22 @@ export class SortFilterBarComponent<V extends Identifiable> {
     @Input()
     public totalCount = 0;
 
-    public get sortOptions(): any {
+    public get sortOptions(): OsSortOption<V>[] {
         return this.sortService.sortOptions;
+    }
+
+    public get sortOptionsWithoutDefault(): OsSortOption<V>[] {
+        const defaultOption = this.defaultOption;
+        if (!defaultOption) {
+            return this.sortOptions;
+        }
+        return this.sortOptions.filter(
+            option => !defaultOption || this.getSortLabel(option) !== this.getSortLabel(defaultOption)
+        );
+    }
+
+    public get defaultOption(): OsSortOption<V> {
+        return this.sortService.defaultOption;
     }
 
     public get filterAmount(): number {

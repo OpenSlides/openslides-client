@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, isObservable, Observable, Subscription } from 'rxjs';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
@@ -105,8 +105,34 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return [];
     }
 
-    public constructor(translate: TranslateService, private store: StorageService) {
+    public get defaultOption(): OsSortingOption<V> | undefined {
+        return this.getSortOptions().find(
+            option =>
+                this._defaultDefinitionSubject.value &&
+                this.isSameProperty(option.property, this._defaultDefinitionSubject.value.sortProperty)
+        );
+    }
+
+    public isSameProperty(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
+        a = Array.isArray(a) ? a : [a];
+        b = Array.isArray(b) ? b : [b];
+        return a.length === b.length && a.every((value, index) => value === b[index]);
+    }
+
+    private _defaultDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V>>(null);
+
+    public constructor(
+        translate: TranslateService,
+        private store: StorageService,
+        defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>
+    ) {
         super(translate);
+
+        if (isObservable(defaultDefinition)) {
+            defaultDefinition.subscribe(this._defaultDefinitionSubject);
+        } else {
+            this._defaultDefinitionSubject.next(defaultDefinition);
+        }
     }
 
     /**
@@ -139,7 +165,12 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     /**
      * Enforce children to implement a method that returns the fault sorting
      */
-    protected abstract getDefaultDefinition(): OsSortingDefinition<V> | Promise<OsSortingDefinition<V>>;
+    protected getDefaultDefinition(): OsSortingDefinition<V> | Promise<OsSortingDefinition<V>> {
+        if (this._defaultDefinitionSubject.value) {
+            return this._defaultDefinitionSubject.value;
+        }
+        return firstValueFrom(this._defaultDefinitionSubject.pipe(filter(value => !!value)));
+    }
 
     /**
      * Defines the sorting properties, and returns an observable with sorted data
@@ -154,7 +185,16 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         }
 
         if (!this.sortDefinition) {
-            const storedDefinition = await this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey);
+            let [storedDefinition, storedProperty, storedAscending] = await Promise.all([
+                this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey),
+                this.store.get<OsSortProperty<V>>(`sorting_property_` + this.storageKey),
+                this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
+            ]);
+
+            if (storedAscending != null) {
+                storedDefinition.sortAscending = storedAscending;
+                storedDefinition.sortProperty = storedProperty;
+            }
 
             if (storedDefinition) {
                 this.sortDefinition = storedDefinition;
@@ -230,7 +270,15 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      */
     private updateSortDefinitions(): void {
         this.updateSortedData();
-        this.store.set(`sorting_` + this.storageKey, this.sortDefinition);
+        if (
+            this.sortDefinition.sortAscending === true &&
+            this.isSameProperty(this.sortDefinition.sortProperty, this._defaultDefinitionSubject.value.sortProperty)
+        ) {
+            this.store.remove(`sorting_property_` + this.storageKey);
+        } else {
+            this.store.set(`sorting_property_` + this.storageKey, this.sortDefinition.sortProperty);
+        }
+        this.store.set(`sorting_ascending_` + this.storageKey, this.sortDefinition.sortAscending);
     }
 
     /**

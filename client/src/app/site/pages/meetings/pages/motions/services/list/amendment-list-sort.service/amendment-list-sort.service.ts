@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { TranslateService } from '@ngx-translate/core';
+import { StorageService } from 'src/app/gateways/storage.service';
+import { OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionListSortService } from '../motion-list-sort.service';
 import { MotionsListServiceModule } from '../motions-list-service.module';
@@ -21,14 +24,14 @@ export class AmendmentListSortService extends MotionListSortService {
         }
     ];
 
-    protected override getSortOptions(): OsSortingOption<ViewMotion>[] {
-        return this.amendmentSortOptions.concat(super.getSortOptions());
+    constructor(translate: TranslateService, store: StorageService, meetingSettingsService: MeetingSettingsService) {
+        super(translate, store, meetingSettingsService, {
+            sortProperty: `title`,
+            sortAscending: true
+        });
     }
 
-    protected override async getDefaultDefinition(): Promise<OsSortingDefinition<ViewMotion>> {
-        return {
-            sortProperty: `parentAndLineNumber`,
-            sortAscending: true
-        };
+    protected override getSortOptions(): OsSortingOption<ViewMotion>[] {
+        return this.amendmentSortOptions.concat(super.getSortOptions());
     }
 }

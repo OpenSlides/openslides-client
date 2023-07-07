@@ -2,12 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import {
-    BaseSortListService,
-    OsHideSortingOptionSetting,
-    OsSortingDefinition,
-    OsSortingOption
-} from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsHideSortingOptionSetting, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
@@ -47,7 +42,10 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
         store: StorageService,
         private meetingSettings: MeetingSettingsService
     ) {
-        super(translate, store);
+        super(translate, store, {
+            sortProperty: [`first_name`, `last_name`],
+            sortAscending: true
+        });
         this.meetingSettings.get(`users_enable_vote_weight`).subscribe(value => (this._voteWeightEnabled = value));
     }
 
@@ -56,18 +54,6 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
      */
     protected getSortOptions(): OsSortingOption<ViewUser>[] {
         return this.userSortOptions;
-    }
-
-    /**
-     * Required by parent
-     *
-     * @returns the default sorting strategy
-     */
-    public async getDefaultDefinition(): Promise<OsSortingDefinition<ViewUser>> {
-        return {
-            sortProperty: [`first_name`, `last_name`],
-            sortAscending: true
-        };
     }
 
     protected override getHideSortingOptionSettings(): OsHideSortingOptionSetting<ViewUser>[] {
