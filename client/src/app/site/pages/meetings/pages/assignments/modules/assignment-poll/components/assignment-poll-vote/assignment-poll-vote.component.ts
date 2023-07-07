@@ -232,7 +232,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         let maxVotesAmount = 0;
         let pollMaximum = 0;
         let isListOpt = false;
-        let countableDelegations = 1;
+        let countableDelegations = 0;
 
         if (!this.getVotingError()) {
             maxVotesAmount = this.getVotesCount();
@@ -254,8 +254,11 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 isListOpt = true;
             }
         }
-        if (((this.poll.isMethodYNA && !isListOpt) || this.poll.isMethodYN) && countableDelegations > 1) {
+        if (countableDelegations > 0 && this.poll.isMethodYNA && !isListOpt) {
             pollMaximum *= countableDelegations;
+        }
+        if (this.poll.isMethodYN) {
+            pollMaximum *= this.poll.option_ids.length;
         }
         return { maxVotesAmount, pollMaximum };
     }
