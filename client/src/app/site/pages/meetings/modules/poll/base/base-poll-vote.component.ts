@@ -211,9 +211,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         return false;
     }
 
-    protected getVotesCount(user: ViewUser = this.user, boo: boolean = false): number {
+    protected getVotesCount(user: ViewUser = this.user, needsDiffCount: boolean = false): number {
         if (this.voteRequestData[user?.id]) {
-            if (boo) {
+            if (needsDiffCount) {
                 return Object.keys(this.voteRequestData[user.id].value)
                     .map(key => parseInt(this.voteRequestData[user.id].value[+key] as string, 10))
                     .reduce((a, b) => a + b, 0);
@@ -248,5 +248,15 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
         if (confirmed) {
             this.preparePayload();
         }
+    }
+
+    protected getActionButtonClass(actions: VoteOption, id: number, user: ViewUser = this.user): string {
+        if (
+            this.voteRequestData[user?.id]?.value[id] === actions.vote ||
+            this.voteRequestData[user?.id]?.value[id] === 1
+        ) {
+            return actions.css!;
+        }
+        return ``;
     }
 }

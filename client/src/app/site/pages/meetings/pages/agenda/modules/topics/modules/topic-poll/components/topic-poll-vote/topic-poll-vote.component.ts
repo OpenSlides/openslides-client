@@ -8,7 +8,6 @@ import {
 } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-vote.component';
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -79,16 +78,6 @@ export class TopicPollVoteComponent extends BasePollVoteComponent<ViewTopic> imp
     public ngOnInit(): void {
         this.defineVoteOptions();
         this.cd.markForCheck();
-    }
-
-    protected getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
-        if (
-            this.voteRequestData[user?.id]?.value[option.id] === actions.vote ||
-            this.voteRequestData[user?.id]?.value[option.id] === 1
-        ) {
-            return actions.css;
-        }
-        return ``;
     }
 
     private defineVoteOptions(): void {

@@ -94,7 +94,7 @@
                                     mat-raised-button
                                     (click)="saveSingleVote(option.id, action.vote, delegation)"
                                     [disabled]="isDeliveringVote(delegation)"
-                                    [ngClass]="getActionButtonClass(action, option, delegation)"
+                                    [ngClass]="getActionButtonClass(action, option.id, delegation)"
                                 >
                                     <mat-icon>{{ action.icon }}</mat-icon>
                                 </button>

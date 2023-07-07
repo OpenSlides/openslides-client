@@ -10,7 +10,6 @@ import {
 import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -102,16 +101,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         this.cd.markForCheck();
     }
 
-    protected getActionButtonClass(actions: VoteOption, option: ViewOption, user: ViewUser = this.user): string {
-        if (
-            this.voteRequestData[user?.id]?.value[option.id] === actions.vote ||
-            this.voteRequestData[user?.id]?.value[option.id] === 1
-        ) {
-            return actions.css!;
-        }
-        return ``;
-    }
-
     protected getGlobalYesClass(user: ViewUser = this.user): string {
         if (this.voteRequestData[user.id]?.value === `Y`) {
             return `voted-yes`;
@@ -197,8 +186,9 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
     }
 
     protected override getVotesCount(user: ViewUser = this.user): number {
-        const boo = this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user);
-        return super.getVotesCount(user, boo);
+        const needsDiffCount =
+            this.poll.isMethodY && this.poll.max_votes_per_option > 1 && !this.isGlobalOptionSelected(user);
+        return super.getVotesCount(user, needsDiffCount);
     }
 
     protected async submitVote(user: ViewUser = this.user): Promise<void> {
@@ -242,7 +232,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         let maxVotesAmount = 0;
         let pollMaximum = 0;
         let isListOpt = false;
-        let countableDelegations = 0;
+        let countableDelegations = 1;
 
         if (!this.getVotingError()) {
             maxVotesAmount = this.getVotesCount();
@@ -264,7 +254,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
                 isListOpt = true;
             }
         }
-        if (((this.poll.isMethodYNA && !isListOpt) || this.poll.isMethodYN) && countableDelegations > 0) {
+        if (((this.poll.isMethodYNA && !isListOpt) || this.poll.isMethodYN) && countableDelegations > 1) {
             pollMaximum *= countableDelegations;
         }
         return { maxVotesAmount, pollMaximum };

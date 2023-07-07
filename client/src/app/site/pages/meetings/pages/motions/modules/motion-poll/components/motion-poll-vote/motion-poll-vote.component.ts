@@ -67,16 +67,6 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
         this.cd.markForCheck();
     }
 
-    protected getActionButtonClass(voteOption: VoteOption, id: number, user: ViewUser = this.user): string {
-        if (
-            this.voteRequestData[user?.id]?.value[id] === voteOption.vote ||
-            this.voteRequestData[user?.id]?.value[id] === 1
-        ) {
-            return voteOption.css!;
-        }
-        return ``;
-    }
-
     protected get minVotes(): number {
         return this.poll.min_votes_amount;
     }
