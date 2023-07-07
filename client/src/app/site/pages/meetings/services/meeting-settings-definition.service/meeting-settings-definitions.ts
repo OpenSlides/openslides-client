@@ -427,12 +427,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 settings: [
                     {
                         key: `list_of_speakers_enable_point_of_order_categories`,
-                        label: `Enable point of order categories`,
+                        label: _(`Enable point of order categories`),
                         type: `boolean`
                     },
                     {
                         key: `point_of_order_category_ids`,
-                        label: `Point of order categories`,
+                        label: _(`Point of order categories`),
                         type: `ranking`,
                         useRelation: true,
                         transformFn: (value?: ViewPointOfOrderCategory[]) =>

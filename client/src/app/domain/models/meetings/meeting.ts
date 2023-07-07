@@ -32,7 +32,6 @@ export class Settings {
         [original: string]: string;
     };
 
-    public list_of_speakers_enable_point_of_order_categories!: boolean;
     public point_of_order_category_ids!: Ids;
 
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
@@ -100,6 +99,7 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;

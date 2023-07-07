@@ -5,7 +5,7 @@ export class Action<T = void> {
     private _sendActionFn: (requests: ActionRequest[]) => Promise<T[]>;
 
     public constructor(sendActionFn: (requests: ActionRequest[]) => Promise<T[]>, ...actions: ActionRequest[]) {
-        this._actions = actions.filter(action => !!action.data?.length);
+        this._actions = actions.filter(action => !!action?.data?.length);
         this._sendActionFn = sendActionFn;
     }
 

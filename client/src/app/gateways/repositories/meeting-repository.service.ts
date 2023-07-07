@@ -164,18 +164,25 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             this.getNewGroupsForUsers(userUpdate, addedAdmins, meeting.id, meeting.admin_group_id);
             this.getNewGroupsForUsers(userUpdate, removedAdmins, meeting.id, meeting.admin_group_id);
         }
+        const userActions: any[] = [];
         if (Object.keys(userUpdate).length) {
-            actions.push(
+            userActions.push(
                 ...Object.keys(userUpdate).map(userId => ({
                     id: parseInt(userId, 10),
                     group_$_ids: { [meeting!.id]: userUpdate[parseInt(userId, 10)] }
                 }))
             );
         }
-        return this.createAction(
-            UserAction.UPDATE,
-            actions.filter(action => Object.keys(action).length > 1)
-        );
+        const payload = [
+            { actionName: MeetingAction.UPDATE, data: actions },
+            { actionName: UserAction.UPDATE, data: userActions }
+        ]
+            .map(({ actionName, data }) => ({
+                actionName,
+                data: data.filter(action => Object.keys(action).length > 1)
+            }))
+            .filter(action => action.data.length);
+        return Action.from(...payload.map(data => this.createAction(data.actionName, data.data)));
     }
 
     public async delete(...meetings: Identifiable[]): Promise<void> {

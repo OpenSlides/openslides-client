@@ -194,7 +194,7 @@ export class MeetingSettingsGroupDetailComponent
     }
 
     private getValueForKey(meeting: ViewMeeting, key: keyof Settings, setting: SettingsItem): any {
-        let newKey: keyof ViewMeeting;
+        let newKey: keyof ViewMeeting = key;
         if (setting.useRelation) {
             newKey = RELATIONS.find(
                 relation =>
