@@ -20,6 +20,8 @@ export const GENDERS = [_(`female`), _(`male`), _(`diverse`), _(`non-binary`)];
 export class User extends BaseDecimalModel<User> {
     public static COLLECTION = `user`;
 
+    public readonly tech_id!: string;
+    public readonly member_id!: string;
     public readonly username!: string;
     public readonly title!: string;
     public readonly pronoun!: string;
@@ -185,6 +187,8 @@ export class User extends BaseDecimalModel<User> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof User | { templateField: string })[] = [
         `id`,
+        `tech_id`,
+        `member_id`,
         `username`,
         `saml_id`,
         `pronoun`,

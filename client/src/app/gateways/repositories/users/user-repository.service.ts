@@ -197,6 +197,8 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
 
     private getBaseUserPayload(partialUser: Partial<User>): any {
         const partialPayload: Partial<User> = {
+            tech_id: partialUser.tech_id,
+            member_id: partialUser.member_id,
             pronoun: partialUser.pronoun,
             title: partialUser.title,
             first_name: partialUser.first_name,

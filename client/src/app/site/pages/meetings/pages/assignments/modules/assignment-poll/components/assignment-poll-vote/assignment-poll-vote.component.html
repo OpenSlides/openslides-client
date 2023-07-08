@@ -119,7 +119,7 @@
                             [ngClass]="getGlobalYesClass(delegation)"
                             [disabled]="isDeliveringVote(delegation)"
                         >
-                            <mat-icon>thumb_up</mat-icon>
+                            <mat-icon>check_box</mat-icon>
                         </button>
                         <span class="vote-label">
                             {{ PollPropertyVerbose.global_yes | translate }}
@@ -134,7 +134,7 @@
                             [ngClass]="getGlobalNoClass(delegation)"
                             [disabled]="isDeliveringVote(delegation)"
                         >
-                            <mat-icon>thumb_down</mat-icon>
+                            <mat-icon>disabled_by_default</mat-icon>
                         </button>
                         <span class="vote-label">
                             {{ PollPropertyVerbose.global_no | translate }}

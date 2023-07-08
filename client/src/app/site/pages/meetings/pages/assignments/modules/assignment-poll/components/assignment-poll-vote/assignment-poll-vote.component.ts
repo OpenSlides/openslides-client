@@ -27,13 +27,13 @@ const voteOptions: {
     Yes: {
         vote: `Y`,
         css: `voted-yes`,
-        icon: `thumb_up`,
+        icon: `check_box`,
         label: `Yes`
     } as VoteOption,
     No: {
         vote: `N`,
         css: `voted-no`,
-        icon: `thumb_down`,
+        icon: `disabled_by_default`,
         label: `No`
     } as VoteOption,
     Abstain: {

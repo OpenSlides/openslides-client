@@ -122,6 +122,24 @@
         </div>
 
         <div *ngIf="isAllowed('manage') && !user?.saml_id">
+            <!-- tech id -->
+            <mat-form-field class="full-width">
+                <input
+                    matInput
+                    autocomplete="off"
+                    placeholder="{{ 'Technische ID' }}"
+                    formControlName="tech_id"
+                />
+            </mat-form-field>
+            <!-- member id -->
+            <mat-form-field class="full-width">
+                <input
+                    matInput
+                    autocomplete="off"
+                    placeholder="{{ 'Mitgliedsnummer' }}"
+                    formControlName="member_id"
+                />
+            </mat-form-field>
             <!-- Initial Password -->
             <mat-form-field class="full-width">
                 <input
@@ -217,6 +235,16 @@
             <div *ngIf="user.default_password && !user.saml_id">
                 <h4>{{ 'Initial password' | translate }}</h4>
                 <span>{{ user.default_password }}</span>
+            </div>
+            <!-- tech id -->
+            <div *ngIf="user.tech_id">
+                <h4>{{ 'Technische ID' }}</h4>
+                <span>{{ user.tech_id }}</span>
+            </div>
+            <!-- member id -->
+            <div *ngIf="user.member_id">
+                <h4>{{ 'Mitgliedsnummer' }}</h4>
+                <span>{{ user.member_id }}</span>
             </div>
 
             <!-- SAML id -->

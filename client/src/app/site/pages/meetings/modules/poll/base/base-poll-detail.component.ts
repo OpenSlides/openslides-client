@@ -51,11 +51,11 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
     public readonly voteOptionStyle: any = {
         Y: {
             css: `yes`,
-            icon: `thumb_up`
+            icon: `check_box`
         },
         N: {
             css: `no`,
-            icon: `thumb_down`
+            icon: `disabled_by_default`
         },
         A: {
             css: `abstain`,

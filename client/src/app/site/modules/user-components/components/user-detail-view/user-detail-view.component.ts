@@ -289,6 +289,8 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     private getCreateFormControlsConfig(): { [key: string]: any } {
         return {
             username: [``, this.isNewUser ? [] : [Validators.required]],
+            tech_id: [``],
+            member_id: [``],
             pronoun: [``, Validators.maxLength(32)],
             title: [``],
             first_name: [``],

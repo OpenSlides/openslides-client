@@ -84,7 +84,16 @@
             </ng-container>
         </span>
     </os-motion-extension-field>
-
+    <!-- custom -->
+    <p *ngIf="perms.isAllowed('change_state', motion) && motion.state.name === 'in Bearbeitung'">
+        <span *ngFor="let state of motion.state.next_states">
+            <button
+                *ngIf="state.name === 'gestellt'"
+                mat-stroked-button (click)="setState(state.id)">
+                Antrag stellen
+            </button>
+        </span>
+    </p>
     <!-- Forward to meeting -->
     <button mat-stroked-button (click)="forwardMotionToMeetings()" *ngIf="showForwardButton" class="spacer-top-10">
         <mat-icon>forward</mat-icon>

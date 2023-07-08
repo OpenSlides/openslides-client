@@ -12,7 +12,7 @@
     "ng": "ng",
     "ng-high-memory": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng",
     "start": "npm run ng-high-memory -- serve --host=0.0.0.0 --port=9001",
-    "build": "npm run ng-high-memory -- build --configuration production --stats-json",
+    "build": "npm run ng-high-memory -- build --configuration development --stats-json",
     "build-to-dir": "npm run build -- --output-path",
     "postinstall": "ngcc",
     "build-debug": "npm run ng-high-memory -- build",

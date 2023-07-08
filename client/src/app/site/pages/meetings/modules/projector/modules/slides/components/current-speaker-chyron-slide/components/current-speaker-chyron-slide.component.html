@@ -1,6 +1,6 @@
 <div
     id="chyron"
-    *ngIf="data"
+    *ngIf="data.data.current_speaker_name"
     [ngStyle]="{
         'background-color': projector?.chyron_background_color || data.data.background_color,
         color: projector?.chyron_font_color || data.data.font_color
