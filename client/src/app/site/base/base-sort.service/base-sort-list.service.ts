@@ -1,6 +1,14 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, filter, firstValueFrom, isObservable, Observable, Subscription } from 'rxjs';
+import {
+    BehaviorSubject,
+    distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    isObservable,
+    Observable,
+    Subscription
+} from 'rxjs';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
@@ -121,12 +129,23 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     private _defaultDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V>>(null);
 
+    private _isDefaultSorting = true;
+
     public constructor(
         translate: TranslateService,
         private store: StorageService,
         defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>
     ) {
         super(translate);
+
+        this._defaultDefinitionSubject
+            .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty !== curr?.sortProperty))
+            .subscribe(defaultDef => {
+                if (this._isDefaultSorting && defaultDef) {
+                    this.sortDefinition = defaultDef;
+                    this.updateSortDefinitions();
+                }
+            });
 
         if (isObservable(defaultDefinition)) {
             defaultDefinition.subscribe(this._defaultDefinitionSubject);
@@ -185,15 +204,24 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         }
 
         if (!this.sortDefinition) {
-            let [storedDefinition, storedProperty, storedAscending] = await Promise.all([
-                this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey),
-                this.store.get<OsSortProperty<V>>(`sorting_property_` + this.storageKey),
-                this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
-            ]);
+            let [storedDefinition, sortProperty, sortAscending]: [OsSortingDefinition<V>, OsSortProperty<V>, boolean] =
+                await Promise.all([
+                    // TODO: Remove the sorting definition loading part and everything caused by 'transformDeprecated' at a later date, it is only here for backwards compatibility
+                    this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey),
+                    this.store.get<OsSortProperty<V>>(`sorting_property_` + this.storageKey),
+                    this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
+                ]);
 
-            if (storedAscending != null) {
-                storedDefinition.sortAscending = storedAscending;
-                storedDefinition.sortProperty = storedProperty;
+            let transformDeprecated = !!storedDefinition;
+            if (transformDeprecated) {
+                this.store.remove(`sorting_` + this.storageKey);
+            }
+
+            if ((sortAscending ?? sortProperty) != null) {
+                storedDefinition = {
+                    sortAscending,
+                    sortProperty
+                };
             }
 
             if (storedDefinition) {
@@ -201,9 +229,20 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             }
 
             if (this.sortDefinition && this.sortDefinition.sortProperty) {
-                this.updateSortedData();
+                if (transformDeprecated) {
+                    this.updateSortDefinitions();
+                } else {
+                    this.calculateDefaultStatus();
+                    this.updateSortedData();
+                }
             } else {
-                this.sortDefinition = await this.getDefaultDefinition();
+                let defaultDef = await this.getDefaultDefinition();
+                sortAscending = sortAscending ?? defaultDef.sortAscending;
+                sortProperty = sortProperty ?? defaultDef.sortProperty;
+                this.sortDefinition = {
+                    sortAscending,
+                    sortProperty
+                };
                 this.updateSortDefinitions();
             }
         }
@@ -266,22 +305,6 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     /**
-     * Saves the current sorting definitions to the local store
-     */
-    private updateSortDefinitions(): void {
-        this.updateSortedData();
-        if (
-            this.sortDefinition.sortAscending === true &&
-            this.isSameProperty(this.sortDefinition.sortProperty, this._defaultDefinitionSubject.value.sortProperty)
-        ) {
-            this.store.remove(`sorting_property_` + this.storageKey);
-        } else {
-            this.store.set(`sorting_property_` + this.storageKey, this.sortDefinition.sortProperty);
-        }
-        this.store.set(`sorting_ascending_` + this.storageKey, this.sortDefinition.sortAscending);
-    }
-
-    /**
      * Recreates the sorting function. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
@@ -300,5 +323,26 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             );
             this.outputSubject.next(this.inputData);
         }
+    }
+
+    /**
+     * Saves the current sorting definitions to the local store
+     */
+    private updateSortDefinitions(): void {
+        this.calculateDefaultStatus();
+        this.updateSortedData();
+        if (this._isDefaultSorting) {
+            this.store.remove(`sorting_property_` + this.storageKey);
+        } else {
+            this.store.set(`sorting_property_` + this.storageKey, this.sortDefinition?.sortProperty);
+        }
+        this.store.set(`sorting_ascending_` + this.storageKey, this.sortDefinition?.sortAscending);
+    }
+
+    private calculateDefaultStatus(): void {
+        this._isDefaultSorting = this.isSameProperty(
+            this.sortDefinition.sortProperty,
+            this._defaultDefinitionSubject.value?.sortProperty
+        );
     }
 }
