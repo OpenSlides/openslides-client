@@ -342,7 +342,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         if (!Array.isArray(payload)) {
             payload = [payload];
         }
-        return this.actions.create({ action: name, data: payload as unknown[] });
+        return this.actions.createFromArray([{ action: name, data: payload as unknown[] }]);
     }
 
     /**
