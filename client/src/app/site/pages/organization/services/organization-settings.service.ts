@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
+import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
 
 import { OrganizationSetting } from '../../../../domain/models/organizations/organization';
 import { ViewOrganization } from '../view-models/view-organization';
-import { OrganizationService } from './organization.service';
+import { ORGANIZATION_ID, OrganizationService } from './organization.service';
 
 @Injectable({
     providedIn: `root`
@@ -14,10 +15,16 @@ export class OrganizationSettingsService {
      */
     private settingSubjects: { [key: string]: BehaviorSubject<any> } = {};
 
+    private hasDataSubject = new BehaviorSubject(false);
+
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(private organization: OrganizationService) {
+    public constructor(private organization: OrganizationService, private repo: OrganizationRepositoryService) {
+        this.repo
+            .getModifiedIdsObservable()
+            .subscribe(ids => this.hasDataSubject.next(this.hasDataSubject.value || ids.includes(ORGANIZATION_ID)));
+
         organization.organizationObservable.subscribe(activeOrganization => {
             if (activeOrganization) {
                 for (const key of Object.keys(this.settingSubjects)) {
@@ -46,9 +53,27 @@ export class OrganizationSettingsService {
      * @param key The setting value to get from.
      */
     public get<T extends keyof OrganizationSetting>(key: T): Observable<OrganizationSetting[T]> {
+        this.ensureSettingsSubject<T>(key);
+        return this.settingSubjects[key];
+    }
+
+    /**
+     * Get an observer for the setting value given by the key.
+     * The observer will not emit before there is data from the organization detail subscription.
+     *
+     * @param key The setting value to get from.
+     */
+    public getSafe<T extends keyof OrganizationSetting>(key: T): Observable<OrganizationSetting[T]> {
+        this.ensureSettingsSubject<T>(key);
+        return combineLatest([this.settingSubjects[key], this.hasDataSubject]).pipe(
+            filter(values => values[1]),
+            map(values => values[0])
+        );
+    }
+
+    private ensureSettingsSubject<T extends keyof OrganizationSetting>(key: T): void {
         if (!this.settingSubjects[key]) {
             this.settingSubjects[key] = new BehaviorSubject<any>(this.instant(key));
         }
-        return this.settingSubjects[key];
     }
 }

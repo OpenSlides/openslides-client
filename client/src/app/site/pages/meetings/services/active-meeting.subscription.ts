@@ -24,6 +24,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `location`,
                 `language`,
                 `organization_tag_ids`,
+                `present_user_ids`,
                 `welcome_title`,
                 `welcome_text`,
                 `enable_anonymous`,
@@ -46,7 +47,8 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                         `default_group_for_meeting_id`,
                         `name`,
                         `permissions`,
-                        `weight`
+                        `weight`,
+                        `external_id`
                     ]
                 },
                 {

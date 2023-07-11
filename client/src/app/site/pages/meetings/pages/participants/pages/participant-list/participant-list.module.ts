@@ -16,13 +16,12 @@ import { PipesModule } from 'src/app/ui/pipes';
 
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantListComponent } from './components/participant-list/participant-list.component';
-import { ParticipantMultiselectActionsComponent } from './components/participant-multiselect-actions/participant-multiselect-actions.component';
 import { ParticipantListInfoDialogModule } from './modules/participant-list-info-dialog/participant-list-info-dialog.module';
 import { ParticipantListRoutingModule } from './participant-list-routing.module';
 import { ParticipantListServiceModule } from './services/participant-list-service.module';
 
 @NgModule({
-    declarations: [ParticipantListComponent, ParticipantMultiselectActionsComponent],
+    declarations: [ParticipantListComponent],
     imports: [
         CommonModule,
         ParticipantListRoutingModule,

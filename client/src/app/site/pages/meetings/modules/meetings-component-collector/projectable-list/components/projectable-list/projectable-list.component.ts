@@ -62,7 +62,11 @@ export class ProjectableListComponent<V extends BaseViewModel | BaseProjectableV
         }
 
         // hide the speakers in mobile
-        if (this.isMobile || !this.showListOfSpeakers || !this.operator.hasPerms(Permission.listOfSpeakersCanSee)) {
+        if (
+            this.isMobile ||
+            !this.showListOfSpeakers ||
+            !this.operator.hasPerms(Permission.listOfSpeakersCanSee, Permission.listOfSpeakersCanBeSpeaker)
+        ) {
             columnsToHide.push(`speaker`);
         }
 

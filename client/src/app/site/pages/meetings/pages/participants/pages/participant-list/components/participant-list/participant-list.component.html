@@ -55,6 +55,9 @@
                 <mat-icon matTooltip="{{ 'Inactive' | translate }}" *ngIf="!user.is_active && canManage">
                     block
                 </mat-icon>
+                <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}" *ngIf="user.hasSamlId && canManage">
+                    fingerprint
+                </mat-icon>
             </div>
         </div>
     </div>
@@ -155,13 +158,11 @@
 <!-- Menu for mobile entries -->
 <mat-menu #singleItemMenu="matMenu">
     <ng-template matMenuContent let-user="user">
-        <os-projector-button [object]="user" [menuItem]="true"></os-projector-button>
-
         <!-- Presence -->
         <mat-checkbox
             class="mat-menu-item"
             (change)="setPresent(user)"
-            [checked]="user.is_present"
+            [checked]="isUserPresent(user)"
             [disabled]="isPresentToggleDisabled(user)"
         >
             <span>{{ 'Present' | translate }}</span>

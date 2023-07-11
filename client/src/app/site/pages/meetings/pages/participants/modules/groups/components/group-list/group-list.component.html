@@ -96,6 +96,14 @@
                 />
                 <mat-error *ngIf="!groupForm?.valid">{{ 'Required' | translate }}</mat-error>
             </mat-form-field>
+            <mat-form-field>
+                <input
+                    type="text"
+                    matInput
+                    formControlName="external_id"
+                    placeholder="{{ 'External ID' | translate }}"
+                />
+            </mat-form-field>
         </form>
     </div>
     <div mat-dialog-actions>

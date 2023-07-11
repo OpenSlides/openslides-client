@@ -8,7 +8,15 @@
     >
         <!-- Title -->
         <div class="title-slot" *ngIf="projector">
-            <h2>{{ projector.name }}</h2>
+            <os-icon-container
+                [noWrap]="true"
+                icon="lock"
+                size="large"
+                [showIcon]="projector.is_internal"
+                [iconTooltip]="'Internal' | translate"
+            >
+                <h2>{{ projector.name }}</h2>
+            </os-icon-container>
         </div>
 
         <!-- Menu -->

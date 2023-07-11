@@ -100,6 +100,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.meetings.some(meeting => meeting.isArchived);
     }
 
+    public get hasSamlId(): boolean {
+        return this.saml_id !== null && this.saml_id !== undefined;
+    }
+
     // Will be set by the repository
     public getName!: () => string;
     public getShortName!: () => string;
@@ -263,6 +267,17 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return delegate.isPresentInMeeting();
     }
     // ### block end.
+
+    public getIsVoteCountable(presentUserIds?: number[]) {
+        if (!presentUserIds) {
+            return this.isVoteCountable;
+        }
+        const delegateId = this.vote_delegated_to_id();
+        if (delegateId) {
+            return presentUserIds.includes(delegateId);
+        }
+        return this.isPresentInMeeting();
+    }
 
     public override getDetailStateUrl(): string {
         return `/${this.getActiveMeetingId()}/users/${this.id}`;

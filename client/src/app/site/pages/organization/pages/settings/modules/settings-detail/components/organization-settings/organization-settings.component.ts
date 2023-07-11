@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { availableTranslations } from 'src/app/domain/definitions/languages';
+import { objectToFormattedString } from 'src/app/infrastructure/utils';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
 import { OrganizationControllerService } from 'src/app/site/pages/organization/services/organization-controller.service';
@@ -24,6 +25,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public get hasEdits(): boolean {
         return this.orgaSettingsForm?.dirty || false;
     }
+
+    public get ssoConfigRows(): number {
+        return this._ssoConfigRows;
+    }
+
+    private _ssoConfigRows: number = 3;
 
     private _currentOrgaSettings: ViewOrganization | null = null;
 
@@ -75,7 +82,18 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     enable_electronic_voting: [this._currentOrgaSettings.enable_electronic_voting],
                     enable_chat: [this._currentOrgaSettings.enable_chat],
                     limit_of_meetings: [this._currentOrgaSettings.limit_of_meetings ?? 0],
-                    limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0]
+                    limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0],
+                    saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false],
+                    saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
+                    saml_attr_mapping: [
+                        this._currentOrgaSettings.saml_attr_mapping &&
+                        typeof this._currentOrgaSettings.saml_attr_mapping !== `string`
+                            ? JSON.stringify(this._currentOrgaSettings.saml_attr_mapping)
+                            : this._currentOrgaSettings.saml_attr_mapping
+                    ],
+                    saml_metadata_idp: [this._currentOrgaSettings.saml_metadata_idp],
+                    saml_metadata_sp: [this._currentOrgaSettings.saml_metadata_sp],
+                    saml_private_key: [this._currentOrgaSettings.saml_private_key]
                 };
             }
         } else {
@@ -103,11 +121,15 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this.orgaSettingsForm = this.createForm();
         }
         const patchMeeting: any = viewOrganization.organization;
+        const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
+        patchMeeting.saml_attr_mapping = attrMapping;
+        this._ssoConfigRows = attrMapping.split(`\n`).length;
         this.orgaSettingsForm!.patchValue(patchMeeting);
     }
 
     public onSubmit(): void {
         const payload: any = this.orgaSettingsForm!.value;
+        payload.saml_attr_mapping = JSON.stringify(JSON.parse(payload.saml_attr_mapping as string));
         this.controller
             .update(payload)
             .then(() => this.markFormAsClean())
