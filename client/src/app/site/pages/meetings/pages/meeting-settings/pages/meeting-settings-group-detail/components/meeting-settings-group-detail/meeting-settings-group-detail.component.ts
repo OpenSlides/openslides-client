@@ -2,7 +2,11 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildre
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Meeting, Settings } from 'src/app/domain/models/meetings/meeting';
-import { RELATIONS } from 'src/app/infrastructure/definitions/relations';
+import { Action } from 'src/app/gateways/actions';
+import { canPerformListUpdates } from 'src/app/gateways/repositories/base-repository';
+import { Relation, RELATIONS } from 'src/app/infrastructure/definitions/relations';
+import { ObjectReplaceKeysConfig, partitionModelsForUpdate, replaceObjectKeys } from 'src/app/infrastructure/utils';
+import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -13,6 +17,7 @@ import {
     SettingsItem
 } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
 import { ensureIdField } from 'src/app/site/services/relation-manager.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
@@ -44,6 +49,10 @@ export class MeetingSettingsGroupDetailComponent
      */
     private untransformedValues: { [key: string]: any } = {};
 
+    private keyTransformConfigs: { [key: string]: ObjectReplaceKeysConfig } = {};
+
+    private keyRelations: { [key: string]: Relation } = {};
+
     /** Provides access to all created settings fields. */
     @ViewChildren(`settingsFields`) public settingsFields!: QueryList<MeetingSettingsGroupDetailFieldComponent>;
 
@@ -54,7 +63,8 @@ export class MeetingSettingsGroupDetailComponent
         private route: ActivatedRoute,
         private promptDialog: PromptService,
         private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService,
-        private repo: MeetingControllerService
+        private repo: MeetingControllerService,
+        private collectionMapper: CollectionMapperService
     ) {
         super(componentServiceCollector, translate);
     }
@@ -100,21 +110,45 @@ export class MeetingSettingsGroupDetailComponent
     public async saveAll(): Promise<void> {
         this.cd.detach();
         try {
-            await this.repo.update(
-                Object.keys(this.changedSettings).mapToObject(key => {
-                    let value: any = this.changedSettings[key];
-                    const reverseFunction = (this.settingsGroup.transformableKeys[key] ?? [])[0]?.reverseTransformFn;
-                    if (this.settingsGroup.transformableKeys[key]?.length > 1) {
-                        console.warn(
-                            `There are multiple transform reverse functions for ${key} in this setting group. They will therefore be ignored.`
-                        );
-                    } else if (reverseFunction) {
-                        value = reverseFunction(this.changedSettings[key], this.untransformedValues[key]);
-                    }
-                    return { [key]: value };
-                }),
-                { meeting: this.meeting }
-            );
+            let data = deepCopy(this.changedSettings);
+            for (let key of Object.keys(this.keyTransformConfigs)) {
+                if (Array.isArray(data[key])) {
+                    data[key] = data[key].map(val =>
+                        typeof val === `object` ? replaceObjectKeys(val, this.keyTransformConfigs[key], true) : val
+                    );
+                } else if (typeof data[key] === `object`) {
+                    data[key] = replaceObjectKeys(data[key], this.keyTransformConfigs[key], true);
+                }
+            }
+            let actions: Action<any>[] = [];
+            for (let key of Object.keys(this.keyRelations)) {
+                if (data[key] === undefined) {
+                    continue;
+                }
+                const relation = this.keyRelations[key];
+                const repo = this.collectionMapper.getRepository(relation.foreignViewModel?.COLLECTION);
+                if (!repo || !canPerformListUpdates(repo)) {
+                    console.warn(
+                        `Can't perform update on ${key}, repository was not suitable. Skipping this key.`,
+                        repo
+                    );
+                } else {
+                    actions.push(
+                        repo.listUpdate(
+                            relation.many
+                                ? partitionModelsForUpdate(data[key], this.untransformedValues[key])
+                                : { toUpdate: data[key] }
+                        )
+                    );
+                }
+                delete data[key];
+            }
+            if (actions.length) {
+                await Action.from(...actions).resolve();
+            }
+            if (Object.keys(data).length) {
+                await this.repo.update(data, { meeting: this.meeting });
+            }
             this.changedSettings = {};
             this.cd.reattach();
             this.cd.markForCheck();
@@ -196,24 +230,39 @@ export class MeetingSettingsGroupDetailComponent
     private getValueForKey(meeting: ViewMeeting, key: keyof Settings, setting: SettingsItem): any {
         let newKey: keyof ViewMeeting = key;
         if (setting.useRelation) {
-            newKey = RELATIONS.find(
-                relation =>
-                    relation.ownViewModels.some(model => model.COLLECTION === Meeting.COLLECTION) &&
-                    ensureIdField(relation) === key
-            )?.ownField as keyof ViewMeeting;
+            if (!this.keyRelations[key]) {
+                this.keyRelations[key] = RELATIONS.find(
+                    relation =>
+                        relation.ownViewModels.some(model => model.COLLECTION === Meeting.COLLECTION) &&
+                        ensureIdField(relation) === key
+                );
+            }
+            newKey = this.keyRelations[key]?.ownField as keyof ViewMeeting;
             if (!newKey) {
                 console.warn(`Couldn't find relation for ${key}, will instead use id values`);
             }
             newKey = newKey || key;
         }
-        let result = meeting[newKey];
-        if (this.settingsGroup.transformableKeys[key]?.length > 1) {
-            console.warn(
-                `There are multiple transform functions for ${key} in this setting group. They will therefore be ignored`
-            );
-        } else if (setting.transformFn) {
+        let result: any = meeting[newKey];
+        if (setting.pickKeys) {
+            if (Array.isArray(result)) {
+                result = result.map(val =>
+                    typeof val === `object` ? setting.pickKeys.mapToObject(key => ({ [key]: val[key] })) : val
+                );
+            } else if (typeof result === `object`) {
+                result = setting.pickKeys.mapToObject(key => ({ [key]: result[key] }));
+            }
+        }
+        if (setting.keyTransformationConfig) {
+            this.keyTransformConfigs[key] = setting.keyTransformationConfig;
             this.untransformedValues[key] = result;
-            result = setting.transformFn(result);
+            if (Array.isArray(result)) {
+                result = result.map(val =>
+                    typeof val === `object` ? replaceObjectKeys(val, setting.keyTransformationConfig) : val
+                );
+            } else if (typeof result === `object`) {
+                result = replaceObjectKeys(result, setting.keyTransformationConfig);
+            }
         }
         return result;
     }
@@ -222,9 +271,12 @@ export class MeetingSettingsGroupDetailComponent
      * Updates the specified settings item indicated by the given key.
      */
     private calculateAutomaticFieldChanges(update: SettingsFieldUpdate): void {
-        const detailFields = this.settingsFields?.filter(field =>
-            (Array.isArray(update.key) ? update.key : [update.key]).some(key => field.watchProperties?.includes(key))
-        );
+        const detailFields =
+            this.settingsFields?.filter(field =>
+                (Array.isArray(update.key) ? update.key : [update.key]).some(key =>
+                    field.watchProperties?.includes(key)
+                )
+            ) ?? [];
         detailFields.forEach(detailField => {
             const currentValue = detailField.currentValue;
             const changedValues = detailField.watchProperties.map(key => this.changedSettings[key]);

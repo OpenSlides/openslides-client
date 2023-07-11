@@ -12,9 +12,16 @@
             <mat-icon>arrow_forward</mat-icon>
             <mat-form-field>
                 <input
-                    *ngIf="config"
+                    *ngIf="config && isNumberAllocation"
                     formControlName="allocation"
-                    [type]="isNumberAllocation ? 'number' : 'text'"
+                    type="number"
+                    matInput
+                    placeholder="{{ allocationLabel | translate }}"
+                />
+                <input
+                    *ngIf="config && !isNumberAllocation"
+                    formControlName="allocation"
+                    type="text"
                     matInput
                     placeholder="{{ allocationLabel | translate }}"
                 />

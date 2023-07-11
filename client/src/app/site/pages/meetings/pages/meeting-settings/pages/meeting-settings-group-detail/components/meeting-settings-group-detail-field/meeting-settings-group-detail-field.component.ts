@@ -142,6 +142,8 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         isNumberAllocation: true
     };
 
+    private _comparedForm = false;
+
     /**
      * The current value of this setting. It is usually the first value, but this does not work for groups...
      */
@@ -229,13 +231,11 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 })
             )
             .subscribe(form => {
-                if (this._comparedForm || String(form.value) !== String(this._firstValue)) {
+                if (this._comparedForm || JSON.stringify(form.value) !== JSON.stringify(this._firstValue)) {
                     this.onChange(form.value);
                 }
             });
     }
-
-    private _comparedForm = false;
 
     /**
      * Stops the change detection
@@ -270,6 +270,13 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         this.form.patchValue({
             value: this.getRestrictedValue(newValue)
         });
+    }
+
+    public getAllocationConfig(setting: SettingsItem<any>): AllocationListConfig {
+        return {
+            ...(setting.type === `translations` ? this.TRANSLATION_CONFIG : this.RANKING_CONFIG),
+            useIds: setting.useRelation
+        };
     }
 
     /**

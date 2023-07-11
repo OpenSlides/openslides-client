@@ -2,6 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, filter, Observable, Subject } from 'rxjs';
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
+import { ListUpdateData } from 'src/app/infrastructure/utils';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
@@ -19,6 +20,14 @@ import { RepositoryServiceCollectorService } from './repository-service-collecto
 const RELATION_AS_OBSERVABLE_SUFFIX = `_as_observable`;
 
 export interface CreateResponse extends Identifiable, HasSequentialNumber {}
+
+export interface CanPerformListUpdates<M extends BaseModel, UpdateResult = any> {
+    listUpdate: (data: ListUpdateData<M>, meeting_id?: Id) => Action<UpdateResult>;
+}
+
+export function canPerformListUpdates(repo: any): repo is CanPerformListUpdates<any> {
+    return repo.listUpdate && typeof repo.listUpdate === `function`;
+}
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
     /**
@@ -342,7 +351,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         if (!Array.isArray(payload)) {
             payload = [payload];
         }
-        return this.actions.createFromArray([{ action: name, data: payload as unknown[] }]);
+        return this.actions.create({ action: name, data: payload as unknown[] });
     }
 
     /**

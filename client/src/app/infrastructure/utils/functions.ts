@@ -1,4 +1,6 @@
-import { Decimal } from '../../domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+
+import { Decimal, Id } from '../../domain/definitions/key-types';
 
 export function toBase64(data: File | Blob): Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
@@ -370,4 +372,52 @@ function getSpacer(level: number): string {
 
 export function isValidId(id: number): boolean {
     return !Number.isNaN(id) || id > 0;
+}
+
+export interface ListUpdateData<T extends Identifiable> {
+    toCreate?: Omit<T, `id`>[];
+    toUpdate?: T[];
+    toDelete?: Id[];
+}
+
+export function partitionModelsForUpdate<T extends Identifiable>(
+    newValues: T[],
+    originals: T[] = []
+): ListUpdateData<T> {
+    const originalIds = originals.map(value => value.id);
+    const updatedIds = newValues.map(val => val.id).filter(id => !!id);
+    const deleteSet = new Set<Id>(originalIds);
+    updatedIds.forEach(id => deleteSet.delete(id));
+    const toDelete = Array.from(deleteSet);
+    const toUpdate: T[] = newValues.filter(update => {
+        if (!update.id) {
+            return false;
+        }
+        const former = originals.find(value => value.id === update.id);
+        return Object.keys(update).some(key => key !== `id` && former[key] !== update[key]);
+    });
+    const toCreate: Omit<T, `id`>[] = newValues.filter(val => !val.id);
+    return { toDelete, toUpdate, toCreate };
+}
+
+export type ObjectReplaceKeysConfig = [string, string][];
+
+export function replaceObjectKeys(
+    object: { [key: string]: any },
+    config: ObjectReplaceKeysConfig,
+    reverse?: boolean
+): Object {
+    if (reverse) {
+        return replaceObjectKeys(
+            object,
+            config.map(line => [line[1], line[0]] as [string, string])
+        );
+    }
+    const map = new Map<string, string>(config);
+    let result: { [key: string]: any } = {};
+    for (let key of Object.keys(object)) {
+        const newKey = map.get(key) ?? key;
+        result[newKey] = object[key];
+    }
+    return result;
 }

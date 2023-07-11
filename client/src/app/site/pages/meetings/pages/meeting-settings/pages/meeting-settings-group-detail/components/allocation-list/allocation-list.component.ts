@@ -1,13 +1,14 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import {
     ControlValueAccessor,
+    FormBuilder,
+    NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     UntypedFormArray,
-    UntypedFormBuilder,
     UntypedFormGroup,
     Validators
 } from '@angular/forms';
-import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, firstValueFrom, map } from 'rxjs';
 
 export interface AllocationBox {
     entry: string;
@@ -24,13 +25,14 @@ export interface AllocationListConfig {
     allocationLabel: string;
     addButtonLabel: string;
     isNumberAllocation?: boolean; //default: false
+    useIds?: boolean; //default: false
 }
 
 /**
  * A list that allows one to create string entries and assign them a string or number value.
  *
  * Default input- and return type is a key-value dictionary.
- * There is however an option for this component to remember ids, by giving an AllocationBox Array as a formValue. This causes the return type of this component to henceforth be an AllocationBox array as well.
+ * There is however an option for this component to remember ids, that can be set via the config. This causes the return type of this component to be an AllocationBox array.
  *
  * @example:
  * ```html
@@ -46,8 +48,14 @@ export interface AllocationListConfig {
             provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => AllocationListComponent),
             multi: true
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => AllocationListComponent),
+            multi: true
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllocationListComponent implements ControlValueAccessor, OnInit {
     @Input()
@@ -75,6 +83,10 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         return this.config?.isNumberAllocation;
     }
 
+    private get useIds(): boolean {
+        return this.config?.useIds;
+    }
+
     /**
      * The parent form-group.
      */
@@ -89,14 +101,12 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
 
     private deletedIds: number[] = [];
 
-    private useIds = false;
-
     /**
      * Default constructor.
      *
      * @param formBuilder FormBuilder
      */
-    public constructor(private formBuilder: UntypedFormBuilder) {}
+    public constructor(private formBuilder: FormBuilder, private cd: ChangeDetectorRef) {}
 
     /**
      * Initializes the form-controls.
@@ -107,18 +117,23 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
         });
 
         this.allocationBoxes = this.allocationListForm.get(`allocationBoxes`) as UntypedFormArray;
-        this.allocationBoxes.valueChanges.subscribe((value: AllocationBox[]) => {
-            if (this.allocationBoxes.valid) {
-                this.propagateChange(
-                    this.useIds
-                        ? value
-                        : value.mapToObject(entry => ({
-                              [entry.entry]: entry.id
-                                  ? [this.formatAllocationValue(entry.allocation), entry.id]
-                                  : this.formatAllocationValue(entry.allocation)
-                          }))
-                );
-            }
+        combineLatest([
+            this.allocationBoxes.valueChanges,
+            this.configSubject.pipe(
+                map(config => !!config),
+                filter(config => config),
+                distinctUntilChanged()
+            )
+        ]).subscribe(async ([value, _]: [AllocationBox[], boolean]) => {
+            this.propagateChange(
+                this.useIds
+                    ? value
+                    : value.mapToObject(entry => ({
+                          [entry.entry]: entry.id
+                              ? [this.formatAllocationValue(entry.allocation), entry.id]
+                              : this.formatAllocationValue(entry.allocation)
+                      }))
+            );
         });
     }
 
@@ -130,24 +145,34 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
     /**
      * The value from the FormControl
      *
-     * @param obj the value from the parent form. Type "any" is required by the interface. Can either be a dictionary or an array of AllocationBoxes. If at any point an array is given, the propagation type of this component will henceforth be a AllocationBox array.
+     * @param obj the value from the parent form. Type "any" is required by the interface. Can either be a dictionary or an array of AllocationBoxes.
      */
     public writeValue(obj: any): void {
         this.deletedIds = [];
         if (Array.isArray(obj)) {
-            this.useIds = true;
             for (let entry of obj) {
                 if (!isAllocationBox(entry)) {
                     console.warn(`Allocation list received data in wrong format`);
                     continue;
                 }
-                this.addNewAllocation(entry.entry, entry.allocation, entry.id);
+                this.addNewAllocationInternal(entry.entry, entry.allocation, false, entry.id);
             }
         } else if (obj) {
-            for (const key of Object.keys(obj)) {
-                this.addNewAllocation(key, obj[key]);
+            for (let key of Object.keys(obj)) {
+                this.addNewAllocationInternal(key, obj[key], false);
             }
         }
+    }
+
+    public validate(): {
+        invalid: boolean;
+    } | null {
+        const isNotValid = !this.allocationBoxes.valid;
+        return isNotValid
+            ? {
+                  invalid: true
+              }
+            : null;
     }
 
     /**
@@ -193,18 +218,32 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
      * @param entry The string to for which the allocation is made.
      * @param allocation The allocation value for the given string.
      */
-    public async addNewAllocation(entry: string = ``, allocation: string | number = ``, id?: number): Promise<void> {
+    public async addNewAllocation(entry: string = ``, allocation: string | number = ``): Promise<void> {
+        await this.addNewAllocationInternal(entry, allocation, true);
+    }
+
+    private async addNewAllocationInternal(
+        entry: string,
+        allocation: string | number,
+        emitEvent: boolean,
+        id?: number
+    ): Promise<void> {
         await firstValueFrom(this.configSubject.pipe(filter(config => !!config)));
         this.allocationBoxes.push(
-            this.formBuilder.group({
-                entry: [entry, Validators.required],
-                allocation: [
-                    this.isNumberAllocation ? this.getNumber(allocation) : String(allocation),
-                    Validators.required
-                ],
-                ...(id ? { id: [id] } : {})
-            })
+            this.isNumberAllocation
+                ? this.formBuilder.group({
+                      entry: [entry, Validators.required],
+                      allocation: [this.getNumber(allocation), Validators.required],
+                      ...(id ? { id: [id] } : {})
+                  })
+                : this.formBuilder.group({
+                      entry: [entry, Validators.required],
+                      allocation: [String(allocation), Validators.required],
+                      ...(id ? { id: [id] } : {})
+                  }),
+            ...(emitEvent === false ? [{ emitEvent }] : [])
         );
+        this.cd.markForCheck();
     }
 
     private getNumber(allocation: number | string): number {
@@ -219,6 +258,6 @@ export class AllocationListComponent implements ControlValueAccessor, OnInit {
     }
 
     private formatAllocationValue(allocation: string | number): string | number {
-        return this.isNumberAllocation ? Number(allocation) : allocation;
+        return this.isNumberAllocation ? this.getNumber(allocation) : allocation;
     }
 }

@@ -3,8 +3,7 @@ import { HasMeetingId } from '../../interfaces';
 import { BaseModel } from '../base/base-model';
 
 /**
- * Representation of user group.
- * @ignore
+ * Representation of point of order category
  */
 export class PointOfOrderCategory extends BaseModel<PointOfOrderCategory> {
     public static COLLECTION = `point_of_order_category`;

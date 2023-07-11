@@ -3,17 +3,15 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { PointOfOrderCategory } from 'src/app/domain/models/point-of-order-category/point-of-order-category';
 import {
     PollBackendDurationChoices,
     PollPercentBaseVerbose,
     PollTypeVerbose
 } from 'src/app/domain/models/poll/poll-constants';
+import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
-import { ViewPointOfOrderCategory } from '../../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
-import { AllocationBox } from '../../pages/meeting-settings/pages/meeting-settings-group-detail/components/allocation-list/allocation-list.component';
 
 export type SettingsType =
     | 'string'
@@ -45,12 +43,7 @@ export interface ChoicesFunctionDefinition<V> {
     labelKey: keyof V;
 }
 
-export interface SettingsItemTransformFunctions<V = any> {
-    transformFn?: (value?: any) => V;
-    reverseTransformFn?: (value: V, original?: any) => any;
-}
-
-export interface SettingsItemData<V = any> {
+export interface SettingsItem<V = any> {
     key: keyof Settings | (keyof Settings)[]; // Array can be used with fields that require multiple values (like then type === 'daterange')
     label: string;
     type?: SettingsType; // default: text
@@ -65,6 +58,8 @@ export interface SettingsItemData<V = any> {
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
     useRelation?: boolean; // May be set to true for relation id fields to get the relation item(s) instead if the id(s)
+    keyTransformationConfig?: ObjectReplaceKeysConfig; // May be set if the value is expected to be an object. If it is, all keys will be transformed according to the lines before they are passed to the forms, and back before the form is saved.
+    pickKeys?: string[]; // If the value is an object, this will throw away all properties, except the given keys, this is done before the keyTransformation
     /**
      * A function to restrict some values of a settings-item depending on used organization's settings
      *
@@ -74,8 +69,6 @@ export interface SettingsItemData<V = any> {
      */
     restrictionFn?: <T>(orgaSettings: OrganizationSettingsService, value: T) => any;
 }
-
-export type SettingsItem<V = any> = SettingsItemData<V> & SettingsItemTransformFunctions<V>;
 
 interface SettingsItemAutomaticChangeSetting<V> {
     /**
@@ -88,7 +81,7 @@ interface SettingsItemAutomaticChangeSetting<V> {
     getChangeFn: (currentValue: V, currentWatchPropertyValues: any[]) => V;
 }
 
-export interface SettingsGroupData {
+export interface SettingsGroup {
     label: string;
     icon: string;
     subgroups: {
@@ -97,13 +90,7 @@ export interface SettingsGroupData {
     }[];
 }
 
-export type SettingsGroup = SettingsGroupData & {
-    transformableKeys: {
-        [key: string]: SettingsItemTransformFunctions[];
-    };
-};
-
-function fillInSettingsDefaults(settingsGroups: SettingsGroupData[]): SettingsGroup[] {
+function fillInSettingsDefaults(settingsGroups: SettingsGroup[]): SettingsGroup[] {
     settingsGroups.forEach(group =>
         group.subgroups.forEach(
             subgroup =>
@@ -112,30 +99,7 @@ function fillInSettingsDefaults(settingsGroups: SettingsGroupData[]): SettingsGr
                 ))
         )
     );
-    return settingsGroups.map(group => ({
-        ...group,
-        transformableKeys: group.subgroups
-            .flatMap(subgroup =>
-                subgroup.settings
-                    .filter(setting => setting.transformFn || setting.reverseTransformFn)
-                    .flatMap(setting =>
-                        (Array.isArray(setting.key) ? setting.key : [setting.key]).map(key => ({
-                            key: key as string,
-                            transformFn: setting.transformFn,
-                            reverseTransformFn: setting.reverseTransformFn
-                        }))
-                    )
-            )
-            .reduce<{ [key: string]: SettingsItemTransformFunctions[] }>((dictionary, current) => {
-                const { key, ...rest } = current;
-                if (Object.keys(dictionary).includes(key)) {
-                    dictionary[key].push(rest);
-                } else {
-                    dictionary[key] = [rest];
-                }
-                return dictionary;
-            }, {})
-    }));
+    return settingsGroups;
 }
 
 export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
@@ -343,11 +307,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`General`),
                 settings: [
                     {
-                        key: `list_of_speakers_enable_point_of_order_speakers`,
-                        label: _(`Enable point of order`),
-                        type: `boolean`
-                    },
-                    {
                         key: `list_of_speakers_enable_pro_contra_speech`,
                         label: _(`Enable forspeech / counter speech`),
                         type: `boolean`
@@ -423,8 +382,13 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`Point of order categories`),
+                label: _(`Point of order`),
                 settings: [
+                    {
+                        key: `list_of_speakers_enable_point_of_order_speakers`,
+                        label: _(`Enable point of order`),
+                        type: `boolean`
+                    },
                     {
                         key: `list_of_speakers_enable_point_of_order_categories`,
                         label: _(`Enable point of order categories`),
@@ -435,30 +399,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Point of order categories`),
                         type: `ranking`,
                         useRelation: true,
-                        transformFn: (value?: ViewPointOfOrderCategory[]) =>
-                            (value ?? []).map(element => ({
-                                entry: element.text,
-                                allocation: element.rank,
-                                id: element.id
-                            })),
-                        reverseTransformFn: (value: AllocationBox[], original?: ViewPointOfOrderCategory[]) => {
-                            const originalIds = original.map(value => value.id);
-                            const updatedIds = value.map(val => val.id).filter(id => !!id);
-                            const toDelete = originalIds.difference(updatedIds);
-                            const toUpdate: Partial<PointOfOrderCategory>[] = value
-                                .map(val => ({ text: val.entry, rank: +val.allocation, id: val.id }))
-                                .filter(val => {
-                                    if (!val.id) {
-                                        return false;
-                                    }
-                                    const former = original.find(value => value.id === val.id);
-                                    return former.text !== val.text || former.rank !== val.rank;
-                                });
-                            const toCreate: { text: string; rank: number }[] = value
-                                .filter(val => !val.id)
-                                .map(val => ({ text: val.entry, rank: +val.allocation }));
-                            return { toDelete, toUpdate, toCreate };
-                        }
+                        keyTransformationConfig: [
+                            [`text`, `entry`],
+                            [`rank`, `allocation`]
+                        ],
+                        pickKeys: [`id`, `text`, `rank`]
                     }
                 ]
             }

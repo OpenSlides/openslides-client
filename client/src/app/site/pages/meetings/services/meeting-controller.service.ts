@@ -46,22 +46,13 @@ export class MeetingControllerService extends BaseController<ViewMeeting, Meetin
     }
 
     public async update(
-        updateData: any,
+        update: any,
         config: {
             meeting?: ViewMeeting;
             options?: MeetingUserModifiedFields;
         } = {}
     ): Promise<void> {
-        const { point_of_order_category_ids, ...update } = updateData;
-        let pointOfOrderCategoryAction: Action<void | Identifiable>;
-        if (point_of_order_category_ids) {
-            pointOfOrderCategoryAction = this.pointOfOrdercategoryRepo.bulkUpdateCategories(
-                point_of_order_category_ids,
-                updateData.id || config.meeting.id
-            );
-        }
-        const updateAction = this.repo.update(update, config.meeting, config.options);
-        await Action.from(updateAction, pointOfOrderCategoryAction).resolve();
+        await this.repo.update(update, config.meeting, config.options).resolve();
     }
 
     public delete(...meetings: Identifiable[]): Promise<void> {

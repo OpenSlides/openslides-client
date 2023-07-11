@@ -143,7 +143,7 @@
                 <!-- Custom Translations -->
                 <div *ngIf="setting.type === 'translations' || setting.type === 'ranking'">
                     <os-allocation-list
-                        [config]="setting.type === 'translations' ? TRANSLATION_CONFIG : RANKING_CONFIG"
+                        [config]="getAllocationConfig(setting)"
                         formControlName="value"
                     ></os-allocation-list>
                 </div>
