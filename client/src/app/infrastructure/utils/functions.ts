@@ -3,7 +3,6 @@ import { Decimal } from '../../domain/definitions/key-types';
 export function toBase64(data: File | Blob): Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsDataURL(data);
         reader.onload = () => {
             const resultStr: string = reader.result as string;
             resolve(resultStr.split(`,`)[1]);
@@ -11,6 +10,7 @@ export function toBase64(data: File | Blob): Promise<string> {
         reader.onerror = error => {
             reject(error);
         };
+        reader.readAsDataURL(data);
     });
 }
 
@@ -43,7 +43,7 @@ export function reconvertChars(text: string): string {
  */
 export function stripHtmlTags(inputString: string): string {
     const regexp = new RegExp(/<[^ ][^<>]*(>|$)/g);
-    return inputString.replace(regexp, ``).trim();
+    return inputString.replace(regexp, ` `).replace(/  +/g, ` `).trim();
 }
 
 const VERBOSE_TRUE_FIELDS = [`1`, `on`, `true`];
@@ -66,29 +66,13 @@ const AMOUNT_DECIMAL_PLACES = 6;
  * @returns A string containing the floating point representation of the given number.
  */
 export function toDecimal(input: string | number | undefined, returnNull = true): Decimal | null {
+    if (typeof input === `string` && Number.isNaN(Number(input))) {
+        throw new Error(`Can't convert "${input}" to number`);
+    }
     if ((typeof input !== `string` || !input?.length) && typeof input !== `number`) {
         return returnNull ? null : undefined;
     }
-    if (typeof input === `number`) {
-        return input.toFixed(AMOUNT_DECIMAL_PLACES);
-    }
-    return parseStringToDecimal(input);
-}
-
-function parseStringToDecimal(input: string): Decimal {
-    const appending = (value: string, commaIndex: number): string => {
-        while (value.length - commaIndex <= AMOUNT_DECIMAL_PLACES) {
-            value += `0`;
-        }
-        return value;
-    };
-    const index = input.indexOf(`.`);
-    if (index > -1) {
-        return appending(input, index);
-    } else {
-        input += `.`;
-        return appending(input, input.length - 1);
-    }
+    return (typeof input === `number` ? input : +input).toFixed(AMOUNT_DECIMAL_PLACES);
 }
 
 /**
@@ -102,13 +86,14 @@ export function getLongPreview(input: string, size: number = 300): string {
     if (!input || !input.length) {
         return ``;
     }
-    if (input.length < size) {
-        return stripHtmlTags(input);
+    input = stripHtmlTags(input);
+    if (input.length <= size) {
+        return input;
     }
     return (
-        stripHtmlTags(input.substring(0, size / 2 - 3)) +
+        input.substring(0, Math.floor(size / 2) - 3).trim() +
         ` [...] ` +
-        stripHtmlTags(input.substring(input.length - size / 2, input.length))
+        input.substring(input.length - Math.ceil(size / 2) + 4, input.length).trim()
     );
 }
 
@@ -122,10 +107,11 @@ export function getShortPreview(input: string): string {
     if (!input || !input.length) {
         return ``;
     }
+    input = stripHtmlTags(input);
     if (input.length > 50) {
-        return stripHtmlTags(input.substring(0, 47)) + `...`;
+        return input.substring(0, 47).trim() + `...`;
     }
-    return stripHtmlTags(input);
+    return input;
 }
 
 export function isEasterEggTime(): boolean {
@@ -155,13 +141,13 @@ export function mmToPoints(mm: number, dense: number = 72): number {
  * @returns 0 if they are equal, a negative value if a>b, else a positive value
  */
 export function compareNumber(a: number, b: number): number {
-    if (!b) {
-        if (!a) {
+    if (b == null) {
+        if (a == null) {
             return 0;
         }
         return -1;
     }
-    if (!a) {
+    if (a == null) {
         return 1;
     }
     return b - a;
@@ -327,14 +313,7 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     }
 
     // If the json actually represents an object or array, format the JSON skeleton
-    const separators = [`[`, `{`, `]`, `}`];
-    if (separators.some(separator => !json.includes(separator))) {
-        for (let symbol of [`[`, `{`, `]`, `}`]) {
-            json = json.split(symbol).join(`\n` + symbol + `\n`);
-        }
-        json = json.split(`,`).join(`,\n`).split(`:`).join(`: `).trim();
-        json = addSpacersToMultiLineJson(json);
-    }
+    json = formatJsonSkeleton(json);
 
     // Merge strings back with json skeleton
     let result = ``;
@@ -349,6 +328,19 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
     return result;
 }
 
+function formatJsonSkeleton(json: string): string {
+    const append = [`[`, `{`, `,`];
+    const prepend = [`]`, `}`];
+    for (let symbol of append) {
+        json = splitStringKeepSeperator(json, symbol, `append`).join(`\n`);
+    }
+    for (let symbol of prepend) {
+        json = splitStringKeepSeperator(json, symbol, `prepend`).join(`\n`);
+    }
+    json = json.split(`:`).join(`: `).trim();
+    return addSpacersToMultiLineJson(json);
+}
+
 function addSpacersToMultiLineJson(json: string): string {
     const openers = [`[`, `{`];
     const closers = [`]`, `}`];
@@ -356,11 +348,11 @@ function addSpacersToMultiLineJson(json: string): string {
     let resultArray: string[] = [];
     let level = 0;
     for (let element of jsonArray) {
-        if (openers.includes(element)) {
+        if (openers.includes(element.charAt(element.length - 1))) {
             resultArray.push(getSpacer(level) + element);
             level++;
             continue;
-        } else if (closers.includes(element) && level > 0) {
+        } else if (closers.includes(element.charAt(0)) && level > 0) {
             level--;
         }
         resultArray.push(getSpacer(level) + element);
@@ -374,4 +366,8 @@ function getSpacer(level: number): string {
         spacer = spacer + `   `;
     }
     return spacer;
+}
+
+export function isValidId(id: number): boolean {
+    return !Number.isNaN(id) || id > 0;
 }

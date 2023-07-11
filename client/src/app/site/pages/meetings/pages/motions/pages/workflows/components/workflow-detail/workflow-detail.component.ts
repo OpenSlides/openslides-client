@@ -198,11 +198,11 @@ Prerequisites:
             type: `check`
         },
         {
-            name: _(`Set timestamp of creation`),
+            name: _(`Set timestamp`),
             help_text: _(
                 `Activates the automatic logging of the date and time when this state was first reached. A set time stamp cannot be removed.`
             ),
-            selector: `set_created_timestamp`,
+            selector: `set_workflow_timestamp`,
             type: `check`
         },
         {
