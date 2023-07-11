@@ -36,7 +36,18 @@
                     <th mat-header-cell class="group-head-table-cell" *matHeaderCellDef>
                         {{ 'Permissions' | translate }}
                     </th>
-                    <td mat-cell *matCellDef="let perm">
+                    <td
+                        mat-cell
+                        *matCellDef="let perm"
+                        #tooltip="matTooltip"
+                        [ngClass]="{ 'has-help-text': perm.help_text }"
+                        [matTooltip]="perm.help_text | translate"
+                        matTooltipClass="pre-wrap"
+                        matTooltipPosition="after"
+                        (mouseenter)="$event.stopImmediatePropagation()"
+                        (mouseleave)="tooltip.hide()"
+                        (click)="tooltip.toggle()"
+                    >
                         <div class="permission-name">
                             {{ perm.name | translate }}
                         </div>
