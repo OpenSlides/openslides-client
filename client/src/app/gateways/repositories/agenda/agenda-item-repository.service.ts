@@ -93,7 +93,7 @@ export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<Vi
         } else {
             payload = items.map(item => ({ id: (item as Identifiable).id }));
         }
-        await this.actions.sendBulkRequest(AgendaItemAction.DELETE, payload);
+        this.actions.createFromArray([{ action: AgendaItemAction.DELETE, data: payload }]);
     }
 
     /**

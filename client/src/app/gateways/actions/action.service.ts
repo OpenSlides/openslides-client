@@ -89,18 +89,4 @@ export class ActionService {
         }
         return results[0];
     }
-
-    /**
-     * @deprecated This will be removed pretty soon, use `createFromArray` instead!
-     * @param action
-     * @param data
-     * @returns
-     */
-    public async sendBulkRequest<T>(action: string, data: any[]): Promise<T[] | null> {
-        const results = await this.sendRequests<T>([{ action, data }]);
-        if (results && results.length !== data.length) {
-            throw new Error(`Inner resultlength is not ${data.length} from the action service`);
-        }
-        return results;
-    }
 }

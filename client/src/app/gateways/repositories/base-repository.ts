@@ -437,9 +437,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @param payload
      * @returns
      */
-    protected async sendBulkActionToBackend<T>(action: string, payload: T[]): Promise<any> {
+    protected async sendBulkActionToBackend<T>(act: string, payload: T[]): Promise<any> {
         try {
-            return await this.actions.sendBulkRequest(action, payload);
+            return this.actions.createFromArray([{ action: act, data: payload }]);
         } catch (e) {
             throw e;
         }
