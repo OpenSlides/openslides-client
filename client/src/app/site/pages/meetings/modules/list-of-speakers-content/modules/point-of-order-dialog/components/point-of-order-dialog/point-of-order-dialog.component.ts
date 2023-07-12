@@ -1,49 +1,65 @@
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { TranslateService } from '@ngx-translate/core';
-import { map, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { ViewListOfSpeakers, ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda';
+import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 @Component({
     selector: `os-point-of-order-dialog`,
     templateUrl: `./point-of-order-dialog.component.html`,
     styleUrls: [`./point-of-order-dialog.component.scss`]
 })
-export class PointOfOrderDialogComponent implements OnDestroy {
+export class PointOfOrderDialogComponent {
     public editForm: UntypedFormGroup;
 
     public readonly MAX_LENGTH = 80;
 
     public title: string;
-    private _titleSubscription: Subscription;
+
+    public categoriesSubject = new BehaviorSubject<ViewPointOfOrderCategory[]>([]);
+
+    public get showCategorySelect(): boolean {
+        return this._showCategorySelect;
+    }
+
+    private _showCategorySelect = false;
 
     public constructor(
         public readonly dialogRef: MatDialogRef<PointOfOrderDialogComponent>,
         @Inject(MAT_DIALOG_DATA)
-        public readonly data: { listOfSpeakers: ViewListOfSpeakers; category?: ViewPointOfOrderCategory },
+        public readonly listOfSpeakers: ViewListOfSpeakers,
         private fb: UntypedFormBuilder,
-        private translate: TranslateService
+        private meetingSettings: MeetingSettingsService,
+        private activeMeeting: ActiveMeetingService
     ) {
-        this.editForm = this.fb.group({
-            note: [``, [Validators.required, Validators.maxLength(this.MAX_LENGTH)]]
-        });
-        this._titleSubscription = this.translate
-            .get(_(`Are you sure you want to submit a %pointOfOrder%?`))
-            .pipe(
-                map((text: string) =>
-                    text.replace(
-                        `%pointOfOrder%`,
-                        this.translate.instant(this.data.category?.text ?? _(`point of order`))
-                    )
-                )
-            )
-            .subscribe(title => (this.title = title));
-    }
+        this.activeMeeting.meeting.point_of_order_categories_as_observable
+            .pipe(map(categories => categories.sort((a, b) => a.rank - b.rank)))
+            .subscribe(this.categoriesSubject);
 
-    public ngOnDestroy(): void {
-        this._titleSubscription?.unsubscribe();
+        this.editForm = this.fb.group({
+            note: [``, [Validators.required, Validators.maxLength(this.MAX_LENGTH)]],
+            category: []
+        });
+
+        combineLatest([
+            this.meetingSettings.get(`list_of_speakers_enable_point_of_order_categories`),
+            this.categoriesSubject
+        ]).subscribe(([enabled, categories]) => {
+            const show = categories.length && enabled;
+            const categoryForm = this.editForm.get(`category`);
+            if (show) {
+                categoryForm.setValidators([Validators.required]);
+                if (!categories.map(cat => cat.id).includes(categoryForm.value)) {
+                    categoryForm.setValue(categories[0].id);
+                }
+            } else {
+                categoryForm.clearValidators();
+            }
+            this.editForm.updateValueAndValidity();
+            this._showCategorySelect = show;
+        });
     }
 
     public onOk(): void {
@@ -51,7 +67,10 @@ export class PointOfOrderDialogComponent implements OnDestroy {
             return;
         }
         const note = this.editForm.value.note;
-        this.dialogRef.close({ note });
+        const point_of_order_category_id = this._showCategorySelect
+            ? this.editForm.value.category || undefined
+            : undefined;
+        this.dialogRef.close({ note, point_of_order_category_id });
     }
 
     public onCancel(): void {

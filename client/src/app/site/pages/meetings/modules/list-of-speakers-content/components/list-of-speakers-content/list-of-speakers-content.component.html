@@ -261,36 +261,13 @@
             mat-stroked-button
             color="warn"
             (click)="addPointOfOrder()"
-            *ngIf="
-                (!pointOfOrderCategoriesEnabled || (pointOfOrderCategories && pointOfOrderCategories.length <= 1)) &&
-                showPointOfOrders &&
-                !isOpInWaitlist(true)
-            "
+            *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
         >
             <mat-icon>warning</mat-icon>
             &nbsp;
-            <span *ngIf="!pointOfOrderCategoriesEnabled || pointOfOrderCategories.length !== 1">
+            <span>
                 {{ 'Point of order' | translate }}
             </span>
-            <span *ngIf="pointOfOrderCategoriesEnabled && pointOfOrderCategories.length === 1">
-                {{ pointOfOrderCategories[0].text | translate }}
-            </span>
-        </button>
-        <button
-            mat-stroked-button
-            color="warn"
-            [matMenuTriggerFor]="pointOfOrderMenu"
-            *ngIf="
-                pointOfOrderCategoriesEnabled &&
-                pointOfOrderCategories &&
-                pointOfOrderCategories.length > 1 &&
-                showPointOfOrders &&
-                !isOpInWaitlist(true)
-            "
-        >
-            <mat-icon>warning</mat-icon>
-            &nbsp;
-            <span>{{ 'Point of order' | translate }}</span>
         </button>
         <button
             mat-stroked-button
@@ -299,9 +276,7 @@
             *ngIf="showPointOfOrders && isOpInWaitlist(true)"
         >
             <mat-icon>remove</mat-icon>
-            <span>
-                {{ withdrawButtonText | async }}
-            </span>
+            <span translate>Withdraw point of order</span>
         </button>
     </div>
 </mat-card>
@@ -421,11 +396,3 @@
     </button>
     <ng-container></ng-container>
 </ng-template>
-
-<mat-menu #pointOfOrderMenu="matMenu">
-    <ng-template matMenuContent>
-        <button *ngFor="let category of pointOfOrderCategories" mat-menu-item (click)="addPointOfOrder(category)">
-            {{ category.text }}
-        </button>
-    </ng-template>
-</mat-menu>

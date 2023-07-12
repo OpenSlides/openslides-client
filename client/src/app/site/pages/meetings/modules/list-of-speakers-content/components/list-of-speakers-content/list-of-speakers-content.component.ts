@@ -11,9 +11,8 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, firstValueFrom, map, Observable, startWith } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
@@ -31,7 +30,6 @@ import { ViewPortService } from 'src/app/site/services/view-port.service';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
-import { ViewPointOfOrderCategory } from '../../../../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { UserSelectionData } from '../../../participant-search-selector';
 import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
 import {
@@ -125,22 +123,6 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public pointOfOrderCategoriesEnabled: boolean = false;
 
-    public get pointOfOrderCategoriesObservable(): Observable<ViewPointOfOrderCategory[]> {
-        return this._pointOfOrderCategoriesSubject;
-    }
-
-    public get pointOfOrderCategories(): ViewPointOfOrderCategory[] {
-        return this._pointOfOrderCategoriesSubject.value.sort((a, b) => a.rank - b.rank);
-    }
-
-    public get withdrawButtonText(): Observable<string> {
-        return this._withdrawButtonTextSubject;
-    }
-
-    private _withdrawButtonTextSubject = new BehaviorSubject<string>(null);
-
-    private _pointOfOrderCategoriesSubject = new BehaviorSubject<ViewPointOfOrderCategory[]>(null);
-
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -177,26 +159,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.subscriptions.push(
             this.meetingSettingsService
                 .get(`list_of_speakers_enable_point_of_order_categories`)
-                .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
-            this.activeMeeting.point_of_order_categories_as_observable.subscribe(this._pointOfOrderCategoriesSubject),
-            combineLatest([
-                this.translate.get(_(`Withdraw %title%`)),
-                this._pointOfOrderCategoriesSubject,
-                this.meetingSettingsService
-                    .get(`list_of_speakers_enable_point_of_order_categories`)
-                    .pipe(startWith(null))
-            ])
-                .pipe(
-                    map(([text, categories, enabled]) =>
-                        (text as string).replace(
-                            `%title%`,
-                            this.translate.instant(
-                                !enabled || categories.length !== 1 ? _(`point of order`) : categories[0].text
-                            )
-                        )
-                    )
-                )
-                .subscribe(this._withdrawButtonTextSubject)
+                .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled))
         );
     }
 
@@ -274,19 +237,14 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         }
     }
 
-    public async addPointOfOrder(category?: ViewPointOfOrderCategory): Promise<void> {
-        category = category ?? this.pointOfOrderCategories[0];
-        const dialogRef = await this.dialog.open(
-            this.listOfSpeakers,
-            this.pointOfOrderCategoriesEnabled ? category : undefined
-        );
+    public async addPointOfOrder(): Promise<void> {
+        const dialogRef = await this.dialog.open(this.listOfSpeakers);
         try {
             const result = await firstValueFrom(dialogRef.afterClosed());
             if (result) {
                 await this.speakerRepo.create(this.listOfSpeakers, this._currentUser!.id, {
                     pointOfOrder: true,
-                    note: result.note,
-                    point_of_order_category_id: this.pointOfOrderCategoriesEnabled ? category?.id : undefined
+                    ...result
                 });
             }
         } catch (e) {
