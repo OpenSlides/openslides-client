@@ -1,4 +1,6 @@
-import { Decimal } from '../../domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+
+import { Decimal, Id } from '../../domain/definitions/key-types';
 
 export function toBase64(data: File | Blob): Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
@@ -368,6 +370,85 @@ function getSpacer(level: number): string {
     return spacer;
 }
 
+/**
+ * Checks if a number is a valid id in the OpenSlides-context
+ */
 export function isValidId(id: number): boolean {
-    return !Number.isNaN(id) || id > 0;
+    return Number.isInteger(id) && id > 0;
+}
+
+/**
+ * Returns a version of the given object that lacks all key-value pairs that don't fulfill the condition.
+ * Doesn't change the original object.
+ */
+export function filterObject(obj: Object, callbackFn: (keyValue: { key: string; value: any }) => boolean): Object {
+    if (!obj) {
+        return obj;
+    }
+
+    return Object.entries(obj)
+        .filter(([key, value]) => callbackFn({ key, value }))
+        .map(([key, value]) => ({ [key]: value }))
+        .reduce((prev, curr) => Object.assign(prev, curr));
+}
+
+export interface ListUpdateData<T extends Identifiable> {
+    toCreate?: Omit<T, `id`>[];
+    toUpdate?: T[];
+    toDelete?: Id[];
+}
+
+/**
+ * Compares the newValues Array to the originals array and partitions them into a ListUpdateData object,
+ * based on what should happen if there were to be a bulk update on the originals, that should create the state represented by newValues.
+ *
+ * To this end:
+ *  - All newValues objects without ids are interpreted as new and sorted into toCreate
+ *  - All ids that were present in originals, but not in newValues are put in toDelete
+ *  - All newValues objects with ids are interpreted as updated, if either there is no corresponding original, or the corresponding original has different values
+ */
+export function partitionModelsForUpdate<T extends Identifiable>(
+    newValues: (T | Omit<T, `id`>)[],
+    originals: T[] = []
+): ListUpdateData<T> {
+    const originalIds = originals.map(value => value.id);
+    const updatedIds = newValues.map(val => val[`id`] as number).filter(id => !!id);
+    const deleteSet = new Set<Id>(originalIds);
+    updatedIds.forEach(id => deleteSet.delete(id));
+    const toDelete = Array.from(deleteSet);
+    const toUpdate = newValues.filter(update => {
+        if (!update[`id`]) {
+            return false;
+        }
+        const newVal = update as T;
+        const former = originals.find(value => value.id === newVal.id);
+        return !former || Object.keys(newVal).some(key => key !== `id` && former[key] !== newVal[key]);
+    }) as T[];
+    const toCreate: Omit<T, `id`>[] = newValues.filter(val => !val[`id`]);
+    return filterObject(
+        { toDelete, toUpdate, toCreate },
+        (keyValue: { key: string; value: any[] }) => !!keyValue.value.length
+    );
+}
+
+export type ObjectReplaceKeysConfig = [string, string][];
+
+export function replaceObjectKeys(
+    object: { [key: string]: any },
+    config: ObjectReplaceKeysConfig,
+    reverse?: boolean
+): Object {
+    if (reverse) {
+        return replaceObjectKeys(
+            object,
+            config.map(line => [line[1], line[0]] as [string, string])
+        );
+    }
+    const map = new Map<string, string>(config);
+    let result: { [key: string]: any } = {};
+    for (let key of Object.keys(object)) {
+        const newKey = map.get(key) ?? key;
+        result[newKey] = object[key];
+    }
+    return result;
 }

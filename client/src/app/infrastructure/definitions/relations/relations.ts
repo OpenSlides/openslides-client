@@ -1,3 +1,4 @@
+import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewResource } from 'src/app/site/pages/organization/pages/resources';
@@ -361,6 +362,13 @@ export const RELATIONS: Relation[] = [
         MViewModel: ViewGroup,
         OField: `assignment_poll_default_groups`,
         MField: `used_as_assignment_poll_default`
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
+        MViewModel: ViewPointOfOrderCategory,
+        OField: `point_of_order_categories`,
+        OIdField: `point_of_order_category_ids`,
+        MField: `meeting`
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
@@ -897,6 +905,13 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewMotionState,
         AField: `first_state`,
         BField: `first_state_of_workflow`
+    }),
+    // ########## Point of order categories
+    ...makeM2O({
+        OViewModel: ViewPointOfOrderCategory,
+        MViewModel: ViewSpeaker,
+        OField: `speakers`,
+        MField: `point_of_order_category`
     }),
     // ########## Polls
     ...makeGenericO2M({

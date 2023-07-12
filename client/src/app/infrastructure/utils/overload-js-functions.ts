@@ -32,7 +32,7 @@ declare global {
          * @param callbackFn A function that receives the whole array and has to return nothing.
          */
         tap(callbackFn: (self: T[]) => void): T[];
-        mapToObject(f: (item: T, index: number) => { [key: string]: any }): { [key: string]: any };
+        mapToObject<V = any>(f: (item: T, index: number) => { [key: string]: V }): { [key: string]: V };
         /**
          * TODO: Remove this, when ES2022 is the target for our tsconfig
          *
@@ -102,7 +102,8 @@ function overloadArrayFunctions(): void {
     Object.defineProperty(Array.prototype, `difference`, {
         value<T>(other: T[], symmetric: boolean = false): T[] {
             const difference = new Set<T>(this);
-            for (const entry of other ?? []) {
+            const otherSet = new Set<T>(other ?? []);
+            for (const entry of Array.from(otherSet)) {
                 if (difference.has(entry)) {
                     difference.delete(entry);
                 } else if (symmetric) {
@@ -122,7 +123,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, `mapToObject`, {
-        value<T, U extends object>(f: (item: T, index: number) => U): U {
+        value<T, U extends { [key: string]: V }, V = any>(f: (item: T, index: number) => U): U {
             return this.reduce((aggr: U, item: T, index: number) => {
                 const res = f(item, index);
                 for (const key in res) {

@@ -32,13 +32,13 @@ export class WorkflowExportService {
         ];
         const json = [];
         const getNextWorkflowJson = (workflow: ViewMotionWorkflow) => {
-            const nextWorkflow = workflowKeysToCopy.mapToObject(key => ({ [key]: workflow[key] }));
+            const nextWorkflow = workflowKeysToCopy.mapToObject<any>(key => ({ [key]: workflow[key] }));
             nextWorkflow[`states`] = [];
             for (const state of workflow.states) {
                 if (state.id === workflow.first_state_id) {
                     nextWorkflow[`first_state_name`] = state.name;
                 }
-                const nextState = stateKeysToCopy.mapToObject(key => ({ [key]: state[key] }));
+                const nextState = stateKeysToCopy.mapToObject<any>(key => ({ [key]: state[key] }));
                 nextState[`next_state_names`] = (state.next_state_ids || []).map(
                     id => this.stateRepo.getViewModel(id)!.name
                 );

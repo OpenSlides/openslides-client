@@ -8,6 +8,7 @@ import {
     PollPercentBaseVerbose,
     PollTypeVerbose
 } from 'src/app/domain/models/poll/poll-constants';
+import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
@@ -23,6 +24,7 @@ export type SettingsType =
     | 'date'
     | 'datetime'
     | 'translations'
+    | 'ranking'
     | 'groups'
     | 'daterange';
 
@@ -55,6 +57,9 @@ export interface SettingsItem<V = any> {
     helpText?: string; // default: ""
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
+    useRelation?: boolean; // May be set to true for relation id fields to get the relation item(s) instead if the id(s)
+    keyTransformationConfig?: ObjectReplaceKeysConfig; // May be set if the value is expected to be an object. If it is, all keys will be transformed according to the lines before they are passed to the forms, and back before the form is saved.
+    pickKeys?: string[]; // If the value is an object, this will throw away all properties, except the given keys, this is done before the keyTransformation
     /**
      * A function to restrict some values of a settings-item depending on used organization's settings
      *
@@ -302,11 +307,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`General`),
                 settings: [
                     {
-                        key: `list_of_speakers_enable_point_of_order_speakers`,
-                        label: _(`Enable point of order`),
-                        type: `boolean`
-                    },
-                    {
                         key: `list_of_speakers_enable_pro_contra_speech`,
                         label: _(`Enable forspeech / counter speech`),
                         type: `boolean`
@@ -378,6 +378,32 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `projector_countdown_default_time`,
                         label: _(`Predefined seconds of new countdowns`),
                         type: `integer`
+                    }
+                ]
+            },
+            {
+                label: _(`Point of order`),
+                settings: [
+                    {
+                        key: `list_of_speakers_enable_point_of_order_speakers`,
+                        label: _(`Enable point of order`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_enable_point_of_order_categories`,
+                        label: _(`Enable point of order categories`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `point_of_order_category_ids`,
+                        label: _(`Point of order categories`),
+                        type: `ranking`,
+                        useRelation: true,
+                        keyTransformationConfig: [
+                            [`text`, `entry`],
+                            [`rank`, `allocation`]
+                        ],
+                        pickKeys: [`id`, `text`, `rank`]
                     }
                 ]
             }

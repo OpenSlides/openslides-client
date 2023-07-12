@@ -27,6 +27,8 @@ export class Speaker extends BaseModel<Speaker> {
     public list_of_speakers_id!: Id; // list_of_speakers/speaker_ids;
     public user_id!: Id; // user/speaker_$<meeting_id>_ids;
 
+    public point_of_order_category_id!: Id; // point_of_order_category/speaker_ids;
+
     public get speakingTime(): number {
         return this.end_time - this.begin_time || 0;
     }
@@ -44,6 +46,7 @@ export class Speaker extends BaseModel<Speaker> {
         `note`,
         `point_of_order`,
         `list_of_speakers_id`,
+        `point_of_order_category_id`,
         `user_id`,
         `meeting_id`
     ];

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomTranslationComponent } from './custom-translation.component';
+import { AllocationListComponent } from './allocation-list.component';
 
-xdescribe(`CustomTranslationComponent`, () => {
-    let component: CustomTranslationComponent;
-    let fixture: ComponentFixture<CustomTranslationComponent>;
+xdescribe(`AllocationListComponent`, () => {
+    let component: AllocationListComponent;
+    let fixture: ComponentFixture<AllocationListComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [CustomTranslationComponent]
+            declarations: [AllocationListComponent]
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(CustomTranslationComponent);
+        fixture = TestBed.createComponent(AllocationListComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
