@@ -391,12 +391,12 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `list_of_speakers_enable_point_of_order_categories`,
-                        label: _(`Enable point of order categories`),
+                        label: _(`Enable specifications and ranking for possible motions`),
                         type: `boolean`
                     },
                     {
                         key: `point_of_order_category_ids`,
-                        label: _(`Point of order categories`),
+                        label: `Point of order specifications`,
                         type: `ranking`,
                         useRelation: true,
                         keyTransformationConfig: [
@@ -536,7 +536,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Sort motions by`),
                         type: `choice`,
                         choices: {
-                            number: _(`Number`),
+                            number: _(`Identifier`),
                             weight: _(`Call list`)
                         }
                     }
@@ -547,7 +547,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 settings: [
                     {
                         key: `motions_number_type`,
-                        label: _(`Motion number`),
+                        label: _(`Motion identifier`),
                         type: `choice`,
                         choices: {
                             per_category: _(`Numbered per category`),
@@ -557,9 +557,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_number_min_digits`,
-                        label: _(`Minimum number of digits for motion number`),
+                        label: _(`Minimum number of digits for motion identifier`),
                         type: `integer`,
-                        helpText: _(`Uses leading zeros to sort motions correctly by number.`),
+                        helpText: _(`Uses leading zeros to sort motions correctly by identifier.`),
                         validators: [Validators.min(1)]
                     },
                     {
@@ -590,7 +590,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_amendments_prefix`,
-                        label: _(`Prefix for the motion number for amendments`)
+                        label: _(`Prefix for the motion identifier of amendments`)
                     },
                     {
                         key: `motions_amendments_text_mode`,
