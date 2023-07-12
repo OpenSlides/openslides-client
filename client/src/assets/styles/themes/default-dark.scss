@@ -32,3 +32,8 @@ $openslides-dark-theme: map-merge(
         background: $background-dark
     )
 );
+
+@mixin os-dark-theme-vars() {
+    --alternating-list-even-bg: inherit;
+    --alternating-list-even-bg-hover: inherit;
+}

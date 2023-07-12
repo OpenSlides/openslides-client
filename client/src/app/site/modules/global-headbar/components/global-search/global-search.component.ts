@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/global-search.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 @Component({
     selector: `os-global-search`,
@@ -28,12 +26,7 @@ export class GlobalSearchComponent {
 
     public results: { [key: string]: GlobalSearchEntry[] } = {};
 
-    public get isDarkModeObservable(): Observable<boolean> {
-        return this.themeService.isDarkModeObservable;
-    }
-
     public constructor(
-        private themeService: ThemeService,
         private globalSearchService: GlobalSearchService,
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef

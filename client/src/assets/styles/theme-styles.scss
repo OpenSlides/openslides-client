@@ -16,10 +16,12 @@
 
 .openslides-light-theme {
     @include openslides-components-theme($openslides-light-theme);
+    @include os-light-theme-vars();
 }
 
 .openslides-dark-theme {
     @include openslides-components-theme($openslides-dark-theme);
+    @include os-dark-theme-vars();
 }
 
 [class^='openslides-'][class*='-light-theme'] {
