@@ -38,10 +38,33 @@
 
         <!-- Sort Button -->
         <button mat-button *ngIf="vp.isMobile && hasSorting" (click)="openSortDropDown()">
-            <span class="upper">{{ 'Sort' | translate }}</span>
+            <span
+                matBadge="&#8288;"
+                matBadgeColor="accent"
+                [matBadgeHidden]="!hasSortOptionSelected"
+                [matBadgeOverlap]="false"
+                matBadgeSize="small"
+                class="upper"
+            >
+                {{ 'Sort' | translate }}
+            </span>
         </button>
-        <button mat-button *ngIf="!vp.isMobile && hasSorting" [matMenuTriggerFor]="menu">
-            <span class="upper">{{ 'Sort' | translate }}</span>
+        <button
+            mat-button
+            *ngIf="!vp.isMobile && hasSorting"
+            [matTooltip]="getSortLabel(sortOption) | translate"
+            [matMenuTriggerFor]="menu"
+        >
+            <span
+                matBadge="&#8288;"
+                matBadgeColor="accent"
+                [matBadgeHidden]="!hasSortOptionSelected"
+                [matBadgeOverlap]="false"
+                matBadgeSize="small"
+                class="upper"
+            >
+                {{ 'Sort' | translate }}
+            </span>
         </button>
 
         <!-- Search bar -->

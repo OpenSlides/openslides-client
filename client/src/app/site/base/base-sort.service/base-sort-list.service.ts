@@ -74,6 +74,15 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return this.sortDefinition!.sortAscending;
     }
 
+    public get hasSortOptionSelected(): boolean {
+        const defaultDef = this._defaultDefinitionSubject.value;
+        const current = this.sortDefinition;
+        if (!defaultDef || !current) {
+            return false;
+        }
+        return defaultDef.sortAscending !== current.sortAscending || defaultDef.sortProperty !== current.sortProperty;
+    }
+
     /**
      * set the property of the viewModel the sorting will be based on.
      * If the property stays the same, only the sort direction will be toggled,
@@ -95,7 +104,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @returns the current sorting property
      */
     public get sortProperty(): OsSortProperty<V> {
-        return this.sortDefinition!.sortProperty;
+        return this.sortDefinition?.sortProperty;
     }
 
     /**
@@ -181,14 +190,11 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return shouldHide;
     }
 
-    /**
-     * Enforce children to implement a method that returns the fault sorting
-     */
-    protected getDefaultDefinition(): OsSortingDefinition<V> | Promise<OsSortingDefinition<V>> {
+    protected async getDefaultDefinition(): Promise<OsSortingDefinition<V>> {
         if (this._defaultDefinitionSubject.value) {
             return this._defaultDefinitionSubject.value;
         }
-        return firstValueFrom(this._defaultDefinitionSubject.pipe(filter(value => !!value)));
+        return await firstValueFrom(this._defaultDefinitionSubject.pipe(filter(value => !!value)));
     }
 
     /**

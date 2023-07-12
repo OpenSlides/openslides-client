@@ -29,6 +29,7 @@ export interface SortListService<V> extends SortService<V> {
     readonly outputObservable: Observable<V[]>;
     readonly isActive: boolean;
     readonly defaultOption: OsSortOption<V> | undefined;
+    readonly hasSortOptionSelected: boolean;
     sortProperty: OsSortProperty<V>;
     getSortIcon(option: OsSortOption<V>): string | null;
     getSortLabel(option: OsSortOption<V>): string;

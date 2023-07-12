@@ -143,11 +143,25 @@ export class SortFilterBarComponent<V extends Identifiable> {
         return 0;
     }
 
+    public get hasSortOptionSelected(): boolean {
+        return this.sortService.hasSortOptionSelected;
+    }
+
+    public get sortOption(): OsSortingOption<V> {
+        if (!this._sortOption) {
+            this._sortOption = this.sortOptions.find(option => option.property === this.sortService.sortProperty);
+        }
+        return this._sortOption;
+    }
+
     public set sortOption(option: OsSortingOption<V>) {
         // If the option has a custom sorting function
         this.sortService.sortFn = option.sortFn;
         this.sortService.sortProperty = option.property;
+        this._sortOption = option;
     }
+
+    private _sortOption: OsSortingOption<V>;
 
     private _searchField = ``;
 
@@ -216,7 +230,10 @@ export class SortFilterBarComponent<V extends Identifiable> {
      * the property is used.
      * @param option
      */
-    public getSortLabel(option: OsSortingOption<V>): string {
+    public getSortLabel(option?: OsSortingOption<V>): string {
+        if (!option) {
+            return ``;
+        }
         if (option.label) {
             return option.label;
         }
