@@ -20,7 +20,7 @@
 </div>
 
 <mat-dialog-content class="search-results">
-    <section *ngFor="let category of results | keyvalue" class="search-results-category">
+    <section *ngFor="let category of filteredResults | keyvalue" class="search-results-category">
         <h2>
             <span [matBadge]="category.value.length < 100 ? category.value.length : '99+'" [matBadgeOverlap]="false">
                 {{ availableFilters[category.key] | translate }}

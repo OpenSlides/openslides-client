@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/global-search.service';
 @Component({
     selector: `os-global-search`,
@@ -7,7 +8,7 @@ import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/gl
     styleUrls: [`./global-search.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GlobalSearchComponent {
+export class GlobalSearchComponent implements OnDestroy {
     public searchTerm = ``;
 
     public readonly availableFilters = {
@@ -23,21 +24,35 @@ export class GlobalSearchComponent {
         Object.fromEntries(Object.keys(this.availableFilters).map(field => [field, true]))
     );
 
-    public results: { [key: string]: GlobalSearchEntry[] } = {};
+    public filteredResults: { [key: string]: GlobalSearchEntry[] } = {};
+    private results: { [key: string]: GlobalSearchEntry[] } = {};
+
+    private filterChangeSubscription: Subscription;
 
     public constructor(
         private globalSearchService: GlobalSearchService,
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef
-    ) {}
+    ) {
+        this.filterChangeSubscription = this.currentFilters.valueChanges.subscribe(() => this.updateFilteredResults());
+    }
 
-    public async searchChange() {
-        this.results = await this.globalSearchService.searchChange(
-            this.searchTerm,
-            Object.keys(this.availableFilters).filter(
-                field => this.currentFilters.get(field) && this.currentFilters.get(field).getRawValue()
-            )
-        );
+    ngOnDestroy(): void {
+        this.filterChangeSubscription.unsubscribe();
+    }
+
+    public async searchChange(): Promise<void> {
+        this.results = await this.globalSearchService.searchChange(this.searchTerm, Object.keys(this.availableFilters));
+        this.updateFilteredResults();
         this.cd.markForCheck();
+    }
+
+    private updateFilteredResults(): void {
+        this.filteredResults = {};
+        for (let collection of Object.keys(this.results)) {
+            if (this.currentFilters.get(collection) && this.currentFilters.get(collection).getRawValue()) {
+                this.filteredResults[collection] = this.results[collection];
+            }
+        }
     }
 }
