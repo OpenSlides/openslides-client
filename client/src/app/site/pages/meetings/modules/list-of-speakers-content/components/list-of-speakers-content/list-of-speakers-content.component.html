@@ -388,7 +388,11 @@
             </i>
             <i
                 [class.foreground-warn]="!!showcolor"
-                *ngIf="!speaker.note && !(pointOfOrderCategoriesEnabled && speaker.point_of_order_category)"
+                *ngIf="
+                    !speaker.note &&
+                    speaker.point_of_order &&
+                    !(pointOfOrderCategoriesEnabled && speaker.point_of_order_category)
+                "
             >
                 {{ 'Point of order' | translate }}
             </i>
