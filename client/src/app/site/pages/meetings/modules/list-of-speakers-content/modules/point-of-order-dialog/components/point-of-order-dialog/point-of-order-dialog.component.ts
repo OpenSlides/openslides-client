@@ -39,7 +39,7 @@ export class PointOfOrderDialogComponent {
             .subscribe(this.categoriesSubject);
 
         this.editForm = this.fb.group({
-            note: [``, [Validators.required, Validators.maxLength(this.MAX_LENGTH)]],
+            note: [``, [Validators.maxLength(this.MAX_LENGTH)]],
             category: []
         });
 
@@ -66,7 +66,7 @@ export class PointOfOrderDialogComponent {
         if (!this.editForm.valid) {
             return;
         }
-        const note = this.editForm.value.note;
+        const note = this.editForm.value.note || undefined;
         const point_of_order_category_id = this._showCategorySelect
             ? this.editForm.value.category || undefined
             : undefined;

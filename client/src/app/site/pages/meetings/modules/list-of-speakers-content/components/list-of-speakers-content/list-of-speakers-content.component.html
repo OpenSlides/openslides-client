@@ -382,9 +382,17 @@
         >
             ·
         </span>
-        <i [class.foreground-warn]="!!showcolor" *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
-            {{ speaker.note }}
-        </i>
+        <ng-container *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
+            <i [class.foreground-warn]="!!showcolor" *ngIf="speaker.note">
+                {{ speaker.note }}
+            </i>
+            <i
+                [class.foreground-warn]="!!showcolor"
+                *ngIf="!speaker.note && !(pointOfOrderCategoriesEnabled && speaker.point_of_order_category)"
+            >
+                {{ 'Point of order' | translate }}
+            </i>
+        </ng-container>
     </ng-container>
 </ng-template>
 
