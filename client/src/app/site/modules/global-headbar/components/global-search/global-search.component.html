@@ -3,11 +3,13 @@
         <input
             matInput
             [(ngModel)]="searchTerm"
-            (change)="searchChange()"
+            (keyup.enter)="searchChange()"
             placeholder="{{ 'Search' | translate }}"
             autofocus
         />
-        <mat-icon matSuffix>search</mat-icon>
+        <button mat-icon-button matSuffix (click)="searchChange()">
+            <mat-icon>search</mat-icon>
+        </button>
     </mat-form-field>
 
     <section class="filter-section" [formGroup]="currentFilters">
