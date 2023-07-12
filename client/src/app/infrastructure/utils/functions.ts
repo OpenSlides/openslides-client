@@ -370,8 +370,26 @@ function getSpacer(level: number): string {
     return spacer;
 }
 
+/**
+ * Checks if a number is a valid id in the OpenSlides-context
+ */
 export function isValidId(id: number): boolean {
-    return !Number.isNaN(id) || id > 0;
+    return Number.isInteger(id) && id > 0;
+}
+
+/**
+ * Returns a version of the given object that lacks all key-value pairs that don't fulfill the condition.
+ * Doesn't change the original object.
+ */
+export function filterObject(obj: Object, callbackFn: (keyValue: { key: string; value: any }) => boolean): Object {
+    if (!obj) {
+        return obj;
+    }
+
+    return Object.entries(obj)
+        .filter(([key, value]) => callbackFn({ key, value }))
+        .map(([key, value]) => ({ [key]: value }))
+        .reduce((prev, curr) => Object.assign(prev, curr));
 }
 
 export interface ListUpdateData<T extends Identifiable> {
@@ -380,24 +398,37 @@ export interface ListUpdateData<T extends Identifiable> {
     toDelete?: Id[];
 }
 
+/**
+ * Compares the newValues Array to the originals array and partitions them into a ListUpdateData object,
+ * based on what should happen if there were to be a bulk update on the originals, that should create the state represented by newValues.
+ *
+ * To this end:
+ *  - All newValues objects without ids are interpreted as new and sorted into toCreate
+ *  - All ids that were present in originals, but not in newValues are put in toDelete
+ *  - All newValues objects with ids are interpreted as updated, if either there is no corresponding original, or the corresponding original has different values
+ */
 export function partitionModelsForUpdate<T extends Identifiable>(
-    newValues: T[],
+    newValues: (T | Omit<T, `id`>)[],
     originals: T[] = []
 ): ListUpdateData<T> {
     const originalIds = originals.map(value => value.id);
-    const updatedIds = newValues.map(val => val.id).filter(id => !!id);
+    const updatedIds = newValues.map(val => val[`id`] as number).filter(id => !!id);
     const deleteSet = new Set<Id>(originalIds);
     updatedIds.forEach(id => deleteSet.delete(id));
     const toDelete = Array.from(deleteSet);
-    const toUpdate: T[] = newValues.filter(update => {
-        if (!update.id) {
+    const toUpdate = newValues.filter(update => {
+        if (!update[`id`]) {
             return false;
         }
-        const former = originals.find(value => value.id === update.id);
-        return Object.keys(update).some(key => key !== `id` && former[key] !== update[key]);
-    });
-    const toCreate: Omit<T, `id`>[] = newValues.filter(val => !val.id);
-    return { toDelete, toUpdate, toCreate };
+        const newVal = update as T;
+        const former = originals.find(value => value.id === newVal.id);
+        return !former || Object.keys(newVal).some(key => key !== `id` && former[key] !== newVal[key]);
+    }) as T[];
+    const toCreate: Omit<T, `id`>[] = newValues.filter(val => !val[`id`]);
+    return filterObject(
+        { toDelete, toUpdate, toCreate },
+        (keyValue: { key: string; value: any[] }) => !!keyValue.value.length
+    );
 }
 
 export type ObjectReplaceKeysConfig = [string, string][];
