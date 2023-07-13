@@ -32,12 +32,6 @@ export class MotionPollVoteComponent extends BasePollVoteComponent implements On
             css: `voted-no`,
             icon: `disabled_by_default`,
             label: `No`
-        },
-        {
-            vote: `A`,
-            css: `voted-abstain`,
-            icon: `trip_origin`,
-            label: `Abstain`
         }
     ];
 
