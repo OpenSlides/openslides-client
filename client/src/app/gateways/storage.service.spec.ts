@@ -1,16 +1,87 @@
 import { TestBed } from '@angular/core/testing';
+import { LocalStorage } from '@ngx-pwa/local-storage';
+import { interval, map, Observable, takeWhile } from 'rxjs';
 
 import { StorageService } from './storage.service';
 
-xdescribe(`StorageService`, () => {
+class MockLocalStorage {
+    public storage: { [key: string]: any } = {};
+
+    private tick = interval(2);
+
+    private current = 0;
+
+    public constructor() {
+        this.tick.subscribe(current => (this.current = current));
+    }
+
+    public setItem(key: string, item: any): Observable<boolean> {
+        this.storage[key] = item;
+        return this.getObservable(() => true);
+    }
+
+    public getItem<T>(key: string): Observable<T> {
+        return this.getObservable(() => this.storage[key] as T);
+    }
+
+    public removeItem(key: string): Observable<boolean> {
+        delete this.storage[key];
+        return this.getObservable(() => true);
+    }
+
+    public clear(): Observable<boolean> {
+        this.storage = {};
+        return this.getObservable(() => true);
+    }
+
+    private getObservable<T>(getValueFn: () => T): Observable<T> {
+        const current = this.current;
+        return this.tick.pipe(
+            takeWhile(time => time < current + 10),
+            map(getValueFn)
+        );
+    }
+}
+
+describe(`StorageService`, () => {
     let service: StorageService;
+    let localStorage: MockLocalStorage;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [StorageService, { provide: LocalStorage, useClass: MockLocalStorage }]
+        });
         service = TestBed.inject(StorageService);
+        localStorage = TestBed.inject(LocalStorage) as unknown as MockLocalStorage;
     });
 
-    it(`should be created`, () => {
-        expect(service).toBeTruthy();
+    it(`check if set works`, async () => {
+        await service.set(`example`, `Something something text text text`);
+        expect(localStorage.storage).toEqual({ example: `Something something text text text` });
+    });
+
+    it(`check if get works`, async () => {
+        localStorage.storage[`example`] = `Something something text text text`;
+        expect(await service.get<string>(`example`)).toBe(`Something something text text text`);
+    });
+
+    it(`check if remove works`, async () => {
+        localStorage.storage = {
+            example: `Something something text text text`,
+            anotherExample: `Another something text`
+        };
+        await service.remove(`example`);
+        expect(localStorage.storage).toEqual({
+            anotherExample: `Another something text`
+        });
+    });
+
+    it(`check if clear works`, async () => {
+        localStorage.storage = {
+            example: `Something something text text text`,
+            anotherExample: `Another something text`
+        };
+        await service.clear();
+        expect(localStorage.storage).toEqual({});
     });
 });
