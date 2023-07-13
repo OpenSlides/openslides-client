@@ -1,11 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
+import { MockTranslateService } from 'src/app/site/pages/meetings/modules/poll/pipes/poll-parse-number/poll-parse-number.pipe.spec';
 
 import { TimePipe } from './time.pipe';
-
-class MockTranslateService {
-    currentLang = `en`;
-}
 
 describe(`TimePipe`, () => {
     let pipe: TimePipe;
