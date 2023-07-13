@@ -57,8 +57,17 @@
     box-shadow: none !important;
     background: none !important;
     margin-bottom: 20px;
+
     .queue-element {
         margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+
+        .name {
+            flex: 1;
+            min-width: 0;
+            margin-right: 10px;
+        }
     }
 
     .mat-expansion-panel-header {
@@ -113,10 +122,6 @@
         display: table-cell;
         vertical-align: middle;
     }
-}
-
-.queue-projector-title {
-    width: 175px;
 }
 
 .drop-list-entry:last-child {
