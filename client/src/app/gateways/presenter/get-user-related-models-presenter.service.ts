@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 
 import { Id } from '../../domain/definitions/key-types';
-import { CML } from '../../domain/definitions/organization-permission';
+import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
 
 export interface GetUserRelatedModelsUser {
-    name?: string;
+    organization_management_level?: OML;
     meetings?: {
         id: Id;
         is_active_in_organization_id: Id;
         name: string;
-        candidate_ids: Id[];
+        assignment_candidate_ids: Id[];
         speaker_ids: Id[];
-        submitter_ids: Id[];
+        motion_submitter_ids: Id[];
     }[];
     committees?: GetUserRelatedModelsCommittee[];
     error?: string; // This is in case the presenter fails in an unpredicted way
