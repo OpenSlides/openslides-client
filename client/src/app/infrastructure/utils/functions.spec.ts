@@ -5,6 +5,7 @@ import {
     djb2hash,
     escapeRegExp,
     filterObject,
+    findIndexInSortedArray,
     getLongPreview,
     getShortPreview,
     isEasterEggTime,
@@ -662,6 +663,32 @@ describe(`utils: functions`, () => {
                     [`f`, `g h`]
                 ])
             ).toEqual({ b: `b`, e: `e`, 'g h': `g h` });
+        });
+    });
+
+    describe(`findIndexInSortedArray function`, () => {
+        const sortedArray = [1, 4, 5, 7, 8, 9];
+
+        for (let searchValue = 0; searchValue < 10; searchValue++) {
+            let expected = sortedArray.findIndex(val => searchValue === val);
+            it(`test result for ${searchValue} in ${JSON.stringify(sortedArray)}`, () => {
+                expect(findIndexInSortedArray(sortedArray, searchValue, (a, b) => a - b)).toBe(expected);
+            });
+        }
+
+        const sortedStringArray = [`a`, `b`, `d`];
+
+        for (let searchValue of [`b`, `c`, `d`, `e`]) {
+            let expected = sortedStringArray.findIndex(val => searchValue === val);
+            it(`test result for "${searchValue}" in ${JSON.stringify(sortedStringArray)}`, () => {
+                expect(findIndexInSortedArray(sortedStringArray, searchValue, (a, b) => a.localeCompare(b))).toBe(
+                    expected
+                );
+            });
+        }
+
+        it(`finds first among many`, () => {
+            expect(findIndexInSortedArray([1, 1, 1, 1, 1, 1, 1], 1, (a, b) => a - b)).toBe(0);
         });
     });
 });

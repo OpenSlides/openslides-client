@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from 'src/app/infrastructure/definitions/tree';
+import { findIndexInSortedArray } from 'src/app/infrastructure/utils';
 
 @Injectable({
     providedIn: `root`
@@ -279,6 +280,56 @@ export class TreeService {
         } else {
             throw new Error(`This should not happen. Invalid sorting items given`);
         }
+    }
+
+    /**
+     * Inserts OSTreeNode branches into another tree at the position specified
+     *
+     * @param tree A (partial) tree the branches need to be inserted into. It
+     * is assumed that this tree does not contain the branches to be inserted.
+     * See also {@link getTreeWithoutSelection}
+     * @param branches OsTreeNodes to be inserted. See also {@link getBranchesFromTree}
+     * @param parentId the id of a parent node under which the branches should be inserted
+     * @param olderSibling (optional) the id of the item on the same level
+     * the tree is to be inserted behind
+     * @returns the re-arranged tree containing the branches
+     */
+    public removeNodesFromFlatTreeByItemId<T extends Identifiable & Displayable>(
+        tree: FlatNode<T>[],
+        deleteIds: number[],
+        byItemId = true
+    ): FlatNode<T>[] {
+        if (!deleteIds.length) {
+            return tree;
+        }
+        deleteIds = deleteIds.sort();
+        tree = tree.map(val => val); // create shallow copy
+        tree.reverse();
+        let i = 0;
+        while (i < tree.length) {
+            let node = tree[i];
+            let remove = false;
+            if (findIndexInSortedArray(deleteIds, byItemId ? node.item.id : node.id, (a, b) => a - b) !== -1) {
+                remove = true;
+            }
+
+            if (remove) {
+                tree = [tree.slice(0, i), i + 1 < tree.length ? tree.slice(i + 1) : []].flatMap(
+                    val => val as FlatNode<T>[]
+                );
+                for (let j = i; j >= 0 && tree[j].level >= node.level + 1; --j) {
+                    tree[j].level--;
+                    if (tree[j].level === node.level) {
+                        tree[j].isExpanded = tree[j].expandable ? node.isExpanded : tree[j].isExpanded;
+                        tree[j].isSeen = node.isSeen;
+                    }
+                }
+                continue; // without incrementing i!
+            }
+            i++;
+        }
+        tree.reverse();
+        return tree;
     }
 
     /**

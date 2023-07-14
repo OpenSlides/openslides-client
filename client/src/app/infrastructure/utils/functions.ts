@@ -452,3 +452,33 @@ export function replaceObjectKeys(
     }
     return result;
 }
+
+/**
+ * A function to efficiently find the index of an item in an array that has been sorted beforehand.
+ * @param array An array sorted in ascending order according to compareFn
+ * @param toFind The item to search for
+ * @param compareFn A compare function the type of which would be used in array.sort
+ * @returns -1 if no index is found, else the index of the item in the array. If the item is in the array multiple times, it will be the first index of the item.
+ */
+export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: T, b: T) => number): number {
+    let startId = 0;
+    while (array.length) {
+        let middleId = Math.floor(array.length / 2);
+        let comparison = compareFn(toFind, array[middleId]);
+        if (comparison === 0) {
+            // If toFind is the current item
+            while (middleId > 0 && compareFn(toFind, array[middleId - 1]) === 0) {
+                middleId--;
+            }
+            return startId + middleId;
+        } else if (comparison > 0) {
+            // If toFind is greater than the current item
+            startId += middleId + 1;
+            array = array.slice(middleId + 1);
+        } else {
+            // If toFind is smaller than the current item
+            array = array.slice(0, middleId);
+        }
+    }
+    return -1;
+}

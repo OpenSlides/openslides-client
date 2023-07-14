@@ -2,9 +2,10 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDragMove, CdkDragSortEvent, CdkDragStart } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
-import { auditTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
+import { auditTime, Observable, Subscription } from 'rxjs';
 import { Displayable, Identifiable } from 'src/app/domain/interfaces';
 import { FlatNode, TreeIdNode } from 'src/app/infrastructure/definitions/tree';
+import { findIndexInSortedArray } from 'src/app/infrastructure/utils';
 import { SortDefinition } from 'src/app/site/base/base-sort.service';
 
 import { TreeService, TreeSortService } from '../../services';
@@ -881,22 +882,54 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
         }
     }
 
+    private changedIds: { newIds: number[]; deletedIds: number[] } = { newIds: [], deletedIds: [] };
+
     /**
      * Function to (re-) set the subscription to recognize changes.
      */
     public setSubscription(): void {
         this.removeSubscription();
         this.madeChanges(false);
-        this.modelSubscription = this._model!.pipe(
-            auditTime(10),
-            distinctUntilChanged((previous, current) => {
-                return (
-                    JSON.stringify(previous.sort((a, b) => a.id - b.id)) ===
-                    JSON.stringify(current.sort((a, b) => a.id - b.id))
+        this.modelSubscription = this._model!.pipe(auditTime(10)).subscribe(values => {
+            if (!this.osTreeData.length) {
+                this.osTreeData = this.treeService.makeFlatTree(values, this.weightKey, this.parentKey);
+            } else {
+                values = values.sort((a, b) => a.id - b.id);
+                const deleteSet = new Set<number>(this.osTreeData.map(val => val.id));
+                const newSet = new Set<number>(values.map(val => val.id));
+                values.forEach(val => deleteSet.delete(val.id));
+                this.osTreeData.forEach(val => newSet.delete(val.id));
+                console.log(`BEFORE`, this.osTreeData, Array.from(newSet));
+                this.osTreeData = this.treeService.removeNodesFromFlatTreeByItemId(
+                    this.osTreeData,
+                    Array.from(deleteSet)
                 );
-            })
-        ).subscribe(values => {
-            this.osTreeData = this.treeService.makeFlatTree(values, this.weightKey, this.parentKey);
+                console.log(`BETWEEN`, this.osTreeData);
+                let items = Array.from(newSet).map(id => {
+                    let item = values[findIndexInSortedArray(values, { id } as T, (a, b) => a.id - b.id)];
+                    return {
+                        ...item,
+                        item,
+                        level: 0,
+                        isSeen: true,
+                        expandable: false
+                    };
+                });
+                this.osTreeData = this.osTreeData.concat(items).map((node, index) => {
+                    const newItemIndex = findIndexInSortedArray(values, node.item, (a, b) => a.id - b.id);
+                    const item = newItemIndex >= 0 ? values[newItemIndex] : node.item;
+                    return {
+                        ...item,
+                        item,
+                        level: node.level,
+                        isExpanded: node.isExpanded,
+                        isSeen: node.isSeen,
+                        expandable: node.expandable,
+                        position: index
+                    };
+                });
+                console.log(`AFTER`, this.osTreeData);
+            }
             this.checkActiveFilters();
             this.dataSource = new ArrayDataSource(this.osTreeData);
         });
