@@ -894,41 +894,17 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
             if (!this.osTreeData.length) {
                 this.osTreeData = this.treeService.makeFlatTree(values, this.weightKey, this.parentKey);
             } else {
-                values = values.sort((a, b) => a.id - b.id);
-                const deleteSet = new Set<number>(this.osTreeData.map(val => val.id));
+                const deleteSet = new Set<number>(this.osTreeData.map(val => val.item?.id ?? val.id));
                 const newSet = new Set<number>(values.map(val => val.id));
                 values.forEach(val => deleteSet.delete(val.id));
-                this.osTreeData.forEach(val => newSet.delete(val.id));
-                console.log(`BEFORE`, this.osTreeData, Array.from(newSet));
+                this.osTreeData.forEach(val => newSet.delete(val.item?.id ?? val.id));
                 this.osTreeData = this.treeService.removeNodesFromFlatTreeByItemId(
                     this.osTreeData,
                     Array.from(deleteSet)
                 );
-                console.log(`BETWEEN`, this.osTreeData);
-                let items = Array.from(newSet).map(id => {
-                    let item = values[findIndexInSortedArray(values, { id } as T, (a, b) => a.id - b.id)];
-                    return {
-                        ...item,
-                        item,
-                        level: 0,
-                        isSeen: true,
-                        expandable: false
-                    };
-                });
-                this.osTreeData = this.osTreeData.concat(items).map((node, index) => {
-                    const newItemIndex = findIndexInSortedArray(values, node.item, (a, b) => a.id - b.id);
-                    const item = newItemIndex >= 0 ? values[newItemIndex] : node.item;
-                    return {
-                        ...item,
-                        item,
-                        level: node.level,
-                        isExpanded: node.isExpanded,
-                        isSeen: node.isSeen,
-                        expandable: node.expandable,
-                        position: index
-                    };
-                });
-                console.log(`AFTER`, this.osTreeData);
+                let newIds = Array.from(newSet).sort((a, b) => a - b);
+                let items = values.filter(val => findIndexInSortedArray(newIds, val.id, (a, b) => a - b) !== -1);
+                this.osTreeData = this.treeService.concatNewNodesFromItems(this.osTreeData, items);
             }
             this.checkActiveFilters();
             this.dataSource = new ArrayDataSource(this.osTreeData);

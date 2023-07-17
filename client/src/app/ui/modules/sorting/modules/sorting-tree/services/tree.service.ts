@@ -283,18 +283,17 @@ export class TreeService {
     }
 
     /**
-     * Inserts OSTreeNode branches into another tree at the position specified
+     * Returns an array of FlatNodes where all nodes whose ids are contained in the delete array are removed.
+     * Array is sorted by position as far as possible
      *
-     * @param tree A (partial) tree the branches need to be inserted into. It
-     * is assumed that this tree does not contain the branches to be inserted.
-     * See also {@link getTreeWithoutSelection}
-     * @param branches OsTreeNodes to be inserted. See also {@link getBranchesFromTree}
-     * @param parentId the id of a parent node under which the branches should be inserted
-     * @param olderSibling (optional) the id of the item on the same level
-     * the tree is to be inserted behind
-     * @returns the re-arranged tree containing the branches
+     * Doesn't change the original array.
+     *
+     * @param tree the array of FlatNodes from which the Nodes should be removed
+     * @param deleteIds the ids of the deleted nodes
+     * @param byItemId whether the id comparison should happen by item id, or by node id. True by default.
+     * @returns an array that is like tree but without the items that had the ids.
      */
-    public removeNodesFromFlatTreeByItemId<T extends Identifiable & Displayable>(
+    public removeNodesFromFlatTreeByItemId<T extends Identifiable>(
         tree: FlatNode<T>[],
         deleteIds: number[],
         byItemId = true
@@ -303,33 +302,59 @@ export class TreeService {
             return tree;
         }
         deleteIds = deleteIds.sort();
-        tree = tree.map(val => val); // create shallow copy
-        tree.reverse();
-        let i = 0;
-        while (i < tree.length) {
+        tree = tree.sort((a, b) =>
+            a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
+        );
+        for (let i = 0; i < tree.length; ) {
             let node = tree[i];
-            let remove = false;
             if (findIndexInSortedArray(deleteIds, byItemId ? node.item.id : node.id, (a, b) => a - b) !== -1) {
-                remove = true;
-            }
-
-            if (remove) {
                 tree = [tree.slice(0, i), i + 1 < tree.length ? tree.slice(i + 1) : []].flatMap(
                     val => val as FlatNode<T>[]
                 );
-                for (let j = i; j >= 0 && tree[j].level >= node.level + 1; --j) {
-                    tree[j].level--;
-                    if (tree[j].level === node.level) {
-                        tree[j].isExpanded = tree[j].expandable ? node.isExpanded : tree[j].isExpanded;
-                        tree[j].isSeen = node.isSeen;
+                let removeLevels = true;
+                for (let j = i; j < tree.length; ++j) {
+                    if (tree[j].position >= 0) {
+                        tree[j].position--;
+                    }
+                    if (removeLevels && tree[j].level >= node.level + 1) {
+                        tree[j].level--;
+                        if (tree[j].level === node.level) {
+                            tree[j].isExpanded = tree[j].expandable ? node.isExpanded : tree[j].isExpanded;
+                            tree[j].isSeen = node.isSeen;
+                        }
+                    } else {
+                        removeLevels = false;
                     }
                 }
                 continue; // without incrementing i!
             }
             i++;
         }
-        tree.reverse();
         return tree;
+    }
+
+    /**
+     * Returns an array of FlatNodes where all nodes whose ids are contained in the delete array are removed.
+     *
+     * Doesn't change the original array.
+     *
+     * @param tree the array of FlatNodes from which the Nodes should be removed
+     * @param deleteIds the ids of the deleted nodes
+     * @param byItemId whether the id comparison should happen by item id, or by node id. True by default.
+     * @returns an array that is like tree but without the items that had the ids.
+     */
+    public concatNewNodesFromItems<T extends Identifiable>(tree: FlatNode<T>[], newItems: T[]): FlatNode<T>[] {
+        const oldMaxPosition = Math.max(...tree.map(node => node.position), tree.length - 1);
+        let items = newItems.map((item, index) => ({
+            ...item,
+            item,
+            level: 0,
+            isSeen: true,
+            expandable: false,
+            id: item.id,
+            position: index + oldMaxPosition + 1
+        }));
+        return tree.concat(items);
     }
 
     /**
