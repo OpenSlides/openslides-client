@@ -15,7 +15,7 @@ interface GetUserScopeIdentifiedScope {
 }
 
 interface GetUserScopePresenterResult {
-    [user_id: string]: GetUserScopeIdentifiedScope;
+    [user_id: Id]: GetUserScopeIdentifiedScope;
 }
 
 @Injectable({

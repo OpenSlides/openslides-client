@@ -82,6 +82,12 @@ module.exports = {
             }
         },
         {
+            files: ['*.spec.ts'],
+            rules: {
+                'no-restricted-globals': ['error', 'fdescribe', 'fit'],
+            }
+        },
+        {
             files: ['*.html'],
             extends: ['plugin:@angular-eslint/template/recommended'],
             rules: {}

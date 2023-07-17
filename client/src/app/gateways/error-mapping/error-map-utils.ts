@@ -2,17 +2,29 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
 import { MotionAction } from '../repositories/motions';
 
+export class MapError {
+    public constructor(private message: string) {}
+
+    public getError(): Error {
+        return new Error(this.message);
+    }
+}
+
+export function isMapError(obj: any): obj is MapError {
+    return obj && typeof obj === `object` && obj.getError && typeof obj.getError === `function`;
+}
+
 /**
  * A type of map that maps regular expressions (of error messages) to either a cleaner string-message, a function calculating such a string message, or an Error-object containing such a string message.
  */
-export class ErrorMap extends Map<RegExp, string | Error | ((input: string) => string | Error)> {}
+export class ErrorMap extends Map<RegExp, string | MapError | ((input: string) => string | MapError)> {}
 
 const AuthServiceErrorMap: ErrorMap = new ErrorMap([
-    [/Username or password is incorrect./, new Error(_(`Username or password is incorrect.`))],
+    [/Username or password is incorrect./, new MapError(_(`Username or password is incorrect.`))],
     [/Multiple users found for same username!/, _(`Multiple users found for same username!`)],
     [/Multiple users with same credentials!/, _(`Multiple users with same credentials!`)],
     [/The account is deactivated./, _(`The account is deactivated.`)],
-    [/Property [\S] is [\S]/, _(`User not found.`)]
+    [/Property [\S]+ is [\S]+/, _(`User not found.`)]
 ]);
 
 const VoteServiceErrorMap: ErrorMap = new ErrorMap([
@@ -26,7 +38,7 @@ const VoteServiceErrorMap: ErrorMap = new ErrorMap([
     [/is not allowed to vote/, _(`You do not have the permission to vote.`)]
 ]);
 
-const MotionCreateForwardErrorMap: ErrorMap = new ErrorMap([[/(.*)/, input => new Error(input)]]);
+const MotionCreateForwardErrorMap: ErrorMap = new ErrorMap([[/(.*)/, input => new MapError(input)]]);
 
 /**
  * Finds the correct error map for an action response by the original requests action name

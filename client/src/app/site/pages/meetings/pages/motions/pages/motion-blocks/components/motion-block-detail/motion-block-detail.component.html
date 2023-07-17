@@ -126,7 +126,10 @@
         </div>
 
         <!-- Menu -->
-        <div *osScrollingTableCell="'menu'; row as motion" class="cell-slot fill">
+        <div
+            *osScrollingTableCell="'menu'; row as motion; config: { width: 40, position: END_POSITION }"
+            class="cell-slot fill"
+        >
             <button
                 mat-icon-button
                 [disabled]="isMultiSelect"

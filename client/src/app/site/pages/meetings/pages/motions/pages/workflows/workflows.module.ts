@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { FileUploadModule } from 'src/app/ui/modules/file-upload';
@@ -52,6 +53,7 @@ import { WorkflowsRoutingModule } from './workflows-routing.module';
         MatChipsModule,
         MatRippleModule,
         MatInputModule,
+        MatTooltipModule,
         FormsModule,
         SortingListModule
     ]

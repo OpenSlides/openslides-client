@@ -121,6 +121,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public isCallEnabled: Observable<boolean> = this.interactionService.showLiveConfObservable;
 
+    public pointOfOrderCategoriesEnabled: boolean = false;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -153,6 +155,12 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         private interactionService: InteractionService
     ) {
         super(componentServiceCollector, translate);
+
+        this.subscriptions.push(
+            this.meetingSettingsService
+                .get(`list_of_speakers_enable_point_of_order_categories`)
+                .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled))
+        );
     }
 
     public ngOnInit(): void {
@@ -236,7 +244,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
             if (result) {
                 await this.speakerRepo.create(this.listOfSpeakers, this._currentUser!.id, {
                     pointOfOrder: true,
-                    note: result.note
+                    ...result
                 });
             }
         } catch (e) {

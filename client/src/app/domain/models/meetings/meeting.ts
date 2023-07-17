@@ -1,4 +1,4 @@
-import { Id } from '../../definitions/key-types';
+import { Id, Ids } from '../../definitions/key-types';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
@@ -31,6 +31,8 @@ export class Settings {
     public custom_translations!: {
         [original: string]: string;
     };
+
+    public point_of_order_category_ids!: Ids;
 
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
@@ -97,6 +99,7 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;
@@ -342,6 +345,7 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
         `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_enable_point_of_order_categories`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,
@@ -428,6 +432,7 @@ export class Meeting extends BaseModel<Meeting> {
         `tag_ids`,
         `agenda_item_ids`,
         `list_of_speakers_ids`,
+        `point_of_order_category_ids`,
         `speaker_ids`,
         `topic_ids`,
         `group_ids`,

@@ -3,7 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { PollParseNumberPipe } from './poll-parse-number.pipe';
 
-class MockTranslateService {
+export class MockTranslateService {
+    currentLang = `en`;
+
     public instant(text: string): string {
         return text;
     }

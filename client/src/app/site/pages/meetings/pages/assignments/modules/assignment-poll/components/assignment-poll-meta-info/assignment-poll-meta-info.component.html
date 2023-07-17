@@ -42,8 +42,8 @@
             {{ 'Entitled to vote' | translate }}:
 
             <span *ngFor="let group of poll.entitled_groups; let last = last">
-                {{ group.getTitle() | translate }}
-                <span *ngIf="!last">,</span>
+                <span>{{ group.getTitle() | translate }}</span>
+                <span *ngIf="!last">,&ensp;</span>
             </span>
             <br />
         </small>

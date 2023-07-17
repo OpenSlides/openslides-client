@@ -25,13 +25,21 @@ export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewS
     public create(
         listOfSpeakers: ListOfSpeakers,
         userId: Id,
-        optionalInformation: { pointOfOrder?: boolean; note?: UnsafeHtml; speechState?: SpeechState } = {}
+        optionalInformation: {
+            pointOfOrder?: boolean;
+            note?: UnsafeHtml;
+            speechState?: SpeechState;
+            point_of_order_category_id?: Id;
+        } = {}
     ): Promise<Identifiable> {
         const payload: any = {
             list_of_speakers_id: listOfSpeakers.id,
             user_id: userId,
             speech_state: optionalInformation.speechState,
             point_of_order: optionalInformation.pointOfOrder,
+            point_of_order_category_id: optionalInformation.pointOfOrder
+                ? optionalInformation.point_of_order_category_id
+                : undefined,
             note: optionalInformation.note
         };
         return this.sendActionToBackend(SpeakerAction.CREATE, payload);

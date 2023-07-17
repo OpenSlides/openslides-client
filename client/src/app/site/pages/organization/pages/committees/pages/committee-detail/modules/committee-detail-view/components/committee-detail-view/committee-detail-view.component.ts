@@ -36,10 +36,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
         return this.operator.hasCommitteePermissions(this.committeeId, CML.can_manage);
     }
 
-    public get canManageUsers(): boolean {
-        return this.operator.hasOrganizationPermissions(OML.can_manage_users);
-    }
-
     public constructor(
         private translate: TranslateService,
         private route: ActivatedRoute,
@@ -83,10 +79,6 @@ export class CommitteeDetailViewComponent extends BaseUiComponent {
             this.operator.hasCommitteePermissions(committee.id, CML.can_manage) ||
             this.operator.isInCommittees(committee)
         );
-    }
-
-    public getMemberAmount(committee: ViewCommittee): number {
-        return committee.user_ids?.length || 0;
     }
 
     public getMeetingsSorted(committee: ViewCommittee): ViewMeeting[] {

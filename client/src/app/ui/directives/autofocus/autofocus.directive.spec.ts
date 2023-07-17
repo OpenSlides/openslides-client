@@ -13,9 +13,10 @@ class TestComponent {}
 
 describe(`AutofocusDirective`, () => {
     let fixture: ComponentFixture<TestComponent>;
-    let input: any;
+    let input: HTMLInputElement;
 
     beforeEach(() => {
+        jasmine.clock().install();
         fixture = TestBed.configureTestingModule({
             declarations: [AutofocusDirective, TestComponent]
         }).createComponent(TestComponent);
@@ -24,11 +25,15 @@ describe(`AutofocusDirective`, () => {
         spyOn(input, `focus`);
     });
 
+    afterEach(() => {
+        jasmine.clock().uninstall();
+    });
+
     it(`check if element gets in focus`, async () => {
         expect(input.focus).not.toHaveBeenCalled();
 
         fixture.detectChanges();
-        await (() => new Promise(r => setTimeout(r, 100)))();
+        jasmine.clock().tick(100000);
 
         expect(input.focus).toHaveBeenCalled();
     });
