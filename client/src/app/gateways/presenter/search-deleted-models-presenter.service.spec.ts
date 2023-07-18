@@ -34,13 +34,13 @@ describe(`SearchDeletedModelsPresenterService`, () => {
                 typeof data.filter_string !== `string` ||
                 typeof data.meeting_id !== `number`
             ) {
-                return { error: `MockPresenterService: Data had wrong format` };
+                return { error: `MockPresenterService: Data has wrong format` };
             }
             return { returnValue: testMotions };
         });
     });
 
-    it(`should correctly call export_meeting`, async () => {
+    it(`should correctly call search_deleted_models`, async () => {
         expect(await service.call({ collection: `motion`, filter_string: `Doe`, meeting_id: 2 })).toEqual(testMotions);
     });
 });

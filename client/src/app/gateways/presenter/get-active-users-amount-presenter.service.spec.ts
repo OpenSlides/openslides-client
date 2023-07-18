@@ -9,8 +9,6 @@ describe(`GetActiveUserAmountPresenterService`, () => {
     let service: GetActiveUsersAmountPresenterService;
     let presenter: MockPresenterService;
 
-    const testMeeting = { name: `Some meeting` };
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
@@ -23,7 +21,7 @@ describe(`GetActiveUserAmountPresenterService`, () => {
         presenter = TestBed.inject(PresenterService) as unknown as MockPresenterService;
         presenter.returnValueFns.set(Presenter.GET_ACTIVE_USER_AMOUNT, (data?: any) => {
             if (!data || !(typeof data === `object`) || Object.keys(data).length !== 0) {
-                return { error: `MockPresenterService: Data had wrong format` };
+                return { error: `MockPresenterService: Data has wrong format` };
             }
             return { returnValue: { active_users_amount: 6 } };
         });

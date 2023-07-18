@@ -44,13 +44,13 @@ describe(`GetForwardingMeetingsPresenterService`, () => {
         presenter = TestBed.inject(PresenterService) as unknown as MockPresenterService;
         presenter.returnValueFns.set(Presenter.GET_FORWARDING_MEETINGS, (data?: any) => {
             if (!data || !(typeof data === `object`) || !Number.isInteger(data.meeting_id)) {
-                return { error: `MockPresenterService: Data had wrong format` };
+                return { error: `MockPresenterService: Data has wrong format` };
             }
             return { returnValue: testCommittees };
         });
     });
 
-    it(`should correctly call export_meeting`, async () => {
+    it(`should correctly call get_forward_meetings`, async () => {
         expect(await service.call({ meeting_id: 2 })).toEqual(testCommittees);
     });
 });

@@ -62,13 +62,13 @@ describe(`GetUserRelatedModelsPresenterService`, () => {
                 !Array.isArray(data.user_ids) ||
                 (data.user_ids as any[]).some(id => !Number.isInteger(id) || id < 1)
             ) {
-                return { error: `MockPresenterService: Data had wrong format` };
+                return { error: `MockPresenterService: Data has wrong format` };
             }
             return { returnValue: testUsers };
         });
     });
 
-    it(`should correctly call export_meeting`, async () => {
+    it(`should correctly call get_user_related_models`, async () => {
         expect(await service.call({ user_ids: [2, 3, 5] })).toEqual(testUsers);
     });
 });
