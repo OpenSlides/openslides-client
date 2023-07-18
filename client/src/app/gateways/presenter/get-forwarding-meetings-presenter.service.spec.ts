@@ -44,7 +44,7 @@ describe(`GetForwardingMeetingsPresenterService`, () => {
         presenter = TestBed.inject(PresenterService) as unknown as MockPresenterService;
         presenter.returnValueFns.set(Presenter.GET_FORWARDING_MEETINGS, (data?: any) => {
             if (!data || !(typeof data === `object`) || !Number.isInteger(data.meeting_id)) {
-                return { error: `data had wrong format` };
+                return { error: `MockPresenterService: Data had wrong format` };
             }
             return { returnValue: testCommittees };
         });

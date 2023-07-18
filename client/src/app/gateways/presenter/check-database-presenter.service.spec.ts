@@ -28,7 +28,7 @@ describe(`CheckDatabasePresenterService`, () => {
         presenter = TestBed.inject(PresenterService) as unknown as MockPresenterService;
         presenter.returnValueFns.set(Presenter.CHECK_DATABASE_ALL, (data?: any) => {
             if (!data || !(typeof data === `object`) || Object.keys(data).length) {
-                return { error: `data had wrong format` };
+                return { error: `MockPresenterService: Data had wrong format` };
             }
             return { returnValue: corruptResult };
         });
@@ -39,7 +39,7 @@ describe(`CheckDatabasePresenterService`, () => {
                 Object.keys(data).length > 1 ||
                 (Object.keys(data).length === 1 && !Number.isInteger(data.meeting_id))
             ) {
-                return { error: `data had wrong format` };
+                return { error: `MockPresenterService: Data had wrong format` };
             }
             return { returnValue: okResult };
         });

@@ -20,7 +20,7 @@ describe(`ExportMeetingPresenterService`, () => {
         presenter = TestBed.inject(PresenterService) as unknown as MockPresenterService;
         presenter.returnValueFns.set(Presenter.EXPORT_MEETING, (data?: any) => {
             if (!data || !(typeof data === `object`) || !Number.isInteger(data.meeting_id)) {
-                return { error: `data had wrong format` };
+                return { error: `MockPresenterService: Data had wrong format` };
             }
             return { returnValue: { meeting: { id: data.meeting_id, ...testMeeting } } };
         });
