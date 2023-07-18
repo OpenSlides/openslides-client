@@ -23,7 +23,8 @@ export class MockPresenterService {
 
     public async call<R, D = any>(presenter: Presenter, data?: D): Promise<R> {
         const fn: (data?: any) => { error?: string; returnValue?: any } =
-            this.returnValueFns.get(presenter) ?? (() => ({ error: `Called unexpected presenter` }));
+            this.returnValueFns.get(presenter) ??
+            (() => ({ error: `MockPresenterService: Called unexpected presenter` }));
         const returnValue = fn(data);
         if (returnValue.error) {
             throw new Error(returnValue.error);
