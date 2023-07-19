@@ -35,7 +35,14 @@ export class PointOfOrderDialogComponent {
         private activeMeeting: ActiveMeetingService
     ) {
         this.activeMeeting.meeting.point_of_order_categories_as_observable
-            .pipe(map(categories => categories.sort((a, b) => a.rank - b.rank)))
+            .pipe(
+                map(categories =>
+                    categories.sort((a, b) => {
+                        const comparison = a.text.localeCompare(b.text);
+                        return comparison || a.rank - b.rank;
+                    })
+                )
+            )
             .subscribe(this.categoriesSubject);
 
         this.editForm = this.fb.group({
