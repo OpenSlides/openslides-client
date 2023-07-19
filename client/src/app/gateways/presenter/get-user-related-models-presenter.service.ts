@@ -22,7 +22,7 @@ export interface GetUserRelatedModelsUser {
 export interface GetUserRelatedModelsCommittee {
     id: Id;
     name: string;
-    cml: CML;
+    cml: CML | ``;
 }
 
 export interface GetUserRelatedModelsPresenterResult {
