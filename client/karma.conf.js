@@ -43,6 +43,7 @@ module.exports = function(config) {
     autoWatch: true,
     browsers: ['jsdom'],
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    browserNoActivityTimeout: 400000
   });
 };

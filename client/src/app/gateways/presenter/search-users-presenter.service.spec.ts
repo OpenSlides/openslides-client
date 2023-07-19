@@ -29,8 +29,8 @@ describe(`SearchUsersPresenterService`, () => {
                 !data ||
                 typeof data !== `object` ||
                 Object.keys(data).some(key => ![`permission_type`, `permission_id`, `search`].includes(key)) ||
-                ![`meeting`, `committee`, `organization`].includes(data.permission_type) ||
-                !Number.isInteger(data.permission_id) ||
+                (data.permission_type && ![`meeting`, `committee`, `organization`].includes(data.permission_type)) ||
+                (data.permission_id && !Number.isInteger(data.permission_id)) ||
                 !Array.isArray(data.search) ||
                 (data.search as any[]).some(
                     search =>
