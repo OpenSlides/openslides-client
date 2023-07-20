@@ -1,15 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Selectable } from 'src/app/domain/interfaces/selectable';
 import { Action } from 'src/app/gateways/actions';
 import { UserSelectionData } from 'src/app/site/pages/meetings/modules/participant-search-selector';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion, ViewMotionSubmitter } from 'src/app/site/pages/meetings/pages/motions';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MotionSubmitterControllerService } from '../../../../modules/submitters/services/motion-submitter-controller.service/motion-submitter-controller.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service';
 import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
 
 type Submitter = Selectable & { fqid?: Fqid; user_id?: Id };
@@ -30,8 +31,9 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     @Input()
     public set motion(value: ViewMotion) {
         this._motion = value;
-        this.editSubmitterSubject.next(value.submitters);
+        this.updateSubmitterData(value.submitters);
     }
+
     public get motion(): ViewMotion {
         return this._motion;
     }
@@ -74,7 +76,8 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
     public constructor(
         private userRepository: ParticipantControllerService,
         private motionSubmitterRepository: MotionSubmitterControllerService,
-        public perms: MotionPermissionService
+        public perms: MotionPermissionService,
+        private motionController: MotionControllerService
     ) {
         super();
 
@@ -110,6 +113,19 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
             );
         }
         await Action.from(...actions).resolve();
+        const submitters = await Promise.all(
+            this.editSubmitterSubject.value.map(async val =>
+                val.user_id
+                    ? val
+                    : await firstValueFrom(
+                          this.motionController.getViewModelObservable(this.motion.id).pipe(
+                              map(motion => motion.submitters.find(sub => sub.user_id === val.id)),
+                              filter(sub => !!sub)
+                          )
+                      )
+            )
+        );
+        this.motionSubmitterRepository.sort(submitters, this.motion);
         this.isEditMode = false;
     }
 
@@ -141,7 +157,6 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
      */
     public onSortingChange(submitters: Submitter[]): void {
         this.editSubmitterSubject.next(submitters);
-        this.motionSubmitterRepository.sort(submitters, this.motion);
     }
 
     /**
@@ -165,6 +180,44 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
         } else {
             this.addUserAsSubmitter(this.userRepository.getViewModel(data.userId));
         }
+    }
+
+    private updateSubmitterData(submitters: ViewMotionSubmitter[]): void {
+        if (!this.isEditMode) {
+            this.editSubmitterSubject.next(submitters);
+            return;
+        }
+        let newRemoveMap: IdMap = {};
+        let sortMap = new Map(
+            this.editSubmitterSubject.value.map((submitter, index) => [this.getUserId(submitter), index])
+        );
+        for (let submitter of submitters) {
+            if (this._removeSubmittersMap[submitter.user_id]) {
+                newRemoveMap[submitter.user_id] = submitter.id;
+            } else if (this._addSubmittersSet.has(submitter.user_id)) {
+                this._addSubmittersSet.delete(submitter.user_id);
+            }
+        }
+        this.editSubmitterSubject.next(
+            (submitters as Submitter[])
+                .concat(
+                    this.editSubmitterSubject.value.filter(
+                        submitter => submitter.user_id && this._addSubmittersSet.has(submitter.id)
+                    )
+                )
+                .sort((a, b) => {
+                    const indexA = sortMap.get(this.getUserId(a));
+                    const indexB = sortMap.get(this.getUserId(b));
+                    if (indexB === undefined) return -1;
+                    if (indexA === undefined) return 1;
+                    return indexA - indexB;
+                })
+        );
+        this._removeSubmittersMap = newRemoveMap;
+    }
+
+    private getUserId(submitter: Submitter): number {
+        return submitter.user_id ?? submitter.id;
     }
 
     /**
