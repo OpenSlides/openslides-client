@@ -1,0 +1,45 @@
+<h1 mat-dialog-title>{{ data.settings.title | translate }}</h1>
+
+<form [formGroup]="exportForm">
+    <!-- Content -->
+    <div mat-dialog-content class="motion-export-dialog-wrapper">
+        <div *ngFor="let setting of settings">
+            <p class="toggle-group-head">{{ getSettingTitle(setting) | translate }}</p>
+            <mat-button-toggle-group
+                class="smaller-buttons"
+                [multiple]="setting.multiple"
+                [formControlName]="setting.key"
+                (change)="onChange($event, setting)"
+            >
+                <ng-container *ngFor="let choice of setting.choices | keyvalue">
+                    <ng-container *ngIf="choice.value.perms && choice.value.perms.length">
+                        <mat-button-toggle
+                            *osPerms="choice.value.perms"
+                            [value]="choice.key"
+                            [disabled]="choice.value.disabled"
+                        >
+                            <span>{{ getChoiceTitle(choice.value, choice.key) | translate }}</span>
+                        </mat-button-toggle>
+                    </ng-container>
+                    <ng-container *ngIf="!(choice.value.perms && choice.value.perms.length)">
+                        <mat-button-toggle [value]="choice.key" [disabled]="choice.value.disabled">
+                            <span>{{ getChoiceTitle(choice.value, choice.key) | translate }}</span>
+                        </mat-button-toggle>
+                    </ng-container>
+                </ng-container>
+            </mat-button-toggle-group>
+        </div>
+
+        <br />
+    </div>
+
+    <!-- Action buttons -->
+    <div mat-dialog-actions>
+        <button mat-button type="button" color="accent" [mat-dialog-close]="exportForm.value">
+            <span>{{ 'Export' | translate }}</span>
+        </button>
+        <button mat-button type="button" (click)="onCloseClick()">
+            <span>{{ 'Cancel' | translate }}</span>
+        </button>
+    </div>
+</form>

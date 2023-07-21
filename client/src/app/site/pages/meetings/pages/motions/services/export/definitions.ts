@@ -17,7 +17,7 @@ export type InfoToExport =
     | 'allcomments';
 
 /**
- * Determines the possible file format of a motion export
+ * Determines the possible file format of an export
  */
 export enum ExportFileFormat {
     PDF = 1,
