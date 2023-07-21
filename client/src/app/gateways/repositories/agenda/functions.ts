@@ -12,6 +12,7 @@ export function createAgendaItem(model: any): any {
         agenda_duration: parseInt(model.agenda_duration, 10) || undefined,
         agenda_parent_id: model.agenda_parent_id,
         agenda_type: model.agenda_type,
-        agenda_weight: model.agenda_weight
+        agenda_weight: model.agenda_weight,
+        tag_ids: model.tag_ids
     };
 }
