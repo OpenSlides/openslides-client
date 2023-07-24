@@ -11,9 +11,9 @@ import { ExportDialogModule } from '../export-dialog.module';
 
 export type ExportInfoChoiceType<T> = T extends Array<any> ? T[number] : T;
 
-type ExportDialogSettingsKeys<ExportInfo extends { format: ExportFileFormat }> = keyof ExportInfo;
+type ExportDialogSettingsKeys<ExportInfo extends { format?: ExportFileFormat }> = keyof ExportInfo;
 
-export type ExportDialogSettings<ExportInfo extends { format: ExportFileFormat }> = {
+export type ExportDialogSettings<ExportInfo extends { format?: ExportFileFormat }> = {
     title: string;
     settings: {
         [key in ExportDialogSettingsKeys<ExportInfo>]: {
@@ -27,9 +27,9 @@ export type ExportDialogSettings<ExportInfo extends { format: ExportFileFormat }
                 {
                     label?: string;
                     perms?: Permission;
-                    mandatory?: boolean; // If true, this option will not be shown but still returned as part of the selection
                     disableWhen?: { otherValue: ExportInfo[key]; checked: boolean }[];
                     disableForFormat?: ExportFileFormat[];
+                    changeStateForFormat?: { format: ExportFileFormat[]; value: boolean }[];
                 }
             >;
         };
@@ -39,32 +39,22 @@ export type ExportDialogSettings<ExportInfo extends { format: ExportFileFormat }
 @Injectable({
     providedIn: ExportDialogModule
 })
-export class ExportDialogService<
+export abstract class ExportDialogService<
     T extends BaseViewModel,
-    ExportInfo extends { format: ExportFileFormat }
-> extends BaseDialogService<
-    ExportDialogComponent<T, ExportInfo>,
-    {
-        data: T[];
-        settings: ExportDialogSettings<ExportInfo>;
-        storageKey: string;
-        defaults: ExportInfo;
-    },
-    ExportInfo
-> {
+    ExportInfo extends { format?: ExportFileFormat }
+> extends BaseDialogService<ExportDialogComponent<T, ExportInfo>, T[], ExportInfo> {
+    protected abstract get settings(): ExportDialogSettings<ExportInfo>;
+    protected abstract readonly storageKey: string;
+    protected abstract get defaults(): ExportInfo;
+
     public constructor(dialog: MatDialog) {
         super(dialog);
     }
 
-    public override async open(data: {
-        data: T[];
-        settings: ExportDialogSettings<ExportInfo>;
-        storageKey: string;
-        defaults: ExportInfo;
-    }): Promise<MatDialogRef<ExportDialogComponent<T, ExportInfo>, ExportInfo>> {
+    public override async open(data: T[]): Promise<MatDialogRef<ExportDialogComponent<T, ExportInfo>, ExportInfo>> {
         const module = await import(`../export-dialog.module`).then(m => m.ExportDialogModule);
         return this.dialog.open(module.getComponent()<T, ExportInfo>, {
-            data,
+            data: { data, settings: this.settings, storageKey: this.storageKey, defaults: this.defaults },
             ...largeDialogSettings
         });
     }

@@ -2,7 +2,7 @@
 
 <form [formGroup]="exportForm">
     <!-- Content -->
-    <div mat-dialog-content class="motion-export-dialog-wrapper">
+    <div mat-dialog-content class="export-dialog-wrapper">
         <div *ngFor="let setting of settings">
             <p class="toggle-group-head">{{ getSettingTitle(setting) | translate }}</p>
             <mat-button-toggle-group

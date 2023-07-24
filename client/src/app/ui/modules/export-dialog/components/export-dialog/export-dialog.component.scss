@@ -1,0 +1,16 @@
+.export-dialog-wrapper {
+    .toggle-group-head {
+        margin-bottom: 0;
+    }
+
+    h1 {
+        margin: 0;
+    }
+
+    mat-button-toggle {
+        .mat-button-toggle-label-content {
+            line-height: 2.5;
+            padding: 0 10px;
+        }
+    }
+}

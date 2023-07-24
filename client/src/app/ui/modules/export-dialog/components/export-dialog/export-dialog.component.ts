@@ -14,10 +14,10 @@ import { ExportDialogSettings, ExportInfoChoiceType } from '../../services';
 interface Choice<ExportInfo> {
     label?: string;
     perms?: Permission;
-    mandatory?: boolean; // If true, this option will not be shown but still returned as part of the selection
     disableWhen?: { otherValue: ExportInfo[keyof ExportInfo]; checked: boolean }[];
     disableForFormat?: ExportFileFormat[];
     disabled?: boolean;
+    changeStateForFormat?: { format: ExportFileFormat[]; value: boolean }[];
 }
 
 type ChoiceMap<ExportInfo> = Map<ExportInfoChoiceType<ExportInfo[keyof ExportInfo]>, Choice<ExportInfo>>;
@@ -38,7 +38,7 @@ interface ExportInfoTableData<ExportInfo> {
     styleUrls: [`./export-dialog.component.scss`],
     encapsulation: ViewEncapsulation.None
 })
-export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends { format: ExportFileFormat }>
+export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends { format?: ExportFileFormat }>
     extends BaseUiComponent
     implements OnInit
 {
