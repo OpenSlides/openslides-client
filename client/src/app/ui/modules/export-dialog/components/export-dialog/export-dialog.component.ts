@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { auditTime } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
@@ -50,12 +50,6 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
     public exportForm!: UntypedFormGroup;
 
     public settings: ExportInfoTableData<ExportInfo>[] = [];
-
-    /**
-     * To deactivate the export-as-diff button
-     */
-    @ViewChildren(MatButtonToggleGroup)
-    public toggleGroups!: QueryList<MatButtonToggleGroup>;
 
     private format: ExportFileFormat;
 
@@ -129,17 +123,27 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
         // }
     }
 
+    /**
+     * Just close the dialog
+     */
+    public onCloseClick(): void {
+        this.dialogRef.close();
+    }
+
     private updateDisabled(row?: ExportInfoTableData<ExportInfo>) {
         for (let setting of row ? [row] : this.settings) {
             const control = this.exportForm.get(setting.key);
             if (setting.disableForFormat?.includes(this.format)) {
+                control.setValue(setting.multiple ? [] : null);
                 control.disable();
-            } else {
+            } else if (control.disabled) {
                 control.enable();
+                control.setValue(this.data.defaults[setting.key]);
             }
             for (let choiceKey of setting.choices.keys()) {
                 const choice = setting.choices.get(choiceKey);
                 const value = control.value;
+                const disabled = choice.disabled;
                 choice.disabled =
                     choice.disableForFormat?.includes(this.format) ||
                     choice.disableWhen?.some(condition => {
@@ -149,49 +153,23 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
                                 : value === condition.otherValue) === condition.checked
                         );
                     });
-                if (choice.disabled && Array.isArray(value) ? value.includes(choiceKey) : value === choiceKey) {
+                if (
+                    choice.disabled &&
+                    !disabled &&
+                    (Array.isArray(value) ? value.includes(choiceKey) : value === choiceKey)
+                ) {
                     control.setValue(
                         Array.isArray(value) ? value.filter(val => val !== choiceKey) : this.getOffState(setting.key)
                     );
+                } else if (choice.disabled !== disabled) {
+                    control.setValue(this.data.defaults[setting.key]);
                 }
             }
         }
     }
 
     /**
-     * Function to change the state of the property `disabled` of a given button.
-     *
-     * Ensures, that the button exists.
-     *
-     * @param button The button whose state will change.
-     * @param nextState The next state the button will assume.
-     */
-    private changeStateOfButton(button: MatButtonToggle, nextState: boolean): void {
-        if (button) {
-            button.disabled = nextState;
-        }
-    }
-
-    /**
-     * Helper function to easier enable a control
-     * @param name
-     */
-    private enableControl(name: string): void {
-        this.exportForm.get(name)!.enable();
-    }
-
-    /**
-     * Helper function to easier disable a control
-     *
-     * @param name
-     */
-    private disableControl(name: string): void {
-        this.exportForm.get(name)!.disable();
-        this.exportForm.get(name)!.setValue(this.getOffState(name));
-    }
-
-    /**
-     * Determine what "off means in certain states"
+     * Determine what "off" means in certain states
      *
      * @param control
      */
@@ -202,7 +180,7 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
     /**
      * Creates the form with default values
      */
-    public createForm(): void {
+    private createForm(): void {
         this.exportForm = this.formBuilder.group(this.settings.mapToObject(setting => ({ [setting.key]: [] })));
 
         // restore selection or set default
@@ -213,12 +191,5 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
                 this.exportForm.patchValue(this.data.defaults);
             }
         });
-    }
-
-    /**
-     * Just close the dialog
-     */
-    public onCloseClick(): void {
-        this.dialogRef.close();
     }
 }

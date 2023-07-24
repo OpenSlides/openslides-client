@@ -93,6 +93,7 @@ export class MotionExportDialogService extends ExportDialogService<ViewMotion, M
                                 {
                                     label: _(`Speakers`),
                                     perms: Permission.listOfSpeakersCanSee,
+                                    disableForFormat: [ExportFileFormat.CSV],
                                     changeStateForFormat: [
                                         { format: [ExportFileFormat.XLSX], value: false },
                                         { format: [ExportFileFormat.PDF, ExportFileFormat.CSV], value: true }
