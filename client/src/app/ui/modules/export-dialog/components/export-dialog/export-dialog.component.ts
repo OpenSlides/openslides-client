@@ -117,10 +117,6 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
 
     public onChange(event: MatButtonToggleChange, row: ExportInfoTableData<ExportInfo>): void {
         this.updateDisabled(row);
-        // if (event.value.includes(MOTION_PDF_OPTIONS.ContinuousText)) {
-        //     this.tocButton.checked = false;
-        //     this.addBreaksButton.checked = false;
-        // }
     }
 
     /**
@@ -143,7 +139,7 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
             for (let choiceKey of setting.choices.keys()) {
                 const choice = setting.choices.get(choiceKey);
                 const value = control.value;
-                const disabled = choice.disabled;
+                const previouslyDisabled = choice.disabled;
                 choice.disabled =
                     choice.disableForFormat?.includes(this.format) ||
                     choice.disableWhen?.some(condition => {
@@ -153,15 +149,11 @@ export class ExportDialogComponent<T extends BaseViewModel, ExportInfo extends {
                                 : value === condition.otherValue) === condition.checked
                         );
                     });
-                if (
-                    choice.disabled &&
-                    !disabled &&
-                    (Array.isArray(value) ? value.includes(choiceKey) : value === choiceKey)
-                ) {
+                if (choice.disabled && !previouslyDisabled) {
                     control.setValue(
                         Array.isArray(value) ? value.filter(val => val !== choiceKey) : this.getOffState(setting.key)
                     );
-                } else if (choice.disabled !== disabled) {
+                } else if (choice.disabled !== previouslyDisabled) {
                     control.setValue(this.data.defaults[setting.key]);
                 }
             }

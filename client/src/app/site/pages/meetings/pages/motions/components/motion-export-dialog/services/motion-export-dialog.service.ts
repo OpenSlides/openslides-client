@@ -70,6 +70,7 @@ export class MotionExportDialogService extends ExportDialogService<ViewMotion, M
                     label: _(`Content`),
                     weight: 4,
                     multiple: true,
+                    disableForFormat: [ExportFileFormat.XLSX],
                     choices: new Map([
                         [`text`, { label: _(`Text`) }],
                         [`reason`, { label: _(`Reason`) }]
@@ -79,7 +80,6 @@ export class MotionExportDialogService extends ExportDialogService<ViewMotion, M
                     label: _(`Meta Information`),
                     weight: 5,
                     multiple: true,
-                    disableForFormat: [ExportFileFormat.CSV, ExportFileFormat.XLSX],
                     choices: new Map(
                         (
                             (
@@ -114,6 +114,7 @@ export class MotionExportDialogService extends ExportDialogService<ViewMotion, M
                     label: _(`PDF options`),
                     weight: 5,
                     multiple: true,
+                    disableForFormat: [ExportFileFormat.CSV, ExportFileFormat.XLSX],
                     choices: new Map<string, any>([
                         [
                             `toc`,
