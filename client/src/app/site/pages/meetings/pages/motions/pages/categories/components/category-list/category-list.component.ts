@@ -2,14 +2,12 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
 import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { ViewMotionCategory } from '../../../../modules';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
@@ -50,30 +48,19 @@ export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMoti
         return this.operator.hasPerms(Permission.motionCanManage);
     }
 
-    private _categoryPrefixesSubject = new BehaviorSubject<string[]>([]);
-
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         public repo: MotionCategoryControllerService,
         private formBuilder: UntypedFormBuilder,
         private dialog: MatDialog,
-        private operator: OperatorService,
-        private treeService: TreeService
+        private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
         this.listStorageIndex = CATEGORY_LIST_STORAGE_INDEX;
 
-        this.repo
-            .getViewModelListObservable()
-            .subscribe(categories =>
-                this._categoryPrefixesSubject.next(
-                    categories.filter(category => category.prefix).map(category => category.prefix)
-                )
-            );
-
         this.createForm = this.formBuilder.group({
-            prefix: [``, isUniqueAmong(this._categoryPrefixesSubject)],
+            prefix: [``],
             name: [``, Validators.required],
             parent_id: [``]
         });
