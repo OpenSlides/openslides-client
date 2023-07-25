@@ -70,7 +70,9 @@ export class HistoryPresenterService {
             .map(position => {
                 return new HistoryPosition({
                     ...position,
-                    information: Array.isArray(position) ? position.information : position?.information[fqid],
+                    information: Array.isArray(position.information)
+                        ? position.information
+                        : position?.information[fqid],
                     fqid,
                     user: this.userRepo.getViewModel(position.user_id)?.getFullName()
                 });

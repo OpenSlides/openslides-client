@@ -26,9 +26,7 @@ function getAssignmentHistory(id: Id, addDuplicates = false): any {
                     position: 18,
                     timestamp: getTime(1),
                     user_id: 1,
-                    information: {
-                        [`assignment/${id}`]: [`Candidate added`]
-                    }
+                    information: [`Candidate added`]
                 },
                 addDuplicates ? 2 : 1
             ),
@@ -36,65 +34,49 @@ function getAssignmentHistory(id: Id, addDuplicates = false): any {
                 position: 21,
                 timestamp: getTime(2),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Candidate removed`]
-                }
+                information: [`Candidate removed`]
             },
             {
                 position: 22,
                 timestamp: getTime(3),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Candidate added`]
-                }
+                information: [`Candidate added`]
             },
             {
                 position: 23,
                 timestamp: getTime(4),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Candidate added`]
-                }
+                information: [`Candidate added`]
             },
             {
                 position: 25,
                 timestamp: getTime(5),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Ballot created`]
-                }
+                information: [`Ballot created`]
             },
             {
                 position: 26,
                 timestamp: getTime(6),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Ballot published`]
-                }
+                information: [`Ballot published`]
             },
             {
                 position: 30,
                 timestamp: getTime(7),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Ballot created`]
-                }
+                information: [`Ballot created`]
             },
             {
                 position: 31,
                 timestamp: getTime(8),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Ballot started`]
-                }
+                information: [`Ballot started`]
             },
             {
                 position: 33,
                 timestamp: getTime(9),
                 user_id: 1,
-                information: {
-                    [`assignment/${id}`]: [`Ballot stopped/published`]
-                }
+                information: [`Ballot stopped/published`]
             }
         ]
     };
@@ -225,7 +207,12 @@ class MockUserRepo {
     }
 }
 
-function compareHistoryPositions(compare: HistoryPosition, to: any, fqid: string): boolean {
+function compareHistoryPositions(
+    compare: HistoryPosition,
+    to: any,
+    fqid: string,
+    isDeprecatedFormat: boolean
+): boolean {
     return (
         compare.timestamp !== to.timestamp ||
         compare.fqid !== fqid ||
@@ -234,7 +221,11 @@ function compareHistoryPositions(compare: HistoryPosition, to: any, fqid: string
         compare.user_id !== to.user_id ||
         compare.user !== `User ${to.user_id}` ||
         compare.getLocaleString(`en`) !== new Date(to.timestamp * 1000).toLocaleString(`en`) ||
-        compare.information?.join(`#`) !== (to.information as { [fqid: string]: string[] })[fqid]?.join(`#`)
+        compare.information?.join(`#`) !==
+            (isDeprecatedFormat
+                ? (to.information as string[])
+                : (to.information as { [fqid: string]: string[] })[fqid]
+            )?.join(`#`)
     );
 }
 
@@ -265,7 +256,10 @@ describe(`HistoryPresenterService`, () => {
     ]) {
         const fqid = `${collection}/${id}`;
         const expectLength = collection === Motion.COLLECTION ? 3 : collection === User.COLLECTION ? 5 : 9;
-        it(`test with ${collection} and ${useDuplicates ? `` : `no `}duplicates`, async () => {
+        const deprecatedFormat = collection === Assignment.COLLECTION;
+        it(`test with ${collection} and ${useDuplicates ? `` : `no `}duplicates${
+            deprecatedFormat ? ` in deprecated format` : ``
+        }`, async () => {
             http.addDuplicates = useDuplicates;
             const history = await service.call(fqid);
             expect(http.lastPosts.length).toBe(1);
@@ -280,7 +274,7 @@ describe(`HistoryPresenterService`, () => {
             );
             const differentFromExpected = (getHistory(collection, id, false)[fqid] as any[])
                 .sort((a, b) => b.timestamp - a.timestamp)
-                .some((value, index) => compareHistoryPositions(history[index], value, fqid));
+                .some((value, index) => compareHistoryPositions(history[index], value, fqid, deprecatedFormat));
             expect(differentFromExpected).toBe(false);
         });
     }
