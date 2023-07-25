@@ -363,18 +363,13 @@
         </mat-icon>
         <b
             [class.foreground-warn]="!!showcolor"
-            *ngIf="
-                pointOfOrderCategoriesEnabled &&
-                speaker.point_of_order_category &&
-                ((showSpeakerNoteForEveryoneObservable | async) || canManage)
-            "
+            *ngIf="speaker.point_of_order_category && ((showSpeakerNoteForEveryoneObservable | async) || canManage)"
         >
             {{ speaker.point_of_order_category.text }}
         </b>
         <span
             [class.foreground-warn]="!!showcolor"
             *ngIf="
-                pointOfOrderCategoriesEnabled &&
                 speaker.point_of_order_category &&
                 speaker.note &&
                 ((showSpeakerNoteForEveryoneObservable | async) || canManage)
