@@ -33,9 +33,13 @@ export class ActionService {
         }
         console.log(`send requests:`, requests);
         const response = await this.http.post<T>(handle_separately ? ACTION_SEPARATELY_URL : ACTION_URL, requests);
+        console.log(`is  response: `, response);
         if (isActionError(response)) {
+            console.log(`############### if`);
+            console.log(response.message);
             throw response.message;
         } else if (isActionResponse<T>(response)) {
+            console.log(`############### else if #1`);
             const results = response.results;
             if (!results) {
                 return null;
@@ -45,8 +49,10 @@ export class ActionService {
             }
             return results[0] as T[];
         } else if (response !== null) {
+            console.log(`############### else if #2`);
             throw new Error(`Unknown return type from action service`);
         }
+        console.log(`############### else`);
         return null;
     }
 
