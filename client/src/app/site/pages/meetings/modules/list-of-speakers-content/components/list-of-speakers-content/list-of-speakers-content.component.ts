@@ -163,7 +163,7 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
                 .get(`list_of_speakers_enable_point_of_order_categories`)
                 .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
             this.meetingSettingsService
-                .get(`list_of_speakers_restrict_point_of_order_submissions_to_open_lists`)
+                .get(`list_of_speakers_closing_disables_point_of_order`)
                 .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
     }

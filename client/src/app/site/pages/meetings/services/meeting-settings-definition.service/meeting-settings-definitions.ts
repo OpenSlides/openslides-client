@@ -390,7 +390,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_restrict_point_of_order_submissions_to_open_lists`,
+                        key: `list_of_speakers_closing_disables_point_of_order`,
                         label: _(`Restrict point of order actions to open lists of speakers`),
                         type: `boolean`
                     },
