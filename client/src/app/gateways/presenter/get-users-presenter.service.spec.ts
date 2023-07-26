@@ -66,5 +66,6 @@ describe(`GetUsersPresenterService`, () => {
 
     it(`should correctly call get_users`, async () => {
         expect(await service.call({ start_index: 7, entries: 3 })).toEqual(testUsers);
+        expect(await service.call({})).toEqual(testUsers);
     });
 });
