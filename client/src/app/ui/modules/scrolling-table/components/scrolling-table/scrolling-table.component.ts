@@ -174,7 +174,7 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     public deselectAll(): void {
-        this.changeSelection(this._source, false);
+        this.changeSelection(this._fullSource, false);
     }
 
     private select(rows: T[]): void {
