@@ -261,7 +261,9 @@
             mat-stroked-button
             color="warn"
             (click)="addPointOfOrder()"
-            *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
+            *ngIf="
+                showPointOfOrders && !isOpInWaitlist(true) && !(restrictPointOfOrderActions && listOfSpeakers.closed)
+            "
         >
             <mat-icon>warning</mat-icon>
             &nbsp;
@@ -273,7 +275,7 @@
             mat-stroked-button
             color="warn"
             (click)="removePointOfOrder()"
-            *ngIf="showPointOfOrders && isOpInWaitlist(true)"
+            *ngIf="showPointOfOrders && isOpInWaitlist(true) && !(restrictPointOfOrderActions && listOfSpeakers.closed)"
         >
             <mat-icon>remove</mat-icon>
             <span translate>Withdraw point of order</span>

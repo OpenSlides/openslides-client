@@ -390,6 +390,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_closing_disables_point_of_order`,
+                        label: _(`Restrict point of order actions to open lists of speakers`),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_enable_point_of_order_categories`,
                         label: _(`Enable specifications and ranking for possible motions`),
                         type: `boolean`
