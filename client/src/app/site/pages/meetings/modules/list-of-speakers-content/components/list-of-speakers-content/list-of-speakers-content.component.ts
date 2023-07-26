@@ -123,6 +123,8 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
 
     public pointOfOrderCategoriesEnabled: boolean = false;
 
+    public restrictPointOfOrderActions: boolean = false;
+
     @Output()
     private isListOfSpeakersEmptyEvent = new EventEmitter<boolean>();
 
@@ -159,7 +161,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         this.subscriptions.push(
             this.meetingSettingsService
                 .get(`list_of_speakers_enable_point_of_order_categories`)
-                .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled))
+                .subscribe(enabled => (this.pointOfOrderCategoriesEnabled = enabled)),
+            this.meetingSettingsService
+                .get(`list_of_speakers_closing_disables_point_of_order`)
+                .subscribe(enabled => (this.restrictPointOfOrderActions = enabled))
         );
     }
 
