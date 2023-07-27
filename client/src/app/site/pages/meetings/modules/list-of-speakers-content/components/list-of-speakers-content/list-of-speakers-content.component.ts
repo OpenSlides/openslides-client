@@ -260,7 +260,10 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
     public async removePointOfOrder(): Promise<void> {
         const speakerToDelete = this.findOperatorSpeaker(true);
         if (speakerToDelete) {
-            await this.speakerRepo.delete(speakerToDelete.id);
+            const title = this.translate.instant(`Are you sure you want to irrevocably remove your point of order?`);
+            if (!(this.restrictPointOfOrderActions && this.closed) || (await this.promptService.open(title))) {
+                await this.speakerRepo.delete(speakerToDelete.id);
+            }
         }
     }
 
