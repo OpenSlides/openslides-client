@@ -390,7 +390,6 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
             if (this.poll.isMethodY && this.poll.max_votes_per_option > 1) {
                 this.disableAndResetInputs();
             }
-            this.submitVote(user);
         }
     }
 
