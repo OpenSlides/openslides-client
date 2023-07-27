@@ -10,7 +10,7 @@ export class Action<T = void> {
     }
 
     public concat(...actions: (Action<any | any[]> | ActionRequest | null)[]): Action<T> {
-        actions = actions.filter(action => action[`data`]?.length || action[`_actions`]?.length);
+        actions = actions.filter(action => !!action && (action[`data`]?.length || action[`_actions`]?.length));
         if (actions.length === 0) {
             return this;
         }
