@@ -368,7 +368,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async onDeleteAssignmentButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this election?`);
-        if (await this.promptService.open(title, this.assignment.getTitle())) {
+        const content = this.assignment.getTitle();
+        if (await this.promptService.open(title, content)) {
             this.assignmentRepo
                 .delete(this.assignment)
                 .then(() => this.router.navigate([this.activeMeetingId, `assignments`]));

@@ -53,12 +53,12 @@ export class OrganizationTagListComponent extends BaseListViewComponent<ViewOrga
     }
 
     public async deleteOrganizationTags(...orgaTags: ViewOrganizationTag[]): Promise<void> {
-        const dialogTitle =
+        const title =
             orgaTags.length === 1
                 ? this.translate.instant(`Are you sure you want to delete this tag?`)
                 : this.translate.instant(`Are you sure you want to delete all selected tags?`);
-        const dialogSubtitle = orgaTags.length === 1 ? orgaTags[0].name : ``;
-        if (await this.promptService.open(dialogTitle, dialogSubtitle)) {
+        const content = orgaTags.length === 1 ? orgaTags[0].name : ``;
+        if (await this.promptService.open(title, content)) {
             await this.repo.delete(...orgaTags);
         }
     }
