@@ -123,8 +123,8 @@
                 </div>
             </div>
 
-            <!-- global yes/no/abstain -->
-            <ng-container *ngIf="(poll.isMethodY || poll.isMethodN) && poll.hasGlobalOptionEnabled">
+            <!-- global/general yes/no/abstain -->
+            <ng-container *ngIf="(poll.isMethodY || poll.isMethodN || poll.isMethodYN) && poll.hasGlobalOptionEnabled">
                 <mat-divider></mat-divider>
                 <div class="global-option-grid">
                     <div *ngIf="poll.global_yes">
