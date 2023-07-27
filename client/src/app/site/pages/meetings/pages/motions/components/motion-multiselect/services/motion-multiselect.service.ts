@@ -237,11 +237,11 @@ export class MotionMultiselectService {
             title,
             choices: this.tagRepo.getViewModelListObservable(),
             multiSelect: true,
-            actions,
-            clearChoiceOption: this.translate.instant(`Clear tags`)
+            actions
         });
         if (selectedChoice) {
             let requestData: Action<void>[] = [];
+            motions = motions.map(motion => this.repo.getViewModel(motion.id));
             if (selectedChoice.action === ADD) {
                 requestData = motions.map(motion => {
                     const tagIds = new Set((motion.tag_ids || []).concat(selectedChoice.ids));
@@ -249,8 +249,9 @@ export class MotionMultiselectService {
                 });
             } else if (selectedChoice.action === REMOVE) {
                 requestData = motions.map(motion => {
-                    const tagIdsToRemove = new Set(selectedChoice.ids as number[]);
-                    return this.repo.update({ tag_ids: Array.from(tagIdsToRemove) }, motion);
+                    const remainingTagIds = new Set((motion.tag_ids || []) as number[]);
+                    for (let id of selectedChoice.ids) remainingTagIds.delete(id);
+                    return this.repo.update({ tag_ids: Array.from(remainingTagIds) }, motion);
                 });
             } else {
                 requestData = motions.map(motion => this.repo.update({ tag_ids: [] }, motion));
