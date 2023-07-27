@@ -163,7 +163,7 @@ export class MotionMultiselectService {
             clearChoiceOption
         });
         const categoryId = selectedChoice?.action ? null : selectedChoice?.firstId;
-        if (selectedChoice && categoryId) {
+        if (selectedChoice) {
             const message = this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: () => this.repo.setCategory(categoryId, ...motions)
