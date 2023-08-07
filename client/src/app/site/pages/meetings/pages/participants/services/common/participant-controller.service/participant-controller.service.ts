@@ -3,7 +3,7 @@ import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs'
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
 import { Action, ActionService } from 'src/app/gateways/actions';
-import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
+import { GetUserRelatedModelsPresenterService, GetUserScopePresenterService } from 'src/app/gateways/presenter';
 import {
     FullNameInformation,
     RawUser,
@@ -50,7 +50,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         public meetingController: MeetingControllerService,
         private userController: UserControllerService,
         private userDeleteDialog: UserDeleteDialogService,
-        private presenter: GetUserScopePresenterService,
+        private userScopePresenter: GetUserScopePresenterService,
+        private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService,
         private userService: UserService,
         private actions: ActionService
     ) {
@@ -169,20 +170,28 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public async removeUsersFromMeeting(
         users: ViewUser[],
-        meeting: ViewMeeting | null = this.activeMeeting
+        meeting: ViewMeeting = this.activeMeeting
     ): Promise<boolean> {
-        const result = await this.presenter.call({ user_ids: users.map(user => user.id) });
-        const toDelete = Object.keys(result)
-            .map(key => parseInt(key, 10))
-            .filter(key => {
-                const fqid = `${result[key].collection}/${result[key].id}`;
-                return fqid === meeting!.fqid;
-            });
+        // only delete users which are in meeting scope
+        const scopes = await this.userScopePresenter.call({ user_ids: users.map(user => user.id) });
+        const meetingScopeUserIds = Object.entries(scopes)
+            .filter(([_, entry]) => entry.collection == meeting.COLLECTION && entry.id == meeting.id)
+            .map(([key, _]) => parseInt(key));
+        const relatedModels = meetingScopeUserIds
+            ? await this.userRelatedModelsPresenter.call({ user_ids: meetingScopeUserIds })
+            : {};
+        const toDelete = meetingScopeUserIds.filter(
+            id => relatedModels[id].meetings?.length === 1 && relatedModels[id].meetings[0].id === meeting.id
+        );
         const toDeleteUsers = toDelete.map(id => this.getViewModel(id)!);
         const toRemove = users.map(user => user.id).difference(toDelete);
-        const toRemoveUsers = toRemove.map(id => this.getViewModel(id) as ViewUser);
+        const toRemoveUsers = toRemove.map(id => this.getViewModel(id));
 
-        const prompt = await this.userDeleteDialog.open({ toDelete: toDeleteUsers, toRemove: toRemoveUsers });
+        const prompt = await this.userDeleteDialog.open({
+            toDelete: toDeleteUsers,
+            toRemove: toRemoveUsers,
+            relatedModelsResult: relatedModels
+        });
         const answer = await firstValueFrom(prompt.afterClosed());
         if (answer) {
             const patch = { group_$_ids: { [this.activeMeetingId!]: [] } };

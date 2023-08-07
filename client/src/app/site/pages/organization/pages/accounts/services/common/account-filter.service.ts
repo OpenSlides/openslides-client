@@ -144,6 +144,14 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
                 ]
             },
             {
+                property: `hasSamlId`,
+                label: this.translate.instant(`SSO`),
+                options: [
+                    { condition: true, label: this.translate.instant(`Has SSO identification`) },
+                    { condition: [false, null], label: this.translate.instant(`Has no SSO identification`) }
+                ]
+            },
+            {
                 property: `getDuplicateStatusInMap`,
                 label: this.translate.instant(`Duplicates`),
                 options: [

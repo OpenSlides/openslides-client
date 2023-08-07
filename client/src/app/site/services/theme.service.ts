@@ -190,7 +190,7 @@ export class ThemeService {
         const key = `--theme-${usage}-${color.name}`;
         const value = color.hex;
         const keyContrast = `--theme-${usage}-contrast-${color.name}`;
-        const valueContrast = color.darkContrast ? `rgba(black, 0.87)` : `white`;
+        const valueContrast = color.darkContrast ? `rgba(0, 0, 0, 0.87)` : `white`;
         document.documentElement.style.setProperty(key, value);
         document.documentElement.style.setProperty(keyContrast, valueContrast);
     }

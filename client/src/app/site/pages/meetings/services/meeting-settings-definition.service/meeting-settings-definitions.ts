@@ -8,6 +8,7 @@ import {
     PollPercentBaseVerbose,
     PollTypeVerbose
 } from 'src/app/domain/models/poll/poll-constants';
+import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
@@ -23,6 +24,7 @@ export type SettingsType =
     | 'date'
     | 'datetime'
     | 'translations'
+    | 'ranking'
     | 'groups'
     | 'daterange';
 
@@ -55,6 +57,9 @@ export interface SettingsItem<V = any> {
     helpText?: string; // default: ""
     validators?: ValidatorFn[]; // default: []
     automaticChangesSetting?: SettingsItemAutomaticChangeSetting<V>;
+    useRelation?: boolean; // May be set to true for relation id fields to get the relation item(s) instead if the id(s)
+    keyTransformationConfig?: ObjectReplaceKeysConfig; // May be set if the value is expected to be an object. If it is, all keys will be transformed according to the lines before they are passed to the forms, and back before the form is saved.
+    pickKeys?: string[]; // If the value is an object, this will throw away all properties, except the given keys, this is done before the keyTransformation
     /**
      * A function to restrict some values of a settings-item depending on used organization's settings
      *
@@ -131,6 +136,10 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                                     : currentValue;
                             }
                         }
+                    },
+                    {
+                        key: `external_id`,
+                        label: _(`External ID`)
                     }
                 ]
             },
@@ -298,11 +307,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`General`),
                 settings: [
                     {
-                        key: `list_of_speakers_enable_point_of_order_speakers`,
-                        label: _(`Enable point of order`),
-                        type: `boolean`
-                    },
-                    {
                         key: `list_of_speakers_enable_pro_contra_speech`,
                         label: _(`Enable forspeech / counter speech`),
                         type: `boolean`
@@ -374,6 +378,37 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `projector_countdown_default_time`,
                         label: _(`Predefined seconds of new countdowns`),
                         type: `integer`
+                    }
+                ]
+            },
+            {
+                label: _(`Point of order`),
+                settings: [
+                    {
+                        key: `list_of_speakers_enable_point_of_order_speakers`,
+                        label: _(`Enable point of order`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_closing_disables_point_of_order`,
+                        label: _(`Restrict point of order actions to open lists of speakers`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `list_of_speakers_enable_point_of_order_categories`,
+                        label: _(`Enable specifications and ranking for possible motions`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `point_of_order_category_ids`,
+                        label: `Point of order specifications`,
+                        type: `ranking`,
+                        useRelation: true,
+                        keyTransformationConfig: [
+                            [`text`, `entry`],
+                            [`rank`, `allocation`]
+                        ],
+                        pickKeys: [`id`, `text`, `rank`]
                     }
                 ]
             }
@@ -506,7 +541,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Sort motions by`),
                         type: `choice`,
                         choices: {
-                            number: _(`Number`),
+                            number: _(`Identifier`),
                             weight: _(`Call list`)
                         }
                     }
@@ -517,7 +552,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 settings: [
                     {
                         key: `motions_number_type`,
-                        label: _(`Motion number`),
+                        label: _(`Motion identifier`),
                         type: `choice`,
                         choices: {
                             per_category: _(`Numbered per category`),
@@ -527,9 +562,9 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_number_min_digits`,
-                        label: _(`Minimum number of digits for motion number`),
+                        label: _(`Minimum number of digits for motion identifier`),
                         type: `integer`,
-                        helpText: _(`Uses leading zeros to sort motions correctly by number.`),
+                        helpText: _(`Uses leading zeros to sort motions correctly by identifier.`),
                         validators: [Validators.min(1)]
                     },
                     {
@@ -560,7 +595,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     },
                     {
                         key: `motions_amendments_prefix`,
-                        label: _(`Prefix for the motion number for amendments`)
+                        label: _(`Prefix for the motion identifier of amendments`)
                     },
                     {
                         key: `motions_amendments_text_mode`,

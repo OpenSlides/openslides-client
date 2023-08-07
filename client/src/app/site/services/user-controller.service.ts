@@ -197,7 +197,8 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         const response = (await this.repo.sendInvitationEmails(users, meetingId).resolve()) as EmailSentResult[];
 
         const numEmails = response.filter(email => email.sent).length;
-        const noEmails = response.filter(email => !email.sent);
+        const noEmails = response.filter(email => !email.sent && email.type === `user_error`);
+        const notSent = response.filter(email => !email.sent);
         let responseMessage: string;
         if (numEmails === 0) {
             responseMessage = this.translate.instant(`No emails were send.`);
@@ -213,11 +214,11 @@ export class UserControllerService extends BaseController<ViewUser, User> {
 
             if (noEmails.length === 1) {
                 responseMessage += this.translate.instant(
-                    `The user %user% has no email, so the invitation email could not be send.`
+                    `The user %user% has no email, so the invitation email could not be sent.`
                 );
             } else {
                 responseMessage += this.translate.instant(
-                    `The users %user% have no email, so the invitation emails could not be send.`
+                    `The users %user% have no email, so the invitation emails could not be sent.`
                 );
             }
 
@@ -234,6 +235,12 @@ export class UserControllerService extends BaseController<ViewUser, User> {
                 userString = usernames.join(`, `);
             }
             responseMessage = responseMessage.replace(`%user%`, userString);
+        }
+
+        if (notSent > noEmails) {
+            responseMessage += this.translate.instant(
+                `Some mails could not be sent. There may be a problem communicating with the mail server, please contact your admin.`
+            );
         }
 
         return responseMessage;

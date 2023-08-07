@@ -33,7 +33,7 @@ export function getNodeByName(node: Node, searchName: string, last: boolean = fa
     }
 
     const element = <Element>node;
-    if (element.nodeName === searchName) {
+    if (element.nodeName.toUpperCase() === searchName.toUpperCase()) {
         return element;
     }
 
@@ -148,7 +148,7 @@ export function fragmentToHtml(fragment: DocumentFragment): string {
  */
 export function nodesToHtml(nodes: Element[]): string {
     const root = document.createElement(`div`);
-    nodes.forEach(node => {
+    nodes?.forEach(node => {
         root.appendChild(node);
     });
     return root.innerHTML;
@@ -408,7 +408,7 @@ export function htmlToUppercase(html: string): string {
         attributes = attributes.replace(
             /( [^"'=]*)(= *(["']).*?\3)?/gi,
             (_fullHtml: string, attr: string, content: string, _quotes: string) => {
-                return attr.toUpperCase() + content;
+                return attr.toUpperCase() + (content ?? ``);
             }
         );
 

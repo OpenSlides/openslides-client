@@ -39,7 +39,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             `receive_forwardings_from_committee_ids`,
             `organization_tag_ids`,
             `user_ids`,
-            { templateField: `user_$_management_level` }
+            { templateField: `user_$_management_level` },
+            `external_id`
         ]);
         return {
             ...super.getFieldsets(),
@@ -120,7 +121,8 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
             receive_forwardings_from_committee_ids:
                 committee.receive_forwardings_from_committee_ids === null
                     ? []
-                    : committee.receive_forwardings_from_committee_ids
+                    : committee.receive_forwardings_from_committee_ids,
+            external_id: committee.external_id
         };
     }
 }

@@ -8,7 +8,7 @@ import { FormatPipe } from 'ngx-date-fns';
 })
 export class LocalizedDatePipe extends FormatPipe implements PipeTransform {
     public override transform(value: any, dateFormat: string = `PPp`): any {
-        if (!value) {
+        if (!value && value !== 0) {
             return ``;
         }
 

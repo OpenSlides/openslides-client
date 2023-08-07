@@ -1,4 +1,5 @@
 import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
+import { Observable } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
 
@@ -8,6 +9,7 @@ import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
+import { ViewPointOfOrderCategory } from '../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
 import { ViewMediafile } from '../pages/mediafiles';
@@ -164,5 +166,7 @@ interface IMeetingRelations {
     template_for_organization: ViewOrganization;
     poll_countdown: ViewProjectorCountdown;
     list_of_speakers_countdown: ViewProjectorCountdown;
+    point_of_order_categories: ViewPointOfOrderCategory[];
+    point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
 }
 export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle, HasOrganizationTags {}

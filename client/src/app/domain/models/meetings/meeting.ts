@@ -1,4 +1,4 @@
-import { Id } from '../../definitions/key-types';
+import { Id, Ids } from '../../definitions/key-types';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
 import { BaseModel } from '../base/base-model';
@@ -31,6 +31,8 @@ export class Settings {
     public custom_translations!: {
         [original: string]: string;
     };
+
+    public point_of_order_category_ids!: Ids;
 
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
@@ -97,11 +99,13 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;
     public list_of_speakers_can_set_contribution_self!: boolean;
     public list_of_speakers_speaker_note_for_everyone!: boolean;
+    public list_of_speakers_closing_disables_point_of_order!: boolean;
 
     // Motions
     public motions_default_workflow_id!: Id; // workflow/default_workflow_meeting_id;
@@ -198,6 +202,9 @@ export class Settings {
     poll_default_onehundred_percent_base: PollPercentBase;
     poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
     poll_default_backend: PollBackendDurationType;
+
+    //SSO
+    public external_id!: string;
 }
 
 export class Meeting extends BaseModel<Meeting> {
@@ -280,6 +287,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     public static readonly REQUESTABLE_FIELDS: (keyof Meeting | { templateField: string })[] = [
         `id`,
+        `external_id`,
         `welcome_title`,
         `welcome_text`,
         `name`,
@@ -338,8 +346,10 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
         `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_enable_point_of_order_categories`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
+        `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_speaker_note_for_everyone`,
         `list_of_speakers_initially_closed`,
         `motions_default_workflow_id`,
@@ -424,6 +434,7 @@ export class Meeting extends BaseModel<Meeting> {
         `tag_ids`,
         `agenda_item_ids`,
         `list_of_speakers_ids`,
+        `point_of_order_category_ids`,
         `speaker_ids`,
         `topic_ids`,
         `group_ids`,

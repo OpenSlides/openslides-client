@@ -28,7 +28,12 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
     public create(
         listOfSpeakers: ViewListOfSpeakers,
         userId: Id,
-        optionalInformation?: { pointOfOrder?: boolean; note?: UnsafeHtml; speechState?: SpeechState }
+        optionalInformation?: {
+            pointOfOrder?: boolean;
+            note?: UnsafeHtml;
+            speechState?: SpeechState;
+            point_of_order_category_id?: Id;
+        }
     ): Promise<Identifiable> {
         return this.repo.create(listOfSpeakers, userId, optionalInformation);
     }
