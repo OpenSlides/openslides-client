@@ -43,7 +43,7 @@ export class GlobalSearchComponent implements OnDestroy {
         this.filterChangeSubscription.unsubscribe();
     }
 
-    public async searchChange() {
+    public async searchChange(): Promise<void> {
         this.results = await this.globalSearchService.searchChange(this.searchTerm, Object.keys(this.availableFilters));
         this.updateFilteredResults();
         this.cd.markForCheck();
