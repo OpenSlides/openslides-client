@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/global-search.service';
+
 @Component({
     selector: `os-global-search`,
     templateUrl: `./global-search.component.html`,
@@ -10,6 +11,7 @@ import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/gl
 })
 export class GlobalSearchComponent implements OnDestroy {
     public searchTerm = ``;
+    public noResults = false;
 
     public readonly availableFilters = {
         committee: `Committees`,
@@ -41,7 +43,7 @@ export class GlobalSearchComponent implements OnDestroy {
         this.filterChangeSubscription.unsubscribe();
     }
 
-    public async searchChange(): Promise<void> {
+    public async searchChange() {
         this.results = await this.globalSearchService.searchChange(this.searchTerm, Object.keys(this.availableFilters));
         this.updateFilteredResults();
         this.cd.markForCheck();
@@ -54,5 +56,7 @@ export class GlobalSearchComponent implements OnDestroy {
                 this.filteredResults[collection] = this.results[collection];
             }
         }
+
+        this.noResults = !Object.keys(this.filteredResults).length;
     }
 }
