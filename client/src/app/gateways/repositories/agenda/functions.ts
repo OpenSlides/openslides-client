@@ -13,6 +13,6 @@ export function createAgendaItem(model: any): any {
         agenda_parent_id: model.agenda_parent_id,
         agenda_type: model.agenda_type,
         agenda_weight: model.agenda_weight,
-        tag_ids: model.tag_ids
+        agenda_tag_ids: model.tag_ids
     };
 }

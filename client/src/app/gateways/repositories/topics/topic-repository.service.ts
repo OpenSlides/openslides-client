@@ -30,8 +30,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             id: viewModel.id,
             text: update.text,
             title: update.title,
-            attachment_ids: update.attachment_ids || [],
-            tag_ids: update.tag_ids || []
+            attachment_ids: update.attachment_ids || []
         };
         return this.sendActionToBackend(TopicAction.UPDATE, payload);
     }
