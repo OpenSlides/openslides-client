@@ -9,6 +9,7 @@ import { PointOfOrderDialogModule } from '../point-of-order-dialog.module';
 
 interface PointOfOrderResult {
     note: string;
+    point_of_order_category_id: number;
 }
 
 @Injectable({
@@ -23,6 +24,10 @@ export class PointOfOrderDialogService extends BaseDialogService<
         data: ViewListOfSpeakers
     ): Promise<MatDialogRef<PointOfOrderDialogComponent, PointOfOrderResult>> {
         const module = await import(`../point-of-order-dialog.module`).then(m => m.PointOfOrderDialogModule);
-        return this.dialog.open(module.getComponent(), { data, ...infoDialogSettings, disableClose: false });
+        return this.dialog.open(module.getComponent(), {
+            data,
+            ...infoDialogSettings,
+            disableClose: false
+        });
     }
 }

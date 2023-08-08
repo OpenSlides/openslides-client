@@ -11,6 +11,13 @@ table {
         position: relative;
     }
 
+    .has-help-text {
+        cursor: help;
+        &:hover {
+            color: #888;
+        }
+    }
+
     .clickable-cell {
         display: flex;
         cursor: pointer;

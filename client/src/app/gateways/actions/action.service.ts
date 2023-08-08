@@ -54,11 +54,11 @@ export class ActionService {
      * @deprecated this does not offer the handle_separately route option, which is vital for certain types of bulk requests, it's better to use `createFromArray` instead.
      */
     public create<T>(...requests: ActionRequest[]): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r) as any, ...requests);
+        return new Action<T>(r => this.sendRequests<T>(r), requests);
     }
 
     public createFromArray<T>(requests: ActionRequest[], handle_separately = false): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r, handle_separately) as any, ...requests);
+        return new Action<T>(r => this.sendRequests<T>(r, handle_separately), requests);
     }
 
     private isAllowed(): boolean {

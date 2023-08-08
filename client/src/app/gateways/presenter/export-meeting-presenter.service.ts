@@ -9,8 +9,10 @@ interface ExportMeetingPresenterPayload {
 }
 
 interface JsonBlob {
-    [key: string]: JsonBlob;
+    [key: string]: JsonBlobValueType | JsonBlobValueType[] | null;
 }
+
+type JsonBlobValueType = JsonBlob | string | number | boolean;
 
 @Injectable({
     providedIn: `root`

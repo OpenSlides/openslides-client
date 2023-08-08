@@ -30,7 +30,6 @@ export class Topic extends BaseModel<Topic> {
         `attachment_ids`,
         `agenda_item_id`,
         `list_of_speakers_id`,
-        `tag_ids`,
         `meeting_id`
     ];
 }

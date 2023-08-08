@@ -6,6 +6,7 @@ import {
     MOTION_PDF_OPTIONS,
     PERSONAL_NOTE_ID
 } from 'src/app/domain/models/motions/motions.constants';
+import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
 import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
 import { PollKeyVerbosePipe, PollParseNumberPipe } from 'src/app/site/pages/meetings/modules/poll/pipes';
 import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
@@ -388,22 +389,24 @@ export class MotionPdfService {
                             this.pollKeyVerbose.transform(votingResult.votingOption)
                         );
                         const value = votingResult.value[0];
-                        const resultValue = this.parsePollNumber.transform(value.amount!);
-                        column1.push(`${votingOption}:`);
-                        if (value.showPercent) {
-                            const resultInPercent = this.motionPollService.getVoteValueInPercent(value.amount!, {
-                                poll
-                            });
-                            // hard check for "null" since 0 is a valid number in this case
-                            if (resultInPercent !== null) {
-                                column2.push(`(${resultInPercent})`);
+                        if (value.amount !== VOTE_UNDOCUMENTED) {
+                            const resultValue = this.parsePollNumber.transform(value.amount!);
+                            column1.push(`${votingOption}:`);
+                            if (value.showPercent) {
+                                const resultInPercent = this.motionPollService.getVoteValueInPercent(value.amount!, {
+                                    poll
+                                });
+                                // hard check for "null" since 0 is a valid number in this case
+                                if (resultInPercent !== null) {
+                                    column2.push(`(${resultInPercent})`);
+                                } else {
+                                    column2.push(``);
+                                }
                             } else {
                                 column2.push(``);
                             }
-                        } else {
-                            column2.push(``);
+                            column3.push(resultValue);
                         }
-                        column3.push(resultValue);
                     });
                     metaTableBody.push([
                         {

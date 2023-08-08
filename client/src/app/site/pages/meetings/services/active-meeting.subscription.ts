@@ -1,7 +1,7 @@
 import 'src/app/site/services/model-request-builder';
 
 import { Id } from 'src/app/domain/definitions/key-types';
-import { MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
 import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 
@@ -53,6 +53,10 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                     idField: `poll_ids`,
                     follow: [{ idField: `content_object_id`, fieldset: [`title`] }],
                     fieldset: [`title`, `state`, `entitled_group_ids`]
+                },
+                {
+                    idField: `point_of_order_category_ids`,
+                    fieldset: FULL_FIELDSET
                 },
                 {
                     idField: `group_ids`,
