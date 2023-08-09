@@ -83,7 +83,7 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public get isTemplate(): boolean {
-        return this.is_template || !!this.template_for_organization_id;
+        return !!this.template_for_organization_id;
     }
 
     public get relatedTime(): RelatedTime {
