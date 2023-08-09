@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, map, Observable, of, Subscription, switchAll } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { User } from 'src/app/domain/models/users/user';
@@ -97,6 +98,24 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public override getViewModelListObservable(): Observable<ViewUser[]> {
         return this._participantListSubject;
+    }
+
+    public override getViewModelObservable(id: Id): Observable<ViewUser | null> {
+        return this.repo.getViewModelObservable(id).pipe(
+            map(user => {
+                if (!user?.meeting_users) {
+                    return of(user);
+                }
+
+                return this.meetingUserRepo
+                    .getViewModelObservable(user.meeting_users.find(u => u.meeting_id === this.activeMeetingId).id)
+                    .pipe(
+                        filter(u => !!u),
+                        map(u => u.user)
+                    );
+            }),
+            switchAll()
+        );
     }
 
     public create(...participants: Partial<User & MeetingUser>[]): Promise<Identifiable[]> {
