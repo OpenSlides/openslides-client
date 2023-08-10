@@ -26,7 +26,7 @@ export class MotionSubmitterRepositoryService extends BaseMeetingRelatedReposito
 
     public create(motion: Identifiable, ...meetingUsers: Identifiable[]): Action<Identifiable[]> {
         const payload = meetingUsers.map(user => ({
-            user_id: user.id,
+            meeting_user_id: user.id,
             motion_id: motion.id
         }));
         return this.createAction(MotionSubmitterAction.CREATE, payload);
