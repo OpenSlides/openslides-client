@@ -47,10 +47,7 @@
                             <b>{{ 'Submitters' | translate }}:</b>
                         </td>
                         <td>
-                            <span *ngFor="let submitter of submitters; let last = last">
-                                <span>{{ submitter }}</span>
-                                <span *ngIf="!last">,</span>
-                            </span>
+                            <os-comma-separated-listing [list]="submitters"></os-comma-separated-listing>
                         </td>
                     </tr>
                 </ng-container>

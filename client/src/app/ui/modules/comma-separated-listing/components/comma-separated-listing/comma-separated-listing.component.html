@@ -1,12 +1,7 @@
-<div *ngFor="let item of list; let isLast = last">
+<span *ngFor="let item of list; let isLast = last">
     <span *ngIf="templateRef">
-        <span>
-            <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
-        </span>
-        <span *ngIf="!isLast">,&ensp;</span>
+        <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
     </span>
-    <span *ngIf="!templateRef">
-        {{ item }}
-        <span *ngIf="!isLast">,&ensp;</span>
-    </span>
-</div>
+    <span *ngIf="!templateRef">{{ item }}</span>
+    <span *ngIf="!isLast">,&ensp;</span>
+</span>
