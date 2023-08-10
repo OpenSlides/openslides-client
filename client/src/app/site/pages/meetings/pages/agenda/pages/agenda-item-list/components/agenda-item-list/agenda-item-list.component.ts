@@ -398,7 +398,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         this.modelRequestService
             .fetch(getTopicDuplicateSubscriptionConfig(...filteredItems.map(el => el.content_object.id)))
             .then(() => {
-                this.topicRepo.duplicateTopics(...filteredItems);
+                this.topicRepo.duplicateTopics(...filteredItems.map(item => this.repo.getViewModel(item.id)));
             });
     }
 
