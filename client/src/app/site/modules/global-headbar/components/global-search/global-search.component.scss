@@ -1,3 +1,14 @@
+.search-form-container {
+    width: 800px;
+    max-width: 100%;
+}
+
+.search-results {
+    width: 848px;
+    max-width: calc(100% + 48px);
+    margin: 0 -24px -24px -24px;
+}
+
 .search-field {
     width: 100%;
 }
@@ -20,6 +31,7 @@
         padding: 1em 24px;
         cursor: pointer;
         text-decoration: none;
+        color: inherit;
         > :first-of-type {
             margin-top: 0;
         }
@@ -33,12 +45,16 @@
     }
 }
 
-.filters-list {
-    list-style: none;
+.filter-section {
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    > li {
-        padding: 0 12px;
+    margin-top: 12px;
+    justify-content: space-between;
+    .filter {
+        padding-right: 24px;
+        &:last-of-type {
+            padding-right: 0;
+        }
     }
 }

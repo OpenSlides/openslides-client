@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Fqid } from 'src/app/domain/definitions/key-types';
+import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { HttpService } from 'src/app/gateways/http.service';
 import { collectionFromFqid, idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 
@@ -20,13 +20,19 @@ export class GlobalSearchService {
 
     public async searchChange(
         searchTerm: string,
-        collections: string[] = []
+        collections: string[] = [],
+        meeting?: Id
     ): Promise<{ [key: string]: GlobalSearchEntry[] }> {
-        const rawResults: { [fqid: string]: any } = await this.http.get(`/system/search`, null, { q: searchTerm });
+        const params: { q: string; m?: string } = { q: searchTerm };
+        if (meeting) {
+            params.m = meeting.toString();
+        }
+
+        const rawResults: { [fqid: string]: any } = await this.http.get(`/system/search`, null, params);
         let results = Object.keys(rawResults)
             .filter(fqid => {
                 const collection = collectionFromFqid(fqid);
-                return collections.includes(collection);
+                return collections.includes(collection) || !collections.length;
             })
             .map(fqid => this.getResult(fqid, rawResults[fqid]));
 

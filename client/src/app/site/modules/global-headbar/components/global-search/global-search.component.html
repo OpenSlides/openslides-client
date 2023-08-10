@@ -1,4 +1,4 @@
-<div>
+<div class="search-form-container">
     <mat-form-field class="search-field" appearance="outline" floatLabel="never">
         <input
             matInput
@@ -12,12 +12,24 @@
         </button>
     </mat-form-field>
 
-    <section class="filter-section" [formGroup]="currentFilters">
-        <ul class="filters-list">
-            <li *ngFor="let filter of availableFilters | keyvalue">
-                <mat-checkbox formControlName="{{ filter.key }}">{{ filter.value }}</mat-checkbox>
-            </li>
-        </ul>
+    <section class="filters" [formGroup]="currentFilters">
+        <mat-radio-group class="filter-section" formControlName="meetingFilter">
+            <mat-radio-button *ngIf="inMeeting" class="filter" value="current">{{ 'This meeting' }}</mat-radio-button>
+            <mat-radio-button class="filter" value="all">{{ 'All meetings' }}</mat-radio-button>
+            <mat-radio-button class="filter" value="meetings">{{ 'Meeting title' }}</mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
+            <ng-container *ngFor="let filter of availableFilters | keyvalue">
+                <mat-checkbox
+                    *ngIf="currentlyAvailableFilters.includes(filter.key)"
+                    formControlName="{{ filter.key }}"
+                    class="filter"
+                >
+                    {{ filter.value }}
+                </mat-checkbox>
+            </ng-container>
+        </div>
     </section>
 </div>
 
@@ -38,7 +50,7 @@
             >
                 <h3 *ngIf="result.title">{{ result.title }}</h3>
             </a>
-            <router-link
+            <a
                 *ngIf="!result.fqid.startsWith('mediafile')"
                 class="search-results-entry"
                 [routerLink]="result.url"
@@ -46,7 +58,7 @@
             >
                 <h3 *ngIf="result.title">{{ result.title }}</h3>
                 <p *ngIf="result.text" [innerHtml]="result.text"></p>
-            </router-link>
+            </a>
         </ng-container>
     </section>
     <h3 *ngIf="noResults" class="search-no-results">{{ 'No results found' | translate }}</h3>
