@@ -66,10 +66,9 @@
                         <b>{{ 'Referring motions' | translate }}:</b>
                     </td>
                     <td>
-                        <span *ngFor="let titleInformation of referencingMotions; let last = last">
-                            <span>{{ getNumberOrTitle(titleInformation) }}</span>
-                            <span *ngIf="!last">,</span>
-                        </span>
+                        <os-comma-separated-listing [list]="referencingMotions">
+                            <ng-template let-information>{{ getNumberOrTitle(information) }}</ng-template>
+                        </os-comma-separated-listing>
                     </td>
                 </tr>
             </table>
