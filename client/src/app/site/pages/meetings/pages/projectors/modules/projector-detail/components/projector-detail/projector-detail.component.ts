@@ -165,7 +165,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      */
     public async onDeleteProjectorButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this projector?`);
-        if (this.projector && (await this.promptService.open(title, this.projector.name))) {
+        const content = this.projector.name;
+        if (this.projector && (await this.promptService.open(title, content))) {
             this.repo.delete(this.projector);
         }
     }

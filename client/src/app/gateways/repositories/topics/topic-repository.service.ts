@@ -68,7 +68,8 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             agenda_parent_id: topicAgendaItem.parent_id,
             agenda_weight: topicAgendaItem.weight,
             agenda_comment: topicAgendaItem.comment,
-            agenda_duration: topicAgendaItem.duration
+            agenda_duration: topicAgendaItem.duration,
+            tag_ids: topicAgendaItem.tag_ids
         };
     }
 
