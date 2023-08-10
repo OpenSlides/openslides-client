@@ -19,7 +19,6 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `start_time`,
                 `end_time`,
                 `is_active_in_organization_id`,
-                `is_archived_organization_id`,
                 `template_for_organization_id`,
                 `user_ids`,
                 `description`,

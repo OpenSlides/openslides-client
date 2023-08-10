@@ -1,6 +1,6 @@
 import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { ViewMotion, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
@@ -19,7 +19,6 @@ export class ViewMotionWorkflow extends BaseViewModel<MotionWorkflow> {
 interface IWorkflowRelations {
     states: ViewMotionState[];
     first_state: ViewMotionState;
-    motions: ViewMotion[];
     default_workflow_meeting?: ViewMeeting;
     default_amendment_workflow_meeting?: ViewMeeting;
     default_statute_amendment_workflow_meeting?: ViewMeeting;
