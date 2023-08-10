@@ -134,7 +134,8 @@ export class ChatGroupDetailComponent extends BaseMeetingComponent implements On
 
     public async clearChatGroup(chatGroup: ViewChatGroup): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to clear all messages in this chat?`);
-        if (await this.promptService.open(title, chatGroup.name)) {
+        const content = chatGroup.name;
+        if (await this.promptService.open(title, content)) {
             await this.repo.clear(chatGroup).catch(this.raiseError);
             this.triggerUpdateView();
         }
