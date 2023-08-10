@@ -4,7 +4,7 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
  */
 export type InfoToExport =
     | 'submitters'
-    | 'supporters'
+    | 'supporter_users'
     | 'state'
     | 'recommendation'
     | 'category'
