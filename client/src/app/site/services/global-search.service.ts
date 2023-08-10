@@ -69,6 +69,9 @@ export class GlobalSearchService {
             case `assignment`:
                 url = `/${content.meeting_id}/assignments/${id}`;
                 break;
+            case `topic`:
+                url = `/${content.meeting_id}/agenda/topics/${id}`;
+                break;
             case `mediafile`:
                 url = `/system/media/get/${id}`;
                 break;
