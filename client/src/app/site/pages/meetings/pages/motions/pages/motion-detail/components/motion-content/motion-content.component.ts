@@ -138,7 +138,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
     }
 
     public set paragraphBasedAmendmentContent(content: {
-        amendment_paragraph_$: { [paragraph_number: number]: UnsafeHtml };
+        amendment_paragraphs: { [paragraph_number: number]: UnsafeHtml };
     }) {
         this._paragraphBasedAmendmentContent = content;
         this.propagateChanges();
@@ -488,7 +488,7 @@ export class MotionContentComponent extends BaseMotionDetailChildComponent {
             attachment_ids: [[]],
             agenda_parent_id: [],
             submitter_ids: [[]],
-            supporter_ids: [[]],
+            supporter_meeting_user_ids: [[]],
             workflow_id: [],
             tag_ids: [[]],
             statute_amendment: [``], // Internal value for the checkbox, not saved to the model

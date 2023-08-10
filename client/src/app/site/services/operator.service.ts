@@ -25,18 +25,13 @@ import { SimplifiedModelRequest } from './model-request-builder/model-request-bu
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
 function getUserCML(user: ViewUser): { [id: number]: string } | null {
-    if (!user.committee_$_management_level) {
+    if (!user.committee_management_ids) {
         return null; // Explicit null to distinguish from undefined
     }
 
     const committeeManagementLevel: { [committeeId: number]: CML } = {};
-    for (const replacement of user.committee_$_management_level) {
-        if (!user.committee_management_level_ids(replacement)) {
-            continue;
-        }
-        for (const committeeId of user.committee_management_level_ids(replacement)) {
-            committeeManagementLevel[+committeeId] = replacement;
-        }
+    for (const id of user.committee_management_ids) {
+        committeeManagementLevel[id] = CML.can_manage;
     }
     return committeeManagementLevel;
 }
@@ -78,7 +73,7 @@ export class OperatorService {
     }
 
     private get isCommitteeManager(): boolean {
-        return (this.user.committee_$_management_level || []).includes(CML.can_manage);
+        return !!(this.user.committee_management_ids || []).length;
     }
 
     public get isAnyManager(): boolean {
@@ -330,7 +325,7 @@ export class OperatorService {
         if (user.organization_management_level !== undefined || this._OML === undefined) {
             this._OML = user.organization_management_level || null;
         }
-        this._meetingIds = (user.group_$_ids || []).map(idString => parseInt(idString, 10));
+        this._meetingIds = user.ensuredMeetingIds;
         this._CML = getUserCML(user);
     }
 
@@ -665,8 +660,14 @@ export class OperatorService {
                 fieldset: `all`,
                 follow: [
                     {
-                        idField: { templateIdField: `vote_delegations_$_from_ids`, templateValue: `` },
-                        fieldset: [{ templateField: `group_$_ids` }, ...UserFieldsets.FullNameSubscription.fieldset]
+                        idField: `meeting_user_ids`,
+                        fieldset: `all`,
+                        follow: [
+                            {
+                                idField: `vote_delegations_from_ids`,
+                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                            }
+                        ]
                     }
                 ]
             };

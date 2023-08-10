@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { User } from 'src/app/domain/models/users/user';
+import { GeneralUser } from 'src/app/gateways/repositories/users';
 import { BaseUserImportListComponent } from 'src/app/site/base/base-user-import-list.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 
@@ -31,9 +31,13 @@ export class ParticipantImportListComponent extends BaseUserImportListComponent 
      * `const type = typeof User[property];`
      * always returns undefined
      */
-    protected guessType(userProperty: keyof User): 'string' | 'number' | 'boolean' {
-        const numberProperties: (keyof User)[] = [`id`, `vote_weight`];
-        const booleanProperties: (keyof User)[] = [`is_present_in_meeting_ids`, `is_physical_person`, `is_active`];
+    protected guessType(userProperty: keyof GeneralUser): 'string' | 'number' | 'boolean' {
+        const numberProperties: (keyof GeneralUser)[] = [`id`, `vote_weight`];
+        const booleanProperties: (keyof GeneralUser)[] = [
+            `is_present_in_meeting_ids`,
+            `is_physical_person`,
+            `is_active`
+        ];
         if (numberProperties.includes(userProperty)) {
             return `number`;
         } else if (booleanProperties.includes(userProperty)) {

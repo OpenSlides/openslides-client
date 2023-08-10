@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/domain/models/users/user';
+import { GeneralUser } from 'src/app/gateways/repositories/users';
 import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
 import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
@@ -34,11 +34,11 @@ export class AccountImportService extends BaseUserImportService {
         this.exporter.downloadCsvImportExample();
     }
 
-    protected getConfig(): ImportConfig<User> {
+    protected getConfig(): ImportConfig<GeneralUser> {
         return {
             modelHeadersAndVerboseNames: accountHeadersAndVerboseNames,
             verboseNameFn: plural => (plural ? `Accounts` : `Account`),
-            getDuplicatesFn: (entry: Partial<User>) =>
+            getDuplicatesFn: (entry: Partial<GeneralUser>) =>
                 this.repo.getViewModelList().filter(user => user.username === entry.username),
             createFn: (entries: any[]) => this.repo.create(...entries)
         };

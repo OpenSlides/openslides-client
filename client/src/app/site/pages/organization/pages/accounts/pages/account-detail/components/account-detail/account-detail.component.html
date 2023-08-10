@@ -93,7 +93,7 @@
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field>
                     <os-repo-search-selector
-                        formControlName="committee_$_management_level"
+                        formControlName="committee_management_ids"
                         [multiple]="true"
                         placeholder="{{ 'Committee admin' | translate }}"
                         [repo]="committeeController"

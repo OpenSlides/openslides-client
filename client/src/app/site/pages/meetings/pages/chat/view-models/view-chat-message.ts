@@ -1,10 +1,9 @@
 import { ChatMessage } from '../../../../../../domain/models/chat/chat-message';
-import { BaseViewModel } from '../../../../../base/base-view-model';
+import { BaseHasMeetingUserViewModel } from '../../../base/base-has-meeting-user-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
-import { ViewUser } from '../../../view-models/view-user';
 import { ViewChatGroup } from './view-chat-group';
 
-export class ViewChatMessage extends BaseViewModel<ChatMessage> {
+export class ViewChatMessage extends BaseHasMeetingUserViewModel<ChatMessage> {
     public static readonly COLLECTION = ChatMessage.COLLECTION;
 
     public getCreationDate(): Date {
@@ -13,8 +12,6 @@ export class ViewChatMessage extends BaseViewModel<ChatMessage> {
 }
 
 export interface ViewChatMessage extends ChatMessage, ViewChatMessageRelations {}
-
 interface ViewChatMessageRelations extends HasMeeting {
-    user: ViewUser;
     chat_group: ViewChatGroup;
 }

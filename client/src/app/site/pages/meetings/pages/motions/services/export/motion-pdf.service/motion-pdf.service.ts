@@ -278,8 +278,8 @@ export class MotionPdfService {
         // supporters
         if (!infoToExport || infoToExport.includes(`supporters`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
-            if (minSupporters && motion.supporters.length > 0) {
-                const supporters = motion.supporters.map(supporter => supporter.full_name).join(`, `);
+            if (minSupporters && motion.supporter_users.length > 0) {
+                const supporters = motion.supporter_users.map(supporter => supporter.full_name).join(`, `);
 
                 metaTableBody.push([
                     {

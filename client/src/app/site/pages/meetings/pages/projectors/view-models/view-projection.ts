@@ -1,6 +1,6 @@
 import { HasProjectorTitle, ProjectorTitle } from '../../../../../../domain/interfaces/has-projector-title';
 import { Projection } from '../../../../../../domain/models/projector/projection';
-import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import { ProjectiondefaultValue } from '../../../../../../domain/models/projector/projection-default';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ProjectionBuildDescriptor } from '../../../view-models/projection-build-descriptor';
@@ -35,7 +35,7 @@ export class ViewProjection extends BaseProjectableViewModel<Projection> {
         return this.getProjectorTitle().subtitle || ``;
     }
 
-    public getProjectiondefault(): Projectiondefault | null {
+    public getProjectiondefault(): ProjectiondefaultValue | null {
         if (this.content_object?.getProjectiondefault) {
             return this.content_object?.getProjectiondefault();
         }

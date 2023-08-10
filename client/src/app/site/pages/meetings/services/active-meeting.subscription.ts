@@ -3,6 +3,7 @@ import 'src/app/site/services/model-request-builder';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
 import { UserFieldsets } from 'src/app/domain/fieldsets/user';
+import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 
 import { ViewMeeting } from '../view-models/view-meeting';
 
@@ -25,19 +26,28 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 `location`,
                 `language`,
                 `organization_tag_ids`,
-                `present_user_ids`,
                 `welcome_title`,
                 `welcome_text`,
                 `enable_anonymous`,
-                { templateField: `logo_$_id` },
-                { templateField: `font_$_id` },
+                ...MEETING_MEDIAFILE_USAGE_ID_KEYS,
                 ...settingsKeys
             ],
             follow: [
                 { idField: `chat_group_ids` /*, fieldset: [`chat_message_ids`]*/ },
                 {
                     idField: `chat_message_ids`,
-                    follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
+                    follow: [
+                        {
+                            idField: `meeting_user_id`,
+                            fieldset: [],
+                            follow: [
+                                {
+                                    idField: `user_id`,
+                                    ...UserFieldsets.FullNameSubscription
+                                }
+                            ]
+                        }
+                    ]
                 }, // TODO: Remove and count unread messages by chat_group_ids/chat_message_ids
                 {
                     idField: `poll_ids`,
@@ -82,7 +92,13 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                                             follow: [
                                                 {
                                                     idField: `speaker_ids`,
-                                                    fieldset: [`user_id`, `begin_time`, `end_time`, `weight`]
+                                                    fieldset: [`begin_time`, `end_time`, `weight`],
+                                                    follow: [
+                                                        {
+                                                            idField: `meeting_user_id`,
+                                                            fieldset: [`user_id`]
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         }

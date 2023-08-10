@@ -1,7 +1,10 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-import { Projectiondefault } from '../../../../../../domain/models/projector/projection-default';
+import {
+    PROJECTIONDEFAULT,
+    ProjectiondefaultValue
+} from '../../../../../../domain/models/projector/projection-default';
 import { ProjectorCountdown } from '../../../../../../domain/models/projector/projector-countdown';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
@@ -40,8 +43,8 @@ export class ViewProjectorCountdown extends BaseProjectableViewModel<ProjectorCo
         };
     }
 
-    public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.projectorCountdown;
+    public getProjectiondefault(): ProjectiondefaultValue {
+        return PROJECTIONDEFAULT.projectorCountdown;
     }
 }
 interface ProjectorCountdownRelations {

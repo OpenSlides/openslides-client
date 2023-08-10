@@ -176,7 +176,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
             tag_ids: this.motion.tag_ids,
             motion_block_id: this.motion.block_id,
             lead_motion_id: this.motion.id,
-            amendment_paragraph_$: amendmentParagraphs,
+            amendment_paragraphs: amendmentParagraphs,
             workflow_id: this.meetingSettingsService.instant(`motions_default_amendment_workflow_id`)
         };
 

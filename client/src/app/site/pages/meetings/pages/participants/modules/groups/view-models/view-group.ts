@@ -1,16 +1,16 @@
+import { BaseHasMeetingUsersViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+
 import { Permission } from '../../../../../../../../domain/definitions/permission';
 import { permissionChildren } from '../../../../../../../../domain/definitions/permission-relations';
 import { Group } from '../../../../../../../../domain/models/users/group';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../../../view-models/view-meeting';
-import { ViewUser } from '../../../../../view-models/view-user';
 import { ViewChatGroup } from '../../../../chat/view-models/view-chat-group';
 import { ViewMediafile } from '../../../../mediafiles/view-models/view-mediafile';
 import { ViewMotionCommentSection } from '../../../../motions/modules/comments/view-models/view-motion-comment-section';
 import { ViewPoll } from '../../../../polls/view-models/view-poll';
 
-export class ViewGroup extends BaseViewModel<Group> {
+export class ViewGroup extends BaseHasMeetingUsersViewModel<Group> {
     public static COLLECTION = Group.COLLECTION;
 
     public get group(): Group {
@@ -24,7 +24,6 @@ export class ViewGroup extends BaseViewModel<Group> {
     }
 }
 interface IGroupRelations {
-    users: ViewUser[];
     default_group_for_meeting: ViewMeeting;
     admin_group_for_meeting: ViewMeeting;
     mediafile_access_groups: ViewMediafile[];

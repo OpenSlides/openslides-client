@@ -12,7 +12,7 @@ import {
     VOTE_MAJORITY
 } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
 import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
@@ -90,8 +90,8 @@ export class ViewPoll<C extends PollContentObject = any>
         return this.isStarted;
     }
 
-    public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.poll;
+    public getProjectiondefault(): ProjectiondefaultValue {
+        return PROJECTIONDEFAULT.poll;
     }
 
     public override getDetailStateUrl(): string {
@@ -122,7 +122,7 @@ export class ViewPoll<C extends PollContentObject = any>
     public getSlide(): ProjectionBuildDescriptor {
         return {
             content_object_id: this.content_object_id,
-            projectionDefault: Projectiondefault.poll,
+            projectionDefault: PROJECTIONDEFAULT.poll,
             getDialogTitle: this.getTitle
         };
     }

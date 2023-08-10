@@ -4,7 +4,7 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE = `https://raw.githubusercontent.com/OpenSlides/openslides-backend/main/global/meta/models.yml`;
+const SOURCE = `https://github.com/OpenSlides/openslides-backend/raw/feature/remove-template-fields/global/meta/models.yml`;
 
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 
@@ -81,19 +81,11 @@ function snakeToPascal(input: string) {
                 isReadonly: true,
                 scope: Scope.Public,
                 name: `REQUESTABLE_FIELDS`,
-                type: `(keyof ${classNode.getName()} | { templateField: string })[]`
+                type: `keyof ${classNode.getName()}[]`
             });
         }
-        defaultFieldsetProp.setInitializer(
-            `[${fieldset
-                .map((f: string) => {
-                    if (f.indexOf(`$`) !== -1) {
-                        return `{ templateField: \`${f}\`}`;
-                    }
-                    return `\`${f}\``;
-                })
-                .join(`, `)}]`
-        );
+        defaultFieldsetProp.setInitializer(`[${fieldset.map((f: string) => `\`${f}\``).join(`, `)}]`);
+        defaultFieldsetProp.setType(`(keyof ${classNode.getName()})[]`);
         await tsFile.save();
     }
 })();

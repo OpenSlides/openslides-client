@@ -1,5 +1,5 @@
 import { Fqid } from '../../../../domain/definitions/key-types';
-import { Projectiondefault } from '../../../../domain/models/projector/projection-default';
+import { ProjectiondefaultValue } from '../../../../domain/models/projector/projection-default';
 import { SlideOptions } from './slide-options';
 
 export function isProjectionBuildDescriptor(obj: any): obj is ProjectionBuildDescriptor {
@@ -12,7 +12,7 @@ export interface ProjectionBuildDescriptor {
     stable?: boolean;
     type?: string;
     slideOptions?: SlideOptions;
-    projectionDefault: Projectiondefault | null;
+    projectionDefault: ProjectiondefaultValue | null;
 
     /**
      * The title to show in the projection dialog

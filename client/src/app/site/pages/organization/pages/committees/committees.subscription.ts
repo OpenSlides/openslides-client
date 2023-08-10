@@ -23,7 +23,6 @@ export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = (
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 
 export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
-    hideWhenDestroyed: true,
     modelRequest: {
         viewModelCtor: ViewCommittee,
         ids: [id],
@@ -32,7 +31,7 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
             {
                 idField: `user_ids`,
                 fieldset: `accountList`,
-                additionalFields: [{ templateField: `group_$_ids` }]
+                follow: [{ idField: `meeting_user_ids`, fieldset: `groups` }]
             }
         ]
     },

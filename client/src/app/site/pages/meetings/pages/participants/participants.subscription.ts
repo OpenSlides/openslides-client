@@ -17,17 +17,25 @@ export const getParticipantVoteInfoSubscriptionConfig: SubscriptionConfigGenerat
         ids: [id],
         follow: [
             {
-                idField: `user_ids`,
-                fieldset: [
-                    `default_vote_weight`,
-                    `is_physical_person`,
-                    `is_active`,
-                    `meeting_ids`,
-                    { templateField: `vote_delegated_$_to_id` },
-                    { templateField: `vote_delegations_$_from_ids` },
-                    { templateField: `vote_weight_$` },
-                    { templateField: `group_$_ids` },
-                    `is_present_in_meeting_ids`
+                idField: `meeting_user_ids`,
+                fieldset: [`group_ids`, `vote_delegations_from_ids`, `vote_weight`, `meeting_id`],
+                follow: [
+                    {
+                        idField: `user_id`,
+                        fieldset: [
+                            `default_vote_weight`,
+                            `is_physical_person`,
+                            `is_active`,
+                            `meeting_ids`,
+                            `meeting_user_ids`,
+                            `is_present_in_meeting_ids`
+                        ]
+                    },
+                    {
+                        idField: `vote_delegated_to_id`,
+                        follow: [{ idField: `user_id`, fieldset: [`is_present_in_meeting_ids`, `meeting_user_ids`] }],
+                        fieldset: [`meeting_id`]
+                    }
                 ]
             }
         ]
@@ -40,7 +48,12 @@ export const getParticipantIsPresentSubscriptionConfig: SubscriptionConfigGenera
         viewModelCtor: ViewMeeting,
         fieldset: [],
         ids: [id],
-        follow: [{ idField: `user_ids`, additionalFields: [`is_present_in_meeting_ids`] }]
+        follow: [
+            {
+                idField: `meeting_user_ids`,
+                follow: [{ idField: `user_id`, additionalFields: [`is_present_in_meeting_ids`] }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_IS_PRESENT_LIST_SUBSCRIPTION
 });
@@ -49,7 +62,13 @@ export const getParticipantListSubscriptionConfig: SubscriptionConfigGenerator =
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `user_ids`, fieldset: `participantList` }]
+        follow: [
+            {
+                idField: `meeting_user_ids`,
+                fieldset: `participantListMinimal`,
+                follow: [{ idField: `user_id`, fieldset: `participantList` }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION
 });
@@ -58,7 +77,13 @@ export const getParticipantMinimalSubscriptionConfig: SubscriptionConfigGenerato
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [{ idField: `user_ids`, fieldset: `participantListMinimal` }]
+        follow: [
+            {
+                idField: `meeting_user_ids`,
+                fieldset: `participantListMinimal`,
+                follow: [{ idField: `user_id`, fieldset: `participantListMinimal` }]
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 });
@@ -69,7 +94,13 @@ export const getParticipantDetailSubscription: SubscriptionConfigGenerator = (id
     modelRequest: {
         viewModelCtor: ViewUser,
         ids: [id],
-        fieldset: DEFAULT_FIELDSET
+        fieldset: DEFAULT_FIELDSET,
+        follow: [
+            {
+                idField: `meeting_user_ids`,
+                fieldset: DEFAULT_FIELDSET
+            }
+        ]
     },
     subscriptionName: PARTICIPANT_DETAIL_SUBSCRIPTION
 });

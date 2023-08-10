@@ -27,7 +27,7 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
             for (let poll of viewPolls) {
                 const subscription = this.repo.subscribeVoted(poll, [
                     this.operator.user.id,
-                    ...this.operator.user.vote_delegations_from_ids()
+                    ...(this.operator.user.vote_delegations_from_ids() || [])
                 ]);
 
                 if (!subscription) {
