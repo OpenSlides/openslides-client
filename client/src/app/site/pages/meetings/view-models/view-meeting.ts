@@ -1,4 +1,5 @@
 import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
+import { Observable } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
 import { HasProperties } from 'src/app/domain/interfaces/has-properties';
 import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
@@ -14,6 +15,7 @@ import { HasOrganizationTags } from '../../organization/pages/organization-tags'
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { BaseHasMeetingUsersViewModel } from '../base/base-has-meeting-user-view-model';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
+import { ViewPointOfOrderCategory } from '../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
 import { ViewMediafile } from '../pages/mediafiles';
@@ -81,7 +83,7 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public get isTemplate(): boolean {
-        return this.is_template || !!this.template_for_organization_id;
+        return !!this.template_for_organization_id;
     }
 
     public get relatedTime(): RelatedTime {
@@ -182,6 +184,8 @@ interface IMeetingRelations {
     template_for_organization: ViewOrganization;
     poll_countdown: ViewProjectorCountdown;
     list_of_speakers_countdown: ViewProjectorCountdown;
+    point_of_order_categories: ViewPointOfOrderCategory[];
+    point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
 }
 export interface ViewMeeting
     extends Meeting,

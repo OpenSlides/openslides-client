@@ -1,11 +1,19 @@
 <h2 mat-dialog-title>
-    <span>{{ 'Are you sure you want to submit a point of order?' | translate }}</span>
+    <span translate>Are you sure you want to submit a point of order?</span>
 </h2>
 
 <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">
     <mat-dialog-content>
-        {{ 'Request' | translate }}
+        <mat-form-field *ngIf="showCategorySelect">
+            <mat-label>{{ 'Possible points of order' | translate }}</mat-label>
+            <mat-select osAutofocus formControlName="category">
+                <mat-option *ngFor="let category of categoriesSubject | async" [value]="category.id">
+                    {{ category.getTitle() | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
         <mat-form-field>
+            <mat-label>{{ 'Request' | translate }}</mat-label>
             <input matInput osAutofocus [maxLength]="MAX_LENGTH" formControlName="note" />
         </mat-form-field>
         {{ editForm.value.note.length }} / {{ MAX_LENGTH }}

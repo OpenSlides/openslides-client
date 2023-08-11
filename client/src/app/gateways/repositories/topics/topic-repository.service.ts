@@ -32,8 +32,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             id: viewModel.id,
             text: update.text,
             title: update.title,
-            attachment_ids: update.attachment_ids || [],
-            tag_ids: update.tag_ids || []
+            attachment_ids: update.attachment_ids || []
         };
         return this.sendActionToBackend(TopicAction.UPDATE, payload);
     }
@@ -79,7 +78,8 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             agenda_parent_id: topicAgendaItem.parent_id,
             agenda_weight: topicAgendaItem.weight,
             agenda_comment: topicAgendaItem.comment,
-            agenda_duration: topicAgendaItem.duration
+            agenda_duration: topicAgendaItem.duration,
+            tag_ids: topicAgendaItem.tag_ids
         };
     }
 

@@ -10,6 +10,7 @@ import {
 } from 'src/app/domain/models/meetings/meeting.constants';
 import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
+import { ViewPointOfOrderCategory } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewPollCandidate } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from 'src/app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
@@ -333,6 +334,13 @@ export const RELATIONS: Relation[] = [
     }),
     ...makeM2O({
         OViewModel: ViewMeeting,
+        MViewModel: ViewPointOfOrderCategory,
+        OField: `point_of_order_categories`,
+        OIdField: `point_of_order_category_ids`,
+        MField: `meeting`
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeeting,
         MViewModel: ViewProjector,
         OField: `projectors`,
         MField: `meeting`,
@@ -643,7 +651,7 @@ export const RELATIONS: Relation[] = [
     // ########## Tags
     ...makeGenericM2M<ViewTag, HasTags>({
         viewModel: ViewTag,
-        possibleViewModels: [ViewAgendaItem, ViewAssignment, ViewMotion, ViewTopic],
+        possibleViewModels: [ViewAgendaItem, ViewAssignment, ViewMotion],
         viewModelField: `tagged`,
         viewModelIdField: `tagged_ids`,
         possibleViewModelsField: `tags`
@@ -827,6 +835,13 @@ export const RELATIONS: Relation[] = [
         BViewModel: ViewMotionState,
         AField: `first_state`,
         BField: `first_state_of_workflow`
+    }),
+    // ########## Point of order categories
+    ...makeM2O({
+        OViewModel: ViewPointOfOrderCategory,
+        MViewModel: ViewSpeaker,
+        OField: `speakers`,
+        MField: `point_of_order_category`
     }),
     // ########## Polls
     ...makeGenericO2M({

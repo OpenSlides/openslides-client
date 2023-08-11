@@ -30,7 +30,12 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
     public create(
         listOfSpeakers: ViewListOfSpeakers,
         userId: Id,
-        optionalInformation?: { pointOfOrder?: boolean; note?: UnsafeHtml; speechState?: SpeechState }
+        optionalInformation?: {
+            pointOfOrder?: boolean;
+            note?: UnsafeHtml;
+            speechState?: SpeechState;
+            point_of_order_category_id?: Id;
+        }
     ): Promise<Identifiable> {
         const meetingUserId = this.userRepo.getViewModel(userId)?.getMeetingUser(listOfSpeakers.meeting_id).id;
         if (!meetingUserId) {

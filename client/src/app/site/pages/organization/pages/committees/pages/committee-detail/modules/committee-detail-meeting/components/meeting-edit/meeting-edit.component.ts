@@ -263,10 +263,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const rawForm: { [key: string]: any } = {
             name: [``, Validators.required],
             location: [``],
-            daterange: {
-                start: [currentDate],
-                end: [currentDate]
-            },
+            daterange: [
+                {
+                    start: currentDate,
+                    end: currentDate
+                }
+            ],
             admin_ids: [[], Validators.minLength(1)],
             organization_tag_ids: [[]],
             external_id: [``]

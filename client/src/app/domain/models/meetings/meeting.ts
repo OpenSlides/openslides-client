@@ -1,4 +1,4 @@
-import { Id } from '../../definitions/key-types';
+import { Id, Ids } from '../../definitions/key-types';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasProperties } from '../../interfaces/has-properties';
 import { AgendaItemCreation, AgendaItemType } from '../agenda/agenda-item';
@@ -27,9 +27,10 @@ export class Settings {
         [original: string]: string;
     };
 
+    public point_of_order_category_ids!: Ids;
+
     // TODO: Move to meeting. these are not settings anymore, if the meeting-detail-view
     // in the committee-list-view is finished.
-    public is_template!: boolean; // Unique within a committee
     public enable_anonymous!: boolean;
     public language!: boolean;
 
@@ -37,9 +38,6 @@ export class Settings {
     public jitsi_domain!: string;
     public jitsi_room_name!: string;
     public jitsi_room_password!: string;
-
-    // Chat
-    public enable_chat!: boolean;
 
     public conference_show!: boolean;
     public conference_auto_connect!: boolean;
@@ -92,11 +90,13 @@ export class Settings {
     public list_of_speakers_show_amount_of_speakers_on_slide!: boolean;
     public list_of_speakers_present_users_only!: boolean;
     public list_of_speakers_show_first_contribution!: boolean;
+    public list_of_speakers_enable_point_of_order_categories!: boolean;
     public list_of_speakers_enable_point_of_order_speakers!: boolean;
     public list_of_speakers_initially_closed!: boolean;
     public list_of_speakers_enable_pro_contra_speech!: boolean;
     public list_of_speakers_can_set_contribution_self!: boolean;
     public list_of_speakers_speaker_note_for_everyone!: boolean;
+    public list_of_speakers_closing_disables_point_of_order!: boolean;
 
     // Motions
     public motions_default_workflow_id!: Id; // workflow/default_workflow_meeting_id;
@@ -171,22 +171,11 @@ export class Settings {
     public assignment_poll_default_backend!: PollBackendDurationType;
 
     //topic poll
-    topic_poll_ballot_paper_selection: BallotPaperSelection;
-    topic_poll_ballot_paper_number: number;
-    topic_poll_add_candidates_to_list_of_speakers: boolean;
-    topic_poll_enable_max_votes_per_option: boolean;
-    topic_poll_sort_poll_result_by_votes: boolean;
-    topic_poll_default_type: PollType;
-    topic_poll_default_method: PollMethod;
-    topic_poll_default_onehundred_percent_base: PollPercentBase;
     topic_poll_default_group_ids: Id[]; // (group/used_as_poll_default_id)[];
-    topic_poll_default_backend: PollBackendDurationType;
 
     //default poll
     poll_ballot_paper_selection: BallotPaperSelection;
     poll_ballot_paper_number: number;
-    poll_add_candidates_to_list_of_speakers: boolean;
-    poll_enable_max_votes_per_option: boolean;
     poll_sort_poll_result_by_votes: boolean;
     poll_default_type: PollType;
     poll_default_method: PollMethod;
@@ -332,6 +321,8 @@ export class Meeting extends BaseModel<Meeting> {
         `list_of_speakers_present_users_only`,
         `list_of_speakers_show_first_contribution`,
         `list_of_speakers_enable_point_of_order_speakers`,
+        `list_of_speakers_enable_point_of_order_categories`,
+        `list_of_speakers_closing_disables_point_of_order`,
         `list_of_speakers_enable_pro_contra_speech`,
         `list_of_speakers_can_set_contribution_self`,
         `list_of_speakers_speaker_note_for_everyone`,
@@ -419,6 +410,7 @@ export class Meeting extends BaseModel<Meeting> {
         `tag_ids`,
         `agenda_item_ids`,
         `list_of_speakers_ids`,
+        `point_of_order_category_ids`,
         `speaker_ids`,
         `topic_ids`,
         `group_ids`,

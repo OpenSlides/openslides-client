@@ -46,7 +46,9 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
 
     public async setReferenceProjector(projector: Identifiable): Promise<void> {
         await this.update({ is_internal: false }, projector);
-        return this.meetingRepo.update({ reference_projector_id: projector.id }, this.activeMeetingService.meeting!);
+        await this.meetingRepo
+            .update({ reference_projector_id: projector.id }, this.activeMeetingService.meeting!)
+            .resolve();
     }
 
     public scale(projector: Identifiable, direction: ScrollScaleDirection, step: number): Promise<void> {
@@ -161,7 +163,9 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
 
     private async updateProjectordefaults(defaultKeys: { [key: string]: number[] }): Promise<void> {
         if (Object.keys(defaultKeys).length) {
-            return this.meetingRepo.update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) });
+            await this.meetingRepo
+                .update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) })
+                .resolve();
         }
         return;
     }

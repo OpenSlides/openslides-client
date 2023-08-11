@@ -8,7 +8,8 @@ import {
     PollPercentBaseVerbose,
     PollStateChangeActionVerbose,
     PollStateVerbose,
-    PollTypeVerbose
+    PollTypeVerbose,
+    VOTE_MAJORITY
 } from 'src/app/domain/models/poll';
 import { Poll } from 'src/app/domain/models/poll/poll';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
@@ -102,7 +103,9 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get hasVotes(): boolean {
-        return this.results.flatMap(option => option.votes).some(vote => vote.weight > 0);
+        return this.results
+            .flatMap(option => option.votes)
+            .some(vote => vote.weight > 0 || +vote.weight === VOTE_MAJORITY);
     }
 
     public hasVotedForDelegations(userId?: number): boolean {

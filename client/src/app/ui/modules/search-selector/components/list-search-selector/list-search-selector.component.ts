@@ -40,7 +40,7 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
                 value.pipe(auditTime(10), distinctUntilChanged()).subscribe(items => {
                     this.selectableItems = items;
                     if (this.contentForm) {
-                        this.disabled = !items || (!!items && !items.length);
+                        this.disabled = (!items || (!!items && !items.length)) && !this.clickNotFound.observed;
                     }
                 })
             );

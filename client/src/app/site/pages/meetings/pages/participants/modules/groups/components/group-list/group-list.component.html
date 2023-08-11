@@ -26,7 +26,18 @@
                 <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
                     <ng-container matColumnDef="perm" sticky>
                         <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
-                        <mat-cell *matCellDef="let perm" class="raised-cell">
+                        <mat-cell
+                            *matCellDef="let perm"
+                            class="raised-cell"
+                            #tooltip="matTooltip"
+                            [ngClass]="{ 'has-help-text': perm.help_text }"
+                            [matTooltip]="perm.help_text | translate"
+                            matTooltipClass="pre-wrap"
+                            matTooltipPosition="after"
+                            (mouseenter)="$event.stopImmediatePropagation()"
+                            (mouseleave)="tooltip.hide()"
+                            (click)="tooltip.toggle()"
+                        >
                             {{ perm.display_name | translate }}
                         </mat-cell>
                     </ng-container>

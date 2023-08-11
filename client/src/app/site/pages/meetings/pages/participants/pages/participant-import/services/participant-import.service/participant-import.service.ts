@@ -121,7 +121,10 @@ export class ParticipantImportService extends BaseUserImportService {
             permissionRelatedId: this.activeMeetingId,
             users: _entries.map(entry => entry.model)
         });
-        this._existingUsers = _entries.mapToObject((entry, i) => ({ [entry.id]: results[i] }));
+        this._existingUsers = {};
+        for (let i in _entries) {
+            this._existingUsers[_entries[i].id] = <Partial<GeneralUser>[]>results[i];
+        }
     }
 
     protected override async onCreateImportModel({
