@@ -220,7 +220,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`Wifi`),
+                label: _(`WiFi`),
                 settings: [
                     {
                         key: `users_pdf_wlan_ssid`,
