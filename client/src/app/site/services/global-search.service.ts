@@ -37,6 +37,9 @@ export class GlobalSearchService {
             null,
             params
         );
+
+        this.updateScores(rawResults);
+
         return Object.keys(rawResults)
             .filter(fqid => {
                 const collection = collectionFromFqid(fqid);
@@ -45,6 +48,38 @@ export class GlobalSearchService {
             .map(fqid => this.getResult(fqid, rawResults))
             .filter(r => r.score > 0)
             .sort((a, b) => b.score - a.score);
+    }
+
+    private updateScores(results: { [fqid: string]: { content: any; score?: number } }): void {
+        for (let fqid of Object.keys(results)) {
+            this.updateScore(fqid, results[fqid].score || 0, results);
+        }
+    }
+
+    private updateScore(
+        fqid: string,
+        addScore: number,
+        results: { [fqid: string]: { content: any; score?: number } }
+    ): void {
+        const collection = collectionFromFqid(fqid);
+        const result = results[fqid];
+        if (collection === `tag` && results[fqid].content?.tagged_ids) {
+            for (let taggedFqid of results[fqid].content?.tagged_ids) {
+                results[taggedFqid].score = Math.max(results[taggedFqid].score || 0, addScore);
+                this.updateScore(taggedFqid, results[taggedFqid].score, results);
+            }
+        } else if (collection === `agenda_item` && result.content?.content_object_id) {
+            results[result.content.content_object_id].score = Math.max(
+                results[result.content.content_object_id].score || 0,
+                addScore
+            );
+
+            this.updateScore(
+                result.content.content_object_id,
+                results[result.content.content_object_id].score,
+                results
+            );
+        }
     }
 
     private getResult(fqid: Fqid, results: { [fqid: string]: any }) {
