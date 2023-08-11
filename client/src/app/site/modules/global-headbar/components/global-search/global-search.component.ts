@@ -65,7 +65,7 @@ export class GlobalSearchComponent implements OnDestroy {
         if (this.currentFilters.get(`meetingFilter`).getRawValue() === `current`) {
             searchMeeting = this.activeMeeting.meetingId;
         } else if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
-            this.currentlyAvailableFilters = Object.keys(this.availableFilters).slice(0, 2);
+            this.currentlyAvailableFilters = Object.keys(this.availableFilters).slice(0, 1);
         }
 
         this.results = await this.globalSearchService.searchChange(

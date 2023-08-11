@@ -21,10 +21,7 @@
 
         <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
             <ng-container *ngFor="let filter of currentlyAvailableFilters">
-                <mat-checkbox
-                    formControlName="{{ filter }}"
-                    class="filter"
-                >
+                <mat-checkbox formControlName="{{ filter }}" class="filter">
                     {{ availableFilters[filter] }}
                 </mat-checkbox>
             </ng-container>
@@ -35,10 +32,16 @@
 <mat-dialog-content class="search-results">
     <section class="search-results-category">
         <div *ngFor="let result of filteredResults" class="search-results-entry">
-            <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="breadcrumb">
+            <div class="breadcrumb">
+                <ng-container *ngIf="result.committee">
+                    <a [routerLink]="'/committees/' + result.committee.id" mat-dialog-close>
+                        {{ result.committee.name }}
+                    </a>
+                    <span class="sep">&gt;</span>
+                </ng-container>
                 <ng-container *ngIf="currentFilters.value.meetingFilter === 'all' && result.meeting">
                     <a [routerLink]="'/' + result.meeting.id" mat-dialog-close>{{ result.meeting.name }}</a>
-                    <span *ngIf="result.meeting" class="sep">&gt;</span>
+                    <span class="sep">&gt;</span>
                 </ng-container>
                 <span>{{ availableFilters[result.collection] }}</span>
             </div>

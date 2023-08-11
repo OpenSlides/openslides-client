@@ -12,6 +12,7 @@ export interface GlobalSearchEntry {
     collection: string;
     url?: string;
     meeting?: { id: Id; name: string };
+    committee?: { id: Id; name: string };
     score?: number;
 }
 
@@ -42,6 +43,7 @@ export class GlobalSearchService {
                 return collections.includes(collection) || !collections.length;
             })
             .map(fqid => this.getResult(fqid, rawResults))
+            .filter(r => r.score > 0)
             .sort((a, b) => b.score - a.score);
     }
 
@@ -56,17 +58,10 @@ export class GlobalSearchService {
             fqid,
             collection,
             url: this.getUrl(collection, id, content),
-            meeting: this.getMeeting(collection, content, results),
+            meeting: results[`meeting/${content.meeting_id}`]?.content,
+            committee: results[`committee/${content.committee_id}`]?.content,
             score: results[fqid].score || 0
         };
-    }
-
-    private getMeeting(_collection: string, content: any, results: { [fqid: string]: any }) {
-        if (content.meeting_id) {
-            return results[`meeting/${content.meeting_id}`].content;
-        }
-
-        return undefined;
     }
 
     private getTitle(collection: string, content: any) {
