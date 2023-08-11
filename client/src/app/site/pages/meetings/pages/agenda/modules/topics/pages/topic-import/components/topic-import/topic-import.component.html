@@ -6,16 +6,23 @@
 
     <div class="menu-slot">
         <button *ngIf="canImport" mat-button (click)="doImport()">
-            <span class="upper">{{ 'Import' | translate }}</span>
+            <span class="upper">{{ tryAgain ? 'Try again' : ('Import' | translate) }}</span>
         </button>
+        <div *ngIf="finishedSuccessfully || hasErrors" style="padding-top: 6px">
+            <mat-icon *ngIf="finishedSuccessfully" matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
+            <mat-icon *ngIf="hasErrors" matTooltip="{{ 'Can not import because of errors' | translate }}">
+                block
+            </mat-icon>
+        </div>
+        <os-spinner *ngIf="isImporting" [width]="30" [height]="30" [showText]="false"></os-spinner>
     </div>
 </os-head-bar>
 
-<os-import-list
+<os-backend-import-list
     [importer]="importer"
-    [columns]="columns"
     [possibleFields]="possibleFields"
-    [showUnknownHeaders]="!isTextImportSelected"
+    [defaultColumns]="columns"
+    modelName="Topic"
     (selectedTabChanged)="selectedTabIndex = $event"
 >
     <mat-tab label="{{ 'Text import' | translate }}" osImportListFirstTab>
@@ -45,13 +52,4 @@
             </div>
         </ng-template>
     </mat-tab>
-
-    <div *osScrollingTableCell="'agenda_duration'; row as entry; config: { width: 150 }">
-        <div *osScrollingTableCellLabel>{{ 'Duration' | translate }}</div>
-        {{ getDuration(entry.newEntry.agenda_duration) }}
-    </div>
-    <div *osScrollingTableCell="'agenda_type'; row as entry; config: { width: 150 }">
-        <div *osScrollingTableCellLabel>{{ 'Internal item' | translate }}</div>
-        {{ getTypeString(entry.newEntry.agenda_type) | translate }}
-    </div>
-</os-import-list>
+</os-backend-import-list>

@@ -7,4 +7,5 @@ interface HeaderDefinition {
     isRequired?: boolean;
     isTableColumn?: boolean;
     width?: number;
+    flexible?: boolean;
 }
