@@ -40,26 +40,20 @@
                 {{ availableFilters[category.key] | translate }}
             </span>
         </h2>
-        <ng-container *ngFor="let result of category.value">
-            <a
-                *ngIf="result.fqid.startsWith('mediafile')"
-                class="search-results-entry"
-                [href]="result.url"
-                target="blank"
-                mat-dialog-close
-            >
+        <div *ngFor="let result of category.value" class="search-results-entry">
+            <div *ngIf="currentFilters.value.meetingFilter === 'all'" class="breadcrumb">
+                <span *ngIf="result.meeting">{{ result.meeting.name }}</span>
+                <span *ngIf="result.meeting" class="sep">&gt;</span>
+                <span>{{ availableFilters[result.collection] }}</span>
+            </div>
+            <a *ngIf="result.fqid.startsWith('mediafile')" [href]="result.url" target="blank" mat-dialog-close>
                 <h3 *ngIf="result.title">{{ result.title }}</h3>
             </a>
-            <a
-                *ngIf="!result.fqid.startsWith('mediafile')"
-                class="search-results-entry"
-                [routerLink]="result.url"
-                mat-dialog-close
-            >
+            <a *ngIf="!result.fqid.startsWith('mediafile')" [routerLink]="result.url" mat-dialog-close>
                 <h3 *ngIf="result.title">{{ result.title }}</h3>
                 <p *ngIf="result.text" [innerHtml]="result.text"></p>
             </a>
-        </ng-container>
+        </div>
     </section>
     <h3 *ngIf="noResults" class="search-no-results">{{ 'No results found' | translate }}</h3>
 </mat-dialog-content>

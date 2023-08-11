@@ -27,16 +27,28 @@
     }
 
     .search-results-entry {
-        display: block;
         padding: 1em 24px;
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
-        > :first-of-type {
-            margin-top: 0;
+        > a {
+            display: block;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            > :first-of-type {
+                margin-top: 0;
+            }
+
+            > :last-of-type {
+                margin-bottom: 0;
+            }
         }
-        > :last-of-type {
-            margin-bottom: 0;
+        .breadcrumb {
+            font-size: 10px;
+            + a h3 {
+                margin-top: 0;
+            }
+            .sep {
+                padding: 0 4px;
+            }
         }
     }
 

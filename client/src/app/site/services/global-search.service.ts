@@ -9,7 +9,9 @@ export interface GlobalSearchEntry {
     title: string;
     text: string;
     fqid: string;
+    collection: string;
     url?: string;
+    meeting?: { id: Id; name: string };
 }
 
 @Injectable({
@@ -34,7 +36,7 @@ export class GlobalSearchService {
                 const collection = collectionFromFqid(fqid);
                 return collections.includes(collection) || !collections.length;
             })
-            .map(fqid => this.getResult(fqid, rawResults[fqid]));
+            .map(fqid => this.getResult(fqid, rawResults));
 
         let collectionMap: { [key: string]: GlobalSearchEntry[] } = {};
         for (let result of results) {
@@ -49,51 +51,63 @@ export class GlobalSearchService {
         return collectionMap;
     }
 
-    private getResult(fqid: Fqid, content: any) {
+    private getResult(fqid: Fqid, results: { [fqid: string]: any }) {
+        const content = results[fqid];
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);
-        let title = content.title || content.name;
-        let text = content.text || content.description;
-        let url = ``;
-
-        switch (collection) {
-            case `committee`:
-                url = `/committees/${id}`;
-                break;
-            case `meeting`:
-                url = `/${id}`;
-                break;
-            case `motion`:
-                url = `/${content.meeting_id}/motions/${id}`;
-                break;
-            case `assignment`:
-                url = `/${content.meeting_id}/assignments/${id}`;
-                break;
-            case `topic`:
-                url = `/${content.meeting_id}/agenda/topics/${id}`;
-                break;
-            case `mediafile`:
-                url = `/system/media/get/${id}`;
-                break;
-            case `user`:
-                const firstName = content.first_name?.trim() || ``;
-                const lastName = content.last_name?.trim() || ``;
-                const userName = content.username?.trim() || ``;
-                const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
-                title = name?.trim() || ``;
-                if (this.activeMeeting.meetingId && content.meeting_ids?.includes(this.activeMeeting.meetingId)) {
-                    url = `/${this.activeMeeting.meetingId}/participants/${id}`;
-                } else {
-                    url = `/accounts/${id}`;
-                }
-                break;
-        }
 
         return {
-            title,
-            text,
+            title: this.getTitle(collection, content),
+            text: content.text || content.description,
             fqid,
-            url
+            collection,
+            url: this.getUrl(collection, id, content),
+            meeting: this.getMeeting(collection, content, results)
         };
+    }
+
+    private getMeeting(_collection: string, content: any, results: { [fqid: string]: any }) {
+        if (content.meeting_id) {
+            return results[`meeting/${content.meeting_id}`];
+        }
+
+        return undefined;
+    }
+
+    private getTitle(collection: string, content: any) {
+        if (collection === `user`) {
+            const firstName = content.first_name?.trim() || ``;
+            const lastName = content.last_name?.trim() || ``;
+            const userName = content.username?.trim() || ``;
+            const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
+            return name?.trim() || ``;
+        }
+
+        return content.title || content.name;
+    }
+
+    private getUrl(collection: string, id: Id, content: any): string {
+        switch (collection) {
+            case `committee`:
+                return `/committees/${id}`;
+            case `meeting`:
+                return `/${id}`;
+            case `motion`:
+                return `/${content.meeting_id}/motions/${id}`;
+            case `assignment`:
+                return `/${content.meeting_id}/assignments/${id}`;
+            case `topic`:
+                return `/${content.meeting_id}/agenda/topics/${id}`;
+            case `mediafile`:
+                return `/system/media/get/${id}`;
+            case `user`:
+                // TODO: Needs update to work with rtf
+                if (this.activeMeeting.meetingId && content.meeting_ids?.includes(this.activeMeeting.meetingId)) {
+                    return `/${this.activeMeeting.meetingId}/participants/${id}`;
+                }
+
+                return `/accounts/${id}`;
+        }
+        return `/`;
     }
 }
