@@ -15,6 +15,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { DirectivesModule } from 'src/app/ui/directives';
 
 import { OpenSlidesTranslationModule } from '../translations';
 import { UserComponentsModule } from '../user-components';
@@ -35,7 +36,8 @@ const MODULES = [
     MatCheckboxModule,
     MatRadioModule,
     MatBadgeModule,
-    PortalModule
+    PortalModule,
+    DirectivesModule
 ];
 const DECLARATIONS = [GlobalHeadbarComponent];
 

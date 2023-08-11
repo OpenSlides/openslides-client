@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { FormBuilder } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { pairwise, startWith, Subscription } from 'rxjs';
+import { Permission } from 'src/app/domain/definitions/permission';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/global-search.service';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-global-search`,
@@ -40,6 +42,7 @@ export class GlobalSearchComponent implements OnDestroy {
 
     public constructor(
         private activeMeeting: ActiveMeetingService,
+        public operator: OperatorService,
         private globalSearchService: GlobalSearchService,
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef
@@ -57,6 +60,14 @@ export class GlobalSearchComponent implements OnDestroy {
 
     ngOnDestroy(): void {
         this.filterChangeSubscription.unsubscribe();
+    }
+
+    public getPermissionByFilter(filter: string): Permission {
+        if (filter === `topic`) {
+            return Permission.agendaItemCanSee;
+        }
+
+        return (filter + `.can_see`) as Permission;
     }
 
     public async searchChange(): Promise<void> {
