@@ -315,6 +315,15 @@
                                 <span>{{ 'Messages' | translate }}</span>
                             </mat-expansion-panel-header>
                             <mat-list>
+                                <mat-list-item class="larger-mat-list-item">
+                                    <mat-card class="wifi-card" style="width: 100%">
+                                        <os-projector-button
+                                            [object]="wifiDataBuildDesc()"
+                                            [projector]="projector"
+                                        ></os-projector-button>
+                                        <span>{{ 'WiFi access data' | translate }}</span>
+                                    </mat-card>
+                                </mat-list-item>
                                 <mat-list-item *ngFor="let message of messages" class="larger-mat-list-item">
                                     <os-message-controls
                                         class="dynamic-list-entry"
@@ -332,21 +341,14 @@
                         </mat-expansion-panel>
 
                         <!-- WiFi access data -->
-                        <mat-expansion-panel *ngIf="hasWiFiData">
+                        <!-- <mat-expansion-panel *ngIf="hasWiFiData">
                             <mat-expansion-panel-header>
                                 <span>{{ 'WiFi access data' | translate }}</span>
                             </mat-expansion-panel-header>
-                            <!-- Slide-->
+                            Slide
                             <mat-list>
-                                <mat-list-item>
-                                    <os-projector-button
-                                        [object]="wifiDataBuildDesc()"
-                                        [projector]="projector"
-                                    ></os-projector-button>
-                                    <span class="spacer-left-10">{{ 'Project' | translate }}</span>
-                                </mat-list-item>
                             </mat-list>
-                        </mat-expansion-panel>
+                        </mat-expansion-panel> -->
 
                         <!-- Current list of speakers -->
                         <mat-expansion-panel>

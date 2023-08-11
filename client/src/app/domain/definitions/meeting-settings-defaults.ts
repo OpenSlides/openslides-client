@@ -81,6 +81,7 @@ export const meetingSettingsDefaults: { [key: string]: any } = {
     users_enable_vote_delegations: false,
     users_pdf_welcometitle: _(`Welcome to OpenSlides`),
     users_pdf_welcometext: _(`[Place for your welcome and help text.]`),
+    users_pdf_wlan_encryption: `WPA`,
     users_pdf_url: `https://example.com`,
     users_email_sender: `OpenSlides`,
     users_email_subject: _(`OpenSlides access data`),

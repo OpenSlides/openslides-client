@@ -144,3 +144,10 @@
 .dynamic-list-entry {
     width: 100%;
 }
+
+.wifi-card {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}

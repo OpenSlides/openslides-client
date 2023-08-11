@@ -6,16 +6,12 @@
 
         <div>
             <div *ngIf="ssid">
-                <h3 translate>Network (SSID)</h3>
+                <h3 translate>WiFi name</h3>
                 {{ ssid }}
             </div>
             <div *ngIf="password">
                 <h3 translate>Password</h3>
                 {{ password }}
-            </div>
-            <div *ngIf="encryption">
-                <h3 translate>Encryption</h3>
-                {{ encryption | translate }}
             </div>
         </div>
     </div>

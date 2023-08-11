@@ -218,6 +218,33 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     }
                 ]
+            },
+            {
+                label: _(`Wifi`),
+                settings: [
+                    {
+                        key: `users_pdf_wlan_ssid`,
+                        label: _(`WLAN name (SSID)`),
+                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
+                    },
+                    {
+                        key: `users_pdf_wlan_password`,
+                        label: _(`WLAN password`),
+                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
+                    },
+                    {
+                        key: `users_pdf_wlan_encryption`,
+                        label: _(`WLAN encryption`),
+                        type: `choice`,
+                        helpText: _(`Used for WLAN QRCode in PDF of access data.`),
+                        choices: {
+                            '': `---------`,
+                            WEP: `WEP`,
+                            WPA: `WPA/WPA2`,
+                            nopass: _(`No encryption`)
+                        }
+                    }
+                ]
             }
         ]
     },
@@ -860,28 +887,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `users_pdf_welcometext`,
                         label: _(`Help text for access data and welcome PDF`)
-                    },
-                    {
-                        key: `users_pdf_wlan_ssid`,
-                        label: _(`WLAN name (SSID)`),
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
-                    },
-                    {
-                        key: `users_pdf_wlan_password`,
-                        label: _(`WLAN password`),
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
-                    },
-                    {
-                        key: `users_pdf_wlan_encryption`,
-                        label: _(`WLAN encryption`),
-                        type: `choice`,
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`),
-                        choices: {
-                            '': `---------`,
-                            WEP: `WEP`,
-                            WPA: `WPA/WPA2`,
-                            nopass: _(`No encryption`)
-                        }
                     }
                 ]
             },

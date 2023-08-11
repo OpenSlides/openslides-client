@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { formatWiFiConfig } from 'src/app/infrastructure/utils/formatting-functions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
@@ -74,72 +73,9 @@ export class ParticipantPdfService {
      */
     private createAccessDataContent(user: ViewUser): object {
         return {
-            columns: [this.createWifiAccessContent(), this.createUserAccessContent(user)],
+            columns: [this.createUserAccessContent(user)],
             margin: [0, 20]
         };
-    }
-
-    /**
-     * Creates the wifi access data, including qr code, for the configured event wlan parameters
-     *
-     * @returns pdfMake definitions
-     */
-    private createWifiAccessContent(): object {
-        const wifiColumn: object[] = [
-            {
-                text: this.translate.instant(`WLAN access data`),
-                style: `userDataHeading`
-            },
-            {
-                text: this.translate.instant(`WLAN name (SSID)`) + `:`,
-                style: `userDataTopic`
-            },
-            {
-                text: this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) || `-`,
-                style: `userDataValue`
-            },
-            {
-                text: this.translate.instant(`WLAN password`) + `:`,
-                style: `userDataTopic`
-            },
-            {
-                text: this.meetingSettingsService.instant(`users_pdf_wlan_password`) || `-`,
-                style: `userDataValue`
-            },
-            {
-                text: this.translate.instant(`WLAN encryption`) + `:`,
-                style: `userDataTopic`
-            },
-            {
-                text: this.meetingSettingsService.instant(`users_pdf_wlan_encryption`) || `-`,
-                style: `userDataValue`
-            },
-            {
-                text: `\n`
-            }
-        ];
-        if (
-            this.meetingSettingsService.instant(`users_pdf_wlan_ssid`) &&
-            this.meetingSettingsService.instant(`users_pdf_wlan_encryption`)
-        ) {
-            const wifiQrCode = formatWiFiConfig(
-                this.meetingSettingsService.instant(`users_pdf_wlan_ssid`),
-                this.meetingSettingsService.instant(`users_pdf_wlan_encryption`),
-                this.meetingSettingsService.instant(`users_pdf_wlan_password`)
-            );
-            wifiColumn.push(
-                {
-                    qr: wifiQrCode,
-                    fit: 120,
-                    margin: [0, 0, 0, 8]
-                },
-                {
-                    text: this.translate.instant(`Scan this QR code to connect to WLAN.`),
-                    style: `small`
-                }
-            );
-        }
-        return wifiColumn;
     }
 
     /**
