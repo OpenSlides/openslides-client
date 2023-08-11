@@ -118,7 +118,9 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         );
     }
 
-    public create(...participants: Partial<User & MeetingUser>[]): Promise<Identifiable[]> {
+    public create(
+        ...participants: Partial<User & MeetingUser>[]
+    ): Promise<(Identifiable & { meeting_user_id?: Id })[]> {
         return this.repo.create(...participants.map(participant => this.validatePayload(participant)));
     }
 
@@ -271,6 +273,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const getNameFn = () => this.userController.getShortName(newUser);
         return {
             id: identifiable.id,
+            meeting_user_id: identifiable.meeting_user_id,
             ...newUser,
             fqid: `${User.COLLECTION}/${identifiable.id}`,
             getTitle: getNameFn,
