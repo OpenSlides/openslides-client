@@ -87,7 +87,7 @@
             {{ entry }}
             <span *ngIf="!last">,&nbsp;</span>
         </span>
-        <mat-icon color="primary" style="cursor: pointer" inline (click)="openDialog(fieldsInfoDialog)">info</mat-icon>
+        <mat-icon color="primary" class="pointer-icon" inline (click)="openDialog(fieldsInfoDialog)">info</mat-icon>
     </div>
     <ul *ngIf="requiredFields.length">
         <li>
@@ -137,7 +137,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div style="margin-bottom: 5px">
+    <div class="bottom-offset">
         <div class="flex-vertical-center">
             <input
                 id="user-import-file-input"
@@ -208,7 +208,6 @@
 <ng-template #previewList>
     <os-scrolling-table
         *ngIf="rows?.length && (dataSource | async)"
-        style="height: 500px"
         class="import-list-preview-table"
         tableHeight="500px"
         [rowHeight]="50"
