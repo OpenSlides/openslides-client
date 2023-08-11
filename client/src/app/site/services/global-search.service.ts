@@ -12,6 +12,7 @@ export interface GlobalSearchEntry {
     collection: string;
     url?: string;
     meeting?: { id: Id; name: string };
+    score?: number;
 }
 
 @Injectable({
@@ -24,35 +25,28 @@ export class GlobalSearchService {
         searchTerm: string,
         collections: string[] = [],
         meeting?: Id
-    ): Promise<{ [key: string]: GlobalSearchEntry[] }> {
+    ): Promise<GlobalSearchEntry[]> {
         const params: { q: string; m?: string } = { q: searchTerm };
         if (meeting) {
             params.m = meeting.toString();
         }
 
-        const rawResults: { [fqid: string]: any } = await this.http.get(`/system/search`, null, params);
-        let results = Object.keys(rawResults)
+        const rawResults: { [fqid: string]: { content: any; score: number } } = await this.http.get(
+            `/system/search`,
+            null,
+            params
+        );
+        return Object.keys(rawResults)
             .filter(fqid => {
                 const collection = collectionFromFqid(fqid);
                 return collections.includes(collection) || !collections.length;
             })
-            .map(fqid => this.getResult(fqid, rawResults));
-
-        let collectionMap: { [key: string]: GlobalSearchEntry[] } = {};
-        for (let result of results) {
-            const collection = collectionFromFqid(result.fqid);
-            if (!collectionMap[collection]) {
-                collectionMap[collection] = [];
-            }
-
-            collectionMap[collection].push(result);
-        }
-
-        return collectionMap;
+            .map(fqid => this.getResult(fqid, rawResults))
+            .sort((a, b) => b.score - a.score);
     }
 
     private getResult(fqid: Fqid, results: { [fqid: string]: any }) {
-        const content = results[fqid];
+        const content = results[fqid].content;
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);
 
@@ -62,13 +56,14 @@ export class GlobalSearchService {
             fqid,
             collection,
             url: this.getUrl(collection, id, content),
-            meeting: this.getMeeting(collection, content, results)
+            meeting: this.getMeeting(collection, content, results),
+            score: results[fqid].score || 0
         };
     }
 
     private getMeeting(_collection: string, content: any, results: { [fqid: string]: any }) {
         if (content.meeting_id) {
-            return results[`meeting/${content.meeting_id}`];
+            return results[`meeting/${content.meeting_id}`].content;
         }
 
         return undefined;

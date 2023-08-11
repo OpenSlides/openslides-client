@@ -33,13 +33,8 @@
 </div>
 
 <mat-dialog-content class="search-results">
-    <section *ngFor="let category of filteredResults | keyvalue" class="search-results-category">
-        <h2>
-            <span [matBadge]="category.value.length < 100 ? category.value.length : '99+'" [matBadgeOverlap]="false">
-                {{ availableFilters[category.key] | translate }}
-            </span>
-        </h2>
-        <div *ngFor="let result of category.value" class="search-results-entry">
+    <section class="search-results-category">
+        <div *ngFor="let result of filteredResults" class="search-results-entry">
             <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="breadcrumb">
                 <ng-container *ngIf="currentFilters.value.meetingFilter === 'all' && result.meeting">
                     <a [routerLink]="'/' + result.meeting.id" mat-dialog-close>{{ result.meeting.name }}</a>

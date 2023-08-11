@@ -31,10 +31,10 @@ export class GlobalSearchComponent implements OnDestroy {
         meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
     });
 
-    public filteredResults: { [key: string]: GlobalSearchEntry[] } = {};
+    public filteredResults: GlobalSearchEntry[] = [];
     public inMeeting = !!this.activeMeeting.meetingId;
 
-    private results: { [key: string]: GlobalSearchEntry[] } = {};
+    private results: GlobalSearchEntry[] = [];
 
     private filterChangeSubscription: Subscription;
 
@@ -78,7 +78,7 @@ export class GlobalSearchComponent implements OnDestroy {
     }
 
     private updateFilteredResults(): void {
-        this.filteredResults = {};
+        this.filteredResults = [];
         let allUnchecked = true;
         for (const filter of this.currentlyAvailableFilters) {
             if (this.currentFilters.get(filter) && this.currentFilters.get(filter).getRawValue()) {
@@ -86,17 +86,18 @@ export class GlobalSearchComponent implements OnDestroy {
             }
         }
 
-        for (let collection of Object.keys(this.results)) {
+        for (let result of this.results) {
+            const collection = result.collection;
             if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
                 if (collection === `meeting` || collection === `committee`) {
-                    this.filteredResults[collection] = this.results[collection];
+                    this.filteredResults.push(result);
                 }
             } else {
                 if (
                     allUnchecked ||
                     (this.currentFilters.get(collection) && this.currentFilters.get(collection).getRawValue())
                 ) {
-                    this.filteredResults[collection] = this.results[collection];
+                    this.filteredResults.push(result);
                 }
             }
         }
