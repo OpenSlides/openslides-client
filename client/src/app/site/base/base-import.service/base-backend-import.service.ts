@@ -273,8 +273,9 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
 
     /**
      * Executing the import.
+     * @returns true if the import finished successfully
      */
-    public async doImport(): Promise<void> {
+    public async doImport(): Promise<boolean> {
         this._currentImportPhaseSubject.next(BackendImportPhase.IMPORTING);
 
         const results = await this.import(this.previewActionIds, false);
@@ -292,7 +293,9 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
         } else {
             this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
             this._csvLines = [];
+            return true;
         }
+        return false;
     }
 
     /**

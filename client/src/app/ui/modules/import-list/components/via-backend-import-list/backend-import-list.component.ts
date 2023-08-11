@@ -303,11 +303,13 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
     /**
      * Removes the selected file and also empties the preview.
      */
-    public removeSelectedFile(): void {
+    public removeSelectedFile(clearImporter = true): void {
         if (this.fileInput) {
             this.fileInput.nativeElement.value = ``;
         }
-        this._importer.clearFile();
+        if (clearImporter) {
+            this._importer.clearFile();
+        }
     }
 
     /**

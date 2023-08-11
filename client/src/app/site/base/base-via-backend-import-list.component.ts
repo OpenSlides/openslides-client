@@ -1,7 +1,10 @@
-import { Directive, OnInit } from '@angular/core';
+import { Directive, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseComponent } from 'src/app/site/base/base.component';
-import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
+import {
+    BackendImportListComponent,
+    BackendImportPhase
+} from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 
 import { Identifiable } from '../../domain/interfaces';
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
@@ -13,6 +16,9 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
     extends BaseComponent
     implements OnInit
 {
+    @ViewChild(BackendImportListComponent)
+    private list: BackendImportListComponent<M>;
+
     /**
      * Helper function for previews
      */
@@ -78,6 +84,8 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
      * Triggers the importer's import
      */
     public async doImport(): Promise<void> {
-        await this.importer.doImport();
+        if (await this.importer.doImport()) {
+            this.list.removeSelectedFile(false);
+        }
     }
 }

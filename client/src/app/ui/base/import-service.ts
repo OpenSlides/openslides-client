@@ -60,7 +60,7 @@ export interface BackendImportService<M extends Identifiable> {
     clearPreview(): void;
     clearFile(): void;
     onSelectFile(event: any): void;
-    doImport(): Promise<void>;
+    doImport(): Promise<boolean>;
     downloadCsvExample(): void;
     getVerboseSummaryPointTitle(title: string): string;
     clearAll(): void;
