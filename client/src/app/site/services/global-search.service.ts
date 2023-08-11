@@ -16,6 +16,10 @@ export interface GlobalSearchEntry {
     score?: number;
 }
 
+export interface GlobalSearchResponse {
+    [fqid: string]: { content: any; score: number };
+}
+
 @Injectable({
     providedIn: `root`
 })
@@ -32,11 +36,7 @@ export class GlobalSearchService {
             params.m = meeting.toString();
         }
 
-        const rawResults: { [fqid: string]: { content: any; score: number } } = await this.http.get(
-            `/system/search`,
-            null,
-            params
-        );
+        const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, params);
 
         this.updateScores(rawResults);
 
@@ -50,17 +50,13 @@ export class GlobalSearchService {
             .sort((a, b) => b.score - a.score);
     }
 
-    private updateScores(results: { [fqid: string]: { content: any; score?: number } }): void {
+    private updateScores(results: GlobalSearchResponse): void {
         for (let fqid of Object.keys(results)) {
             this.updateScore(fqid, results[fqid].score || 0, results);
         }
     }
 
-    private updateScore(
-        fqid: string,
-        addScore: number,
-        results: { [fqid: string]: { content: any; score?: number } }
-    ): void {
+    private updateScore(fqid: string, addScore: number, results: GlobalSearchResponse): void {
         const collection = collectionFromFqid(fqid);
         const result = results[fqid];
         if (collection === `tag` && results[fqid].content?.tagged_ids) {
@@ -82,7 +78,7 @@ export class GlobalSearchService {
         }
     }
 
-    private getResult(fqid: Fqid, results: { [fqid: string]: any }) {
+    private getResult(fqid: Fqid, results: GlobalSearchResponse) {
         const content = results[fqid].content;
         const collection = collectionFromFqid(fqid);
         const id = content.sequential_number || idFromFqid(fqid);
