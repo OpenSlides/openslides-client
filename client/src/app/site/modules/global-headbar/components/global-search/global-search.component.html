@@ -20,13 +20,12 @@
         </mat-radio-group>
 
         <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
-            <ng-container *ngFor="let filter of availableFilters | keyvalue">
+            <ng-container *ngFor="let filter of currentlyAvailableFilters">
                 <mat-checkbox
-                    *ngIf="currentlyAvailableFilters.includes(filter.key)"
-                    formControlName="{{ filter.key }}"
+                    formControlName="{{ filter }}"
                     class="filter"
                 >
-                    {{ filter.value }}
+                    {{ availableFilters[filter] }}
                 </mat-checkbox>
             </ng-container>
         </div>
@@ -41,9 +40,11 @@
             </span>
         </h2>
         <div *ngFor="let result of category.value" class="search-results-entry">
-            <div *ngIf="currentFilters.value.meetingFilter === 'all'" class="breadcrumb">
-                <span *ngIf="result.meeting">{{ result.meeting.name }}</span>
-                <span *ngIf="result.meeting" class="sep">&gt;</span>
+            <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="breadcrumb">
+                <ng-container *ngIf="currentFilters.value.meetingFilter === 'all' && result.meeting">
+                    <a [routerLink]="'/' + result.meeting.id" mat-dialog-close>{{ result.meeting.name }}</a>
+                    <span *ngIf="result.meeting" class="sep">&gt;</span>
+                </ng-container>
                 <span>{{ availableFilters[result.collection] }}</span>
             </div>
             <a *ngIf="result.fqid.startsWith('mediafile')" [href]="result.url" target="blank" mat-dialog-close>
