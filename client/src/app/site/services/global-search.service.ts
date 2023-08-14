@@ -17,7 +17,7 @@ export interface GlobalSearchEntry {
 }
 
 export interface GlobalSearchResponse {
-    [fqid: string]: { content: any; score: number };
+    [fqid: string]: { content: any; score: number; fragments: { [field: string]: string } };
 }
 
 @Injectable({
@@ -39,6 +39,7 @@ export class GlobalSearchService {
         const rawResults: GlobalSearchResponse = await this.http.get(`/system/search`, null, params);
 
         this.updateScores(rawResults);
+        this.parseFragments(rawResults);
 
         return Object.keys(rawResults)
             .filter(fqid => {
@@ -50,12 +51,40 @@ export class GlobalSearchService {
             .sort((a, b) => b.score - a.score);
     }
 
+    /**
+     * Moves the match markers from the fragments into the content.
+     * This is required because html tags within search results are
+     * converted to html special characters.
+     */
+    private parseFragments(results: GlobalSearchResponse): void {
+        for (const fqid of Object.keys(results)) {
+            const result = results[fqid];
+            for (const field of Object.keys(result.fragments)) {
+                if (result.content[field]) {
+                    for (const fragment of result.fragments[field]) {
+                        const marks = fragment.matchAll(/<mark>(.*?)<\/mark>/g);
+                        for (const mark of marks) {
+                            result.content[field] = (<string>result.content[field]).replace(
+                                new RegExp(mark[1], `g`),
+                                mark[0]
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private updateScores(results: GlobalSearchResponse): void {
         for (let fqid of Object.keys(results)) {
             this.updateScore(fqid, results[fqid].score || 0, results);
         }
     }
 
+    /**
+     * Recursively updates the scores of related search results to match
+     * their parents
+     */
     private updateScore(fqid: string, addScore: number, results: GlobalSearchResponse): void {
         const collection = collectionFromFqid(fqid);
         const result = results[fqid];
