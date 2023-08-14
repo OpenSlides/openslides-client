@@ -145,9 +145,13 @@
     width: 100%;
 }
 
-.wifi-card {
+.wifi-button-area {
     display: flex;
     flex-direction: row;
     gap: 10px;
     align-items: center;
+}
+
+.wifi-help-text {
+    color: grey;
 }

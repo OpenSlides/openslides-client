@@ -220,25 +220,24 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`WiFi`),
+                label: _(`Wifi`),
                 settings: [
                     {
                         key: `users_pdf_wlan_ssid`,
                         label: _(`WLAN name (SSID)`),
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
+                        helpText: _(`Used for WLAN QRCode projection.`)
                     },
                     {
                         key: `users_pdf_wlan_password`,
                         label: _(`WLAN password`),
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`)
+                        helpText: _(`Used for WLAN QRCode projection.`)
                     },
                     {
                         key: `users_pdf_wlan_encryption`,
                         label: _(`WLAN encryption`),
                         type: `choice`,
-                        helpText: _(`Used for WLAN QRCode in PDF of access data.`),
+                        helpText: _(`Used for WLAN QRCode projection.`),
                         choices: {
-                            '': `---------`,
                             WEP: `WEP`,
                             WPA: `WPA/WPA2`,
                             nopass: _(`No encryption`)

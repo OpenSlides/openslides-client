@@ -108,7 +108,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 title = this.translate.instant(`Agenda`);
                 break;
             case MeetingProjectionType.WiFiAccess:
-                title = this.translate.instant(`WiFi access data`);
+                title = this.translate.instant(`Wifi access data`);
                 break;
             default:
                 console.warn(`Unknown slide type for meeting:`, projection.type);

@@ -87,11 +87,17 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return false;
     }
 
-    public get hasWiFiData(): boolean {
-        return this._hasWiFiData;
+    public get hasEnoughWiFiData(): boolean {
+        return this._hasEnoughWiFiData;
     }
 
-    private _hasWiFiData: boolean;
+    public get noWiFiData(): boolean {
+        return this._noWiFiData;
+    }
+
+    private _hasEnoughWiFiData: boolean;
+
+    private _noWiFiData: boolean;
 
     private _projectorId: Id | null = null;
 
@@ -125,7 +131,10 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
                 this.meetingSettingsService.get(`users_pdf_wlan_encryption`),
                 this.meetingSettingsService.get(`users_pdf_wlan_password`),
                 this.meetingSettingsService.get(`users_pdf_wlan_ssid`)
-            ]).subscribe(data => (this._hasWiFiData = data.some(date => !!date)))
+            ]).subscribe(data => {
+                this._hasEnoughWiFiData = data[0] && !!data[2] && !(data[0] !== `nopass` && !data[1]);
+                this._noWiFiData = !data.some(date => !!date);
+            })
         );
     }
 
@@ -257,7 +266,7 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
             content_object_id: `meeting/${this.activeMeetingId}`,
             type: MeetingProjectionType.WiFiAccess,
             projectionDefault: null,
-            getDialogTitle: () => this.translate.instant(`WiFi access data`)
+            getDialogTitle: () => this.translate.instant(`Wifi access data`)
         };
     }
 

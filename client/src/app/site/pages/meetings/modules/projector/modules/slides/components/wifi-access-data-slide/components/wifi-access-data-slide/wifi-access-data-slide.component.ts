@@ -32,6 +32,10 @@ export class WifiAccessDataSlideComponent extends BaseSlideComponent<WifiAccessD
     }
 
     public get qrCodeText(): string {
-        return formatWiFiConfig(this.ssid, this.data.data.users_pdf_wlan_encryption, this.password);
+        try {
+            return formatWiFiConfig(this.ssid, this.data.data.users_pdf_wlan_encryption, this.password);
+        } catch (e) {
+            return null;
+        }
     }
 }

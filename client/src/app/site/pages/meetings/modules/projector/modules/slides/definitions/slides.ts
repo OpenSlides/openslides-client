@@ -29,7 +29,7 @@ export const Slides: SlideManifest[] = [
             import(`../components/wifi-access-data-slide/wifi-access-data-slide.module`).then(
                 m => m.WifiAccessDataSlideModule
             ),
-        verboseName: _(`WiFi access data`),
+        verboseName: _(`Wifi access data`),
         scaleable: true,
         scrollable: true
     },
