@@ -55,8 +55,11 @@ export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator =
         follow: [
             {
                 idField: `user_ids`,
-                fieldset: `accountList`,
+                fieldset: [],
                 follow: [{ idField: `meeting_user_ids`, fieldset: `groups` }]
+            },
+            {
+                idField: `meeting_ids`
             }
         ]
     },
@@ -78,7 +81,28 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
             `language`,
             `external_id`
         ],
-        follow: [`admin_group_id`, `default_group_id`]
+        follow: [
+            {
+                idField: `admin_group_id`,
+                fieldset: [
+                    `name`,
+                    `meeting_id`,
+                    `admin_group_for_meeting_id`,
+                    `default_group_for_meeting_id`,
+                    `meeting_user_ids`
+                ]
+            },
+            {
+                idField: `default_group_id`,
+                fieldset: [
+                    `name`,
+                    `meeting_id`,
+                    `admin_group_for_meeting_id`,
+                    `default_group_for_meeting_id`,
+                    `meeting_user_ids`
+                ]
+            }
+        ]
     },
     subscriptionName: MEETING_DETAIL_EDIT_SUBSCRIPTION,
     hideWhenDestroyed: true
