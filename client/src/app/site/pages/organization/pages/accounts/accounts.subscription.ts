@@ -10,7 +10,14 @@ export const getAccountDetailSubscriptionConfig: SubscriptionConfigGenerator = (
         viewModelCtor: ViewUser,
         ids: [id],
         fieldset: `all`,
-        follow: [`committee_ids`, { idField: `meeting_ids`, additionalFields: [`committee_id`] }]
+        follow: [
+            { idField: `committee_ids`, fieldset: [`name`, `manager_ids`] },
+            {
+                idField: `meeting_ids`,
+                follow: [{ idField: `group_ids`, fieldset: [`name`] }],
+                fieldset: [`name`, `committee_id`]
+            }
+        ]
     },
     subscriptionName: ACCOUNT_DETAIL_SUBSCRIPTION_NAME
 });

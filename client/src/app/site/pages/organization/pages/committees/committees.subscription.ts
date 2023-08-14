@@ -20,6 +20,31 @@ export const getCommitteeListSubscriptionConfig: SubscriptionConfigGenerator = (
     subscriptionName: COMMITTEE_LIST_SUBSCRIPTION
 });
 
+export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list`;
+
+export const getCommitteeListMinimalSubscriptionConfig: SubscriptionConfigGenerator = () => ({
+    modelRequest: {
+        viewModelCtor: ViewOrganization,
+        ids: [ORGANIZATION_ID],
+        follow: [
+            {
+                idField: `committee_ids`,
+                fieldset: [
+                    `name`,
+                    `description`,
+                    `meeting_ids`,
+                    `forward_to_committee_ids`,
+                    `receive_forwardings_from_committee_ids`,
+                    `organization_tag_ids`,
+                    `manager_ids`,
+                    `external_id`
+                ]
+            }
+        ]
+    },
+    subscriptionName: COMMITTEE_LIST_SUBSCRIPTION
+});
+
 export const COMMITTEE_DETAIL_SUBSCRIPTION = `committee_detail`;
 
 export const getCommitteeDetailSubscriptionConfig: SubscriptionConfigGenerator = (id: Id) => ({
