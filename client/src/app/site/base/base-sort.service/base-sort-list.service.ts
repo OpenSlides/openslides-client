@@ -148,7 +148,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         super(translate);
 
         this._defaultDefinitionSubject
-            .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty !== curr?.sortProperty))
+            .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty === curr?.sortProperty))
             .subscribe(defaultDef => {
                 if (this._isDefaultSorting && defaultDef) {
                     this.sortDefinition = defaultDef;
