@@ -159,7 +159,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const payload: any[] = data.map(partialUser => ({
             ...partialUser.user,
             ...partialUser.first_meeting_user,
-            is_present_in_meeting_ids: partialUser.user.is_present_in_meeting_ids || []
+            is_present_in_meeting_ids: partialUser.user.is_present_in_meeting_ids?.length
+                ? partialUser.user.is_present_in_meeting_ids
+                : undefined
         }));
         const results: Identifiable[] = await this.sendBulkActionToBackend(UserAction.CREATE, payload);
         const ids: number[] = [];
