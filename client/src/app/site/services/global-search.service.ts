@@ -17,7 +17,7 @@ export interface GlobalSearchEntry {
 }
 
 export interface GlobalSearchResponse {
-    [fqid: string]: { content: any; score: number; fragments: { [field: string]: string } };
+    [fqid: string]: { content: any; score: number; matched_by: { [field: string]: string[] } };
 }
 
 @Injectable({
@@ -59,16 +59,13 @@ export class GlobalSearchService {
     private parseFragments(results: GlobalSearchResponse): void {
         for (const fqid of Object.keys(results)) {
             const result = results[fqid];
-            for (const field of Object.keys(result.fragments)) {
+            for (const field of Object.keys(result.matched_by)) {
                 if (result.content[field]) {
-                    for (const fragment of result.fragments[field]) {
-                        const marks = fragment.matchAll(/<mark>(.*?)<\/mark>/g);
-                        for (const mark of marks) {
-                            result.content[field] = (<string>result.content[field]).replace(
-                                new RegExp(mark[1], `g`),
-                                mark[0]
-                            );
-                        }
+                    for (const word of result.matched_by[field]) {
+                        result.content[field] = (<string>result.content[field]).replace(
+                            new RegExp(word, `gi`),
+                            match => `<mark>${match}</mark>`
+                        );
                     }
                 }
             }
