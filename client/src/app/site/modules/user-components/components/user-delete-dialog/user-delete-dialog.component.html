@@ -85,10 +85,10 @@
             <ng-container *ngIf="hasRelations(user)">
                 <ul *ngFor="let meeting of user.meetings">
                     <p class="meeting-title">{{ meeting.name }}</p>
-                    <li *ngIf="meeting.candidate_ids?.length">
+                    <li *ngIf="meeting.assignment_candidate_ids?.length">
                         {{ 'Is candidate' | translate }}
                     </li>
-                    <li *ngIf="meeting.submitter_ids?.length">
+                    <li *ngIf="meeting.motion_submitter_ids?.length">
                         {{ 'Is submitter' | translate }}
                     </li>
                     <li *ngIf="meeting.speaker_ids?.length">
