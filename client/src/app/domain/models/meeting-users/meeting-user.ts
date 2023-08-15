@@ -28,8 +28,6 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public vote_delegations_from_ids!: Id[]; // meeting_user/vote_delegated_to_id;
     public chat_message_ids!: Id[]; // (chat_message/meeting_user_id)[];
 
-    public projection_ids!: any[];
-
     public constructor(input?: Partial<MeetingUser>) {
         super(MeetingUser.COLLECTION, input);
     }

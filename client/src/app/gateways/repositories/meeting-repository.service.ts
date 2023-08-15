@@ -55,7 +55,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `start_time`,
             `end_time`,
             `is_active_in_organization_id`,
-            `is_archived_organization_id`,
             `template_for_organization_id`,
             `meeting_user_ids`,
             `description`,
@@ -71,7 +70,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `language`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
-            `is_template`,
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,

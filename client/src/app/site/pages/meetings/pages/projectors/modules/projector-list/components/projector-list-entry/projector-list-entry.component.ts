@@ -105,7 +105,8 @@ export class ProjectorListEntryComponent {
      */
     public async onDeleteButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this projector?`);
-        if (await this.promptService.open(title, this.projector.name)) {
+        const content = this.projector.name;
+        if (await this.promptService.open(title, content)) {
             this.repo.delete(this.projector);
         }
     }

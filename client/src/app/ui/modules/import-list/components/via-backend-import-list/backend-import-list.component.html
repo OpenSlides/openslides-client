@@ -1,0 +1,286 @@
+<mat-card class="os-form-card import-table spacer-bottom-60">
+    <mat-tab-group *ngIf="hasSeveralTabs()" (selectedTabChange)="onTabChange($event)">
+        <!-- Tabs before CSV import tab -->
+        <mat-tab *ngFor="let tab of importListFirstTabs">
+            <ng-template matTabLabel>
+                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+        </mat-tab>
+
+        <!-- CSV import tab -->
+        <mat-tab label="{{ 'CSV import' | translate }}">
+            <ng-template matTabContent>
+                <ng-container *ngTemplateOutlet="defaultTabContent"></ng-container>
+            </ng-template>
+        </mat-tab>
+
+        <!-- Tabs after CSV import tab -->
+        <mat-tab *ngFor="let tab of importListLastTabs">
+            <ng-template matTabLabel>
+                <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
+            </ng-template>
+            <ng-container *ngTemplateOutlet="tab._explicitContent"></ng-container>
+        </mat-tab>
+    </mat-tab-group>
+    <ng-container *ngIf="!hasSeveralTabs(); then defaultTabContent"></ng-container>
+</mat-card>
+
+<!-- preview table -->
+<ng-container *ngIf="dataSource | async">
+    <mat-card class="os-form-card spacer-bottom-60">
+        <div class="action-title">
+            <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
+            <button
+                mat-icon-button
+                (click)="enterFullscreen(fullscreenDialog)"
+                matTooltip="{{ 'Fullscreen' | translate }}"
+            >
+                <mat-icon>fullscreen</mat-icon>
+            </button>
+        </div>
+        <table *ngIf="!finishedSuccessfully">
+            <tr *ngFor="let point of summary">
+                <td>{{ getSummaryPointTitle(point.name) | translate }}:</td>
+                <td>&nbsp;{{ point.value }}</td>
+            </tr>
+        </table>
+        <div class="margin-top-12 margin-bottom-12" *ngIf="rows?.length">
+            <span *ngIf="tryAgain">
+                {{
+                    'The import has failed due to recent changes on the server. Please check the updated preview before clicking on "import" again.'
+                        | translate
+                }}
+            </span>
+            <span *ngIf="awaitingConfirm">
+                {{ 'After verifying the preview click on "import" please (see top right).' | translate }}
+            </span>
+            <span *ngIf="isImporting">{{ 'The import is in progress, please wait...' | translate }}</span>
+            <span class="warn" *ngIf="hasErrors">
+                {{
+                    'The import can not proceed. There is likely a problem with the import data, please check the preview for details.'
+                        | translate
+                }}
+            </span>
+            <span class="green-text" *ngIf="finishedSuccessfully">{{ 'The import was successful.' | translate }}</span>
+        </div>
+
+        <ng-container *ngIf="!finishedSuccessfully">
+            <h2>{{ 'Preview' | translate }}</h2>
+            <div *ngIf="!isInFullscreen">
+                <ng-container *ngTemplateOutlet="previewList"></ng-container>
+            </div>
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #defaultTabContent>
+    <br />
+    <span>
+        {{
+            'Required comma or semicolon separated values with these column header names in the first row:' | translate
+        }}
+    </span>
+    <br />
+    <div class="code">
+        <span class="foreground-warn" *ngFor="let entry of possibleFields; let last = last">
+            {{ entry }}
+            <span *ngIf="!last">,&nbsp;</span>
+        </span>
+        <mat-icon color="primary" class="pointer-icon" inline (click)="openDialog(fieldsInfoDialog)">info</mat-icon>
+    </div>
+    <ul *ngIf="requiredFields.length">
+        <li>
+            <span *ngFor="let field of requiredFields; let last = last">
+                {{ field }}
+                <span *ngIf="!last">,&nbsp;</span>
+            </span>
+            <span *ngIf="requiredFields.length === 1">{{ 'is required' | translate }}.</span>
+            <span *ngIf="requiredFields.length > 1">{{ 'are required' | translate }}.</span>
+            {{ 'All other fields are optional and may be empty.' | translate }}
+        </li>
+        <li>
+            {{
+                'Additional columns after the required ones may be present and will not affect the import.' | translate
+            }}
+        </li>
+    </ul>
+    <p *ngIf="additionalInfo">
+        {{ additionalInfo }}
+    </p>
+    <button mat-button color="accent" (click)="downloadCsvExample()">
+        {{ 'Download CSV example file' | translate }}
+    </button>
+    <div class="wrapper import-list-wrapper">
+        <mat-form-field>
+            <mat-label>{{ 'Encoding of the file' | translate }}</mat-label>
+            <mat-select class="selection" (selectionChange)="selectEncoding($event)" [value]="encodings[0].value">
+                <mat-option *ngFor="let option of encodings" [value]="option.value">
+                    {{ option.label | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'Column separator' | translate }}</mat-label>
+            <mat-select class="selection" (selectionChange)="selectColSep($event)" value="">
+                <mat-option *ngFor="let option of columnSeparators" [value]="option.value">
+                    {{ option.label | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>{{ 'Text separator' | translate }}</mat-label>
+            <mat-select class="selection" (selectionChange)="selectTextSep($event)" value='"'>
+                <mat-option *ngFor="let option of textSeparators" [value]="option.value">
+                    {{ option.label | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="bottom-offset">
+        <div class="flex-vertical-center">
+            <input
+                id="user-import-file-input"
+                type="file"
+                class="hidden-input"
+                accept="text"
+                #fileInput
+                (change)="onSelectFile($event)"
+            />
+            <button mat-button color="accent" (click)="fileInput.click()">
+                <span>{{ 'Select file' | translate }}</span>
+            </button>
+            <div *ngIf="!finishedSuccessfully && (rawFileObservable | async) as file">
+                {{ file.name }}
+                <button mat-icon-button (click)="removeSelectedFile()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #entryTemplate let-entry="entry" let-def="def" let-row="row" let-type="type">
+    <div *ngIf="entry[def] || type === 'boolean'" class="flex-vertical-center">
+        <ng-container *ngIf="getHeader(def).is_list">
+            <ng-container
+                *ngIf="entry[def][0]"
+                [ngTemplateOutlet]="entryContentTemplate"
+                [ngTemplateOutletContext]="{ entry: entry[def][0], def: def }"
+            ></ng-container>
+            <ng-container *ngIf="entry[def].length > 1">
+                <div class="fake-button-no-touch">+{{ entry[def].length - 1 }}</div>
+            </ng-container>
+        </ng-container>
+        <ng-container
+            *ngIf="!getHeader(def).is_list"
+            [ngTemplateOutlet]="entryContentTemplate"
+            [ngTemplateOutletContext]="{ entry: entry[def], def: def }"
+        ></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #entryContentTemplate let-entry="entry" let-def="def">
+    <ng-container *ngIf="getHeader(def).type === 'object'">
+        <ng-container
+            [ngTemplateOutlet]="nonObjectEntryTemplate"
+            [ngTemplateOutletContext]="{ entry: entry.value, type: entry.type }"
+        ></ng-container>
+        <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry.info)">
+            {{ getActionIcon(entry.info) }}
+        </mat-icon>
+    </ng-container>
+    <ng-container
+        *ngIf="getHeader(def).type !== 'object'"
+        [ngTemplateOutlet]="nonObjectEntryTemplate"
+        [ngTemplateOutletContext]="{ entry, type: getHeader(def).type}"
+    ></ng-container>
+</ng-template>
+
+<ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
+    <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
+    <ng-container *ngIf="type === 'number'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
+    <mat-checkbox *ngIf="type === 'boolean'" [checked]="entry" disabled></mat-checkbox>
+    &nbsp;
+</ng-template>
+
+<ng-template #previewList>
+    <os-scrolling-table
+        *ngIf="rows?.length && (dataSource | async)"
+        class="import-list-preview-table"
+        tableHeight="500px"
+        [rowHeight]="50"
+        [dataSource]="dataSource"
+        [showHeader]="true"
+        rowClass="import-list-preview-row"
+    >
+        <div
+            *osScrollingTableCell="'status'; row as row; config: { width: 25, position: START_POSITION }"
+            class="flex-vertical-center"
+        >
+            <mat-icon
+                [ngClass]="{ 'red-warning-text': row.state === 'error', warn: row.state === 'warning' }"
+                matTooltip="{{ getRowTooltip(row) }}"
+                matTooltipPosition="right"
+            >
+                {{ getActionIcon(row) }}
+            </mat-icon>
+        </div>
+        <div *osScrollingTableCell="'id'; value as value; config: { width: 25, position: START_POSITION }">
+            <div *osScrollingTableCellLabel>#</div>
+            {{ value }}
+        </div>
+
+        <ng-container *ngFor="let column of previewColumns">
+            <div
+                *osScrollingTableCell="
+                    column.property;
+                    row as row;
+                    definition as def;
+                    isDefault: true;
+                    config: getColumnConfig(column.property)
+                "
+            >
+                <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>
+                <ng-container
+                    *ngTemplateOutlet="
+                        entryTemplate;
+                        context: { entry: row.data, def: def, row: row, type: column.type }
+                    "
+                ></ng-container>
+            </div>
+        </ng-container>
+    </os-scrolling-table>
+</ng-template>
+
+<ng-template #fullscreenDialog>
+    <div mat-dialog-title class="action-title">
+        <h1 class="dialog-title">{{ 'Preview' | translate }}</h1>
+        <button mat-icon-button [mat-dialog-close]="null" matTooltip="{{ 'Exit fullscreen' | translate }}">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div mat-dialog-content>
+        <ng-container *ngTemplateOutlet="previewList"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #fieldsInfoDialog>
+    <div mat-dialog-title class="action-title">
+        <h1 class="dialog-title" translate>The fields are defined as follows</h1>
+    </div>
+    <div mat-dialog-content>
+        <table>
+            <tr *ngFor="let column of defaultColumns">
+                <td>{{ column.property }}:</td>
+                <td>&nbsp;{{ column.label | translate }}</td>
+            </tr>
+        </table>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close>
+            {{ 'Close' | translate }}
+        </button>
+    </div>
+</ng-template>

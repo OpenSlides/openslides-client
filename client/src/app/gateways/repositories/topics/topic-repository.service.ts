@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
+import { Action } from '../../actions';
 import { createAgendaItem } from '../agenda';
 import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
@@ -30,8 +32,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             id: viewModel.id,
             text: update.text,
             title: update.title,
-            attachment_ids: update.attachment_ids || [],
-            tag_ids: update.tag_ids || []
+            attachment_ids: update.attachment_ids || []
         };
         return this.sendActionToBackend(TopicAction.UPDATE, payload);
     }
@@ -39,6 +40,14 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
     public delete(...viewModels: ViewTopic[]): Promise<void> {
         const payload: Identifiable[] = viewModels.map(topic => ({ id: topic.id }));
         return this.sendBulkActionToBackend(TopicAction.DELETE, payload);
+    }
+
+    public jsonUpload(payload: { [key: string]: any }): Action<BackendImportRawPreview> {
+        return this.createAction<BackendImportRawPreview>(TopicAction.JSON_UPLOAD, payload);
+    }
+
+    public import(payload: { id: number; import: boolean }[]): Action<BackendImportRawPreview | void> {
+        return this.createAction<BackendImportRawPreview | void>(TopicAction.IMPORT, payload);
     }
 
     public getTitle = (topic: ViewTopic) => topic.title;
@@ -69,7 +78,8 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
             agenda_parent_id: topicAgendaItem.parent_id,
             agenda_weight: topicAgendaItem.weight,
             agenda_comment: topicAgendaItem.comment,
-            agenda_duration: topicAgendaItem.duration
+            agenda_duration: topicAgendaItem.duration,
+            tag_ids: topicAgendaItem.tag_ids
         };
     }
 

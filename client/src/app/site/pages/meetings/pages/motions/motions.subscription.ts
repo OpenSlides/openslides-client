@@ -55,7 +55,6 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `state_extension_reference_ids`,
                     `state_id`,
                     `submitter_ids`,
-                    `supporter_ids`,
                     `tag_ids`,
                     `title`
                 ],
@@ -74,8 +73,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     }
                 ]
             }
-        ],
-        additionalFields: [`origin_id`, `origin_meeting_id`, `derived_motion_ids`]
+        ]
     },
     subscriptionName: MOTION_LIST_SUBSCRIPTION
 });

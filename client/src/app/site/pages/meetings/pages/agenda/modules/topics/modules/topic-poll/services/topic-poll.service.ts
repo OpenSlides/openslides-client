@@ -53,7 +53,7 @@ export class TopicPollService extends PollService {
         super(organizationSettingsService, translate, pollKeyVerbose, parsePollNumber, themeService);
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
-            .get(`topic_poll_default_onehundred_percent_base`)
+            .get(`poll_default_onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base ?? PollPercentBase.Y));
 
         this.meetingSettingsService
@@ -61,20 +61,14 @@ export class TopicPollService extends PollService {
             .subscribe(ids => (this.defaultGroupIds = ids ?? []));
 
         this.meetingSettingsService
-            .get(`topic_poll_default_method`)
+            .get(`poll_default_method`)
             .subscribe(method => (this.defaultPollMethod = method ?? PollMethod.Y));
 
         this.meetingSettingsService
-            .get(`topic_poll_default_type`)
+            .get(`poll_default_type`)
             .subscribe(type => (this.defaultPollType = type ?? PollType.Pseudoanonymous));
 
-        this.meetingSettingsService
-            .get(`topic_poll_sort_poll_result_by_votes`)
-            .subscribe(sort => (this.sortByVote = sort));
-
-        this.meetingSettingsService
-            .get(`topic_poll_enable_max_votes_per_option`)
-            .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option));
+        this.meetingSettingsService.get(`poll_sort_poll_result_by_votes`).subscribe(sort => (this.sortByVote = sort));
     }
 
     public getDefaultPollData(contentObject?: Topic): Partial<Poll> {
