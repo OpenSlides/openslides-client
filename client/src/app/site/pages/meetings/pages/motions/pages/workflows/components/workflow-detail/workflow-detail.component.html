@@ -106,10 +106,9 @@
                             <div class="inner-table">
                                 <div *ngIf="!state.next_states.length">-</div>
                                 <div *ngIf="state.next_states.length">
-                                    <div *ngFor="let nextstate of state.next_states; let last = last">
-                                        {{ nextstate.name }}
-                                        <span *ngIf="!last">,&nbsp;</span>
-                                    </div>
+                                    <os-comma-separated-listing [list]="state.next_states">
+                                        <ng-template let-next>{{ next.name }}</ng-template>
+                                    </os-comma-separated-listing>
                                 </div>
                             </div>
                             <div
@@ -132,10 +131,9 @@
                             <div class="inner-table">
                                 <div *ngIf="!state.restrictions?.length">-</div>
                                 <div *ngIf="state.restrictions?.length">
-                                    <div *ngFor="let restriction of state.restrictions; let last = last">
-                                        {{ getRestrictionLabel(restriction) | translate }}
-                                        <span *ngIf="!last">,&nbsp;</span>
-                                    </div>
+                                    <os-comma-separated-listing [list]="state.restrictions">
+                                        <ng-template let-res>{{ getRestrictionLabel(res) | translate }}</ng-template>
+                                    </os-comma-separated-listing>
                                 </div>
                             </div>
                             <div

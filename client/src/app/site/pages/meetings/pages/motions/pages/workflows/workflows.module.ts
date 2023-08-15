@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { FileUploadModule } from 'src/app/ui/modules/file-upload';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { SortingListModule } from 'src/app/ui/modules/sorting/modules';
@@ -36,6 +37,7 @@ import { WorkflowsRoutingModule } from './workflows-routing.module';
     ],
     imports: [
         CommonModule,
+        CommaSeparatedListingModule,
         WorkflowsRoutingModule,
         MotionWorkflowServiceModule,
         MeetingsComponentCollectorModule,

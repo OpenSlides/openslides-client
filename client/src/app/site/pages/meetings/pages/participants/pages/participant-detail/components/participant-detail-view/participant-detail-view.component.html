@@ -216,10 +216,9 @@
         <!-- Groups -->
         <div *ngIf="usersGroups && usersGroups.length > 0">
             <h4>{{ 'Groups' | translate }}</h4>
-            <span *ngFor="let group of usersGroups; let last = last" class="inline-flex">
-                {{ group.getTitle() | translate }}
-                <span *ngIf="!last">,&nbsp;</span>
-            </span>
+            <os-comma-separated-listing [list]="usersGroups">
+                <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+            </os-comma-separated-listing>
         </div>
 
         <div *ngIf="!usersGroups || usersGroups?.length === 0">

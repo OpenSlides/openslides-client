@@ -35,10 +35,9 @@
         {{ motion.supporters.length }} {{ 'supporters' | translate }}
     </button>
     <p *ngIf="showSupporters" class="supporters">
-        <span *ngFor="let supporter of motion.supporters; let last = last">
-            {{ supporter.full_name }}
-            <span *ngIf="!last">,</span>
-        </span>
+        <os-comma-separated-listing [list]="motion.supporters">
+            <ng-template let-supporter>{{ supporter.full_name }}</ng-template>
+        </os-comma-separated-listing>
     </p>
 </div>
 
