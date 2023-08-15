@@ -14,6 +14,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewCommittee } from '../../../../../committees';
+import { getCommitteeListMinimalSubscriptionConfig } from '../../../../../committees/committees.subscription';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
@@ -57,6 +58,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isEditingUser = false;
     public user: ViewUser | null = null;
     public isNewUser = false;
+    public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
 
     public get tableData(): ParticipationTableData {
         return this._tableData;

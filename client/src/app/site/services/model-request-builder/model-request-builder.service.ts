@@ -156,6 +156,12 @@ export class ModelRequestBuilderService {
             fieldsetFields.push(`id`);
         }
 
+        if (this.collectionMapper.getModelConstructor(modelRequestObject.collection).ACCESSIBILITY_FIELD) {
+            fieldsetFields.push(
+                this.collectionMapper.getModelConstructor(modelRequestObject.collection).ACCESSIBILITY_FIELD
+            );
+        }
+
         // insert the fieldsetFields into fields
         for (const f of fieldsetFields) {
             if (typeof f === `string`) {
