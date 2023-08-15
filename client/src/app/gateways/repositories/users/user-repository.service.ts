@@ -18,7 +18,7 @@ import { Action } from '../../actions';
 import { MeetingUserRepositoryService } from '../meeting_user';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
-export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid };
+export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid; meeting_user_id?: Id };
 
 export type GeneralUser = User & MeetingUser;
 
@@ -139,7 +139,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         };
     }
 
-    public async create(...usersToCreate: any[]): Promise<Identifiable[]> {
+    public async create(...usersToCreate: any[]): Promise<(Identifiable & { meeting_user_id?: Id })[]> {
         const data = usersToCreate.map(user => {
             const meetingUsers = user.meeting_users as Partial<ViewMeetingUser>[];
             return {
@@ -163,7 +163,10 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                 ? partialUser.user.is_present_in_meeting_ids
                 : undefined
         }));
-        const results: Identifiable[] = await this.sendBulkActionToBackend(UserAction.CREATE, payload);
+        const results: (Identifiable & { meeting_user_id?: Id })[] = await this.sendBulkActionToBackend(
+            UserAction.CREATE,
+            payload
+        );
         const ids: number[] = [];
         const updatePayload: any[] = [];
         for (let date of data) {
