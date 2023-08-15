@@ -31,6 +31,10 @@ export class GlobalSearchService {
         collections: string[] = [],
         meeting?: Id
     ): Promise<GlobalSearchEntry[]> {
+        if (!searchTerm) {
+            return [];
+        }
+
         const params: { q: string; m?: string } = { q: searchTerm };
         if (meeting) {
             params.m = meeting.toString();
@@ -52,9 +56,7 @@ export class GlobalSearchService {
     }
 
     /**
-     * Moves the match markers from the fragments into the content.
-     * This is required because html tags within search results are
-     * converted to html special characters.
+     * Searches the content for search matches and replaces them with markers
      */
     private parseFragments(results: GlobalSearchResponse): void {
         for (const fqid of Object.keys(results)) {
