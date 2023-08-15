@@ -11,6 +11,7 @@ export interface GlobalSearchEntry {
     fqid: string;
     collection: string;
     url?: string;
+    obj?: any;
     meeting?: { id: Id; name: string };
     committee?: { id: Id; name: string };
     score?: number;
@@ -114,6 +115,7 @@ export class GlobalSearchService {
         return {
             title: this.getTitle(collection, content),
             text: content.text || content.description,
+            obj: content,
             fqid,
             collection,
             url: this.getUrl(collection, id, content),

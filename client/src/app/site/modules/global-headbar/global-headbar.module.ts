@@ -16,6 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { InputModule } from 'src/app/ui/modules/input';
 
 import { OpenSlidesTranslationModule } from '../translations';
 import { UserComponentsModule } from '../user-components';
@@ -25,6 +26,7 @@ import { GlobalHeadbarComponent } from './components/global-headbar/global-headb
 import { GlobalSearchComponent } from './components/global-search/global-search.component';
 
 const MODULES = [
+    InputModule,
     MatToolbarModule,
     MatIconModule,
     MatListModule,

@@ -88,6 +88,47 @@ export class GlobalSearchComponent implements OnDestroy {
         this.cd.markForCheck();
     }
 
+    public getTextSnippet(text: string): string {
+        const textSnippetSize = 90;
+        const removeTags = /<\/?(?!(?:mark)\b)[^/>]+>/g;
+        let resultText = ``;
+        const textParts = text.replace(removeTags, ``).split(new RegExp(`(<mark>[^<]+<\/mark>)`, `g`));
+        let totalLength = 0;
+
+        let append = ``;
+        totalLength += textParts[1].length - 13;
+        append += textParts[1] + ` `;
+
+        const preText = textParts[0].split(` `);
+        for (let j = preText.length - 1; j >= 0 && !preText[j].endsWith(`.`); j--) {
+            append = preText[j] + ` ` + append;
+            totalLength += preText[j].length;
+            if (totalLength > textSnippetSize) {
+                break;
+            }
+        }
+        resultText += append;
+
+        outer: for (let i = 2; i < textParts.length; i++) {
+            if (textParts[i].startsWith(`<mark>`)) {
+                totalLength += textParts[i].length - 13;
+                resultText += textParts[i];
+            } else {
+                const text = textParts[i].split(` `);
+                for (let word of text) {
+                    totalLength += word.length;
+                    resultText += ` ` + word;
+                    if (totalLength > textSnippetSize) {
+                        resultText += `\u2026`;
+                        break outer;
+                    }
+                }
+            }
+        }
+
+        return resultText;
+    }
+
     private updateFilteredResults(): void {
         this.filteredResults = [];
         let allUnchecked = true;

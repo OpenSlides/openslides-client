@@ -41,7 +41,20 @@
             > :last-of-type {
                 margin-bottom: 0;
             }
+            > div, > p {
+                font-size: 10px;
+            }
         }
+
+        ::ng-deep mark {
+            background: none;
+            font-weight: 400;
+        }
+
+        ::ng-deep :not(h3) > mark {
+            font-weight: 500;
+        }
+
         .breadcrumb {
             font-size: 10px;
             + a h3 {
@@ -63,6 +76,7 @@
     display: flex;
     flex-wrap: wrap;
     margin-top: 12px;
+    padding: 0 50px;
     justify-content: space-between;
     .filter {
         padding-right: 24px;
