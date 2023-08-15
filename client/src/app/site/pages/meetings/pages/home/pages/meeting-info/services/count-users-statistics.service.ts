@@ -54,7 +54,7 @@ export class CountUsersStatisticsService {
         const raw = await this.http.get<{ [key: string]: number }>(CONNECTION_COUNT_PATH);
         this._lastUpdated = Date.now();
         const entries = Object.entries(raw).filter(
-            entry => entry[1] > 0 && this.userRepo.getViewModel(+entry[0]).getMeetingUser()
+            entry => entry[1] > 0 && this.userRepo.getViewModel(+entry[0])?.getMeetingUser()
         );
         const users = Object.fromEntries(entries);
         let result = {

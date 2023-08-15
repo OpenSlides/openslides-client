@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { filter, firstValueFrom, map } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
+import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
+import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
-const INFO_SUBSCRIPTION = `info`;
+const INFO_SUBSCRIPTION = `meeting_info`;
 
 @Component({
     selector: `os-meeting-info`,
     templateUrl: `./meeting-info.component.html`,
     styleUrls: [`./meeting-info.component.scss`]
 })
-export class MeetingInfoComponent extends BaseComponent implements OnInit {
+export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit {
     public get canSeeStatistics(): boolean {
         return this.osIsManager || this.operator.hasPerms(Permission.userCanManage);
     }
@@ -25,32 +25,35 @@ export class MeetingInfoComponent extends BaseComponent implements OnInit {
     }
 
     public constructor(
-        componentServiceCollector: ComponentServiceCollectorService,
+        componentServiceCollector: MeetingComponentServiceCollectorService,
         protected override translate: TranslateService,
         private orgaRepo: OrganizationRepositoryService,
         private operator: OperatorService
     ) {
         super(componentServiceCollector, translate);
-        this.modelRequestService.subscribeTo({
-            modelRequest: {
-                viewModelCtor: ViewOrganization,
-                ids: [ORGANIZATION_ID],
-                follow: [
-                    {
-                        idField: `user_ids`,
-                        fieldset: [],
-                        follow: [
-                            {
-                                idField: `meeting_user_ids`,
-                                fieldset: `groups`,
-                                follow: [{ idField: `group_ids`, fieldset: [`name`, `meeting_id`] }]
-                            }
-                        ]
-                    }
-                ]
-            },
-            subscriptionName: INFO_SUBSCRIPTION
-        });
+        firstValueFrom(this.activeMeetingIdService.meetingIdObservable.pipe(filter(val => !!val))).then(() =>
+            this.modelRequestService.subscribeTo({
+                modelRequest: {
+                    viewModelCtor: ViewMeeting,
+                    ids: [this.activeMeetingId],
+                    follow: [
+                        {
+                            idField: `meeting_user_ids`,
+                            fieldset: `groups`,
+                            follow: [
+                                { idField: `group_ids`, fieldset: [`name`, `meeting_id`] },
+                                {
+                                    idField: `user_id`,
+                                    fieldset: [`username`, `meeting_user_ids`]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                subscriptionName: `${INFO_SUBSCRIPTION}_${this.activeMeetingId}`,
+                hideWhen: this.activeMeetingIdService.meetingIdChanged.pipe(map(id => !id))
+            })
+        );
     }
 
     public ngOnInit(): void {
