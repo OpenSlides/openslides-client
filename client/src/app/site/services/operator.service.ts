@@ -57,8 +57,8 @@ export class OperatorService {
     }
 
     public get isMeetingAdmin(): boolean {
-        if (this.defaultGroupId) {
-            return this.isInGroupIdsNonAdminCheck(this.defaultGroupId);
+        if (this.adminGroupId) {
+            return this.isInGroupIdsNonAdminCheck(this.adminGroupId);
         } else {
             throw new NoActiveMeetingError();
         }

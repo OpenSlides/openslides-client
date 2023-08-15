@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, map } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
 import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
@@ -17,11 +16,15 @@ const INFO_SUBSCRIPTION = `meeting_info`;
 })
 export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit {
     public get canSeeStatistics(): boolean {
-        return this.osIsManager || this.operator.hasPerms(Permission.userCanManage);
+        return this.osIsManager || this.osIsMeetingAdmin;
     }
 
-    private get osIsManager(): boolean {
+    public get osIsManager(): boolean {
         return this.operator.isSuperAdmin || this.operator.isOrgaManager;
+    }
+
+    public get osIsMeetingAdmin(): boolean {
+        return this.operator.isMeetingAdmin;
     }
 
     public constructor(
@@ -44,7 +47,18 @@ export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit
                                 { idField: `group_ids`, fieldset: [`name`, `meeting_id`] },
                                 {
                                     idField: `user_id`,
-                                    fieldset: [`username`, `meeting_user_ids`]
+                                    fieldset: [`meeting_user_ids`]
+                                }
+                            ]
+                        },
+                        {
+                            idField: `list_of_speakers_ids`,
+                            fieldset: [],
+                            follow: [
+                                {
+                                    idField: `speaker_ids`,
+                                    fieldset: [`begin_time`, `end_time`, `point_of_order`],
+                                    follow: [`meeting_user_id`]
                                 }
                             ]
                         }

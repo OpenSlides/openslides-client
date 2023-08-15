@@ -1,7 +1,9 @@
 <button type="button" mat-stroked-button (click)="countUsers()">
-    {{ 'Count logged-in users' | translate }}
+    <span *ngIf="!stats">{{ 'Count logged-in users' | translate }}</span>
+    <span *ngIf="stats">{{ 'Re-count logged-in users' | translate }}</span>
 </button>
 <div *ngIf="stats">
+    <i>{{ 'last Updated' | translate }}: {{ lastUpdated / 1000 | localizedDate : 'PPpp' }}</i>
     <p>
         {{ userIds().length }} {{ 'logged-in users' | translate }} ({{ stats.activeUserHandles }}
         {{ 'connections' | translate }})
@@ -16,5 +18,4 @@
             {{ 'connections' | translate }})
         </li>
     </ul>
-    <i>{{ 'last Updated' | translate }}: {{ lastUpdated / 1000 | localizedDate }}</i>
 </div>
