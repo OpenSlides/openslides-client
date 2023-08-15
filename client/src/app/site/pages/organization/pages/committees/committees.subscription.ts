@@ -46,7 +46,6 @@ export const getCommitteeMeetingDetailSubscriptionConfig: SubscriptionConfigGene
         ids: [id],
         fieldset: [],
         additionalFields: [
-            `is_template`,
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,

@@ -21,9 +21,9 @@ export class TopicExportService {
 
     public downloadCsvImportExample(): void {
         const rows: TopicExport[] = [
-            { title: `Demo 1`, text: `Demo text 1`, agenda_duration: `1:00`, agenda_comment: `Test comment` },
-            { title: `Break`, agenda_duration: `0:10`, agenda_type: `internal` },
-            { title: `Demo 2`, text: `Demo text 2`, agenda_duration: `1:30`, agenda_type: `hidden` }
+            { title: `Demo 1`, text: `Demo text 1`, agenda_duration: `60`, agenda_comment: `Test comment` },
+            { title: `Break`, agenda_duration: `10`, agenda_type: `internal` },
+            { title: `Demo 2`, text: `Demo text 2`, agenda_duration: `90`, agenda_type: `hidden` }
         ];
 
         this.csvExportService.dummyCSVExport<TopicExport>(

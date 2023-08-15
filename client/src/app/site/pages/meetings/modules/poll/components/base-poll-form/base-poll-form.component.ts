@@ -257,9 +257,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
     }
 
     private checkPollBackend(): void {
+        const pollType = this.data.content_object?.collection as PollClassType;
         if (!this.data.backend) {
-            const pollType = this.data.content_object?.collection as PollClassType;
-            this.data.backend = this.meetingSettingService.instant(`${pollType}_poll_default_backend`);
+            if (pollType !== `topic`) {
+                this.data.backend = this.meetingSettingService.instant(`${pollType}_poll_default_backend`);
+            } else {
+                this.data.backend = this.meetingSettingService.instant(`poll_default_backend`);
+            }
         }
     }
 

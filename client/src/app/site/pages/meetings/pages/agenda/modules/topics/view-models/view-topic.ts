@@ -5,7 +5,6 @@ import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-model
 import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
 
 import { HasAttachment } from '../../../../mediafiles/view-models/has-attachment';
-import { HasTags } from '../../../../motions/modules/tags/view-models/has-tags';
 import { HasPolls, VotingTextContext } from '../../../../polls';
 
 export class ViewTopic extends BaseProjectableViewModel<Topic> {
@@ -42,7 +41,6 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
 export interface ViewTopic
     extends Topic,
         HasAttachment,
-        HasTags,
         HasAgendaItem,
         HasListOfSpeakers,
         HasMeeting,
