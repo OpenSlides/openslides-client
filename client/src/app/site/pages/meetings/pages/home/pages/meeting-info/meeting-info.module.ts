@@ -6,6 +6,7 @@ import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { ListModule } from 'src/app/ui/modules/list';
+import { PipesModule } from 'src/app/ui/pipes';
 
 import { CountUsersComponent } from './components/count-users/count-users.component';
 import { MeetingInfoComponent } from './components/meeting-info/meeting-info.component';
@@ -22,7 +23,8 @@ import { MeetingInfoRoutingModule } from './meeting-info-routing.module';
         ListModule,
         DirectivesModule,
         OpenSlidesTranslationModule.forChild(),
-        InfoModule
+        InfoModule,
+        PipesModule
     ]
 })
 export class MeetingInfoModule {}
