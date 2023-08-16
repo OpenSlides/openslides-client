@@ -133,7 +133,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     public isSameProperty(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
         a = Array.isArray(a) ? a : [a];
         b = Array.isArray(b) ? b : [b];
-        return a.length === b.length && a.every((value, index) => value === b[index]);
+        return a.equals(b);
     }
 
     private _defaultDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V>>(null);
