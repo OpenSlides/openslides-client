@@ -152,6 +152,8 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             .subscribe(defaultDef => {
                 if (this._isDefaultSorting && defaultDef) {
                     this.setSorting(defaultDef.sortProperty, defaultDef.sortAscending);
+                } else if (defaultDef && this.sortDefinition?.sortProperty === defaultDef?.sortProperty) {
+                    this.updateSortDefinitions();
                 }
             });
 
