@@ -70,7 +70,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
             MOTION_PDF_OPTIONS.Page,
             MOTION_PDF_OPTIONS.AddBreaks
         ],
-        metaInfo: [`submitters`, `state`, `recommendation`, `category`, `tags`, `block`, `polls`]
+        metaInfo: [`submitters`, `state`, `recommendation`, `category`, `tags`, `block`, `polls`, `referring_motions`]
     };
 
     /**
@@ -96,6 +96,12 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
      */
     @ViewChild(`votingResultButton`, { static: true })
     public votingResultButton!: MatButtonToggle;
+
+    /**
+     * To deactivate the referring motions button
+     */
+    @ViewChild(`referringMotionsButton`, { static: true })
+    public referringMotionsButton!: MatButtonToggle;
 
     /**
      * To deactivate the speakers button.
@@ -184,6 +190,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
                 this.disableMetaInfoControl(`polls`);
             }
             this.votingResultButton.disabled = true;
+            this.referringMotionsButton.disabled = true;
         }
 
         if (format === ExportFileFormat.PDF) {
@@ -191,6 +198,7 @@ export class MotionExportDialogComponent extends BaseUiComponent implements OnIn
             this.enableControl(`crMode`);
             this.enableControl(`pdfOptions`);
             this.votingResultButton.disabled = false;
+            this.referringMotionsButton.disabled = false;
         }
     }
 
