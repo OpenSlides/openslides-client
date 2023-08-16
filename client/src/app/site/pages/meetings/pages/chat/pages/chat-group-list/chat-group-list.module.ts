@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { VerticalTabGroupModule } from 'src/app/ui/modules/vertical-tab-group';
@@ -32,6 +33,7 @@ import { ChatGroupListComponent } from './components/chat-group-list/chat-group-
     ],
     imports: [
         CommonModule,
+        CommaSeparatedListingModule,
         ChatGroupListRoutingModule,
         ChatGroupDialogModule,
         PipesModule,

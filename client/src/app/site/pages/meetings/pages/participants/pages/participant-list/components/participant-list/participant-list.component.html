@@ -72,10 +72,9 @@
         <div class="groupsCell">
             <div *ngIf="user.groups()?.length">
                 <os-icon-container icon="people" [noWrap]="true">
-                    <span *ngFor="let group of user.groups(); let last = last" class="inline-flex">
-                        {{ group.getTitle() | translate }}
-                        <span *ngIf="!last">,&nbsp;</span>
-                    </span>
+                    <os-comma-separated-listing [list]="user.groups()">
+                        <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+                    </os-comma-separated-listing>
                 </os-icon-container>
             </div>
             <div *ngIf="user.structure_level()" class="spacer-top-5">
