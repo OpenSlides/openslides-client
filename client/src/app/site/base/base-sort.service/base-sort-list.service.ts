@@ -138,7 +138,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     private _defaultDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V>>(null);
 
-    private _isDefaultSorting = true;
+    private _isDefaultSorting = false;
 
     public constructor(
         translate: TranslateService,
@@ -151,8 +151,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty === curr?.sortProperty))
             .subscribe(defaultDef => {
                 if (this._isDefaultSorting && defaultDef) {
-                    this.sortDefinition = defaultDef;
-                    this.updateSortDefinitions();
+                    this.setSorting(defaultDef.sortProperty, defaultDef.sortAscending);
                 }
             });
 
@@ -265,10 +264,14 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param property a sorting property of a view model
      * @param ascending ascending or descending
      */
-    public setSorting(property: keyof V, ascending: boolean): void {
-        this.sortDefinition!.sortProperty = property;
-        this.sortDefinition!.sortAscending = ascending;
-        this.updateSortDefinitions();
+    public setSorting(property: OsSortProperty<V>, ascending: boolean): void {
+        if (!this.sortDefinition) {
+            this.sortDefinition = { sortProperty: property, sortAscending: ascending };
+        } else {
+            this.sortDefinition!.sortProperty = property;
+            this.sortDefinition!.sortAscending = ascending;
+            this.updateSortDefinitions();
+        }
     }
 
     /**
