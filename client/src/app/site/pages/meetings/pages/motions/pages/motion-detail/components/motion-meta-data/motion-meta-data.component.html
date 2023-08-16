@@ -135,6 +135,14 @@
         </span>
     </os-motion-extension-field>
 
+    <!-- recommendation referenced motions -->
+    <div class="spacer-top-10" *ngIf="showReferringMotions && referencedMotions?.length > 0">
+        <span *ngFor="let motion of referencedMotions; let last = last">
+            <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
+            <span *ngIf="!last" class="referencelist">&nbsp;·&nbsp;</span>
+        </span>
+    </div>
+
     <button mat-stroked-button *ngIf="canFollowRecommendation()" (click)="onFollowRecButton()" class="spacer-top-10">
         <span>{{ 'Follow recommendation' | translate }}</span>
     </button>
