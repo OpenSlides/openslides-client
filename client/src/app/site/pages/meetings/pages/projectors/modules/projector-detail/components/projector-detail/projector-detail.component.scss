@@ -144,3 +144,14 @@
 .dynamic-list-entry {
     width: 100%;
 }
+
+.wifi-button-area {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.wifi-help-text {
+    color: grey;
+}

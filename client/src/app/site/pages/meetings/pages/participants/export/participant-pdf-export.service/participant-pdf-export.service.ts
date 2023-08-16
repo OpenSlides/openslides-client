@@ -41,7 +41,6 @@ export class ParticipantPdfExportService {
         const doc: object[] = [];
         participants.forEach(participant => {
             doc.push(this.userPdfService.userAccessToDocDef(participant));
-            doc.push({ text: ``, pageBreak: `after` });
         });
         const filename = this.getPdfFilenameForAccessDocuments(participants);
         const metadata = {

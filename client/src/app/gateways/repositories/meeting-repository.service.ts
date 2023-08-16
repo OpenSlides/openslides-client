@@ -19,7 +19,8 @@ import { UserAction } from './users/user-action';
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_list_of_speakers`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
-    AgendaItemList = `agenda_item_list`
+    AgendaItemList = `agenda_item_list`,
+    WiFiAccess = `wifi_access_data`
 }
 
 export interface ImportMeeting {
@@ -105,6 +106,9 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
                 break;
             case MeetingProjectionType.AgendaItemList:
                 title = this.translate.instant(`Agenda`);
+                break;
+            case MeetingProjectionType.WiFiAccess:
+                title = this.translate.instant(`Wifi access data`);
                 break;
             default:
                 console.warn(`Unknown slide type for meeting:`, projection.type);

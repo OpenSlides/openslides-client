@@ -51,6 +51,9 @@ export class ProjectorButtonComponent implements OnInit, OnDestroy {
     @Input()
     public blendIn = false;
 
+    @Input()
+    public disabled = false;
+
     /**
      * If this is re-defined, it will replace the usual click functionality.
      */
