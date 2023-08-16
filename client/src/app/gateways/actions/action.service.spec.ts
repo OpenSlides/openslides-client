@@ -11,7 +11,7 @@ const ACTION_SEPARATELY_URL = `/system/action/handle_separately`;
 class MockHttpService {
     public lastPosts: { path: string; data: any; queryParams: QueryParams }[] = [];
 
-    public returnType: `response` | `error` | `nothing` | `too little` | `non-response` = `response`;
+    public returnType: `response` | `error` | `nothing` | `too little` | `non-response` | `no results` = `response`;
 
     public constructor() {}
 
@@ -32,6 +32,11 @@ class MockHttpService {
                 return this.wrapInActionResponse([]) as unknown as R;
             case `non-response`:
                 return `I am a string` as unknown as R;
+            case `no results`:
+                return {
+                    success: true,
+                    message: `Actions handeled successfully`
+                } as unknown as R;
             default:
                 return null;
         }
@@ -55,20 +60,20 @@ class MockHttpService {
 }
 
 const exampleData = [
-    { title: `undefined`, data: undefined, expected: `null` },
-    { title: `null`, data: null, expected: `null` },
-    { title: `'0'`, data: 0, expected: `0` },
-    { title: `positive integer`, data: 1, expected: `1` },
-    { title: `negative integer`, data: -2, expected: `-2` },
-    { title: `NaN`, data: Number.NaN, expected: `null` },
-    { title: `infinity`, data: Number.POSITIVE_INFINITY, expected: `null` },
-    { title: `a string`, data: `a`, expected: `"a"` },
-    { title: `an empty string`, data: ``, expected: `""` },
-    { title: `a string containing a number`, data: `1`, expected: `"1"` },
-    { title: `an object`, data: { a: 1 }, expected: `{"a":1}` },
-    { title: `an empty object`, data: {}, expected: `{}` },
-    { title: `an array`, data: [1, 2, 3], expected: `[1,2,3]` },
-    { title: `an empty array`, data: [], expected: `[]` }
+    { data: undefined, expected: `null` },
+    { data: null, expected: `null` },
+    { data: 0, expected: `0` },
+    { data: 1, expected: `1` },
+    { data: -2, expected: `-2` },
+    { data: Number.NaN, expected: `null` },
+    { data: Number.POSITIVE_INFINITY, expected: `null` },
+    { data: `a`, expected: `"a"` },
+    { data: ``, expected: `""` },
+    { data: `1`, expected: `"1"` },
+    { data: { a: 1 }, expected: `{"a":1}` },
+    { data: {}, expected: `{}` },
+    { data: [1, 2, 3], expected: `[1,2,3]` },
+    { data: [], expected: `[]` }
 ];
 
 function getExampleSlice(start: number, end: number = 0): any {
@@ -87,7 +92,7 @@ function getActionExpect(actionName: string, start: number, end: number = 0, wra
         .join(`,`)}]}${new Array(wrap).fill(`]`).join(``)}`;
 }
 
-fdescribe(`ActionService`, () => {
+describe(`ActionService`, () => {
     let service: ActionService;
     let http: MockHttpService;
 
@@ -134,19 +139,31 @@ fdescribe(`ActionService`, () => {
         );
         http.returnType = `nothing`;
         await expectAsync(service.sendRequests(actionPayload)).toBeResolvedTo(null);
+        http.returnType = `no results`;
+        await expectAsync(service.sendRequests(actionPayload)).toBeResolvedTo(null);
     });
 
     it(`test create`, async () => {
-        let action = service.create<any>({ action: `arbitrary.action`, data: getActionData(1, 2) });
-        expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`arbitrary.action`, 1, 2, 1));
+        let action = service.create<any>({ action: `an.action`, data: getActionData(7, 9) });
+        expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`an.action`, 7, 9, 1));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].path === ACTION_URL).toBe(true);
     });
 
     it(`test createFromArray`, async () => {
-        let action = service.createFromArray<any>([{ action: `arbitrary.action`, data: getActionData(1, 2) }]);
-        expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`arbitrary.action`, 1, 2, 1));
+        let action = service.createFromArray<any>([{ action: `action.movie`, data: getActionData(5, 7) }]);
+        expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`action.movie`, 5, 7, 1));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].path === ACTION_URL).toBe(true);
     });
-});
 
-// it(`test beforeActionFunction`, async () => {});
+    it(`test beforeActionFunction`, async () => {
+        let indices = [service.addBeforeActionFn(() => true)];
+        expect(await service.sendRequests([{ action: `action.one`, data: getActionData(1, 2) }])).toBe(null);
+        indices.push(service.addBeforeActionFn(() => false));
+        expect(await service.sendRequests([{ action: `action.two`, data: getActionData(1, 4) }])).toBe(null);
+        service.removeBeforeActionFn(indices[0]);
+        expect(
+            JSON.stringify(await service.sendRequests([{ action: `action.three`, data: getActionData(10, 12) }]))
+        ).toBe(getActionExpect(`action.three`, 10, 12));
+        expect(http.lastPosts.length === 1 && http.lastPosts[0].data[0][`action`] === `action.three`).toBe(true);
+    });
+});
