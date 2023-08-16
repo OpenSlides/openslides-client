@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { distinctUntilChanged, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { Settings } from 'src/app/domain/models/meetings/meeting';
 import { Motion } from 'src/app/domain/models/motions';
@@ -311,21 +311,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             this.repo
                 .getViewModelObservable(this.motion.id)
                 .pipe(
-                    distinctUntilChanged(
-                        (p, c) =>
-                            p.referenced_in_motion_recommendation_extensions.equals(
-                                c.referenced_in_motion_recommendation_extensions
-                            ) && p.recommendation_extension_references.equals(c.recommendation_extension_references)
-                    )
+                    map(motion => [
+                        motion.referenced_in_motion_recommendation_extensions,
+                        motion.recommendation_extension_references as ViewMotion[]
+                    ]),
+                    distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
+                    map(arr => arr.map(motions => (motions || []).sort((a, b) => a.number.localeCompare(b.number))))
                 )
-                .subscribe(value => {
-                    this._referencingMotions = (value.referenced_in_motion_recommendation_extensions || []).sort(
-                        (a, b) => a.number.localeCompare(b.number)
-                    );
-                    this._referencedMotions = ((value.recommendation_extension_references as ViewMotion[]) || []).sort(
-                        (a, b) => a.number.localeCompare(b.number)
-                    );
-                })
+                .subscribe(value => ([this._referencingMotions, this._referencedMotions] = value))
         ];
     }
 
