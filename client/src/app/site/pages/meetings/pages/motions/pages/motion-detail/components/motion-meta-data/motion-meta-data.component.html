@@ -140,6 +140,15 @@
     </button>
 </div>
 
+<!-- recommendation referenced motions -->
+<div *ngIf="showReferringMotions && referencedMotions?.length > 0">
+    <h4>{{ 'Referred motions' | translate }}</h4>
+    <span *ngFor="let motion of referencedMotions; let last = last">
+        <a [routerLink]="motion.getDetailStateUrl()">{{ motion.numberOrTitle }}</a>
+        <span *ngIf="!last" class="referencelist">&nbsp;·&nbsp;</span>
+    </span>
+</div>
+
 <!-- recommendation referencing motions -->
 <div *ngIf="showReferringMotions && motion?.referenced_in_motion_recommendation_extensions?.length > 0">
     <h4>{{ 'Referring motions' | translate }}</h4>

@@ -103,7 +103,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
         return this._referencingMotions;
     }
 
+    public get referencedMotions(): ViewMotion[] {
+        return this._referencedMotions;
+    }
+
     private _referencingMotions: ViewMotion[];
+
+    private _referencedMotions: ViewMotion[];
 
     private _forwardingAvailable: boolean = false;
 
@@ -305,18 +311,21 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
             this.repo
                 .getViewModelObservable(this.motion.id)
                 .pipe(
-                    distinctUntilChanged((p, c) =>
-                        p.referenced_in_motion_recommendation_extensions.equals(
-                            c.referenced_in_motion_recommendation_extensions
-                        )
+                    distinctUntilChanged(
+                        (p, c) =>
+                            p.referenced_in_motion_recommendation_extensions.equals(
+                                c.referenced_in_motion_recommendation_extensions
+                            ) && p.recommendation_extension_references.equals(c.recommendation_extension_references)
                     )
                 )
-                .subscribe(
-                    value =>
-                        (this._referencingMotions = (value.referenced_in_motion_recommendation_extensions || []).sort(
-                            (a, b) => a.number.localeCompare(b.number)
-                        ))
-                )
+                .subscribe(value => {
+                    this._referencingMotions = (value.referenced_in_motion_recommendation_extensions || []).sort(
+                        (a, b) => a.number.localeCompare(b.number)
+                    );
+                    this._referencedMotions = ((value.recommendation_extension_references as ViewMotion[]) || []).sort(
+                        (a, b) => a.number.localeCompare(b.number)
+                    );
+                })
         ];
     }
 
