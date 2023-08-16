@@ -49,6 +49,7 @@
                         {{ result.title }}
                     </h3>
                     <div class="info">
+                        <span>{{ 'Submitter' | translate }} {{ result.obj.sequential_number }}</span>
                         <span>{{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}</span>
                     </div>
                     <p *ngIf="result.text" [innerHtml]="getTextSnippet(result.text)"></p>
