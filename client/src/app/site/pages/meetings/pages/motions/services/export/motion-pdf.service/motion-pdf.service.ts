@@ -376,6 +376,25 @@ export class MotionPdfService {
             ]);
         }
 
+        // referring motions
+        if (!infoToExport || infoToExport.includes(`referring_motions`)) {
+            if (motion.referenced_in_motion_recommendation_extensions.length) {
+                const referringMotions = motion.referenced_in_motion_recommendation_extensions
+                    .map(motion => motion.getNumberOrTitle())
+                    .join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Referring motions`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: referringMotions
+                    }
+                ]);
+            }
+        }
+
         // voting results
         if (motion.polls.length && (!infoToExport || infoToExport.includes(`polls`))) {
             motion.polls.forEach(poll => {
