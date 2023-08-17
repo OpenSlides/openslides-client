@@ -42,9 +42,9 @@
                     <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
                 </a>
                 <a *ngSwitchCase="'motion'" [routerLink]="result.url" mat-dialog-close>
-                    <h3 *ngIf="result.title" [innerHtml]="result.title">
+                    <h3 *ngIf="result.title">
                         <span *ngIf="result.obj?.number">{{ result.obj?.number }}: </span>
-                        {{ result.title }}
+                        <span [innerHTML]="result.title"></span>
                     </h3>
                     <div class="info">
                         <span>{{ 'Submitter' | translate }} {{ result.obj.sequential_number }}</span>

@@ -46,12 +46,16 @@
             }
         }
 
+        h3 {
+            font-weight: 400;
+        }
+
         ::ng-deep mark {
             background: none;
             font-weight: 400;
         }
 
-        ::ng-deep :not(h3) > mark {
+        ::ng-deep :not(h3, h3 > span) > mark {
             font-weight: 500;
         }
 
