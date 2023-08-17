@@ -162,14 +162,6 @@ export class AutoupdateSubscription {
                 return false;
             }
 
-            if (relation.type === `template` && existingRelation.type === `template`) {
-                if (relation.values === existingRelation.values) {
-                    return true;
-                } else {
-                    return checkRelation(relation.values, existingRelation.values);
-                }
-            }
-
             if (
                 (relation.type === `relation` && existingRelation.type === `relation`) ||
                 (relation.type === `relation-list` && existingRelation.type === `relation-list`)

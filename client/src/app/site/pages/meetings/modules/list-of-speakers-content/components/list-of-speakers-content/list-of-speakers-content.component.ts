@@ -384,10 +384,11 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         const nonAvailableUsers = this.users
             .filter(
                 user =>
-                    !(!this.onlyPresentUsers || user.isPresentInMeeting()) ||
-                    this.waitingSpeakers.some(speaker => speaker.user_id === user.id)
+                    !(!this.onlyPresentUsers || user?.isPresentInMeeting()) ||
+                    this.waitingSpeakers.some(speaker => speaker.user_id === user?.id)
             )
-            .map(user => user.id);
+            .map(user => user?.id)
+            .filter(user => !!user);
         this.nonAvailableUserIds = nonAvailableUsers;
     }
 
@@ -401,7 +402,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (!data.userId) {
             data.userId = this.operator.operatorId;
         }
-        await this.speakerRepo.create(this.listOfSpeakers, data.userId!);
+        await this.speakerRepo.create(this.listOfSpeakers, data.userId!, {
+            meeting_user_id: data.user?.meeting_user_id
+        });
     }
 
     /**

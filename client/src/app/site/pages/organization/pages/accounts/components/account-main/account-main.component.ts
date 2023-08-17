@@ -1,15 +1,10 @@
 import { Component } from '@angular/core';
-import { map } from 'rxjs';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
 
-import { getMeetingListSubscriptionConfig } from '../../../../organization.subscription';
 import { ORGANIZATION_ID } from '../../../../services/organization.service';
 import { ViewOrganization } from '../../../../view-models/view-organization';
-import { getCommitteeListSubscriptionConfig } from '../../../committees/committees.subscription';
 
 const ACCOUNT_LIST_SUBSCRIPTION = `account_list`;
-
-let uniqueSubscriptionNumber = 0;
 
 @Component({
     selector: `os-account-main`,
@@ -21,10 +16,7 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
         super();
     }
 
-    protected override onShouldCreateModelRequests(firstCreation = true): void {
-        const additionalRequests = firstCreation
-            ? [getCommitteeListSubscriptionConfig(), getMeetingListSubscriptionConfig()]
-            : [];
+    protected override onShouldCreateModelRequests(): void {
         this.subscribeTo(
             [
                 {
@@ -35,14 +27,27 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                             {
                                 idField: `user_ids`,
                                 fieldset: `accountList`,
-                                additionalFields: [{ templateField: `group_$_ids` }]
+                                follow: [
+                                    {
+                                        idField: `meeting_user_ids`,
+                                        fieldset: `groups`,
+                                        follow: [
+                                            {
+                                                idField: `meeting_id`,
+                                                fieldset: [
+                                                    `is_active_in_organization_id`,
+                                                    `is_archived_in_organization_id`
+                                                ],
+                                                follow: [{ idField: `committee_id`, fieldset: [`manager_ids`] }]
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     },
-                    subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}_${uniqueSubscriptionNumber}`,
-                    hideWhen: this.getNextMeetingIdObservable().pipe(map(id => !!id))
-                },
-                ...additionalRequests
+                    subscriptionName: `${ACCOUNT_LIST_SUBSCRIPTION}`
+                }
             ],
             { hideWhenMeetingChanged: true }
         );

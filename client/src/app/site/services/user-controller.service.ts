@@ -7,6 +7,7 @@ import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
     EmailSentResult,
+    ExtendedUserPatchFn,
     FullNameInformation,
     ShortNameInformation,
     UserPatchFn,
@@ -47,7 +48,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
         return this.repo.create(...payload);
     }
 
-    public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
+    public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
         return this.repo.update(patch, ...users);
     }
 

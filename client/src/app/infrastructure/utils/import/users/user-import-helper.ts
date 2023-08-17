@@ -89,7 +89,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
 
     public async onBeforeFind(allImportModels: ImportModel<Model>[]): Promise<void> {
         const toFind = allImportModels.flatMap(model =>
-            this.filterValidNames(model.model[this._importedAs ?? this.idProperty].split(`;`)).map(name =>
+            this.filterValidNames(model.model[this._importedAs ?? this.idProperty]?.split(`;`) ?? []).map(name =>
                 this._repo.parseStringIntoUser(name)
             )
         ) as any;
@@ -118,7 +118,7 @@ export class UserImportHelper<Model> extends BaseBeforeImportHandler<Model, User
             verboseName: this._verboseName
         };
         let ids: Id[] = [];
-        for (const user of item[propertyName as keyof Model] as any) {
+        for (const user of (item[propertyName as keyof Model] ?? []) as any) {
             if (user.id) {
                 ids.push(user.id);
                 continue;

@@ -276,10 +276,10 @@ export class MotionPdfService {
         }
 
         // supporters
-        if (!infoToExport || infoToExport.includes(`supporters`)) {
+        if (!infoToExport || infoToExport.includes(`supporter_users`)) {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
-            if (minSupporters && motion.supporters.length > 0) {
-                const supporters = motion.supporters.map(supporter => supporter.full_name).join(`, `);
+            if (minSupporters && motion.supporter_users.length > 0) {
+                const supporters = motion.supporter_users.map(supporter => supporter.full_name).join(`, `);
 
                 metaTableBody.push([
                     {
@@ -325,6 +325,25 @@ export class MotionPdfService {
                     text: this.motionService.getExtendedRecommendationLabel(motion)
                 }
             ]);
+        }
+
+        // referring motions
+        if (!infoToExport || infoToExport.includes(`referring_motions`)) {
+            if (motion.referenced_in_motion_recommendation_extensions.length) {
+                const referringMotions = motion.referenced_in_motion_recommendation_extensions
+                    .map(motion => motion.getNumberOrTitle())
+                    .join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Referring motions`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: referringMotions
+                    }
+                ]);
+            }
         }
 
         // category

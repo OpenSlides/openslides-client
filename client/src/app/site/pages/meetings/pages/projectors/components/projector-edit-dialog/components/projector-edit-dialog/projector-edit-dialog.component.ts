@@ -12,7 +12,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
-import { Projectiondefault, ProjectiondefaultVerbose } from 'src/app/domain/models/projector/projection-default';
+import {
+    PROJECTIONDEFAULT,
+    PROJECTIONDEFAULT_KEYS,
+    PROJECTIONDEFAULT_VERBOSE
+} from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { ProjectorComponent } from 'src/app/site/pages/meetings/modules/projector/components/projector/projector.component';
 import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
@@ -89,7 +93,12 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     /**
      * Options for the `Projection defaults`-selector
      */
-    public readonly projectiondefaultVerbose = ProjectiondefaultVerbose;
+    public readonly projectiondefaultVerbose = PROJECTIONDEFAULT_VERBOSE;
+
+    /**
+     * Options for the `Projection defaults`-selector
+     */
+    public readonly projectiondefaultKeys = PROJECTIONDEFAULT;
 
     public readonly colorFields = {
         color: _(`Foreground color`),
@@ -236,10 +245,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * @param meeting the changed meeting
      */
     private updateProjectorDefaults(meeting: ViewMeeting): void {
-        Object.keys(this.projectiondefaultVerbose).forEach(key => {
-            const defaultProjectorIds = meeting.default_projectors(Projectiondefault[key]).map(p => p.id);
+        for (let key of PROJECTIONDEFAULT_KEYS) {
+            const defaultProjectorIds = meeting.default_projector_ids(key);
             this.handleChangeInDefaultProjector(key, defaultProjectorIds);
-        });
+        }
     }
 
     /**
@@ -302,7 +311,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         let payload = {};
         // All defaults that are set to true should be set to the current projectors id
         for (let i = 0; i < projectiondefaultKeys.length; i++) {
-            payload[Projectiondefault[projectiondefaultKeys[i]]] = [
+            payload[PROJECTIONDEFAULT[projectiondefaultKeys[i]]] = [
                 ...new Set([this.projector.id, ...this.getDefaultProjectorIds(projectiondefaultKeys[i])])
             ];
         }
@@ -313,11 +322,11 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         for (let i = 0; i < notSelectedKeys.length; i++) {
             if (this.isCurrentProjectorDefault(notSelectedKeys[i])) {
                 if (this.getDefaultProjectorIds(notSelectedKeys[i]).length === 1) {
-                    payload[Projectiondefault[notSelectedKeys[i]]] = [
+                    payload[PROJECTIONDEFAULT[notSelectedKeys[i]]] = [
                         this.activeMeeting.meeting!.reference_projector_id
                     ];
                 } else {
-                    payload[Projectiondefault[notSelectedKeys[i]]] = this.getDefaultProjectorIds(
+                    payload[PROJECTIONDEFAULT[notSelectedKeys[i]]] = this.getDefaultProjectorIds(
                         notSelectedKeys[i]
                     ).filter(id => id !== this.projector.id);
                 }

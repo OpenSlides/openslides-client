@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
+import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
 import { Topic } from 'src/app/domain/models/topics/topic';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
-import { BaseImportService } from 'src/app/site/base/base-import.service';
-import { DurationService } from 'src/app/site/services/duration.service';
+import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
+import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
-import { topicHeadersAndVerboseNames } from '../../../../definitions';
 import { TopicExportService } from '../topic-export.service';
 import { TopicImportServiceModule } from '../topic-import-service.module';
 
 @Injectable({
     providedIn: TopicImportServiceModule
 })
-export class TopicImportService extends BaseImportService<Topic> {
+export class TopicImportService extends BaseBackendImportService<Topic> {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */
@@ -29,6 +28,14 @@ export class TopicImportService extends BaseImportService<Topic> {
         ParsingErrors: _(`Some csv values could not be read correctly.`)
     };
 
+    public override readonly verboseSummaryTitles: { [title: string]: string } = {
+        total: _(`Total topics`),
+        created: _(`Topics created`),
+        updated: _(`Topics updated`),
+        omitted: _(`Topics skipped`),
+        warning: _(`Topics with warnings (will be skipped)`)
+    };
+
     /**
      * Constructor. Calls the abstract class and sets the expected header
      *
@@ -37,9 +44,9 @@ export class TopicImportService extends BaseImportService<Topic> {
      */
     public constructor(
         serviceCollector: ImportServiceCollectorService,
-        private durationService: DurationService,
         private repo: TopicRepositoryService,
-        private exporter: TopicExportService
+        private exporter: TopicExportService,
+        private activeMeetingId: ActiveMeetingIdService
     ) {
         super(serviceCollector);
     }
@@ -48,52 +55,21 @@ export class TopicImportService extends BaseImportService<Topic> {
         this.exporter.downloadCsvImportExample();
     }
 
-    protected getConfig(): ImportConfig<Topic> {
-        return {
-            modelHeadersAndVerboseNames: topicHeadersAndVerboseNames,
-            verboseNameFn: plural => this.repo.getVerboseName(plural),
-            getDuplicatesFn: (entry: Partial<Topic>) =>
-                this.repo.getViewModelList().filter(topic => topic.title === entry.title),
-            createFn: (entries: any[]) => this.repo.create(...entries)
-        };
+    protected override calculateJsonUploadPayload(): any {
+        let payload = super.calculateJsonUploadPayload();
+        payload[`meeting_id`] = this.activeMeetingId.meetingId;
+        return payload;
     }
 
-    protected override pipeParseValue(value: string, header: any): any {
-        if (header === `agenda_duration`) {
-            return this.parseDuration(value);
-        }
-        if (header === `agenda_type`) {
-            return this.parseType(value);
-        }
+    protected async import(
+        actionWorkerIds: number[],
+        abort: boolean = false
+    ): Promise<void | (BackendImportRawPreview | void)[]> {
+        return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
     }
 
-    /**
-     * Matching the duration string/number to the time model in use
-     *
-     * @param input
-     * @returns duration as defined in durationService
-     */
-    public parseDuration(input: string): number {
-        return this.durationService.stringToDuration(input);
-    }
-
-    /**
-     * Converts information from 'item type' to a model-based type number.
-     * Accepts either old syntax (numbers) or new visibility choice csv names;
-     * both defined in {@link itemVisibilityChoices}
-     * Empty values will be interpreted as default 'public' agenda topics
-     *
-     * @param input
-     * @returns a number as defined for the itemVisibilityChoices
-     */
-    public parseType(input: string | number): AgendaItemType {
-        if (typeof input === `string`) {
-            const visibility = ItemTypeChoices.find(choice => choice.csvName === input);
-            if (visibility) {
-                return visibility.key;
-            }
-        }
-        return AgendaItemType.COMMON; // default, public item
+    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]> {
+        return await this.repo.jsonUpload(payload).resolve();
     }
 
     /**

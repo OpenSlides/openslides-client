@@ -17,7 +17,7 @@ export class PointOfOrderCategory extends BaseModel<PointOfOrderCategory> {
         super(PointOfOrderCategory.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PointOfOrderCategory | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof PointOfOrderCategory)[] = [
         `id`,
         `text`,
         `rank`,

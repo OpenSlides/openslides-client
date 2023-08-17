@@ -1,9 +1,10 @@
+import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+
 import { MotionSubmitter } from '../../../../../../../../domain/models/motions/motion-submitter';
-import { BaseViewModel } from '../../../../../../../base/base-view-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
-import { ViewUser } from '../../../../../view-models/view-user';
 import { ViewMotion } from '../../../view-models/view-motion';
-export class ViewMotionSubmitter extends BaseViewModel<MotionSubmitter> {
+
+export class ViewMotionSubmitter extends BaseHasMeetingUserViewModel<MotionSubmitter> {
     public static COLLECTION = MotionSubmitter.COLLECTION;
     protected _collection = MotionSubmitter.COLLECTION;
 
@@ -12,7 +13,6 @@ export class ViewMotionSubmitter extends BaseViewModel<MotionSubmitter> {
     }
 }
 interface IMotionSubmitterRelations {
-    user: ViewUser;
     motion: ViewMotion;
 }
 export interface ViewMotionSubmitter extends MotionSubmitter, IMotionSubmitterRelations, HasMeeting {}

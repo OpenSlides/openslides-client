@@ -1,7 +1,6 @@
 import { Collection, Field, Fqfield, Fqid, Id } from '../../domain/definitions/key-types';
 
 const KEYSEPERATOR = `/`;
-const TEMPLATE_FIELD_INDICATOR = `$`;
 
 export function copy<T>(model: T, modelHeaders: (keyof T)[] = []): T {
     if (!modelHeaders.length) {
@@ -71,13 +70,4 @@ export function collectionFromFqid(fqid: Fqid): Collection {
 
 export function isFqid(field: string): boolean {
     return new RegExp(`^[a-z_]+${KEYSEPERATOR}[1-9][0-9]*$`).test(field);
-}
-
-export function isTemplateField(field: string): boolean {
-    return new RegExp(`.*${TEMPLATE_FIELD_INDICATOR}.*`).test(field);
-}
-
-// E.g. (group_$_ids, 4) -> group_$4_ids
-export function fillTemplateValueInTemplateField(field: string, value: any): Field {
-    return field.replace(TEMPLATE_FIELD_INDICATOR, TEMPLATE_FIELD_INDICATOR + value);
 }

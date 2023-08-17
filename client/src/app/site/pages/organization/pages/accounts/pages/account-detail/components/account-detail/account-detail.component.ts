@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
+import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
 import { BaseComponent } from 'src/app/site/base/base.component';
 import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
@@ -14,6 +14,7 @@ import { UserControllerService } from 'src/app/site/services/user-controller.ser
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ViewCommittee } from '../../../../../committees';
+import { getCommitteeListMinimalSubscriptionConfig } from '../../../../../committees/committees.subscription';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
@@ -47,7 +48,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
         default_number: [``],
         default_vote_weight: [``],
         organization_management_level: [],
-        committee_$_management_level: []
+        committee_management_ids: []
     };
 
     public isFormValid = false;
@@ -57,6 +58,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public isEditingUser = false;
     public user: ViewUser | null = null;
     public isNewUser = false;
+    public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
 
     public get tableData(): ParticipationTableData {
         return this._tableData;
@@ -100,11 +102,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public getTransformSetFn(): (value?: string[]) => Id[] {
-        return () => (this.user ? this.user.committee_management_level_ids(CML.can_manage) : []);
+        return () => (this.user ? this.user.committee_management_ids : []);
     }
 
     public getTransformPropagateFn(): (value?: Id[]) => any {
-        return value => ({ [CML.can_manage]: value });
+        return value => value;
     }
 
     public getSaveAction(): () => Promise<void> {
@@ -164,9 +166,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public getUserCommitteeManagementLevels(): ViewCommittee[] {
-        const committeesToManage: (ViewCommittee | null)[] = this.user!.committee_management_level_ids(
-            CML.can_manage
-        ).map(committeeId => this.committeeController.getViewModel(committeeId));
+        const committeesToManage: (ViewCommittee | null)[] = this.user!.committee_management_ids.map(committeeId =>
+            this.committeeController.getViewModel(committeeId)
+        );
         return committeesToManage.filter(committee => !!committee) as ViewCommittee[];
     }
 
@@ -273,7 +275,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     private getPartialUserPayload(): any {
         const payload = this.personalInfoFormValue;
         if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
-            payload[`committee_$_management_level`] = { [CML.can_manage]: [] };
+            payload[`committee_management_ids`] = undefined;
         }
         return payload;
     }

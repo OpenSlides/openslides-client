@@ -1,13 +1,14 @@
 import { Directive } from '@angular/core';
+import { GeneralUser } from 'src/app/gateways/repositories/users';
 
-import { GENDERS, User } from '../../domain/models/users/user';
+import { GENDERS } from '../../domain/models/users/user';
 import { ImportServiceCollectorService } from '../services/import-service-collector.service';
 import { BaseImportService } from './base-import.service';
 
-export type UserMap = { [importTrackId: number]: Partial<User>[] };
+export type UserMap = { [importTrackId: number]: Partial<GeneralUser>[] };
 
 @Directive()
-export abstract class BaseUserImportService extends BaseImportService<User> {
+export abstract class BaseUserImportService extends BaseImportService<GeneralUser> {
     public override requiredHeaderLength = 3;
 
     private get currentLangGenders(): string[] {
@@ -18,7 +19,7 @@ export abstract class BaseUserImportService extends BaseImportService<User> {
         super(importServiceCollector);
     }
 
-    protected override pipeParseValue(value: string, header: keyof User): any {
+    protected override pipeParseValue(value: string, header: keyof GeneralUser): any {
         if (header === `is_active` || header === `is_physical_person`) {
             return this.toBoolean(value);
         }

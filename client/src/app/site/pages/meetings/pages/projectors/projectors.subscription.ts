@@ -1,12 +1,20 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
 import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { MEETING_DEFAULT_PROJECTOR_IDS_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewProjector } from './view-models';
 
-export const projectionContentObjectFieldset = [`name`, `title`, `meeting_id`, `sequential_number`, `owner_id`];
+export const projectionContentObjectFieldset = [
+    `number`,
+    `name`,
+    `title`,
+    `meeting_id`,
+    `sequential_number`,
+    `owner_id`
+];
 
 export const PROJECTOR_LIST_SUBSCRIPTION = `projector_list`;
 
@@ -35,8 +43,8 @@ export const getProjectorListSubscriptionConfig: SubscriptionConfigGenerator = (
             },
             `projector_countdown_ids`,
             `projector_message_ids`,
-            `default_projector_$_ids`,
-            { idField: `speaker_ids`, additionalFields: [`user_id`] },
+            ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS,
+            { idField: `speaker_ids`, additionalFields: [`meeting_user_id`] },
             `list_of_speakers_ids`
         ],
         additionalFields: [`reference_projector_id`]
@@ -50,7 +58,7 @@ export const getProjectorListMinimalSubscriptionConfig: SubscriptionConfigGenera
     modelRequest: {
         viewModelCtor: ViewMeeting,
         ids: [id],
-        follow: [`projector_ids`, `default_projector_$_ids`],
+        follow: [`projector_ids`, ...MEETING_DEFAULT_PROJECTOR_IDS_KEYS],
         additionalFields: [`reference_projector_id`]
     },
     subscriptionName: PROJECTOR_LIST_MINIMAL_SUBSCRIPTION

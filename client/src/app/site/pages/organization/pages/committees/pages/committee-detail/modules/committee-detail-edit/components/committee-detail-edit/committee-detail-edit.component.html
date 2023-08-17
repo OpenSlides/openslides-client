@@ -43,9 +43,8 @@
         <mat-form-field>
             <mat-label>{{ 'Committee managers' | translate }}</mat-label>
             <os-account-search-selector
-                formControlName="user_$_management_level"
+                formControlName="manager_ids"
                 placeholder="{{ 'Committee managers' | translate }}"
-                [transformPropagateFn]="getTransformPropagateFn()"
             ></os-account-search-selector>
         </mat-form-field>
 

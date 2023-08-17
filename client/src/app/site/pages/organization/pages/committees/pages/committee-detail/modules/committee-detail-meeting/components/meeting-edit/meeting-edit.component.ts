@@ -265,8 +265,8 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             location: [``],
             daterange: [
                 {
-                    start: currentDate,
-                    end: currentDate
+                    start: null,
+                    end: null
                 }
             ],
             admin_ids: [[], Validators.minLength(1)],

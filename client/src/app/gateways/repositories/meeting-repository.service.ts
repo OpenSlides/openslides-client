@@ -49,16 +49,16 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
         // This field is used to determine, if a user can access a meeting: It is restricted for non-authorized users
         // but always present, if the user is allowed to access the meeting. We have to always query this fields to
         // decide about the accessibility.
-        const accessField: TypedFieldset<Meeting> = [ViewMeeting.ACCESSIBILITY_FIELD];
+        const accessField: TypedFieldset<Meeting> = [];
 
         const sharedFields: TypedFieldset<Meeting> = accessField.concat([
             `name`,
+            `description`,
             `start_time`,
             `end_time`,
             `is_active_in_organization_id`,
-            `is_archived_organization_id`,
             `template_for_organization_id`,
-            `user_ids`,
+            `meeting_user_ids`,
             `description`,
             `location`,
             `organization_tag_ids`,
@@ -72,7 +72,6 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             `language`
         ]);
         const detailEditFields: TypedFieldset<Meeting> = [
-            `is_template`,
             `default_meeting_for_committee_id`,
             `jitsi_domain`,
             `jitsi_room_name`,
@@ -173,7 +172,8 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             userActions.push(
                 ...Object.keys(userUpdate).map(userId => ({
                     id: parseInt(userId, 10),
-                    group_$_ids: { [meeting!.id]: userUpdate[parseInt(userId, 10)] }
+                    meeting_id: meeting!.id,
+                    group_ids: userUpdate[parseInt(userId, 10)]
                 }))
             );
         }
