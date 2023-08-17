@@ -18,8 +18,7 @@ export function formatWiFiConfig(ssid: string, encryption: string, password?: st
         escapeSpecialCharactersForWiFiConfig(ssid) +
         `;T:` +
         encryption +
-        `;P:` +
-        escapeSpecialCharactersForWiFiConfig(password) +
+        (password ? `;P:` + escapeSpecialCharactersForWiFiConfig(password) : ``) +
         `;;`
     );
 }
