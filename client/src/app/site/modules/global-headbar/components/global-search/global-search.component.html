@@ -28,13 +28,11 @@
         <div *ngFor="let result of filteredResults" class="search-results-entry">
             <div class="breadcrumb">
                 <ng-container *ngIf="result.committee">
-                    <a [routerLink]="'/committees/' + result.committee.id" mat-dialog-close>
-                        {{ result.committee.name }}
-                    </a>
+                    <span>{{ result.committee.name }}</span>
                     <span class="sep">&gt;</span>
                 </ng-container>
                 <ng-container *ngIf="currentFilters.value.meetingFilter === 'all' && result.meeting">
-                    <a [routerLink]="'/' + result.meeting.id" mat-dialog-close>{{ result.meeting.name }}</a>
+                    <span>{{ result.meeting.name }}</span>
                     <span class="sep">&gt;</span>
                 </ng-container>
                 <span>{{ availableFilters[result.collection] }}</span>
