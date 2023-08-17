@@ -10,6 +10,7 @@ import { UserComponentsModule } from 'src/app/site/modules/user-components';
 import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
 import { DirectivesModule } from 'src/app/ui/directives';
 import { ChoiceDialogModule } from 'src/app/ui/modules/choice-dialog';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { PipesModule } from 'src/app/ui/pipes';
@@ -24,6 +25,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
     declarations: [ParticipantListComponent],
     imports: [
         CommonModule,
+        CommaSeparatedListingModule,
         ParticipantListRoutingModule,
         ParticipantListServiceModule,
         ParticipantListInfoDialogModule,

@@ -32,16 +32,12 @@ export class UserDeleteDialogComponent implements OnInit {
         return this.toDeleteUsers.length + this.toRemoveUsers.length === 1;
     }
 
-    public set selectedUser(user: GetUserRelatedModelsUser | null) {
-        if (this._selectedUser === user) {
-            this._selectedUser = null;
-        } else {
-            this._selectedUser = user;
-        }
+    public get isOneUserToDelete(): boolean {
+        return this.toDeleteUsers.length === 1 && this.toRemoveUsers.length === 0;
     }
 
-    public get selectedUser(): GetUserRelatedModelsUser | null {
-        return this._selectedUser;
+    public get isOneUserToRemove(): boolean {
+        return this.toDeleteUsers.length === 0 && this.toRemoveUsers.length === 1;
     }
 
     private get toDeleteUsers(): GetUserRelatedModelsUser[] {
@@ -52,7 +48,8 @@ export class UserDeleteDialogComponent implements OnInit {
         return this.data.toRemove;
     }
 
-    private _selectedUser: GetUserRelatedModelsUser | null = null;
+    public selectedUser: GetUserRelatedModelsUser | null = null;
+
     private _users: any[] = [];
 
     public constructor(@Inject(MAT_DIALOG_DATA) private data: UserDeleteDialogConfig) {}

@@ -96,6 +96,7 @@
                         formControlName="committee_management_ids"
                         [multiple]="true"
                         placeholder="{{ 'Committee admin' | translate }}"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
                         [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"

@@ -402,7 +402,9 @@ export class ListOfSpeakersContentComponent extends BaseMeetingComponent impleme
         if (!data.userId) {
             data.userId = this.operator.operatorId;
         }
-        await this.speakerRepo.create(this.listOfSpeakers, data.userId!);
+        await this.speakerRepo.create(this.listOfSpeakers, data.userId!, {
+            meeting_user_id: data.user?.meeting_user_id
+        });
     }
 
     /**

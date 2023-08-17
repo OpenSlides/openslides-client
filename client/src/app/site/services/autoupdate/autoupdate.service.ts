@@ -17,7 +17,7 @@ export interface ModelSubscription {
     close: () => void;
 }
 
-const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
+export const AUTOUPDATE_DEFAULT_ENDPOINT = `autoupdate`;
 
 interface AutoupdateConnectConfig {
     /**

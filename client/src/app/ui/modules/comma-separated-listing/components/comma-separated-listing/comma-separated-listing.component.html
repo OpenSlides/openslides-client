@@ -1,0 +1,8 @@
+<span *ngFor="let item of shortenedList; let isLast = last">
+    <span *ngIf="templateRef">
+        <ng-template [ngTemplateOutlet]="templateRef" [ngTemplateOutletContext]="{ $implicit: item }"></ng-template>
+    </span>
+    <span *ngIf="!templateRef">{{ item }}</span>
+    <span *ngIf="!isLast">,&nbsp;</span>
+    <span *ngIf="isLast && ellipsed">…</span>
+</span>

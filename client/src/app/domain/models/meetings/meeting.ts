@@ -189,6 +189,7 @@ export class Settings {
 
 export class Meeting extends BaseModel<Meeting> {
     public static COLLECTION = `meeting`;
+    public static ACCESSIBILITY_FIELD: keyof Meeting = `projector_countdown_default_time`;
 
     public imported_at!: number;
 
@@ -241,7 +242,7 @@ export class Meeting extends BaseModel<Meeting> {
 
     public organization_tag_ids!: Id[]; // (organization_tag/meeting_ids)[];
     public is_active_in_organization_id!: Id; // (organization/active_meeting_ids)[];
-    public is_archived_organization_id!: Id; // (organization/archived_meeting_ids)[];
+    public is_archived_in_organization_id!: Id; // (organization/archived_meeting_ids)[];
     public template_for_organization_id!: Id; // (organization/template_meeting_ids)[];
 
     public constructor(input?: any) {
@@ -267,6 +268,7 @@ export class Meeting extends BaseModel<Meeting> {
         `welcome_text`,
         `name`,
         `is_active_in_organization_id`,
+        `is_archived_in_organization_id`,
         `description`,
         `location`,
         `start_time`,

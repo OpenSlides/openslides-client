@@ -1,23 +1,27 @@
 @import 'src/assets/styles/custom-button-styles.scss';
 
-.grid-wrapper {
-    display: grid;
+.flexbox-wrapper {
+    display: flex;
     width: 100%;
-    grid-template-areas:
-        'project message buttons'
-        'project message buttons';
-    grid-gap: 10px;
-    grid-template-columns: min-content auto auto;
+    flex-direction: row;
+    flex-grow: 0 1 0;
+    align-items: center;
+    gap: 10px;
 }
 
 // could be in a shared scss
 .projector-button {
-    grid-area: project;
     margin: auto 10px auto 0;
+}
+
+.message {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 // could be in a shared scss
 .action-buttons {
-    grid-area: buttons;
     text-align: right;
+    width: 30px;
+    margin-left: auto;
 }
