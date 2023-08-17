@@ -26,15 +26,15 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
 
     public currentSubscribed: Id | null = null;
 
-    private _currentProjection: Partial<HasPolls<C>> | null = null;
+    private _currentProjection: (Partial<HasPolls<C>> & { readonly fqid: string }) | null = null;
 
     @Input()
-    public set currentProjection(viewModel: Partial<HasPolls<C>> | null) {
+    public set currentProjection(viewModel: (Partial<HasPolls<C>> & { readonly fqid: string }) | null) {
         this._currentProjection = viewModel;
         this.updateLastPublished();
     }
 
-    public get currentProjection(): Partial<HasPolls<C>> | null {
+    public get currentProjection(): (Partial<HasPolls<C>> & { readonly fqid: string }) | null {
         return this._currentProjection;
     }
 
@@ -102,7 +102,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         const model = contentObject.getVerboseName();
         const pollTitle = poll.getTitle();
 
-        if (this.showExtendedTitle && contentObject !== this.currentProjection) {
+        if (this.showExtendedTitle && contentObject.fqid !== this.currentProjection.fqid) {
             return `(${model}) ${listTitle} - ${pollTitle}`;
         } else {
             return pollTitle;
