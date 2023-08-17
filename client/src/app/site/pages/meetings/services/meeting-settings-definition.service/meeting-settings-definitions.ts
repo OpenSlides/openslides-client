@@ -348,13 +348,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
-                        key: `list_of_speakers_speaker_note_for_everyone`,
-                        label: _(
-                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
-                        ),
-                        type: `boolean`
-                    },
-                    {
                         key: `list_of_speakers_initially_closed`,
                         label: _(`List of speakers is initially closed`),
                         type: `boolean`
@@ -416,8 +409,15 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `list_of_speakers_speaker_note_for_everyone`,
+                        label: _(
+                            `Everyone can see the request of a point of order (instead of managers for list of speakers only)`
+                        ),
+                        type: `boolean`
+                    },
+                    {
                         key: `list_of_speakers_closing_disables_point_of_order`,
-                        label: _(`Restrict point of order actions to open lists of speakers`),
+                        label: _(`Disallow new point of order when list of speakers is closed`),
                         type: `boolean`
                     },
                     {
@@ -896,7 +896,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `users_email_sender`,
                         label: _(`Sender name`),
                         helpText: _(
-                            `The sender address is defined in the OpenSlides server settings and should modified by administrator only.`
+                            `IMPORTANT: The sender address (noreply@openslides.com) is defined in the OpenSlides server settings and cannot be changed here. 
+                            To receive replies you have to enter a reply address in the next field. Please test the email dispatch in case of changes!`
                         ),
                         dontTranslateDefault: true
                     },
