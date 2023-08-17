@@ -7,7 +7,14 @@ import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
 
 import { ViewProjector } from './view-models';
 
-export const projectionContentObjectFieldset = [`name`, `title`, `meeting_id`, `sequential_number`, `owner_id`];
+export const projectionContentObjectFieldset = [
+    `number`,
+    `name`,
+    `title`,
+    `meeting_id`,
+    `sequential_number`,
+    `owner_id`
+];
 
 export const PROJECTOR_LIST_SUBSCRIPTION = `projector_list`;
 

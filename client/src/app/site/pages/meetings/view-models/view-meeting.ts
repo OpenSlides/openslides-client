@@ -104,7 +104,6 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public static COLLECTION = Meeting.COLLECTION;
-    public static ACCESSIBILITY_FIELD: keyof Meeting = `description`;
 
     protected _collection = Meeting.COLLECTION;
 
@@ -113,7 +112,7 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     }
 
     public override canAccess(): boolean {
-        return this[ViewMeeting.ACCESSIBILITY_FIELD] !== undefined && this[ViewMeeting.ACCESSIBILITY_FIELD] !== null;
+        return this[Meeting.ACCESSIBILITY_FIELD] !== undefined && this[Meeting.ACCESSIBILITY_FIELD] !== null;
     }
 
     public getSpecifiedLogoPlaces(): LogoPlace[] {

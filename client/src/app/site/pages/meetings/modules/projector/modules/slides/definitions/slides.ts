@@ -1,4 +1,5 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 
 import { SlideManifest } from './slide-manifest';
 
@@ -19,6 +20,16 @@ export const Slides: SlideManifest[] = [
                 m => m.AgendaItemListSlideModule
             ),
         verboseName: _(`Agenda`),
+        scaleable: true,
+        scrollable: true
+    },
+    {
+        path: MeetingProjectionType.WiFiAccess,
+        loadChildren: () =>
+            import(`../components/wifi-access-data-slide/wifi-access-data-slide.module`).then(
+                m => m.WifiAccessDataSlideModule
+            ),
+        verboseName: _(`Wifi access data`),
         scaleable: true,
         scrollable: true
     },

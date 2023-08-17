@@ -16,6 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DirectivesModule } from 'src/app/ui/directives';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { InputModule } from 'src/app/ui/modules/input';
 
 import { OpenSlidesTranslationModule } from '../translations';
@@ -48,6 +49,7 @@ const DECLARATIONS = [GlobalHeadbarComponent];
     declarations: [...DECLARATIONS, AccountButtonComponent, AccountDialogComponent, GlobalSearchComponent],
     imports: [
         CommonModule,
+        CommaSeparatedListingModule,
         OpenSlidesTranslationModule.forChild(),
         UserComponentsModule,
         RouterModule,

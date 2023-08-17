@@ -35,9 +35,12 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
             note?: UnsafeHtml;
             speechState?: SpeechState;
             point_of_order_category_id?: Id;
+            meeting_user_id?: Id;
         }
     ): Promise<Identifiable> {
-        const meetingUserId = this.userRepo.getViewModel(userId)?.getMeetingUser(listOfSpeakers.meeting_id).id;
+        const meetingUserId =
+            optionalInformation.meeting_user_id ??
+            this.userRepo.getViewModel(userId)?.getMeetingUser(listOfSpeakers.meeting_id).id;
         if (!meetingUserId) {
             throw new Error(`Speaker creation failed: Selected user may not be in meeting`);
         }

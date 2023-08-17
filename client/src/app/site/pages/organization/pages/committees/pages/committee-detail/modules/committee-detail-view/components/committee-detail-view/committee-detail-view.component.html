@@ -98,15 +98,16 @@
             *ngIf="canManageCommittee"
         >
             <ng-container *ngIf="committee.getManagers() as managers">
-                <span *ngFor="let manager of managers; let last = last">
-                    <ng-container *osOmlPerms="OML.can_manage_users">
-                        <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
-                    </ng-container>
-                    <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
-                        <span>{{ manager }}</span>
-                    </ng-container>
-                    <span *ngIf="!last">,&nbsp;</span>
-                </span>
+                <os-comma-separated-listing [list]="managers">
+                    <ng-template let-manager>
+                        <ng-container *osOmlPerms="OML.can_manage_users">
+                            <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
+                        </ng-container>
+                        <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
+                            <span>{{ manager }}</span>
+                        </ng-container>
+                    </ng-template>
+                </os-comma-separated-listing>
                 <i class="red-warning-text" *ngIf="managers.length === 0">
                     {{ 'This committee has no managers!' | translate }}
                 </i>

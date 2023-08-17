@@ -327,6 +327,25 @@ export class MotionPdfService {
             ]);
         }
 
+        // referring motions
+        if (!infoToExport || infoToExport.includes(`referring_motions`)) {
+            if (motion.referenced_in_motion_recommendation_extensions.length) {
+                const referringMotions = motion.referenced_in_motion_recommendation_extensions
+                    .map(motion => motion.getNumberOrTitle())
+                    .join(`, `);
+
+                metaTableBody.push([
+                    {
+                        text: `${this.translate.instant(`Referring motions`)}:`,
+                        style: `boldText`
+                    },
+                    {
+                        text: referringMotions
+                    }
+                ]);
+            }
+        }
+
         // category
         if (motion.category && (!infoToExport || infoToExport.includes(`category`))) {
             let categoryText = ``;
@@ -466,7 +485,7 @@ export class MotionPdfService {
                     // change type column
                     if (change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION) {
                         const changeReco = change as ViewMotionChangeRecommendation;
-                        columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line}: `);
+                        columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line} `);
                         columnChangeType.push(
                             `(${this.translate.instant(`Change recommendation`)}) - ${this.translate.instant(
                                 getRecommendationTypeName(changeReco)
@@ -480,7 +499,7 @@ export class MotionPdfService {
                         } else if (amendment.isAccepted()) {
                             summaryText += ` ${this.translate.instant(amendment.stateName)}`;
                             // only append line and change, if the merge of the state of the amendment is accepted.
-                            columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line}: `);
+                            columnLineNumbers.push(`${this.translate.instant(`Line`)} ${line} `);
                             columnChangeType.push(summaryText);
                         }
                     }

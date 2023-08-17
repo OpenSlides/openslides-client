@@ -1,19 +1,18 @@
-<button type="button" mat-stroked-button (click)="countUsers()" *ngIf="!this.token">
-    {{ 'Count active users' | translate }}
-</button>
-<button type="button" mat-stroked-button (click)="stopCounting()" *ngIf="this.token">
-    {{ 'Stop counting' | translate }}
+<button type="button" mat-stroked-button (click)="countUsers()">
+    <span *ngIf="!stats">{{ 'Count logged-in users' | translate }}</span>
+    <span *ngIf="stats">{{ 'Re-count logged-in users' | translate }}</span>
 </button>
 <div *ngIf="stats">
+    <i>{{ 'last Updated' | translate }}: {{ lastUpdated / 1000 | localizedDate : 'PPpp' }}</i>
     <p>
-        {{ userIds().length }} {{ 'active users' | translate }} ({{ stats.activeUserHandles }}
+        {{ userIds().length }} {{ 'logged-in users' | translate }} ({{ stats.activeUserHandles }}
         {{ 'connections' | translate }})
     </p>
     {{ 'Groups' | translate }}:
     <ul>
         <li *ngFor="let groupId of groupIds()">
             <strong>{{ stats.groups[groupId].name | translate }}:</strong>
-            {{ userInGroupIds(groupId).length }} {{ 'active users' | translate }} ({{
+            {{ userInGroupIds(groupId).length }} {{ 'logged-in users' | translate }} ({{
                 stats.groups[groupId].userHandleCount
             }}
             {{ 'connections' | translate }})

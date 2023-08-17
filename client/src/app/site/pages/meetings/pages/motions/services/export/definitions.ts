@@ -14,6 +14,7 @@ export type InfoToExport =
     | 'speakers'
     | 'id'
     | 'sequential_number'
+    | 'referring_motions'
     | 'allcomments';
 
 /**
