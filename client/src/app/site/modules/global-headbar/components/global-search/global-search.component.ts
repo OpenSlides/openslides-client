@@ -95,19 +95,22 @@ export class GlobalSearchComponent implements OnDestroy {
         const textParts = text.replace(removeTags, ``).split(new RegExp(`(<mark>[^<]+<\/mark>)`, `g`));
         let totalLength = 0;
 
-        let append = ``;
-        totalLength += textParts[1].length - 13;
-        append += textParts[1] + ` `;
-
-        const preText = textParts[0].split(` `);
-        for (let j = preText.length - 1; j >= 0 && !preText[j].endsWith(`.`); j--) {
-            append = preText[j] + ` ` + append;
-            totalLength += preText[j].length;
-            if (totalLength > textSnippetSize) {
-                break;
+        if (textParts.length > 1) {
+            let append = ``;
+            totalLength += textParts[1].length - 13;
+            append += textParts[1] + ` `;
+            const preText = textParts[0].split(` `);
+            for (let j = preText.length - 1; j >= 0 && !preText[j].endsWith(`.`); j--) {
+                append = preText[j] + ` ` + append;
+                totalLength += preText[j].length;
+                if (totalLength > textSnippetSize) {
+                    break;
+                }
             }
+            resultText += append;
+        } else {
+            textParts.unshift(null, null);
         }
-        resultText += append;
 
         outer: for (let i = 2; i < textParts.length; i++) {
             if (textParts[i].startsWith(`<mark>`)) {
