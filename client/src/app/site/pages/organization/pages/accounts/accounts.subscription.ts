@@ -14,7 +14,7 @@ export const getAccountDetailSubscriptionConfig: SubscriptionConfigGenerator = (
             { idField: `committee_ids`, fieldset: [`name`, `manager_ids`] },
             {
                 idField: `meeting_ids`,
-                follow: [{ idField: `group_ids`, fieldset: [`name`] }],
+                follow: [{ idField: `group_ids`, fieldset: [`name`], isFullList: false }],
                 fieldset: [`name`, `committee_id`]
             }
         ]
