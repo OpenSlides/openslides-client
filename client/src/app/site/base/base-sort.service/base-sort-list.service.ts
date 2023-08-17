@@ -322,17 +322,19 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     protected async updateSortedData(): Promise<void> {
         const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
         if (this.inputData) {
-            this.inputData.sort((itemA, itemB) =>
-                this.sortItems(
-                    itemA,
-                    itemB,
-                    this.shouldHideOption({ property: this.sortProperty }, false)
-                        ? alternativeProperty
-                        : this.sortProperty,
-                    this.ascending
+            this.outputSubject.next(
+                [...this.inputData].sort(
+                    (itemA, itemB) =>
+                        this.sortItems(
+                            itemA,
+                            itemB,
+                            this.shouldHideOption({ property: this.sortProperty }, false)
+                                ? alternativeProperty
+                                : this.sortProperty,
+                            this.ascending
+                        ) || itemA.id - itemB.id
                 )
             );
-            this.outputSubject.next(this.inputData);
         }
     }
 
