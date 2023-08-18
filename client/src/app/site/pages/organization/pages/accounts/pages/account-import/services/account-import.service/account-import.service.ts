@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { GeneralUser } from 'src/app/gateways/repositories/users';
-import { ImportConfig } from 'src/app/infrastructure/utils/import/import-utils';
-import { BaseUserImportService } from 'src/app/site/base/base-user-import.service';
+import { User } from 'src/app/domain/models/users/user';
+import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
+import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { AccountExportService } from '../../../../services/account-export.service';
-import { accountHeadersAndVerboseNames } from '../../definitions';
+import { AccountControllerService } from '../../../../services/common/account-controller.service';
 import { AccountImportServiceModule } from '../account-import-service.module';
 
 @Injectable({
     providedIn: AccountImportServiceModule
 })
-export class AccountImportService extends BaseUserImportService {
-    public override errorList = {
+export class AccountImportService extends BaseBackendImportService<User> {
+    public errorList = {
         Duplicates: `This user already exists`,
         NoName: `Entry has no valid name`,
         DuplicateImport: `Entry cannot be imported twice. This line will be ommitted`,
@@ -24,7 +23,7 @@ export class AccountImportService extends BaseUserImportService {
 
     public constructor(
         importServiceCollector: ImportServiceCollectorService,
-        private repo: UserControllerService,
+        private repo: AccountControllerService,
         private exporter: AccountExportService
     ) {
         super(importServiceCollector);
@@ -34,13 +33,14 @@ export class AccountImportService extends BaseUserImportService {
         this.exporter.downloadCsvImportExample();
     }
 
-    protected getConfig(): ImportConfig<GeneralUser> {
-        return {
-            modelHeadersAndVerboseNames: accountHeadersAndVerboseNames,
-            verboseNameFn: plural => (plural ? `Accounts` : `Account`),
-            getDuplicatesFn: (entry: Partial<GeneralUser>) =>
-                this.repo.getViewModelList().filter(user => user.username === entry.username),
-            createFn: (entries: any[]) => this.repo.create(...entries)
-        };
+    protected async import(
+        actionWorkerIds: number[],
+        abort = false
+    ): Promise<void | (BackendImportRawPreview | void)[]> {
+        return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
+    }
+
+    protected async jsonUpload(payload: { [key: string]: any }): Promise<void | BackendImportRawPreview[]> {
+        return await this.repo.jsonUpload(payload).resolve();
     }
 }

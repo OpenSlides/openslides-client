@@ -5,5 +5,6 @@ export const accountHeadersAndVerboseNames: { [key in keyof User]?: string } = {
     ...userHeadersAndVerboseNames,
     default_structure_level: `Structure level`,
     default_number: `Participant number`,
-    default_vote_weight: `Vote weight`
+    default_vote_weight: `Vote weight`,
+    saml_id: `SSO identification`
 };

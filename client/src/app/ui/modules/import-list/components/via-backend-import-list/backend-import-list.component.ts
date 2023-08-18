@@ -439,6 +439,10 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         return this._importer.getVerboseSummaryPointTitle(title);
     }
 
+    public isObjectEntry(entry: any): boolean {
+        return typeof entry === `object`;
+    }
+
     private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
         for (const key of Object.keys(data)) {
             for (const header of data[key] ?? []) {
