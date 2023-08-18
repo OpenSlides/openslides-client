@@ -47,9 +47,9 @@ export class OpenSlidesTranslateParser extends TranslateDefaultParser {
      */
     public override getValue(target: any, key: string): any {
         const translation = super.getValue(target, key);
-        const customTranslationKey = Object.keys(this.customTranslations).find(original => original === translation);
-        if (customTranslationKey) {
-            return this.customTranslations[customTranslationKey];
+        const customTranslationsKey = translation || key; // use the original string if no translation was found
+        if (customTranslationsKey && this.customTranslations.hasOwnProperty(customTranslationsKey)) {
+            return this.customTranslations[customTranslationsKey];
         } else {
             return translation;
         }

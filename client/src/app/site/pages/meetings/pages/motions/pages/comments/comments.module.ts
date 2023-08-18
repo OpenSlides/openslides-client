@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
 import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 import { IconContainerModule } from 'src/app/ui/modules/icon-container';
 import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
@@ -24,6 +25,7 @@ import { CommentSectionSortComponent } from './components/comment-section-sort/c
     declarations: [CommentSectionListComponent, CommentSectionSortComponent],
     imports: [
         CommonModule,
+        CommaSeparatedListingModule,
         CommentsRoutingModule,
         SortingModule,
         HeadBarModule,

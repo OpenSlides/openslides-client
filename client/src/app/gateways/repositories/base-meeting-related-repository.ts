@@ -16,6 +16,8 @@ export abstract class BaseMeetingRelatedRepository<V extends BaseViewModel, M ex
     V,
     M
 > {
+    public readonly resetOnMeetingChange: boolean = true;
+
     protected get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
     }

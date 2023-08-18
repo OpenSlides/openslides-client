@@ -182,8 +182,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             group_ids: user.group_ids(),
             structure_level: user.structure_level(),
             number: user.number(),
-            vote_delegations_from_ids: user.vote_delegations_from_ids(),
-            vote_delegated_to_id: user.vote_delegated_to_id()
+            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
+            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
 
         dialogRef.afterClosed().subscribe(result => {

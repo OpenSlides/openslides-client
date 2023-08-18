@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Ids } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
 import { Projector } from 'src/app/domain/models/projector/projector';
 import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
@@ -45,7 +46,9 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
 
     public async setReferenceProjector(projector: Identifiable): Promise<void> {
         await this.update({ is_internal: false }, projector);
-        return this.meetingRepo.update({ reference_projector_id: projector.id }, this.activeMeetingService.meeting!);
+        await this.meetingRepo
+            .update({ reference_projector_id: projector.id }, this.activeMeetingService.meeting!)
+            .resolve();
     }
 
     public scale(projector: Identifiable, direction: ScrollScaleDirection, step: number): Promise<void> {
@@ -160,8 +163,21 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
 
     private async updateProjectordefaults(defaultKeys: { [key: string]: number[] }): Promise<void> {
         if (Object.keys(defaultKeys).length) {
-            return this.meetingRepo.update({ id: this.activeMeetingId, default_projector_$_ids: defaultKeys });
+            await this.meetingRepo
+                .update({ id: this.activeMeetingId, ...this.formatDefaultProjectors(defaultKeys) })
+                .resolve();
         }
         return;
+    }
+
+    private formatDefaultProjectors(defaultKeys: { [key: string]: number[] }): { [key: string]: number[] } {
+        let defaults = {};
+        for (let key of PROJECTIONDEFAULTS) {
+            defaults = {
+                ...defaults,
+                [`default_projector_${key}_ids`]: defaultKeys[key]
+            };
+        }
+        return defaults;
     }
 }

@@ -6,9 +6,24 @@ import { BaseModel } from '../../domain/models/base/base-model';
 import { Relation, RELATIONS } from '../../infrastructure/definitions/relations';
 import { collectionIdFromFqid } from '../../infrastructure/utils/transform-functions';
 import { BaseViewModel } from '../base/base-view-model';
-import { ActiveMeetingIdService } from '../pages/meetings/services/active-meeting-id.service';
 import { CollectionMapperService } from './collection-mapper.service';
 import { ViewModelStoreService } from './view-model-store.service';
+
+export function ensureIdField(relation: Partial<Relation>): string {
+    if (relation.ownIdField) {
+        return relation.ownIdField as string;
+    }
+
+    if (!relation.ownField) {
+        throw Error(`Couldn't ensure id field because of missing data`);
+    }
+
+    if (relation.many) {
+        return (relation.ownField as string).slice(0, -1) + `_ids`;
+    } else {
+        return (relation.ownField as string) + `_id`;
+    }
+}
 
 @Injectable({
     providedIn: `root`
@@ -20,7 +35,6 @@ export class RelationManagerService {
 
     public constructor(
         private viewModelStoreService: ViewModelStoreService,
-        private activeMeetingIdService: ActiveMeetingIdService,
         private collectionMapper: CollectionMapperService
     ) {
         this.loadRelations();
@@ -48,14 +62,10 @@ export class RelationManagerService {
     }
 
     public handleRelation<M extends BaseModel>(model: M, relation: Relation): any {
-        if (!relation.generic && !relation.structured) {
+        if (!relation.generic) {
             return this.handleNormalRelation(model, relation, relation.ownIdField as any);
-        } else if (relation.generic && !relation.structured) {
-            return this.handleGenericRelation(model, relation);
-        } else if (!relation.generic && relation.structured) {
-            return this.handleStructuredRelation(model, relation);
         } else {
-            throw new Error(`Generic and structured relations are not yet implemented.`);
+            return this.handleGenericRelation(model, relation);
         }
     }
 
@@ -64,10 +74,8 @@ export class RelationManagerService {
         if (!foreignRepo) {
             throw new Error(`Could not find foreignRepo for ${relation}`);
         }
-        if (relation.generic || relation.structured) {
-            throw new Error(
-                `Generic and/or structured relations are not yet implemented for detection of changing relations.`
-            );
+        if (relation.generic) {
+            throw new Error(`Generic relations are not yet implemented for detection of changing relations.`);
         }
         return foreignRepo.getViewModelMapObservable().pipe(
             map(modelMap => {
@@ -97,9 +105,6 @@ export class RelationManagerService {
                 relation.ownIdField as string,
                 relation.many
             );
-            if (relation.structured) {
-                [relation.ownIdFieldPrefix, relation.ownIdFieldSuffix] = this.getPrefixSuffix(relation.ownIdField);
-            }
             for (const ownViewModel of relation.ownViewModels) {
                 if (this.relationsByCollection[ownViewModel.COLLECTION] === undefined) {
                     this.relationsByCollection[ownViewModel.COLLECTION] = [];
@@ -141,53 +146,12 @@ export class RelationManagerService {
         }
     }
 
-    private handleStructuredRelation<M extends BaseModel>(model: M, relation: Relation): (attr: string) => any {
-        return (attr: string) => {
-            if (!attr) {
-                if (relation.ownIdFieldDefaultAttribute === `active-meeting`) {
-                    const meetingId = this.activeMeetingIdService.meetingId;
-                    if (!meetingId) {
-                        console.error(model, attr, relation);
-                        throw new Error(`No active meeting to query the structured relation!`);
-                    }
-                    attr = meetingId.toString();
-                } else {
-                    console.error(model, attr, relation);
-                    throw new Error(`You must give a non-empty attribute for this structured relation`);
-                }
-            }
-            if (!(model[relation.ownIdField] as string[])?.includes(attr)) {
-                return relation.many ? [] : undefined;
-            }
-            const idField = (relation.ownIdFieldPrefix + attr + relation.ownIdFieldSuffix) as keyof M;
-            return this.handleNormalRelation(model, relation, idField);
-        };
-    }
-
     /**
      * id(s) field rules:
      * for many=false:  idField: `<field>` -> `<field>_id`
      * for many=true: idField: `<field>s` -> `<field>_ids`
      */
     private ensureIdField(field: string, idField: string | null, many: boolean): string {
-        if (idField) {
-            return idField;
-        }
-
-        if (many) {
-            return field.slice(0, -1) + `_ids`;
-        } else {
-            return field + `_id`;
-        }
-    }
-
-    // 'prefix_$_suffix' -> ['prefix_$', '_suffix']
-    private getPrefixSuffix(idField: string): [string, string] {
-        const parts = idField.split(`$`);
-        if (parts.length !== 2) {
-            throw new Error(`The id field of a structured field must include exactly one $`);
-        }
-        parts[0] += `$`;
-        return parts as [string, string];
+        return ensureIdField({ ownIdField: idField, ownField: field, many });
     }
 }

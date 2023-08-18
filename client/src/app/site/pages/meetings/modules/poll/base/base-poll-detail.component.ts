@@ -272,7 +272,10 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
     public getUsersVoteDelegation(user: ViewUser): ViewUser | null {
         if (user.isVoteRightDelegated) {
-            return user.vote_delegated_to(this.activeMeetingId!);
+            return (
+                user.vote_delegated_to(this.activeMeetingId!) ??
+                this.userRepo.getViewModel(user.vote_delegated_to_id(this.activeMeetingId))
+            );
         }
 
         if (this._currentOperator.canVoteFor(user)) {

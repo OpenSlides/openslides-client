@@ -13,11 +13,6 @@ export class Tag extends BaseModel<Tag> {
         super(Tag.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Tag | { templateField: string })[] = [
-        `id`,
-        `name`,
-        `tagged_ids`,
-        `meeting_id`
-    ];
+    public static readonly REQUESTABLE_FIELDS: (keyof Tag)[] = [`id`, `name`, `tagged_ids`, `meeting_id`];
 }
 export interface Tag extends HasMeetingId {}

@@ -309,6 +309,10 @@
     .background-accent {
         background: mat.get-color-from-palette($accent) !important;
         color: mat.get-color-from-palette($accent, default-contrast) !important;
+
+        a {
+            color: mat.get-color-from-palette($accent, default-contrast) !important;
+        }
     }
 
     .background-warn {

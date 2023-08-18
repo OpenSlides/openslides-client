@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Motion } from 'src/app/domain/models/motions/motion';
 import { BaseImportListComponent } from 'src/app/site/base/base-import-list.component';
 import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
@@ -14,7 +13,7 @@ import { MotionImportService } from '../../services/motion-import.service';
     templateUrl: `./motion-import-list.component.html`,
     styleUrls: [`./motion-import-list.component.scss`]
 })
-export class MotionImportListComponent extends BaseImportListComponent<Motion> {
+export class MotionImportListComponent extends BaseImportListComponent<ViewMotion> {
     public possibleFields = motionExpectedHeaders.map(header => getVerboseNameOfMotionProperty(header));
 
     public get columns(): ImportListHeaderDefinition[] {

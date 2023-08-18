@@ -1,5 +1,5 @@
 <ng-container *osPerms="permission.agendaItemCanManage">
-    <ng-container *ngIf="hasItemsObservable | async as hasItems">
+    <ng-container>
         <div [formGroup]="form">
             <p>
                 <mat-checkbox formControlName="agenda_create">
@@ -21,7 +21,7 @@
             </div>
 
             <!-- Parent item -->
-            <div *ngIf="hasItems" [formGroup]="form">
+            <div *ngIf="hasItemsObservable | async" [formGroup]="form">
                 <mat-form-field>
                     <os-list-search-selector
                         formControlName="agenda_parent_id"

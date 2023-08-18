@@ -1,4 +1,4 @@
-<mat-card class="os-card speaker-card">
+<mat-card class="os-card">
     <!-- Title -->
     <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
         <mat-icon
@@ -262,10 +262,13 @@
             color="warn"
             (click)="addPointOfOrder()"
             *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
+            [disabled]="restrictPointOfOrderActions && closed"
         >
             <mat-icon>warning</mat-icon>
             &nbsp;
-            <span>{{ 'Point of order' | translate }}</span>
+            <span>
+                {{ 'Point of order' | translate }}
+            </span>
         </button>
         <button
             mat-stroked-button
@@ -274,7 +277,7 @@
             *ngIf="showPointOfOrders && isOpInWaitlist(true)"
         >
             <mat-icon>remove</mat-icon>
-            <span>{{ 'Withdraw point of order' | translate }}</span>
+            <span translate>Withdraw point of order</span>
         </button>
     </div>
 </mat-card>
@@ -359,9 +362,37 @@
         >
             warning
         </mat-icon>
-        <i [class.foreground-warn]="!!showcolor" *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
-            {{ speaker.note }}
-        </i>
+        <b
+            [class.foreground-warn]="!!showcolor"
+            *ngIf="speaker.point_of_order_category && ((showSpeakerNoteForEveryoneObservable | async) || canManage)"
+        >
+            {{ speaker.point_of_order_category.text }}
+        </b>
+        <span
+            [class.foreground-warn]="!!showcolor"
+            *ngIf="
+                speaker.point_of_order_category &&
+                speaker.note &&
+                ((showSpeakerNoteForEveryoneObservable | async) || canManage)
+            "
+        >
+            ·
+        </span>
+        <ng-container *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
+            <i [class.foreground-warn]="!!showcolor" *ngIf="speaker.note">
+                {{ speaker.note }}
+            </i>
+            <i
+                [class.foreground-warn]="!!showcolor"
+                *ngIf="
+                    !speaker.note &&
+                    speaker.point_of_order &&
+                    !(pointOfOrderCategoriesEnabled && speaker.point_of_order_category)
+                "
+            >
+                {{ 'Point of order' | translate }}
+            </i>
+        </ng-container>
     </ng-container>
 </ng-template>
 

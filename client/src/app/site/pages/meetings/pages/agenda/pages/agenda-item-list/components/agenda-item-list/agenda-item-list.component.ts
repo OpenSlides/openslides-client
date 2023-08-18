@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
@@ -21,7 +21,6 @@ import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meetin
 import { DurationService } from 'src/app/site/services/duration.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { ColumnRestriction } from 'src/app/ui/modules/list';
 import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
@@ -74,14 +73,15 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         return this.operator.hasPerms(Permission.agendaItemCanManage);
     }
 
-    public itemListSlide: ProjectionBuildDescriptor | null = null;
+    public get canSeeMenu(): boolean {
+        return this.operator.hasPerms(
+            Permission.agendaItemCanManage,
+            Permission.listOfSpeakersCanBeSpeaker,
+            Permission.listOfSpeakersCanSee
+        );
+    }
 
-    public restrictedColumns: ColumnRestriction<Permission>[] = [
-        {
-            columnName: `menu`,
-            permission: Permission.agendaItemCanManage
-        }
-    ];
+    public itemListSlide: ProjectionBuildDescriptor | null = null;
 
     /**
      * Define extra filter properties
@@ -135,7 +135,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
                                 default: false
                             }
                         ],
-                        projectionDefault: Projectiondefault.agendaAllItems,
+                        projectionDefault: PROJECTIONDEFAULT.agendaItemList,
                         getDialogTitle: () => this.translate.instant(`Agenda`)
                     };
                 } else {
@@ -398,7 +398,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
         this.modelRequestService
             .fetch(getTopicDuplicateSubscriptionConfig(...filteredItems.map(el => el.content_object.id)))
             .then(() => {
-                this.topicRepo.duplicateTopics(...filteredItems);
+                this.topicRepo.duplicateTopics(...filteredItems.map(item => this.repo.getViewModel(item.id)));
             });
     }
 

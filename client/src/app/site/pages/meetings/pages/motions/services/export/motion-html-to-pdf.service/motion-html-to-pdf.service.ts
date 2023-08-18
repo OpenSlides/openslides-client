@@ -51,7 +51,11 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
         }
 
         // Cleanup of dirty html would happen here
-        htmlText = htmlText.replace(/\s+<br class="os-line-break">/g, `<br class="os-line-break">`);
+        if (this.lineNumberingMode === LineNumberingMode.None) {
+            htmlText = htmlText.replace(/\s+<br class="os-line-break">/g, ` `);
+        } else {
+            htmlText = htmlText.replace(/\s+<br class="os-line-break">/g, `<br class="os-line-break">`);
+        }
 
         return super.convertHtml({ htmlText });
     }

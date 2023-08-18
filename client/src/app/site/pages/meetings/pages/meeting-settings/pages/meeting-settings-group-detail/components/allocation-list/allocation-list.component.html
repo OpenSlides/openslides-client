@@ -1,0 +1,47 @@
+<form [formGroup]="allocationListForm">
+    <div
+        class="inline-form"
+        formArrayName="allocationBoxes"
+        *ngFor="let allocation of allocationBoxes.controls; let i = index"
+    >
+        <ng-container [formGroupName]="i">
+            <mat-form-field>
+                <input formControlName="entry" matInput placeholder="{{ entryLabel | translate }}" />
+                <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
+            </mat-form-field>
+            <mat-icon>arrow_forward</mat-icon>
+            <mat-form-field>
+                <input
+                    *ngIf="config && isNumberAllocation"
+                    formControlName="allocation"
+                    type="number"
+                    matInput
+                    placeholder="{{ allocationLabel | translate }}"
+                />
+                <input
+                    *ngIf="config && !isNumberAllocation"
+                    formControlName="allocation"
+                    type="text"
+                    matInput
+                    placeholder="{{ allocationLabel | translate }}"
+                />
+                <mat-error>{{ 'You have to fill this field.' | translate }}</mat-error>
+            </mat-form-field>
+            <button
+                mat-icon-button
+                type="button"
+                (click)="onRemoveAllocation(i)"
+                matTooltip="{{ 'Cancel' | translate }}"
+                matTooltipPosition="left"
+            >
+                <mat-icon>close</mat-icon>
+            </button>
+        </ng-container>
+    </div>
+</form>
+
+<!-- Add new allocation button -->
+<button mat-button (click)="addNewAllocation()">
+    <mat-icon>add</mat-icon>
+    {{ addButtonLabel | translate }}
+</button>

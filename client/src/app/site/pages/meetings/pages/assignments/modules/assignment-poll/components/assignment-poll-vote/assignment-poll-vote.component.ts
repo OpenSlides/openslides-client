@@ -81,7 +81,7 @@ export class AssignmentPollVoteComponent extends BasePollVoteComponent<ViewAssig
         if (this.poll.max_votes_amount > 1 && !this.isGlobalOptionSelected()) {
             content =
                 this.translate.instant(`Your votes`) +
-                `: ${this.getVotesCount()}/${this.poll.max_votes_amount}<br>` +
+                `: ${this.getVotesCount(user)}/${this.poll.max_votes_amount}<br>` +
                 content;
         }
         const confirmed = await this.promptService.open(title, content);

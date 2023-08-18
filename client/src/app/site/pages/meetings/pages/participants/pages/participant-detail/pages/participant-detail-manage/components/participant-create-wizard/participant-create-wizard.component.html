@@ -124,7 +124,7 @@
             <ng-template matStepLabel>{{ 'Creation' | translate }}</ng-template>
             <ng-template matStepContent>
                 <os-user-detail-view
-                    [user]="createUserForm.value"
+                    [user]="user"
                     [isNewUser]="isNewUser"
                     [isEditing]="true"
                     [additionalFormControls]="additionalFormControls"
@@ -137,7 +137,7 @@
                     (errorEvent)="formErrors = $event"
                 >
                     <ng-template #editView let-form="form">
-                        <div [formGroup]="form">
+                        <div [formGroup]="form" *ngIf="(flicker | async) === false">
                             <h2>{{ 'Meeting specific information' | translate }}</h2>
                             <!-- Present? -->
                             <div [formGroup]="form">

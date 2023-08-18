@@ -72,6 +72,7 @@ export class MeetingSettingsDefinitionService {
                 return null;
             case `groups`:
             case `translations`:
+            case `ranking`:
                 return [];
             case `datetime`:
                 return null;

@@ -1,9 +1,10 @@
-import { Decimal } from '../../domain/definitions/key-types';
+import { Identifiable } from 'src/app/domain/interfaces';
+
+import { Decimal, Id } from '../../domain/definitions/key-types';
 
 export function toBase64(data: File | Blob): Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsDataURL(data);
         reader.onload = () => {
             const resultStr: string = reader.result as string;
             resolve(resultStr.split(`,`)[1]);
@@ -11,6 +12,7 @@ export function toBase64(data: File | Blob): Promise<string> {
         reader.onerror = error => {
             reject(error);
         };
+        reader.readAsDataURL(data);
     });
 }
 
@@ -43,7 +45,7 @@ export function reconvertChars(text: string): string {
  */
 export function stripHtmlTags(inputString: string): string {
     const regexp = new RegExp(/<[^ ][^<>]*(>|$)/g);
-    return inputString.replace(regexp, ``).trim();
+    return inputString.replace(regexp, ` `).replace(/  +/g, ` `).trim();
 }
 
 const VERBOSE_TRUE_FIELDS = [`1`, `on`, `true`];
@@ -66,29 +68,13 @@ const AMOUNT_DECIMAL_PLACES = 6;
  * @returns A string containing the floating point representation of the given number.
  */
 export function toDecimal(input: string | number | undefined, returnNull = true): Decimal | null {
+    if (typeof input === `string` && Number.isNaN(Number(input))) {
+        throw new Error(`Can't convert "${input}" to number`);
+    }
     if ((typeof input !== `string` || !input?.length) && typeof input !== `number`) {
         return returnNull ? null : undefined;
     }
-    if (typeof input === `number`) {
-        return input.toFixed(AMOUNT_DECIMAL_PLACES);
-    }
-    return parseStringToDecimal(input);
-}
-
-function parseStringToDecimal(input: string): Decimal {
-    const appending = (value: string, commaIndex: number): string => {
-        while (value.length - commaIndex <= AMOUNT_DECIMAL_PLACES) {
-            value += `0`;
-        }
-        return value;
-    };
-    const index = input.indexOf(`.`);
-    if (index > -1) {
-        return appending(input, index);
-    } else {
-        input += `.`;
-        return appending(input, input.length - 1);
-    }
+    return (typeof input === `number` ? input : +input).toFixed(AMOUNT_DECIMAL_PLACES);
 }
 
 /**
@@ -102,13 +88,14 @@ export function getLongPreview(input: string, size: number = 300): string {
     if (!input || !input.length) {
         return ``;
     }
-    if (input.length < size) {
-        return stripHtmlTags(input);
+    input = stripHtmlTags(input);
+    if (input.length <= size) {
+        return input;
     }
     return (
-        stripHtmlTags(input.substring(0, size / 2 - 3)) +
+        input.substring(0, Math.floor(size / 2) - 3).trim() +
         ` [...] ` +
-        stripHtmlTags(input.substring(input.length - size / 2, input.length))
+        input.substring(input.length - Math.ceil(size / 2) + 4, input.length).trim()
     );
 }
 
@@ -122,10 +109,11 @@ export function getShortPreview(input: string): string {
     if (!input || !input.length) {
         return ``;
     }
+    input = stripHtmlTags(input);
     if (input.length > 50) {
-        return stripHtmlTags(input.substring(0, 47)) + `...`;
+        return input.substring(0, 47).trim() + `...`;
     }
-    return stripHtmlTags(input);
+    return input;
 }
 
 export function isEasterEggTime(): boolean {
@@ -155,13 +143,13 @@ export function mmToPoints(mm: number, dense: number = 72): number {
  * @returns 0 if they are equal, a negative value if a>b, else a positive value
  */
 export function compareNumber(a: number, b: number): number {
-    if (!b) {
-        if (!a) {
+    if (b == null) {
+        if (a == null) {
             return 0;
         }
         return -1;
     }
-    if (!a) {
+    if (a == null) {
         return 1;
     }
     return b - a;
@@ -301,4 +289,196 @@ export function splitTypedArray<
     } while (nextIdx !== -1 && nextIdx !== arr.length - 1);
 
     return res;
+}
+
+/**
+ * Takes an object and formats it into a human-readable string JSON representation using line breaks and spaces
+ *
+ * @param jsonOrObject Either an object or a stringified json representation of an object, invalid json will lead to strange formattings
+ */
+export function objectToFormattedString(jsonOrObject: string | object): string {
+    if (!jsonOrObject) {
+        return undefined;
+    }
+    let json = JSON.stringify(
+        JSON.parse(
+            jsonOrObject && typeof jsonOrObject !== `string` ? JSON.stringify(jsonOrObject) : (jsonOrObject as string)
+        )
+    );
+
+    // Extract strings from JSON
+    const stringRegex = /\"([^\"]+)\"/g;
+    const stringReplacement = `#`;
+    let strings: string[] = [...json.match(stringRegex)];
+    while (stringRegex.test(json)) {
+        json = json.replace(stringRegex, stringReplacement);
+    }
+
+    // If the json actually represents an object or array, format the JSON skeleton
+    json = formatJsonSkeleton(json);
+
+    // Merge strings back with json skeleton
+    let result = ``;
+    let jsonArray = json.split(stringReplacement);
+    while (jsonArray.length) {
+        result = result + jsonArray[0] + (strings.length ? strings[0] : ``);
+        jsonArray = jsonArray.slice(1);
+        if (strings.length) {
+            strings = strings.slice(1);
+        }
+    }
+    return result;
+}
+
+function formatJsonSkeleton(json: string): string {
+    const append = [`[`, `{`, `,`];
+    const prepend = [`]`, `}`];
+    for (let symbol of append) {
+        json = splitStringKeepSeperator(json, symbol, `append`).join(`\n`);
+    }
+    for (let symbol of prepend) {
+        json = splitStringKeepSeperator(json, symbol, `prepend`).join(`\n`);
+    }
+    json = json.split(`:`).join(`: `).trim();
+    return addSpacersToMultiLineJson(json);
+}
+
+function addSpacersToMultiLineJson(json: string): string {
+    const openers = [`[`, `{`];
+    const closers = [`]`, `}`];
+    const jsonArray = json.split(`\n`);
+    let resultArray: string[] = [];
+    let level = 0;
+    for (let element of jsonArray) {
+        if (openers.includes(element.charAt(element.length - 1))) {
+            resultArray.push(getSpacer(level) + element);
+            level++;
+            continue;
+        } else if (closers.includes(element.charAt(0)) && level > 0) {
+            level--;
+        }
+        resultArray.push(getSpacer(level) + element);
+    }
+    return resultArray.filter(line => !!line.trim()).join(`\n`);
+}
+
+function getSpacer(level: number): string {
+    let spacer = ``;
+    for (let i = 0; i < level; i++) {
+        spacer = spacer + `   `;
+    }
+    return spacer;
+}
+
+/**
+ * Checks if a number is a valid id in the OpenSlides-context
+ */
+export function isValidId(id: number): boolean {
+    return Number.isInteger(id) && id > 0;
+}
+
+/**
+ * Returns a version of the given object that lacks all key-value pairs that don't fulfill the condition.
+ * Doesn't change the original object.
+ */
+export function filterObject(obj: Object, callbackFn: (keyValue: { key: string; value: any }) => boolean): Object {
+    if (!obj) {
+        return obj;
+    }
+
+    return Object.entries(obj)
+        .filter(([key, value]) => callbackFn({ key, value }))
+        .map(([key, value]) => ({ [key]: value }))
+        .reduce((prev, curr) => Object.assign(prev, curr));
+}
+
+export interface ListUpdateData<T extends Identifiable> {
+    toCreate?: Omit<T, `id`>[];
+    toUpdate?: T[];
+    toDelete?: Id[];
+}
+
+/**
+ * Compares the newValues Array to the originals array and partitions them into a ListUpdateData object,
+ * based on what should happen if there were to be a bulk update on the originals, that should create the state represented by newValues.
+ *
+ * To this end:
+ *  - All newValues objects without ids are interpreted as new and sorted into toCreate
+ *  - All ids that were present in originals, but not in newValues are put in toDelete
+ *  - All newValues objects with ids are interpreted as updated, if either there is no corresponding original, or the corresponding original has different values
+ */
+export function partitionModelsForUpdate<T extends Identifiable>(
+    newValues: (T | Omit<T, `id`>)[],
+    originals: T[] = []
+): ListUpdateData<T> {
+    const originalIds = originals.map(value => value.id);
+    const updatedIds = newValues.map(val => val[`id`] as number).filter(id => !!id);
+    const deleteSet = new Set<Id>(originalIds);
+    updatedIds.forEach(id => deleteSet.delete(id));
+    const toDelete = Array.from(deleteSet);
+    const toUpdate = newValues.filter(update => {
+        if (!update[`id`]) {
+            return false;
+        }
+        const newVal = update as T;
+        const former = originals.find(value => value.id === newVal.id);
+        return !former || Object.keys(newVal).some(key => key !== `id` && former[key] !== newVal[key]);
+    }) as T[];
+    const toCreate: Omit<T, `id`>[] = newValues.filter(val => !val[`id`]);
+    return filterObject(
+        { toDelete, toUpdate, toCreate },
+        (keyValue: { key: string; value: any[] }) => !!keyValue.value.length
+    );
+}
+
+export type ObjectReplaceKeysConfig = [string, string][];
+
+export function replaceObjectKeys(
+    object: { [key: string]: any },
+    config: ObjectReplaceKeysConfig,
+    reverse?: boolean
+): Object {
+    if (reverse) {
+        return replaceObjectKeys(
+            object,
+            config.map(line => [line[1], line[0]] as [string, string])
+        );
+    }
+    const map = new Map<string, string>(config);
+    let result: { [key: string]: any } = {};
+    for (let key of Object.keys(object)) {
+        const newKey = map.get(key) ?? key;
+        result[newKey] = object[key];
+    }
+    return result;
+}
+
+/**
+ * A function to efficiently find the index of an item in an array that has been sorted beforehand.
+ * @param array An array sorted in ascending order according to compareFn
+ * @param toFind The item to search for
+ * @param compareFn A compare function the type of which would be used in array.sort
+ * @returns -1 if no index is found, else the index of the item in the array. If the item is in the array multiple times, it will be the first index of the item.
+ */
+export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: T, b: T) => number): number {
+    let startId = 0;
+    while (array.length) {
+        let middleId = Math.floor(array.length / 2);
+        let comparison = compareFn(toFind, array[middleId]);
+        if (comparison === 0) {
+            // If toFind is the current item
+            while (middleId > 0 && compareFn(toFind, array[middleId - 1]) === 0) {
+                middleId--;
+            }
+            return startId + middleId;
+        } else if (comparison > 0) {
+            // If toFind is greater than the current item
+            startId += middleId + 1;
+            array = array.slice(middleId + 1);
+        } else {
+            // If toFind is smaller than the current item
+            array = array.slice(0, middleId);
+        }
+    }
+    return -1;
 }

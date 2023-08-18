@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -86,6 +87,18 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         return false;
     }
 
+    public get hasEnoughWiFiData(): boolean {
+        return this._hasEnoughWiFiData;
+    }
+
+    public get noWiFiData(): boolean {
+        return this._noWiFiData;
+    }
+
+    private _hasEnoughWiFiData: boolean;
+
+    private _noWiFiData: boolean;
+
     private _projectorId: Id | null = null;
 
     private _projectorIdSubject: BehaviorSubject<number> = new BehaviorSubject(null);
@@ -113,7 +126,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
         this.subscriptions.push(
             this.countdownRepo.getViewModelListObservable().subscribe(countdowns => (this.countdowns = countdowns)),
             this.messageRepo.getViewModelListObservable().subscribe(messages => (this.messages = messages)),
-            this.repo.getViewModelListObservable().subscribe(projectors => (this.projectorCount = projectors.length))
+            this.repo.getViewModelListObservable().subscribe(projectors => (this.projectorCount = projectors.length)),
+            combineLatest([
+                this.meetingSettingsService.get(`users_pdf_wlan_encryption`),
+                this.meetingSettingsService.get(`users_pdf_wlan_password`),
+                this.meetingSettingsService.get(`users_pdf_wlan_ssid`)
+            ]).subscribe(data => {
+                this._hasEnoughWiFiData = data[0] && !!data[2] && !(data[0] !== `nopass` && !data[1]);
+                this._noWiFiData = !data.some(date => !!date);
+            })
         );
     }
 
@@ -165,7 +186,8 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
      */
     public async onDeleteProjectorButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this projector?`);
-        if (this.projector && (await this.promptService.open(title, this.projector.name))) {
+        const content = this.projector.name;
+        if (this.projector && (await this.promptService.open(title, content))) {
             this.repo.delete(this.projector);
         }
     }
@@ -237,6 +259,15 @@ export class ProjectorDetailComponent extends BaseMeetingComponent implements On
 
     public getCurrentLoSBuildDesc(overlay: boolean): ProjectionBuildDescriptor {
         return this.currentListOfSpeakersSlideService.getProjectionBuildDescriptor(overlay);
+    }
+
+    public wifiDataBuildDesc(): ProjectionBuildDescriptor {
+        return {
+            content_object_id: `meeting/${this.activeMeetingId}`,
+            type: MeetingProjectionType.WiFiAccess,
+            projectionDefault: null,
+            getDialogTitle: () => this.translate.instant(`Wifi access data`)
+        };
     }
 
     public getCurrentProjectionLoSToggleBuildDesc(): ProjectionBuildDescriptor | Projectable | null {

@@ -1,6 +1,6 @@
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { Projectable } from 'src/app/site/pages/meetings/view-models';
@@ -41,8 +41,8 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
         return this.getDetailStateUrl();
     }
 
-    public getProjectiondefault(): Projectiondefault {
-        return Projectiondefault.listOfSpeakers;
+    public getProjectiondefault(): ProjectiondefaultValue {
+        return PROJECTIONDEFAULT.listOfSpeakers;
     }
 
     public hasSpeakerSpoken(checkSpeaker: ViewSpeaker): boolean {
@@ -50,9 +50,9 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
     }
 
     public hasUserSpoken(userId: Id): boolean {
-        return !!this.speakers.find(
-            speaker => speaker.speaker.user_id === userId && speaker.state === SpeakerState.FINISHED
-        );
+        return userId
+            ? !!this.speakers.find(speaker => speaker.user_id === userId && speaker.state === SpeakerState.FINISHED)
+            : false;
     }
 
     public findUserIndexOnList(userId: number): number {
@@ -69,12 +69,12 @@ export class ViewListOfSpeakers extends BaseProjectableViewModel<ListOfSpeakers>
     }
 
     public getSpeakerByUserId(userId: Id): ViewSpeaker | undefined {
-        return this.speakers.find(speaker => speaker.speaker.user_id === userId);
+        return this.speakers.find(speaker => speaker.user_id === userId);
     }
 
     public isUserOnList(userId: Id): boolean {
         return !!this.speakers.find(speaker => {
-            return speaker.speaker.user_id === userId;
+            return speaker.user_id === userId;
         });
     }
 

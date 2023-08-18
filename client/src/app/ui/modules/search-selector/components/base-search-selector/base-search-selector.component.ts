@@ -1,4 +1,3 @@
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
     ContentChild,
     Directive,
@@ -25,8 +24,8 @@ import { ParentErrorStateMatcher } from '../../validators';
 
 @Directive()
 export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlComponent<Selectable> implements OnInit {
-    @ViewChild(CdkVirtualScrollViewport, { static: true })
-    public cdkVirtualScrollViewPort!: CdkVirtualScrollViewport;
+    @ViewChild(`scrollViewport`, { static: true })
+    public scrollViewport!: ElementRef<HTMLElement>;
 
     @ViewChild(`matSelect`)
     public matSelect!: MatSelect;
@@ -270,8 +269,7 @@ export abstract class BaseSearchSelectorComponent extends BaseFormFieldControlCo
     public onOpenChanged(event: boolean): void {
         this.openedChange.emit(event);
         if (event) {
-            this.cdkVirtualScrollViewPort.scrollToIndex(0);
-            this.cdkVirtualScrollViewPort.checkViewportSize();
+            this.scrollViewport.nativeElement.scroll({ top: 0 });
         } else {
             this.searchValueForm.setValue(``);
         }

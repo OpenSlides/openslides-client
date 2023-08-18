@@ -11,9 +11,7 @@ export class UserFieldsets {
             `gender`,
             `default_number`,
             `default_structure_level`,
-            `default_vote_weight`,
-            { templateField: `number_$` },
-            { templateField: `structure_level_$` }
+            `default_vote_weight`
         ]
     };
 }

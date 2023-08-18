@@ -126,4 +126,57 @@
             </section>
         </div>
     </mat-card>
+
+    <mat-card class="os-card margin-bottom-60" *osOmlPerms="OML.superadmin">
+        <div class="saml-settings-form">
+            <h2>{{ 'Single Sign-On settings' | translate }}</h2>
+            <!-- sso enabled -->
+            <section>
+                <mat-checkbox formControlName="saml_enabled">
+                    {{ 'Enable SSO via SAML' | translate }}
+                </mat-checkbox>
+            </section>
+            <!-- SSO login button text -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'Login button text' | translate }}</mat-label>
+                    <input matInput formControlName="saml_login_button_text" />
+                </mat-form-field>
+            </section>
+            <!-- JSON source attribute -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'Attribute mapping (JSON)' | translate }}</mat-label>
+                    <textarea matInput formControlName="saml_attr_mapping" [rows]="ssoConfigRows"></textarea>
+                    <mat-hint>
+                        {{
+                            'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute name).'
+                                | translate
+                        }}
+                    </mat-hint>
+                </mat-form-field>
+            </section>
+            <!-- SSO login button text -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>
+                    <textarea matInput formControlName="saml_metadata_idp" [rows]="6" wrap="hard"></textarea>
+                </mat-form-field>
+            </section>
+            <!-- SSO login button text -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'Metadata of Service Provider (SP)' | translate }}</mat-label>
+                    <textarea matInput formControlName="saml_metadata_sp" [rows]="6" wrap="hard"></textarea>
+                </mat-form-field>
+            </section>
+            <!-- SSO login button text -->
+            <section>
+                <mat-form-field>
+                    <mat-label>{{ 'Private key of Service Provider (SP)' | translate }}</mat-label>
+                    <textarea matInput formControlName="saml_private_key" [rows]="6" wrap="hard"></textarea>
+                </mat-form-field>
+            </section>
+        </div>
+    </mat-card>
 </form>

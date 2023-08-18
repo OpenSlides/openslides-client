@@ -366,8 +366,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             delete result.title; // Do not update the title!
             await this.motionRepo
                 .update(result.update, motion)
-                .concat(this.motionRepo.setState(result.state_id!, motion))
-                .concat(this.motionRepo.setRecommendation(result.recommendation_id!, motion))
+                .concat(
+                    this.motionRepo.setState(result.state_id!, motion),
+                    this.motionRepo.setRecommendation(result.recommendation_id!, motion)
+                )
                 .resolve();
         }
 
