@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { map, switchAll, tap } from 'rxjs';
+import { map, of, switchAll, tap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -66,7 +66,7 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
                         return this.repo.getViewModelObservable(this.urlUserId);
                     }
 
-                    return null;
+                    return of();
                 }),
                 switchAll()
             )

@@ -72,7 +72,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                     }
                 }),
                 map(newId => {
-                    return newId ? this.meetingController.getViewModelObservable(newId) : null;
+                    return newId ? this.meetingController.getViewModelObservable(newId) : of();
                 }),
                 switchAll()
             )
