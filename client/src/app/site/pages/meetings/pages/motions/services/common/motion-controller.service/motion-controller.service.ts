@@ -228,7 +228,7 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
         viewModel.getParagraphTitleByParagraph = (paragraph: DiffLinesInParagraph) =>
             this.motionLineNumbering.getAmendmentParagraphLinesTitle(paragraph);
         if (viewModel.lead_motion && viewModel.isParagraphBasedAmendment()) {
-            viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode, includeUnchanged: boolean = false) => {
+            viewModel.getAmendmentParagraphLines = (recoMode: ChangeRecoMode, includeUnchanged = false) => {
                 const changeRecos = viewModel.change_recommendations.filter(changeReco => changeReco.showInFinalView());
                 return this.motionLineNumbering.getAmendmentParagraphLines(
                     viewModel,

@@ -43,17 +43,17 @@ export abstract class BasePollPdfService {
      * An arbitrary number of ballots to print, if {@link ballotCountSelection} is set
      * to CUSTOM_NUMBER. Value is expected to be fetched from the configuration`
      */
-    protected ballotCustomCount: number = 0;
+    protected ballotCustomCount = 0;
 
     /**
      * The event name
      */
-    protected eventName: string = ``;
+    protected eventName = ``;
 
     /**
      * The url of the logo to be printed
      */
-    protected logoUrl: string = ``;
+    protected logoUrl = ``;
 
     private get activeMeeting(): ViewMeeting {
         return this.activeMeetingService.meeting!;

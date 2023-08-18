@@ -363,8 +363,8 @@ export abstract class BaseBackendImportService<MainModel extends Identifiable>
     private processRawPreviews(rawPreviews: BackendImportRawPreview[]): void {
         const previews: (BackendImportRawPreview | BackendImportPreview)[] = rawPreviews;
         let index = 1;
-        for (let preview of previews) {
-            for (let row of preview.rows) {
+        for (const preview of previews) {
+            for (const row of preview.rows) {
                 row[`id`] = index;
                 index++;
             }

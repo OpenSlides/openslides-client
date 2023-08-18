@@ -58,7 +58,7 @@ export class TreeService {
         }
 
         let tree_weight = 1;
-        const inject = (nodes: T[], level: number = 0) => {
+        const inject = (nodes: T[], level = 0) => {
             nodes.sort((nodeA, nodeB) => (nodeA[weightKey] as any) - (nodeB[weightKey] as any));
             for (const node of nodes) {
                 node.tree_weight = tree_weight++;
@@ -306,7 +306,7 @@ export class TreeService {
             a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
         );
         for (let i = 0; i < tree.length; ) {
-            let node = tree[i];
+            const node = tree[i];
             if (findIndexInSortedArray(deleteIds, byItemId ? node.item.id : node.id, (a, b) => a - b) !== -1) {
                 tree = [tree.slice(0, i), i + 1 < tree.length ? tree.slice(i + 1) : []].flatMap(
                     val => val as FlatNode<T>[]
@@ -345,7 +345,7 @@ export class TreeService {
      */
     public concatNewNodesFromItems<T extends Identifiable>(tree: FlatNode<T>[], newItems: T[]): FlatNode<T>[] {
         const oldMaxPosition = Math.max(...tree.map(node => node.position), tree.length - 1);
-        let items = newItems.map((item, index) => ({
+        const items = newItems.map((item, index) => ({
             ...item,
             item,
             level: 0,

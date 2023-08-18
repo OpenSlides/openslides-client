@@ -31,7 +31,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
                         this.authTokenService.setRawAccessToken(httpEvent.headers.get(`Authentication`));
                     }
                 },
-                error: error => {
+                error: (error: unknown) => {
                     if (error instanceof HttpErrorResponse) {
                         // Here you can cache failed responses and try again
                     }

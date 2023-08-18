@@ -27,12 +27,12 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
     /**
      * if this pw-page is for your own user
      */
-    public ownPage: boolean = false;
+    public ownPage = false;
 
     /**
      * if current user has the "can_manage" permission
      */
-    public canManage: boolean = false;
+    public canManage = false;
 
     public get generatePasswordFn(): () => string {
         return () => this.repo.getRandomPassword();

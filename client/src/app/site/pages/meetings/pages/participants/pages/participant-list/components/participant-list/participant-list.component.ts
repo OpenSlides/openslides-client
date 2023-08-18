@@ -53,8 +53,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         return this._presenceViewConfigured && this.operator.hasPerms(Permission.userCanManage);
     }
 
-    private voteWeightEnabled: boolean = false;
-    public voteDelegationEnabled: boolean = false;
+    private voteWeightEnabled = false;
+    public voteDelegationEnabled = false;
 
     /**
      * Helper to check for main button permissions
@@ -89,8 +89,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
      */
     public filterProps = [`full_name`, `groups`, `structure_level`, `number`, `delegationName`];
 
-    private _allowSelfSetPresent: boolean = false;
-    private _isElectronicVotingEnabled: boolean = false;
+    private _allowSelfSetPresent = false;
+    private _isElectronicVotingEnabled = false;
     private _isUserInScope = true;
 
     public constructor(

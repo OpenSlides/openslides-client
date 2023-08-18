@@ -76,7 +76,7 @@ export class AssignmentPollPdfService extends BasePollPdfService {
         if (subtitle.length > 90) {
             subtitle = subtitle.substring(0, 90) + `...`;
         }
-        let rowsPerPage = this.getRowsPerPage(poll);
+        const rowsPerPage = this.getRowsPerPage(poll);
         const sheetEnd = Math.floor(417 / rowsPerPage);
         this.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend: sheetEnd, title, subtitle, poll }),

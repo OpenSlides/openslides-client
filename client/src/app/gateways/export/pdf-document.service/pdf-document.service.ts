@@ -223,7 +223,7 @@ class PdfCreator {
     }
 
     private replaceSvgImages(doc: any, images: object): any {
-        for (let url of Object.keys(images)) {
+        for (const url of Object.keys(images)) {
             doc = this.replaceSvgRecursive(doc, url, images[url]);
         }
 
@@ -236,7 +236,7 @@ class PdfCreator {
                 return this.replaceSvgRecursive(el, url, image);
             });
         } else if (doc && typeof doc === `object`) {
-            for (let key of Object.keys(doc)) {
+            for (const key of Object.keys(doc)) {
                 if (key === `image` && (doc[key] === url || doc[key] === `/` + url)) {
                     delete doc[key];
                     doc.svg = image;
@@ -423,7 +423,7 @@ export class PdfDocumentService {
      *
      * @returns {Object} An object for `DocDefinition` for `pdf-make`.
      */
-    public createTocLineInline(text: string, italics: boolean = false): Object {
+    public createTocLineInline(text: string, italics = false): Object {
         return {
             text: `\n` + text,
             style: StyleType.SUB_ENTRY,
@@ -508,7 +508,7 @@ export class PdfDocumentService {
     ): void {
         this.showProgress();
 
-        var logoBallotPaperUrl = this.mediaManageService.getLogoUrl(`pdf_ballot_paper`);
+        let logoBallotPaperUrl = this.mediaManageService.getLogoUrl(`pdf_ballot_paper`);
         if (logoBallotPaperUrl) {
             logoBallotPaperUrl = this.removeLeadingSlash(logoBallotPaperUrl);
             this.imageUrls.push(logoBallotPaperUrl);
@@ -574,8 +574,8 @@ export class PdfDocumentService {
     private getHeader({ exportInfo, lrMargin }: PdfDocumentHeaderConfig): object {
         let text: string;
         const columns = [];
-        let logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
-        let logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
+        const logoHeaderLeftUrl = this.mediaManageService.getLogoUrl(`pdf_header_l`);
+        const logoHeaderRightUrl = this.mediaManageService.getLogoUrl(`pdf_header_r`);
         const header =
             exportInfo && exportInfo.pdfOptions ? exportInfo.pdfOptions.includes(MOTION_PDF_OPTIONS.Header) : true;
 
@@ -651,8 +651,8 @@ export class PdfDocumentService {
         let logoContainerWidth: string;
         let pageNumberPosition: string;
         let logoContainerSize: number[];
-        let logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_l`);
-        let logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_r`);
+        const logoFooterLeftUrl = this.mediaManageService.getLogoUrl(`pdf_footer_l`);
+        const logoFooterRightUrl = this.mediaManageService.getLogoUrl(`pdf_footer_r`);
 
         let footerPageNumber = ``;
         if (showPageNr) {

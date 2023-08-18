@@ -84,7 +84,7 @@ export class CommitteeImportListComponent extends BaseImportListComponent<Commit
     }
 
     private _currentImportPhase: ImportStepPhase = ImportStepPhase.ENQUEUED;
-    private _isImportValid: boolean = false;
+    private _isImportValid = false;
 
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,

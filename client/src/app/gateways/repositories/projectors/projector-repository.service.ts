@@ -23,7 +23,7 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
 
     public getTitle = (viewProjector: ViewProjector) => viewProjector.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Projectors` : `Projector`);
 
     public async create(partialProjector: Partial<Projector> & { name: string }): Promise<Identifiable> {
         const payload: any = {
@@ -74,7 +74,7 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
      * @param direction The direction.
      * @param step (default 1) The amount of scroll-steps
      */
-    public async scroll(projector: Identifiable, direction: ScrollScaleDirection, step: number = 1): Promise<void> {
+    public async scroll(projector: Identifiable, direction: ScrollScaleDirection, step = 1): Promise<void> {
         return await this.controlView(projector, direction, `scroll`, step);
     }
 
@@ -85,7 +85,7 @@ export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<Vie
      * @param direction The direction.
      * @param step (default 1) The amount of scale-steps
      */
-    public async scale(projector: Identifiable, direction: ScrollScaleDirection, step: number = 1): Promise<void> {
+    public async scale(projector: Identifiable, direction: ScrollScaleDirection, step = 1): Promise<void> {
         return await this.controlView(projector, direction, `scale`, step);
     }
 

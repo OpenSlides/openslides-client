@@ -55,7 +55,7 @@ export class MeetingSettingsDefinitionService {
 
     private getDefaultValueForItem(item: SettingsItem): any {
         const isArray = Array.isArray(item.key);
-        let value = meetingSettingsDefaults[isArray ? item.key[0] : (item.key as keyof Settings)];
+        const value = meetingSettingsDefaults[isArray ? item.key[0] : (item.key as keyof Settings)];
         if (item.type === `daterange`) {
             return [value ?? null, meetingSettingsDefaults[item.key[1]] ?? null];
         }
@@ -106,7 +106,7 @@ export class MeetingSettingsDefinitionService {
                 for (const setting of subgroup.settings) {
                     this.validateSetting(setting);
                     const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
-                    for (let key of keys) {
+                    for (const key of keys) {
                         localSettingsMap[key] = setting;
                     }
                 }

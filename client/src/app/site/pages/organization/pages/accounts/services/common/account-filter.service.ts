@@ -36,7 +36,7 @@ export class AccountFilterService extends BaseFilterListService<ViewUser> {
     private updateUserMaps(users: ViewUser[]): void {
         this.userEmailMap.clear();
         this.userNameMap.clear();
-        for (let user of users) {
+        for (const user of users) {
             this.userEmailMap.set(user.email, (this.userEmailMap.get(user.email) ?? []).concat(user.id));
             this.userNameMap.set(user.getName(), (this.userNameMap.get(user.getName()) ?? []).concat(user.id));
         }

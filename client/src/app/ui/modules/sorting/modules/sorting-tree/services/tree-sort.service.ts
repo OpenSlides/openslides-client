@@ -27,7 +27,7 @@ export class TreeSortService<T extends Identifiable & Displayable> extends BaseS
      *
      * @returns {FlatNode<T>[]} The sorted array.
      */
-    public sortTree(sourceData: FlatNode<T>[], property: OsSortProperty<T>, ascending: boolean = true): FlatNode<T>[] {
+    public sortTree(sourceData: FlatNode<T>[], property: OsSortProperty<T>, ascending = true): FlatNode<T>[] {
         return sourceData
             .sort((nodeA, nodeB) => {
                 const itemA = nodeA.item;

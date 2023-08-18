@@ -46,10 +46,10 @@ export class CallComponent extends BaseMeetingComponent implements OnInit, After
     public showParticles: Observable<boolean> = this.applauseService.showParticles;
     public hasLiveStreamUrl: Observable<boolean> = this.streamService.hasLiveStreamUrlObservable;
 
-    public isJitsiActive: boolean = false;
-    public isJoined: boolean = false;
+    public isJitsiActive = false;
+    public isJoined = false;
 
-    private autoConnect: boolean = false;
+    private autoConnect = false;
     private dominantSpeaker: string | undefined;
 
     public get showHangUp(): boolean {

@@ -8,10 +8,10 @@ import { BrowserRecommendation, BrowserSupportService } from '../../../../servic
     styleUrls: [`./unsupported-browser.component.scss`]
 })
 export class UnsupportedBrowserComponent implements OnInit {
-    public supported: boolean = false;
-    public currentBrowser: string = ``;
-    public browserVersion: string = ``;
-    public supportedVersion: number = 0;
+    public supported = false;
+    public currentBrowser = ``;
+    public browserVersion = ``;
+    public supportedVersion = 0;
 
     public get recommendedBrowsers(): BrowserRecommendation[] {
         return this.browserSupprt.recommendedBrowsers;

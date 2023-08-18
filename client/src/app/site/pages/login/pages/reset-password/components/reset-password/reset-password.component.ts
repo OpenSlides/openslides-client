@@ -20,7 +20,7 @@ export class ResetPasswordComponent extends BaseComponent implements OnInit {
         return this._isWaiting;
     }
 
-    private _isWaiting: boolean = false;
+    private _isWaiting = false;
 
     /**
      * Constructur for the reset password view. Initializes the form for the email.

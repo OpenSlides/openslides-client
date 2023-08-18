@@ -9,10 +9,10 @@ import { ViewMotion } from '../../../view-models';
     providedIn: `root`
 })
 export class MotionPermissionService {
-    public configMinSupporters: number = 0;
+    public configMinSupporters = 0;
 
-    private _amendmentEnabled: boolean = false;
-    private _amendmentOfAmendmentEnabled: boolean = false;
+    private _amendmentEnabled = false;
+    private _amendmentOfAmendmentEnabled = false;
 
     public constructor(private operator: OperatorService, private meetingSettingsService: MeetingSettingsService) {
         // load config variables

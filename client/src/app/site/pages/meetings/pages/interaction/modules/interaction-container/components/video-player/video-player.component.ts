@@ -175,19 +175,19 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
          * Using observable would not make sense, because without it would not automatically update
          * if a Ressource switches from online to offline
          */
-        const ajaxResponse: AjaxResponse<any> = await firstValueFrom(
+        const ajaxResponse: AjaxResponse<any> | unknown = await firstValueFrom(
             ajax({
                 url: this.videoUrl,
                 crossDomain: true
             }).pipe(
                 map(response => response),
-                catchError(error => of(error))
+                catchError((error: unknown) => of(error))
             )
         );
         /**
          * there is no enum for http status codes in the whole Angular stack...
          */
-        if (ajaxResponse.status === 200) {
+        if ((ajaxResponse as AjaxResponse<any>)?.status === 200) {
             this.isUrlOnline = true;
         } else {
             this.isUrlOnline = false;
@@ -218,7 +218,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
             };
         }
 
-        let style: any = {};
+        const style: any = {};
         if (this.posterUrl) {
             style.poster = this.posterUrl;
         }
@@ -306,7 +306,7 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
 
     private getNanocosmosVideoId(url: string): string {
         if (!url.includes(`bintu`)) {
-            const urlParts: String[] = url.split(`=`);
+            const urlParts: string[] = url.split(`=`);
             if (urlParts?.length && typeof urlParts[1] === `string`) {
                 return urlParts[1];
             }

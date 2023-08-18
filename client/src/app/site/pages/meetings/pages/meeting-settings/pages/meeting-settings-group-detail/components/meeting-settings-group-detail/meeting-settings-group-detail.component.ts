@@ -110,8 +110,8 @@ export class MeetingSettingsGroupDetailComponent
     public async saveAll(): Promise<void> {
         this.cd.detach();
         try {
-            let data = deepCopy(this.changedSettings);
-            for (let key of Object.keys(this.keyTransformConfigs)) {
+            const data = deepCopy(this.changedSettings);
+            for (const key of Object.keys(this.keyTransformConfigs)) {
                 if (Array.isArray(data[key])) {
                     data[key] = data[key].map(val =>
                         typeof val === `object` ? replaceObjectKeys(val, this.keyTransformConfigs[key], true) : val
@@ -120,8 +120,8 @@ export class MeetingSettingsGroupDetailComponent
                     data[key] = replaceObjectKeys(data[key], this.keyTransformConfigs[key], true);
                 }
             }
-            let actions: Action<any>[] = [];
-            for (let key of Object.keys(this.keyRelations)) {
+            const actions: Action<any>[] = [];
+            for (const key of Object.keys(this.keyRelations)) {
                 if (data[key] === undefined) {
                     continue;
                 }

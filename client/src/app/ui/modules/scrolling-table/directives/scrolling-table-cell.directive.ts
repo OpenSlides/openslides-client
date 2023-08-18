@@ -74,9 +74,9 @@ export class ScrollingTableCellDirective implements OnInit, ScrollingTableCellDe
 
     private _labelTemplate: TemplatePortal;
     private _config: ScrollingTableCellDefConfig = {};
-    private _width: string = ``;
-    private _minWidth: string = ``;
-    private _maxWidth: string = ``;
+    private _width = ``;
+    private _minWidth = ``;
+    private _maxWidth = ``;
     private _isHidden = false;
     private _property = ``;
     private _labelString = ``;

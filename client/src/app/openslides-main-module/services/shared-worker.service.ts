@@ -15,7 +15,7 @@ export class SharedWorkerService {
     constructor(private zone: NgZone) {
         if (environment.autoupdateOnSharedWorker) {
             try {
-                let worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
+                const worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
                     name: `openslides-shared-worker`
                 });
                 this.conn = worker.port;

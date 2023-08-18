@@ -95,7 +95,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     public addMeetingLabel = ADD_MEETING_LABEL;
     public editMeetingLabel = EDIT_MEETING_LABEL;
 
-    public isCreateView: boolean = false;
+    public isCreateView = false;
 
     public meetingForm!: UntypedFormGroup;
     public theDuplicateFromId: Id | null = null;

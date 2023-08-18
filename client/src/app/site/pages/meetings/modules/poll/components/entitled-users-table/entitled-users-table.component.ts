@@ -13,7 +13,7 @@ import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-
     encapsulation: ViewEncapsulation.None
 })
 export class EntitledUsersTableComponent {
-    private _isViewingThis: boolean = true;
+    private _isViewingThis = true;
 
     @Input()
     public set entitledUsersObservable(observable: Observable<EntitledUsersTableEntry[]>) {

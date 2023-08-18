@@ -72,9 +72,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     @Input()
     public lineNumberingMode!: LineNumberingMode;
     @Input()
-    public showAllAmendments: boolean = false;
+    public showAllAmendments = false;
     @Input()
-    public showSummary: boolean = true;
+    public showSummary = true;
     @Input()
     public set showPreamble(value: boolean) {
         this._showPreamble = value;
@@ -95,7 +95,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public get showPreamble(): boolean {
         return this.motion.showPreamble ? this._showPreamble : false;
     }
-    private _showPreamble: boolean = true;
+    private _showPreamble = true;
 
     public get nativeElement(): any {
         return this.el.nativeElement;

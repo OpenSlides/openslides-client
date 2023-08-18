@@ -26,7 +26,7 @@ export class InfoActionsComponent extends BaseComponent {
         this.lifecycleService.reset();
     }
 
-    public async checkDatastore(all: boolean = false): Promise<void> {
+    public async checkDatastore(all = false): Promise<void> {
         const response = await this.presenter.call(all);
         if (response.ok) {
             this.snackbar.open(this.translate.instant(`Datastore is ok!`), `Ok`);

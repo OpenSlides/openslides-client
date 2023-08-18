@@ -33,7 +33,7 @@ export abstract class BaseSortTreeViewComponent<V extends BaseViewModel>
     /**
      * Emitter to emit if the nodes should expand or collapse.
      */
-    public readonly changeState: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    public readonly changeState: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /**
      * Emitter that emits the filters to the sorting tree.

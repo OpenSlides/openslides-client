@@ -30,7 +30,7 @@ export class AccountSearchSelectorComponent extends BaseSearchSelectorComponent 
         if (!this.selectableItems?.length) {
             this.selectableItems = [...users];
         } else {
-            for (let user of users) {
+            for (const user of users) {
                 this.addSelectableItem(user);
             }
         }

@@ -132,7 +132,7 @@ export class BaseModelRequestHandlerComponent extends BaseUiComponent implements
         { hideWhen, hideWhenDestroyed, hideWhenMeetingChanged, hideWhenUnauthenticated }: HidingConfig,
         ...additional: Observable<boolean>[]
     ): Observable<boolean> | null {
-        let observables: Observable<boolean>[] = [];
+        const observables: Observable<boolean>[] = [];
 
         additional = additional.filter(e => !!e);
         if (additional && additional.length) {

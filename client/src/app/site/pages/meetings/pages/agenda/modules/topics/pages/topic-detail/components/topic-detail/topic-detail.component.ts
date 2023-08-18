@@ -50,7 +50,7 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
     /**
      * Determine is created
      */
-    public newTopic: boolean = false;
+    public newTopic = false;
 
     /**
      * Holds the current view topic

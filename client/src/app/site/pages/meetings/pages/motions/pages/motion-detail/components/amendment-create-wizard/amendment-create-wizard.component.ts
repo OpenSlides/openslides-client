@@ -48,7 +48,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * determine if we are in the amendment of amendment mode
      */
-    private isAmendmentOfAmendment: boolean = false;
+    private isAmendmentOfAmendment = false;
 
     /**
      * Change recommendation content.
@@ -63,12 +63,12 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
     /**
      * Determine, from the config service, if a reason is required
      */
-    public reasonRequired: boolean = false;
+    public reasonRequired = false;
 
     /**
      * Indicates if an amendment can change multiple paragraphs or only one
      */
-    public multipleParagraphsAllowed: boolean = false;
+    public multipleParagraphsAllowed = false;
 
     public tinyMceConfig = MotionTinyMceConfig;
 

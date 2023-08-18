@@ -57,7 +57,7 @@ export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepositor
             ? viewMotionCategory.prefix + ` - ` + viewMotionCategory.name
             : viewMotionCategory.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Categories` : `Category`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Categories` : `Category`);
 
     /**
      * Updates a categories numbering.

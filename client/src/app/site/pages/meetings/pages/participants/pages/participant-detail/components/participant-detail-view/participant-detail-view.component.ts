@@ -112,10 +112,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
     }
 
     private _userId: Id | undefined = undefined; // Not initialized
-    private _isVoteWeightEnabled: boolean = false;
-    private _isVoteDelegationEnabled: boolean = false;
-    private _isElectronicVotingEnabled: boolean = false;
-    private _isUserInScope: boolean = false;
+    private _isVoteWeightEnabled = false;
+    private _isVoteDelegationEnabled = false;
+    private _isElectronicVotingEnabled = false;
+    private _isUserInScope = false;
 
     public constructor(
         componentServiceCollector: MeetingComponentServiceCollectorService,

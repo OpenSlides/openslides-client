@@ -59,7 +59,7 @@ export class MotionHighlightFormComponent extends BaseMotionDetailChildComponent
     /**
      * Indicates if the highlight line form was opened
      */
-    public highlightedLineOpened: boolean = false;
+    public highlightedLineOpened = false;
 
     /**
      * Holds the model for the typed line number

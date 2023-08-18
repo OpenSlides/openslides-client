@@ -57,7 +57,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     }
 
     public async createForwarded(meetingIds: Id[], ...motions: any[]): Promise<{ success: number; partial: number }> {
-        let payloads: any[][] = [];
+        const payloads: any[][] = [];
         motions.forEach(motion => {
             payloads.push(
                 meetingIds.map(id => {
@@ -70,10 +70,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         });
         let success = 0;
         let partial = 0;
-        for (let meetingPayloads of payloads) {
+        for (const meetingPayloads of payloads) {
             let partialSuccess = false;
             let failure = false;
-            for (let payload of meetingPayloads) {
+            for (const payload of meetingPayloads) {
                 try {
                     await Promise.race([
                         this.createAction(MotionAction.CREATE_FORWARDED, payload).resolve(),
@@ -300,7 +300,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return agendaTitle;
     };
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Motions` : `Motion`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Motions` : `Motion`);
 
     public getProjectorTitle = (viewMotion: ViewMotion) => {
         const subtitle =

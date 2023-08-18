@@ -37,7 +37,7 @@ export class AutoupdateCommunicationService {
     private endpointName: string;
     private autoupdateEndpointStatus: 'healthy' | 'unhealthy' = `healthy`;
     private unhealtyTimeout: any;
-    private tryReconnectOpen: boolean = false;
+    private tryReconnectOpen = false;
     private subscriptionsWithData = new Set<string>();
 
     constructor(

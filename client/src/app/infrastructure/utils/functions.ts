@@ -84,7 +84,7 @@ export function toDecimal(input: string | number | undefined, returnNull = true)
  * @param size Optional. The maximum amount of characters to display.
  * @returns returns the first and last size/2 characters of a string
  */
-export function getLongPreview(input: string, size: number = 300): string {
+export function getLongPreview(input: string, size = 300): string {
     if (!input || !input.length) {
         return ``;
     }
@@ -131,7 +131,7 @@ const MILLIMETERS_PER_INCH = 25.4;
  *
  * @return points
  */
-export function mmToPoints(mm: number, dense: number = 72): number {
+export function mmToPoints(mm: number, dense = 72): number {
     const inches = mm / MILLIMETERS_PER_INCH;
     return inches * dense;
 }
@@ -333,10 +333,10 @@ export function objectToFormattedString(jsonOrObject: string | object): string {
 function formatJsonSkeleton(json: string): string {
     const append = [`[`, `{`, `,`];
     const prepend = [`]`, `}`];
-    for (let symbol of append) {
+    for (const symbol of append) {
         json = splitStringKeepSeperator(json, symbol, `append`).join(`\n`);
     }
-    for (let symbol of prepend) {
+    for (const symbol of prepend) {
         json = splitStringKeepSeperator(json, symbol, `prepend`).join(`\n`);
     }
     json = json.split(`:`).join(`: `).trim();
@@ -347,9 +347,9 @@ function addSpacersToMultiLineJson(json: string): string {
     const openers = [`[`, `{`];
     const closers = [`]`, `}`];
     const jsonArray = json.split(`\n`);
-    let resultArray: string[] = [];
+    const resultArray: string[] = [];
     let level = 0;
-    for (let element of jsonArray) {
+    for (const element of jsonArray) {
         if (openers.includes(element.charAt(element.length - 1))) {
             resultArray.push(getSpacer(level) + element);
             level++;
@@ -445,8 +445,8 @@ export function replaceObjectKeys(
         );
     }
     const map = new Map<string, string>(config);
-    let result: { [key: string]: any } = {};
-    for (let key of Object.keys(object)) {
+    const result: { [key: string]: any } = {};
+    for (const key of Object.keys(object)) {
         const newKey = map.get(key) ?? key;
         result[newKey] = object[key];
     }
@@ -464,7 +464,7 @@ export function findIndexInSortedArray<T>(array: T[], toFind: T, compareFn: (a: 
     let startId = 0;
     while (array.length) {
         let middleId = Math.floor(array.length / 2);
-        let comparison = compareFn(toFind, array[middleId]);
+        const comparison = compareFn(toFind, array[middleId]);
         if (comparison === 0) {
             // If toFind is the current item
             while (middleId > 0 && compareFn(toFind, array[middleId - 1]) === 0) {

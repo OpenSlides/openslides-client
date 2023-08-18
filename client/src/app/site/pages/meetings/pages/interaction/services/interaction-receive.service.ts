@@ -55,7 +55,7 @@ export class InteractionReceiveService {
         this.setConferenceState(state);
     }
 
-    private isInCall: boolean = false;
+    private isInCall = false;
 
     private get promptService(): PromptService {
         return this._lazyServices.promptService;

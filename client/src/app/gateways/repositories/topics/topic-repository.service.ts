@@ -64,7 +64,7 @@ export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersConte
 
     public override getAgendaSlideTitle = (topic: ViewTopic) => this.getAgendaListTitle(topic).title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Topics` : `Topic`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Topics` : `Topic`);
 
     public duplicateTopics(...topicAgendaItems: ViewAgendaItem<ViewTopic>[]): Promise<Identifiable[]> {
         return this.create(...topicAgendaItems.map(topic => this.getDuplicatedTopic(topic)));

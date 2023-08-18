@@ -23,7 +23,7 @@ export class AutoupdateSubscription {
     ) {
         this.id = this.id || Math.floor(Math.random() * (900000 - 1) + 100000);
 
-        for (let port of ports) {
+        for (const port of ports) {
             this.publishSubscriptionId(port);
         }
     }
@@ -50,7 +50,7 @@ export class AutoupdateSubscription {
      * @param data The data to be processed
      */
     public updateData(data: Object): void {
-        for (let port of this.ports) {
+        for (const port of this.ports) {
             port.postMessage({
                 sender: `autoupdate`,
                 action: `receive-data`,
@@ -69,7 +69,7 @@ export class AutoupdateSubscription {
      * @param data The error data
      */
     public sendError(data: Object): void {
-        for (let port of this.ports) {
+        for (const port of this.ports) {
             port.postMessage({
                 sender: `autoupdate`,
                 action: `receive-error`,
@@ -104,7 +104,7 @@ export class AutoupdateSubscription {
      * @param port The port to be removed
      */
     public closePort(port: MessagePort): void {
-        let portIdx = this.ports.indexOf(port);
+        const portIdx = this.ports.indexOf(port);
         if (portIdx !== -1) {
             this.ports.splice(portIdx, 1);
         }

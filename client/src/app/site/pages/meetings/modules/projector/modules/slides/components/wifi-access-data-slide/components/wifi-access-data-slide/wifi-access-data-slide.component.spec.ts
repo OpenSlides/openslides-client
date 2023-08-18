@@ -110,7 +110,7 @@ function findChildFromDebugElement(element: DebugElement, ...nodenames: string[]
     }
     nodenames = [...nodenames[0].split(`.`), ...nodenames.slice(1)];
     const children = element.children?.filter(child => child.name === nodenames[0]) ?? [];
-    for (let child of children) {
+    for (const child of children) {
         const result = findChildFromDebugElement(child, ...nodenames.slice(1));
         if (result) {
             return result;
@@ -141,7 +141,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi`);
         expect(component.password).toBe(`Super&StrongP455Word`);
         expect(component.encryption).toBe(`WPA/WPA2`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -156,7 +156,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi`);
         expect(component.password).toBe(`Super&StrongP455Word`);
         expect(component.encryption).toBe(`WEP`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -171,7 +171,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi`);
         expect(component.password).toBe(`Super&StrongP455Word`);
         expect(component.encryption).toBe(`No encryption`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -186,7 +186,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(undefined);
         expect(component.password).toBe(undefined);
         expect(component.encryption).toBe(undefined);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;
@@ -199,7 +199,7 @@ describe(`WifiAccessDataSlideComponent`, () => {
         expect(component.ssid).toBe(`RandomWiWi\;\:`);
         expect(component.password).toBe(`Super&StrongP455Word\\\"`);
         expect(component.encryption).toBe(`WPA/WPA2`);
-        let qr: MockQrCodeComponent = findChildFromDebugElement(
+        const qr: MockQrCodeComponent = findChildFromDebugElement(
             fixture.debugElement,
             QR_COMPONENT_PATH
         )?.componentInstance;

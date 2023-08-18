@@ -65,6 +65,5 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getTitle = (viewUser: ViewMeetingUser) => viewUser.user?.getTitle() ?? `Unknown`;
 
-    public getVerboseName = (plural: boolean = false): string =>
-        this.translate.instant(plural ? `Participants` : `Participant`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
 }

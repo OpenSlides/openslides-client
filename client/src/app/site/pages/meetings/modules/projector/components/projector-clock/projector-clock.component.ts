@@ -9,9 +9,9 @@ import { ServerTimePresenterService } from 'src/app/gateways/presenter/server-ti
 })
 export class ProjectorClockComponent implements OnInit, OnDestroy {
     @Input()
-    public color: string = ``;
+    public color = ``;
 
-    public time: string = ``;
+    public time = ``;
 
     private servertimeSubscription: Subscription | null = null;
 

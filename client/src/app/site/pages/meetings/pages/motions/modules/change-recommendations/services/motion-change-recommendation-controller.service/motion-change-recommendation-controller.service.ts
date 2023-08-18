@@ -30,10 +30,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
         super(controllerServiceCollector, MotionChangeRecommendation, repo);
     }
 
-    public create(
-        changeRecommendation: Partial<MotionChangeRecommendation>,
-        firstLine: number = 1
-    ): Promise<Identifiable> {
+    public create(changeRecommendation: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {
         return this.repo.create(changeRecommendation, firstLine);
     }
 

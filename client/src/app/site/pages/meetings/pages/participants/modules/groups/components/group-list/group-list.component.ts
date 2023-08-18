@@ -108,7 +108,7 @@ export class GroupListComponent extends BaseMeetingComponent implements OnInit, 
      * @param editMode
      * @param newGroup Set to true, if the edit mode is for creating instead of updating a group.
      */
-    public setEditMode(editMode: boolean, newGroup: boolean = true): void {
+    public setEditMode(editMode: boolean, newGroup = true): void {
         this.editGroup = editMode;
         this.newGroup = newGroup;
 

@@ -32,7 +32,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
     /**
      * is the user logged in, or the anonymous is active.
      */
-    public isLoggedIn: boolean = false;
+    public isLoggedIn = false;
 
     public get mainMenuEntries(): MainMenuEntry[] {
         return this.mainMenuService.entries;

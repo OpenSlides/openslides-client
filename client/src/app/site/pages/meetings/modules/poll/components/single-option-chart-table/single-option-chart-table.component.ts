@@ -19,7 +19,7 @@ export class SingleOptionChartTableComponent {
     private _pollService: PollService = null;
 
     @Input()
-    public shouldShowHead: boolean = true;
+    public shouldShowHead = true;
 
     @Input()
     public set tableData(tableData: PollTableData[]) {
@@ -52,7 +52,7 @@ export class SingleOptionChartTableComponent {
     public iconSize: 'large' | 'gigantic' = `large`;
 
     @Input()
-    public shouldShowEntitled: boolean = false;
+    public shouldShowEntitled = false;
 
     public get pollService() {
         return this._pollService || this.defaultPollService;

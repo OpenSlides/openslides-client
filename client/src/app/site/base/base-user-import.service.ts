@@ -39,7 +39,7 @@ export abstract class BaseUserImportService extends BaseImportService<GeneralUse
      * @param data
      * @returns a boolean from the string
      */
-    private toBoolean(data: string): Boolean {
+    private toBoolean(data: string): boolean {
         if (!data || data === `0` || data === `false`) {
             return false;
         } else if (data === `1` || data === `true`) {
