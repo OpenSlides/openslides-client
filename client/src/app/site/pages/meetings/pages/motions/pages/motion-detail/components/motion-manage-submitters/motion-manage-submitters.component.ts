@@ -97,7 +97,7 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
      * Save the submitters
      */
     public async onSave(): Promise<void> {
-        let actions: Action<any>[] = [];
+        const actions: Action<any>[] = [];
         if (Object.values(this._removeSubmittersMap).length > 0) {
             const removeSubmittersMap = Object.values(this._removeSubmittersMap).map(id => {
                 return { id: id };
@@ -187,11 +187,11 @@ export class MotionManageSubmittersComponent extends BaseUiComponent implements 
             this.editSubmitterSubject.next(submitters);
             return;
         }
-        let newRemoveMap: IdMap = {};
-        let sortMap = new Map(
+        const newRemoveMap: IdMap = {};
+        const sortMap = new Map(
             this.editSubmitterSubject.value.map((submitter, index) => [this.getUserId(submitter), index])
         );
-        for (let submitter of submitters) {
+        for (const submitter of submitters) {
             if (this._removeSubmittersMap[submitter.user_id]) {
                 newRemoveMap[submitter.user_id] = submitter.id;
             } else if (this._addSubmittersSet.has(submitter.user_id)) {

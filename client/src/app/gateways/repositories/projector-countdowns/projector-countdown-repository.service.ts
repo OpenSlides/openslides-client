@@ -27,7 +27,7 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
             ? `${viewProjectorCountdown.title} (${viewProjectorCountdown.description})`
             : viewProjectorCountdown.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Countdowns` : `Countdown`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Countdowns` : `Countdown`);
 
     public async create(payload: any): Promise<Identifiable> {
         return await this.sendActionToBackend(ProjectorCountdownAction.CREATE, payload);

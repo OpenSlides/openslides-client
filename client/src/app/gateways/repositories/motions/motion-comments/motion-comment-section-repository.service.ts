@@ -28,8 +28,7 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
 
     public getTitle = (viewMotionCommentSection: ViewMotionCommentSection) => viewMotionCommentSection.name;
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Comment sections` : `Comment section`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Comment sections` : `Comment section`);
 
     public async create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         const payload = {

@@ -71,7 +71,7 @@ export class MeetingSettingDirective extends BaseUiComponent {
      * @param forceUpdate Whether the view should be updated in any case. This is necessary, if the templates changed
      * but a view was already initiated.
      */
-    private updateView(forceUpdate: boolean = false): void {
+    private updateView(forceUpdate = false): void {
         if (this.isEnabled() && (!this._thenViewRef || forceUpdate)) {
             // clean up and add the template,
             this.viewContainer.clear();

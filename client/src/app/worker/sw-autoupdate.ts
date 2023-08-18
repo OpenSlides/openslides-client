@@ -14,13 +14,13 @@ const autoupdatePool = new AutoupdateStreamPool({
     method: `post`
 } as AutoupdateSetEndpointParams);
 
-let subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
+const subscriptionQueues: { [key: string]: AutoupdateSubscription[] } = {
     required: [],
     requiredMeeting: [],
     sequentialnumbermapping: [],
     other: []
 };
-let openTimeouts = {
+const openTimeouts = {
     required: null,
     requiredMeeting: [],
     sequentialnumbermapping: null,
@@ -38,7 +38,7 @@ function registerDebugCommands() {
         console.log(`AU POOL INFO`);
         console.log(`Currently open:`, autoupdatePool.activeStreams.length);
         console.group(`Streams`);
-        for (let stream of autoupdatePool.activeStreams) {
+        for (const stream of autoupdatePool.activeStreams) {
             console.groupCollapsed(stream.subscriptions.map(s => s.description).join(`, `));
             console.log(`Current data:`, stream.currentData);
             console.log(`Current data size:`, JSON.stringify(stream.currentData).length);
@@ -46,7 +46,7 @@ function registerDebugCommands() {
             console.log(`Query params:`, stream.queryParams.toString());
             console.log(`Failed connects:`, stream.failedConnects);
             console.groupCollapsed(`Subscriptions`);
-            for (let subscr of stream.subscriptions) {
+            for (const subscr of stream.subscriptions) {
                 console.group(subscr.description);
                 console.log(`ID:`, subscr.id);
                 console.log(`Request:`, subscr.request);

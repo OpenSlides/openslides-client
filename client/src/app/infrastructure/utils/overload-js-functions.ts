@@ -100,7 +100,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, `difference`, {
-        value<T>(other: T[], symmetric: boolean = false): T[] {
+        value<T>(other: T[], symmetric = false): T[] {
             const difference = new Set<T>(this);
             const otherSet = new Set<T>(other ?? []);
             for (const entry of Array.from(otherSet)) {

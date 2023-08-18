@@ -45,7 +45,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Show or hide password and change the indicator accordingly
      */
-    public hide: boolean = false;
+    public hide = false;
 
     public loginAreaExpanded = false;
 
@@ -54,7 +54,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     /**
      * Reference to the SnackBarEntry for the installation notice send by the server.
      */
-    public installationNotice: string = ``;
+    public installationNotice = ``;
 
     /**
      * Login Error Message if any

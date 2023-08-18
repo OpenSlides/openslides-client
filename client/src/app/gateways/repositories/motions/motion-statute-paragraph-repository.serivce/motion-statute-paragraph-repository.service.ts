@@ -52,7 +52,7 @@ export class MotionStatuteParagraphRepositoryService extends BaseMeetingRelatedR
 
     public getTitle = (viewMotionStatuteParagraph: ViewMotionStatuteParagraph) => viewMotionStatuteParagraph.title;
 
-    public getVerboseName = (plural: boolean = false) =>
+    public getVerboseName = (plural = false) =>
         this.translate.instant(plural ? `Statute paragraphs` : `Statute paragraph`);
 
     private getCreatePayload(partialStatuteParagraph: Partial<MotionStatuteParagraph>): any {

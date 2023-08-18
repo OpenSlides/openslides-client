@@ -21,7 +21,7 @@ export class WorkflowListComponent extends BaseMeetingListViewComponent<ViewMoti
     /**
      * Holds the new workflow title
      */
-    public newWorkflowTitle: string = ``;
+    public newWorkflowTitle = ``;
 
     /**
      * Define extra filter properties

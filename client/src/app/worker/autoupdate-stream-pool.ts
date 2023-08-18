@@ -31,8 +31,8 @@ export class AutoupdateStreamPool {
     private _waitEndpointHealthyPromise: Promise<void> | null = null;
     private _authTokenRefreshTimeout: any | null = null;
     private _updateAuthPromise: Promise<void> | undefined;
-    private _waitingForUpdateAuthPromise: boolean = false;
-    private _disableCompression: boolean = false;
+    private _waitingForUpdateAuthPromise = false;
+    private _disableCompression = false;
 
     public get activeStreams(): AutoupdateStream[] {
         return this.streams.filter(stream => stream.active);
@@ -49,7 +49,7 @@ export class AutoupdateStreamPool {
      * @param queryParams
      */
     public openNewStream(subscriptions: AutoupdateSubscription[], queryParams: string): AutoupdateStream {
-        for (let subscription of subscriptions) {
+        for (const subscription of subscriptions) {
             this.subscriptions[subscription.id] = subscription;
         }
 
@@ -69,7 +69,7 @@ export class AutoupdateStreamPool {
      * Resets fail counter and reconnect a stream
      * @throws if stream not in pool
      */
-    public reconnect(stream: AutoupdateStream, force: boolean = true): void {
+    public reconnect(stream: AutoupdateStream, force = true): void {
         if (!this.streams.includes(stream)) {
             throw new Error(`Stream not found`);
         }
@@ -82,7 +82,7 @@ export class AutoupdateStreamPool {
      * Resets fail counts and reconnects all streams
      */
     public reconnectAll(onlyInactive?: boolean): void {
-        for (let stream of this.streams) {
+        for (const stream of this.streams) {
             stream.failedCounter = 0;
             this.connectStream(stream, !onlyInactive);
         }
@@ -100,7 +100,7 @@ export class AutoupdateStreamPool {
             this.reconnectAll(true);
         } else {
             this.onlineStatusStopTimeout = setTimeout(() => {
-                for (let stream of this.streams) {
+                for (const stream of this.streams) {
                     stream.abort();
                 }
             }, POOL_CONFIG.CONNECTION_LOST_CLOSE_TIMEOUT);
@@ -113,7 +113,7 @@ export class AutoupdateStreamPool {
      * @param stream The stream to be removed
      */
     public removeStream(stream: AutoupdateStream): void {
-        for (let subscription of stream.subscriptions) {
+        for (const subscription of stream.subscriptions) {
             if (this.subscriptions[subscription.id]) {
                 this.subscriptions.delete(subscription.id);
             }
@@ -137,7 +137,7 @@ export class AutoupdateStreamPool {
 
         this.endpoint = Object.assign(this.endpoint, endpoint);
 
-        for (let stream of this.streams) {
+        for (const stream of this.streams) {
             stream.updateEndpoint(this.endpoint);
         }
     }
@@ -159,8 +159,8 @@ export class AutoupdateStreamPool {
      * @param modelRequest
      */
     public getMatchingSubscription(queryParams: string, modelRequest: ModelRequest): AutoupdateSubscription | null {
-        for (let stream of this.streams) {
-            for (let subscription of stream.subscriptions) {
+        for (const stream of this.streams) {
+            for (const subscription of stream.subscriptions) {
                 if (subscription.fulfills(queryParams, modelRequest)) {
                     return subscription;
                 }
@@ -211,7 +211,7 @@ export class AutoupdateStreamPool {
 
     public async disableCompression(): Promise<void> {
         this._disableCompression = true;
-        for (let stream of this.streams) {
+        for (const stream of this.streams) {
             stream.queryParams.delete(`compress`);
         }
 
@@ -222,7 +222,7 @@ export class AutoupdateStreamPool {
         const lastUserId = this.currentUserId;
         this.authToken = token;
 
-        for (let stream of this.streams) {
+        for (const stream of this.streams) {
             stream.setAuthToken(this.authToken);
         }
 
@@ -244,7 +244,7 @@ export class AutoupdateStreamPool {
                 id: this.currentUserId
             } as AutoupdateNewUserContent);
 
-            for (let stream of this.streams) {
+            for (const stream of this.streams) {
                 stream.clearSubscriptions();
                 stream.restart();
             }
@@ -263,7 +263,7 @@ export class AutoupdateStreamPool {
         } else if (stopReason === `error`) {
             await this.handleError(stream, error);
         } else if (stopReason === `resolved`) {
-            let params = new URLSearchParams(stream.queryParams);
+            const params = new URLSearchParams(stream.queryParams);
             if (+params.get(`position`) === 0 && !params.get(`single`)) {
                 await this.handleError(stream, null);
             } else {
@@ -366,7 +366,7 @@ export class AutoupdateStreamPool {
         ) {
             this.splitStream(stream);
         } else {
-            for (let subscription of stream.subscriptions) {
+            for (const subscription of stream.subscriptions) {
                 subscription.sendError({
                     reason: `Repeated failure or client error`,
                     terminate: true
@@ -382,7 +382,7 @@ export class AutoupdateStreamPool {
             this.streams.splice(idx, 1);
         }
 
-        for (let subscription of stream.subscriptions) {
+        for (const subscription of stream.subscriptions) {
             const newStream = stream.cloneWithSubscriptions([subscription]);
             newStream.failedCounter = POOL_CONFIG.RETRY_AMOUNT;
             this.streams.push(newStream);

@@ -21,8 +21,7 @@ export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<
 
     public getTitle = (viewPersonalNote: ViewPersonalNote) => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) =>
-        this.translate.instant(plural ? `Personal notes` : `Personal note`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Personal notes` : `Personal note`);
 
     public create(personalNote: Partial<PersonalNote>, content_object_id: Fqid): Action<Identifiable> {
         if (personalNote.star === undefined && personalNote.note === undefined) {

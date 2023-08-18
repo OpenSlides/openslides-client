@@ -172,7 +172,7 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
 
     private formatDefaultProjectors(defaultKeys: { [key: string]: number[] }): { [key: string]: number[] } {
         let defaults = {};
-        for (let key of PROJECTIONDEFAULTS) {
+        for (const key of PROJECTIONDEFAULTS) {
             defaults = {
                 ...defaults,
                 [`default_projector_${key}_ids`]: defaultKeys[key]

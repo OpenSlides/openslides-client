@@ -155,7 +155,7 @@ export class HeadBarComponent implements OnInit, AfterViewInit {
      * Optional tooltip for the main action
      */
     @Input()
-    public mainActionTooltip: string = ``;
+    public mainActionTooltip = ``;
 
     /**
      * Provide a custom menu and ignores the menu service trigger

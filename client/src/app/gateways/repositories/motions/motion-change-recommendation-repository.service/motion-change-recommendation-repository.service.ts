@@ -20,10 +20,10 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
 
     public getTitle = () => this.getVerboseName();
 
-    public getVerboseName = (plural: boolean = false) =>
+    public getVerboseName = (plural = false) =>
         this.translate.instant(plural ? `Change recommendations` : `Change recommendation`);
 
-    public create(model: Partial<MotionChangeRecommendation>, firstLine: number = 1): Promise<Identifiable> {
+    public create(model: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {
         const payload = {
             internal: model.internal,
             line_from: model.line_from! - firstLine + 1,

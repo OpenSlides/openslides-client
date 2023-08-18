@@ -28,7 +28,7 @@ export class AutopilotComponent extends BaseMeetingComponent implements OnInit {
     /**
      * filled by child component
      */
-    public canReaddLastSpeaker: boolean = false;
+    public canReaddLastSpeaker = false;
 
     public get title(): string {
         if (this._currentProjection) {

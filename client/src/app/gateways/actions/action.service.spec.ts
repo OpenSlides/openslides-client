@@ -76,17 +76,17 @@ const exampleData = [
     { data: [], expected: `[]` }
 ];
 
-function getExampleSlice(start: number, end: number = 0): any {
+function getExampleSlice(start: number, end = 0): any {
     start = start % exampleData.length;
     end = end % (exampleData.length + 1);
     return start >= end ? exampleData.slice(start) : exampleData.slice(start, end);
 }
 
-function getActionData(start: number, end: number = 0): any {
+function getActionData(start: number, end = 0): any {
     return getExampleSlice(start, end).map(date => date.data);
 }
 
-function getActionExpect(actionName: string, start: number, end: number = 0, wrap = 2): any {
+function getActionExpect(actionName: string, start: number, end = 0, wrap = 2): any {
     return `${new Array(wrap).fill(`[`).join(``)}{"action":"${actionName}","data":[${getExampleSlice(start, end)
         .map(date => `${date.expected}`)
         .join(`,`)}]}${new Array(wrap).fill(`]`).join(``)}`;
@@ -144,19 +144,19 @@ describe(`ActionService`, () => {
     });
 
     it(`test create`, async () => {
-        let action = service.create<any>({ action: `an.action`, data: getActionData(7, 9) });
+        const action = service.create<any>({ action: `an.action`, data: getActionData(7, 9) });
         expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`an.action`, 7, 9, 1));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].path === ACTION_URL).toBe(true);
     });
 
     it(`test createFromArray`, async () => {
-        let action = service.createFromArray<any>([{ action: `action.movie`, data: getActionData(5, 7) }]);
+        const action = service.createFromArray<any>([{ action: `action.movie`, data: getActionData(5, 7) }]);
         expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`action.movie`, 5, 7, 1));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].path === ACTION_URL).toBe(true);
     });
 
     it(`test beforeActionFunction`, async () => {
-        let indices = [service.addBeforeActionFn(() => true)];
+        const indices = [service.addBeforeActionFn(() => true)];
         expect(await service.sendRequests([{ action: `action.one`, data: getActionData(1, 2) }])).toBe(null);
         indices.push(service.addBeforeActionFn(() => false));
         expect(await service.sendRequests([{ action: `action.two`, data: getActionData(1, 4) }])).toBe(null);

@@ -45,7 +45,7 @@ export class PruningTranslationLoader implements TranslateLoader {
     }
 
     private parse(content: string): any {
-        let translations: { [key: string]: string } = {};
+        const translations: { [key: string]: string } = {};
 
         const po = pofile.parse(content);
         for (const item of po.items) {

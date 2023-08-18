@@ -150,13 +150,13 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     /**
      * Check if mobile and required semaphore for change detection
      */
-    public isMobile: boolean = false;
+    public isMobile = false;
 
     /**
      * Search input value
      */
     @Input()
-    public inputValue: string = ``;
+    public inputValue = ``;
 
     public get currentOffset(): number {
         if (!this._viewListComponent.scrollViewport) {

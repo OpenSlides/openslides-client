@@ -11,7 +11,7 @@ export class ListSearchService<V extends Identifiable> implements SearchService<
     private _source: V[] = [];
     private _sourceObservable: Observable<V[]> | null = null;
     private _sourceSubscription: Subscription | null = null;
-    private _currentSearchFilter: string = ``;
+    private _currentSearchFilter = ``;
     private _filterPropsMap: { [filterProps: string]: string[] } = {};
 
     private readonly _outputSubject = new BehaviorSubject<V[]>([]);

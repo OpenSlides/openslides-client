@@ -111,7 +111,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     private _referencedMotions: ViewMotion[];
 
-    private _forwardingAvailable: boolean = false;
+    private _forwardingAvailable = false;
 
     /**
      * The subscription to the recommender config variable.

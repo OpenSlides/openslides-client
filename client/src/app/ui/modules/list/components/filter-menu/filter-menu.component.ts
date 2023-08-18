@@ -3,7 +3,6 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnDestroy,
     OnInit,
     Output,
     ViewEncapsulation
@@ -35,7 +34,7 @@ const MAX_CHECKBOX_WIDTH = 290; // Maximum width of a checkbox (in px).
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterMenuComponent<V extends Identifiable> implements OnInit, OnDestroy {
+export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     /**
      * The height of one row in an action list
      */
@@ -67,13 +66,6 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit, OnDe
         this.service.outputObservable.subscribe(() => {
             this.cd.markForCheck();
         });
-    }
-
-    /**
-     *
-     */
-    public ngOnDestroy(): void {
-        this.dismissed.unsubscribe();
     }
 
     /**

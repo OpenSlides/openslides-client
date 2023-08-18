@@ -14,7 +14,7 @@ import { PollService } from '../../services/poll.service';
     encapsulation: ViewEncapsulation.None
 })
 export class VotesTableComponent {
-    private _isViewingThis: boolean = true;
+    private _isViewingThis = true;
 
     @Input()
     public set votesDataObservable(observable: Observable<BaseVoteData[]>) {
@@ -34,7 +34,7 @@ export class VotesTableComponent {
     public parent: BasePollDetailComponent<PollContentObject, PollService>;
 
     @Input()
-    public templateType: string = ``;
+    public templateType = ``;
 
     public get isViewingThis(): boolean {
         return this._isViewingThis;

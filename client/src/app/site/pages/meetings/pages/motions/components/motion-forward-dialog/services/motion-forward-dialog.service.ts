@@ -32,7 +32,7 @@ export class MotionForwardDialogService extends BaseDialogService<MotionForwardD
     private _forwardingCommitteesSubject = new BehaviorSubject<(Partial<ViewCommittee> & Selectable)[]>([]);
 
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
-    private _forwardingMeetingsUpdateRequired: boolean = true;
+    private _forwardingMeetingsUpdateRequired = true;
 
     public constructor(
         dialog: MatDialog,

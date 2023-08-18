@@ -79,7 +79,7 @@ export class TopicPollPdfService extends BasePollPdfService {
             }
         }
 
-        let rowsPerPage = this.getRowsPerPage(viewPoll);
+        const rowsPerPage = this.getRowsPerPage(viewPoll);
         const sheetend = Math.floor(417 / rowsPerPage);
         this.downloadWithBallotPaper(
             this.getPages(rowsPerPage, { sheetend, title, subtitle, poll: viewPoll }),

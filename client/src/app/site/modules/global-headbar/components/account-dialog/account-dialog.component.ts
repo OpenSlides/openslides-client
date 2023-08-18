@@ -92,7 +92,7 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     public userPasswordForm!: PasswordForm;
 
     private _self: ViewUser | null = null;
-    private _isUserInScope: boolean = false;
+    private _isUserInScope = false;
     private _isEditing = false;
 
     public constructor(

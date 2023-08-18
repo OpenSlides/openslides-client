@@ -107,7 +107,7 @@ export class MeetingPdfExportService {
         return this.pdfExportService.createTocLine(definition, ...subTitles);
     }
 
-    public createTocLineInline(text: string, italics: boolean = false): any {
+    public createTocLineInline(text: string, italics = false): any {
         return this.pdfExportService.createTocLineInline(text, italics);
     }
 

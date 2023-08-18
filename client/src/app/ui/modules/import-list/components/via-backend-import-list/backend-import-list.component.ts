@@ -441,8 +441,8 @@ export class BackendImportListComponent<M extends Identifiable> implements OnIni
     }
 
     private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
-        for (let key of Object.keys(data)) {
-            for (let header of data[key] ?? []) {
+        for (const key of Object.keys(data)) {
+            for (const header of data[key] ?? []) {
                 if (!this._headers[header.property]) {
                     this._headers[header.property] = { [key]: header };
                 } else {

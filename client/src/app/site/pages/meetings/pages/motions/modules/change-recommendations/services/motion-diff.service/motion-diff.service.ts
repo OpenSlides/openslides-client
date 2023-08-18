@@ -345,7 +345,7 @@ export class MotionDiffService {
             return ModificationType.TYPE_REPLACEMENT;
         }
 
-        let firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
+        const firstDiffIndex = Array.from(htmlOld).findIndex((v, i) => v !== htmlNew[i]);
 
         const remainderOld = htmlOld.substr(firstDiffIndex);
         const remainderNew = htmlNew.substr(firstDiffIndex);
@@ -389,7 +389,7 @@ export class MotionDiffService {
             os[oldArr[i]].rows.push(i);
         }
 
-        for (let i in ns) {
+        for (const i in ns) {
             if (ns[i].rows.length === 1 && typeof os[i] !== `undefined` && os[i].rows.length === 1) {
                 newArr[ns[i].rows[0]] = { text: newArr[ns[i].rows[0]], row: os[i].rows[0] };
                 oldArr[os[i].rows[0]] = { text: oldArr[os[i].rows[0]], row: ns[i].rows[0] };
@@ -454,7 +454,7 @@ export class MotionDiffService {
      */
     private tokenizeHtml(str: string): string[] {
         let res = [str];
-        for (let splitConf of [
+        for (const splitConf of [
             { by: `<`, type: `prepend` },
             { by: `>`, type: `append` },
             { by: ` ` },

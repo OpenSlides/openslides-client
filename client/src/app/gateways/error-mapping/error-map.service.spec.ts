@@ -146,8 +146,8 @@ describe(`ErrorMapService`, () => {
         spyOn(console, `warn`);
     });
 
-    for (let date of testData) {
-        let test = date.test;
+    for (const date of testData) {
+        const test = date.test;
         it(date.title, () => {
             expect(service.getCleanErrorMessage(test.message, test.options)).toEqual(date.expect);
         });

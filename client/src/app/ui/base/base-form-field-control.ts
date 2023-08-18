@@ -100,7 +100,7 @@ export abstract class BaseFormFieldControlComponent<T>
 
     public focused = false;
 
-    private _placeholder: string = ``;
+    private _placeholder = ``;
 
     private _required = false;
 

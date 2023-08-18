@@ -39,7 +39,7 @@ export class DashboardComponent extends BaseComponent {
         return this.orgaService.organization?.description;
     }
 
-    public ready: boolean = false;
+    public ready = false;
 
     public previousMeetings: ViewMeeting[] = [];
     public currentMeetings: ViewMeeting[] = [];

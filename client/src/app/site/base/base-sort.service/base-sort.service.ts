@@ -45,7 +45,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
      * Recreates the sorting function. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
-    protected sortItems(itemA: T, itemB: T, sortProperty: OsSortProperty<T>, ascending: boolean = true): number {
+    protected sortItems(itemA: T, itemB: T, sortProperty: OsSortProperty<T>, ascending = true): number {
         const sortPropertyArray = Array.isArray(sortProperty) ? sortProperty : [sortProperty];
         const primaryProperty = sortPropertyArray[0];
         const result = (ascending ? 1 : -1) * this.sortItemsHelper(itemA, itemB, primaryProperty);

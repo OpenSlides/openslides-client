@@ -17,7 +17,7 @@ import { MotionBlockServiceModule } from '../motion-block-service.module';
     providedIn: MotionBlockServiceModule
 })
 export class MotionBlockDetailFilterListService extends MotionListFilterService {
-    protected override storageKey: string = `MotionBlock`;
+    protected override storageKey = `MotionBlock`;
 
     /**
      * setter for the blockId
@@ -29,7 +29,7 @@ export class MotionBlockDetailFilterListService extends MotionListFilterService 
     /**
      * Private acessor for the blockId
      */
-    private _blockId: number = 0;
+    private _blockId = 0;
 
     public constructor(
         store: MeetingActiveFiltersService,

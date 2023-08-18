@@ -18,7 +18,7 @@ export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<V
 
     public getTitle = (viewMotionState: ViewMotionState) => viewMotionState.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Workflows` : `Workflow`);
 
     public async create(model: Partial<MotionState>): Promise<Identifiable> {
         const payload = {

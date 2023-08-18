@@ -60,7 +60,7 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
 
     public getTitle = (viewAssignment: ViewAssignment) => viewAssignment.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Elections` : `Election`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Elections` : `Election`);
 
     private getPartialPayload(model: Partial<ViewAssignment>): any {
         return {

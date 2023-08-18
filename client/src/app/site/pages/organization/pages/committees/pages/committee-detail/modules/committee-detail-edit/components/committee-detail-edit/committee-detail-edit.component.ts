@@ -33,7 +33,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
     public addCommitteeLabel = CREATE_COMMITTEE_LABEL;
     public editCommitteeLabel = EDIT_COMMITTEE_LABEL;
 
-    public isCreateView: boolean = false;
+    public isCreateView = false;
     public committeeForm!: UntypedFormGroup;
 
     public editCommittee!: ViewCommittee;

@@ -46,7 +46,7 @@ export class DurationService {
      * from the duration text.
      * @returns time in minutes or seconds or 0 if values are below 0 or no parsable numbers
      */
-    public stringToDuration(durationText: string = ``, suffix: 'h' | 'm' = `h`): number {
+    public stringToDuration(durationText = ``, suffix: 'h' | 'm' = `h`): number {
         const splitDuration = durationText.replace(suffix, ``).split(`:`);
         let time: number | null = null;
         if (splitDuration.length > 1 && !isNaN(+splitDuration[0]) && !isNaN(+splitDuration[1])) {

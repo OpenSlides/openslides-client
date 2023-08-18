@@ -250,7 +250,7 @@ export class MotionMultiselectService {
             } else if (selectedChoice.action === REMOVE) {
                 requestData = motions.map(motion => {
                     const remainingTagIds = new Set((motion.tag_ids || []) as number[]);
-                    for (let id of selectedChoice.ids) remainingTagIds.delete(id);
+                    for (const id of selectedChoice.ids) remainingTagIds.delete(id);
                     return this.repo.update({ tag_ids: Array.from(remainingTagIds) }, motion);
                 });
             } else {

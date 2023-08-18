@@ -144,7 +144,7 @@ export class OrganizationMediafileListComponent
         }
         const fullPlace = place;
         if (file.token !== fullPlace) {
-            for (let filteredFile of this.repo
+            for (const filteredFile of this.repo
                 .getViewModelList()
                 .filter(filterFile => filterFile.token === fullPlace && filterFile.id !== file.id)) {
                 await this.repo.update({ token: null }, filteredFile);

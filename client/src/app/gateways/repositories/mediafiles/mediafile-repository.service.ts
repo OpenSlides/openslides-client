@@ -30,7 +30,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
 
     public getTitle = (viewMediafile: ViewMediafile) => viewMediafile.title;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Files` : `File`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Files` : `File`);
 
     public override getFieldsets(): Fieldsets<Mediafile> {
         const fileSelectionFields: TypedFieldset<Mediafile> = [`title`, `is_directory`];

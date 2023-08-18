@@ -56,14 +56,14 @@ export class TopicImportService extends BaseBackendImportService<Topic> {
     }
 
     protected override calculateJsonUploadPayload(): any {
-        let payload = super.calculateJsonUploadPayload();
+        const payload = super.calculateJsonUploadPayload();
         payload[`meeting_id`] = this.activeMeetingId.meetingId;
         return payload;
     }
 
     protected async import(
         actionWorkerIds: number[],
-        abort: boolean = false
+        abort = false
     ): Promise<void | (BackendImportRawPreview | void)[]> {
         return await this.repo.import(actionWorkerIds.map(id => ({ id, import: !abort }))).resolve();
     }

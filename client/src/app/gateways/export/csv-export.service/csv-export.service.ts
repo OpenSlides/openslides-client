@@ -53,7 +53,7 @@ export class CsvExportService {
 
         // create header data
         const header = columns.map(column => {
-            let label: string = ``;
+            let label = ``;
             if (isPropertyDefinition(column)) {
                 label = column.label ? column.label : (column.property as string);
             } else if (isMapDefinition(column)) {
@@ -68,7 +68,7 @@ export class CsvExportService {
         csvContent = csvContent.concat(
             models.map(model =>
                 columns.map(column => {
-                    let value: string = ``;
+                    let value = ``;
 
                     if (isPropertyDefinition(column)) {
                         const property: any = model[column.property];

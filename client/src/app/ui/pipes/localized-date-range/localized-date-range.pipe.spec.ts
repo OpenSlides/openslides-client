@@ -173,9 +173,9 @@ describe(`LocalizedDateRangePipe`, () => {
         expect(pipe.transform({ end: 0 }, `PP`)).toBe(`Jan 1, 1970`);
     });
 
-    for (let data of Object.values(testData)) {
-        for (let lang of Object.keys(data.expect)) {
-            for (let dateFormat of Object.keys(data.expect[lang])) {
+    for (const data of Object.values(testData)) {
+        for (const lang of Object.keys(data.expect)) {
+            for (const dateFormat of Object.keys(data.expect[lang])) {
                 it(`${data.title} for locale '${lang}' in format '${dateFormat}'`, () => {
                     pipe.config.setLocale(getLocale(lang));
                     expect(pipe.transform(data.range, dateFormat)).toBe(data.expect[lang][dateFormat]);

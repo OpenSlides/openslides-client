@@ -186,7 +186,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
 
         const nextDefinitions = this.getFilterDefinitions();
 
-        let storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
+        const storedFilters: OsFilter<V>[] = (await this.loadFilters()) ?? [];
 
         if (!(storedFilters && storedFilters.length && nextDefinitions && nextDefinitions.length)) {
             return;
@@ -206,7 +206,7 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
      * @param filter
      * @param update
      */
-    public clearFilter(filter: OsFilter<V>, update: boolean = true): void {
+    public clearFilter(filter: OsFilter<V>, update = true): void {
         filter.options.forEach(option => {
             if (typeof option === `object` && option.isActive) {
                 this.removeFilterOption(filter.property, option);
