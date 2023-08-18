@@ -199,7 +199,7 @@
 
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
     <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
-    <ng-container *ngIf="type === 'number'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'number' || type === 'integer'">{{ entry }}</ng-container>
     <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
     <mat-checkbox *ngIf="type === 'boolean'" [checked]="entry" disabled></mat-checkbox>
     &nbsp;
