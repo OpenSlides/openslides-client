@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { map, switchAll, tap } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { PasswordForm } from 'src/app/site/modules/user-components';
 import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
@@ -56,18 +57,25 @@ export class ParticipantPasswordComponent extends BaseMeetingComponent implement
      */
     public ngOnInit(): void {
         super.setTitle(this.translate.instant(`Change password`));
-        this.openslidesRouter.currentParamMap.subscribe(params => {
-            if (params[`id`]) {
-                this.urlUserId = +params[`id`];
-                this.repo.getViewModelObservable(this.urlUserId).subscribe(user => {
-                    if (user) {
-                        this.user = user;
-                        this.updateUser();
+        this.openslidesRouter.currentParamMap
+            .pipe(
+                tap(() => this.updateUser()),
+                map(params => {
+                    if (params[`id`]) {
+                        this.urlUserId = +params[`id`];
+                        return this.repo.getViewModelObservable(this.urlUserId);
                     }
-                });
-            }
-            this.updateUser();
-        });
+
+                    return null;
+                }),
+                switchAll()
+            )
+            .subscribe(user => {
+                if (user) {
+                    this.user = user;
+                    this.updateUser();
+                }
+            });
 
         this.operator.operatorUpdated.subscribe(() => {
             this.updateUser();

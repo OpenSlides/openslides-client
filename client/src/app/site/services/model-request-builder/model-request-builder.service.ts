@@ -189,9 +189,8 @@ export class ModelRequestBuilderService {
     }
 
     private getFollowedRelation(modelRequestObject: ModelRequestObject, follow: Follow): void {
-        let effectiveIdField: Field; // the id field of the model.
-        let queryIdField: Field; // The field to query the relation for.
-        effectiveIdField = queryIdField = follow.idField;
+        const effectiveIdField: Field = follow.idField; // the id field of the model.
+        const queryIdField: Field = effectiveIdField; // The field to query the relation for.
 
         const relation: Relation | undefined = this.relationManager.findRelation(
             modelRequestObject.collection,

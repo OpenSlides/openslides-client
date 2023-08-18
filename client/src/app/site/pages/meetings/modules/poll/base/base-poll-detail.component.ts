@@ -109,8 +109,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         return (this.hasPerms() && this.poll!.isFinished) || this.poll!.isPublished;
     }
 
-    protected get contentObjectId(): Id {
-        return this.poll?.getContentObject()?.id!;
+    protected get contentObjectId(): Id | undefined {
+        return this.poll?.getContentObject()?.id;
     }
 
     private _entitledUsersSubject = new BehaviorSubject<EntitledUsersTableEntry[]>([]);

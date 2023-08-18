@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, firstValueFrom, map, Observable, of, Subscription, switchAll } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, map, Observable, of, Subscription, switchAll, tap } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
@@ -64,17 +64,22 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         super(controllerServiceCollector, User, repo);
 
         let meetingUserIds = [];
-        this.activeMeetingIdService.meetingIdObservable.subscribe(newId => {
-            if (this._participantListUpdateSubscription) {
-                this._participantListUpdateSubscription.unsubscribe();
-            }
-            if (newId) {
-                this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
-                    meetingUserIds = meeting?.meeting_user_ids ?? [];
-                    this.updateUsersFromMeetingUsers(this.meetingUserRepo.getViewModelList() ?? [], meetingUserIds);
-                });
-            }
-        });
+        this.activeMeetingIdService.meetingIdObservable
+            .pipe(
+                tap(() => {
+                    if (this._participantListUpdateSubscription) {
+                        this._participantListUpdateSubscription.unsubscribe();
+                    }
+                }),
+                map(newId => {
+                    return newId ? this.meetingController.getViewModelObservable(newId) : null;
+                }),
+                switchAll()
+            )
+            .subscribe(meeting => {
+                meetingUserIds = meeting?.meeting_user_ids ?? [];
+                this.updateUsersFromMeetingUsers(this.meetingUserRepo.getViewModelList() ?? [], meetingUserIds);
+            });
 
         this.meetingUserRepo.getViewModelListObservable().subscribe(async mUsers => {
             this.updateUsersFromMeetingUsers(mUsers, meetingUserIds);
