@@ -28,7 +28,7 @@
                     <mat-select formControlName="value" [errorStateMatcher]="matcher">
                         <ng-container *ngIf="getRestrictedValue(setting.choices)">
                             <mat-option
-                                *ngFor="let choice of getRestrictedValue(setting.choices) | keyvalue: keepEntryOrder"
+                                *ngFor="let choice of getRestrictedValue(setting.choices) | keyvalue : keepEntryOrder"
                                 [value]="choice.key"
                             >
                                 {{ choice.value | toString | translate }}
@@ -120,6 +120,17 @@
                     </div>
                 </div>
 
+                <!-- daterange -->
+                <div *ngIf="setting.type === 'daterange'">
+                    <os-daterangepicker
+                        formControlName="daterange"
+                        [error]="error"
+                        [title]="setting.label"
+                        [hintText]="setting.helpText"
+                        [showUpdateSuccessIcon]="updateSuccessIcon"
+                    ></os-daterangepicker>
+                </div>
+
                 <!-- The editor -->
                 <div *ngIf="setting.type === 'markupText'">
                     <h4>{{ setting.label | translate }}</h4>
@@ -130,8 +141,11 @@
                 </div>
 
                 <!-- Custom Translations -->
-                <div *ngIf="setting.type === 'translations'">
-                    <os-custom-translation formControlName="value"></os-custom-translation>
+                <div *ngIf="setting.type === 'translations' || setting.type === 'ranking'">
+                    <os-allocation-list
+                        [config]="getAllocationConfig(setting)"
+                        formControlName="value"
+                    ></os-allocation-list>
                 </div>
             </div>
         </form>

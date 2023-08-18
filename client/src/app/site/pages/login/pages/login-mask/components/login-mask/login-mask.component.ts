@@ -47,6 +47,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
      */
     public hide: boolean = false;
 
+    public loginAreaExpanded = false;
+
     private checkBrowser = true;
 
     /**
@@ -73,9 +75,13 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
 
     public samlLoginButtonText: string | null = null;
 
+    public samlEnabled = true;
+
     public guestsEnabled = false;
 
     public isWaitingOnLogin = false;
+
+    public loading = true;
 
     /**
      * The message, that should appear, when the user logs in.
@@ -130,6 +136,17 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
             this.checkDevice();
         }
 
+        // check if global saml auth is enabled
+        this.subscriptions.push(
+            this.orgaSettings.getSafe(`saml_enabled`).subscribe(enabled => {
+                this.samlEnabled = enabled;
+                this.loading = false;
+            }),
+            this.orgaSettings.get(`saml_login_button_text`).subscribe(text => {
+                this.samlLoginButtonText = text;
+            })
+        );
+
         this.checkForUnsecureConnection();
     }
 
@@ -156,7 +173,7 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         } catch (e: any) {
             this.isWaitingOnLogin = false;
             // this.spinnerService.hide();
-            this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${e.message}`;
+            this.loginErrorMsg = `${this.translate.instant(`Error`)}: ${this.translate.instant(e.message)}`;
         }
     }
 
@@ -164,11 +181,24 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.router.navigate([`${this.currentMeetingId}/`]);
     }
 
+    public async samlLogin(): Promise<void> {
+        const redirectUrl = await this.authService.startSamlLogin();
+        location.replace(redirectUrl);
+    }
+
     /**
      * Go to the reset password view
      */
     public resetPassword(): void {
         this.router.navigate([`./forget-password`], { relativeTo: this.route });
+    }
+
+    public toggleLoginAreaExpansion(): void {
+        this.loginAreaExpanded = !this.loginAreaExpanded;
+    }
+
+    public setLoginAreaExpansion(expanded: boolean): void {
+        this.loginAreaExpanded = expanded;
     }
 
     private formatLoginInputValues(info: LoginValues): LoginValues {

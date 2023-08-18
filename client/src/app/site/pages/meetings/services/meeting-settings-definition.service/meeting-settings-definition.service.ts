@@ -50,7 +50,16 @@ export class MeetingSettingsDefinitionService {
 
     public getDefaultValue(setting: keyof Settings | SettingsItem): any {
         const settingItem = typeof setting === `string` ? this.settingsMap[setting] : setting;
-        return meetingSettingsDefaults[settingItem.key] ?? this.getDefaultValueForType(settingItem);
+        return this.getDefaultValueForItem(settingItem) ?? this.getDefaultValueForType(settingItem);
+    }
+
+    private getDefaultValueForItem(item: SettingsItem): any {
+        const isArray = Array.isArray(item.key);
+        let value = meetingSettingsDefaults[isArray ? item.key[0] : (item.key as keyof Settings)];
+        if (item.type === `daterange`) {
+            return [value ?? null, meetingSettingsDefaults[item.key[1]] ?? null];
+        }
+        return value;
     }
 
     public getDefaultValueForType(setting: SettingsItem): any {
@@ -63,9 +72,12 @@ export class MeetingSettingsDefinitionService {
                 return null;
             case `groups`:
             case `translations`:
+            case `ranking`:
                 return [];
             case `datetime`:
                 return null;
+            case `daterange`:
+                return [Date.now(), Date.now()];
             case `string`:
             case `text`:
             case `markupText`:
@@ -93,7 +105,10 @@ export class MeetingSettingsDefinitionService {
             for (const subgroup of group.subgroups) {
                 for (const setting of subgroup.settings) {
                     this.validateSetting(setting);
-                    localSettingsMap[setting.key] = setting;
+                    const keys = Array.isArray(setting.key) ? setting.key : [setting.key];
+                    for (let key of keys) {
+                        localSettingsMap[key] = setting;
+                    }
                 }
             }
         }

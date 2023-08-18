@@ -26,7 +26,18 @@
                 <table mat-table [dataSource]="getTableDataSource(appPermissions.permissions)">
                     <ng-container matColumnDef="perm" sticky>
                         <mat-header-cell *matHeaderCellDef>{{ 'Permissions' | translate }}</mat-header-cell>
-                        <mat-cell *matCellDef="let perm" class="raised-cell">
+                        <mat-cell
+                            *matCellDef="let perm"
+                            class="raised-cell"
+                            #tooltip="matTooltip"
+                            [ngClass]="{ 'has-help-text': perm.help_text }"
+                            [matTooltip]="perm.help_text | translate"
+                            matTooltipClass="pre-wrap"
+                            matTooltipPosition="after"
+                            (mouseenter)="$event.stopImmediatePropagation()"
+                            (mouseleave)="tooltip.hide()"
+                            (click)="tooltip.toggle()"
+                        >
                             {{ perm.display_name | translate }}
                         </mat-cell>
                     </ng-container>
@@ -79,11 +90,21 @@
                     type="text"
                     matInput
                     osAutofocus
-                    required
                     formControlName="name"
                     placeholder="{{ 'New group name' | translate }}"
                 />
-                <mat-error *ngIf="!groupForm?.valid">{{ 'Required' | translate }}</mat-error>
+                <mat-error *ngIf="!groupForm?.valid && !groupForm.value.name">{{ 'Required' | translate }}</mat-error>
+                <mat-error *ngIf="!groupForm?.valid && groupForm.value.name">
+                    {{ 'Must be unique' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input
+                    type="text"
+                    matInput
+                    formControlName="external_id"
+                    placeholder="{{ 'External ID' | translate }}"
+                />
             </mat-form-field>
         </form>
     </div>

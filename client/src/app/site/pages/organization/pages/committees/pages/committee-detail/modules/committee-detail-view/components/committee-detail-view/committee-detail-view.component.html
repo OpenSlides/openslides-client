@@ -50,8 +50,14 @@
                 </li>
             </ul>
             <button *ngIf="committee.forward_to_committees.length > 1" mat-button (click)="toggleForwardingList()">
-                <ng-container *ngIf="!forwardingExpanded">{{ 'More' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
-                <ng-container *ngIf="forwardingExpanded">{{ 'Less' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
+                <ng-container *ngIf="!forwardingExpanded">
+                    {{ 'More' | translate }}
+                    <mat-icon>expand_more</mat-icon>
+                </ng-container>
+                <ng-container *ngIf="forwardingExpanded">
+                    {{ 'Less' | translate }}
+                    <mat-icon>expand_less</mat-icon>
+                </ng-container>
             </button>
         </os-committee-meta-info>
 
@@ -69,28 +75,39 @@
                     <span *ngIf="!canAccessCommittee(receive)">{{ receive.name }}</span>
                 </li>
             </ul>
-            <button *ngIf="committee.receive_forwardings_from_committees.length > 1" mat-button (click)="toggleReceiveList()">
-                <ng-container *ngIf="!receiveExpanded">{{ 'More' | translate }} <mat-icon>expand_more</mat-icon></ng-container>
-                <ng-container *ngIf="receiveExpanded">{{ 'Less' | translate }} <mat-icon>expand_less</mat-icon></ng-container>
+            <button
+                *ngIf="committee.receive_forwardings_from_committees.length > 1"
+                mat-button
+                (click)="toggleReceiveList()"
+            >
+                <ng-container *ngIf="!receiveExpanded">
+                    {{ 'More' | translate }}
+                    <mat-icon>expand_more</mat-icon>
+                </ng-container>
+                <ng-container *ngIf="receiveExpanded">
+                    {{ 'Less' | translate }}
+                    <mat-icon>expand_less</mat-icon>
+                </ng-container>
             </button>
         </os-committee-meta-info>
 
         <!-- Member amount -->
-        <os-committee-meta-info *ngIf="canManageUsers" icon="group" title="{{ 'Assigned accounts' | translate }}">
-            {{ getMemberAmount(committee) }}
-        </os-committee-meta-info>
-
-        <os-committee-meta-info icon="engineering" title="{{ 'Committee admin' | translate }}" *ngIf="canManageCommittee">
+        <os-committee-meta-info
+            icon="engineering"
+            title="{{ 'Committee admin' | translate }}"
+            *ngIf="canManageCommittee"
+        >
             <ng-container *ngIf="committee.getManagers() as managers">
-                <span *ngFor="let manager of managers; let last = last">
-                    <ng-container *osOmlPerms="OML.can_manage_users">
-                        <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
-                    </ng-container>
-                    <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
-                        <span>{{ manager }}</span>
-                    </ng-container>
-                    <span *ngIf="!last">,&nbsp;</span>
-                </span>
+                <os-comma-separated-listing [list]="managers">
+                    <ng-template let-manager>
+                        <ng-container *osOmlPerms="OML.can_manage_users">
+                            <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
+                        </ng-container>
+                        <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
+                            <span>{{ manager }}</span>
+                        </ng-container>
+                    </ng-template>
+                </os-comma-separated-listing>
                 <i class="red-warning-text" *ngIf="managers.length === 0">
                     {{ 'This committee has no managers!' | translate }}
                 </i>

@@ -80,10 +80,9 @@
 </mat-menu>
 
 <ng-template #groupList let-groups="groups">
-    <span class="inline-flex" *ngFor="let group of groups; let last = last">
-        {{ group.getTitle() | translate }}
-        <span *ngIf="!last">,&nbsp;</span>
-    </span>
+    <os-comma-separated-listing [list]="groups">
+        <ng-template let-group>{{ group.getTitle() | translate }}</ng-template>
+    </os-comma-separated-listing>
 </ng-template>
 
 <!-- Template for motion comment dialog -->
@@ -123,9 +122,7 @@
                 </mat-form-field>
             </p>
             <p>
-                <mat-checkbox
-                    formControlName="submitter_can_write"
-                >
+                <mat-checkbox formControlName="submitter_can_write">
                     {{ 'Allow submitter edit' | translate }}
                 </mat-checkbox>
             </p>

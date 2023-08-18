@@ -31,7 +31,7 @@ export class MeetingCollectionMapperService extends CollectionMapperService impl
         if (!repo) {
             return false;
         }
-        return repo instanceof BaseMeetingRelatedRepository;
+        return repo instanceof BaseMeetingRelatedRepository && repo.resetOnMeetingChange;
     }
 
     public getViewModelByFqid(fqid: Fqid): BaseViewModel<any> | null {

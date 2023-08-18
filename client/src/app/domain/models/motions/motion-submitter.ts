@@ -7,17 +7,17 @@ export class MotionSubmitter extends BaseModel<MotionSubmitter> {
 
     public weight!: number;
 
-    public user_id!: Id; // user/submitted_motion_$<meeting_id>_ids;
+    public meeting_user_id!: Id; // meeting_user/submitted_motion_ids;
     public motion_id!: Id; // motion/submitter_ids;
 
     public constructor(input?: any) {
         super(MotionSubmitter.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof MotionSubmitter | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof MotionSubmitter)[] = [
         `id`,
         `weight`,
-        `user_id`,
+        `meeting_user_id`,
         `motion_id`,
         `meeting_id`
     ];

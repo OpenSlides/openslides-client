@@ -23,7 +23,7 @@ export class ProjectorCountdown extends BaseModel<ProjectorCountdown> {
         super(ProjectorCountdown.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorCountdown | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ProjectorCountdown)[] = [
         `id`,
         `title`,
         `description`,

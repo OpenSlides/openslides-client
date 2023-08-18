@@ -1,7 +1,7 @@
 import { Collection } from 'src/app/domain/definitions/key-types';
 import { AgendaItem, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
 import { Projection } from 'src/app/domain/models/projector/projection';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasAgendaItem, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
@@ -52,7 +52,7 @@ export class ViewAgendaItem<
         return this.content_object.getProjectionBuildDescriptor(meetingSettingsService);
     }
 
-    public getProjectiondefault(): Projectiondefault | null {
+    public getProjectiondefault(): ProjectiondefaultValue | null {
         return null;
     }
 

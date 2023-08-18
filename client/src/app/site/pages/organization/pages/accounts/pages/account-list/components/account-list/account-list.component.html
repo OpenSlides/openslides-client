@@ -32,10 +32,12 @@
     <!-- Name column -->
     <div *osScrollingTableCell="'short_name'; row as user; rowContext as rowContext" class="cell-slot fill">
         <a class="detail-link" [routerLink]="user.id" *ngIf="!isMultiSelect"></a>
-        <div style="overflow: hidden" class="flex-vertical-center">
-            <div style="overflow: hidden" class="nameCell">
+        <div class="flex-vertical-center overflow-hidden">
+            <div class="nameCell overflow-hidden">
                 <div class="title-line title-box">
-                    <span class="ellipsis-overflow">{{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')'  : '') }}</span>
+                    <span class="ellipsis-overflow">
+                        {{ user.short_name + (user.pronoun ? ' (' + user.pronoun + ')' : '') }}
+                    </span>
                     <div style="float: right; display: inline-flex">
                         &nbsp;
                         <os-icon-container
@@ -48,13 +50,16 @@
                             *ngIf="!user.is_active"
                             matTooltip="{{ 'Inactive' | translate }}"
                         ></os-icon-container>
+                        <os-icon-container
+                            icon="fingerprint"
+                            *ngIf="user.hasSamlId"
+                            matTooltip="{{ 'Has SSO identification' | translate }}"
+                        ></os-icon-container>
                     </div>
                 </div>
                 <div class="meta-info user-subtitle ellipsis-overflow">
-                    {{ user.username }}
-                    <ng-container *ngIf="user.email">
-                        · {{ user.email }}
-                    </ng-container>
+                    {{ user.saml_id || user.username }}
+                    <ng-container *ngIf="user.email">· {{ user.email }}</ng-container>
                 </div>
             </div>
         </div>
@@ -79,8 +84,7 @@
                 *ngIf="user.isLastEmailSent"
                 matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                 matTooltipPosition="left"
-            >
-            </os-icon-container>
+            ></os-icon-container>
         </div>
         <div class="flex-center">
             <os-icon-container

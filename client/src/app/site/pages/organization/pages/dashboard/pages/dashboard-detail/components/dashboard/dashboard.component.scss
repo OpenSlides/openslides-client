@@ -2,19 +2,20 @@
 
 os-dashboard {
     .organization-description {
-        padding-left: 104px;
-        @include tablet {
-            padding-left: 66px;
-            padding-top: 15px;
+        padding-left: 76px;
+
+        @media (max-width: 960px) {
+            padding-left: 0;
         }
-        @include phone {
-            padding-left: 66px;
-            padding-top: 15px;
-        }
+    }
+
+    .meeting-list-container-empty {
+        margin: 0;
     }
 
     .meeting-list-viewport {
         max-width: 100%;
+
         .cdk-virtual-scroll-content-wrapper {
             max-width: 100%;
         }
@@ -42,52 +43,110 @@ os-dashboard {
     }
 
     .meeting-list-container {
+        display: flex;
+        margin: 16px 0;
+
         @include desktop {
             max-width: 1000px;
-            margin: 20px auto;
+            margin: 0 auto 40px auto;
         }
+
+        @media (max-width: 960px) {
+            flex-direction: column;
+            align-items: center;
+            margin-top: 8px;
+            margin-bottom: 8px;
+
+            mat-icon {
+                display: none;
+            }
+        }
+    }
+
+    .meeting-list-container-description {
         display: flex;
-        margin: 0 0px 8px 0;
+        margin: 25px auto 25px auto;
+
+        @media (max-width: 960px) {
+            flex-direction: column;
+            align-items: start;
+            justify-items: center;
+            margin-bottom: 0px;
+        }
+    }
+
+    .padding-right-8 {
+        margin-left: 23px;
+        margin-right: 23px;
+        margin-bottom: 17px;
+        padding-right: 0;
     }
 
     .meeting-icon-wrapper,
     .pseudo-icon-spacer {
-        @include phone {
-            width: 40px;
-            font-size: 0.75rem;
-        }
-        @include tablet {
-            width: 40px;
-        }
-        padding: 0 10px 0 16px;
-        width: 80px;
+        padding: 0 5px 0 0px;
+        width: 70px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
 
         mat-icon {
-            padding: 0 8px; // Ensures that the wrapper has really a width of 40px
+            padding: 0 8px;
             $size: 30px;
             font-size: $size;
             width: $size;
             height: $size;
             line-height: $size;
         }
+
+        @media (max-width: 960px) {
+            width: calc(100% - 10px);
+            font-size: 1rem;
+            height: 35px;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: flex-start;
+            box-sizing: border-box;
+            padding: 0;
+            margin-top: 6px;
+
+            mat-icon {
+                padding: 0;
+            }
+        }
+    }
+
+    .show-committee-icon,
+    .show-committee-link {
+        @media (max-width: 960px) and (min-width: 701px) {
+            display: inline-block !important;
+            padding-right: 20px;
+            $size: 20px;
+            font-size: $size;
+            width: 10%;
+            height: $size;
+        }
+
+        @media (max-width: 700px) {
+            display: none !important;
+        }
     }
 
     .orga-information {
-        @include phone {
+        width: calc(100% - 128px);
+
+        @media (max-width: 960px) {
             width: calc(100% - 88px);
         }
-        width: calc(100% - 128px);
     }
 
     .meeting-list {
-        @include phone {
-            width: calc(100% - 40px);
-        }
         width: calc(100% - 80px);
+
+        @media (max-width: 960px) {
+            width: calc(100% - 10px);
+        }
     }
 
     .meeting-list {
@@ -112,6 +171,10 @@ os-dashboard {
         .no-meetings-card {
             border-radius: 0;
             padding: 16px 20px;
+
+            @media (max-width: 960px) {
+                padding-left: 10px;
+            }
         }
     }
 
@@ -132,8 +195,47 @@ os-dashboard {
                 padding-left: 20px;
                 height: 100%;
             }
+
             &:last-child {
                 padding-right: 20px;
+            }
+        }
+
+        @media (max-width: 960px) {
+            > a {
+                text-decoration: none;
+
+                &:first-child {
+                    padding-left: 10px;
+                    height: 100%;
+                    width: calc(100% - 9px);
+                }
+
+                &:last-child {
+                    margin-right: 5px;
+                    padding-left: 0px;
+                    width: 0px;
+                    height: 75%;
+                }
+            }
+        }
+
+        @media (max-width: 700px) {
+            > a {
+                text-decoration: none;
+
+                &:first-child {
+                    padding-left: 10px;
+                    height: 100%;
+                    width: calc(100% - 40px);
+                }
+
+                &:last-child {
+                    margin-right: 5px;
+                    padding-left: 0px;
+                    width: 16px;
+                    height: 75%;
+                }
             }
         }
 
@@ -148,19 +250,38 @@ os-dashboard {
 
     .meeting-box-left {
         width: calc(95% - 50px);
+
+        @media (max-width: 960px) {
+            width: 90%;
+        }
     }
 
     #active-meetings {
+        margin-top: 0;
+
+        .meeting-icon-wrapper {
+            margin-top: 0;
+        }
+
         .meeting-list {
+            margin-top: 0;
             height: fit-content;
 
             .meeting-box {
                 &--mid {
                     font-size: 22px;
+
+                    @media (max-width: 960px) {
+                        font-size: 18px;
+                    }
                 }
 
                 &:last-child {
                     border: none;
+
+                    @media (max-width: 960px) {
+                        font-size: 12px;
+                    }
                 }
             }
         }
@@ -169,7 +290,11 @@ os-dashboard {
     #previous-meetings,
     #no-date-meetings {
         .meeting-icon-wrapper {
-            color: #8f8f8f;
+            color: rgba(87, 87, 87);
+
+            mat-icon {
+                color: #8f8f8f;
+            }
         }
     }
 }

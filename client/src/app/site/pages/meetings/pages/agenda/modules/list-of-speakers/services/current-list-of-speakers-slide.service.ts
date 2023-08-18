@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Projectiondefault } from 'src/app/domain/models/projector/projection-default';
+import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
@@ -28,7 +28,7 @@ export class CurrentListOfSpeakersSlideService {
             content_object_id: `meeting/${meetingId}`,
             type: MeetingProjectionType.CurrentListOfSpeakers,
             stable: overlay,
-            projectionDefault: Projectiondefault.currentListOfSpeakers,
+            projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
             getDialogTitle: () => `Current list of speakers`
         };
     }

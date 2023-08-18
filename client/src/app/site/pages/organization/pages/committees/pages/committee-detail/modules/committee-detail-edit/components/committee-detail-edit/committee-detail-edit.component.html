@@ -43,9 +43,8 @@
         <mat-form-field>
             <mat-label>{{ 'Committee managers' | translate }}</mat-label>
             <os-account-search-selector
-                formControlName="user_$_management_level"
+                formControlName="manager_ids"
                 placeholder="{{ 'Committee managers' | translate }}"
-                [transformPropagateFn]="getTransformPropagateFn()"
             ></os-account-search-selector>
         </mat-form-field>
 
@@ -72,6 +71,11 @@
                 [disableOptionWhenFn]="getDisableOptionWhenFn()"
                 [tooltipFn]="getTooltipFn()"
             ></os-repo-search-selector>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'External ID' | translate }}</mat-label>
+            <input matInput formControlName="external_id" />
         </mat-form-field>
     </form>
 </mat-card>

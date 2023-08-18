@@ -9,9 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
 
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { DaterangepickerComponent } from './components/daterangepicker/daterangepicker.component';
 
 @NgModule({
-    declarations: [DatepickerComponent],
+    declarations: [DatepickerComponent, DaterangepickerComponent],
     imports: [
         CommonModule,
         MatDatepickerModule,
@@ -22,6 +23,6 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
         MatIconModule,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [DatepickerComponent]
+    exports: [DatepickerComponent, DaterangepickerComponent]
 })
 export class DatepickerModule {}

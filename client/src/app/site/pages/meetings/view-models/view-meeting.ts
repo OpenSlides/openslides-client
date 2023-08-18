@@ -1,13 +1,21 @@
 import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
+import { Observable } from 'rxjs';
 import { HasProjectorTitle } from 'src/app/domain/interfaces/has-projector-title';
+import { HasProperties } from 'src/app/domain/interfaces/has-properties';
+import { FONT_PLACES, FontPlace, LOGO_PLACES, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
 import { Meeting } from 'src/app/domain/models/meetings/meeting';
+import {
+    ViewMeetingDefaultProjectorsKey,
+    ViewMeetingMediafileUsageKey
+} from 'src/app/domain/models/meetings/meeting.constants';
+import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
 
-import { StructuredRelation } from '../../../../infrastructure/definitions/relations';
-import { BaseViewModel } from '../../../base/base-view-model';
 import { ViewCommittee } from '../../organization/pages/committees';
 import { HasOrganizationTags } from '../../organization/pages/organization-tags';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
+import { BaseHasMeetingUsersViewModel } from '../base/base-has-meeting-user-view-model';
 import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
+import { ViewPointOfOrderCategory } from '../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
 import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
 import { ViewMediafile } from '../pages/mediafiles';
@@ -41,7 +49,7 @@ export enum RelatedTime {
     Dateless
 }
 
-export class ViewMeeting extends BaseViewModel<Meeting> {
+export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
     public get meeting(): Meeting {
         return this._model;
     }
@@ -55,7 +63,7 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     }
 
     public get userAmount(): number {
-        return this.user_ids?.length || 0;
+        return this.meeting_user_ids?.length || 0;
     }
 
     public get motionsAmount(): number {
@@ -75,11 +83,12 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     }
 
     public get isTemplate(): boolean {
-        return this.is_template || !!this.template_for_organization_id;
+        return !!this.template_for_organization_id;
     }
 
     public get relatedTime(): RelatedTime {
-        if ((this.start_time ?? this.end_time) === undefined) {
+        const referenceTime = this.start_time ?? this.end_time;
+        if (!referenceTime && referenceTime !== 0) {
             return RelatedTime.Dateless;
         }
         const current = new Date();
@@ -95,7 +104,6 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     }
 
     public static COLLECTION = Meeting.COLLECTION;
-    public static ACCESSIBILITY_FIELD: keyof Meeting = `description`;
 
     protected _collection = Meeting.COLLECTION;
 
@@ -104,7 +112,23 @@ export class ViewMeeting extends BaseViewModel<Meeting> {
     }
 
     public override canAccess(): boolean {
-        return this[ViewMeeting.ACCESSIBILITY_FIELD] !== undefined && this[ViewMeeting.ACCESSIBILITY_FIELD] !== null;
+        return this[Meeting.ACCESSIBILITY_FIELD] !== undefined && this[Meeting.ACCESSIBILITY_FIELD] !== null;
+    }
+
+    public getSpecifiedLogoPlaces(): LogoPlace[] {
+        return LOGO_PLACES.filter(place => !!this.logo_id(place));
+    }
+
+    public getSpecifiedFontPlaces(): FontPlace[] {
+        return FONT_PLACES.filter(place => !!this.font_id(place));
+    }
+
+    public getSpecifiedPlaces(): (LogoPlace | FontPlace)[] {
+        return [...this.getSpecifiedLogoPlaces(), ...this.getSpecifiedFontPlaces()];
+    }
+
+    public default_projectors(place: ProjectiondefaultValue): ViewProjector[] {
+        return this[`default_projectors_${place}`];
     }
 }
 interface IMeetingRelations {
@@ -146,15 +170,11 @@ interface IMeetingRelations {
     assignment_candidates: ViewAssignmentCandidate[];
     chat_groups: ViewChatGroup[];
     chat_messages: ViewChatMessage[];
-    logo: StructuredRelation<string, ViewMediafile | null>;
-    font: StructuredRelation<string, ViewMediafile | null>;
     committee: ViewCommittee;
     template_meeting_for_committee?: ViewCommittee;
     default_meeting_for_committee?: ViewCommittee;
     present_users: ViewUser[];
-    users: ViewUser[];
     reference_projector: ViewProjector;
-    default_projectors: StructuredRelation<string, ViewProjector[]>;
     projections: ViewProjection[];
     default_group: ViewGroup;
     admin_group: ViewGroup;
@@ -163,5 +183,13 @@ interface IMeetingRelations {
     template_for_organization: ViewOrganization;
     poll_countdown: ViewProjectorCountdown;
     list_of_speakers_countdown: ViewProjectorCountdown;
+    point_of_order_categories: ViewPointOfOrderCategory[];
+    point_of_order_categories_as_observable: Observable<ViewPointOfOrderCategory[]>;
 }
-export interface ViewMeeting extends Meeting, IMeetingRelations, HasProjectorTitle, HasOrganizationTags {}
+export interface ViewMeeting
+    extends Meeting,
+        IMeetingRelations,
+        HasProjectorTitle,
+        HasOrganizationTags,
+        HasProperties<ViewMeetingMediafileUsageKey, ViewMediafile>,
+        HasProperties<ViewMeetingDefaultProjectorsKey, ViewProjector[]> {}

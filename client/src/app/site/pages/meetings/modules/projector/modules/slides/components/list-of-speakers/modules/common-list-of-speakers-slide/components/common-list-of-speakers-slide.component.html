@@ -7,7 +7,8 @@
         <h2>
             {{ title }}
             <span *ngIf="waitingSpeakers !== null && waitingSpeakers > 1">
-                &ndash; {{ waitingSpeakers }} <span>{{ 'Speakers' | translate }}</span>
+                &ndash; {{ waitingSpeakers }}
+                <span>{{ 'Speakers' | translate }}</span>
             </span>
         </h2>
     </div>
@@ -15,21 +16,21 @@
     <!-- Last speakers -->
     <div *ngIf="data.data.finished && data.data.finished.length" class="lastSpeakers">
         <div *ngFor="let speaker of data.data.finished">
-            <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:speaker}"></ng-container>
+            <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: speaker }"></ng-container>
         </div>
     </div>
 
     <!-- Current speaker -->
     <div *ngIf="data.data.current" class="currentSpeaker">
         <mat-icon class="micicon">mic</mat-icon>
-        <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:data.data.current}"></ng-container>
+        <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: data.data.current }"></ng-container>
     </div>
 
     <!-- Next speakers -->
     <div *ngIf="data.data.waiting && data.data.waiting.length">
         <ol class="nextSpeakers">
             <li *ngFor="let speaker of data.data.waiting">
-                <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:speaker}"></ng-container>
+                <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: speaker }"></ng-container>
             </li>
         </ol>
     </div>
@@ -40,12 +41,12 @@
 
     <div *ngIf="data.data.current" class="currentSpeaker one-line">
         <mat-icon>mic</mat-icon>
-        <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:data.data.current}"></ng-container>
+        <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: data.data.current }"></ng-container>
     </div>
 
     <ol *ngIf="data.data.waiting && data.data.waiting.length" class="nextSpeakers">
         <li *ngFor="let speaker of data.data.waiting" class="one-line">
-            <ng-container *ngTemplateOutlet="speakerTemplate; context:{speaker:speaker}"></ng-container>
+            <ng-container *ngTemplateOutlet="speakerTemplate; context: { speaker: speaker }"></ng-container>
         </li>
     </ol>
 </div>

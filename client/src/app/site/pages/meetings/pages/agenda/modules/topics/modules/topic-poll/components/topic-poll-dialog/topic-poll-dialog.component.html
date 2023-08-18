@@ -1,5 +1,3 @@
-
-
 <!-- Settings -->
 <os-topic-poll-form
     [pollClassType]="pollClassType.Topic"
@@ -13,67 +11,61 @@
 
 <!-- Options -->
 <div mat-dialog-content class="option-selection topic-poll-preview-meta-info-form info-grid" *ngIf="!isEdit">
+    <ng-container>
+        <h3>{{ 'Options' | translate }}</h3>
+        <div>
+            <div class="option-list" (scroll)="scrolled($event)" #scrollframe>
+                <os-sorting-list
+                    *ngIf="newOptions.length"
+                    [input]="optionsSubject"
+                    [live]="true"
+                    (sortEvent)="onSortingChange($event)"
+                >
+                    <!-- implicit item references into the component using ng-template slot -->
+                    <ng-template let-item>
+                        <div class="single-option-line" #item>
+                            <span>{{ item.getTitle() }}</span>
+                            <span class="delete-button">
+                                <button
+                                    mat-icon-button
+                                    matTooltip="{{ 'Remove option' | translate }}"
+                                    (click)="removeOption(item)"
+                                >
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                            </span>
+                        </div>
+                    </ng-template>
+                </os-sorting-list>
+            </div>
 
-        <ng-container>
-            <h3>{{ 'Options' | translate }}</h3>
             <div>
-                <div class="option-list"  (scroll)="scrolled($event)" #scrollframe>
-                    <os-sorting-list
-                        *ngIf="newOptions.length"
-                        [input]="optionsSubject"
-                        [live]="true"
-                        (sortEvent)="onSortingChange($event)"
-                        >
-
-                        <!-- implicit item references into the component using ng-template slot -->
-                        <ng-template let-item>
-                            <div class="single-option-line" #item>
-                                <span>{{ item.getTitle() }}</span>
-                                <span class="delete-button">
-                                    <button
-                                        mat-icon-button
-                                        matTooltip="{{ 'Remove option' | translate }}"
-                                        matTooltipPosition="left"
-                                        (click)="removeOption(item)">
-                                        <mat-icon>clear</mat-icon>
-                                    </button>
-                                </span>
-                            </div>
-                        </ng-template>
-                    </os-sorting-list>
+                <!-- Enter new option -->
+                <div>
+                    <mat-form-field>
+                        <input
+                            require
+                            matInput
+                            [(ngModel)]="optionInput"
+                            type="text"
+                            [placeholder]="'New option' | translate"
+                        />
+                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
+                    </mat-form-field>
                 </div>
 
+                <!-- Add option -->
                 <div>
-                    <!-- Enter new option -->
                     <div>
-                        <mat-form-field>
-                            <input
-                                require
-                                matInput
-                                [(ngModel)]="optionInput"
-                                type="text"
-                                [placeholder]="'New option' | translate" />
-                            <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Add option -->
-                    <div>
-                        <div>
-                            <button
-                                mat-button
-                                color="accent"
-                                (click)="addNewOption()"
-                                [disabled]="optionInput===''">
-                                <mat-icon>add</mat-icon>
-                                <span>{{ 'Add option' | translate }}</span>
-                            </button>
-                        </div>
+                        <button mat-button color="accent" (click)="addNewOption()" [disabled]="optionInput === ''">
+                            <mat-icon>add</mat-icon>
+                            <span>{{ 'Add option' | translate }}</span>
+                        </button>
                     </div>
                 </div>
             </div>
-        </ng-container>
-
+        </div>
+    </ng-container>
 
     <!-- Too few options warning -->
     <div class="potential-warning">
@@ -87,7 +79,6 @@
 
 <!-- Actions -->
 <div mat-dialog-actions>
-
     <!-- Save Button -->
     <button
         mat-button

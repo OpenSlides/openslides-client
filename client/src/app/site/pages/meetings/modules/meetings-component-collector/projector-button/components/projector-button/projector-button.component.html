@@ -3,6 +3,7 @@
         *ngIf="!menuItem && !blendIn"
         mat-mini-fab
         (click)="onClick($event)"
+        [disabled]="disabled"
         [ngClass]="{ 'projector-inactive': !isProjected() }"
     >
         <ng-container *ngTemplateOutlet="content"></ng-container>
@@ -11,6 +12,7 @@
         *ngIf="!menuItem && blendIn"
         mat-icon-button
         (click)="onClick($event)"
+        [disabled]="disabled"
         class="blend-in"
     >
         <ng-container *ngTemplateOutlet="content"></ng-container>
@@ -19,6 +21,7 @@
         *ngIf="menuItem"
         mat-menu-item
         (click)="onClick()"
+        [disabled]="disabled"
         [ngClass]="{ 'projector-inactive': !isProjected() }"
     >
         <ng-container *ngTemplateOutlet="content"></ng-container>

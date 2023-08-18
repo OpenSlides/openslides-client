@@ -93,9 +93,10 @@
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field>
                     <os-repo-search-selector
-                        formControlName="committee_$_management_level"
+                        formControlName="committee_management_ids"
                         [multiple]="true"
                         placeholder="{{ 'Committee admin' | translate }}"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
                         [repo]="committeeController"
                         [transformPropagateFn]="getTransformPropagateFn()"
                         [transformSetFn]="getTransformSetFn()"
@@ -148,17 +149,29 @@
         <!-- Meeting Table -->
         <ng-container>
             <h2>{{ 'Committees and meetings' | translate }}</h2>
-            <p *ngIf="canSeeParticipationTable"> {{ user.short_name }} {{ 'is assigned to the following committees, meetings and groups' | translate }}:</p>
-            <p *ngIf="!canSeeParticipationTable"> {{ user.short_name }} {{ 'is not assigned to any committees or meetings yet' | translate }}.</p>
+            <p *ngIf="canSeeParticipationTable">
+                {{ user.short_name }} {{ 'is assigned to the following committees, meetings and groups' | translate }}:
+            </p>
+            <p *ngIf="!canSeeParticipationTable">
+                {{ user.short_name }} {{ 'is not assigned to any committees or meetings yet' | translate }}.
+            </p>
 
             <table *ngIf="canSeeParticipationTable" class="participation-table">
                 <tr class="header-underline">
-                    <th><span translate>Committees</span> ({{ user.committee_ids?.length }})</th>
-                    <th class="admin-column" *ngIf="comitteeAdministrationAmount">({{ comitteeAdministrationAmount }})</th>
-                    <th><span translate>Meetings</span> ({{ user.meeting_ids?.length }})</th>
+                    <th>
+                        <span translate>Committees</span>
+                        ({{ user.committee_ids?.length }})
+                    </th>
+                    <th class="admin-column" *ngIf="comitteeAdministrationAmount">
+                        ({{ comitteeAdministrationAmount }})
+                    </th>
+                    <th>
+                        <span translate>Meetings</span>
+                        ({{ user.meeting_ids?.length }})
+                    </th>
                     <th translate>Groups</th>
                 </tr>
-                <ng-container *ngFor="let row of tableData | keyvalue: tableDataAscOrderCompare; last as lastLine">
+                <ng-container *ngFor="let row of tableData | keyvalue : tableDataAscOrderCompare; last as lastLine">
                     <!-- Handle committees without meetings-->
                     <ng-container *ngIf="!getNumberOfKeys(row.value.meetings)">
                         <tr [ngClass]="getCellClass(true, true, lastLine)">
@@ -166,24 +179,47 @@
                                 <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                             </td>
                             <td class="admin-column" *ngIf="comitteeAdministrationAmount">
-                                <mat-icon matTooltip="{{ 'Committee admin' | translate }}" [matTooltipPosition]="'left'" *ngIf="row.value.is_manager">engineering</mat-icon>
+                                <mat-icon
+                                    matTooltip="{{ 'Committee admin' | translate }}"
+                                    [matTooltipPosition]="'left'"
+                                    *ngIf="row.value.is_manager"
+                                >
+                                    engineering
+                                </mat-icon>
                             </td>
                             <td colspan="2"></td>
                         </tr>
                     </ng-container>
                     <!-- Handle committees with meetings-->
-                    <tr *ngFor="let meeting_row of row.value.meetings | keyvalue: tableDataAscOrderCompare; first as isFirst; last as isLast" [ngClass]="getCellClass(true, true, lastLine)">
+                    <tr
+                        *ngFor="
+                            let meeting_row of row.value.meetings | keyvalue : tableDataAscOrderCompare;
+                            first as isFirst;
+                            last as isLast
+                        "
+                        [ngClass]="getCellClass(true, true, lastLine)"
+                    >
                         <td *ngIf="isFirst" [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
                             <a [routerLink]="'/committees/' + row.key + ''">{{ row.value.committee_name }}</a>
                         </td>
-                        <td class="admin-column" *ngIf="isFirst && comitteeAdministrationAmount" [attr.rowspan]="getNumberOfKeys(row.value.meetings)" >
-                            <mat-icon matTooltip="{{ 'Committee admin' | translate }}" [matTooltipPosition]="'left'" *ngIf="row.value.is_manager">engineering</mat-icon>
+                        <td
+                            class="admin-column"
+                            *ngIf="isFirst && comitteeAdministrationAmount"
+                            [attr.rowspan]="getNumberOfKeys(row.value.meetings)"
+                        >
+                            <mat-icon
+                                matTooltip="{{ 'Committee admin' | translate }}"
+                                [matTooltipPosition]="'left'"
+                                *ngIf="row.value.is_manager"
+                            >
+                                engineering
+                            </mat-icon>
                         </td>
                         <td [ngClass]="getCellClass(false, isLast, lastLine)">
                             <a [routerLink]="'/' + meeting_row.key + ''">{{ meeting_row.value.meeting_name }}</a>
                         </td>
                         <td [ngClass]="getCellClass(false, isLast, lastLine)">
-                            <span *ngFor="let group of meeting_row.value.group_names, last as lastGroup">
+                            <span *ngFor="let group of meeting_row.value.group_names; last as lastGroup">
                                 {{ group | translate }}{{ !lastGroup ? ', ' : '' }}
                             </span>
                         </td>
@@ -203,7 +239,7 @@
 </ng-template>
 
 <mat-menu #userExtraMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">
+    <button *ngIf="!user?.saml_id" mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'password']">
         <mat-icon>security</mat-icon>
         <span>{{ 'Change password' | translate }}</span>
     </button>

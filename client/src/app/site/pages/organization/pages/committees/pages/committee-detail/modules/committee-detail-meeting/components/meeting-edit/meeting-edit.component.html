@@ -35,17 +35,9 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-label>{{ 'Description' | translate }}</mat-label>
-            <input matInput formControlName="description" />
-        </mat-form-field>
-
-        <mat-form-field *ngIf="isCreateView">
             <mat-label>{{ 'Language' | translate }}</mat-label>
-            <mat-select formControlName="language">
-                <mat-option
-                    *ngFor="let choice of translations | keyvalue"
-                    [value]="choice.key"
-                >
+            <mat-select formControlName="language" [disabled]="!isCreateView || !!theDuplicateFromId">
+                <mat-option *ngFor="let choice of translations | keyvalue" [value]="choice.key">
                     {{ choice.value }}
                 </mat-option>
             </mat-select>
@@ -56,18 +48,7 @@
             <input matInput formControlName="location" />
         </mat-form-field>
 
-        <os-datepicker formControlName="start_time" title="Start date"></os-datepicker>
-
-        <os-datepicker formControlName="end_time" title="End date"></os-datepicker>
-
-        <mat-form-field>
-            <mat-label>{{ 'Participants' | translate }}</mat-label>
-            <os-account-search-selector
-                formControlName="user_ids"
-                [accounts]="meetingUsers"
-                placeholder="{{ 'Participants' | translate }}"
-            ></os-account-search-selector>
-        </mat-form-field>
+        <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
 
         <mat-form-field>
             <mat-label>{{ 'Administrators' | translate }}</mat-label>
@@ -92,6 +73,11 @@
                     {{ 'Create new tag' | translate }}
                 </ng-template>
             </os-repo-search-selector>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ 'External ID' | translate }}</mat-label>
+            <input matInput formControlName="external_id" />
         </mat-form-field>
     </mat-card>
 

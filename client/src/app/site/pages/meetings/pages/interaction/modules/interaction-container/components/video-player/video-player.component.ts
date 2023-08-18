@@ -176,7 +176,10 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
          * if a Ressource switches from online to offline
          */
         const ajaxResponse: AjaxResponse<any> = await firstValueFrom(
-            ajax(this.videoUrl).pipe(
+            ajax({
+                url: this.videoUrl,
+                crossDomain: true
+            }).pipe(
                 map(response => response),
                 catchError(error => of(error))
             )

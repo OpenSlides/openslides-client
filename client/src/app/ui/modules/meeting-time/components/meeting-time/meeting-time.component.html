@@ -1,33 +1,16 @@
 <span [ngClass]="cssClass">
     <ng-container *ngIf="meeting">
         <ng-container
-            *ngTemplateOutlet="timeWrapTemplate; context: { startTime: meeting.start_time, endTime: meeting.end_time }"
+            *ngTemplateOutlet="timeTemplate; context: { startTime: meeting.start_time, endTime: meeting.end_time }"
         ></ng-container>
     </ng-container>
     <ng-container *ngIf="!meeting">
         <ng-container
-            *ngTemplateOutlet="timeWrapTemplate; context: { startTime: startTime, endTime: endTime }"
+            *ngTemplateOutlet="timeTemplate; context: { startTime: startTime, endTime: endTime }"
         ></ng-container>
     </ng-container>
 </span>
 
-<ng-template #timeWrapTemplate let-startTime="startTime" let-endTime="endTime">
-    <div *ngIf="breakLines" class="break-lines">
-        <ng-container
-            *ngTemplateOutlet="timeTemplate; context: { startTime: startTime, endTime: endTime }"
-        ></ng-container>
-    </div>
-    <ng-container *ngIf="!breakLines">
-        <ng-container
-            *ngTemplateOutlet="timeTemplate; context: { startTime: startTime, endTime: endTime }"
-        ></ng-container>
-    </ng-container>
-</ng-template>
-
 <ng-template #timeTemplate let-startTime="startTime" let-endTime="endTime">
-    <ng-container *ngIf="startTime">
-        <span>{{ startTime | localizedDate: 'PP' }}</span>
-        <span *ngIf="endTime && (startTime !== endTime)">&nbsp;-&nbsp;</span>
-    </ng-container>
-    <span *ngIf="endTime && (startTime !== endTime)">{{ endTime | localizedDate: 'PP' }}</span>
+    <span>{{ { start: startTime, end: endTime } | localizedDateRange : 'PP' }}</span>
 </ng-template>

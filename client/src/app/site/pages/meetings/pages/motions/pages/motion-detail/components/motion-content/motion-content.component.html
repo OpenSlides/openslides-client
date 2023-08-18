@@ -100,12 +100,16 @@
     <div
         class="motion-text line-numbers-none"
         *ngIf="!editMotion && motion?.isStatuteAmendment()"
-        [innerHTML]="getFormattedStatuteAmendment() | trust: 'html'"
+        [innerHTML]="getFormattedStatuteAmendment() | trust : 'html'"
     ></div>
 
     <!-- The HTML Editor for motions and traditional amendments -->
     <ng-container *ngIf="editMotion && !isParagraphBasedAmendment">
-        <os-editor formControlName="text" [required]="!isParagraphBasedAmendment" [customSettings]="tinyMceConfig"></os-editor>
+        <os-editor
+            formControlName="text"
+            [required]="!isParagraphBasedAmendment"
+            [customSettings]="tinyMceConfig"
+        ></os-editor>
         <div
             *ngIf="
                 contentForm.get('text')?.invalid && (contentForm.get('text')?.dirty || contentForm.get('text')?.touched)
@@ -145,10 +149,15 @@
             &nbsp;
             <span *ngIf="reasonRequired && editMotion">*</span>
         </h3>
-        <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion?.reason | trust: 'html'"></div>
+        <div class="motion-text" *ngIf="!editMotion" [innerHtml]="motion?.reason | trust : 'html'"></div>
 
         <!-- The HTML Editor -->
-        <os-editor *ngIf="editMotion" formControlName="reason" [required]="reasonRequired" [customSettings]="tinyMceConfig"></os-editor>
+        <os-editor
+            *ngIf="editMotion"
+            formControlName="reason"
+            [required]="reasonRequired"
+            [customSettings]="tinyMceConfig"
+        ></os-editor>
         <div
             *ngIf="
                 reasonRequired &&
@@ -203,7 +212,7 @@
             <div class="content-field" *ngIf="editMotion && minSupporters">
                 <mat-form-field>
                     <os-repo-search-selector
-                        formControlName="supporter_ids"
+                        formControlName="supporter_meeting_user_ids"
                         [multiple]="true"
                         placeholder="{{ 'Supporters' | translate }}"
                         [repo]="participantRepo"

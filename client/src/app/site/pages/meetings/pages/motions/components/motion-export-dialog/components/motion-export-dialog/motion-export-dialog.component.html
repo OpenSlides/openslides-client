@@ -66,11 +66,19 @@
                 <mat-button-toggle value="polls" #votingResultButton>
                     <span>{{ 'Voting result' | translate }}</span>
                 </mat-button-toggle>
+                <mat-button-toggle value="referring_motions" #referringMotionsButton>
+                    <span>{{ 'Referring motions' | translate }}</span>
+                </mat-button-toggle>
             </mat-button-toggle-group>
         </div>
         <div>
             <p class="toggle-group-head">{{ 'PDF options' | translate }}</p>
-            <mat-button-toggle-group class="smaller-buttons" multiple formControlName="pdfOptions" (change)="onChange($event)">
+            <mat-button-toggle-group
+                class="smaller-buttons"
+                multiple
+                formControlName="pdfOptions"
+                (change)="onChange($event)"
+            >
                 <mat-button-toggle value="toc" #toc [disabled]="continuousTextButton?.checked">
                     <span>{{ 'Table of contents' | translate }}</span>
                 </mat-button-toggle>

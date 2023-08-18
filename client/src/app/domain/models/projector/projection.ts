@@ -27,7 +27,7 @@ export class Projection extends BaseModel<Projection> {
         super(Projection.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof Projection | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof Projection)[] = [
         `id`,
         `options`,
         `stable`,

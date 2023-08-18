@@ -81,9 +81,23 @@ module.exports = {
             }
         },
         {
+            files: ['*.spec.ts'],
+            rules: {
+                'no-restricted-globals': ['error', 'fdescribe', 'fit'],
+            }
+        },
+        {
             files: ['*.html'],
             extends: ['plugin:@angular-eslint/template/recommended'],
             rules: {}
+        },
+        {
+            files: ['*.html'],
+            excludedFiles: ['*inline-template-*.component.html'],
+            extends: ['plugin:prettier/recommended'],
+            rules: {
+                "prettier/prettier": ["error", { "parser": "angular" }]
+            }
         }
     ]
 };

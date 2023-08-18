@@ -1,4 +1,5 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -55,7 +56,8 @@ export class ProjectorListEntryComponent {
         private promptService: PromptService,
         private dialog: ProjectorEditDialogService,
         private operator: OperatorService,
-        private activeMeetingService: ActiveMeetingService
+        private activeMeetingService: ActiveMeetingService,
+        private prompt: PromptService
     ) {}
 
     /**
@@ -72,7 +74,16 @@ export class ProjectorListEntryComponent {
     /**
      * Handler to set the selected projector as the meeting reference projector
      */
-    public setProjectorAsReference(): void {
+    public async setProjectorAsReference(): Promise<void> {
+        if (this.projector.is_internal) {
+            const title = _(`Warning: This projector will be set to visible`);
+            const text = _(
+                `This projector is currently internal. Selecting such projectors as reference projectors will automatically set them to visible. Do you really want to do this?`
+            );
+            if (!(await this.prompt.open(title, text))) {
+                return;
+            }
+        }
         this.repo.setReferenceProjector(this.projector);
     }
 
@@ -94,7 +105,8 @@ export class ProjectorListEntryComponent {
      */
     public async onDeleteButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this projector?`);
-        if (await this.promptService.open(title, this.projector.name)) {
+        const content = this.projector.name;
+        if (await this.promptService.open(title, content)) {
             this.repo.delete(this.projector);
         }
     }

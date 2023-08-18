@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: `toArray`
 })
 export class ToArrayPipe implements PipeTransform {
-    public transform<T>(value: T): T[] {
+    public transform<T>(value: T | T[]): T[] {
         if (Array.isArray(value)) {
             return value;
         }

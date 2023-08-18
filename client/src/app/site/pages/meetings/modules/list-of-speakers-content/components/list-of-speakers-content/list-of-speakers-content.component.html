@@ -1,7 +1,15 @@
-<mat-card class="os-card speaker-card">
+<mat-card class="os-card">
     <!-- Title -->
     <os-projectable-title class="los-title" *ngIf="!explicitTitleContent" [model]="listOfSpeakers">
-        <mat-icon append *ngIf="closed" style="margin-top: 8px" class="primary-accent-by-theme" matTooltip="{{ 'The list of speakers is closed.' | translate }}">lock</mat-icon>
+        <mat-icon
+            append
+            *ngIf="closed"
+            style="margin-top: 8px"
+            class="primary-accent-by-theme"
+            matTooltip="{{ 'The list of speakers is closed.' | translate }}"
+        >
+            lock
+        </mat-icon>
     </os-projectable-title>
     <span *ngIf="explicitTitleContent">
         <ng-container *ngTemplateOutlet="explicitTitleContent"></ng-container>
@@ -15,7 +23,7 @@
         <mat-list>
             <mat-list-item *ngFor="let speaker of finishedSpeakers; let number = index">
                 <div class="finished-speakers-grid">
-                    <div>{{ number + 1 }}.</div>
+                    <div *osPerms="permission.listOfSpeakersCanSee">{{ number + 1 }}.</div>
                     <div class="finished-speaker-info">
                         <div>
                             <div>{{ speaker.getTitle() }}</div>
@@ -101,7 +109,7 @@
         <os-sorting-list
             [live]="true"
             [input]="waitingSpeakers"
-            [count]="true"
+            [count]="canSee"
             [enable]="canManage && (isSortMode || !isMobile)"
             (sortEvent)="onSortingChanged($event)"
         >
@@ -222,10 +230,7 @@
     </div>
 
     <!-- Search for speakers -->
-    <div
-        class="search-new-speaker-form"
-        *ngIf="canManage"
-    >
+    <div class="search-new-speaker-form" *ngIf="canManage">
         <os-participant-search-selector
             [nonSelectableUserIds]="nonAvailableUserIds"
             placeholder="{{ 'Select or search new speaker ...' | translate }}"
@@ -257,10 +262,13 @@
             color="warn"
             (click)="addPointOfOrder()"
             *ngIf="showPointOfOrders && !isOpInWaitlist(true)"
+            [disabled]="restrictPointOfOrderActions && closed"
         >
             <mat-icon>warning</mat-icon>
             &nbsp;
-            <span>{{ 'Point of order' | translate }}</span>
+            <span>
+                {{ 'Point of order' | translate }}
+            </span>
         </button>
         <button
             mat-stroked-button
@@ -269,7 +277,7 @@
             *ngIf="showPointOfOrders && isOpInWaitlist(true)"
         >
             <mat-icon>remove</mat-icon>
-            <span>{{ 'Withdraw point of order' | translate }}</span>
+            <span translate>Withdraw point of order</span>
         </button>
     </div>
 </mat-card>
@@ -354,9 +362,37 @@
         >
             warning
         </mat-icon>
-        <i [class.foreground-warn]="!!showcolor" *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
-            {{ speaker.note }}
-        </i>
+        <b
+            [class.foreground-warn]="!!showcolor"
+            *ngIf="speaker.point_of_order_category && ((showSpeakerNoteForEveryoneObservable | async) || canManage)"
+        >
+            {{ speaker.point_of_order_category.text }}
+        </b>
+        <span
+            [class.foreground-warn]="!!showcolor"
+            *ngIf="
+                speaker.point_of_order_category &&
+                speaker.note &&
+                ((showSpeakerNoteForEveryoneObservable | async) || canManage)
+            "
+        >
+            ·
+        </span>
+        <ng-container *ngIf="(showSpeakerNoteForEveryoneObservable | async) || canManage">
+            <i [class.foreground-warn]="!!showcolor" *ngIf="speaker.note">
+                {{ speaker.note }}
+            </i>
+            <i
+                [class.foreground-warn]="!!showcolor"
+                *ngIf="
+                    !speaker.note &&
+                    speaker.point_of_order &&
+                    !(pointOfOrderCategoriesEnabled && speaker.point_of_order_category)
+                "
+            >
+                {{ 'Point of order' | translate }}
+            </i>
+        </ng-container>
     </ng-container>
 </ng-template>
 

@@ -64,7 +64,7 @@ export class VotingBannerService {
 
     private updateBanner(polls: ViewPoll[], voted: { [key: Id]: Id[] }) {
         if (this.activeMeeting.meetingId) {
-            const checkUsers = [this.operator.user, ...this.operator.user.vote_delegations_from()];
+            const checkUsers = [this.operator.user, ...(this.operator.user.vote_delegations_from() || [])];
             this.pollsToVote = polls.filter(
                 poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined
             );

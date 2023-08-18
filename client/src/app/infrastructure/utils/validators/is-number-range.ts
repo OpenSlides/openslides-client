@@ -4,7 +4,7 @@ export function isNumberRange(minCtrlName: string, maxCtrlName: string): Validat
     return (formControl: AbstractControl): { [key: string]: any } | null => {
         const min = formControl.get(minCtrlName)!.value;
         const max = formControl.get(maxCtrlName)!.value;
-        if (min > max) {
+        if (+min > +max || Number.isNaN(+min) || Number.isNaN(+max)) {
             return { rangeError: true };
         }
         return null;

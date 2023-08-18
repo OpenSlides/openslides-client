@@ -78,10 +78,15 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
 
     /**
      * Define extra filter properties
-     *
-     * TODO: repo.getExtendedStateLabel(), repo.getExtendedRecommendationLabel()
      */
-    public filterProps = [`submitters`, `block`, `title`, `number`, `state_extension`, `recommendation_extension`];
+    public filterProps = [
+        `submitters`,
+        `block`,
+        `title`,
+        `number`,
+        `getExtendedStateLabel`,
+        `getExtendedRecommendationLabel`
+    ];
 
     public get canForward(): boolean {
         return this._forwardingAvailable;
@@ -361,8 +366,10 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             delete result.title; // Do not update the title!
             await this.motionRepo
                 .update(result.update, motion)
-                .concat(this.motionRepo.setState(result.state_id!, motion))
-                .concat(this.motionRepo.setRecommendation(result.recommendation_id!, motion))
+                .concat(
+                    this.motionRepo.setState(result.state_id!, motion),
+                    this.motionRepo.setRecommendation(result.recommendation_id!, motion)
+                )
                 .resolve();
         }
 

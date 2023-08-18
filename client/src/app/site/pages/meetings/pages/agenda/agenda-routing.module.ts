@@ -29,7 +29,7 @@ const routes: Routes = [
         path: `speakers`,
         loadChildren: () =>
             import(`./modules/list-of-speakers/list-of-speakers.module`).then(m => m.ListOfSpeakersModule),
-        data: { meetingPermissions: [Permission.listOfSpeakersCanSee] },
+        data: { meetingPermissions: [Permission.listOfSpeakersCanSee, Permission.listOfSpeakersCanBeSpeaker] },
         canLoad: [PermissionGuard]
     }
 ];

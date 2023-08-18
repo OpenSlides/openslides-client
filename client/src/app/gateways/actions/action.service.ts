@@ -18,6 +18,12 @@ export class ActionService {
 
     public constructor(private http: HttpService) {}
 
+    /**
+     * Registers a boolean function that will be used to check if actions should currently be allowed to be sent.
+     * If any of the registered functions returns true, no actions will be sent.
+     *
+     * @returns the index under which the function is registered. Can be used to remove it later.
+     */
     public addBeforeActionFn(fn: () => boolean): number {
         this._beforeActionFnMap[++uniqueFnId] = fn;
         return uniqueFnId;
@@ -54,11 +60,11 @@ export class ActionService {
      * @deprecated this does not offer the handle_separately route option, which is vital for certain types of bulk requests, it's better to use `createFromArray` instead.
      */
     public create<T>(...requests: ActionRequest[]): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r) as any, ...requests);
+        return new Action<T>(r => this.sendRequests<T>(r), requests);
     }
 
     public createFromArray<T>(requests: ActionRequest[], handle_separately = false): Action<T> {
-        return new Action<T>(r => this.sendRequests<T>(r, handle_separately) as any, ...requests);
+        return new Action<T>(r => this.sendRequests<T>(r, handle_separately), requests);
     }
 
     private isAllowed(): boolean {
@@ -66,7 +72,7 @@ export class ActionService {
         if (!functions.length) {
             return true;
         }
-        return functions.some(fn => !fn());
+        return functions.every(fn => !fn());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////

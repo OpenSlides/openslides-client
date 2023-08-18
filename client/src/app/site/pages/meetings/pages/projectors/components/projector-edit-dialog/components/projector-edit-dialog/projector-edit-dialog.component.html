@@ -13,6 +13,12 @@
                 </mat-error>
             </mat-form-field>
 
+            <div *ngIf="!projector.used_as_reference_projector_meeting_id">
+                <mat-checkbox formControlName="is_internal">
+                    <span>{{ 'Internal' | translate }}</span>
+                </mat-checkbox>
+            </div>
+
             <h3>{{ 'Resolution and size' | translate }}</h3>
             <!-- Aspect ratio field -->
             <div>
@@ -100,13 +106,14 @@
                     placeholder="{{ 'Projection defaults' | translate }}"
                     [multiple]="true"
                 >
-                    <mat-option *ngFor="let pd of projectiondefaultVerbose | keyvalue" [value]="pd.key">
+                    <mat-option
+                        *ngFor="let pd of projectiondefaultVerbose | keyvalue"
+                        [value]="projectiondefaultKeys[pd.key]"
+                    >
                         {{ pd.value | translate }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
-
 
             <!-- colors -->
             <div class="spacer-top-10">

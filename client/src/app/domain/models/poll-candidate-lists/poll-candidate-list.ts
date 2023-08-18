@@ -12,7 +12,7 @@ export class PollCandidateList extends BaseModel<PollCandidateList> {
         super(PollCandidateList.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PollCandidateList | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof PollCandidateList)[] = [
         `id`,
         `poll_candidate_ids`,
         `meeting_id`,

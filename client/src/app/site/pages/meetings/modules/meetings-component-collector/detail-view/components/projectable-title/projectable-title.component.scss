@@ -1,10 +1,12 @@
-.title-line {
+.projectable-title-line {
     display: flex;
 
     .model-title {
         // Grab the left padding of the parent element to catch hover-events for the :before element
         margin-left: -20px;
         padding-left: 20px;
+        min-width: 100px;
+        flex: 1;
 
         .change-title {
             position: relative;

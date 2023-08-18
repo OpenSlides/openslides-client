@@ -3,6 +3,7 @@ import { distinctUntilChanged, Observable, of, Subscription } from 'rxjs';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { BaseViewModel } from 'src/app/site/base/base-view-model';
 import { HasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-speaker-button`,
@@ -35,10 +36,14 @@ export class SpeakerButtonComponent implements OnDestroy {
 
     public hasInitialized = true;
 
+    public get canSee(): boolean {
+        return this.operator.hasPerms(Permission.listOfSpeakersCanSee);
+    }
+
     private _losObservable: Observable<ViewListOfSpeakers | null> | null = of(null);
     private _losSub: Subscription | null = null;
 
-    public constructor(private cd: ChangeDetectorRef) {}
+    public constructor(private cd: ChangeDetectorRef, private operator: OperatorService) {}
 
     public ngOnDestroy(): void {
         this.cleanLosSub();

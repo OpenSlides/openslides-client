@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, map, Observable, of, Subscription, switchAll } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
+import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { User } from 'src/app/domain/models/users/user';
 import { Action, ActionService } from 'src/app/gateways/actions';
-import { GetUserScopePresenterService } from 'src/app/gateways/presenter';
+import { GetUserRelatedModelsPresenterService, GetUserScopePresenterService } from 'src/app/gateways/presenter';
+import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
 import {
+    ExtendedUserPatchFn,
     FullNameInformation,
     RawUser,
     UserPatchFn,
@@ -18,6 +22,7 @@ import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/b
 import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
 import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
@@ -47,10 +52,12 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
+        private meetingUserRepo: MeetingUserRepositoryService,
         public meetingController: MeetingControllerService,
         private userController: UserControllerService,
         private userDeleteDialog: UserDeleteDialogService,
-        private presenter: GetUserScopePresenterService,
+        private userScopePresenter: GetUserScopePresenterService,
+        private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService,
         private userService: UserService,
         private actions: ActionService
     ) {
@@ -63,22 +70,26 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             }
             if (newId) {
                 this.meetingController.getViewModelObservable(newId).subscribe(meeting => {
-                    meetingUserIds = meeting?.user_ids ?? [];
-                    const meetingUsers =
-                        meeting && meeting?.user_ids
-                            ? repo.getViewModelList().filter(user => meeting?.user_ids.includes(user.id))
-                            : [];
-                    this._participantListSubject.next(meetingUsers);
+                    meetingUserIds = meeting?.meeting_user_ids ?? [];
+                    this.updateUsersFromMeetingUsers(this.meetingUserRepo.getViewModelList() ?? [], meetingUserIds);
                 });
             }
         });
 
-        repo.getViewModelListObservable().subscribe(users => {
-            const meetingUsers = users.filter(
-                user => user.group_ids(this.activeMeetingId).length && meetingUserIds.includes(user.id)
-            );
-            this._participantListSubject.next(meetingUsers);
+        this.meetingUserRepo.getViewModelListObservable().subscribe(async mUsers => {
+            this.updateUsersFromMeetingUsers(mUsers, meetingUserIds);
         });
+    }
+
+    private async updateUsersFromMeetingUsers(mUsers: ViewMeetingUser[], meetingUserIds?: number[]): Promise<void> {
+        const meetingUsers = mUsers.filter(
+            mUser =>
+                mUser.meeting_id === this.activeMeetingId &&
+                mUser.group_ids?.length &&
+                meetingUserIds.includes(mUser.id)
+        );
+        const users = meetingUsers.map(mUser => mUser.user);
+        this._participantListSubject.next(users);
     }
 
     public override getViewModelList(): ViewUser[] {
@@ -89,11 +100,31 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this._participantListSubject;
     }
 
-    public create(...participants: Partial<User>[]): Promise<Identifiable[]> {
+    public override getViewModelObservable(id: Id): Observable<ViewUser | null> {
+        return this.repo.getViewModelObservable(id).pipe(
+            map(user => {
+                if (!user?.meeting_users) {
+                    return of(user);
+                }
+
+                return this.meetingUserRepo
+                    .getViewModelObservable(user.meeting_users.find(u => u.meeting_id === this.activeMeetingId).id)
+                    .pipe(
+                        filter(u => !!u),
+                        map(u => u.user)
+                    );
+            }),
+            switchAll()
+        );
+    }
+
+    public create(
+        ...participants: Partial<User & MeetingUser>[]
+    ): Promise<(Identifiable & { meeting_user_id?: Id })[]> {
         return this.repo.create(...participants.map(participant => this.validatePayload(participant)));
     }
 
-    public update(patch: UserPatchFn, ...users: ViewUser[]): Action<void> {
+    public update(patch: ExtendedUserPatchFn, ...users: ViewUser[]): Action<void> {
         if (typeof patch === `function`) {
             const updatePatch = (user: ViewUser) => {
                 const participantPayload = patch(user);
@@ -101,7 +132,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             };
             return this.repo.update(updatePatch, ...users);
         }
-        return this.repo.update(this.validatePayload(patch as Partial<User>), ...users);
+        return this.repo.update(this.validatePayload(patch as Partial<ViewUser>), ...users);
     }
 
     public updateSelf(patch: UserPatchFn, participant: ViewUser): Promise<void> {
@@ -169,23 +200,31 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public async removeUsersFromMeeting(
         users: ViewUser[],
-        meeting: ViewMeeting | null = this.activeMeeting
+        meeting: ViewMeeting = this.activeMeeting
     ): Promise<boolean> {
-        const result = await this.presenter.call({ user_ids: users.map(user => user.id) });
-        const toDelete = Object.keys(result)
-            .map(key => parseInt(key, 10))
-            .filter(key => {
-                const fqid = `${result[key].collection}/${result[key].id}`;
-                return fqid === meeting!.fqid;
-            });
+        // only delete users which are in meeting scope
+        const scopes = await this.userScopePresenter.call({ user_ids: users.map(user => user.id) });
+        const meetingScopeUserIds = Object.entries(scopes)
+            .filter(([_, entry]) => entry.collection == meeting.COLLECTION && entry.id == meeting.id)
+            .map(([key, _]) => parseInt(key));
+        const relatedModels = meetingScopeUserIds
+            ? await this.userRelatedModelsPresenter.call({ user_ids: meetingScopeUserIds })
+            : {};
+        const toDelete = meetingScopeUserIds.filter(
+            id => relatedModels[id].meetings?.length === 1 && relatedModels[id].meetings[0].id === meeting.id
+        );
         const toDeleteUsers = toDelete.map(id => this.getViewModel(id)!);
         const toRemove = users.map(user => user.id).difference(toDelete);
-        const toRemoveUsers = toRemove.map(id => this.getViewModel(id) as ViewUser);
+        const toRemoveUsers = toRemove.map(id => this.getViewModel(id));
 
-        const prompt = await this.userDeleteDialog.open({ toDelete: toDeleteUsers, toRemove: toRemoveUsers });
+        const prompt = await this.userDeleteDialog.open({
+            toDelete: toDeleteUsers,
+            toRemove: toRemoveUsers,
+            relatedModelsResult: relatedModels
+        });
         const answer = await firstValueFrom(prompt.afterClosed());
         if (answer) {
-            const patch = { group_$_ids: { [this.activeMeetingId!]: [] } };
+            const patch = { group_ids: [] };
             await this.delete(toDeleteUsers, true)
                 .concat(this.update(patch, ...toRemoveUsers))
                 .resolve();
@@ -234,6 +273,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         const getNameFn = () => this.userController.getShortName(newUser);
         return {
             id: identifiable.id,
+            meeting_user_id: identifiable.meeting_user_id,
             ...newUser,
             fqid: `${User.COLLECTION}/${identifiable.id}`,
             getTitle: getNameFn,
@@ -245,31 +285,25 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         this._participantListSubject.next([]);
     }
 
-    private validatePayload(participant: Partial<User>): any {
+    private validatePayload(participant: Partial<User & MeetingUser> | Partial<ViewUser>): any {
         return {
             ...participant,
-            structure_level_$: participant.structure_level_$ || {
-                [this.activeMeetingId!]: participant.structure_level
-            },
-            group_$_ids: participant.group_$_ids || {
-                [this.activeMeetingId!]: participant.group_ids
-            },
-            number_$: participant.number_$ || { [this.activeMeetingId!]: participant.number },
-            vote_weight_$: participant.vote_weight_$ || {
-                [this.activeMeetingId!]: toDecimal(participant.vote_weight as any, false)
-            },
-            vote_delegated_$_to_id: participant.vote_delegated_$_to_id || {
-                [this.activeMeetingId!]: participant.vote_delegated_to_id
-            },
-            vote_delegations_$_from_ids: participant.vote_delegations_$_from_ids || {
-                [this.activeMeetingId!]: participant.vote_delegations_from_ids
-            },
-            about_me_$: participant.about_me_$ || {
-                [this.activeMeetingId!]: participant.about_me
-            },
-            comment_$: participant.comment_$ || {
-                [this.activeMeetingId!]: participant.comment
-            }
+            meeting_users: [
+                {
+                    group_ids: this.validateField(participant, `group_ids`),
+                    structure_level: this.validateField(participant, `structure_level`),
+                    number: this.validateField(participant, `number`),
+                    vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
+                    vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),
+                    vote_delegations_from_ids: this.validateField(participant, `vote_delegations_from_ids`),
+                    about_me: this.validateField(participant, `about_me`),
+                    comment: this.validateField(participant, `comment`)
+                }
+            ]
         };
+    }
+
+    private validateField(participant: Partial<ViewUser> | Partial<User & MeetingUser>, fieldname: string): any {
+        return typeof participant[fieldname] === `function` ? participant[fieldname]() : participant[fieldname];
     }
 }

@@ -21,6 +21,11 @@
     }
 }
 
+.title-box {
+    display: flex;
+    flex-direction: row;
+}
+
 // most mat-lists are NGrid already. Group-List and Workflow-Detail still require these.
 .mat-table {
     width: 100%;

@@ -10,6 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { fromUnixTime, getHours, getMinutes, getUnixTime, setHours, setMinutes } from 'date-fns';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
@@ -24,9 +25,10 @@ import { ComponentServiceCollectorService } from 'src/app/site/services/componen
 import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
+import { AllocationListConfig } from '../allocation-list/allocation-list.component';
 
 export interface SettingsFieldUpdate {
-    key: keyof Settings;
+    key: keyof Settings | (keyof Settings)[];
     value: any;
 }
 
@@ -127,6 +129,21 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         );
     }
 
+    public readonly TRANSLATION_CONFIG: AllocationListConfig = {
+        entryLabel: _(`Original`),
+        allocationLabel: _(`Translation`),
+        addButtonLabel: _(`Add new custom translation`)
+    };
+
+    public readonly RANKING_CONFIG: AllocationListConfig = {
+        entryLabel: _(`Name`),
+        allocationLabel: _(`Rank`),
+        addButtonLabel: _(`Add new entry`),
+        isNumberAllocation: true
+    };
+
+    private _comparedForm = false;
+
     /**
      * The current value of this setting. It is usually the first value, but this does not work for groups...
      */
@@ -180,12 +197,23 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
         this.form = this.formBuilder.group({
             value: [``, this.setting.validators ?? []],
             date: [``],
-            time: [``]
+            time: [``],
+            daterange: {
+                start: [null],
+                end: [null]
+            }
         });
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
             this.form.patchValue(datetimeObj);
+        }
+        if (this.setting.type === `daterange` && this.value) {
+            const daterangeObj = {
+                start: this.getRestrictedValue(this.value[0] ? new Date(this.value[0] * 1000) : null),
+                end: this.getRestrictedValue(this.value[1] ? new Date(this.value[1] * 1000) : null)
+            };
+            this.form.get(`daterange`).patchValue(daterangeObj);
         }
         this.form.patchValue({
             value: this.getRestrictedValue(this.internalValue)
@@ -203,13 +231,11 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 })
             )
             .subscribe(form => {
-                if (this._comparedForm || String(form.value) !== String(this._firstValue)) {
+                if (this._comparedForm || JSON.stringify(form.value) !== JSON.stringify(this._firstValue)) {
                     this.onChange(form.value);
                 }
             });
     }
-
-    private _comparedForm = false;
 
     /**
      * Stops the change detection
@@ -234,9 +260,23 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(newValue as number));
             this.form.patchValue(datetimeObj);
         }
+        if (this.setting.type === `daterange` && newValue) {
+            const daterangeObj = {
+                start: this.getRestrictedValue(newValue[0] ? new Date(newValue[0]) : null),
+                end: this.getRestrictedValue(newValue[1] ? new Date(newValue[1]) : null)
+            };
+            this.form.get(`daterange`).patchValue(daterangeObj);
+        }
         this.form.patchValue({
             value: this.getRestrictedValue(newValue)
         });
+    }
+
+    public getAllocationConfig(setting: SettingsItem<any>): AllocationListConfig {
+        return {
+            ...(setting.type === `translations` ? this.TRANSLATION_CONFIG : this.RANKING_CONFIG),
+            useIds: setting.useRelation
+        };
     }
 
     /**
@@ -288,6 +328,12 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 const date = this.form.get(`date`)!.value;
                 const time = this.form.get(`time`)!.value;
                 value = this.dateAndTimeToUnix(date, time);
+                break;
+            case `daterange`:
+                // daterange has to be formatted
+                const start = this.form.get(`daterange`)!.value.start;
+                const end = this.form.get(`daterange`)!.value.end;
+                value = [start, end];
                 break;
             case `groups`:
                 // we have to check here explicitly if nothing changed because of the search value selector
@@ -358,7 +404,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = [`boolean`, `markupText`, `text`, `translations`, `datetime`, `date`];
+        const excluded = [`boolean`, `markupText`, `text`, `translations`, `ranking`, `datetime`, `date`, `daterange`];
         return excluded.includes(type);
     }
 

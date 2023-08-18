@@ -10,18 +10,18 @@ export class ChatMessage extends BaseModel<ChatMessage> implements HasMeetingId 
     public readonly created!: number; // in seconds
     public readonly content!: UnsafeHtml;
 
-    public readonly user_id!: Id; // (user/chat_message_ids)
+    public readonly meeting_user_id!: Id; // (meeting_user/chat_message_ids)
     public readonly chat_group_id!: Id; // (chat_group/chat_message_ids)
 
     public constructor(input?: Partial<ChatMessage>) {
         super(ChatMessage.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof ChatMessage | { templateField: string })[] = [
+    public static readonly REQUESTABLE_FIELDS: (keyof ChatMessage)[] = [
         `id`,
         `content`,
         `created`,
-        `user_id`,
+        `meeting_user_id`,
         `chat_group_id`,
         `meeting_id`
     ];
