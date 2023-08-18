@@ -66,7 +66,7 @@ export class GlobalSearchService {
                 for (const field of Object.keys(result.matched_by)) {
                     if (result.content[field]) {
                         for (const word of result.matched_by[field]) {
-                            result.content[field] = (<string>result.content[field]).replace(
+                            result.content[field] = `${result.content[field]}`.replace(
                                 new RegExp(word, `gi`),
                                 match => `<mark>${match}</mark>`
                             );
