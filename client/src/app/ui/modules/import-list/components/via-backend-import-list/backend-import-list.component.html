@@ -181,17 +181,17 @@
 </ng-template>
 
 <ng-template #entryContentTemplate let-entry="entry" let-def="def">
-    <ng-container *ngIf="isObjectEntry(entry)">
+    <ng-container *ngIf="getHeader(def).is_object">
         <ng-container
             [ngTemplateOutlet]="nonObjectEntryTemplate"
             [ngTemplateOutletContext]="{ entry: entry.value, type: getHeader(def).type }"
         ></ng-container>
         <mat-icon class="newBadge" color="accent" inline *ngIf="getActionIcon(entry.info)">
-            {{ getActionIcon(entry.info) }}
+            {{ getEntryIcon(entry) }}
         </mat-icon>
     </ng-container>
     <ng-container
-        *ngIf="!isObjectEntry(entry)"
+        *ngIf="!getHeader(def).is_object"
         [ngTemplateOutlet]="nonObjectEntryTemplate"
         [ngTemplateOutletContext]="{ entry, type: getHeader(def).type}"
     ></ng-container>

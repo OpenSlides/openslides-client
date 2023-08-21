@@ -351,13 +351,20 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
                 return `warning`;
             case BackendImportState.New:
                 return `add`;
-            case BackendImportState.Done: // item has been imported
-                return `done`;
+            case BackendImportState.Done: // item will be updated / has been imported
+                return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
             case BackendImportState.Generated:
                 return `autorenew`;
             default:
                 return `block`; // fallback: Error
         }
+    }
+
+    public getEntryIcon(item: BackendImportEntryObject): string {
+        if (item.info === BackendImportState.Done) {
+            return undefined;
+        }
+        return this.getActionIcon(item);
     }
 
     /**
@@ -376,8 +383,14 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
                 return this.getErrorDescription(row) ?? _(`This row will not be imported, due to an unknown reason.`);
             case BackendImportState.New:
                 return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
-            case BackendImportState.Done: // item has been imported
-                return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`has been imported`);
+            case BackendImportState.Done: // item will be updated / has been imported
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will be updated`)
+                        : this.translate.instant(`has been imported`))
+                );
             default:
                 return undefined;
         }
@@ -437,10 +450,6 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      */
     public getSummaryPointTitle(title: string): string {
         return this._importer.getVerboseSummaryPointTitle(title);
-    }
-
-    public isObjectEntry(entry: any): boolean {
-        return typeof entry === `object`;
     }
 
     private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {

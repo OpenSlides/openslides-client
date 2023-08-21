@@ -11,8 +11,9 @@ export enum BackendImportState {
 
 export interface BackendImportHeader {
     property: string; // field name/column title
-    type: `boolean` | `number` | `string` | `date` | `object`; // date must be in format yyyy-mm-dd
+    type: `boolean` | `number` | `string` | `date`; // date must be in format yyyy-mm-dd
     is_list: boolean; // optional, if not given defaults to `false`
+    is_object: boolean; // optional, if not given defaults to `false`
 }
 
 export type BackendImportEntry = null | boolean | number | string | BackendImportEntryObject;

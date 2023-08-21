@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { User } from 'src/app/domain/models/users/user';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
@@ -12,6 +13,11 @@ import { AccountImportServiceModule } from '../account-import-service.module';
     providedIn: AccountImportServiceModule
 })
 export class AccountImportService extends BaseBackendImportService<User> {
+    /**
+     * The minimimal number of header entries needed to successfully create an entry
+     */
+    public override requiredHeaderLength = 1;
+
     public errorList = {
         Duplicates: `This user already exists`,
         NoName: `Entry has no valid name`,
@@ -19,6 +25,14 @@ export class AccountImportService extends BaseBackendImportService<User> {
         ParsingErrors: `Some csv values could not be read correctly.`,
         FailedImport: `Imported user could not be imported.`,
         vote_weight: `The vote weight has too many decimal places (max.: 6).`
+    };
+
+    public override readonly verboseSummaryTitles: { [title: string]: string } = {
+        total: _(`Total accounts`),
+        created: _(`Accounts created`),
+        updated: _(`Accounts updated`),
+        error: _(`Accounts with errors`),
+        warning: _(`Accounts with warnings (will be skipped)`)
     };
 
     public constructor(
