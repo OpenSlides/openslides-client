@@ -2,8 +2,8 @@
     <mat-form-field class="datepicker-form-field">
         <mat-label *ngIf="title">{{ title | translate }}</mat-label>
         <mat-date-range-input [formGroup]="contentForm" (click)="picker.open()" [rangePicker]="picker">
-            <input matStartDate readonly formControlName="start" placeholder="{{'Start date' | translate}}" />
-            <input matEndDate readonly formControlName="end" placeholder="{{'End date' | translate}}" />
+            <input matStartDate readonly formControlName="start" [placeholder]="'Start date' | translate" />
+            <input matEndDate readonly formControlName="end" [placeholder]="'End date' | translate" />
         </mat-date-range-input>
         <mat-hint *ngIf="hintText">{{ hintText | translate }}</mat-hint>
         <div class="suffix-wrapper" matSuffix>
