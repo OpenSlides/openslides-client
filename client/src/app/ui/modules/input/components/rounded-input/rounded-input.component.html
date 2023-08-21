@@ -1,6 +1,9 @@
 <div class="input-container">
     <div class="input-prefix">
-        <mat-icon class="foreground-active">search</mat-icon>
+        <mat-icon *ngIf="!hasSubmit" class="foreground-active">search</mat-icon>
+        <button *ngIf="hasSubmit" mat-icon-button (click)="send()">
+            <mat-icon class="foreground-active">search</mat-icon>
+        </button>
     </div>
     <input
         #osInput
@@ -10,6 +13,7 @@
         [ngClass]="[size, borderRadius, hasChildren ? 'children-bottom' : '']"
         [formControl]="dedicatedContentForm"
         (keyup)="keyPressed($event)"
+        (keyup.enter)="send()"
         (blur)="blur()"
     />
     <div *ngIf="!!contentForm.value" class="input-suffix foreground-icon" (mousedown)="clear($event)">

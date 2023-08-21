@@ -1,8 +1,9 @@
 <div class="search-form-container">
     <os-rounded-input
         [(ngModel)]="searchTerm"
-        (keyup.enter)="searchChange()"
+        (submit)="searchChange()"
         placeholder="{{ 'Search' | translate }}"
+        [hasSubmit]="true"
         [autofocus]="true"
     ></os-rounded-input>
 
