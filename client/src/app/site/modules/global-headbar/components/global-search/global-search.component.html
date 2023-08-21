@@ -43,17 +43,22 @@
                 </a>
                 <a *ngSwitchCase="'motion'" [routerLink]="result.url" mat-dialog-close>
                     <h3 *ngIf="result.title">
-                        <span *ngIf="result.obj?.number">{{ result.obj?.number }}: </span>
+                        <span *ngIf="result.obj?.number" [innerHTML]="result.obj?.number + ': '"></span>
                         <span [innerHTML]="result.title"></span>
                     </h3>
                     <div class="info">
-                        <span>{{ 'Submitter' | translate }} {{ result.obj.sequential_number }}</span>
+                        <span *ngIf="result.obj?.submitter_ids?.length">
+                            {{ 'Submitter' | translate }}:
+                            <os-comma-separated-listing
+                                [list]="getNamesBySubmitters(result.obj.submitter_ids)"
+                            ></os-comma-separated-listing>
+                        </span>
                         <span>{{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}</span>
                     </div>
                     <p *ngIf="result.text" [innerHtml]="getTextSnippet(result.text)"></p>
                 </a>
                 <a *ngSwitchDefault [routerLink]="result.url" mat-dialog-close>
-                    <h3 *ngIf="result.title" [innerHtml]="result.title">{{ result.title }}</h3>
+                    <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
                     <p *ngIf="result.text" [innerHtml]="getTextSnippet(result.text)"></p>
                 </a>
             </ng-container>

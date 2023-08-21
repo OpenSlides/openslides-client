@@ -31,9 +31,9 @@ export class GlobalSearchService {
         searchTerm: string,
         collections: string[] = [],
         meeting?: Id
-    ): Promise<GlobalSearchEntry[]> {
+    ): Promise<{ resultList: GlobalSearchEntry[]; models: GlobalSearchResponse }> {
         if (!searchTerm) {
-            return [];
+            return { resultList: [], models: {} };
         }
 
         const params: { q: string; m?: string } = { q: searchTerm };
@@ -46,14 +46,17 @@ export class GlobalSearchService {
         this.updateScores(rawResults);
         this.parseFragments(rawResults);
 
-        return Object.keys(rawResults)
-            .filter(fqid => {
-                const collection = collectionFromFqid(fqid);
-                return collections.includes(collection) || !collections.length;
-            })
-            .map(fqid => this.getResult(fqid, rawResults))
-            .filter(r => r.score > 0)
-            .sort((a, b) => b.score - a.score);
+        return {
+            resultList: Object.keys(rawResults)
+                .filter(fqid => {
+                    const collection = collectionFromFqid(fqid);
+                    return collections.includes(collection) || !collections.length;
+                })
+                .map(fqid => this.getResult(fqid, rawResults))
+                .filter(r => r.score > 0)
+                .sort((a, b) => b.score - a.score),
+            models: rawResults
+        };
     }
 
     /**
@@ -127,13 +130,13 @@ export class GlobalSearchService {
         };
     }
 
-    private getTitle(collection: string, content: any) {
+    public getTitle(collection: string, content: any) {
         if (collection === `user`) {
             const firstName = content.first_name?.trim() || ``;
             const lastName = content.last_name?.trim() || ``;
             const userName = content.username?.trim() || ``;
             const name = firstName || lastName ? `${firstName} ${lastName}` : userName;
-            return name?.trim() || ``;
+            return `${content.title?.trim() || ``} ${name?.trim()}`.trim() || ``;
         }
 
         return content.title || content.name;

@@ -2,9 +2,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { FormBuilder } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { pairwise, startWith, Subscription } from 'rxjs';
+import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { GlobalSearchEntry, GlobalSearchService } from 'src/app/site/services/global-search.service';
+import {
+    GlobalSearchEntry,
+    GlobalSearchResponse,
+    GlobalSearchService
+} from 'src/app/site/services/global-search.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
@@ -37,6 +42,7 @@ export class GlobalSearchComponent implements OnDestroy {
     public inMeeting = !!this.activeMeeting.meetingId;
 
     private results: GlobalSearchEntry[] = [];
+    private models: GlobalSearchResponse;
 
     private filterChangeSubscription: Subscription;
 
@@ -79,13 +85,32 @@ export class GlobalSearchComponent implements OnDestroy {
             this.currentlyAvailableFilters = Object.keys(this.availableFilters).slice(0, 1);
         }
 
-        this.results = await this.globalSearchService.searchChange(
+        const search = await this.globalSearchService.searchChange(
             this.searchTerm,
             this.currentlyAvailableFilters,
             searchMeeting
         );
+        this.results = search.resultList;
+        this.models = search.models;
         this.updateFilteredResults();
         this.cd.markForCheck();
+    }
+
+    public getModel(model: string, id: Id): any | null {
+        return this.models[`${model}/${id}`] || null;
+    }
+
+    public getNamesBySubmitters(submitters: Id[]): string[] {
+        const submitterNames: string[] = [];
+        for (const submitterId of submitters) {
+            const motionSubmitter = this.getModel(`motion_submitter`, submitterId)?.content;
+            const meetingUser = this.getModel(`meeting_user`, motionSubmitter?.meeting_user_id)?.content;
+            const user = this.getModel(`user`, meetingUser?.user_id)?.content;
+
+            submitterNames.push(this.globalSearchService.getTitle(`user`, user));
+        }
+
+        return submitterNames;
     }
 
     public getTextSnippet(text: string): string {
