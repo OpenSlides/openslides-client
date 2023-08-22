@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { getMeetingListSubscriptionConfig } from 'src/app/site/pages/organization/organization.subscription';
 
 import { getAccountDetailSubscriptionConfig } from '../../../../accounts.subscription';
 
@@ -13,6 +14,7 @@ export class AccountDetailMainComponent extends BaseModelRequestHandlerComponent
         if (params[`id`] !== oldParams[`id`]) {
             const id = +params[`id`];
             this.subscribeTo(getAccountDetailSubscriptionConfig(id), { hideWhenDestroyed: true });
+            this.subscribeTo(getMeetingListSubscriptionConfig(), { hideWhenDestroyed: true });
         }
     }
 }
