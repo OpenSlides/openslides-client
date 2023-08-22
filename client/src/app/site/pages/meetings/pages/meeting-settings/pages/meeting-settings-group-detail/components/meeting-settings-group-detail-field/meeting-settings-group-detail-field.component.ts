@@ -123,10 +123,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     }
 
     public get getChangeFn(): (currentValue: any, currentWatchPropertyValues: any[]) => any {
-        return (
-            this.setting.automaticChangesSetting?.getChangeFn ??
-            ((currentValue, currentWatchPropertyValues) => currentValue)
-        );
+        return this.setting.automaticChangesSetting?.getChangeFn ?? (currentValue => currentValue);
     }
 
     public readonly TRANSLATION_CONFIG: AllocationListConfig = {
@@ -333,7 +330,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 // daterange has to be formatted
                 const start = this.form.get(`daterange`)!.value.start;
                 const end = this.form.get(`daterange`)!.value.end;
-                value = [start, end];
+                value = [start, end].map(date => this.dateAndTimeToUnix(date, undefined));
                 break;
             case `groups`:
                 // we have to check here explicitly if nothing changed because of the search value selector
