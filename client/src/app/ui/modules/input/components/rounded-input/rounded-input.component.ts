@@ -125,9 +125,7 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public override ngOnInit(): void {
         super.ngOnInit();
         if (this.autofocus) {
-            setTimeout(() => {
-                this.focus();
-            }, 500);
+            this.focus();
         }
         this.subscriptions.push(
             this.contentForm.valueChanges.pipe(debounceTime(250)).subscribe(nextValue => {
