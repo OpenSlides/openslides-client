@@ -76,6 +76,8 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
 
     private _topicId: Id | null = null;
 
+    public getTitleFn = () => this.topic.getListTitle();
+
     /**
      * Constructor for the topic detail page.
      */

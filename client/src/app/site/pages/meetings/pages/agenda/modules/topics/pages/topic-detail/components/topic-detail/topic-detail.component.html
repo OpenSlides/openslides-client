@@ -38,7 +38,7 @@
         [ngClass]="editTopic ? 'os-form-card' : 'os-card'"
     >
         <ng-container *ngIf="!editTopic && topic">
-            <os-projectable-title [model]="topic"></os-projectable-title>
+            <os-projectable-title [model]="topic" [getTitleFn]="getTitleFn"></os-projectable-title>
             <div>
                 <span *ngIf="topic.text">
                     <!-- Render topic text as HTML -->
