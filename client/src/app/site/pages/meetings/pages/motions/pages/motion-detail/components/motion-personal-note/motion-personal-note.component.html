@@ -39,7 +39,7 @@
     <!-- Content -->
     <ng-container class="meta-text-block-content">
         <ng-container *ngIf="!isEditing">
-            <div *ngIf="personalNoteObservable | async as note" [innerHTML]="note?.note | trust : 'html'"></div>
+            <div *ngIf="(personalNoteObservable | async).note as note" [innerHTML]="note | trust : 'html'"></div>
             <div class="no-content" *ngIf="(hasPersonalNoteObservable | async) === false">
                 {{ 'No personal note' | translate }}
             </div>
