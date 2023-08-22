@@ -36,7 +36,8 @@
                     <span>{{ result.meeting.name }}</span>
                     <span class="sep">&gt;</span>
                 </ng-container>
-                <span>{{ availableFilters[result.collection] }}</span>
+                <span *ngIf="currentFilters.value.meetingFilter === 'all' && result.collection === 'user'">{{ 'Account' | translate }}</span>
+                <span *ngIf="currentFilters.value.meetingFilter !== 'all' || result.collection !== 'user'">{{ availableFilters[result.collection] }}</span>
             </div>
             <ng-container [ngSwitch]="result.collection">
                 <a *ngSwitchCase="'mediafile'" [href]="result.url" target="blank" mat-dialog-close>
