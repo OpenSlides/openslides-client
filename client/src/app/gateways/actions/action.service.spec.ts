@@ -2,8 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { QueryParams } from 'src/app/infrastructure/definitions/http';
 
 import { HttpService } from '../http.service';
+import { Action, createEmptyAction } from './action';
 import { ActionService } from './action.service';
-import { ActionError, ActionResponse } from './action-utils';
+import { ActionError, ActionRequest, ActionResponse } from './action-utils';
 
 const ACTION_URL = `/system/action/handle_request`;
 const ACTION_SEPARATELY_URL = `/system/action/handle_separately`;
@@ -165,5 +166,80 @@ describe(`ActionService`, () => {
             JSON.stringify(await service.sendRequests([{ action: `action.three`, data: getActionData(10, 12) }]))
         ).toBe(getActionExpect(`action.three`, 10, 12));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].data[0][`action`] === `action.three`).toBe(true);
+    });
+});
+
+describe(`Action`, () => {
+    let sendRequestsCalled: boolean;
+
+    beforeEach(() => {
+        sendRequestsCalled = false;
+    });
+
+    const requestFn = async requests => {
+        sendRequestsCalled = true;
+        return requests.map(rqst => rqst.action + `: ` + JSON.stringify(rqst.data));
+    };
+    const getAction = (...actions: ActionRequest[]) => new Action<string>(requestFn, actions);
+
+    it(`test action base functionality`, async () => {
+        const action = getAction({ action: `t3xt`, data: [4, `b`, `c`, `d`, 3] });
+        expect(await action.resolve()).toEqual([`t3xt: [4,"b","c","d",3]`]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action from`, async () => {
+        const actions = [
+            getAction({ action: `50m3 t3xt`, data: [`f`, `g`, `h`, 1, `j`, `k`] }),
+            getAction({ action: `some text`, data: [`l`, `m`, `n`] })
+        ];
+        const newAction = Action.from<string>(...actions);
+        expect(await newAction.resolve()).toEqual([`50m3 t3xt: ["f","g","h",1,"j","k"]`, `some text: ["l","m","n"]`]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action from empty`, async () => {
+        const newAction = Action.from<string>();
+        expect(await newAction.resolve()).toEqual([]);
+        expect(sendRequestsCalled).toBe(false);
+    });
+
+    it(`test action concat`, async () => {
+        const action = getAction({ action: `1337`, data: [0, `p`, `q`, `r`, 5] });
+        const actions = [
+            getAction({ action: `t`, data: [`t`] }, { action: `u`, data: [`u`] }),
+            createEmptyAction(),
+            new Action(async () => {
+                return [];
+            }, [{ action: `letters`, data: [`v`, `w`, `x`] }]),
+            null,
+            { action: `yz`, data: [`y`, `z`] }
+        ];
+        const newAction = action.concat(...actions);
+        expect(await newAction.resolve()).toEqual([
+            `1337: [0,"p","q","r",5]`,
+            `t: ["t"]`,
+            `u: ["u"]`,
+            `letters: ["v","w","x"]`,
+            `yz: ["y","z"]`
+        ]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action concat without data`, async () => {
+        const action = getAction({ action: `1337`, data: [0, `p`, `q`, `r`, 5] });
+        const newAction = action.concat();
+        expect(await newAction.resolve()).toEqual([`1337: [0,"p","q","r",5]`]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action with empty sendRequest return value`, async () => {
+        const action = new Action<string>(async () => null, [{ action: `t3xt`, data: [4, `b`, `c`, `d`, 3] }]);
+        expect(await action.resolve()).toEqual(undefined);
+        const secondAction = new Action<string>(
+            async () => undefined,
+            [{ action: `t3xt`, data: [4, `b`, `c`, `d`, 3] }]
+        );
+        expect(await secondAction.resolve()).toEqual(undefined);
     });
 });
