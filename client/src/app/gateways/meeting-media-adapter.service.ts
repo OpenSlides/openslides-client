@@ -32,15 +32,17 @@ export class MeetingMediaAdapterService {
     }
 
     private async performAction(param: MediaAdapterActionParameters): Promise<void> {
-        const data: any = {
-            ...(param.action === `set`
-                ? {
-                      id: param.mediafile.meeting_id,
-                      mediafile_id: param.mediafile.id
-                  }
-                : { id: param.meetingId }),
-            place: param.place
-        };
+        const data: any[] = [
+            {
+                ...(param.action === `set`
+                    ? {
+                          id: param.mediafile.meeting_id,
+                          mediafile_id: param.mediafile.id
+                      }
+                    : { id: param.meetingId }),
+                place: param.place
+            }
+        ];
         await this.actionService.createFromArray([{ action: `meeting.${param.action}_${param.type}`, data }]).resolve();
     }
 }
