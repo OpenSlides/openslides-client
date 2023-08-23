@@ -9,15 +9,15 @@
 
     <section class="filters" [formGroup]="currentFilters">
         <mat-radio-group *ngIf="operator.knowsMultipleMeetings" class="filter-section" formControlName="meetingFilter">
-            <mat-radio-button *ngIf="inMeeting" class="filter" value="current">{{ 'This meeting' }}</mat-radio-button>
-            <mat-radio-button class="filter" value="all">{{ 'All meetings' }}</mat-radio-button>
-            <mat-radio-button class="filter" value="meetings">{{ 'Meeting title' }}</mat-radio-button>
+            <mat-radio-button *ngIf="inMeeting" class="filter" value="current">{{ 'This meeting' | translate }}</mat-radio-button>
+            <mat-radio-button class="filter" value="all">{{ 'All meetings' | translate }}</mat-radio-button>
+            <mat-radio-button class="filter" value="meetings">{{ 'Meeting title' | translate }}</mat-radio-button>
         </mat-radio-group>
 
         <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
             <ng-container *ngFor="let filter of currentlyAvailableFilters">
                 <mat-checkbox *osPerms="getPermissionByFilter(filter)" formControlName="{{ filter }}" class="filter">
-                    {{ availableFilters[filter] }}
+                    {{ availableFilters[filter] | translate }}
                 </mat-checkbox>
             </ng-container>
         </div>
@@ -37,7 +37,7 @@
                     <span class="sep">&gt;</span>
                 </ng-container>
                 <span *ngIf="currentFilters.value.meetingFilter === 'all' && result.collection === 'user'">{{ 'Account' | translate }}</span>
-                <span *ngIf="currentFilters.value.meetingFilter !== 'all' || result.collection !== 'user'">{{ availableFilters[result.collection] }}</span>
+                <span *ngIf="currentFilters.value.meetingFilter !== 'all' || result.collection !== 'user'">{{ availableFilters[result.collection] | translate }}</span>
             </div>
             <ng-container [ngSwitch]="result.collection">
                 <a *ngSwitchCase="'mediafile'" [href]="result.url" target="blank" mat-dialog-close>
