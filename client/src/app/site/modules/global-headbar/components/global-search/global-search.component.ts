@@ -50,6 +50,7 @@ export class GlobalSearchComponent implements OnDestroy {
         private formBuilder: FormBuilder,
         private cd: ChangeDetectorRef
     ) {
+        this.updateCurrentlyAvailableFilters();
         this.filterChangeSubscription = this.currentFilters.valueChanges
             .pipe(startWith(this.currentFilters.value), pairwise())
             .subscribe(([last, next]) => {
@@ -75,11 +76,9 @@ export class GlobalSearchComponent implements OnDestroy {
 
     public async searchChange(): Promise<void> {
         let searchMeeting = null;
-        this.currentlyAvailableFilters = Object.keys(this.availableFilters).slice(2);
+        this.updateCurrentlyAvailableFilters();
         if (this.currentFilters.get(`meetingFilter`).getRawValue() === `current`) {
             searchMeeting = this.activeMeeting.meetingId;
-        } else if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
-            this.currentlyAvailableFilters = Object.keys(this.availableFilters).slice(0, 1);
         }
 
         const search = await this.globalSearchService.searchChange(
@@ -180,5 +179,13 @@ export class GlobalSearchComponent implements OnDestroy {
         }
 
         this.noResults = !Object.keys(this.filteredResults).length;
+    }
+
+    private updateCurrentlyAvailableFilters(): void {
+        if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
+            this.currentlyAvailableFilters = Object.keys(this.availableFilters).slice(0, 1);
+        } else {
+            this.currentlyAvailableFilters = Object.keys(this.availableFilters).slice(2);
+        }
     }
 }
