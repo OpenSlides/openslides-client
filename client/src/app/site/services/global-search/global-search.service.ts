@@ -3,23 +3,8 @@ import { Fqid, Id } from 'src/app/domain/definitions/key-types';
 import { HttpService } from 'src/app/gateways/http.service';
 import { collectionFromFqid, idFromFqid } from 'src/app/infrastructure/utils/transform-functions';
 
-import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
-
-export interface GlobalSearchEntry {
-    title: string;
-    text: string;
-    fqid: string;
-    collection: string;
-    url?: string;
-    obj?: any;
-    meeting?: { id: Id; name: string };
-    committee?: { id: Id; name: string };
-    score?: number;
-}
-
-export interface GlobalSearchResponse {
-    [fqid: string]: { content: any; score: number; matched_by: { [field: string]: string[] } };
-}
+import { ActiveMeetingService } from '../../pages/meetings/services/active-meeting.service';
+import { GlobalSearchEntry, GlobalSearchResponse } from './definitions';
 
 @Injectable({
     providedIn: `root`
@@ -157,7 +142,6 @@ export class GlobalSearchService {
             case `mediafile`:
                 return `/system/media/get/${id}`;
             case `user`:
-                // TODO: Needs update to work with rtf
                 if (this.activeMeeting.meetingId && content.meeting_ids?.includes(this.activeMeeting.meetingId)) {
                     return `/${this.activeMeeting.meetingId}/participants/${id}`;
                 }

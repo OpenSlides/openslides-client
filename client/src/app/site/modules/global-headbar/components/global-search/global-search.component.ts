@@ -4,12 +4,9 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { pairwise, startWith, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Permission } from 'src/app/domain/definitions/permission';
+import { splitStringKeepSeperator } from 'src/app/infrastructure/utils';
 import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import {
-    GlobalSearchEntry,
-    GlobalSearchResponse,
-    GlobalSearchService
-} from 'src/app/site/services/global-search.service';
+import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchService } from 'src/app/site/services/global-search';
 import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
@@ -123,7 +120,7 @@ export class GlobalSearchComponent implements OnDestroy {
         if (textParts.length > 1) {
             let append = ``;
             totalLength += textParts[1].length - 13;
-            append += textParts[1] + ` `;
+            append += textParts[1];
             const preText = textParts[0].split(` `);
             for (let j = preText.length - 1; j >= 0 && !preText[j].endsWith(`.`); j--) {
                 append = preText[j] + ` ` + append;
@@ -142,10 +139,10 @@ export class GlobalSearchComponent implements OnDestroy {
                 totalLength += textParts[i].length - 13;
                 resultText += textParts[i];
             } else {
-                const text = textParts[i].split(` `);
+                const text = splitStringKeepSeperator(textParts[i], ` `, `between`);
                 for (let word of text) {
                     totalLength += word.length;
-                    resultText += ` ` + word;
+                    resultText += word;
                     if (totalLength > textSnippetSize) {
                         resultText += `\u2026`;
                         break outer;
