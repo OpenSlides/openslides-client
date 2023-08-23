@@ -43,6 +43,16 @@ export class AccountMainComponent extends BaseModelRequestHandlerComponent {
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                idField: `committee_ids`,
+                                fieldset: [`name`],
+                                follow: [
+                                    {
+                                        idField: `meeting_ids`,
+                                        fieldset: [`name`]
+                                    }
+                                ]
                             }
                         ]
                     },
