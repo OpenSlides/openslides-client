@@ -4,6 +4,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     ViewChild,
@@ -23,7 +24,7 @@ import { FilterListService, SearchService, SortListService } from '../../definit
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class ViewListComponent<V extends Identifiable> implements OnInit {
+export class ViewListComponent<V extends Identifiable> implements OnInit, OnDestroy {
     @ViewChild(ScrollingTableComponent, { static: true })
     private readonly _scrollingTableComponent: ScrollingTableComponent<V> | undefined;
 
@@ -152,6 +153,20 @@ export class ViewListComponent<V extends Identifiable> implements OnInit {
 
     public ngOnInit(): void {
         this.initDataListObservable();
+    }
+
+    public ngOnDestroy(): void {
+        if (this.filterService) {
+            this.filterService.exitFilterService();
+        }
+
+        if (this.sortService) {
+            this.sortService.exitSortService();
+        }
+
+        if (this.searchService) {
+            this.searchService.exitSearchService();
+        }
     }
 
     /**

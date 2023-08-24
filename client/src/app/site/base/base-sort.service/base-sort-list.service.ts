@@ -148,10 +148,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param definitions The definitions of the possible options
      */
     public async initSorting(inputObservable: Observable<V[]>): Promise<void> {
-        if (this.inputDataSubscription) {
-            this.inputDataSubscription.unsubscribe();
-            this.inputDataSubscription = null;
-        }
+        this.exitSortService();
 
         if (!this.sortDefinition) {
             const storedDefinition = await this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey);
@@ -172,6 +169,13 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             this.inputData = data;
             this.updateSortedData();
         });
+    }
+
+    public exitSortService(): void {
+        if (this.inputDataSubscription) {
+            this.inputDataSubscription.unsubscribe();
+            this.inputDataSubscription = null;
+        }
     }
 
     /**
