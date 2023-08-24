@@ -15,7 +15,7 @@ export class ViewTopic extends BaseProjectableViewModel<Topic> {
     }
 
     public getVotingText(context: VotingTextContext<ViewTopic>): string {
-        return `${this.getTitle()}: ${context.poll.getTitle()}: ${context.translateFn(`Voting opened`)}`;
+        return `${this.getListTitle()}: ${context.poll.getTitle()}: ${context.translateFn(`Voting opened`)}`;
     }
 
     public override getDetailStateUrl(): string {
