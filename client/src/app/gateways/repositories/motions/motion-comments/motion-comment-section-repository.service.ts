@@ -64,6 +64,6 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
             meeting_id: this.activeMeetingId,
             motion_comment_section_ids: sections.map(section => section.id)
         };
-        return this.actions.sendRequest(MotionCommentSectionAction.SORT, payload);
+        await this.createAction(MotionCommentSectionAction.SORT, payload).resolve();
     }
 }

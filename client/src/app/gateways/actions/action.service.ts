@@ -74,39 +74,4 @@ export class ActionService {
         }
         return functions.every(fn => !fn());
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// The following methods will be removed ///////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @deprecated This will be removed pretty soon, use `create` instead!
-     * @param action
-     * @param data
-     * @returns
-     */
-    public async sendRequest<T>(action: string, data: any): Promise<T | void> {
-        const results = await this.sendRequests<T>([{ action, data: [data] }]);
-        if (!results) {
-            return;
-        }
-        if (results.length !== 1) {
-            throw new Error(`The action service did not respond with exactly one response for one request.`);
-        }
-        return results[0];
-    }
-
-    /**
-     * @deprecated This will be removed pretty soon, use `createFromArray` instead!
-     * @param action
-     * @param data
-     * @returns
-     */
-    public async sendBulkRequest<T>(action: string, data: any[]): Promise<T[] | null> {
-        const results = await this.sendRequests<T>([{ action, data }]);
-        if (results && results.length !== data.length) {
-            throw new Error(`Inner resultlength is not ${data.length} from the action service`);
-        }
-        return results;
-    }
 }
