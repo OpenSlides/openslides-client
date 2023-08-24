@@ -13,6 +13,7 @@ export interface FilterListService<V extends Identifiable> extends ViewModelList
     toggleFilterOption(property: keyof V, option: OsFilterOption): void;
     clearAllFilters(): void;
     initFilters(inputObservable: Observable<V[]>): void;
+    exitFilterService(): void;
 }
 
 /**

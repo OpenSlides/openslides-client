@@ -32,4 +32,5 @@ export interface SortListService<V> extends SortService<V> {
     getSortIcon(option: OsSortOption<V>): string | null;
     getSortLabel(option: OsSortOption<V>): string;
     initSorting(inputObservable: Observable<V[]>): void;
+    exitSortService(): void;
 }
