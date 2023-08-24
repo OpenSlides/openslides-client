@@ -126,6 +126,14 @@ describe(`utils: transform-functions`, () => {
             expect(copied.mixedNuts.pecans).toEqual(`100g`);
             expect(copied.chocolate.length).toEqual(3);
         });
+
+        it(`deepCopy falsy values`, () => {
+            expect(deepCopy(null)).toEqual(null);
+            expect(deepCopy(undefined)).toEqual(undefined);
+            expect(deepCopy(0)).toEqual(0);
+            expect(deepCopy(false)).toEqual(false);
+            expect(deepCopy(``)).toEqual(``);
+        });
     });
 
     describe(`fqidFromCollectionAndId function`, () => {
