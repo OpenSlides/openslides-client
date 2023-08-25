@@ -331,15 +331,7 @@ export class MotionPdfService {
         if (!infoToExport || infoToExport.includes(`referring_motions`)) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
-                    .sort((a, b) =>
-                        a.number
-                            ? b.number
-                                ? a.number.localeCompare(b.number)
-                                : -1
-                            : b.number
-                            ? 1
-                            : a.title.localeCompare(b.title)
-                    )
+                    .naturalSort(this.translate.currentLang, [`number`, `title`])
                     .map(motion => motion.getNumberOrTitle())
                     .join(`, `);
 
