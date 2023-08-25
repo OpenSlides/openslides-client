@@ -17,7 +17,7 @@
                         </div>
 
                         <!-- Delegation -->
-                        <div *ngIf="entry.vote_delegated_to_id">
+                        <div *ngIf="entry.vote_delegated_to_user_id">
                             <span>
                                 ({{ 'represented by' | translate }} {{ entry.vote_delegated_to.getShortName().trim() }})
                             </span>
