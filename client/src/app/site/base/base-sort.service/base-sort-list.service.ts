@@ -216,7 +216,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
                     this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
                 ]);
 
-            let transformDeprecated = !!storedDefinition;
+            const transformDeprecated = !!storedDefinition;
             if (transformDeprecated) {
                 this.store.remove(`sorting_` + this.storageKey);
             }
@@ -240,7 +240,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
                     this.updateSortedData();
                 }
             } else {
-                let defaultDef = await this.getDefaultDefinition();
+                const defaultDef = await this.getDefaultDefinition();
                 sortAscending = sortAscending ?? defaultDef.sortAscending;
                 sortProperty = sortProperty ?? defaultDef.sortProperty;
                 this.sortDefinition = {
