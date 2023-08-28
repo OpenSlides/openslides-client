@@ -38,6 +38,8 @@ export class GlobalSearchComponent implements OnDestroy {
     public filteredResults: GlobalSearchEntry[] = [];
     public inMeeting = !!this.activeMeeting.meetingId;
 
+    public searching: number | null = null;
+
     private results: GlobalSearchEntry[] = [];
     private models: GlobalSearchResponse;
 
@@ -81,14 +83,30 @@ export class GlobalSearchComponent implements OnDestroy {
             searchMeeting = this.activeMeeting.meetingId;
         }
 
-        const search = await this.globalSearchService.searchChange(
-            this.searchTerm,
-            this.currentlyAvailableFilters,
-            searchMeeting
-        );
-        this.results = search.resultList;
-        this.models = search.models;
-        this.updateFilteredResults();
+        const searchId = Math.random() * 10000 + 1;
+        this.searching = searchId;
+        this.cd.markForCheck();
+
+        try {
+            const search = await this.globalSearchService.searchChange(
+                this.searchTerm,
+                this.currentlyAvailableFilters,
+                searchMeeting
+            );
+            if (this.searching === searchId) {
+                this.results = search.resultList;
+                this.models = search.models;
+                this.updateFilteredResults();
+            }
+        } catch (e) {
+            this.results = [];
+            console.error(e);
+        }
+
+        if (this.searching === searchId) {
+            this.searching = null;
+        }
+
         this.cd.markForCheck();
     }
 
