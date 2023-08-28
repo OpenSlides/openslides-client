@@ -25,12 +25,7 @@
         <mat-error *ngIf="error">{{ error }}</mat-error>
         <mat-date-range-picker #picker>
             <mat-datepicker-actions>
-                <button
-                    mat-button
-                    (click)="clearForm()"
-                    matDateRangePickerCancel
-                    color="warn"
-                >
+                <button mat-button (click)="clearForm()" matDateRangePickerCancel color="warn">
                     {{ 'Clear' | translate }}
                 </button>
                 <button mat-button matDateRangePickerCancel>{{ 'Cancel' | translate }}</button>
