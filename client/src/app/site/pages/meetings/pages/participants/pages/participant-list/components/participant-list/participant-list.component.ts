@@ -201,7 +201,10 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 if (
                     !(
                         user.id === this.operator.operatorId &&
-                        this.operator.user.group_ids().some(id => !(result.group_ids ?? []).includes(id)) &&
+                        this.operator.user
+                            .group_ids()
+                            .filter(group => group !== this.activeMeeting.default_group_id)
+                            .some(id => !(result.group_ids ?? []).includes(id)) &&
                         !result.group_ids.includes(this.activeMeeting.admin_group_id)
                     ) ||
                     (await this.prompt.open(title, content))

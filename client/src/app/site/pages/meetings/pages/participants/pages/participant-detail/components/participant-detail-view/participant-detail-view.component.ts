@@ -328,7 +328,10 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
             if (
                 !(
                     payload.id === this.operator.operatorId &&
-                    this.operator.user.group_ids().some(id => !(payload.group_ids ?? []).includes(id)) &&
+                    this.operator.user
+                        .group_ids()
+                        .filter(group => group !== this.activeMeeting.default_group_id)
+                        .some(id => !(payload.group_ids ?? []).includes(id)) &&
                     !payload.group_ids.includes(this.activeMeeting.admin_group_id)
                 ) ||
                 (await this.promptService.open(title, content))
