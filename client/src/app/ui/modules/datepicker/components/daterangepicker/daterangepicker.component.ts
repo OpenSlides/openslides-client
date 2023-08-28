@@ -22,6 +22,8 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
     public override contentForm: UntypedFormGroup;
 
     private currentValue: any;
+    private start: any;
+    private end: any;
 
     constructor(
         formBuilder: UntypedFormBuilder,
@@ -30,6 +32,15 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
         @Optional() @Self() ngControl: NgControl
     ) {
         super(formBuilder, focusMonitor, element, ngControl);
+    }
+
+    public onChange(e: any, prop: string) {
+        this[prop] = e.value;
+        if (prop === `end`) {
+            console.log(this.start, this.end);
+            this.contentForm.patchValue({ start: this.start, end: this.end }, { emitEvent: false });
+            this.makeDatesValid({ start: this.start, end: this.end });
+        }
     }
 
     protected createForm(): UntypedFormGroup {
@@ -45,20 +56,20 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
 
     protected override push(value: any): void {
         super.push(value);
-        this.makeDatesValid();
     }
 
-    private async makeDatesValid(): Promise<void> {
-        setTimeout(() => {
-            const value = this.contentForm.value;
-            if ((value.start === null) !== (value.end === null)) {
-                const newValue = value.start !== null ? value.start : value.end;
-                this.updateForm({ start: newValue, end: newValue });
-            } else if (value.start && value.end && value.start > value.end) {
-                const newValue = this.currentValue.start !== value.start ? value.start : value.end;
-                this.updateForm({ start: newValue, end: newValue });
-            }
-            this.currentValue = this.contentForm.value;
-        }, 10);
+    private async makeDatesValid(value?: any): Promise<void> {
+        if (!value) {
+            value = this.contentForm.value;
+        }
+
+        if ((value.start === null) !== (value.end === null)) {
+            const newValue = value.start !== null ? value.start : value.end;
+            this.updateForm({ start: newValue, end: newValue });
+        } else if (value.start && value.end && value.start > value.end) {
+            const newValue = this.currentValue.start !== value.start ? value.start : value.end;
+            this.updateForm({ start: newValue, end: newValue });
+        }
+        this.currentValue = this.contentForm.value;
     }
 }
