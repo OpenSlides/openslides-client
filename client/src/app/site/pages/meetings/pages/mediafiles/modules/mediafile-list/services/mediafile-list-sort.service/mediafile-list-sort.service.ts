@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
 import { ViewMediafile } from '../../../../view-models';
 import { MediafileListServiceModule } from '../mediafile-list-service.module';
@@ -26,7 +26,10 @@ export class MediafileListSortService extends BaseSortListService<ViewMediafile>
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {
-        super(translate, store);
+        super(translate, store, {
+            sortProperty: `title`,
+            sortAscending: true
+        });
     }
 
     /**
@@ -34,17 +37,5 @@ export class MediafileListSortService extends BaseSortListService<ViewMediafile>
      */
     protected getSortOptions(): OsSortingOption<ViewMediafile>[] {
         return this.mediafilesSortOptions;
-    }
-
-    /**
-     * Required by parent
-     *
-     * @returns the default sorting strategy
-     */
-    public async getDefaultDefinition(): Promise<OsSortingDefinition<ViewMediafile>> {
-        return {
-            sortProperty: `title`,
-            sortAscending: true
-        };
     }
 }

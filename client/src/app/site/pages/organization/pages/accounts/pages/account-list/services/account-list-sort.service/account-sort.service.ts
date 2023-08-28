@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { AccountListServiceModule } from '../account-list-service.module';
@@ -29,16 +29,13 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {
-        super(translate, store);
+        super(translate, store, {
+            sortProperty: [`first_name`, `last_name`],
+            sortAscending: true
+        });
     }
 
     protected getSortOptions(): OsSortingOption<ViewUser>[] {
         return this.staticSortOptions;
-    }
-    protected async getDefaultDefinition(): Promise<OsSortingDefinition<ViewUser>> {
-        return {
-            sortProperty: [`first_name`, `last_name`],
-            sortAscending: true
-        };
     }
 }

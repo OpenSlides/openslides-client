@@ -161,14 +161,18 @@ export abstract class BaseFilterListService<V extends BaseViewModel> implements 
             this.storeActiveFilters();
         }
 
-        if (this.inputDataSubscription) {
-            this.inputDataSubscription.unsubscribe();
-            this.inputDataSubscription = null;
-        }
+        this.exitFilterService();
         this.inputDataSubscription = inputData.subscribe(data => {
             this._source.next(this.preFilter(data));
             this.updateFilteredData();
         });
+    }
+
+    public exitFilterService(): void {
+        if (this.inputDataSubscription) {
+            this.inputDataSubscription.unsubscribe();
+            this.inputDataSubscription = null;
+        }
     }
 
     public getViewModelListObservable(): Observable<V[]> {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
 import { ViewCommittee } from '../../../../view-models';
 import { CommitteeListServiceModule } from '../committee-list-service.module';
@@ -20,17 +20,13 @@ export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {
-        super(translate, store);
+        super(translate, store, {
+            sortProperty: `name`,
+            sortAscending: true
+        });
     }
 
     protected getSortOptions(): OsSortingOption<ViewCommittee>[] {
         return this.staticSortOptions;
-    }
-
-    protected getDefaultDefinition(): OsSortingDefinition<ViewCommittee> {
-        return {
-            sortProperty: `name`,
-            sortAscending: true
-        };
     }
 }

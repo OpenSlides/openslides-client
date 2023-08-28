@@ -86,6 +86,10 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.cd.markForCheck();
     }
 
+    public get nextMotion(): ViewMotion | null {
+        return this._nextMotion;
+    }
+
     /**
      * preload the previous motion for direct navigation
      */
@@ -94,23 +98,19 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
         this.cd.markForCheck();
     }
 
-    public get nextMotion(): ViewMotion | null {
-        return this._nextMotion;
-    }
-
     public get previousMotion(): ViewMotion | null {
         return this._previousMotion;
     }
-
-    private _nextMotion: ViewMotion | null = null;
-
-    private _previousMotion: ViewMotion | null = null;
 
     public get showNavigateButtons(): boolean {
         return !!this.previousMotion || !!this.nextMotion;
     }
 
     public hasLoaded = new BehaviorSubject(false);
+
+    private _nextMotion: ViewMotion | null = null;
+
+    private _previousMotion: ViewMotion | null = null;
 
     /**
      * Subject for (other) motions

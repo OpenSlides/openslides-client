@@ -79,7 +79,7 @@ export class AccountAddToMeetingsComponent extends BaseUiComponent implements On
     private userId: Id | null = null;
 
     public getMeetingAdditionalInfoFn = (item: ViewMeeting) =>
-        item?.committee?.getTitle().trim() === item.getTitle().trim() ? `` : `(${item?.committee?.getTitle()})`;
+        item.committee?.getTitle()?.trim() === item.getTitle()?.trim() ? `` : `(${item.committee?.getTitle()})`;
 
     public getMeetingAdditionallySearchedFn = (item: ViewMeeting) => [item.committee.getTitle()];
 

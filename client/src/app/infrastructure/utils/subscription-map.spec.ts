@@ -34,6 +34,18 @@ describe(`utils: subscription-map`, () => {
         expect(subscription.closed).toBe(true);
     });
 
+    it(`updateSubscription method: update one subscription`, () => {
+        const subscription: Subscription = new Observable().subscribe();
+        const subscription2: Subscription = new Observable().subscribe();
+        sub.updateSubscription(`test`, subscription);
+        expect(subscription.closed).toBe(false);
+        sub.updateSubscription(`test`, subscription2);
+        expect(subscription2.closed).toBe(false);
+        expect(subscription.closed).toBe(true);
+        sub.clear();
+        expect(subscription2.closed).toBe(true);
+    });
+
     it(`push method: add several subscriptions`, () => {
         const subscription: Subscription = new Observable().subscribe();
         const subscription2: Subscription = new Observable().subscribe();
