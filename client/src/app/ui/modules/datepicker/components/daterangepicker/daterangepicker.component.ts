@@ -34,13 +34,17 @@ export class DaterangepickerComponent extends BaseDatepickerComponent {
         super(formBuilder, focusMonitor, element, ngControl);
     }
 
-    public onChange(e: any, prop: string) {
+    public onChange(e: any, prop: string): void {
         this[prop] = e.value;
         if (prop === `end`) {
-            console.log(this.start, this.end);
             this.contentForm.patchValue({ start: this.start, end: this.end }, { emitEvent: false });
             this.makeDatesValid({ start: this.start, end: this.end });
         }
+    }
+
+    public clearForm(): void {
+        this.contentForm.reset();
+        this.currentValue = this.contentForm.value;
     }
 
     protected createForm(): UntypedFormGroup {
