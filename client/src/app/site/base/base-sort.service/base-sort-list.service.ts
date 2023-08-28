@@ -9,6 +9,7 @@ import {
     Observable,
     Subscription
 } from 'rxjs';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
@@ -57,6 +58,13 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      */
     protected abstract readonly storageKey: string;
 
+    public get currentSortBaseKeys(): OsSortProperty<V>[] {
+        const option = this.sortOptions.find(option =>
+            this.isSameProperty(option.property, this.sortDefinition.sortProperty)
+        );
+        return option.baseKeys ?? (Array.isArray(option.property) ? option.property : [option.property]);
+    }
+
     /**
      * Set the current sorting order
      *
@@ -98,6 +106,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             this.sortDefinition!.sortAscending = true;
         }
         this.updateSortDefinitions();
+        this.hasLoaded.resolve(true);
     }
 
     /**
@@ -140,6 +149,8 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     private _isDefaultSorting = false;
 
+    public readonly hasLoaded = new Deferred<boolean>();
+
     public constructor(
         translate: TranslateService,
         private store: StorageService,
@@ -154,6 +165,9 @@ export abstract class BaseSortListService<V extends BaseViewModel>
                     this.setSorting(defaultDef.sortProperty, defaultDef.sortAscending);
                 } else if (defaultDef && this.sortDefinition?.sortProperty === defaultDef?.sortProperty) {
                     this.updateSortDefinitions();
+                }
+                if (!this.sortDefinition) {
+                    this.loadDefinition();
                 }
             });
 
@@ -208,53 +222,58 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         this.exitSortService();
 
         if (!this.sortDefinition) {
-            let [storedDefinition, sortProperty, sortAscending]: [OsSortingDefinition<V>, OsSortProperty<V>, boolean] =
-                await Promise.all([
-                    // TODO: Remove the sorting definition loading part and everything caused by 'transformDeprecated' at a later date, it is only here for backwards compatibility
-                    this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey),
-                    this.store.get<OsSortProperty<V>>(`sorting_property_` + this.storageKey),
-                    this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
-                ]);
-
-            const transformDeprecated = !!storedDefinition;
-            if (transformDeprecated) {
-                this.store.remove(`sorting_` + this.storageKey);
-            }
-
-            if ((sortAscending ?? sortProperty) != null) {
-                storedDefinition = {
-                    sortAscending,
-                    sortProperty
-                };
-            }
-
-            if (storedDefinition) {
-                this.sortDefinition = storedDefinition;
-            }
-
-            if (this.sortDefinition && this.sortDefinition.sortProperty) {
-                if (transformDeprecated) {
-                    this.updateSortDefinitions();
-                } else {
-                    this.calculateDefaultStatus();
-                    this.updateSortedData();
-                }
-            } else {
-                const defaultDef = await this.getDefaultDefinition();
-                sortAscending = sortAscending ?? defaultDef.sortAscending;
-                sortProperty = sortProperty ?? defaultDef.sortProperty;
-                this.sortDefinition = {
-                    sortAscending,
-                    sortProperty
-                };
-                this.updateSortDefinitions();
-            }
+            await this.loadDefinition();
         }
 
         this.inputDataSubscription = inputObservable.subscribe(data => {
             this.inputData = data;
             this.updateSortedData();
         });
+    }
+
+    private async loadDefinition(): Promise<void> {
+        let [storedDefinition, sortProperty, sortAscending]: [OsSortingDefinition<V>, OsSortProperty<V>, boolean] =
+            await Promise.all([
+                // TODO: Remove the sorting definition loading part and everything caused by 'transformDeprecated' at a later date, it is only here for backwards compatibility
+                this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey),
+                this.store.get<OsSortProperty<V>>(`sorting_property_` + this.storageKey),
+                this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
+            ]);
+
+        const transformDeprecated = !!storedDefinition;
+        if (transformDeprecated) {
+            this.store.remove(`sorting_` + this.storageKey);
+        }
+
+        if ((sortAscending ?? sortProperty) != null) {
+            storedDefinition = {
+                sortAscending,
+                sortProperty
+            };
+        }
+
+        if (storedDefinition) {
+            this.sortDefinition = storedDefinition;
+        }
+
+        if (this.sortDefinition && this.sortDefinition.sortProperty) {
+            if (transformDeprecated) {
+                this.updateSortDefinitions();
+            } else {
+                this.calculateDefaultStatus();
+                this.updateSortedData();
+            }
+        } else {
+            const defaultDef = await this.getDefaultDefinition();
+            sortAscending = sortAscending ?? defaultDef.sortAscending;
+            sortProperty = sortProperty ?? defaultDef.sortProperty;
+            this.sortDefinition = {
+                sortAscending,
+                sortProperty
+            };
+            this.updateSortDefinitions();
+        }
+        this.hasLoaded.resolve(true);
     }
 
     public exitSortService(): void {
@@ -278,6 +297,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             this.sortDefinition!.sortAscending = ascending;
             this.updateSortDefinitions();
         }
+        this.hasLoaded.resolve(true);
     }
 
     /**
@@ -324,22 +344,30 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * every time the sorting (property, ascending/descending) or the language changes
      */
     protected async updateSortedData(): Promise<void> {
-        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
         if (this.inputData) {
-            this.outputSubject.next(
-                [...this.inputData].sort(
-                    (itemA, itemB) =>
-                        this.sortItems(
-                            itemA,
-                            itemB,
-                            this.shouldHideOption({ property: this.sortProperty }, false)
-                                ? alternativeProperty
-                                : this.sortProperty,
-                            this.ascending
-                        ) || itemA.id - itemB.id
-                )
-            );
+            this.outputSubject.next(await this.sort([...this.inputData]));
         }
+    }
+
+    public async sort(array: V[]): Promise<V[]> {
+        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
+        return array.sort((itemA, itemB) => this.compareHelperFunction(itemA, itemB, alternativeProperty));
+    }
+
+    private compareHelperFunction(itemA: V, itemB: V, alternativeProperty: OsSortProperty<V>): number {
+        return (
+            this.sortItems(
+                itemA,
+                itemB,
+                this.shouldHideOption({ property: this.sortProperty }, false) ? alternativeProperty : this.sortProperty,
+                this.ascending
+            ) || itemA.id - itemB.id
+        );
+    }
+
+    public async compare(itemA: V, itemB: V): Promise<number> {
+        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
+        return this.compareHelperFunction(itemA, itemB, alternativeProperty);
     }
 
     /**

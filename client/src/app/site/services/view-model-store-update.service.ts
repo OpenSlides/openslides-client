@@ -8,7 +8,7 @@ import { DataStoreUpdateManagerService } from 'src/app/site/services/data-store-
 interface DeletedModels {
     [collection: string]: number[];
 }
-interface ChangedModels {
+export interface ChangedModels {
     [collection: string]: BaseModel[];
 }
 
@@ -111,6 +111,7 @@ export class ViewModelStoreUpdateService {
     }
 
     private async doCollectionUpdates(changedModels: ChangedModels, deletedModels: DeletedModels): Promise<void> {
+        console.log(`CollectionUpdates`, { changedModels, deletedModels });
         const updateSlot = await this.DSUpdateService.getNewUpdateSlot(this.DS);
 
         // Delete the removed objects from the DataStore
@@ -123,7 +124,7 @@ export class ViewModelStoreUpdateService {
             await this.DS.addOrUpdate(changedModels[collection]);
         }
 
-        this.DSUpdateService.commit(updateSlot);
+        this.DSUpdateService.commit(updateSlot, changedModels);
     }
 
     /**

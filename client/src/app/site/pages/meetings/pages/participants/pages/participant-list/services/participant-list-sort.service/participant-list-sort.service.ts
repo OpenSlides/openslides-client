@@ -6,10 +6,8 @@ import { BaseSortListService, OsHideSortingOptionSetting, OsSortingOption } from
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
-import { ParticipantListServiceModule } from '../participant-list-service.module';
-
 @Injectable({
-    providedIn: ParticipantListServiceModule
+    providedIn: `root`
 })
 export class ParticipantListSortService extends BaseSortListService<ViewUser> {
     /**

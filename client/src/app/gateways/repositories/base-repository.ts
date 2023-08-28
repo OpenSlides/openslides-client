@@ -3,6 +3,8 @@ import { auditTime, BehaviorSubject, filter, Observable, Subject } from 'rxjs';
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from 'src/app/infrastructure/utils';
+import { OsSortProperty } from 'src/app/site/base/base-sort.service';
+import { SortListService } from 'src/app/ui/modules/list';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
@@ -245,7 +247,23 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         ids.forEach(id => {
             delete this.viewModelStore[id];
         });
+        for (const index of ids
+            .map(id => this.idToSortedIndexMap[id])
+            .filter(id => id !== undefined)
+            .sort((a, b) => b - a)) {
+            this.sortedViewModelList.splice(index, 1);
+        }
+        this.processSortedViewModelList();
     }
+
+    private processSortedViewModelList(): void {
+        this.idToSortedIndexMap = this.sortedViewModelList.mapToObject((item, index) => ({ [item.id]: index }));
+        this.sortedViewModelListSubject.next(this.sortedViewModelList);
+    }
+
+    private sortedViewModelList: V[] = [];
+    private readonly sortedViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject([]);
+    private idToSortedIndexMap: { [id: number]: number } = {};
 
     /**
      * Updates or creates all given models in the repository (internally, no requests).
@@ -253,11 +271,78 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      *
      * @param ids All model ids.
      */
-    public changedModels(ids: Id[]): void {
+    public changedModels(ids: Id[], changedModels: BaseModel<M>[]): void {
+        const newModels: V[] = [];
+        const updatedModels: V[] = [];
         ids.forEach(id => {
+            const isNewModel = !this.viewModelStore[id];
             this.viewModelStore[id] = this.createViewModel(this.DS.get(this.collection, id));
+            if (isNewModel) {
+                newModels.push(this.viewModelStore[id]);
+            } else {
+                updatedModels.push(this.viewModelStore[id]);
+            }
         });
         this.viewModelStoreSubject.next(this.viewModelStore);
+        if (changedModels) {
+            this.changeBasedResortingPipeline.push({
+                funct: async () => await this.initChangeBasedResorting(changedModels, newModels, updatedModels),
+                active: false
+            });
+            this.activateResortingPipeline();
+        }
+    }
+
+    private async activateResortingPipeline(): Promise<void> {
+        while (this.changeBasedResortingPipeline.length && this.changeBasedResortingPipeline[0].active === false) {
+            this.changeBasedResortingPipeline[0].active = true;
+            await this.changeBasedResortingPipeline[0].funct();
+            this.changeBasedResortingPipeline.splice(0, 1);
+        }
+    }
+
+    private sortListService: SortListService<V> | null = null;
+
+    protected setSortListService(service: SortListService<V> | null): void {
+        this.sortListService = service;
+    }
+
+    private changeBasedResortingPipeline: { funct: () => Promise<void>; active: boolean }[] = [];
+
+    private async initChangeBasedResorting(
+        changedModels: BaseModel<M>[],
+        newModels: V[],
+        updatedModels: V[]
+    ): Promise<void> {
+        for (const model of updatedModels) {
+            this.sortedViewModelList[this.idToSortedIndexMap[model.id]] = this.viewModelStore[model.id];
+        }
+        if (this.sortListService) {
+            const keysSet = new Set(changedModels.flatMap(model => Object.keys(model)));
+            console.log(`KEYS SET`, this.collection, changedModels, keysSet, newModels);
+            await this.sortListService.hasLoaded;
+            console.log(this.collection);
+            const sortKeys: OsSortProperty<V>[] = this.sortListService.currentSortBaseKeys;
+            if (sortKeys.some(key => keysSet.has(String(key)))) {
+                this.sortedViewModelList = await this.sortListService.sort(this.sortedViewModelList);
+            }
+            newModels = await this.sortListService.sort(newModels);
+        }
+        let i = 0;
+        while (newModels.length && this.sortedViewModelList.length > i) {
+            if (
+                (this.sortListService
+                    ? await this.sortListService.compare(newModels[0], this.sortedViewModelList[i])
+                    : newModels[0].id - this.sortedViewModelList[i].id) < 0
+            ) {
+                this.sortedViewModelList.splice(i, 0, newModels[0]);
+                newModels.splice(0, 1);
+            }
+            i++;
+        }
+        this.sortedViewModelList = this.sortedViewModelList.concat(newModels);
+        this.processSortedViewModelList();
+        console.log(`RESORTED`, this.collection, this.sortedViewModelList, this.idToSortedIndexMap);
     }
 
     /**

@@ -82,7 +82,7 @@ export class HistoryListComponent extends BaseMeetingComponent implements OnInit
 
     public get modelsRepoMap(): { [collection: Collection]: BaseRepository<BaseViewModel, BaseModel> } {
         // add repos to this array to extend the selection for history models
-        const historyRepos: BaseRepository<BaseViewModel, BaseModel>[] = [this.motionRepo, this.assignmentRepo];
+        const historyRepos: any[] = [this.motionRepo, this.assignmentRepo];
         if (this.operator.isOrgaManager) {
             historyRepos.push(this.userRepo);
         }

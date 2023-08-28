@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Deferred } from '../../infrastructure/utils/promises';
 import { CollectionMapperService } from './collection-mapper.service';
 import { DataStoreService } from './data-store.service';
+import { ChangedModels } from './view-model-store-update.service';
 
 interface CollectionIds {
     [collection: string]: number[];
@@ -165,7 +166,7 @@ export class DataStoreUpdateManagerService {
      *
      * @param slot The slot to commit
      */
-    public commit(slot: UpdateSlot): void {
+    public commit(slot: UpdateSlot, changedModels: ChangedModels): void {
         if (!this.currentUpdateSlot || !this.currentUpdateSlot.equal(slot)) {
             throw new Error(`No or wrong update slot to be finished!`);
         }
@@ -180,7 +181,7 @@ export class DataStoreUpdateManagerService {
             repo.deleteModels(deletedModelIds);
 
             const changedModelIds = slot.getChangedModelIdsForCollection(repo.collection);
-            repo.changedModels(changedModelIds);
+            repo.changedModels(changedModelIds, changedModels[repo.COLLECTION]);
         });
 
         // Phase 2: updating all repositories

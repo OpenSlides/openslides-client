@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { OsSortProperty } from 'src/app/site/base/base-sort.service';
 export type SortDefinition<T> = keyof T | OsSortDefinition<T>;
 
@@ -30,9 +31,13 @@ export interface SortListService<V> extends SortService<V> {
     readonly isActive: boolean;
     readonly defaultOption: OsSortOption<V> | undefined;
     readonly hasSortOptionSelected: boolean;
+    readonly currentSortBaseKeys: OsSortProperty<V>[];
+    readonly hasLoaded: Deferred<boolean>;
     sortProperty: OsSortProperty<V>;
     getSortIcon(option: OsSortOption<V>): string | null;
     getSortLabel(option: OsSortOption<V>): string;
     initSorting(inputObservable: Observable<V[]>): void;
     exitSortService(): void;
+    sort(array: V[]): Promise<V[]>;
+    compare(itemA: V, itemB: V): Promise<number>;
 }

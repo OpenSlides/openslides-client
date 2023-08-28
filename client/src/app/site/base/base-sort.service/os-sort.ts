@@ -16,6 +16,7 @@ export interface OsSortingOption<T> {
     property: OsSortProperty<T>;
     label?: string;
     sortFn?: (itemA: T, itemB: T, ascending: boolean, intl?: Intl.Collator) => number;
+    baseKeys?: (keyof T)[];
 }
 
 export interface OsHideSortingOptionSetting<T> {
