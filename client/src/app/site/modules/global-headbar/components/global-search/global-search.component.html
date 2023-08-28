@@ -6,6 +6,9 @@
         [hasSubmit]="true"
         [autofocus]="true"
     ></os-rounded-input>
+    <div class="search-hint">
+        <mat-hint>{{ 'To start your search press Enter or the search icon' | translate }}</mat-hint>
+    </div>
 
     <section class="filters" [formGroup]="currentFilters">
         <mat-radio-group *ngIf="operator.knowsMultipleMeetings" class="filter-section" formControlName="meetingFilter">
