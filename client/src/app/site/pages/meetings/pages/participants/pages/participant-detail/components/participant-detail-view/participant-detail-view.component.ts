@@ -323,7 +323,21 @@ export class ParticipantDetailViewComponent extends BaseMeetingComponent {
                           .filter(id => !!id)
                     : []
             };
-            await this.repo.update(payload, this.user!).concat(this.repo.setPresent(isPresent, this.user!)).resolve();
+            const title = this.translate.instant(`This action will remove you from one or more groups.`);
+            const content = `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`;
+            if (
+                !(
+                    payload.id === this.operator.operatorId &&
+                    this.operator.user.group_ids().some(id => !(payload.group_ids ?? []).includes(id)) &&
+                    !payload.group_ids.includes(this.activeMeeting.admin_group_id)
+                ) ||
+                (await this.promptService.open(title, content))
+            ) {
+                await this.repo
+                    .update(payload, this.user!)
+                    .concat(this.repo.setPresent(isPresent, this.user!))
+                    .resolve();
+            }
         } else {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user!);
         }

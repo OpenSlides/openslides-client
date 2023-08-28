@@ -14,6 +14,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from 'src/app/site/services/operator.service';
 import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
+import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
 import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
@@ -106,7 +107,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         private pdfExport: ParticipantPdfExportService,
         private infoDialog: ParticipantListInfoDialogService,
         private organizationSettingsService: OrganizationSettingsService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private prompt: PromptService
     ) {
         super(componentServiceCollector, translate);
 
@@ -186,7 +188,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(async result => {
             if (result) {
                 if (!result.group_ids?.length) {
                     result.group_ids = [this.activeMeeting!.default_group_id];
@@ -194,7 +196,18 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 if (result.vote_delegated_to_id === 0) {
                     result.vote_delegated_to_id = null;
                 }
-                this.repo.update(result, user).resolve();
+                const title = this.translate.instant(`This action will remove you from one or more groups.`);
+                const content = `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`;
+                if (
+                    !(
+                        user.id === this.operator.operatorId &&
+                        this.operator.user.group_ids().some(id => !(result.group_ids ?? []).includes(id)) &&
+                        !result.group_ids.includes(this.activeMeeting.admin_group_id)
+                    ) ||
+                    (await this.prompt.open(title, content))
+                ) {
+                    this.repo.update(result, user).resolve();
+                }
             }
         });
     }
