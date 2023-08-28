@@ -1,4 +1,4 @@
-<div class="input-container" [ngClass]="{'has-submit': hasSubmit}">
+<div class="input-container" [ngClass]="{ 'has-submit': hasSubmit }">
     <div *ngIf="!hasSubmit" class="input-prefix">
         <mat-icon class="foreground-active">search</mat-icon>
     </div>
@@ -13,7 +13,12 @@
         (keyup.enter)="send()"
         (blur)="blur()"
     />
-    <div *ngIf="!!contentForm.value" class="input-suffix-clear foreground-icon" (mousedown)="clear($event)">
+    <div
+        *ngIf="!!contentForm.value"
+        class="input-suffix-clear foreground-icon"
+        [ngClass]="{ 'input-suffix-clear': hasSubmit, 'input-suffix': !hasSubmit }"
+        (mousedown)="clear($event)"
+    >
         <mat-icon>close</mat-icon>
     </div>
     <div class="input-suffix">
