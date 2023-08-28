@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionBlockServiceModule } from '../motion-block-service.module';
@@ -28,7 +28,10 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {
-        super(translate, store);
+        super(translate, store, {
+            sortProperty: `title`,
+            sortAscending: true
+        });
     }
 
     /**
@@ -36,12 +39,5 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
      */
     protected getSortOptions(): OsSortingOption<ViewMotionBlock>[] {
         return this.MotionBlockSortOptions;
-    }
-
-    protected async getDefaultDefinition(): Promise<OsSortingDefinition<ViewMotionBlock>> {
-        return {
-            sortProperty: `title`,
-            sortAscending: true
-        };
     }
 }

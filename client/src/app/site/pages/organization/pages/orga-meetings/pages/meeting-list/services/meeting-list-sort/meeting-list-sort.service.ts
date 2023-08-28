@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseSortListService, OsSortingDefinition, OsSortingOption } from 'src/app/site/base/base-sort.service';
+import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { MeetingListServiceModule } from '../meeting-list-service.module';
@@ -24,17 +24,13 @@ export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
     ];
 
     public constructor(translate: TranslateService, store: StorageService) {
-        super(translate, store);
+        super(translate, store, {
+            sortProperty: `name`,
+            sortAscending: true
+        });
     }
 
     protected getSortOptions(): OsSortingOption<ViewMeeting>[] {
         return this.staticSortOptions;
-    }
-
-    protected getDefaultDefinition(): OsSortingDefinition<ViewMeeting> {
-        return {
-            sortProperty: `name`,
-            sortAscending: true
-        };
     }
 }
