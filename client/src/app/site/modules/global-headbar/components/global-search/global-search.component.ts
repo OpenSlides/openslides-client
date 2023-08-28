@@ -38,6 +38,14 @@ export class GlobalSearchComponent implements OnDestroy {
     public filteredResults: GlobalSearchEntry[] = [];
     public inMeeting = !!this.activeMeeting.meetingId;
 
+    public get resultCount(): number {
+        return this.results.length;
+    }
+
+    public get filteredResultCount(): number {
+        return this.filteredResults.length;
+    }
+
     public searching: number | null = null;
 
     private results: GlobalSearchEntry[] = [];

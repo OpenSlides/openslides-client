@@ -27,6 +27,18 @@
 .search-results {
     padding: 0;
 
+    .info {
+        > span:not(:last-of-type):after {
+            content: '\2022';
+            display: inline-block;
+            padding: 0 4px;
+        }
+    }
+
+    .result-info {
+        padding: 4px 24px;
+    }
+
     .search-no-results {
         padding: 0 24px 24px;
     }
@@ -81,14 +93,6 @@
                 margin-top: 0;
             }
             .sep {
-                padding: 0 4px;
-            }
-        }
-
-        .info {
-            > span:not(:last-of-type):after {
-                content: '\2022';
-                display: inline-block;
                 padding: 0 4px;
             }
         }
