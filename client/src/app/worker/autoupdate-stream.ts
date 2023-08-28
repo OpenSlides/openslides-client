@@ -167,6 +167,30 @@ export class AutoupdateStream {
         this.clearSubscriptions();
     }
 
+    /**
+     * Removes fqids from the cache.
+     *
+     * @param fqids list of fqids to delete
+     */
+    public removeFqids(fqids: string[]): void {
+        let lastHit: string | null = null;
+        for (const key of Object.keys(this._currentData)) {
+            if (lastHit === null || !key.startsWith(fqids[lastHit] + `/`)) {
+                lastHit = null;
+                for (let i = 0; i < fqids.length; i++) {
+                    if (key.startsWith(fqids[i] + `/`)) {
+                        lastHit = key;
+                        break;
+                    }
+                }
+            }
+
+            if (lastHit !== null) {
+                delete this._currentData[key];
+            }
+        }
+    }
+
     public clearSubscriptions(): void {
         this._currentData = null;
     }
