@@ -38,10 +38,33 @@
 
         <!-- Sort Button -->
         <button mat-button *ngIf="vp.isMobile && hasSorting" (click)="openSortDropDown()">
-            <span class="upper">{{ 'Sort' | translate }}</span>
+            <span
+                matBadge="&#8288;"
+                matBadgeColor="accent"
+                [matBadgeHidden]="!hasSortOptionSelected"
+                [matBadgeOverlap]="false"
+                matBadgeSize="small"
+                class="upper"
+            >
+                {{ 'Sort' | translate }}
+            </span>
         </button>
-        <button mat-button *ngIf="!vp.isMobile && hasSorting" [matMenuTriggerFor]="menu">
-            <span class="upper">{{ 'Sort' | translate }}</span>
+        <button
+            mat-button
+            *ngIf="!vp.isMobile && hasSorting"
+            [matTooltip]="getSortLabel(sortOption) | translate"
+            [matMenuTriggerFor]="menu"
+        >
+            <span
+                matBadge="&#8288;"
+                matBadgeColor="accent"
+                [matBadgeHidden]="!hasSortOptionSelected"
+                [matBadgeOverlap]="false"
+                matBadgeSize="small"
+                class="upper"
+            >
+                {{ 'Sort' | translate }}
+            </span>
         </button>
 
         <!-- Search bar -->
@@ -79,7 +102,15 @@
 <!-- non-mobile sorting menu -->
 <mat-menu #menu>
     <div *ngIf="hasSorting">
-        <mat-list-item *ngFor="let option of sortOptions" (click)="sortOption = option">
+        <!-- <mat-list-item> -->
+        <button mat-menu-item *ngIf="defaultOption" (click)="sortOption = defaultOption">
+            <mat-icon>{{ getSortIcon(defaultOption) }}</mat-icon>
+            <span>{{ sortService.getSortLabel(defaultOption) | translate }}&emsp;</span>
+            <small class="subtitle">{{ '(Default)' | translate }}</small>
+        </button>
+        <mat-divider *ngIf="defaultOption"></mat-divider>
+        <!-- </mat-list-item> -->
+        <mat-list-item *ngFor="let option of sortOptionsWithoutDefault" (click)="sortOption = option">
             <button mat-menu-item>
                 <mat-icon>{{ getSortIcon(option) }}</mat-icon>
                 <span>{{ sortService.getSortLabel(option) | translate }}</span>
