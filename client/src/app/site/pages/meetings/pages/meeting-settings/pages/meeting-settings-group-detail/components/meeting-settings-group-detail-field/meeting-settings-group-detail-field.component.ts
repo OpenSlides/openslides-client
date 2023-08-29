@@ -265,7 +265,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 start: this.getRestrictedValue(newValue[0] ? new Date(newValue[0]) : null),
                 end: this.getRestrictedValue(newValue[1] ? new Date(newValue[1]) : null)
             };
-            this.form.get(`daterange`).patchValue(daterangeObj);
+            this.form.patchValue(daterangeObj);
         }
         this.form.patchValue({
             value: this.getRestrictedValue(newValue)
@@ -331,8 +331,8 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 break;
             case `daterange`:
                 // daterange has to be formatted
-                const start = this.form.get(`daterange`)!.value.start;
-                const end = this.form.get(`daterange`)!.value.end;
+                const start = this.form!.value.start;
+                const end = this.form!.value.end;
                 value = [start, end];
                 break;
             case `groups`:
