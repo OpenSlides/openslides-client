@@ -71,7 +71,7 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
 
     public getNameForIds(...ids: number[]): string {
         return this.repo
-            .getSortedViewModelList()
+            .getSortedViewModelListViaSortFn()
             .filter(group => ids.includes(group.id))
             .map(group => group.getTitle())
             .join(`, `);

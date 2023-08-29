@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { auditTime, BehaviorSubject, filter, Observable, Subject } from 'rxjs';
+import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription } from 'rxjs';
 import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
 import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from 'src/app/infrastructure/utils';
@@ -29,6 +29,12 @@ export interface CanPerformListUpdates<M extends BaseModel, UpdateResult = any> 
 
 export function canPerformListUpdates(repo: any): repo is CanPerformListUpdates<any> {
     return repo.listUpdate && typeof repo.listUpdate === `function`;
+}
+
+enum PipelineActionType {
+    General,
+    Resort,
+    Reset
 }
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
@@ -229,9 +235,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * Get a sorted ViewModelList. This passes through a (1ms short) delay,
      * thus may not be accurate, especially on application loading.
      *
-     * @returns all sorted view models stored in this repository.
+     * @returns all sorted view models stored in this repository. Sorting is done according to sortFn
      */
-    public getSortedViewModelList(): V[] {
+    public getSortedViewModelListViaSortFn(): V[] {
         return this.viewModelListSubject.getValue() || [];
     }
 
@@ -257,13 +263,32 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     private processSortedViewModelList(): void {
-        this.idToSortedIndexMap = this.sortedViewModelList.mapToObject((item, index) => ({ [item.id]: index }));
-        this.sortedViewModelListSubject.next(this.sortedViewModelList);
+        this.idToSortedIndexMap = {};
+        this.sortedViewModelList.forEach((item, index) => (this.idToSortedIndexMap[item.id] = index));
+        this.sortedViewModelListUnsafeSubject.next(this.sortedViewModelList);
+        this.sortedViewModelListSubject.next(this.sortedViewModelList.filter(v => v.canAccess()));
     }
 
     private sortedViewModelList: V[] = [];
+    private readonly sortedViewModelListUnsafeSubject: BehaviorSubject<V[]> = new BehaviorSubject([]);
     private readonly sortedViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject([]);
     private idToSortedIndexMap: { [id: number]: number } = {};
+
+    public getSortedViewModelList(): V[] {
+        return this.sortedViewModelListSubject.value ?? [];
+    }
+
+    public getSortedViewModelListObservable(): Observable<V[]> {
+        return this.sortedViewModelListSubject;
+    }
+
+    public getSortedViewModelListUnsafe(): V[] {
+        return this.sortedViewModelListUnsafeSubject.value ?? [];
+    }
+
+    public getSortedViewModelListUnsafeObservable(): Observable<V[]> {
+        return this.sortedViewModelListUnsafeSubject;
+    }
 
     /**
      * Updates or creates all given models in the repository (internally, no requests).
@@ -272,22 +297,29 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * @param ids All model ids.
      */
     public changedModels(ids: Id[], changedModels: BaseModel<M>[]): void {
-        const newModels: V[] = [];
-        const updatedModels: V[] = [];
+        const newViewModels: V[] = [];
+        const newModels: BaseModel<M>[] = [];
+        const updatedViewModels: V[] = [];
+        const updatedModels: BaseModel<M>[] = [];
+        const changedModelMap = changedModels?.mapToObject(model => ({ [model.id]: model })) ?? [];
         ids.forEach(id => {
             const isNewModel = !this.viewModelStore[id];
             this.viewModelStore[id] = this.createViewModel(this.DS.get(this.collection, id));
             if (isNewModel) {
-                newModels.push(this.viewModelStore[id]);
+                newViewModels.push(this.viewModelStore[id]);
+                newModels.push(changedModelMap[id]);
             } else {
-                updatedModels.push(this.viewModelStore[id]);
+                updatedViewModels.push(this.viewModelStore[id]);
+                updatedModels.push(changedModelMap[id]);
             }
         });
         this.viewModelStoreSubject.next(this.viewModelStore);
         if (changedModels) {
             this.changeBasedResortingPipeline.push({
-                funct: async () => await this.initChangeBasedResorting(changedModels, newModels, updatedModels),
-                active: false
+                funct: async () =>
+                    await this.initChangeBasedResorting(newModels, updatedModels, newViewModels, updatedViewModels),
+                active: false,
+                type: PipelineActionType.General
             });
             this.activateResortingPipeline();
         }
@@ -296,6 +328,20 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private async activateResortingPipeline(): Promise<void> {
         while (this.changeBasedResortingPipeline.length && this.changeBasedResortingPipeline[0].active === false) {
             this.changeBasedResortingPipeline[0].active = true;
+            if (
+                [PipelineActionType.Reset, PipelineActionType.Resort].includes(
+                    this.changeBasedResortingPipeline[0].type
+                )
+            ) {
+                for (let i = this.changeBasedResortingPipeline.length - 1; i > 0; i--) {
+                    if (
+                        this.changeBasedResortingPipeline[0].type === this.changeBasedResortingPipeline[i].type ||
+                        this.changeBasedResortingPipeline[i].type === PipelineActionType.Resort
+                    ) {
+                        this.changeBasedResortingPipeline.splice(i, 1);
+                    }
+                }
+            }
             await this.changeBasedResortingPipeline[0].funct();
             this.changeBasedResortingPipeline.splice(0, 1);
         }
@@ -303,15 +349,73 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private sortListService: SortListService<V> | null = null;
 
+    private sortListServiceSubscription: Subscription;
+
     protected setSortListService(service: SortListService<V> | null): void {
+        if (this.sortListServiceSubscription) {
+            this.sortListServiceSubscription.unsubscribe();
+        }
         this.sortListService = service;
+        this.initResorting();
+        this.sortListServiceSubscription = this.sortListService.sortingUpdatedObservable.subscribe(() => {
+            this.initResorting();
+        });
     }
 
-    private changeBasedResortingPipeline: { funct: () => Promise<void>; active: boolean }[] = [];
+    private changeBasedResortingPipeline: {
+        funct: () => Promise<void>;
+        active: boolean;
+        type: PipelineActionType;
+    }[] = [];
+
+    private foreignSortBaseKeys: { [collection: string]: string[] } = {};
+    private foreignSortBaseKeySubscriptions: Subscription[] = [];
+
+    private initResorting(): void {
+        const resortAction = {
+            funct: async () => {
+                this.updateForeignKeys();
+                this.sortedViewModelList = await this.sortListService.sort(this.sortedViewModelList);
+                this.processSortedViewModelList();
+            },
+            active: false,
+            type: PipelineActionType.Reset
+        };
+        this.changeBasedResortingPipeline.splice(this.changeBasedResortingPipeline.length ? 1 : 0, 0, resortAction);
+        this.activateResortingPipeline();
+    }
+
+    private async updateForeignKeys(): Promise<void> {
+        this.foreignSortBaseKeySubscriptions.forEach(subscr => subscr.unsubscribe());
+        await this.sortListService.hasLoaded;
+        this.foreignSortBaseKeys = this.sortListService.currentForeignSortBaseKeys;
+        this.foreignSortBaseKeySubscriptions = Object.keys(this.foreignSortBaseKeys).map(collection =>
+            this.repositoryServiceCollector.getNewKeyUpdatesObservable(collection).subscribe(async keys => {
+                if (this.foreignSortBaseKeys[collection].some(key => keys.includes(key))) {
+                    this.sortedViewModelList = await this.sortListService.sort(this.sortedViewModelList);
+                    const resortAction = {
+                        funct: async () => {
+                            this.sortedViewModelList = await this.sortListService.sort(this.sortedViewModelList);
+                            this.processSortedViewModelList();
+                        },
+                        active: false,
+                        type: PipelineActionType.Resort
+                    };
+                    this.changeBasedResortingPipeline.splice(
+                        this.changeBasedResortingPipeline.length ? 1 : 0,
+                        0,
+                        resortAction
+                    );
+                    this.activateResortingPipeline();
+                }
+            })
+        );
+    }
 
     private async initChangeBasedResorting(
+        newModels: BaseModel<M>[],
         changedModels: BaseModel<M>[],
-        newModels: V[],
+        newViewModels: V[],
         updatedModels: V[]
     ): Promise<void> {
         for (const model of updatedModels) {
@@ -319,30 +423,35 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         }
         if (this.sortListService) {
             const keysSet = new Set(changedModels.flatMap(model => Object.keys(model)));
-            console.log(`KEYS SET`, this.collection, changedModels, keysSet, newModels);
             await this.sortListService.hasLoaded;
-            console.log(this.collection);
             const sortKeys: OsSortProperty<V>[] = this.sortListService.currentSortBaseKeys;
             if (sortKeys.some(key => keysSet.has(String(key)))) {
                 this.sortedViewModelList = await this.sortListService.sort(this.sortedViewModelList);
             }
-            newModels = await this.sortListService.sort(newModels);
+            this.repositoryServiceCollector.registerNewKeyUpdates(
+                this.COLLECTION,
+                Array.from(
+                    new Set(
+                        newModels.flatMap(model => Object.keys(model)).concat(Array.from(keysSet.values()))
+                    ).values()
+                )
+            );
+            newViewModels = await this.sortListService.sort(newViewModels);
         }
         let i = 0;
-        while (newModels.length && this.sortedViewModelList.length > i) {
+        while (newViewModels.length && this.sortedViewModelList.length > i) {
             if (
                 (this.sortListService
-                    ? await this.sortListService.compare(newModels[0], this.sortedViewModelList[i])
-                    : newModels[0].id - this.sortedViewModelList[i].id) < 0
+                    ? await this.sortListService.compare(newViewModels[0], this.sortedViewModelList[i])
+                    : newViewModels[0].id - this.sortedViewModelList[i].id) < 0
             ) {
-                this.sortedViewModelList.splice(i, 0, newModels[0]);
-                newModels.splice(0, 1);
+                this.sortedViewModelList.splice(i, 0, newViewModels[0]);
+                newViewModels.splice(0, 1);
             }
             i++;
         }
-        this.sortedViewModelList = this.sortedViewModelList.concat(newModels);
+        this.sortedViewModelList = this.sortedViewModelList.concat(newViewModels);
         this.processSortedViewModelList();
-        console.log(`RESORTED`, this.collection, this.sortedViewModelList, this.idToSortedIndexMap);
     }
 
     /**

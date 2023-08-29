@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { OsSortProperty } from 'src/app/site/base/base-sort.service';
+import { OsSortingDefinition, OsSortProperty } from 'src/app/site/base/base-sort.service';
 export type SortDefinition<T> = keyof T | OsSortDefinition<T>;
 
 /**
@@ -32,7 +32,9 @@ export interface SortListService<V> extends SortService<V> {
     readonly defaultOption: OsSortOption<V> | undefined;
     readonly hasSortOptionSelected: boolean;
     readonly currentSortBaseKeys: OsSortProperty<V>[];
+    readonly currentForeignSortBaseKeys: { [collection: string]: string[] };
     readonly hasLoaded: Deferred<boolean>;
+    readonly sortingUpdatedObservable: Observable<OsSortingDefinition<V>>;
     sortProperty: OsSortProperty<V>;
     getSortIcon(option: OsSortOption<V>): string | null;
     getSortLabel(option: OsSortOption<V>): string;

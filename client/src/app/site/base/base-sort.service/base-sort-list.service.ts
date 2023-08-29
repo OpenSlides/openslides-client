@@ -1,6 +1,7 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
+    auditTime,
     BehaviorSubject,
     distinctUntilChanged,
     filter,
@@ -10,6 +11,7 @@ import {
     Subscription
 } from 'rxjs';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
@@ -63,6 +65,13 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
         );
         return option.baseKeys ?? (Array.isArray(option.property) ? option.property : [option.property]);
+    }
+
+    public get currentForeignSortBaseKeys(): { [collection: string]: string[] } {
+        const option = this.sortOptions.find(option =>
+            this.isSameProperty(option.property, this.sortDefinition.sortProperty)
+        );
+        return option.foreignBaseKeys ?? {};
     }
 
     /**
@@ -139,12 +148,6 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         );
     }
 
-    public isSameProperty(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
-        a = Array.isArray(a) ? a : [a];
-        b = Array.isArray(b) ? b : [b];
-        return a.equals(b);
-    }
-
     private _defaultDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V>>(null);
 
     private _isDefaultSorting = false;
@@ -176,6 +179,12 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         } else {
             this._defaultDefinitionSubject.next(defaultDefinition);
         }
+    }
+
+    public isSameProperty(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
+        a = Array.isArray(a) ? a : [a];
+        b = Array.isArray(b) ? b : [b];
+        return a.equals(b);
     }
 
     /**
@@ -339,11 +348,23 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
     }
 
+    private sortDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V> | null>(null);
+
+    public get sortingUpdatedObservable() {
+        return this.sortDefinitionSubject.pipe(
+            distinctUntilChanged((prev, curr) => {
+                return JSON.stringify(prev) === JSON.stringify(curr);
+            }),
+            auditTime(5)
+        );
+    }
+
     /**
      * Recreates the sorting function. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
     protected async updateSortedData(): Promise<void> {
+        this.sortDefinitionSubject.next(deepCopy(this.sortDefinition));
         if (this.inputData) {
             this.outputSubject.next(await this.sort([...this.inputData]));
         }

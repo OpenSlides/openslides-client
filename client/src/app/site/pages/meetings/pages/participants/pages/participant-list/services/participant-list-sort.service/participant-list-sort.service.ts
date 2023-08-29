@@ -19,16 +19,20 @@ export class ParticipantListSortService extends BaseSortListService<ViewUser> {
      * Define the sort options
      */
     private userSortOptions: OsSortingOption<ViewUser>[] = [
-        { property: `full_name`, label: _(`Full name`) },
+        { property: `full_name`, label: _(`Full name`), baseKeys: [`first_name`, `last_name`, `title`] },
         { property: [`first_name`, `last_name`], label: _(`Given name`) },
         { property: [`last_name`, `first_name`], label: _(`Surname`) },
         { property: `is_present_in_meeting_ids`, label: _(`Presence`) },
         { property: `is_active`, label: _(`Is active`) },
         { property: `is_physical_person`, label: _(`Is a natural person`) },
-        { property: `number`, label: _(`Participant number`) },
-        { property: `structure_level`, label: _(`Structure level`) },
-        { property: `voteWeight`, label: _(`Vote weight`) },
-        { property: `comment` },
+        { property: `number`, label: _(`Participant number`), foreignBaseKeys: { meeting_user: [`number`] } },
+        {
+            property: `structure_level`,
+            label: _(`Structure level`),
+            foreignBaseKeys: { meeting_user: [`structure_level`] }
+        },
+        { property: `voteWeight`, label: _(`Vote weight`), foreignBaseKeys: { meeting_user: [`vote_weight`] } },
+        { property: `comment`, baseKeys: [], foreignBaseKeys: { meeting_user: [`comment`] } },
         { property: `last_email_sent`, label: _(`Last email sent`) },
         { property: `last_login`, label: _(`Last login`) }
     ];

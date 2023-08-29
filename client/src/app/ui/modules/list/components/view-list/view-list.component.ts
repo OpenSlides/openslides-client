@@ -160,7 +160,11 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
             this.filterService.exitFilterService();
         }
 
-        if (this.sortService) {
+        if (
+            this.sortService &&
+            !this.listObservableProvider &&
+            this.listObservableProvider.getSortedViewModelListObservable()
+        ) {
             this.sortService.exitSortService();
         }
 
@@ -176,7 +180,9 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     private initDataListObservable(): void {
         if (this.listObservableProvider || this.listObservable) {
             this._source = this.listObservableProvider
-                ? this.listObservableProvider.getViewModelListObservable()
+                ? this.listObservableProvider.getSortedViewModelListObservable
+                    ? this.listObservableProvider.getSortedViewModelListObservable()
+                    : this.listObservableProvider.getViewModelListObservable()
                 : this.listObservable;
 
             let dataListObservable: Observable<V[]> = this._source!;
@@ -185,7 +191,11 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
                 this.filterService.initFilters(dataListObservable);
                 dataListObservable = this.filterService.outputObservable;
             }
-            if (this.sortService) {
+            if (
+                this.sortService &&
+                !this.listObservableProvider &&
+                this.listObservableProvider.getSortedViewModelListObservable()
+            ) {
                 this.sortService.initSorting(dataListObservable);
                 dataListObservable = this.sortService.outputObservable;
             }
@@ -203,7 +213,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
             this._scrollingTableComponent.hasDataObservable
                 .pipe(find(hasData => hasData))
                 .pipe(delay(10))
-                .subscribe(_ => {
+                .subscribe(() => {
                     this.scrollTo(offset);
                 });
 

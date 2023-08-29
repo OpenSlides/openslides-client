@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ActiveMeetingService } from '../../site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from '../../site/pages/meetings/services/active-meeting-id.service';
@@ -39,10 +40,22 @@ export class RepositoryMeetingServiceCollectorService {
         return this.repositoryServiceCollector.relationManager;
     }
 
+    public get collectionToKeyUpdatesObservableMap(): { [collection: string]: BehaviorSubject<string[]> } {
+        return this.repositoryServiceCollector.collectionToKeyUpdatesObservableMap;
+    }
+
     public constructor(
         private repositoryServiceCollector: RepositoryServiceCollectorService,
         public activeMeetingIdService: ActiveMeetingIdService,
         public activeMeetingService: ActiveMeetingService,
         public meetingSettingsService: MeetingSettingsService
     ) {}
+
+    public registerNewKeyUpdates(collection: string, newKeys: string[]): void {
+        this.repositoryServiceCollector.registerNewKeyUpdates(collection, newKeys);
+    }
+
+    public getNewKeyUpdatesObservable(collection: string): Observable<string[]> {
+        return this.repositoryServiceCollector.getNewKeyUpdatesObservable(collection);
+    }
 }

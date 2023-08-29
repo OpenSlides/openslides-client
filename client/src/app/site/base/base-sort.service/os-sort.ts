@@ -17,6 +17,7 @@ export interface OsSortingOption<T> {
     label?: string;
     sortFn?: (itemA: T, itemB: T, ascending: boolean, intl?: Intl.Collator) => number;
     baseKeys?: (keyof T)[];
+    foreignBaseKeys?: { [collection: string]: string[] };
 }
 
 export interface OsHideSortingOptionSetting<T> {
