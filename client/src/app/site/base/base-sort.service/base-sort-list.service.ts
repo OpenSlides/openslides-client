@@ -28,37 +28,11 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     implements SortListService<V>
 {
     /**
-     * The data to be sorted. See also the setter for {@link data}
-     */
-    private inputData: V[] = [];
-
-    /**
-     * Subscription for the inputData list.
-     * Acts as an semaphore for new filtered data
-     */
-    private inputDataSubscription: Subscription | null = null;
-
-    /**
-     * Observable output that submits the newly sorted data each time a sorting has been done
-     */
-    private outputSubject = new BehaviorSubject<V[]>([]);
-
-    /**
      * @returns the sorted output subject as observable
      */
     public get outputObservable(): Observable<V[]> {
         return this.outputSubject;
     }
-
-    /**
-     * The current sorting definitions
-     */
-    private sortDefinition: OsSortingDefinition<V> | null = null;
-
-    /**
-     * The key to access stored valued
-     */
-    protected abstract readonly storageKey: string;
 
     public get currentSortBaseKeys(): OsSortProperty<V>[] {
         const option = this.sortOptions.find(option =>
@@ -148,11 +122,48 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         );
     }
 
+    public readonly hasLoaded = new Deferred<boolean>();
+
+    public get sortingUpdatedObservable() {
+        return this.sortDefinitionSubject.pipe(
+            distinctUntilChanged((prev, curr) => {
+                return JSON.stringify(prev) === JSON.stringify(curr);
+            }),
+            auditTime(5)
+        );
+    }
+
+    /**
+     * The key to access stored valued
+     */
+    protected abstract readonly storageKey: string;
+
+    /**
+     * The data to be sorted. See also the setter for {@link data}
+     */
+    private inputData: V[] = [];
+
+    /**
+     * Subscription for the inputData list.
+     * Acts as an semaphore for new filtered data
+     */
+    private inputDataSubscription: Subscription | null = null;
+
+    /**
+     * Observable output that submits the newly sorted data each time a sorting has been done
+     */
+    private outputSubject = new BehaviorSubject<V[]>([]);
+
+    /**
+     * The current sorting definitions
+     */
+    private sortDefinition: OsSortingDefinition<V> | null = null;
+
     private _defaultDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V>>(null);
 
     private _isDefaultSorting = false;
 
-    public readonly hasLoaded = new Deferred<boolean>();
+    private sortDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V> | null>(null);
 
     public constructor(
         translate: TranslateService,
@@ -181,10 +192,94 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         }
     }
 
+    /**
+     * Defines the sorting properties, and returns an observable with sorted data
+     *
+     * @param name arbitrary name, used to save/load correct saved settings from StorageService
+     * @param definitions The definitions of the possible options
+     */
+    public async initSorting(inputObservable: Observable<V[]>): Promise<void> {
+        this.exitSortService();
+
+        if (!this.sortDefinition) {
+            await this.loadDefinition();
+        }
+
+        this.inputDataSubscription = inputObservable.subscribe(data => {
+            this.inputData = data;
+            this.updateSortedData();
+        });
+    }
+
+    public exitSortService(): void {
+        if (this.inputDataSubscription) {
+            this.inputDataSubscription.unsubscribe();
+            this.inputDataSubscription = null;
+        }
+    }
+
+    /**
+     * Change the property and the sorting direction at the same time
+     *
+     * @param property a sorting property of a view model
+     * @param ascending ascending or descending
+     */
+    public setSorting(property: OsSortProperty<V>, ascending: boolean): void {
+        if (!this.sortDefinition) {
+            this.sortDefinition = { sortProperty: property, sortAscending: ascending };
+        } else {
+            this.sortDefinition!.sortProperty = property;
+            this.sortDefinition!.sortAscending = ascending;
+            this.updateSortDefinitions();
+        }
+        this.hasLoaded.resolve(true);
+    }
+
+    /**
+     * Retrieves the currently active icon for an option.
+     *
+     * @param option
+     * @returns the name of the sorting icon, fit to material icon ligatures
+     */
+    public getSortIcon(option: OsSortingOption<V>): string | null {
+        if (this.sortDefinition) {
+            if (!this.sortProperty || !this.getPropertiesEqual(this.sortProperty, option.property)) {
+                return ``;
+            }
+            return this.ascending ? `arrow_upward` : `arrow_downward`;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Determines and returns an untranslated sorting label as string
+     *
+     * @param option The sorting option to a ViewModel
+     * @returns a sorting label as string
+     */
+    public getSortLabel(option: OsSortingOption<V>): string {
+        if (option.label) {
+            return option.label;
+        }
+        const itemProperty = option.property as string;
+        return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
+    }
+
     public isSameProperty(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
         a = Array.isArray(a) ? a : [a];
         b = Array.isArray(b) ? b : [b];
         return a.equals(b);
+    }
+
+    public async sort(array: V[]): Promise<V[]> {
+        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
+        return array.sort((itemA, itemB) => this.compareHelperFunction(itemA, itemB, alternativeProperty));
+    }
+
+    public async compare(itemA: V, itemB: V): Promise<number> {
+        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
+        return this.compareHelperFunction(itemA, itemB, alternativeProperty);
     }
 
     /**
@@ -194,6 +289,24 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     protected getHideSortingOptionSettings(): OsHideSortingOptionSetting<V>[] {
         return [];
+    }
+
+    protected async getDefaultDefinition(): Promise<OsSortingDefinition<V>> {
+        if (this._defaultDefinitionSubject.value) {
+            return this._defaultDefinitionSubject.value;
+        }
+        return await firstValueFrom(this._defaultDefinitionSubject.pipe(filter(value => !!value)));
+    }
+
+    /**
+     * Recreates the sorting function. Is supposed to be called on init and
+     * every time the sorting (property, ascending/descending) or the language changes
+     */
+    protected async updateSortedData(): Promise<void> {
+        this.sortDefinitionSubject.next(deepCopy(this.sortDefinition));
+        if (this.inputData) {
+            this.outputSubject.next(await this.sort([...this.inputData]));
+        }
     }
 
     private shouldHideOption(option: OsSortingOption<V> | OsSortingDefinition<V>, update = true): boolean {
@@ -212,32 +325,6 @@ export abstract class BaseSortListService<V extends BaseViewModel>
             }
         });
         return shouldHide;
-    }
-
-    protected async getDefaultDefinition(): Promise<OsSortingDefinition<V>> {
-        if (this._defaultDefinitionSubject.value) {
-            return this._defaultDefinitionSubject.value;
-        }
-        return await firstValueFrom(this._defaultDefinitionSubject.pipe(filter(value => !!value)));
-    }
-
-    /**
-     * Defines the sorting properties, and returns an observable with sorted data
-     *
-     * @param name arbitrary name, used to save/load correct saved settings from StorageService
-     * @param definitions The definitions of the possible options
-     */
-    public async initSorting(inputObservable: Observable<V[]>): Promise<void> {
-        this.exitSortService();
-
-        if (!this.sortDefinition) {
-            await this.loadDefinition();
-        }
-
-        this.inputDataSubscription = inputObservable.subscribe(data => {
-            this.inputData = data;
-            this.updateSortedData();
-        });
     }
 
     private async loadDefinition(): Promise<void> {
@@ -285,94 +372,12 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         this.hasLoaded.resolve(true);
     }
 
-    public exitSortService(): void {
-        if (this.inputDataSubscription) {
-            this.inputDataSubscription.unsubscribe();
-            this.inputDataSubscription = null;
-        }
-    }
-
-    /**
-     * Change the property and the sorting direction at the same time
-     *
-     * @param property a sorting property of a view model
-     * @param ascending ascending or descending
-     */
-    public setSorting(property: OsSortProperty<V>, ascending: boolean): void {
-        if (!this.sortDefinition) {
-            this.sortDefinition = { sortProperty: property, sortAscending: ascending };
-        } else {
-            this.sortDefinition!.sortProperty = property;
-            this.sortDefinition!.sortAscending = ascending;
-            this.updateSortDefinitions();
-        }
-        this.hasLoaded.resolve(true);
-    }
-
-    /**
-     * Retrieves the currently active icon for an option.
-     *
-     * @param option
-     * @returns the name of the sorting icon, fit to material icon ligatures
-     */
-    public getSortIcon(option: OsSortingOption<V>): string | null {
-        if (this.sortDefinition) {
-            if (!this.sortProperty || !this.getPropertiesEqual(this.sortProperty, option.property)) {
-                return ``;
-            }
-            return this.ascending ? `arrow_upward` : `arrow_downward`;
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Determines if the given properties are either the same property or both arrays of the same
      * properties.
      */
     private getPropertiesEqual(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
         return Array.isArray(a) && Array.isArray(b) ? a.equals(b) : a === b;
-    }
-
-    /**
-     * Determines and returns an untranslated sorting label as string
-     *
-     * @param option The sorting option to a ViewModel
-     * @returns a sorting label as string
-     */
-    public getSortLabel(option: OsSortingOption<V>): string {
-        if (option.label) {
-            return option.label;
-        }
-        const itemProperty = option.property as string;
-        return itemProperty.charAt(0).toUpperCase() + itemProperty.slice(1);
-    }
-
-    private sortDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V> | null>(null);
-
-    public get sortingUpdatedObservable() {
-        return this.sortDefinitionSubject.pipe(
-            distinctUntilChanged((prev, curr) => {
-                return JSON.stringify(prev) === JSON.stringify(curr);
-            }),
-            auditTime(5)
-        );
-    }
-
-    /**
-     * Recreates the sorting function. Is supposed to be called on init and
-     * every time the sorting (property, ascending/descending) or the language changes
-     */
-    protected async updateSortedData(): Promise<void> {
-        this.sortDefinitionSubject.next(deepCopy(this.sortDefinition));
-        if (this.inputData) {
-            this.outputSubject.next(await this.sort([...this.inputData]));
-        }
-    }
-
-    public async sort(array: V[]): Promise<V[]> {
-        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
-        return array.sort((itemA, itemB) => this.compareHelperFunction(itemA, itemB, alternativeProperty));
     }
 
     private compareHelperFunction(itemA: V, itemB: V, alternativeProperty: OsSortProperty<V>): number {
@@ -384,11 +389,6 @@ export abstract class BaseSortListService<V extends BaseViewModel>
                 this.ascending
             ) || itemA.id - itemB.id
         );
-    }
-
-    public async compare(itemA: V, itemB: V): Promise<number> {
-        const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
-        return this.compareHelperFunction(itemA, itemB, alternativeProperty);
     }
 
     /**

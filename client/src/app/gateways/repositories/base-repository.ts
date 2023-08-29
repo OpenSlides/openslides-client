@@ -136,6 +136,24 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private _createViewModelPipes: ((viewModel: V) => void)[] = [];
 
+    private sortedViewModelList: V[] = [];
+    private readonly sortedViewModelListUnsafeSubject: BehaviorSubject<V[]> = new BehaviorSubject([]);
+    private readonly sortedViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject([]);
+    private idToSortedIndexMap: { [id: number]: number } = {};
+
+    private sortListService: SortListService<V> | null = null;
+
+    private sortListServiceSubscription: Subscription;
+
+    private changeBasedResortingPipeline: {
+        funct: () => Promise<void>;
+        active: boolean;
+        type: PipelineActionType;
+    }[] = [];
+
+    private foreignSortBaseKeys: { [collection: string]: string[] } = {};
+    private foreignSortBaseKeySubscriptions: Subscription[] = [];
+
     public constructor(
         private repositoryServiceCollector: RepositoryServiceCollectorService,
         protected baseModelCtor: ModelConstructor<M>
@@ -175,15 +193,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 this.updateViewModelListSubject(this.unsafeViewModelListSubject.value);
             }
         });
-    }
-
-    private updateViewModelListSubject(viewModels: V[]): void {
-        this.viewModelListSubject.next(
-            viewModels
-                ?.filter(m => m.canAccess())
-                ?.tap(models => this.tapViewModels(models))
-                ?.sort(this.viewModelSortFn)
-        );
     }
 
     /**
@@ -262,18 +271,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         this.processSortedViewModelList();
     }
 
-    private processSortedViewModelList(): void {
-        this.idToSortedIndexMap = {};
-        this.sortedViewModelList.forEach((item, index) => (this.idToSortedIndexMap[item.id] = index));
-        this.sortedViewModelListUnsafeSubject.next(this.sortedViewModelList);
-        this.sortedViewModelListSubject.next(this.sortedViewModelList.filter(v => v.canAccess()));
-    }
-
-    private sortedViewModelList: V[] = [];
-    private readonly sortedViewModelListUnsafeSubject: BehaviorSubject<V[]> = new BehaviorSubject([]);
-    private readonly sortedViewModelListSubject: BehaviorSubject<V[]> = new BehaviorSubject([]);
-    private idToSortedIndexMap: { [id: number]: number } = {};
-
     public getSortedViewModelList(): V[] {
         return this.sortedViewModelListSubject.value ?? [];
     }
@@ -325,9 +322,149 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         }
     }
 
+    /**
+     * @returns the current observable for one viewModel
+     */
+    public getViewModelObservable(id: Id): Observable<V | null> {
+        if (!this.viewModelSubjects[id]) {
+            this.viewModelSubjects[id] = new BehaviorSubject<V | null>(this.getViewModel(id));
+        }
+        return this.viewModelSubjects[id];
+    }
+
+    /**
+     * @returns the (sorted) Observable of the whole store.
+     */
+    public getViewModelListObservable(): Observable<V[]> {
+        return this.viewModelListSubject.pipe(filter(v => v !== null));
+    }
+
+    /**
+     * This observable fires every time an object is changed in the repository.
+     */
+    public getGeneralViewModelObservable(): Observable<V> {
+        return this.generalViewModelSubject;
+    }
+
+    /**
+     * This observable fires on every update once contains each changed id.
+     */
+    public getModifiedIdsObservable(): Observable<Id[]> {
+        return this.modifiedIdsSubject;
+    }
+
+    public getViewModelMapObservable(): Observable<{ [id: number]: V }> {
+        return this.viewModelStoreSubject;
+    }
+
+    /**
+     * update the observable of the list. Also updates the sorting of the view model list.
+     */
+    public commitUpdate(modelIds: Id[]): void {
+        this.unsafeViewModelListSubject.next(this.getViewModelListUnsafe());
+        modelIds.forEach(id => {
+            this.updateViewModelObservable(id);
+        });
+        this.modifiedIdsSubject.next(modelIds);
+    }
+
+    public registerCreateViewModelPipe(fn: (viewModel: V) => void): void {
+        this._createViewModelPipes.push(fn);
+    }
+
+    public getFieldsets(): Fieldsets<any> {
+        if (!this.baseModelCtor?.REQUESTABLE_FIELDS) {
+            return {};
+        }
+
+        return {
+            detail: this.baseModelCtor.REQUESTABLE_FIELDS,
+            routing: this.baseModelCtor.REQUESTABLE_FIELDS.includes(`sequential_number`)
+                ? [`meeting_id`, `sequential_number`]
+                : undefined
+        };
+    }
+
+    protected setSortListService(service: SortListService<V> | null): void {
+        if (this.sortListServiceSubscription) {
+            this.sortListServiceSubscription.unsubscribe();
+        }
+        this.sortListService = service;
+        this.initResorting();
+        this.sortListServiceSubscription = this.sortListService.sortingUpdatedObservable.subscribe(() => {
+            this.initResorting();
+        });
+    }
+
+    /**
+     * Updates the ViewModel observable using a ViewModel corresponding to the id
+     */
+    protected updateViewModelObservable(id: Id): void {
+        if (this.viewModelSubjects[id]) {
+            this.viewModelSubjects[id].next(this.getViewModel(id));
+        }
+        this.generalViewModelSubject.next(this.getViewModelUnsafe(id));
+    }
+
+    /**
+     * Clears the repository.
+     */
+    protected clearViewModelStore(): void {
+        this.viewModelStore = {};
+        this.viewModelStoreSubject.next(this.viewModelStore);
+    }
+    /**
+     * The function used for sorting the data of this repository. The default sorts by ID.
+     */
+    protected viewModelSortFn: (a: V, b: V) => number = (a: V, b: V) => a.id - b.id;
+
+    protected tapViewModels(_viewModels: V[]): void {}
+
+    protected createAction<T = void>(name: string, payload: unknown | unknown[]): Action<T> {
+        if (!Array.isArray(payload)) {
+            payload = [payload];
+        }
+        return this.actions.create({ action: name, data: payload as unknown[] });
+    }
+
+    /**
+     * After creating a view model, all functions for models from the repo
+     * are assigned to the new view model.
+     */
+    protected createViewModel(model?: M): V {
+        const viewModel = this.createViewModelProxy(model);
+
+        viewModel.getTitle = () => this.getTitle(viewModel);
+        viewModel.getListTitle = () => this.getListTitle(viewModel);
+        viewModel.getVerboseName = this.getVerboseName;
+
+        this.onCreateViewModel(viewModel);
+
+        return viewModel;
+    }
+
+    protected onCreateViewModel(viewModel: V): void {}
+
+    private updateViewModelListSubject(viewModels: V[]): void {
+        this.viewModelListSubject.next(
+            viewModels
+                ?.filter(m => m.canAccess())
+                ?.tap(models => this.tapViewModels(models))
+                ?.sort(this.viewModelSortFn)
+        );
+    }
+
+    private processSortedViewModelList(): void {
+        this.idToSortedIndexMap = {};
+        this.sortedViewModelList.forEach((item, index) => (this.idToSortedIndexMap[item.id] = index));
+        this.sortedViewModelListUnsafeSubject.next(this.sortedViewModelList);
+        this.sortedViewModelListSubject.next(this.sortedViewModelList.filter(v => v.canAccess()));
+    }
+
     private async activateResortingPipeline(): Promise<void> {
         while (this.changeBasedResortingPipeline.length && this.changeBasedResortingPipeline[0].active === false) {
             this.changeBasedResortingPipeline[0].active = true;
+            await this.changeBasedResortingPipeline[0].funct();
             if (
                 [PipelineActionType.Reset, PipelineActionType.Resort].includes(
                     this.changeBasedResortingPipeline[0].type
@@ -342,34 +479,9 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     }
                 }
             }
-            await this.changeBasedResortingPipeline[0].funct();
             this.changeBasedResortingPipeline.splice(0, 1);
         }
     }
-
-    private sortListService: SortListService<V> | null = null;
-
-    private sortListServiceSubscription: Subscription;
-
-    protected setSortListService(service: SortListService<V> | null): void {
-        if (this.sortListServiceSubscription) {
-            this.sortListServiceSubscription.unsubscribe();
-        }
-        this.sortListService = service;
-        this.initResorting();
-        this.sortListServiceSubscription = this.sortListService.sortingUpdatedObservable.subscribe(() => {
-            this.initResorting();
-        });
-    }
-
-    private changeBasedResortingPipeline: {
-        funct: () => Promise<void>;
-        active: boolean;
-        type: PipelineActionType;
-    }[] = [];
-
-    private foreignSortBaseKeys: { [collection: string]: string[] } = {};
-    private foreignSortBaseKeySubscriptions: Subscription[] = [];
 
     private initResorting(): void {
         const resortAction = {
@@ -453,118 +565,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         this.sortedViewModelList = this.sortedViewModelList.concat(newViewModels);
         this.processSortedViewModelList();
     }
-
-    /**
-     * @returns the current observable for one viewModel
-     */
-    public getViewModelObservable(id: Id): Observable<V | null> {
-        if (!this.viewModelSubjects[id]) {
-            this.viewModelSubjects[id] = new BehaviorSubject<V | null>(this.getViewModel(id));
-        }
-        return this.viewModelSubjects[id];
-    }
-
-    /**
-     * @returns the (sorted) Observable of the whole store.
-     */
-    public getViewModelListObservable(): Observable<V[]> {
-        return this.viewModelListSubject.pipe(filter(v => v !== null));
-    }
-
-    /**
-     * This observable fires every time an object is changed in the repository.
-     */
-    public getGeneralViewModelObservable(): Observable<V> {
-        return this.generalViewModelSubject;
-    }
-
-    /**
-     * This observable fires on every update once contains each changed id.
-     */
-    public getModifiedIdsObservable(): Observable<Id[]> {
-        return this.modifiedIdsSubject;
-    }
-
-    public getViewModelMapObservable(): Observable<{ [id: number]: V }> {
-        return this.viewModelStoreSubject;
-    }
-
-    /**
-     * update the observable of the list. Also updates the sorting of the view model list.
-     */
-    public commitUpdate(modelIds: Id[]): void {
-        this.unsafeViewModelListSubject.next(this.getViewModelListUnsafe());
-        modelIds.forEach(id => {
-            this.updateViewModelObservable(id);
-        });
-        this.modifiedIdsSubject.next(modelIds);
-    }
-
-    public registerCreateViewModelPipe(fn: (viewModel: V) => void): void {
-        this._createViewModelPipes.push(fn);
-    }
-
-    public getFieldsets(): Fieldsets<any> {
-        if (!this.baseModelCtor?.REQUESTABLE_FIELDS) {
-            return {};
-        }
-
-        return {
-            detail: this.baseModelCtor.REQUESTABLE_FIELDS,
-            routing: this.baseModelCtor.REQUESTABLE_FIELDS.includes(`sequential_number`)
-                ? [`meeting_id`, `sequential_number`]
-                : undefined
-        };
-    }
-
-    /**
-     * Updates the ViewModel observable using a ViewModel corresponding to the id
-     */
-    protected updateViewModelObservable(id: Id): void {
-        if (this.viewModelSubjects[id]) {
-            this.viewModelSubjects[id].next(this.getViewModel(id));
-        }
-        this.generalViewModelSubject.next(this.getViewModelUnsafe(id));
-    }
-
-    /**
-     * Clears the repository.
-     */
-    protected clearViewModelStore(): void {
-        this.viewModelStore = {};
-        this.viewModelStoreSubject.next(this.viewModelStore);
-    }
-    /**
-     * The function used for sorting the data of this repository. The default sorts by ID.
-     */
-    protected viewModelSortFn: (a: V, b: V) => number = (a: V, b: V) => a.id - b.id;
-
-    protected tapViewModels(_viewModels: V[]): void {}
-
-    protected createAction<T = void>(name: string, payload: unknown | unknown[]): Action<T> {
-        if (!Array.isArray(payload)) {
-            payload = [payload];
-        }
-        return this.actions.create({ action: name, data: payload as unknown[] });
-    }
-
-    /**
-     * After creating a view model, all functions for models from the repo
-     * are assigned to the new view model.
-     */
-    protected createViewModel(model?: M): V {
-        const viewModel = this.createViewModelProxy(model);
-
-        viewModel.getTitle = () => this.getTitle(viewModel);
-        viewModel.getListTitle = () => this.getListTitle(viewModel);
-        viewModel.getVerboseName = this.getVerboseName;
-
-        this.onCreateViewModel(viewModel);
-
-        return viewModel;
-    }
-
-    protected onCreateViewModel(viewModel: V): void {}
 
     private createViewModelProxy(model?: M): V {
         let viewModel = new this.baseViewModelCtor(model);

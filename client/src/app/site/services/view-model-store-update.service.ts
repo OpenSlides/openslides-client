@@ -111,7 +111,6 @@ export class ViewModelStoreUpdateService {
     }
 
     private async doCollectionUpdates(changedModels: ChangedModels, deletedModels: DeletedModels): Promise<void> {
-        console.log(`CollectionUpdates`, { changedModels, deletedModels });
         const updateSlot = await this.DSUpdateService.getNewUpdateSlot(this.DS);
 
         // Delete the removed objects from the DataStore
