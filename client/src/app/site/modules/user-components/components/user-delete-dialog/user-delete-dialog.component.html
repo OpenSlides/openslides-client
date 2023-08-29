@@ -1,36 +1,54 @@
 <h2 mat-dialog-title>
-    <span *ngIf="!isOneUser" translate>Are you sure you want to delete these accounts?</span>
+    <span *ngIf="!isOneUser && hasUsersToDelete" translate>Are you sure you want to delete these accounts?</span>
+    <span *ngIf="!isOneUser && !hasUsersToDelete" translate>Are you sure you want to remove these participants?</span>
     <span *ngIf="isOneUserToDelete" translate>Are you sure you want to delete this account?</span>
     <span *ngIf="isOneUserToRemove" translate>Are you sure you want to remove this participant?</span>
 </h2>
 
 <div mat-dialog-content>
     <div class="user-delete-dialog-content">
-        <cdk-virtual-scroll-viewport class="user-list-block" [itemSize]="30" *ngIf="!isOneUser">
-            <ng-container *cdkVirtualFor="let user of users">
-                <ng-container *ngIf="isSectionTitle(user)">
-                    <p class="section-title flex-vertical-center">
-                        {{ user | translate }}
-                    </p>
-                </ng-container>
-                <ng-container
-                    *ngIf="!isSectionTitle(user)"
-                    [ngTemplateOutlet]="userRowTemplate"
-                    [ngTemplateOutletContext]="{ user: user }"
-                ></ng-container>
-            </ng-container>
-        </cdk-virtual-scroll-viewport>
-        <ng-container *ngIf="selectedUser">
-            <mat-divider [vertical]="true" *ngIf="!isOneUser"></mat-divider>
-            <div class="user-detail-block">
-                <ng-container *ngTemplateOutlet="userDetailTemplate; context: { user: selectedUser }"></ng-container>
+        <div *ngIf="!isOneUser" class="user-list-block">
+            <div *ngIf="hasUsersToDelete" class="user-list-wrapper">
+                <p class="section-title flex-vertical-center">
+                    {{ 'These accounts will be deleted:' | translate }}
+                </p>
+                <cdk-virtual-scroll-viewport [itemSize]="30">
+                    <ng-container *cdkVirtualFor="let user of toDeleteUsers">
+                        <ng-container
+                            [ngTemplateOutlet]="userRowTemplate"
+                            [ngTemplateOutletContext]="{ user: user }"
+                        ></ng-container>
+                    </ng-container>
+                </cdk-virtual-scroll-viewport>
             </div>
-        </ng-container>
+            <div *ngIf="hasUsersToRemove" class="user-list-wrapper">
+                <p class="section-title flex-vertical-center">
+                    {{ 'These participants will be removed:' | translate }}
+                </p>
+                <cdk-virtual-scroll-viewport [itemSize]="30">
+                    <ng-container *cdkVirtualFor="let user of toRemoveUsers">
+                        <ng-container
+                            [ngTemplateOutlet]="userRowTemplate"
+                            [ngTemplateOutletContext]="{ user: user }"
+                        ></ng-container>
+                    </ng-container>
+                </cdk-virtual-scroll-viewport>
+            </div>
+        </div>
+        <div *ngIf="selectedUser" class="user-detail-block">
+            <mat-divider [vertical]="true" *ngIf="!isOneUser"></mat-divider>
+            <ng-container *ngTemplateOutlet="userDetailTemplate; context: { user: selectedUser }"></ng-container>
+        </div>
     </div>
 </div>
 
 <p mat-dialog-actions>
-    <button mat-button color="warn" [matDialogClose]="true">{{ 'Yes, delete' | translate }}</button>
+    <button mat-button color="warn" [matDialogClose]="true">
+        <span translate>Yes</span>
+        ,&nbsp;
+        <span translate *ngIf="!hasUsersToDelete">remove</span>
+        <span translate *ngIf="hasUsersToDelete">delete</span>
+    </button>
     <button mat-button [matDialogClose]="false">{{ 'Cancel' | translate }}</button>
 </p>
 
