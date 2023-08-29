@@ -199,8 +199,8 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             date: [``],
             time: [``],
             daterange: {
-                start: [null],
-                end: [null]
+                start: null,
+                end: null
             }
         });
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
@@ -213,7 +213,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
                 start: this.getRestrictedValue(this.value[0] ? new Date(this.value[0] * 1000) : null),
                 end: this.getRestrictedValue(this.value[1] ? new Date(this.value[1] * 1000) : null)
             };
-            this.form.get(`daterange`).patchValue(daterangeObj);
+            this.form.patchValue(daterangeObj);
         }
         this.form.patchValue({
             value: this.getRestrictedValue(this.internalValue)
