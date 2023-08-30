@@ -13,6 +13,11 @@ const SHARED_WORKER_WAIT_AFTER_TERMINATE = 2000;
 export class SharedWorkerService {
     public messages: Subject<WorkerResponse> = new Subject();
 
+    public get restartObservable(): Observable<void> {
+        return this.restartSubject;
+    }
+
+    private restartSubject: Subject<void> = new Subject();
     private conn: MessagePort | Window;
     private ready = false;
 
@@ -93,6 +98,7 @@ export class SharedWorkerService {
                 if (e.data.sender === `control` && e.data.action === `terminating`) {
                     this.ready = false;
                     subscription.unsubscribe();
+                    this.restartSubject.next();
                     setTimeout(() => this.connectWorker, SHARED_WORKER_WAIT_AFTER_TERMINATE);
                 }
             } else if (e?.data === `ready`) {
