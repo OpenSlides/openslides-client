@@ -1,22 +1,13 @@
-import { autoupdateMessageHandler } from 'src/app/worker/sw-autoupdate';
+import { autoupdateMessageHandler } from './sw-autoupdate';
+import { controlMessageHandler } from './sw-control';
 
 function registerMessageListener(ctx: any) {
     ctx.addEventListener(`message`, e => {
         const receiver = e.data?.receiver;
         if (receiver === `autoupdate`) {
             autoupdateMessageHandler(ctx, e);
-        } else {
-            const msg = e.data?.msg;
-            const action = msg?.action;
-            switch (action) {
-                case `terminate`:
-                    ctx.postMessage({ sender: `worker`, action: `terminating` });
-                    (<any>self).close();
-                    break;
-                case `ping`:
-                    ctx.postMessage({ sender: `worker`, action: `pong` });
-                    break;
-            }
+        } else if (receiver === `control`) {
+            controlMessageHandler(ctx, e);
         }
     });
 }
@@ -28,7 +19,7 @@ if ((<any>self).Window && self instanceof (<any>self).Window) {
     (<any>self).addEventListener(`connect`, (e: any) => {
         const port: MessagePort = e.ports[0];
 
-        registerMessageListener(self);
+        registerMessageListener(port);
 
         port.start();
         port.postMessage(`ready`);
