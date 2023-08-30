@@ -16,7 +16,7 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
     protected repositoryToken: ProviderToken<BaseRepository<any, any>> = UserRepositoryService;
 
     private staticSortOptions: OsSortingOption<ViewUser>[] = [
-        { property: `full_name`, label: _(`Full name`) },
+        { property: `full_name`, label: _(`Full name`), baseKeys: [`first_name`, `last_name`, `title`] },
         { property: [`first_name`, `last_name`], label: _(`Given name`) },
         { property: [`last_name`, `first_name`], label: _(`Surname`) },
         { property: `is_active`, label: _(`Is active`) },
@@ -25,7 +25,7 @@ export class AccountSortService extends BaseSortListService<ViewUser> {
         { property: `default_vote_weight`, label: _(`Vote weight`) },
         { property: `gender`, label: _(`Gender`) },
         { property: `id`, label: _(`Sequential number`) },
-        { property: `numberOfMeetings`, label: _(`Amount of meetings`) },
+        { property: `numberOfMeetings`, label: _(`Amount of meetings`), baseKeys: [`meeting_ids`] },
         { property: `last_email_sent`, label: _(`Last email sent`) },
         { property: `last_login`, label: _(`Last login`) }
     ];

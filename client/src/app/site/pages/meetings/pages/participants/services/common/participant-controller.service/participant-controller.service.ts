@@ -106,11 +106,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             this._participantListSubject,
             userController.getSortedViewModelListObservable(participantSort.repositorySortingKey)
         ])
-            .pipe(auditTime(1))
-            .subscribe(([participants, sortedUsers]) => {
-                const idMap = participants.mapToObject(user => ({ [user.id]: user }));
-                this._sortedParticipantListSubject.next(sortedUsers.filter(user => idMap[user.id]));
-            });
+            .pipe(
+                auditTime(1),
+                map(([participants, sortedUsers]) => {
+                    const idMap = participants.mapToObject(user => ({ [user.id]: user }));
+                    return sortedUsers.filter(user => idMap[user.id]);
+                })
+            )
+            .subscribe(this._sortedParticipantListSubject);
     }
 
     private async updateUsersFromMeetingUsers(mUsers: ViewMeetingUser[], meetingUserIds?: number[]): Promise<void> {

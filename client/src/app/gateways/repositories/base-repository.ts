@@ -34,8 +34,7 @@ export function canPerformListUpdates(repo: any): repo is CanPerformListUpdates<
 enum PipelineActionType {
     General = `general`,
     Resort = `resort`,
-    Reset = `reset`,
-    Initialization = `initialize`
+    Reset = `reset`
 }
 
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
@@ -410,7 +409,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     this.processSortedViewModelList(key);
                 },
                 active: false,
-                type: PipelineActionType.Initialization,
+                type: PipelineActionType.General,
                 key
             });
             this.activateResortingPipeline();
