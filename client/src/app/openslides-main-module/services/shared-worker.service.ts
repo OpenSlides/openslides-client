@@ -50,8 +50,9 @@ export class SharedWorkerService {
                     await this.handleBrowserReload();
                 }
 
-                this.registerMessageListener();
+                const registerListener = this.registerMessageListener();
                 this.conn.start();
+                await registerListener;
             } catch (e) {
                 console.warn(e);
                 this.setupInWindowAu();
@@ -69,19 +70,22 @@ export class SharedWorkerService {
         });
     }
 
-    private registerMessageListener(): void {
-        this.conn.addEventListener(`message`, (e: any) => {
+    private async registerMessageListener(): Promise<Event> {
+        const eventListener = fromEvent(this.conn, `message`).pipe(timeout({ first: SHARED_WORKER_READY_TIMEOUT }));
+        const subscription = eventListener.subscribe((e: MessageEvent) => {
             if (this.ready && e?.data?.sender) {
                 this.messages.next(e?.data);
                 if (e.data.sender === `control` && e.data.action === `terminating`) {
                     this.ready = false;
-                    this.conn.removeAllListeners();
+                    subscription.unsubscribe();
                     setTimeout(() => this.connectWorker, SHARED_WORKER_WAIT_AFTER_TERMINATE);
                 }
             } else if (e?.data === `ready`) {
                 this.ready = true;
             }
         });
+
+        return await firstValueFrom(eventListener);
     }
 
     /**
