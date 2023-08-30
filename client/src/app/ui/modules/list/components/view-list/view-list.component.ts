@@ -189,6 +189,15 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
                       )
                     : this.listObservableProvider.getViewModelListObservable()
                 : this.listObservable;
+            this._source.subscribe(list =>
+                console.log(
+                    `SOURCE`,
+                    this.sortService ? this.sortService.repositorySortingKey : `none`,
+                    JSON.parse(JSON.stringify(list)),
+                    this.listObservableProvider && this.listObservableProvider.getSortedViewModelListObservable,
+                    this.listObservableProvider[`random`]
+                )
+            );
             let dataListObservable: Observable<V[]> = this._source!;
             if (this.filterService) {
                 this._source = this.filterService.getViewModelListObservable();

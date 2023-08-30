@@ -14,6 +14,8 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
         return this.controllerServiceCollector.translate;
     }
 
+    public random = Math.floor(Math.random() * 1000);
+
     public constructor(
         protected controllerServiceCollector: ControllerServiceCollectorService,
         protected baseModelCtor: ModelConstructor<M>,
