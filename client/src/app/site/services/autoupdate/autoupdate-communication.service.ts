@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscriber } from 'rxjs';
+import { delayWhen, filter, fromEvent, Observable, of, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
@@ -140,19 +140,21 @@ export class AutoupdateCommunicationService {
      * @param params Additional url params
      */
     public open(streamId: Id | null, description: string, request: ModelRequest, params = {}): Promise<Id> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const requestHash = djb2hash(JSON.stringify(request));
             this.openResolvers.set(requestHash, resolve);
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `open`,
-                params: {
-                    streamId,
-                    description,
-                    queryParams: formatQueryParams(params),
-                    requestHash: requestHash,
-                    request
-                }
-            } as AutoupdateOpenStream);
+            this.sharedWorker
+                .sendMessage(`autoupdate`, {
+                    action: `open`,
+                    params: {
+                        streamId,
+                        description,
+                        queryParams: formatQueryParams(params),
+                        requestHash: requestHash,
+                        request
+                    }
+                } as AutoupdateOpenStream)
+                .catch(reject);
         });
     }
 
@@ -175,6 +177,19 @@ export class AutoupdateCommunicationService {
      */
     public listen(): Observable<any> {
         return this.autoupdateDataObservable;
+    }
+
+    /**
+     * @returns Observable containing messages from autoupdate
+     */
+    public listenShouldReconnect(): Observable<any> {
+        const visibilityChangeEvent = fromEvent(document, `visibilitychange`).pipe(
+            filter(() => document.visibilityState === `visible`)
+        );
+
+        return this.sharedWorker.restartObservable.pipe(
+            delayWhen(() => (document.visibilityState === `visible` ? of(undefined) : visibilityChangeEvent))
+        );
     }
 
     public hasReceivedDataForSubscription(description: string): boolean {

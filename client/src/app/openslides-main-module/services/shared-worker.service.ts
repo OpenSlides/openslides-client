@@ -70,15 +70,18 @@ export class SharedWorkerService {
                 const registerListener = this.registerMessageListener();
                 this.conn.start();
                 await registerListener;
+                console.debug(`[shared worker service] Using shared worker`);
             } catch (e) {
                 console.warn(e);
                 if (this.conn) {
                     this.conn.removeAllListeners();
                 }
                 this.setupInWindowAu();
+                console.debug(`[shared worker service] Using in window after error`);
             }
         } else {
             this.setupInWindowAu();
+            console.debug(`[shared worker service] Using in window worker`);
         }
     }
 
@@ -99,7 +102,9 @@ export class SharedWorkerService {
                     this.ready = false;
                     subscription.unsubscribe();
                     this.restartSubject.next();
-                    setTimeout(() => this.connectWorker, SHARED_WORKER_WAIT_AFTER_TERMINATE);
+                    setTimeout(() => {
+                        this.connectWorker();
+                    }, SHARED_WORKER_WAIT_AFTER_TERMINATE);
                 }
             } else if (e?.data === `ready`) {
                 this.ready = true;
@@ -146,10 +151,14 @@ export class SharedWorkerService {
 
             const waitTerminated = this.waitForMessage(
                 SHARED_WORKER_READY_TIMEOUT,
-                (data: any) => data?.action === `terminating`
+                (data: any) => data?.action === `terminating` || data?.action === `terminate-rejected`
             );
             this.sendMessageForce(`control`, { action: `terminate` });
-            await waitTerminated;
+            const terminateResp = await waitTerminated;
+            if (terminateResp.data.action === `terminate-rejected`) {
+                this.ready = true;
+                return;
+            }
             await new Promise(r => setTimeout(r, SHARED_WORKER_WAIT_AFTER_TERMINATE));
 
             const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
@@ -159,7 +168,10 @@ export class SharedWorkerService {
         }
     }
 
-    private async waitForMessage(timeoutDuration: number, isMessage: (data?: any) => boolean): Promise<void> {
+    private async waitForMessage(
+        timeoutDuration: number,
+        isMessage: (data?: any) => boolean
+    ): Promise<MessageEvent<WorkerResponse>> {
         const ret = await firstValueFrom(
             fromEvent(this.conn, `message`).pipe(
                 filter(e => isMessage((<any>e)?.data)),
@@ -171,5 +183,7 @@ export class SharedWorkerService {
         if (ret === false) {
             throw new Error(`Timeout while waiting for message.`);
         }
+
+        return <MessageEvent>ret;
     }
 }

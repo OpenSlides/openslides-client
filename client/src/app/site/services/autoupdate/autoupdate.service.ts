@@ -82,6 +82,9 @@ export class AutoupdateService {
         this.communication.listen().subscribe(data => {
             this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
         });
+        this.communication.listenShouldReconnect().subscribe(() => {
+            this.reconnect(this._currentQueryParams);
+        });
 
         window.addEventListener(`beforeunload`, () => {
             for (const id of Object.keys(this._activeRequestObjects)) {
@@ -99,6 +102,7 @@ export class AutoupdateService {
             const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
             modelSubscription.close();
             this.request(modelRequest.getModelRequest(), description, streamId).then(nextModelSubscription => {
+                console.debug(`[autoupdate] reopen request:`, description, [modelRequest]);
                 this._activeRequestObjects[nextModelSubscription.id] = {
                     modelSubscription: nextModelSubscription,
                     modelRequest,
