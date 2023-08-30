@@ -1,5 +1,6 @@
+import { WorkerMessage } from './interfaces';
 import { autoupdateMessageHandler } from './sw-autoupdate';
-import { controlMessageHandler } from './sw-control';
+import { controlGeneralMessageHandler, controlMessageHandler } from './sw-control';
 
 const contexts = [];
 
@@ -10,7 +11,9 @@ function broadcast(sender: string, action: string, content?: any) {
 }
 
 function registerMessageListener(ctx: any) {
-    ctx.addEventListener(`message`, e => {
+    ctx.addEventListener(`message`, (e: MessageEvent<WorkerMessage>) => {
+        controlGeneralMessageHandler(ctx, e);
+
         const receiver = e.data?.receiver;
         if (receiver === `autoupdate`) {
             autoupdateMessageHandler(ctx, e);
