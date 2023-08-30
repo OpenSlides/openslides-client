@@ -1,5 +1,5 @@
-import { Id } from '../domain/definitions/key-types';
-import { WorkerMessageContent } from './interfaces';
+import { Id } from '../../domain/definitions/key-types';
+import { WorkerMessageContent } from '../interfaces';
 
 export interface AutoupdateSetEndpointParams {
     url: string;

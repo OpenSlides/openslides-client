@@ -5,8 +5,8 @@ import {
     ErrorType,
     isCommunicationError,
     isCommunicationErrorWrapper
-} from '../gateways/http-stream/stream-utils';
-import { joinTypedArrays, splitTypedArray } from '../infrastructure/utils/functions';
+} from '../../gateways/http-stream/stream-utils';
+import { joinTypedArrays, splitTypedArray } from '../../infrastructure/utils/functions';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 

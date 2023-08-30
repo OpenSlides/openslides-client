@@ -21,7 +21,7 @@ import {
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
     AutoupdateStatus
-} from 'src/app/worker/interfaces-autoupdate';
+} from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';

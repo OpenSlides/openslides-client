@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { filter, Observable, Subject } from 'rxjs';
+import { filter, Observable, Subject, Subscription } from 'rxjs';
 import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
 import { environment } from 'src/environments/environment';
 
@@ -12,10 +12,12 @@ export class SharedWorkerService {
     private conn: MessagePort | Window;
     private ready = false;
 
+    private checkHealthInterval: Subscription;
+
     constructor(private zone: NgZone) {
         if (environment.autoupdateOnSharedWorker) {
             try {
-                const worker = new SharedWorker(new URL(`./default-shared-worker.worker`, import.meta.url), {
+                const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
                     name: `openslides-shared-worker`
                 });
                 this.conn = worker.port;
@@ -52,7 +54,7 @@ export class SharedWorkerService {
         this.conn = window;
         this.registerMessageListener();
         this.zone.runOutsideAngular(() => {
-            import(`./default-shared-worker.worker`);
+            import(`../../worker/default-shared-worker.worker`);
         });
     }
 
