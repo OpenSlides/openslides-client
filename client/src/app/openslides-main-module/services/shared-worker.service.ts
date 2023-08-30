@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { catchError, filter, firstValueFrom, fromEvent, Observable, of, Subject, take, timeout } from 'rxjs';
+import { filter, firstValueFrom, fromEvent, Observable, of, Subject, take, timeout } from 'rxjs';
 import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
 import { environment } from 'src/environments/environment';
 
@@ -16,25 +16,7 @@ export class SharedWorkerService {
     private ready = false;
 
     constructor(private zone: NgZone) {
-        if (environment.autoupdateOnSharedWorker) {
-            try {
-                const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
-                    name: `openslides-shared-worker`
-                });
-                this.conn = worker.port;
-
-                this.handleBrowserReload()
-                    .then(() => {
-                        this.registerMessageListener();
-                        (<MessagePort>this.conn).start();
-                    })
-                    .catch(() => this.setupInWindowAu());
-            } catch (e) {
-                this.setupInWindowAu();
-            }
-        } else {
-            this.setupInWindowAu();
-        }
+        this.connectWorker(true);
     }
 
     /**
@@ -56,6 +38,29 @@ export class SharedWorkerService {
         this.sendRawMessage({ receiver, msg } as WorkerMessage);
     }
 
+    private async connectWorker(checkReload = false): Promise<void> {
+        if (environment.autoupdateOnSharedWorker) {
+            try {
+                const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
+                    name: `openslides-shared-worker`
+                });
+                this.conn = worker.port;
+
+                if (checkReload) {
+                    await this.handleBrowserReload();
+                }
+
+                this.registerMessageListener();
+                this.conn.start();
+            } catch (e) {
+                console.warn(e);
+                this.setupInWindowAu();
+            }
+        } else {
+            this.setupInWindowAu();
+        }
+    }
+
     private setupInWindowAu(): void {
         this.conn = window;
         this.registerMessageListener();
@@ -68,14 +73,29 @@ export class SharedWorkerService {
         this.conn.addEventListener(`message`, (e: any) => {
             if (this.ready && e?.data?.sender) {
                 this.messages.next(e?.data);
+                if (e.data.sender === `control` && e.data.action === `terminating`) {
+                    this.ready = false;
+                    this.conn.removeAllListeners();
+                    setTimeout(() => this.connectWorker, SHARED_WORKER_WAIT_AFTER_TERMINATE);
+                }
             } else if (e?.data === `ready`) {
                 this.ready = true;
             }
         });
     }
 
-    private sendRawMessage(message: any): void {
-        if (this.ready) {
+    /**
+     * Sends a message to the worker even if not ready
+     *
+     * @param receiver Name of the receiver
+     * @param msg Content of the message
+     */
+    private sendMessageForce<T extends WorkerMessageContent>(receiver: string, msg: T): void {
+        this.sendRawMessage({ receiver, msg } as WorkerMessage, false);
+    }
+
+    private sendRawMessage(message: any, checkReady = true): void {
+        if (this.ready || !checkReady) {
             this.conn.postMessage(message);
         } else {
             setTimeout(() => this.sendRawMessage(message), 10);
@@ -91,17 +111,16 @@ export class SharedWorkerService {
                     .map(nav => nav.name)
                     .includes(`reload`))
         ) {
-            const CONN_START_TIMEOUT = 20;
-            setTimeout(() => {
-                (<MessagePort>this.conn).start();
-            }, CONN_START_TIMEOUT);
-            await this.waitForMessage(
-                SHARED_WORKER_READY_TIMEOUT + CONN_START_TIMEOUT,
-                (data: any) => data === `ready`
-            );
+            const waitReady = this.waitForMessage(SHARED_WORKER_READY_TIMEOUT, (data: any) => data === `ready`);
+            (<MessagePort>this.conn).start();
+            await waitReady;
 
-            this.sendMessage(`control`, { action: `terminate` });
-            await this.waitForMessage(SHARED_WORKER_READY_TIMEOUT, (data: any) => data?.action === `terminating`);
+            const waitTerminated = this.waitForMessage(
+                SHARED_WORKER_READY_TIMEOUT,
+                (data: any) => data?.action === `terminating`
+            );
+            this.sendMessageForce(`control`, { action: `terminate` });
+            await waitTerminated;
             await new Promise(r => setTimeout(r, SHARED_WORKER_WAIT_AFTER_TERMINATE));
 
             const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
@@ -115,8 +134,7 @@ export class SharedWorkerService {
         const ret = await firstValueFrom(
             fromEvent(this.conn, `message`).pipe(
                 filter(e => isMessage((<any>e)?.data)),
-                timeout(timeoutDuration),
-                catchError(() => of(false)),
+                timeout({ each: timeoutDuration, with: () => of(false) }),
                 take(1)
             )
         );
