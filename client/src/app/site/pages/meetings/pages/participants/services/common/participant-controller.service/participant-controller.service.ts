@@ -1,5 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, firstValueFrom, map, Observable, of, Subscription, switchAll, tap } from 'rxjs';
+import {
+    auditTime,
+    BehaviorSubject,
+    combineLatest,
+    filter,
+    firstValueFrom,
+    map,
+    Observable,
+    of,
+    Subscription,
+    switchAll,
+    tap
+} from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
@@ -27,6 +39,7 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
+import { ParticipantListSortService } from '../../../pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
@@ -46,6 +59,7 @@ export const MEETING_RELATED_FORM_CONTROLS = [
 })
 export class ParticipantControllerService extends BaseMeetingControllerService<ViewUser, User> {
     private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);
+    private _sortedParticipantListSubject = new BehaviorSubject<ViewUser[]>([]);
 
     private _participantListUpdateSubscription: Subscription;
 
@@ -59,9 +73,12 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         private userScopePresenter: GetUserScopePresenterService,
         private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService,
         private userService: UserService,
-        private actions: ActionService
+        private actions: ActionService,
+        participantSort: ParticipantListSortService
     ) {
         super(controllerServiceCollector, User, repo);
+
+        participantSort.initSorting();
 
         let meetingUserIds = [];
         this.activeMeetingIdService.meetingIdObservable
@@ -84,6 +101,16 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         this.meetingUserRepo.getViewModelListObservable().subscribe(async mUsers => {
             this.updateUsersFromMeetingUsers(mUsers, meetingUserIds);
         });
+
+        combineLatest([
+            this._participantListSubject,
+            userController.getSortedViewModelListObservable(participantSort.repositorySortingKey)
+        ])
+            .pipe(auditTime(1))
+            .subscribe(([participants, sortedUsers]) => {
+                const idMap = participants.mapToObject(user => ({ [user.id]: user }));
+                this._sortedParticipantListSubject.next(sortedUsers.filter(user => idMap[user.id]));
+            });
     }
 
     private async updateUsersFromMeetingUsers(mUsers: ViewMeetingUser[], meetingUserIds?: number[]): Promise<void> {
@@ -103,6 +130,14 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public override getViewModelListObservable(): Observable<ViewUser[]> {
         return this._participantListSubject;
+    }
+
+    public override getSortedViewModelList(): ViewUser[] {
+        return this._sortedParticipantListSubject.value;
+    }
+
+    public override getSortedViewModelListObservable(): Observable<ViewUser[]> {
+        return this._sortedParticipantListSubject;
     }
 
     public override getViewModelObservable(id: Id): Observable<ViewUser | null> {

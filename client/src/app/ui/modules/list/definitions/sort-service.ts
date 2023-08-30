@@ -29,7 +29,6 @@ export interface SortService<V> {
 
 export interface SortListService<V> extends SortService<V> {
     readonly sortOptions: OsSortOption<V>[];
-    readonly outputObservable: Observable<V[]>;
     readonly isActive: boolean;
     readonly defaultOption: OsSortOption<V> | undefined;
     readonly hasSortOptionSelected: boolean;
@@ -37,10 +36,11 @@ export interface SortListService<V> extends SortService<V> {
     readonly currentForeignSortBaseKeys: { [collection: string]: string[] };
     readonly hasLoaded: Deferred<boolean>;
     readonly sortingUpdatedObservable: Observable<OsSortingDefinition<V>>;
+    readonly repositorySortingKey: string;
     sortProperty: OsSortProperty<V>;
     getSortIcon(option: OsSortOption<V>): string | null;
     getSortLabel(option: OsSortOption<V>): string;
-    initSorting(inputObservable: Observable<V[]>): void;
+    initSorting(): void;
     exitSortService(): void;
     sort(array: V[]): Promise<V[]>;
     compare(itemA: V, itemB: V): Promise<number>;

@@ -45,12 +45,12 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
         return this.repo.getViewModelListObservable();
     }
 
-    public getSortedViewModelList(): V[] {
-        return this.repo.getSortedViewModelList();
+    public getSortedViewModelList(key?: string): V[] {
+        return this.repo.getSortedViewModelList(key);
     }
 
-    public getSortedViewModelListObservable(): Observable<V[]> {
-        return this.repo.getSortedViewModelListObservable();
+    public getSortedViewModelListObservable(key?: string): Observable<V[]> {
+        return this.repo.getSortedViewModelListObservable(key);
     }
 
     public getVerboseName = (plural?: boolean): string => {

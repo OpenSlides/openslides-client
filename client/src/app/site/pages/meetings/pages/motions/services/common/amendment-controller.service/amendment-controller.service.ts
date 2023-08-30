@@ -43,6 +43,26 @@ export class AmendmentControllerService {
         );
     }
 
+    public getSortedViewModelList(key = `default`): ViewMotion[] {
+        return this.controller.getSortedViewModelList(key).filter(motion => !!motion.lead_motion_id);
+    }
+
+    public getSortedViewModelListFor(motion: Identifiable, key = `default`): ViewMotion[] {
+        return this.getSortedViewModelList(key).filter(amendment => amendment.lead_motion_id === motion.id);
+    }
+
+    public getSortedViewModelListObservable(key = `default`): Observable<ViewMotion[]> {
+        return this.controller
+            .getSortedViewModelListObservable(key)
+            .pipe(map(motions => motions.filter(motion => !!motion.lead_motion_id)));
+    }
+
+    public getSortedViewModelListObservableFor(motion: Identifiable, key = `default`): Observable<ViewMotion[]> {
+        return this.getSortedViewModelListObservable(key).pipe(
+            map(_motions => _motions.filter(_motion => _motion.lead_motion_id === motion.id))
+        );
+    }
+
     public async createTextBased(partialMotion: Partial<Motion>): Promise<CreateResponse> {
         const result = await (this.repo.createTextBased(partialMotion).resolve() as Promise<CreateResponse[]>);
         return result[0];

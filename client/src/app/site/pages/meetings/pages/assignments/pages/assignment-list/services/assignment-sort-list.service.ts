@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, ProviderToken } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
@@ -18,6 +20,8 @@ export class AssignmentSortListService extends BaseSortListService<ViewAssignmen
      */
     protected storageKey = `AssignmentList`;
 
+    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = AssignmentRepositoryService;
+
     /**
      * Define the sort options
      */
@@ -28,8 +32,8 @@ export class AssignmentSortListService extends BaseSortListService<ViewAssignmen
         { property: `id`, label: `Creation date` }
     ];
 
-    constructor(translate: TranslateService, store: StorageService) {
-        super(translate, store, {
+    constructor(translate: TranslateService, store: StorageService, injector: Injector) {
+        super(translate, store, injector, {
             sortProperty: `title`,
             sortAscending: true
         });

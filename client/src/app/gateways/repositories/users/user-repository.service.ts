@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { distinctUntilChanged } from 'rxjs';
 import { Fqid } from 'src/app/domain/definitions/key-types';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
 import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { UserAction } from 'src/app/gateways/repositories/users/user-action';
-import { ParticipantListSortService } from 'src/app/site/pages/meetings/pages/participants/pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { AccountSortService } from 'src/app/site/pages/organization/pages/accounts/pages/account-list/services/account-list-sort.service/account-sort.service';
 
 import { Id } from '../../../domain/definitions/key-types';
 import { Displayable } from '../../../domain/interfaces/displayable';
@@ -84,15 +81,9 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     public constructor(
         repositoryServiceCollector: RepositoryServiceCollectorService,
         private activeMeetingIdService: ActiveMeetingIdService,
-        private meetingUserRepo: MeetingUserRepositoryService,
-        private accountSort: AccountSortService,
-        private participantSort: ParticipantListSortService
+        private meetingUserRepo: MeetingUserRepositoryService
     ) {
         super(repositoryServiceCollector, User);
-
-        this.activeMeetingIdService.meetingIdObservable
-            .pipe(distinctUntilChanged())
-            .subscribe(id => this.setSortListService(id ? this.participantSort : this.accountSort));
     }
 
     /**

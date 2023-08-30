@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive, Injector, ProviderToken } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
     auditTime,
@@ -7,9 +7,9 @@ import {
     filter,
     firstValueFrom,
     isObservable,
-    Observable,
-    Subscription
+    Observable
 } from 'rxjs';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
 import { Deferred } from 'src/app/infrastructure/utils/promises';
 import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
@@ -27,13 +27,6 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     extends BaseSortService<V>
     implements SortListService<V>
 {
-    /**
-     * @returns the sorted output subject as observable
-     */
-    public get outputObservable(): Observable<V[]> {
-        return this.outputSubject;
-    }
-
     public get currentSortBaseKeys(): OsSortProperty<V>[] {
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
@@ -133,26 +126,14 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         );
     }
 
+    public get repositorySortingKey(): string {
+        return this.storageKey;
+    }
+
     /**
      * The key to access stored valued
      */
     protected abstract readonly storageKey: string;
-
-    /**
-     * The data to be sorted. See also the setter for {@link data}
-     */
-    private inputData: V[] = [];
-
-    /**
-     * Subscription for the inputData list.
-     * Acts as an semaphore for new filtered data
-     */
-    private inputDataSubscription: Subscription | null = null;
-
-    /**
-     * Observable output that submits the newly sorted data each time a sorting has been done
-     */
-    private outputSubject = new BehaviorSubject<V[]>([]);
 
     /**
      * The current sorting definitions
@@ -165,9 +146,21 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     private sortDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V> | null>(null);
 
+    protected abstract readonly repositoryToken: ProviderToken<BaseRepository<any, any>>;
+
+    private get repository(): BaseRepository<any, any> {
+        if (!this._repository) {
+            this._repository = this.injector.get(this.repositoryToken);
+        }
+        return this._repository;
+    }
+
+    private _repository: BaseRepository<any, any>;
+
     public constructor(
         translate: TranslateService,
         private store: StorageService,
+        private injector: Injector,
         defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>
     ) {
         super(translate);
@@ -198,24 +191,16 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param name arbitrary name, used to save/load correct saved settings from StorageService
      * @param definitions The definitions of the possible options
      */
-    public async initSorting(inputObservable: Observable<V[]>): Promise<void> {
-        this.exitSortService();
+    public async initSorting(): Promise<void> {
+        this.repository.registerSortListService(this.storageKey, this);
 
         if (!this.sortDefinition) {
             await this.loadDefinition();
         }
-
-        this.inputDataSubscription = inputObservable.subscribe(data => {
-            this.inputData = data;
-            this.updateSortedData();
-        });
     }
 
     public exitSortService(): void {
-        if (this.inputDataSubscription) {
-            this.inputDataSubscription.unsubscribe();
-            this.inputDataSubscription = null;
-        }
+        this.repository.unregisterSortListService(this.storageKey);
     }
 
     /**
@@ -304,9 +289,6 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      */
     protected async updateSortedData(): Promise<void> {
         this.sortDefinitionSubject.next(deepCopy(this.sortDefinition));
-        if (this.inputData) {
-            this.outputSubject.next(await this.sort([...this.inputData]));
-        }
     }
 
     private shouldHideOption(option: OsSortingOption<V> | OsSortingDefinition<V>, update = true): boolean {

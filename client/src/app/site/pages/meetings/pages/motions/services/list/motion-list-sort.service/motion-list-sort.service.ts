@@ -1,7 +1,9 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Inject, Injectable, Injector, Optional, ProviderToken } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
+import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
 import { StorageService } from 'src/app/gateways/storage.service';
 import {
     BaseSortListService,
@@ -22,6 +24,8 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      * set the storage key name
      */
     protected storageKey = `MotionList`;
+
+    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MotionRepositoryService;
 
     /**
      * Hold the default motion sorting
@@ -57,12 +61,13 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
         protected override translate: TranslateService,
         store: StorageService,
         private meetingSettingsService: MeetingSettingsService,
+        injector: Injector,
         @Optional()
         @Inject(undefined)
         defaultDefinition?: OsSortingDefinition<ViewMotion> | Observable<OsSortingDefinition<ViewMotion>>
     ) {
         const defaultDefinitions = new BehaviorSubject<OsSortingDefinition<ViewMotion>>(null);
-        super(translate, store, defaultDefinition ?? defaultDefinitions);
+        super(translate, store, injector, defaultDefinition ?? defaultDefinitions);
         this.defaultDefinitionSubject = defaultDefinitions;
 
         this.defaultMotionSorting = `number`;
