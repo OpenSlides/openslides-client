@@ -1,7 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
-import { filter, Observable, Subject, Subscription } from 'rxjs';
+import { catchError, filter, firstValueFrom, fromEvent, Observable, of, Subject, take, timeout } from 'rxjs';
 import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
 import { environment } from 'src/environments/environment';
+
+const SHARED_WORKER_READY_TIMEOUT = 2000;
+const SHARED_WORKER_WAIT_AFTER_TERMINATE = 2000;
 
 @Injectable({
     providedIn: `root`
@@ -12,8 +15,6 @@ export class SharedWorkerService {
     private conn: MessagePort | Window;
     private ready = false;
 
-    private checkHealthInterval: Subscription;
-
     constructor(private zone: NgZone) {
         if (environment.autoupdateOnSharedWorker) {
             try {
@@ -21,8 +22,13 @@ export class SharedWorkerService {
                     name: `openslides-shared-worker`
                 });
                 this.conn = worker.port;
-                this.registerMessageListener();
-                worker.port.start();
+
+                this.handleBrowserReload()
+                    .then(() => {
+                        this.registerMessageListener();
+                        (<MessagePort>this.conn).start();
+                    })
+                    .catch(() => this.setupInWindowAu());
             } catch (e) {
                 this.setupInWindowAu();
             }
@@ -73,6 +79,50 @@ export class SharedWorkerService {
             this.conn.postMessage(message);
         } else {
             setTimeout(() => this.sendRawMessage(message), 10);
+        }
+    }
+
+    private async handleBrowserReload(): Promise<void> {
+        if (
+            (window.performance.navigation && window.performance.navigation.type === 1) ||
+            (window.performance.getEntriesByType &&
+                window.performance
+                    .getEntriesByType(`navigation`)
+                    .map(nav => nav.name)
+                    .includes(`reload`))
+        ) {
+            const CONN_START_TIMEOUT = 20;
+            setTimeout(() => {
+                (<MessagePort>this.conn).start();
+            }, CONN_START_TIMEOUT);
+            await this.waitForMessage(
+                SHARED_WORKER_READY_TIMEOUT + CONN_START_TIMEOUT,
+                (data: any) => data === `ready`
+            );
+
+            this.sendMessage(`control`, { action: `terminate` });
+            await this.waitForMessage(SHARED_WORKER_READY_TIMEOUT, (data: any) => data?.action === `terminating`);
+            await new Promise(r => setTimeout(r, SHARED_WORKER_WAIT_AFTER_TERMINATE));
+
+            const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
+                name: `openslides-shared-worker`
+            });
+            this.conn = worker.port;
+        }
+    }
+
+    private async waitForMessage(timeoutDuration: number, isMessage: (data?: any) => boolean): Promise<void> {
+        const ret = await firstValueFrom(
+            fromEvent(this.conn, `message`).pipe(
+                filter(e => isMessage((<any>e)?.data)),
+                timeout(timeoutDuration),
+                catchError(() => of(false)),
+                take(1)
+            )
+        );
+
+        if (ret === false) {
+            throw new Error(`Timeout while waiting for message.`);
         }
     }
 }

@@ -15,7 +15,6 @@ import {
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveError,
-    AutoupdateReconnectForce,
     AutoupdateReconnectInactive,
     AutoupdateSetConnectionStatus,
     AutoupdateSetEndpoint,
@@ -100,7 +99,6 @@ export class AutoupdateCommunicationService {
         }
 
         this.registerConnectionStatusListener();
-        this.handleBrowserReload();
     }
 
     /**
@@ -264,21 +262,6 @@ export class AutoupdateCommunicationService {
             }, 1000);
         } else {
             clearTimeout(this.unhealtyTimeout);
-        }
-    }
-
-    private handleBrowserReload(): void {
-        if (
-            (window.performance.navigation && window.performance.navigation.type === 1) ||
-            (window.performance.getEntriesByType &&
-                window.performance
-                    .getEntriesByType(`navigation`)
-                    .map(nav => nav.name)
-                    .includes(`reload`))
-        ) {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `reconnect-force`
-            } as AutoupdateReconnectForce);
         }
     }
 }
