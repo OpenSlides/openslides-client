@@ -28,7 +28,7 @@ export class AssignmentSortListService extends BaseSortListService<ViewAssignmen
     private assignmentSortOptions: OsSortingOption<ViewAssignment>[] = [
         { property: `title`, label: `Name` },
         { property: `phase`, label: `Phase` },
-        { property: `candidateAmount`, label: `Number of candidates` },
+        { property: `candidateAmount`, label: `Number of candidates`, baseKeys: [`candidate_ids`] },
         { property: `id`, label: `Creation date` }
     ];
 
