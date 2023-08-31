@@ -123,15 +123,30 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Event location`)
                     },
                     {
-                        key: [`start_time`, `end_time`],
-                        label: _(`Meeting date`),
-                        type: `daterange`,
+                        key: `start_time`,
+                        label: _(`Start date`),
+                        type: `date`,
                         automaticChangesSetting: {
                             watchProperties: [`end_time`],
                             getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
                                 return currentValue &&
                                     currentWatchPropertyValues.length &&
                                     currentValue > currentWatchPropertyValues[0]
+                                    ? currentWatchPropertyValues[0]
+                                    : currentValue;
+                            }
+                        }
+                    },
+                    {
+                        key: `end_time`,
+                        label: _(`End date`),
+                        type: `date`,
+                        automaticChangesSetting: {
+                            watchProperties: [`start_time`],
+                            getChangeFn: (currentValue: number, currentWatchPropertyValues: number[]) => {
+                                return currentValue &&
+                                    currentWatchPropertyValues.length &&
+                                    currentValue < currentWatchPropertyValues[0]
                                     ? currentWatchPropertyValues[0]
                                     : currentValue;
                             }
