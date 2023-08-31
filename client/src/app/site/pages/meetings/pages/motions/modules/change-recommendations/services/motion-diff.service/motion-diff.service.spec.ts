@@ -181,7 +181,7 @@ describe(`MotionDiffService`, () => {
 
     describe(`extraction of lines`, () => {
         it(`try insert internal line markers twice`, inject([MotionDiffService], (service: MotionDiffService) => {
-            let fragment = htmlToFragment(baseHtml1);
+            const fragment = htmlToFragment(baseHtml1);
             service.insertInternalLineMarkers(fragment);
             service.insertInternalLineMarkers(fragment);
 

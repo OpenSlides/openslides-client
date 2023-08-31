@@ -11,15 +11,15 @@ import { AutoupdateSubscription } from './autoupdate-subscription';
 import { AutoupdateSetEndpointParams } from './interfaces-autoupdate';
 
 export class AutoupdateStream {
-    public failedCounter: number = 0;
+    public failedCounter = 0;
 
     private abortCtrl: AbortController = undefined;
     private activeSubscriptions: AutoupdateSubscription[] = null;
-    private _active: boolean = false;
-    private _connecting: boolean = false;
+    private _active = false;
+    private _connecting = false;
     private _abortResolver: (val?: any) => void | undefined;
     private error: any | ErrorDescription = null;
-    private restarting: boolean = false;
+    private restarting = false;
     private _currentData: Object | null = null;
 
     public get active(): boolean {
@@ -167,6 +167,30 @@ export class AutoupdateStream {
         this.clearSubscriptions();
     }
 
+    /**
+     * Removes fqids from the cache.
+     *
+     * @param fqids list of fqids to delete
+     */
+    public removeFqids(fqids: string[]): void {
+        let lastHit: string | null = null;
+        for (const key of Object.keys(this._currentData)) {
+            if (lastHit === null || !key.startsWith(fqids[lastHit] + `/`)) {
+                lastHit = null;
+                for (let i = 0; i < fqids.length; i++) {
+                    if (key.startsWith(fqids[i] + `/`)) {
+                        lastHit = key;
+                        break;
+                    }
+                }
+            }
+
+            if (lastHit !== null) {
+                delete this._currentData[key];
+            }
+        }
+    }
+
     public clearSubscriptions(): void {
         this._currentData = null;
     }
@@ -180,7 +204,7 @@ export class AutoupdateStream {
 
         if (this.activeSubscriptions === null) {
             this.activeSubscriptions = [];
-            for (let subscription of this.subscriptions) {
+            for (const subscription of this.subscriptions) {
                 this.activeSubscriptions.push(subscription);
                 subscription.stream = this;
             }
@@ -278,7 +302,7 @@ export class AutoupdateStream {
     }
 
     private sendToSubscriptions(data: any): void {
-        for (let subscription of this.subscriptions) {
+        for (const subscription of this.subscriptions) {
             // TODO: It might be possible to only send data to
             // the subscriptions that actually need it
             subscription.updateData(data);
@@ -286,7 +310,7 @@ export class AutoupdateStream {
     }
 
     private sendErrorToSubscriptions(data: any): void {
-        for (let subscription of this.subscriptions) {
+        for (const subscription of this.subscriptions) {
             subscription.sendError(data);
         }
     }

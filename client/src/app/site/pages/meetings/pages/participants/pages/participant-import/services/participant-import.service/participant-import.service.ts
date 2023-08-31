@@ -122,7 +122,7 @@ export class ParticipantImportService extends BaseUserImportService {
             users: _entries.map(entry => entry.model)
         });
         this._existingUsers = {};
-        for (let i in _entries) {
+        for (const i in _entries) {
             this._existingUsers[_entries[i].id] = <Partial<GeneralUser>[]>results[i];
         }
     }

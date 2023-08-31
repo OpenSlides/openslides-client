@@ -1,6 +1,14 @@
 import { Directive } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import {
+    BehaviorSubject,
+    distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    isObservable,
+    Observable,
+    Subscription
+} from 'rxjs';
 import { SortListService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { StorageService } from '../../../gateways/storage.service';
@@ -66,6 +74,15 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return this.sortDefinition!.sortAscending;
     }
 
+    public get hasSortOptionSelected(): boolean {
+        const defaultDef = this._defaultDefinitionSubject.value;
+        const current = this.sortDefinition;
+        if (!defaultDef || !current) {
+            return false;
+        }
+        return defaultDef.sortAscending !== current.sortAscending || defaultDef.sortProperty !== current.sortProperty;
+    }
+
     /**
      * set the property of the viewModel the sorting will be based on.
      * If the property stays the same, only the sort direction will be toggled,
@@ -87,7 +104,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @returns the current sorting property
      */
     public get sortProperty(): OsSortProperty<V> {
-        return this.sortDefinition!.sortProperty;
+        return this.sortDefinition?.sortProperty;
     }
 
     /**
@@ -105,8 +122,46 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return [];
     }
 
-    public constructor(translate: TranslateService, private store: StorageService) {
+    public get defaultOption(): OsSortingOption<V> | undefined {
+        return this.getSortOptions().find(
+            option =>
+                this._defaultDefinitionSubject.value &&
+                this.isSameProperty(option.property, this._defaultDefinitionSubject.value.sortProperty)
+        );
+    }
+
+    public isSameProperty(a: OsSortProperty<V>, b: OsSortProperty<V>): boolean {
+        a = Array.isArray(a) ? a : [a];
+        b = Array.isArray(b) ? b : [b];
+        return a.equals(b);
+    }
+
+    private _defaultDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V>>(null);
+
+    private _isDefaultSorting = false;
+
+    public constructor(
+        translate: TranslateService,
+        private store: StorageService,
+        defaultDefinition: OsSortingDefinition<V> | Observable<OsSortingDefinition<V>>
+    ) {
         super(translate);
+
+        this._defaultDefinitionSubject
+            .pipe(distinctUntilChanged((prev, curr) => prev?.sortProperty === curr?.sortProperty))
+            .subscribe(defaultDef => {
+                if (this._isDefaultSorting && defaultDef) {
+                    this.setSorting(defaultDef.sortProperty, defaultDef.sortAscending);
+                } else if (defaultDef && this.sortDefinition?.sortProperty === defaultDef?.sortProperty) {
+                    this.updateSortDefinitions();
+                }
+            });
+
+        if (isObservable(defaultDefinition)) {
+            defaultDefinition.subscribe(this._defaultDefinitionSubject);
+        } else {
+            this._defaultDefinitionSubject.next(defaultDefinition);
+        }
     }
 
     /**
@@ -136,10 +191,12 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return shouldHide;
     }
 
-    /**
-     * Enforce children to implement a method that returns the fault sorting
-     */
-    protected abstract getDefaultDefinition(): OsSortingDefinition<V> | Promise<OsSortingDefinition<V>>;
+    protected async getDefaultDefinition(): Promise<OsSortingDefinition<V>> {
+        if (this._defaultDefinitionSubject.value) {
+            return this._defaultDefinitionSubject.value;
+        }
+        return await firstValueFrom(this._defaultDefinitionSubject.pipe(filter(value => !!value)));
+    }
 
     /**
      * Defines the sorting properties, and returns an observable with sorted data
@@ -148,22 +205,48 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param definitions The definitions of the possible options
      */
     public async initSorting(inputObservable: Observable<V[]>): Promise<void> {
-        if (this.inputDataSubscription) {
-            this.inputDataSubscription.unsubscribe();
-            this.inputDataSubscription = null;
-        }
+        this.exitSortService();
 
         if (!this.sortDefinition) {
-            const storedDefinition = await this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey);
+            let [storedDefinition, sortProperty, sortAscending]: [OsSortingDefinition<V>, OsSortProperty<V>, boolean] =
+                await Promise.all([
+                    // TODO: Remove the sorting definition loading part and everything caused by 'transformDeprecated' at a later date, it is only here for backwards compatibility
+                    this.store.get<OsSortingDefinition<V>>(`sorting_` + this.storageKey),
+                    this.store.get<OsSortProperty<V>>(`sorting_property_` + this.storageKey),
+                    this.store.get<boolean>(`sorting_ascending_` + this.storageKey)
+                ]);
+
+            const transformDeprecated = !!storedDefinition;
+            if (transformDeprecated) {
+                this.store.remove(`sorting_` + this.storageKey);
+            }
+
+            if ((sortAscending ?? sortProperty) != null) {
+                storedDefinition = {
+                    sortAscending,
+                    sortProperty
+                };
+            }
 
             if (storedDefinition) {
                 this.sortDefinition = storedDefinition;
             }
 
             if (this.sortDefinition && this.sortDefinition.sortProperty) {
-                this.updateSortedData();
+                if (transformDeprecated) {
+                    this.updateSortDefinitions();
+                } else {
+                    this.calculateDefaultStatus();
+                    this.updateSortedData();
+                }
             } else {
-                this.sortDefinition = await this.getDefaultDefinition();
+                const defaultDef = await this.getDefaultDefinition();
+                sortAscending = sortAscending ?? defaultDef.sortAscending;
+                sortProperty = sortProperty ?? defaultDef.sortProperty;
+                this.sortDefinition = {
+                    sortAscending,
+                    sortProperty
+                };
                 this.updateSortDefinitions();
             }
         }
@@ -174,16 +257,27 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         });
     }
 
+    public exitSortService(): void {
+        if (this.inputDataSubscription) {
+            this.inputDataSubscription.unsubscribe();
+            this.inputDataSubscription = null;
+        }
+    }
+
     /**
      * Change the property and the sorting direction at the same time
      *
      * @param property a sorting property of a view model
      * @param ascending ascending or descending
      */
-    public setSorting(property: keyof V, ascending: boolean): void {
-        this.sortDefinition!.sortProperty = property;
-        this.sortDefinition!.sortAscending = ascending;
-        this.updateSortDefinitions();
+    public setSorting(property: OsSortProperty<V>, ascending: boolean): void {
+        if (!this.sortDefinition) {
+            this.sortDefinition = { sortProperty: property, sortAscending: ascending };
+        } else {
+            this.sortDefinition!.sortProperty = property;
+            this.sortDefinition!.sortAscending = ascending;
+            this.updateSortDefinitions();
+        }
     }
 
     /**
@@ -226,31 +320,46 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     /**
-     * Saves the current sorting definitions to the local store
-     */
-    private updateSortDefinitions(): void {
-        this.updateSortedData();
-        this.store.set(`sorting_` + this.storageKey, this.sortDefinition);
-    }
-
-    /**
      * Recreates the sorting function. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
     protected async updateSortedData(): Promise<void> {
         const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
         if (this.inputData) {
-            this.inputData.sort((itemA, itemB) =>
-                this.sortItems(
-                    itemA,
-                    itemB,
-                    this.shouldHideOption({ property: this.sortProperty }, false)
-                        ? alternativeProperty
-                        : this.sortProperty,
-                    this.ascending
+            this.outputSubject.next(
+                [...this.inputData].sort(
+                    (itemA, itemB) =>
+                        this.sortItems(
+                            itemA,
+                            itemB,
+                            this.shouldHideOption({ property: this.sortProperty }, false)
+                                ? alternativeProperty
+                                : this.sortProperty,
+                            this.ascending
+                        ) || itemA.id - itemB.id
                 )
             );
-            this.outputSubject.next(this.inputData);
         }
+    }
+
+    /**
+     * Saves the current sorting definitions to the local store
+     */
+    private updateSortDefinitions(): void {
+        this.calculateDefaultStatus();
+        this.updateSortedData();
+        if (this._isDefaultSorting) {
+            this.store.remove(`sorting_property_` + this.storageKey);
+        } else {
+            this.store.set(`sorting_property_` + this.storageKey, this.sortDefinition?.sortProperty);
+        }
+        this.store.set(`sorting_ascending_` + this.storageKey, this.sortDefinition?.sortAscending);
+    }
+
+    private calculateDefaultStatus(): void {
+        this._isDefaultSorting = this.isSameProperty(
+            this.sortDefinition.sortProperty,
+            this._defaultDefinitionSubject.value?.sortProperty
+        );
     }
 }

@@ -51,7 +51,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
 
     public getTitle = (viewVote: object) => `Vote`;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Votes` : `Vote`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Votes` : `Vote`);
 
     public async sendVote(pollId: Id, payload: VotePayload): Promise<void> {
         const request: Promise<void> = this.http.post(`${VOTE_URL}?id=${pollId}`, payload);
@@ -130,8 +130,8 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
             return;
         }
 
-        let results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
-        for (let pollId of Object.keys(results)) {
+        const results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
+        for (const pollId of Object.keys(results)) {
             const subscription = this._subscribedPolls.get(+pollId);
             const currentVal = subscription.current.value;
             if (JSON.stringify(currentVal) !== JSON.stringify(results[pollId])) {

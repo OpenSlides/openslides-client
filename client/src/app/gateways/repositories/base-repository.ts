@@ -434,7 +434,13 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected async sendActionToBackend<T>(action: string, payload: T): Promise<any> {
         try {
-            return await this.actions.sendRequest(action, payload);
+            const results = await this.actions.createFromArray([{ action, data: [payload] }]).resolve();
+            if (results) {
+                if (results.length !== 1) {
+                    throw new Error(`The action service did not respond with exactly one response for the request.`);
+                }
+                return results[0];
+            }
         } catch (e) {
             throw e;
         }
@@ -448,7 +454,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected async sendBulkActionToBackend<T>(action: string, payload: T[]): Promise<any> {
         try {
-            return await this.actions.sendBulkRequest(action, payload);
+            return await this.actions.createFromArray<any>([{ action, data: payload }]).resolve();
         } catch (e) {
             throw e;
         }

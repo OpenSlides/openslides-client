@@ -18,27 +18,27 @@ describe(`TrustPipe`, () => {
     });
 
     it(`test sanitizes html`, () => {
-        let html = pipe.transform(`<i>Test</i>`, `html`);
+        const html = pipe.transform(`<i>Test</i>`, `html`);
         expect(html).toEqual(domSanitizer.bypassSecurityTrustHtml(`<i>Test</i>`));
     });
 
     it(`test sanitizes style`, () => {
-        let style = pipe.transform(`backgroud: red`, `style`);
+        const style = pipe.transform(`backgroud: red`, `style`);
         expect(style).toEqual(domSanitizer.bypassSecurityTrustStyle(`backgroud: red`));
     });
 
     it(`test sanitizes script`, () => {
-        let js = pipe.transform(`alert('hi')`, `script`);
+        const js = pipe.transform(`alert('hi')`, `script`);
         expect(js).toEqual(domSanitizer.bypassSecurityTrustScript(`alert('hi')`));
     });
 
     it(`test sanitizes url`, () => {
-        let url = pipe.transform(`javascript:alert('hi')`, `url`);
+        const url = pipe.transform(`javascript:alert('hi')`, `url`);
         expect(url).toEqual(domSanitizer.bypassSecurityTrustUrl(`javascript:alert('hi')`));
     });
 
     it(`test sanitizes resourceUrl`, () => {
-        let url = pipe.transform(`test://foo`, `resourceUrl`);
+        const url = pipe.transform(`test://foo`, `resourceUrl`);
         expect(url).toEqual(domSanitizer.bypassSecurityTrustResourceUrl(`test://foo`));
     });
 

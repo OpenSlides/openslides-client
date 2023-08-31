@@ -169,7 +169,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         );
         const ids: number[] = [];
         const updatePayload: any[] = [];
-        for (let date of data) {
+        for (const date of data) {
             if (date.rest?.length) {
                 const models = results.filter(user =>
                     Object.keys(date.user).every(key => date.user[key] === user[key])
@@ -184,7 +184,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
                     continue;
                 }
                 ids.push(models[0].id);
-                for (let meeting_user of date.rest ?? []) {
+                for (const meeting_user of date.rest ?? []) {
                     updatePayload.push({ id: models[0].id, ...meeting_user });
                 }
             }
@@ -326,8 +326,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         }
     }
 
-    public getVerboseName = (plural: boolean = false): string =>
-        this.translate.instant(plural ? `Participants` : `Participant`);
+    public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Participants` : `Participant`);
 
     /**
      * Adds the short and full name to the view user.

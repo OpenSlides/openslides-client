@@ -131,7 +131,7 @@ export class MotionCsvExportService {
             });
         exportProperties.push(
             ...comments.map(commentId => {
-                let label =
+                const label =
                     commentId === PERSONAL_NOTE_ID
                         ? this.translate.instant(`Personal note`)
                         : this.commentRepo.getViewModel(commentId)!.getTitle();

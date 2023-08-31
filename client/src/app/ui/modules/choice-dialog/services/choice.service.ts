@@ -42,7 +42,7 @@ export class ChoiceService {
     public async open<T extends Selectable = Selectable>(
         titleOrConfig: string | ChoiceDialogConfig,
         choices?: Observable<T[]> | T[],
-        multiSelect: boolean = false,
+        multiSelect = false,
         actions?: string[],
         clearChoiceOption?: string,
         sortFn?: (a: T, b: T) => number

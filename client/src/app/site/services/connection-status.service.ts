@@ -82,7 +82,7 @@ export class ConnectionStatusService {
 
     private deferCheckStillOffline(): void {
         this._isOfflineSubject.next(true);
-        let addBannerTimeout = setTimeout(() => this.bannerService.addBanner(OFFLINE_BANNER), 5000);
+        const addBannerTimeout = setTimeout(() => this.bannerService.addBanner(OFFLINE_BANNER), 5000);
         if (this._config?.isOnlineFn instanceof Observable) {
             const subscription = this._config.isOnlineFn.subscribe(is => {
                 if (is) {

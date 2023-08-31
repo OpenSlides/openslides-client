@@ -147,7 +147,7 @@ class StreamMessageParser<T> {
         }
     }
 
-    private handleContent(content: string, errorReason: string = `Reported by server`): void {
+    private handleContent(content: string, errorReason = `Reported by server`): void {
         const decompressedContent = this.decompressContent(content);
         const parsedContent = this.parse(decompressedContent);
         if (parsedContent instanceof ErrorDescription) {
@@ -294,7 +294,7 @@ export class HttpStream<T> {
         const observable = this.createStreamFn();
         this._subscription = observable.subscribe({
             next: event => this.handleStreamEvent(event),
-            error: error => this.handleStreamError(error),
+            error: (error: unknown) => this.handleStreamError(error),
             complete: () => this.onComplete()
         });
     }

@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { MockTranslateService } from 'src/app/site/pages/meetings/modules/poll/pipes/poll-parse-number/poll-parse-number.pipe.spec';
 
+import { MeetingAction } from '../repositories/meetings';
 import { MotionAction } from '../repositories/motions';
 import { ErrorMapService } from './error-map.service';
 import { ErrorMap, UrlFragmentToHttpErrorMap } from './error-map-utils';
@@ -101,6 +102,19 @@ describe(`ErrorMapService`, () => {
                     `function`
         },
         {
+            title: `test with a different action error map`,
+            test: {
+                message: `Only one of start_time and end_time is not allowed.`,
+                options: { url: `random/action`, data: getMockActionFromName(MeetingAction.CREATE) }
+            },
+            expect: `Error: Start and end time must either both be set or both be empty`,
+            testConditionCheck:
+                !!actionMap &&
+                typeof actionMap === `function` &&
+                !!actionMap(getMockActionFromName(MeetingAction.CREATE)) &&
+                typeof Array.from(actionMap(getMockActionFromName(MeetingAction.CREATE)).values())[0] !== `function`
+        },
+        {
             title: `test with a fragment that returns a function with data that returns nothing`,
             test: {
                 message: `I am a create error!`,
@@ -146,8 +160,8 @@ describe(`ErrorMapService`, () => {
         spyOn(console, `warn`);
     });
 
-    for (let date of testData) {
-        let test = date.test;
+    for (const date of testData) {
+        const test = date.test;
         it(date.title, () => {
             expect(service.getCleanErrorMessage(test.message, test.options)).toEqual(date.expect);
         });

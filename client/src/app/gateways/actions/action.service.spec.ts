@@ -2,8 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { QueryParams } from 'src/app/infrastructure/definitions/http';
 
 import { HttpService } from '../http.service';
+import { Action, createEmptyAction } from './action';
 import { ActionService } from './action.service';
-import { ActionError, ActionResponse } from './action-utils';
+import { ActionError, ActionRequest, ActionResponse } from './action-utils';
 
 const ACTION_URL = `/system/action/handle_request`;
 const ACTION_SEPARATELY_URL = `/system/action/handle_separately`;
@@ -76,17 +77,17 @@ const exampleData = [
     { data: [], expected: `[]` }
 ];
 
-function getExampleSlice(start: number, end: number = 0): any {
+function getExampleSlice(start: number, end = 0): any {
     start = start % exampleData.length;
     end = end % (exampleData.length + 1);
     return start >= end ? exampleData.slice(start) : exampleData.slice(start, end);
 }
 
-function getActionData(start: number, end: number = 0): any {
+function getActionData(start: number, end = 0): any {
     return getExampleSlice(start, end).map(date => date.data);
 }
 
-function getActionExpect(actionName: string, start: number, end: number = 0, wrap = 2): any {
+function getActionExpect(actionName: string, start: number, end = 0, wrap = 2): any {
     return `${new Array(wrap).fill(`[`).join(``)}{"action":"${actionName}","data":[${getExampleSlice(start, end)
         .map(date => `${date.expected}`)
         .join(`,`)}]}${new Array(wrap).fill(`]`).join(``)}`;
@@ -144,19 +145,19 @@ describe(`ActionService`, () => {
     });
 
     it(`test create`, async () => {
-        let action = service.create<any>({ action: `an.action`, data: getActionData(7, 9) });
+        const action = service.create<any>({ action: `an.action`, data: getActionData(7, 9) });
         expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`an.action`, 7, 9, 1));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].path === ACTION_URL).toBe(true);
     });
 
     it(`test createFromArray`, async () => {
-        let action = service.createFromArray<any>([{ action: `action.movie`, data: getActionData(5, 7) }]);
+        const action = service.createFromArray<any>([{ action: `action.movie`, data: getActionData(5, 7) }]);
         expect(JSON.stringify(await action.resolve()) as string).toEqual(getActionExpect(`action.movie`, 5, 7, 1));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].path === ACTION_URL).toBe(true);
     });
 
     it(`test beforeActionFunction`, async () => {
-        let indices = [service.addBeforeActionFn(() => true)];
+        const indices = [service.addBeforeActionFn(() => true)];
         expect(await service.sendRequests([{ action: `action.one`, data: getActionData(1, 2) }])).toBe(null);
         indices.push(service.addBeforeActionFn(() => false));
         expect(await service.sendRequests([{ action: `action.two`, data: getActionData(1, 4) }])).toBe(null);
@@ -165,5 +166,80 @@ describe(`ActionService`, () => {
             JSON.stringify(await service.sendRequests([{ action: `action.three`, data: getActionData(10, 12) }]))
         ).toBe(getActionExpect(`action.three`, 10, 12));
         expect(http.lastPosts.length === 1 && http.lastPosts[0].data[0][`action`] === `action.three`).toBe(true);
+    });
+});
+
+describe(`Action`, () => {
+    let sendRequestsCalled: boolean;
+
+    beforeEach(() => {
+        sendRequestsCalled = false;
+    });
+
+    const requestFn = async requests => {
+        sendRequestsCalled = true;
+        return requests.map(rqst => rqst.action + `: ` + JSON.stringify(rqst.data));
+    };
+    const getAction = (...actions: ActionRequest[]) => new Action<string>(requestFn, actions);
+
+    it(`test action base functionality`, async () => {
+        const action = getAction({ action: `t3xt`, data: [4, `b`, `c`, `d`, 3] });
+        expect(await action.resolve()).toEqual([`t3xt: [4,"b","c","d",3]`]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action from`, async () => {
+        const actions = [
+            getAction({ action: `50m3 t3xt`, data: [`f`, `g`, `h`, 1, `j`, `k`] }),
+            getAction({ action: `some text`, data: [`l`, `m`, `n`] })
+        ];
+        const newAction = Action.from<string>(...actions);
+        expect(await newAction.resolve()).toEqual([`50m3 t3xt: ["f","g","h",1,"j","k"]`, `some text: ["l","m","n"]`]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action from empty`, async () => {
+        const newAction = Action.from<string>();
+        expect(await newAction.resolve()).toEqual([]);
+        expect(sendRequestsCalled).toBe(false);
+    });
+
+    it(`test action concat`, async () => {
+        const action = getAction({ action: `1337`, data: [0, `p`, `q`, `r`, 5] });
+        const actions = [
+            getAction({ action: `t`, data: [`t`] }, { action: `u`, data: [`u`] }),
+            createEmptyAction(),
+            new Action(async () => {
+                return [];
+            }, [{ action: `letters`, data: [`v`, `w`, `x`] }]),
+            null,
+            { action: `yz`, data: [`y`, `z`] }
+        ];
+        const newAction = action.concat(...actions);
+        expect(await newAction.resolve()).toEqual([
+            `1337: [0,"p","q","r",5]`,
+            `t: ["t"]`,
+            `u: ["u"]`,
+            `letters: ["v","w","x"]`,
+            `yz: ["y","z"]`
+        ]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action concat without data`, async () => {
+        const action = getAction({ action: `1337`, data: [0, `p`, `q`, `r`, 5] });
+        const newAction = action.concat();
+        expect(await newAction.resolve()).toEqual([`1337: [0,"p","q","r",5]`]);
+        expect(sendRequestsCalled).toBe(true);
+    });
+
+    it(`test action with empty sendRequest return value`, async () => {
+        const action = new Action<string>(async () => null, [{ action: `t3xt`, data: [4, `b`, `c`, `d`, 3] }]);
+        expect(await action.resolve()).toEqual(undefined);
+        const secondAction = new Action<string>(
+            async () => undefined,
+            [{ action: `t3xt`, data: [4, `b`, `c`, `d`, 3] }]
+        );
+        expect(await secondAction.resolve()).toEqual(undefined);
     });
 });

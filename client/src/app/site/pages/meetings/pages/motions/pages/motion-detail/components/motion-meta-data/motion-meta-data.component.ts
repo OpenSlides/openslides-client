@@ -111,7 +111,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
 
     private _referencedMotions: ViewMotion[];
 
-    private _forwardingAvailable: boolean = false;
+    private _forwardingAvailable = false;
 
     /**
      * The subscription to the recommender config variable.
@@ -316,7 +316,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent {
                         motion.recommendation_extension_references as ViewMotion[]
                     ]),
                     distinctUntilChanged((p, c) => [...Array(2).keys()].every(i => p[i].equals(c[i]))),
-                    map(arr => arr.map(motions => (motions || []).sort((a, b) => a.number.localeCompare(b.number))))
+                    map(arr =>
+                        arr.map(motions => (motions || []).naturalSort(this.translate.currentLang, [`number`, `title`]))
+                    )
                 )
                 .subscribe(value => ([this._referencingMotions, this._referencedMotions] = value))
         ];

@@ -64,17 +64,17 @@ export class C4DialogComponent implements OnInit, OnDestroy {
     /**
      * Contains if the user is currently within a meeting
      */
-    public inMeeting: boolean = false;
+    public inMeeting = false;
 
     /**
      * The dialogs caption
      */
-    public caption: string = ``;
+    public caption = ``;
 
     /**
      * Saves, if the board is disabled.
      */
-    public disableBoard: boolean = false;
+    public disableBoard = false;
 
     /**
      * The board. First columns, then rows. Size is 7x6.

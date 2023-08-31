@@ -24,6 +24,8 @@ class MockPollServiceMapperService {
     }
 }
 
+let returnNothing = false;
+
 class MockPollService {
     private type: string;
 
@@ -41,7 +43,9 @@ class MockPollService {
             row?: OptionData | PollTableData;
         }
     ): string {
-        return `${this.type ?? `default`}: ${value}, "${JSON.stringify(poll)}", "${JSON.stringify(row)}"`;
+        return returnNothing
+            ? undefined
+            : `${this.type ?? `default`}: ${value}, "${JSON.stringify(poll)}", "${JSON.stringify(row)}"`;
     }
 }
 
@@ -111,6 +115,8 @@ describe(`PollPercentBasePipe`, () => {
     let pipe: PollPercentBasePipe;
 
     beforeEach(async () => {
+        returnNothing = false;
+
         await TestBed.configureTestingModule({
             providers: [
                 PollPercentBasePipe,
@@ -168,5 +174,14 @@ describe(`PollPercentBasePipe`, () => {
         expect(pipe.transform(5, poll, options[6])).toBe(
             `(default: 5, "{"pollClassType":"motion","pollmethod":"YNA","state":"published","onehundred_percent_base":"Y","votesvalid":5,"votesinvalid":6,"votescast":11,"type":"analog","entitled_users_at_stop":[],"options":[{}],"options_as_observable":{}}", "undefined")`
         );
+    });
+
+    it(`test with no return`, () => {
+        returnNothing = true;
+        const poll = testPollData[`motionPoll`];
+        const options = poll.options;
+        expect(pipe.transform(0, poll, options[0])).toBe(null);
+        expect(pipe.transform(2, poll, options[1])).toBe(null);
+        expect(pipe.transform(5, poll, options[6])).toBe(null);
     });
 });

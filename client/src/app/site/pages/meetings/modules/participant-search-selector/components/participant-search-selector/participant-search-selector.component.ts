@@ -51,7 +51,7 @@ export class ParticipantSearchSelectorComponent extends BaseUiComponent implemen
      * Placeholder string for the search field. Is automatically translated.
      */
     @Input()
-    public placeholder: string = `Select a user...`;
+    public placeholder = `Select a user...`;
 
     /**
      * Event that communicates the selected user to the parent component upon selection

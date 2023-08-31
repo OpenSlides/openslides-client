@@ -55,7 +55,7 @@
             <span *ngIf="awaitingConfirm">
                 {{ 'After verifying the preview click on "import" please (see top right).' | translate }}
             </span>
-            <span *ngIf="isImporting">{{ 'The import is in progress, please wait...' | translate }}</span>
+            <span *ngIf="isImporting">{{ 'The import is in progress, please wait ...' | translate }}</span>
             <span class="warn" *ngIf="hasErrors">
                 {{
                     'The import can not proceed. There is likely a problem with the import data, please check the preview for details.'
@@ -199,7 +199,7 @@
 
 <ng-template #nonObjectEntryTemplate let-entry="entry" let-type="type">
     <ng-container *ngIf="type === 'string'">{{ entry | translate }}</ng-container>
-    <ng-container *ngIf="type === 'number'">{{ entry }}</ng-container>
+    <ng-container *ngIf="type === 'number' || type === 'integer'">{{ entry }}</ng-container>
     <ng-container *ngIf="type === 'date'">{{ entry }}</ng-container>
     <mat-checkbox *ngIf="type === 'boolean'" [checked]="entry" disabled></mat-checkbox>
     &nbsp;

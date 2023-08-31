@@ -76,7 +76,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
         return this._html;
     }
 
-    private _html: string = ``;
+    private _html = ``;
 
     @Input()
     public set changeRecommendations(recos: ViewUnifiedChange[]) {

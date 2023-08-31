@@ -87,7 +87,7 @@ export class LoadFontService {
         this.setNewFontFace(`customProjectorFont`, fonturl, weight);
     }
 
-    private setNewFontFace(fontName: string, fontPath: string, weight: number = 400): void {
+    private setNewFontFace(fontName: string, fontPath: string, weight = 400): void {
         const customFont = new FontFace(fontName, `url(${fontPath})`, { weight });
         customFont
             .load()

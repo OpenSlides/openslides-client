@@ -28,7 +28,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
 
     public getTitle = (viewCommittee: ViewCommittee) => viewCommittee.name;
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Committees` : `Committee`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Committees` : `Committee`);
 
     public override getFieldsets(): Fieldsets<Committee> {
         const nameFields: TypedFieldset<Committee> = [`name`];

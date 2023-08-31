@@ -26,7 +26,7 @@ export class OrganizationTagDialogComponent extends BaseUiComponent implements O
     }
 
     private _isCreateView = false;
-    private _lastValidColor: string = ``;
+    private _lastValidColor = ``;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: OrganizationTagDialogData,

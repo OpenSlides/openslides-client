@@ -55,7 +55,7 @@ export class AgendaItemListComponent extends BaseMeetingListViewComponent<ViewAg
     /**
      * Show or hide the numbering button
      */
-    public isNumberingAllowed: boolean = false;
+    public isNumberingAllowed = false;
 
     public showSubtitles: Observable<boolean> = this.meetingSettingsService.get(`agenda_show_subtitles`);
 

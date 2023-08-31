@@ -24,7 +24,7 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
     public hintText: string | null = null;
 
     @Input()
-    public showUpdateSuccessIcon: boolean = false;
+    public showUpdateSuccessIcon = false;
 
     constructor(
         formBuilder: UntypedFormBuilder,

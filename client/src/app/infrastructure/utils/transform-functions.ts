@@ -11,10 +11,10 @@ export function copy<T>(model: T, modelHeaders: (keyof T)[] = []): T {
 }
 
 export function deepCopy<T>(model: T): T {
-    let tmp: any;
     if (!model) {
         return model;
     }
+    let tmp: any;
     if (Array.isArray(model)) {
         tmp = [];
         model.forEach((entry, index) => (tmp[index] = deepCopy(entry)));

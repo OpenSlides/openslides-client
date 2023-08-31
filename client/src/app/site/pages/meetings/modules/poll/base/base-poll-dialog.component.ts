@@ -47,7 +47,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
      */
     public dialogVoteFormOptionKeysSubject = new BehaviorSubject<string[]>([]);
 
-    public publishImmediately: boolean = false;
+    public publishImmediately = false;
 
     /**
      * If the options of the finished poll should hold text instead of content_object_id,
@@ -220,7 +220,7 @@ export abstract class BasePollDialogComponent extends BaseUiComponent implements
      * replaced with VOTE_UNDOCUMENTED
      * @param voteData the (partial) data
      */
-    private replaceEmptyValues(voteData: any, undo: boolean = false): object {
+    private replaceEmptyValues(voteData: any, undo = false): object {
         const result: any = {};
         for (const key of Object.keys(voteData)) {
             if (typeof voteData[key] === `object` && voteData[key]) {

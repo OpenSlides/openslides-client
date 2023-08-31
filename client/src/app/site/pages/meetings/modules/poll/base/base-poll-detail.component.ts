@@ -109,8 +109,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
         return (this.hasPerms() && this.poll!.isFinished) || this.poll!.isPublished;
     }
 
-    protected get contentObjectId(): Id {
-        return this.poll?.getContentObject()?.id!;
+    protected get contentObjectId(): Id | undefined {
+        return this.poll?.getContentObject()?.id;
     }
 
     private _entitledUsersSubject = new BehaviorSubject<EntitledUsersTableEntry[]>([]);
@@ -233,8 +233,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
 
         for (const entry of this.poll.entitled_users_at_stop || []) {
             userIds.add(entry.user_id);
-            if (entry.vote_delegated_to_id) {
-                userIds.add(entry.vote_delegated_to_id);
+            if (entry.vote_delegated_to_user_id) {
+                userIds.add(entry.vote_delegated_to_user_id);
             }
         }
         this.subscriptions.push(
@@ -252,8 +252,8 @@ export abstract class BasePollDetailComponent<V extends PollContentObject, S ext
                             id: entry.user_id,
                             user: users.find(user => user.id === entry.user_id),
                             voted_verbose: `voted:${entry.voted}`,
-                            vote_delegated_to: entry.vote_delegated_to_id
-                                ? users.find(user => user.id === entry.vote_delegated_to_id)
+                            vote_delegated_to: entry.vote_delegated_to_user_id
+                                ? users.find(user => user.id === entry.vote_delegated_to_user_id)
                                 : null
                         });
                     }

@@ -3,7 +3,7 @@
     <span *ngIf="stats">{{ 'Re-count logged-in users' | translate }}</span>
 </button>
 <div *ngIf="stats">
-    <i>{{ 'last Updated' | translate }}: {{ lastUpdated / 1000 | localizedDate : 'PPpp' }}</i>
+    <i>{{ 'last updated' | translate }}: {{ lastUpdated / 1000 | localizedDate : 'PPpp' }}</i>
     <p>
         {{ userIds().length }} {{ 'logged-in users' | translate }} ({{ stats.activeUserHandles }}
         {{ 'connections' | translate }})

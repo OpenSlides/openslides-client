@@ -44,7 +44,7 @@ interface DragEvent {
 class Movement {
     public verticalMove: Direction.DOWNWARDS | Direction.UPWARDS | Direction.NOWAY = Direction.NOWAY;
     public horizontalMove: Direction.LEFT | Direction.NOWAY | Direction.RIGHT = Direction.NOWAY;
-    public steps: number = 0;
+    public steps = 0;
 }
 
 @Component({
@@ -102,7 +102,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
     /**
      * Number, that holds the current visible nodes.
      */
-    private seenNodes: number = 0;
+    private seenNodes = 0;
 
     /**
      * Function that will be used for filtering the nodes.
@@ -155,7 +155,7 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
      * @param nextState Is an event emitter that emits a boolean whether the nodes should expand or not.
      */
     @Input()
-    public set stateChange(nextState: EventEmitter<Boolean>) {
+    public set stateChange(nextState: EventEmitter<boolean>) {
         nextState.subscribe((state: boolean) => {
             if (state) {
                 this.expandAll();
@@ -902,8 +902,8 @@ export class SortingTreeComponent<T extends Identifiable & Displayable> implemen
                     this.osTreeData,
                     Array.from(deleteSet)
                 );
-                let newIds = Array.from(newSet).sort((a, b) => a - b);
-                let items = values.filter(val => findIndexInSortedArray(newIds, val.id, (a, b) => a - b) !== -1);
+                const newIds = Array.from(newSet).sort((a, b) => a - b);
+                const items = values.filter(val => findIndexInSortedArray(newIds, val.id, (a, b) => a - b) !== -1);
                 this.osTreeData = this.treeService.concatNewNodesFromItems(this.osTreeData, items);
             }
             this.checkActiveFilters();

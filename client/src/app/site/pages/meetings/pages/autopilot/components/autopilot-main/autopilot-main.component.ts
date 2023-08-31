@@ -57,13 +57,13 @@ export class AutopilotMainComponent extends BaseModelRequestHandlerComponent {
                         return;
                     }
 
-                    for (let id of this.currentSubscriptions) {
+                    for (const id of this.currentSubscriptions) {
                         if (projections.indexOf(id) === -1) {
                             this.modelRequestService.closeSubscription(`${AUTOPILOT_CONTENT_SUBSCRIPTION}_${id}`);
                         }
                     }
 
-                    for (let id of projections) {
+                    for (const id of projections) {
                         if (this.currentSubscriptions.indexOf(id) === -1) {
                             this.updateSubscribeTo(
                                 {

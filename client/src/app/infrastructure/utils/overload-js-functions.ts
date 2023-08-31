@@ -1,3 +1,5 @@
+type KeysMatching<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T];
+
 declare global {
     /**
      * Enhance array with own functions
@@ -32,6 +34,7 @@ declare global {
          * @param callbackFn A function that receives the whole array and has to return nothing.
          */
         tap(callbackFn: (self: T[]) => void): T[];
+        naturalSort(currentLang: string, compareBy?: KeysMatching<T, string>[]): T[];
         mapToObject<V = any>(f: (item: T, index: number) => { [key: string]: V }): { [key: string]: V };
         /**
          * TODO: Remove this, when ES2022 is the target for our tsconfig
@@ -100,7 +103,7 @@ function overloadArrayFunctions(): void {
     });
 
     Object.defineProperty(Array.prototype, `difference`, {
-        value<T>(other: T[], symmetric: boolean = false): T[] {
+        value<T>(other: T[], symmetric = false): T[] {
             const difference = new Set<T>(this);
             const otherSet = new Set<T>(other ?? []);
             for (const entry of Array.from(otherSet)) {
@@ -133,6 +136,35 @@ function overloadArrayFunctions(): void {
                 }
                 return aggr;
             }, {});
+        },
+        enumerable: false
+    });
+
+    Object.defineProperty(Array.prototype, `naturalSort`, {
+        value<T>(currentLang: string, compareBy?: KeysMatching<T, string>[]): T[] {
+            const intl = new Intl.Collator(currentLang, {
+                numeric: true,
+                ignorePunctuation: true,
+                sensitivity: `base`
+            });
+            return this.sort((a: T, b: T) => {
+                if (!compareBy || compareBy.length === 0) {
+                    return intl.compare(JSON.stringify(a), JSON.stringify(b));
+                }
+                for (const property of compareBy) {
+                    if (a[property] === b[property] || !(a[property] || b[property])) {
+                        continue;
+                    }
+                    if (!a[property] || !b[property]) {
+                        return !a[property] ? 1 : -1;
+                    }
+                    const value = intl.compare(a[property] as unknown as string, b[property] as unknown as string);
+                    if (value) {
+                        return value;
+                    }
+                }
+                return 0;
+            });
         },
         enumerable: false
     });

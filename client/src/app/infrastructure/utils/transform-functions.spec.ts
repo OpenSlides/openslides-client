@@ -54,9 +54,9 @@ function changeShoppingCart(shoppingCart: ShoppingCart): void {
 describe(`utils: transform-functions`, () => {
     describe(`copy function`, () => {
         it(`copy an object without pre-determined model headers`, () => {
-            let mixedNuts = getMixedNuts();
-            let shoppingCart = getShoppingCart(mixedNuts);
-            let copied = copy(shoppingCart);
+            const mixedNuts = getMixedNuts();
+            const shoppingCart = getShoppingCart(mixedNuts);
+            const copied = copy(shoppingCart);
 
             expect(copied.pineapple).toBe(shoppingCart.pineapple);
             expect(copied.chocolate).toBe(shoppingCart.chocolate);
@@ -75,10 +75,10 @@ describe(`utils: transform-functions`, () => {
         });
 
         it(`copy an object with pre-determined model headers`, () => {
-            let mixedNuts = getMixedNuts();
-            let shoppingCart = getShoppingCart(mixedNuts);
-            let headers: (keyof typeof shoppingCart)[] = [`pineapple`, `mixedNuts`];
-            let copied = copy(shoppingCart, headers);
+            const mixedNuts = getMixedNuts();
+            const shoppingCart = getShoppingCart(mixedNuts);
+            const headers: (keyof typeof shoppingCart)[] = [`pineapple`, `mixedNuts`];
+            const copied = copy(shoppingCart, headers);
 
             expect(copied.pineapple).toBe(shoppingCart.pineapple);
             expect(copied.mixedNuts).toBe(shoppingCart.mixedNuts);
@@ -99,9 +99,9 @@ describe(`utils: transform-functions`, () => {
 
     describe(`deepCopy function`, () => {
         it(`deepCopy an object`, () => {
-            let mixedNuts = getMixedNuts();
-            let shoppingCart = getShoppingCart(mixedNuts);
-            let copied = deepCopy(shoppingCart);
+            const mixedNuts = getMixedNuts();
+            const shoppingCart = getShoppingCart(mixedNuts);
+            const copied = deepCopy(shoppingCart);
 
             expect(copied.pineapple).toEqual(shoppingCart.pineapple);
             expect(copied.chocolate).toEqual(shoppingCart.chocolate);
@@ -125,6 +125,14 @@ describe(`utils: transform-functions`, () => {
             expect(copied.juice).not.toEqual(shoppingCart.juice);
             expect(copied.mixedNuts.pecans).toEqual(`100g`);
             expect(copied.chocolate.length).toEqual(3);
+        });
+
+        it(`deepCopy falsy values`, () => {
+            expect(deepCopy(null)).toEqual(null);
+            expect(deepCopy(undefined)).toEqual(undefined);
+            expect(deepCopy(0)).toEqual(0);
+            expect(deepCopy(false)).toEqual(false);
+            expect(deepCopy(``)).toEqual(``);
         });
     });
 

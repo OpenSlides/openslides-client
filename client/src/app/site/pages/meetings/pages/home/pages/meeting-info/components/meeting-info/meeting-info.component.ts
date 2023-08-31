@@ -20,7 +20,7 @@ export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit
     }
 
     public get osIsManager(): boolean {
-        return this.operator.isSuperAdmin || this.operator.isOrgaManager;
+        return this.operator.isSuperAdmin || this.operator.isOrgaManager || this.operator.isMeetingAdmin;
     }
 
     public get osIsMeetingAdmin(): boolean {

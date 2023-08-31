@@ -16,7 +16,7 @@ export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<Vi
         super(repositoryServiceCollector, Projection);
     }
 
-    public getVerboseName = (plural: boolean = false) => this.translate.instant(plural ? `Projections` : `Projection`);
+    public getVerboseName = (plural = false) => this.translate.instant(plural ? `Projections` : `Projection`);
 
     public getTitle = (viewProjection: ViewProjection) =>
         viewProjection.content_object?.getProjectorTitle(viewProjection.projection).title;

@@ -24,7 +24,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnInit {
     @Input()
     public canManagePoll = false;
 
-    public max: number = 1;
+    public max = 1;
 
     public get votescast(): number {
         return this.poll?.vote_count || 0;

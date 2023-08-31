@@ -84,7 +84,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     /**
      * Determine to use custom aspect ratios
      */
-    public customAspectRatio: boolean = false;
+    public customAspectRatio = false;
 
     public get projector(): ViewProjector | null {
         return this.data.projector || null;
@@ -245,7 +245,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * @param meeting the changed meeting
      */
     private updateProjectorDefaults(meeting: ViewMeeting): void {
-        for (let key of PROJECTIONDEFAULT_KEYS) {
+        for (const key of PROJECTIONDEFAULT_KEYS) {
             const defaultProjectorIds = meeting.default_projector_ids(key);
             this.handleChangeInDefaultProjector(key, defaultProjectorIds);
         }
@@ -308,10 +308,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
     }
 
     private getProjectionDefaultsPayload(projectiondefaultKeys: string[]): { [key: string]: any } {
-        let payload = {};
+        const payload = {};
         // All defaults that are set to true should be set to the current projectors id
         for (let i = 0; i < projectiondefaultKeys.length; i++) {
-            payload[PROJECTIONDEFAULT[projectiondefaultKeys[i]]] = [
+            payload[projectiondefaultKeys[i]] = [
                 ...new Set([this.projector.id, ...this.getDefaultProjectorIds(projectiondefaultKeys[i])])
             ];
         }

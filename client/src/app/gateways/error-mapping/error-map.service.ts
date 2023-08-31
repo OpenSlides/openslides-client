@@ -26,7 +26,7 @@ export class ErrorMapService {
      */
     public getCleanErrorMessage(errorMessage: string, options: GetHttpErrorMapOptions): string | Error {
         let errorMsg = errorMessage;
-        let errorMap = options ? this.getHttpErrorMap(options) : DefaultErrorMap;
+        const errorMap = options ? this.getHttpErrorMap(options) : DefaultErrorMap;
         const fittingExpressions = errorMap ? Array.from(errorMap.keys()).filter(exp => exp.test(errorMessage)) : [];
         if (fittingExpressions.length) {
             if (fittingExpressions.length > 1) {

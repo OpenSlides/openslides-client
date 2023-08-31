@@ -31,7 +31,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
         return this._ssoConfigRows;
     }
 
-    private _ssoConfigRows: number = 3;
+    private _ssoConfigRows = 3;
 
     private _currentOrgaSettings: ViewOrganization | null = null;
 
@@ -137,7 +137,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
                 : null;
         }
-        for (let key of Object.keys(payload)) {
+        for (const key of Object.keys(payload)) {
             if (this.orgaSettingsForm.get(key).pristine) {
                 delete payload[key];
             }

@@ -45,7 +45,7 @@ export class AgendaItemMultiselectService {
         });
 
         if (selectedChoice) {
-            let requestData: Promise<void>[] = [];
+            const requestData: Promise<void>[] = [];
             if (selectedChoice.action === ADD) {
                 this.addTags(agendaItems, selectedChoice);
             } else if (selectedChoice.action === REMOVE) {
@@ -57,7 +57,7 @@ export class AgendaItemMultiselectService {
             const message = `${agendaItems.length} ` + this.translate.instant(this.messageForSpinner);
             this.spinnerService.show(message, {
                 hideAfterPromiseResolved: async () => {
-                    for (let request of requestData) {
+                    for (const request of requestData) {
                         await request;
                     }
                 }

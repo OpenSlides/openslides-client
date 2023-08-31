@@ -40,7 +40,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
     private _isUserInScope = true;
     private _currentUser: ViewUser | null = null;
-    private _voteDelegationEnabled: boolean = false;
+    private _voteDelegationEnabled = false;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,

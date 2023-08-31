@@ -145,9 +145,6 @@ msgstr ""
 msgid "Active meetings"
 msgstr ""
 
-msgid "Active users"
-msgstr ""
-
 msgid "Add"
 msgstr ""
 
@@ -211,6 +208,9 @@ msgid "Administrators"
 msgstr ""
 
 msgid "After verifiy the preview click on \"import\" please (see top right)."
+msgstr ""
+
+msgid "After verifying the preview click on \"import\" please (see top right)."
 msgstr ""
 
 msgid "Agenda"
@@ -458,6 +458,9 @@ msgstr ""
 msgid "Are you sure you want to delete this projector?"
 msgstr ""
 
+msgid "Are you sure you want to delete this state?"
+msgstr ""
+
 msgid "Are you sure you want to delete this statute paragraph?"
 msgstr ""
 
@@ -484,6 +487,9 @@ msgid ""
 "participants?"
 msgstr ""
 
+msgid "Are you sure you want to irrevocably remove your point of order?"
+msgstr ""
+
 msgid "Are you sure you want to number all agenda items?"
 msgstr ""
 
@@ -499,6 +505,9 @@ msgid "Are you sure you want to remove this entry from the agenda?"
 msgstr ""
 
 msgid "Are you sure you want to remove this motion from motion block?"
+msgstr ""
+
+msgid "Are you sure you want to remove this participant?"
 msgstr ""
 
 msgid "Are you sure you want to remove this speaker from the list of speakers?"
@@ -564,6 +573,9 @@ msgid ""
 "Attention: Accounts will add to the default group of each meeting only. If "
 "another group is intended please use the 'Add to meetings' dialog in "
 "account detail view."
+msgstr ""
+
+msgid "Attention: First enter the wifi data in [Settings > General]"
 msgstr ""
 
 msgid "Attention: This action cannot be undone!"
@@ -822,6 +834,9 @@ msgid ""
 "Can nominate other participants as candidates. \n"
 "\n"
 "Requires group permission: [Can see participants]"
+msgstr ""
+
+msgid "Can not import because of errors"
 msgstr ""
 
 msgid "Can put oneself on the list of speakers"
@@ -1099,6 +1114,9 @@ msgstr ""
 msgid "Click here to vote!"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Close list of speakers"
 msgstr ""
 
@@ -1213,10 +1231,10 @@ msgstr ""
 msgid "Copy report to clipboard"
 msgstr ""
 
-msgid "Count active users"
+msgid "Count completed requests to speak"
 msgstr ""
 
-msgid "Count completed requests to speak"
+msgid "Count logged-in users"
 msgstr ""
 
 msgid "Countdown"
@@ -1470,6 +1488,9 @@ msgstr ""
 msgid "Disabled (no percents)"
 msgstr ""
 
+msgid "Disallow new point of order when list of speakers is closed"
+msgstr ""
+
 msgid "Display type"
 msgstr ""
 
@@ -1534,6 +1555,9 @@ msgid "Duplicates"
 msgstr ""
 
 msgid "Duration"
+msgstr ""
+
+msgid "Duration in minutes"
 msgstr ""
 
 msgid "Duration of all requests to speak"
@@ -2104,6 +2128,14 @@ msgstr ""
 msgid "I know the risk"
 msgstr ""
 
+msgid ""
+"IMPORTANT: The sender address (noreply@openslides.com) is defined in the "
+"OpenSlides server settings and cannot be changed here. \n"
+"                            To receive replies you have to enter a reply "
+"address in the next field. Please test the email dispatch in case of "
+"changes!"
+msgstr ""
+
 msgid "Identifier"
 msgstr ""
 
@@ -2139,6 +2171,9 @@ msgstr ""
 msgid "Import statute"
 msgstr ""
 
+msgid "Import successful"
+msgstr ""
+
 msgid "Import topics"
 msgstr ""
 
@@ -2148,7 +2183,7 @@ msgstr ""
 msgid "In motion list, motion detail and PDF."
 msgstr ""
 
-msgid "In progress, please wait..."
+msgid "In progress, please wait ..."
 msgstr ""
 
 msgid "In the election process"
@@ -2424,6 +2459,9 @@ msgid "Livestream poster image url"
 msgstr ""
 
 msgid "Loading data. Please wait ..."
+msgstr ""
+
+msgid "Logged-in users"
 msgstr ""
 
 msgid "Login"
@@ -3337,6 +3375,9 @@ msgstr ""
 msgid "Re-add last speaker"
 msgstr ""
 
+msgid "Re-count logged-in users"
+msgstr ""
+
 msgid "Reason"
 msgstr ""
 
@@ -3488,7 +3529,7 @@ msgstr ""
 msgid "Reset state"
 msgstr ""
 
-msgid "Reset to factory defaults"
+msgid "Reset to default settings"
 msgstr ""
 
 msgid "Resolution and size"
@@ -3534,9 +3575,6 @@ msgid "Save all changes"
 msgstr ""
 
 msgid "Save editorial final version"
-msgstr ""
-
-msgid "Scan this QR code to connect to WLAN."
 msgstr ""
 
 msgid "Scan this QR code to open URL."
@@ -3689,13 +3727,13 @@ msgstr ""
 msgid "Set status for selected participants:"
 msgstr ""
 
+msgid "Set submission timestamp"
+msgstr ""
+
 msgid "Set submitters"
 msgstr ""
 
 msgid "Set tags"
-msgstr ""
-
-msgid "Set timestamp"
 msgstr ""
 
 msgid "Set workflow"
@@ -3892,6 +3930,9 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
+msgid "Start and end time must either both be set or both be empty"
+msgstr ""
+
 msgid "Start date"
 msgstr ""
 
@@ -4054,6 +4095,9 @@ msgstr ""
 msgid "The event manager has not set up a privacy policy yet."
 msgstr ""
 
+msgid "The fields are defined as follows"
+msgstr ""
+
 msgid "The file has too few columns to be parsed properly."
 msgstr ""
 
@@ -4061,6 +4105,22 @@ msgid "The file seems to have additional columns. They will be ignored."
 msgstr ""
 
 msgid "The file seems to have some ommitted columns. They will be considered empty."
+msgstr ""
+
+msgid ""
+"The import can not proceed. There is likely a problem with the import data, "
+"please check the preview for details."
+msgstr ""
+
+msgid ""
+"The import has failed due to recent changes on the server. Please check the "
+"updated preview before clicking on \"import\" again."
+msgstr ""
+
+msgid "The import is in progress, please wait ..."
+msgstr ""
+
+msgid "The import was successful."
 msgstr ""
 
 msgid "The input data for voting is invalid."
@@ -4098,11 +4158,6 @@ msgstr ""
 msgid "The request could not be sent. Check your connection."
 msgstr ""
 
-msgid ""
-"The sender address is defined in the OpenSlides server settings and should "
-"modified by administrator only."
-msgstr ""
-
 msgid "The server could not be reached."
 msgstr ""
 
@@ -4138,6 +4193,9 @@ msgstr ""
 msgid "There is an unknown voting problem."
 msgstr ""
 
+msgid "There is an unspecified error in this line, which prevents the import."
+msgstr ""
+
 msgid ""
 "There seems to be a problem connecting to our services. Check your "
 "connection or try again later."
@@ -4161,9 +4219,6 @@ msgstr ""
 msgid ""
 "This account is not linked as candidate, submitter or speaker in any "
 "meeting and is not manager of any committee"
-msgstr ""
-
-msgid "This account will only be removed from this meeting"
 msgstr ""
 
 msgid "This ballot contains deleted users."
@@ -4190,6 +4245,9 @@ msgstr ""
 msgid "This paragraph does not exist in the main motion anymore:"
 msgstr ""
 
+msgid "This participant will only be removed from this meeting"
+msgstr ""
+
 msgid "This prefix already exists"
 msgstr ""
 
@@ -4203,6 +4261,9 @@ msgid ""
 "This projector is currently internal. Selecting such projectors as "
 "reference projectors will automatically set them to visible. Do you really "
 "want to do this?"
+msgstr ""
+
+msgid "This row will not be imported, due to an unknown reason."
 msgstr ""
 
 msgid "This will add or remove the following groups for all selected participants:"
@@ -4288,6 +4349,21 @@ msgstr ""
 msgid "Topics"
 msgstr ""
 
+msgid "Topics created"
+msgstr ""
+
+msgid "Topics skipped"
+msgstr ""
+
+msgid "Topics updated"
+msgstr ""
+
+msgid "Topics with warnings (will be skipped)"
+msgstr ""
+
+msgid "Total topics"
+msgstr ""
+
 msgid "Total votes cast"
 msgstr ""
 
@@ -4346,7 +4422,7 @@ msgid ""
 "{password}. The url referrs to the system url."
 msgstr ""
 
-msgid "Used for WLAN QRCode in PDF of access data."
+msgid "Used for WLAN QRCode projection."
 msgstr ""
 
 msgid "Used for invitation emails and QRCode in PDF of access data."
@@ -4379,6 +4455,9 @@ msgid "Virtual applause"
 msgstr ""
 
 msgid "Visibility"
+msgstr ""
+
+msgid "Visibility on agenda"
 msgstr ""
 
 msgid "Vote"
@@ -4464,9 +4543,6 @@ msgstr ""
 msgid "Votings"
 msgstr ""
 
-msgid "WLAN access data"
-msgstr ""
-
 msgid "WLAN encryption"
 msgstr ""
 
@@ -4507,6 +4583,15 @@ msgid "What is new?"
 msgstr ""
 
 msgid "Which version?"
+msgstr ""
+
+msgid "Wifi"
+msgstr ""
+
+msgid "Wifi access data"
+msgstr ""
+
+msgid "Wifi name"
 msgstr ""
 
 msgid ""
@@ -4717,9 +4802,6 @@ msgstr ""
 msgid "active"
 msgstr ""
 
-msgid "active users"
-msgstr ""
-
 msgid "add group(s)"
 msgstr ""
 
@@ -4867,7 +4949,13 @@ msgstr ""
 msgid "items selected"
 msgstr ""
 
+msgid "last updated"
+msgstr ""
+
 msgid "lightblue"
+msgstr ""
+
+msgid "logged-in users"
 msgstr ""
 
 msgid "long running"

@@ -198,7 +198,7 @@ Prerequisites:
             type: `check`
         },
         {
-            name: _(`Set timestamp`),
+            name: _(`Set submission timestamp`),
             help_text: _(
                 `Activates the automatic logging of the date and time when this state was first reached. A set time stamp cannot be removed.`
             ),

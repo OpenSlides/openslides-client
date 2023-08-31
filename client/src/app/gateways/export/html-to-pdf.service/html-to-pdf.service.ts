@@ -284,7 +284,7 @@ export class HtmlToPdfService {
      */
     protected createFormattedParagraph(data: CreateSpecificParagraphPayload): any {
         const children = this.parseChildren(data.element, data.styles.concat(this.elementStyles[data.nodeName]));
-        let newParagraph = this.create(`text`);
+        const newParagraph = this.create(`text`);
         newParagraph.text = children;
         return newParagraph;
     }
@@ -295,7 +295,7 @@ export class HtmlToPdfService {
      */
     protected createSpanParagraph(data: CreateSpecificParagraphPayload): any {
         const children = this.parseChildren(data.element, data.styles);
-        let newParagraph = {
+        const newParagraph = {
             ...this.create(`text`),
             ...this.computeStyle(data.styles)
         };
@@ -329,7 +329,7 @@ export class HtmlToPdfService {
                 list.start = parseInt(start, 10);
             }
         }
-        let newParagraph = list;
+        const newParagraph = list;
         newParagraph[data.nodeName] = children;
         return newParagraph;
     }
@@ -339,7 +339,7 @@ export class HtmlToPdfService {
      * Can be overwritten by subclasses for more specific functionality.
      */
     protected createDefaultParagraph(data: CreateSpecificParagraphPayload): any {
-        let newParagraph = {
+        const newParagraph = {
             ...this.create(`text`, data.element.textContent!.replace(/\n/g, ``)),
             ...this.computeStyle(data.styles)
         };

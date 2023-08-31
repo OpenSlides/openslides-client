@@ -116,7 +116,7 @@ export class PollSlideComponent extends BaseSlideComponent<PollSlideData> {
         return poll;
     }
 
-    private createOptionData(data: SlidePollOption, weight: number = 1): OptionData {
+    private createOptionData(data: SlidePollOption, weight = 1): OptionData {
         const getOptionTitle: () => OptionTitle = () => {
             if (data.text) {
                 return { title: data.text };
