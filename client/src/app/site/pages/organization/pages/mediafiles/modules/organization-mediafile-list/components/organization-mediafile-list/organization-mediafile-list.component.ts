@@ -17,7 +17,6 @@ import { LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/me
 import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
 import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
-import { MediafileListSortService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-sort.service';
 import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
 import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
 import { ORGANIZATION_SUBSCRIPTION } from 'src/app/site/pages/organization/organization.subscription';
@@ -94,7 +93,6 @@ export class OrganizationMediafileListComponent
         public repo: MediafileControllerService,
         private exporter: MediafileListExportService,
         public vp: ViewPortService,
-        public sortService: MediafileListSortService,
         private operator: OperatorService,
         private formBuilder: UntypedFormBuilder,
         private cd: ChangeDetectorRef,

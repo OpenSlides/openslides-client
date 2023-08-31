@@ -14,10 +14,9 @@ import {
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { ViewMotion } from '../../../view-models';
-import { MotionsListServiceModule } from '../motions-list-service.module';
 
 @Injectable({
-    providedIn: MotionsListServiceModule
+    providedIn: `root`
 })
 export class MotionListSortService extends BaseSortListService<ViewMotion> {
     /**

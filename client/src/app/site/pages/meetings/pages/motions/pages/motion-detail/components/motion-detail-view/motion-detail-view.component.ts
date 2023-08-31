@@ -189,6 +189,8 @@ export class MotionDetailViewComponent extends BaseMeetingComponent implements O
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this.destroy();
+        this.amendmentSortService.exitSortService();
+        this.motionSortService.exitSortService();
     }
 
     public getSaveAction(): () => Promise<void> {

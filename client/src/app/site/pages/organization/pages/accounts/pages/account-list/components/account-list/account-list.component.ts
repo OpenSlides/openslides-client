@@ -52,10 +52,6 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
         super.setTitle(`Accounts`);
         this.canMultiSelect = true;
         this.listStorageIndex = ACCOUNT_LIST_STORAGE_INDEX;
-        this.controller.getViewModelListObservable().subscribe(list => console.log(`NEW VIEWMODELLIST`, list));
-        this.controller
-            .getSortedViewModelListObservable(this.sortService.repositorySortingKey)
-            .subscribe(list => console.log(`NEW SORTED VIEWMODELLIST`, list));
     }
 
     public createNewMember(): void {

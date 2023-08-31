@@ -25,7 +25,6 @@ import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
 import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
-import { MediafileListSortService } from '../../services/mediafile-list-sort.service';
 
 @Component({
     selector: `os-mediafile-list`,
@@ -93,7 +92,6 @@ export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMed
         private exporter: MediafileListExportService,
         private mediaManage: MediaManageService,
         public vp: ViewPortService,
-        public sortService: MediafileListSortService,
         private operator: OperatorService,
         private formBuilder: UntypedFormBuilder,
         private groupRepo: MediafileListGroupService,

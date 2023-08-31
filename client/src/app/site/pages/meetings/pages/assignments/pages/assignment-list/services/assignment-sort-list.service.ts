@@ -6,13 +6,11 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
 
-import { AssignmentListServiceModule } from './assignment-list-service.module';
-
 /**
  * Sorting service for the assignment list
  */
 @Injectable({
-    providedIn: AssignmentListServiceModule
+    providedIn: `root`
 })
 export class AssignmentSortListService extends BaseSortListService<ViewAssignment> {
     /**

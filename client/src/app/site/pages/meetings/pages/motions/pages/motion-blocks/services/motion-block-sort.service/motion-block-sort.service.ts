@@ -6,10 +6,8 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
-import { MotionBlockServiceModule } from '../motion-block-service.module';
-
 @Injectable({
-    providedIn: MotionBlockServiceModule
+    providedIn: `root`
 })
 export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock> {
     /**

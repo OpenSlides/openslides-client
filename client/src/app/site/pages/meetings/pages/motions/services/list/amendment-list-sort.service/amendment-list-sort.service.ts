@@ -6,10 +6,9 @@ import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionListSortService } from '../motion-list-sort.service';
-import { MotionsListServiceModule } from '../motions-list-service.module';
 
 @Injectable({
-    providedIn: MotionsListServiceModule
+    providedIn: `root`
 })
 export class AmendmentListSortService extends MotionListSortService {
     /**

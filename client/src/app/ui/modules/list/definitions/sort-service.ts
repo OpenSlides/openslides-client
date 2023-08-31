@@ -44,4 +44,5 @@ export interface SortListService<V> extends SortService<V> {
     exitSortService(): void;
     sort(array: V[]): Promise<V[]>;
     compare(itemA: V, itemB: V): Promise<number>;
+    getSortedViewModelListObservable(): Observable<V[]>;
 }

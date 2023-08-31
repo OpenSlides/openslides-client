@@ -7,13 +7,13 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
-import { MeetingListServiceModule } from '../meeting-list-service.module';
-
 @Injectable({
-    providedIn: MeetingListServiceModule
+    providedIn: `root`
 })
 export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
     protected storageKey = `CommitteeList`;
+
+    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MeetingRepositoryService;
 
     private readonly staticSortOptions: OsSortingOption<ViewMeeting>[] = [
         { property: `name`, label: _(`Title`) },
@@ -24,8 +24,6 @@ export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
         { property: `userAmount`, label: _(`Number of participants`), baseKeys: [`meeting_user_ids`] },
         { property: `motionsAmount`, label: _(`Number of motions`), baseKeys: [`motion_ids`] }
     ];
-
-    protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MeetingRepositoryService;
 
     public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
         super(translate, store, injector, {

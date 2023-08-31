@@ -7,10 +7,9 @@ import { StorageService } from 'src/app/gateways/storage.service';
 import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
 import { ViewCommittee } from '../../../../view-models';
-import { CommitteeListServiceModule } from '../committee-list-service.module';
 
 @Injectable({
-    providedIn: CommitteeListServiceModule
+    providedIn: `root`
 })
 export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     protected storageKey = `CommitteeList`;

@@ -153,7 +153,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private sortListServiceSubscriptions: { [key: string]: Subscription } = {};
 
-    private changeBasedResortingPipeline: {
+    private updateActionPipeline: {
         priority: UpdatePipelineAction[];
         lesser: UpdatePipelineAction[];
         active: boolean;
@@ -501,12 +501,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             this.sortedViewModelLists[sortKey].forEach(
                 (item, index) => (this.idToSortedIndexMaps[sortKey][item.id] = index)
             );
-            console.log(
-                `PROCESS`,
-                sortKey,
-                this.sortedViewModelLists[sortKey],
-                this.sortedViewModelLists[sortKey].filter(v => v.canAccess())
-            );
             this.sortedViewModelListUnsafeSubjects[sortKey].next(this.sortedViewModelLists[sortKey]);
             this.sortedViewModelListSubjects[sortKey].next(
                 this.sortedViewModelLists[sortKey].filter(v => v.canAccess())
@@ -516,56 +510,47 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private pushToResortPipeline(action: UpdatePipelineAction): void {
         if (action.key) {
-            this.changeBasedResortingPipeline.lesser.push(action);
+            this.updateActionPipeline.lesser.push(action);
         } else {
-            this.changeBasedResortingPipeline.priority.push(action);
+            this.updateActionPipeline.priority.push(action);
         }
     }
 
     private async activateResortingPipeline(): Promise<void> {
         while (
-            (this.changeBasedResortingPipeline.priority.length || this.changeBasedResortingPipeline.lesser.length) &&
-            this.changeBasedResortingPipeline.active === false
+            (this.updateActionPipeline.priority.length || this.updateActionPipeline.lesser.length) &&
+            this.updateActionPipeline.active === false
         ) {
-            this.changeBasedResortingPipeline.active = true;
-            const priority = this.changeBasedResortingPipeline.priority.length ? `priority` : `lesser`;
-            console.log(
-                `COLLECTION ${this.COLLECTION}:`,
-                ...Object.entries(JSON.parse(JSON.stringify(this.changeBasedResortingPipeline[priority][0]))).flatMap(
-                    entry => [`\n${entry[0]}:`, entry[1]]
-                ),
-                JSON.parse(JSON.stringify(this.sortedViewModelLists)),
-                this.sortedViewModelLists,
-                JSON.parse(JSON.stringify(this.changeBasedResortingPipeline))
-            );
+            this.updateActionPipeline.active = true;
+            const priority = this.updateActionPipeline.priority.length ? `priority` : `lesser`;
             await this.executePipelineFunctionOnIndex(0, priority);
-            this.changeBasedResortingPipeline.active = false;
+            this.updateActionPipeline.active = false;
         }
     }
 
     private async executePipelineFunctionOnIndex(index: number, priority: `priority` | `lesser`): Promise<void> {
         if (
-            !this.changeBasedResortingPipeline[priority][index].key ||
-            this.sortListServices[this.changeBasedResortingPipeline[priority][index].key]
+            !this.updateActionPipeline[priority][index].key ||
+            this.sortListServices[this.updateActionPipeline[priority][index].key]
         ) {
-            await this.changeBasedResortingPipeline[priority][index].funct();
-            this.processSortedViewModelList(this.changeBasedResortingPipeline[priority][index].key);
-            const currentType = this.changeBasedResortingPipeline[priority][index].type;
+            await this.updateActionPipeline[priority][index].funct();
+            this.processSortedViewModelList(this.updateActionPipeline[priority][index].key);
+            const currentType = this.updateActionPipeline[priority][index].type;
             if ([PipelineActionType.Reset, PipelineActionType.Resort].includes(currentType)) {
-                for (let i = this.changeBasedResortingPipeline[priority].length - 1; i > index; i--) {
-                    const iType = this.changeBasedResortingPipeline[priority][i].type;
+                for (let i = this.updateActionPipeline[priority].length - 1; i > index; i--) {
+                    const iType = this.updateActionPipeline[priority][i].type;
                     if (
                         (currentType === iType || iType === PipelineActionType.Resort) &&
-                        (!this.changeBasedResortingPipeline[priority][index].key ||
-                            this.changeBasedResortingPipeline[priority][index].key ===
-                                this.changeBasedResortingPipeline[priority][i].key)
+                        (!this.updateActionPipeline[priority][index].key ||
+                            this.updateActionPipeline[priority][index].key ===
+                                this.updateActionPipeline[priority][i].key)
                     ) {
-                        this.changeBasedResortingPipeline[priority].splice(i, 1);
+                        this.updateActionPipeline[priority].splice(i, 1);
                     }
                 }
             }
         }
-        this.changeBasedResortingPipeline[priority].splice(index, 1);
+        this.updateActionPipeline[priority].splice(index, 1);
     }
 
     private initResorting(key: string): void {

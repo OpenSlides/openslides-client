@@ -39,7 +39,6 @@ import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 import { UserService } from 'src/app/site/services/user.service';
 import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
-import { ParticipantListSortService } from '../../../pages/participant-list/services/participant-list-sort.service/participant-list-sort.service';
 import { ParticipantCommonServiceModule } from '../participant-common-service.module';
 
 export const MEETING_RELATED_FORM_CONTROLS = [
@@ -59,9 +58,10 @@ export const MEETING_RELATED_FORM_CONTROLS = [
 })
 export class ParticipantControllerService extends BaseMeetingControllerService<ViewUser, User> {
     private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);
-    private _sortedParticipantListSubject = new BehaviorSubject<ViewUser[]>([]);
 
     private _participantListUpdateSubscription: Subscription;
+
+    private _participantIdMapSubject = new BehaviorSubject<{ [id: number]: ViewUser }>({});
 
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
@@ -73,12 +73,9 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         private userScopePresenter: GetUserScopePresenterService,
         private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService,
         private userService: UserService,
-        private actions: ActionService,
-        participantSort: ParticipantListSortService
+        private actions: ActionService
     ) {
         super(controllerServiceCollector, User, repo);
-
-        participantSort.initSorting();
 
         let meetingUserIds = [];
         this.activeMeetingIdService.meetingIdObservable
@@ -101,19 +98,6 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         this.meetingUserRepo.getViewModelListObservable().subscribe(async mUsers => {
             this.updateUsersFromMeetingUsers(mUsers, meetingUserIds);
         });
-
-        combineLatest([
-            this._participantListSubject,
-            userController.getSortedViewModelListObservable(participantSort.repositorySortingKey)
-        ])
-            .pipe(
-                auditTime(1),
-                map(([participants, sortedUsers]) => {
-                    const idMap = participants.mapToObject(user => ({ [user.id]: user }));
-                    return sortedUsers.filter(user => idMap[user.id]);
-                })
-            )
-            .subscribe(this._sortedParticipantListSubject);
     }
 
     private async updateUsersFromMeetingUsers(mUsers: ViewMeetingUser[], meetingUserIds?: number[]): Promise<void> {
@@ -124,6 +108,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 meetingUserIds.includes(mUser.id)
         );
         const users = meetingUsers.map(mUser => mUser.user);
+        this._participantIdMapSubject.next(users.mapToObject(user => ({ [user.id]: user })));
         this._participantListSubject.next(users);
     }
 
@@ -135,12 +120,22 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
         return this._participantListSubject;
     }
 
-    public override getSortedViewModelList(): ViewUser[] {
-        return this._sortedParticipantListSubject.value;
+    public override getSortedViewModelList(key?: string): ViewUser[] {
+        return this.userController
+            .getSortedViewModelList(key)
+            .filter(user => this._participantIdMapSubject.value[user.id]);
     }
 
-    public override getSortedViewModelListObservable(): Observable<ViewUser[]> {
-        return this._sortedParticipantListSubject;
+    public override getSortedViewModelListObservable(key?: string): Observable<ViewUser[]> {
+        return combineLatest([
+            this._participantIdMapSubject,
+            this.userController.getSortedViewModelListObservable(key)
+        ]).pipe(
+            auditTime(1),
+            map(([idMap, sortedUsers]) => {
+                return sortedUsers.filter(user => idMap[user.id]);
+            })
+        );
     }
 
     public override getViewModelObservable(id: Id): Observable<ViewUser | null> {

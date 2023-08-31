@@ -157,6 +157,8 @@ export abstract class BaseSortListService<V extends BaseViewModel>
 
     private _repository: BaseRepository<any, any>;
 
+    private initializationCount = 0;
+
     public constructor(
         translate: TranslateService,
         private store: StorageService,
@@ -192,15 +194,21 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * @param definitions The definitions of the possible options
      */
     public async initSorting(): Promise<void> {
-        this.repository.registerSortListService(this.storageKey, this);
+        if (this.initializationCount < 1) {
+            this.repository.registerSortListService(this.storageKey, this);
 
-        if (!this.sortDefinition) {
-            await this.loadDefinition();
+            if (!this.sortDefinition) {
+                await this.loadDefinition();
+            }
         }
+        this.initializationCount++;
     }
 
     public exitSortService(): void {
-        this.repository.unregisterSortListService(this.storageKey);
+        this.initializationCount--;
+        if (this.initializationCount < 1) {
+            this.repository.unregisterSortListService(this.storageKey);
+        }
     }
 
     /**
@@ -265,6 +273,10 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     public async compare(itemA: V, itemB: V): Promise<number> {
         const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
         return this.compareHelperFunction(itemA, itemB, alternativeProperty);
+    }
+
+    public getSortedViewModelListObservable(): Observable<V[]> {
+        return this.repository.getSortedViewModelListObservable(this.repositorySortingKey);
     }
 
     /**

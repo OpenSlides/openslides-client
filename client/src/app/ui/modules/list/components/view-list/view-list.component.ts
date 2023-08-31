@@ -182,22 +182,15 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
             if (this.sortService) {
                 this.sortService.initSorting();
             }
-            this._source = this.listObservableProvider
-                ? this.listObservableProvider.getSortedViewModelListObservable && this.sortService
+            this._source = this.sortService
+                ? this.listObservableProvider?.getSortedViewModelListObservable
                     ? this.listObservableProvider.getSortedViewModelListObservable(
                           this.sortService.repositorySortingKey
                       )
-                    : this.listObservableProvider.getViewModelListObservable()
+                    : this.sortService.getSortedViewModelListObservable()
+                : this.listObservableProvider
+                ? this.listObservableProvider.getViewModelListObservable()
                 : this.listObservable;
-            this._source.subscribe(list =>
-                console.log(
-                    `SOURCE`,
-                    this.sortService ? this.sortService.repositorySortingKey : `none`,
-                    JSON.parse(JSON.stringify(list)),
-                    this.listObservableProvider && this.listObservableProvider.getSortedViewModelListObservable,
-                    this.listObservableProvider[`random`]
-                )
-            );
             let dataListObservable: Observable<V[]> = this._source!;
             if (this.filterService) {
                 this._source = this.filterService.getViewModelListObservable();
