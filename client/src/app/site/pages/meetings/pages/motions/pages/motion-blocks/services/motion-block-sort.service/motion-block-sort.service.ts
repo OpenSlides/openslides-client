@@ -27,7 +27,8 @@ export class MotionBlockSortService extends BaseSortListService<ViewMotionBlock>
             sortFn: (aBlock, bBlock, ascending) =>
                 ascending
                     ? aBlock.motions.length - bBlock.motions.length
-                    : bBlock.motions.length - aBlock.motions.length
+                    : bBlock.motions.length - aBlock.motions.length,
+            baseKeys: [`motion_ids`]
         }
     ];
 
