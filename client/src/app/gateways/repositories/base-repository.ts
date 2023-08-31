@@ -94,8 +94,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     private _collection: string;
 
-    public random = Math.floor(Math.random() * 1000);
-
     public get collection(): string {
         return this._collection;
     }

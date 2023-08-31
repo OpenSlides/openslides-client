@@ -92,13 +92,12 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
                     }
                 case `function`:
                     const a = propertyA.bind(itemA)();
-                    const b = (propertyB as unknown as Function).bind(itemB)();
+                    const b = (propertyB as unknown as () => any).bind(itemB)();
                     return this.intl.compare(a, b);
                 case `object`:
                     if (propertyA instanceof Date) {
                         return propertyA > propertyB ? 1 : -1;
                     } else {
-                        console.log(`COMPARING`, propertyA, propertyB, propertyA.toString());
                         return this.intl.compare(propertyA.toString(), propertyB.toString());
                     }
                 case `undefined`:
