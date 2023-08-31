@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { delayWhen, filter, fromEvent, Observable, of, Subscriber } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
@@ -210,13 +210,7 @@ export class AutoupdateCommunicationService {
      * @returns Observable containing messages from autoupdate
      */
     public listenShouldReconnect(): Observable<any> {
-        const visibilityChangeEvent = fromEvent(document, `visibilitychange`).pipe(
-            filter(() => document.visibilityState === `visible`)
-        );
-
-        return this.sharedWorker.restartObservable.pipe(
-            delayWhen(() => (document.visibilityState === `visible` ? of(undefined) : visibilityChangeEvent))
-        );
+        return this.sharedWorker.restartObservable;
     }
 
     public hasReceivedDataForSubscription(description: string): boolean {
