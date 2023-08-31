@@ -19,8 +19,8 @@ export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
 
     private readonly staticSortOptions: OsSortingOption<ViewCommittee>[] = [
         { property: `name`, label: _(`Title`) },
-        { property: `meetingAmount`, label: _(`Amount of meetings`) },
-        { property: `memberAmount`, label: _(`Amount of accounts`) }
+        { property: `meetingAmount`, label: _(`Amount of meetings`), baseKeys: [`meeting_ids`] },
+        { property: `memberAmount`, label: _(`Amount of accounts`), baseKeys: [`user_ids`] }
     ];
 
     public constructor(translate: TranslateService, store: StorageService, injector: Injector) {
