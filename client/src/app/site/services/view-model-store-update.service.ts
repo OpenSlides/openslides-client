@@ -56,7 +56,7 @@ export class ViewModelStoreUpdateService {
         changedFullListModels,
         deletedModels,
         patch
-    }: UpdatePatch): Promise<void> {
+    }: UpdatePatch): Promise<DeletedModels> {
         const _deletedModels: DeletedModels = {};
         const _changedModels: ChangedModels = {};
 
@@ -86,6 +86,7 @@ export class ViewModelStoreUpdateService {
         }
 
         await this.doCollectionUpdates(_changedModels, _deletedModels);
+        return _deletedModels;
     }
 
     private createCollectionUpdate(

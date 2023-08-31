@@ -240,7 +240,9 @@ export class AutoupdateService {
                 changedFullListModels: fullListUpdateCollections,
                 deletedModels: {}
             })
-            .then(() => {
+            .then(deletedModels => {
+                this.communication.cleanupCollections(requestId, deletedModels);
+
                 if (this._resolveDataReceived[requestId]) {
                     this._resolveDataReceived[requestId](modelData);
                     delete this._resolveDataReceived[requestId];

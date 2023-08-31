@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { AutoupdateStreamPool } from './autoupdate/autoupdate-stream-pool';
 import { AutoupdateSubscription } from './autoupdate/autoupdate-subscription';
 import {
+    AutoupdateCleanupCacheParams,
     AutoupdateCloseStreamParams,
     AutoupdateOpenStreamParams,
     AutoupdateSetEndpointParams
@@ -134,6 +135,15 @@ function closeConnection(ctx: MessagePort, params: AutoupdateCloseStreamParams):
     subscription.closePort(ctx);
 }
 
+function cleanupStream(params: AutoupdateCleanupCacheParams): void {
+    const subscription = autoupdatePool.getSubscriptionById(params.streamId);
+    if (!subscription) {
+        return;
+    }
+
+    subscription.stream.removeFqids(params.deletedFqids);
+}
+
 let currentlyOnline = navigator.onLine;
 function updateOnlineStatus(): void {
     if (currentlyOnline === navigator.onLine) {
@@ -158,6 +168,9 @@ export function autoupdateMessageHandler(ctx: any, e: any): void {
             break;
         case `close`:
             closeConnection(ctx, params);
+            break;
+        case `cleanup-cache`:
+            cleanupStream(params);
             break;
         case `auth-change`:
             autoupdatePool.updateAuthentication();

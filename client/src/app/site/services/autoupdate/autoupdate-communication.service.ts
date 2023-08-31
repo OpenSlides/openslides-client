@@ -7,9 +7,11 @@ import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
 import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
 import { djb2hash } from 'src/app/infrastructure/utils';
+import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
 import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 import {
     AutoupdateAuthChange,
+    AutoupdateCleanupCache,
     AutoupdateCloseStream,
     AutoupdateNewUser,
     AutoupdateOpenStream,
@@ -170,6 +172,31 @@ export class AutoupdateCommunicationService {
                 streamId
             }
         } as AutoupdateCloseStream);
+    }
+
+    /**
+     * Notifies the worker about deleted fqids
+     *
+     * @param streamId Id of the stream
+     * @param deletedData map op collections and ids to be deleted
+     */
+    public cleanupCollections(streamId: Id, deletedData: { [collection: string]: Id[] }): void {
+        const deletedFqids: string[] = [];
+        for (const coll of Object.keys(deletedData)) {
+            for (const id of deletedData[coll]) {
+                deletedFqids.push(fqidFromCollectionAndId(coll, id));
+            }
+        }
+
+        if (deletedFqids.length) {
+            this.sharedWorker.sendMessage(`autoupdate`, {
+                action: `cleanup-cache`,
+                params: {
+                    streamId,
+                    deletedFqids
+                }
+            } as AutoupdateCleanupCache);
+        }
     }
 
     /**

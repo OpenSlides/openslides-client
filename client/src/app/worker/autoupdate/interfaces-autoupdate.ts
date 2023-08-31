@@ -34,6 +34,16 @@ export interface AutoupdateCloseStream extends WorkerMessageContent {
     params: AutoupdateCloseStreamParams;
 }
 
+export interface AutoupdateCleanupCacheParams {
+    streamId: number;
+    deletedFqids: string[];
+}
+
+export interface AutoupdateCleanupCache extends WorkerMessageContent {
+    action: 'cleanup-cache';
+    params: AutoupdateCleanupCacheParams;
+}
+
 export interface AutoupdateSetConnectionStatusParams {
     status: 'online' | 'offline';
 }
