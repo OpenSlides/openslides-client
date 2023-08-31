@@ -1,53 +1,90 @@
-<div>
-    <mat-form-field class="search-field" appearance="outline" floatLabel="never">
-        <input
-            matInput
-            [(ngModel)]="searchTerm"
-            (keyup.enter)="searchChange()"
-            placeholder="{{ 'Search' | translate }}"
-            autofocus
-        />
-        <button mat-icon-button matSuffix (click)="searchChange()">
-            <mat-icon>search</mat-icon>
-        </button>
-    </mat-form-field>
+<div class="search-form-container">
+    <os-rounded-input
+        [(ngModel)]="searchTerm"
+        (submit)="searchChange()"
+        placeholder="{{ 'Search' | translate }}"
+        [hasSubmit]="true"
+        [autofocus]="true"
+    ></os-rounded-input>
+    <div class="search-hint">
+        <mat-hint>{{ 'To start your search press Enter or the search icon' | translate }}</mat-hint>
+    </div>
 
-    <section class="filter-section" [formGroup]="currentFilters">
-        <ul class="filters-list">
-            <li *ngFor="let filter of availableFilters | keyvalue">
-                <mat-checkbox formControlName="{{ filter.key }}">{{ filter.value }}</mat-checkbox>
-            </li>
-        </ul>
+    <section class="filters" [formGroup]="currentFilters">
+        <mat-radio-group *ngIf="operator.knowsMultipleMeetings" class="filter-section" formControlName="meetingFilter">
+            <mat-radio-button *ngIf="inMeeting" class="filter" value="current">
+                {{ 'This meeting' | translate }}
+            </mat-radio-button>
+            <mat-radio-button class="filter" value="all">{{ 'All meetings' | translate }}</mat-radio-button>
+            <mat-radio-button class="filter" value="meetings">{{ 'Meeting title' | translate }}</mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="currentFilters.value.meetingFilter !== 'meetings'" class="filter-section">
+            <ng-container *ngFor="let filter of currentlyAvailableFilters">
+                <mat-checkbox *osPerms="getPermissionByFilter(filter)" formControlName="{{ filter }}" class="filter">
+                    {{ availableFilters[filter] | translate }}
+                </mat-checkbox>
+            </ng-container>
+        </div>
     </section>
 </div>
 
 <mat-dialog-content class="search-results">
-    <section *ngFor="let category of filteredResults | keyvalue" class="search-results-category">
-        <h2>
-            <span [matBadge]="category.value.length < 100 ? category.value.length : '99+'" [matBadgeOverlap]="false">
-                {{ availableFilters[category.key] | translate }}
-            </span>
-        </h2>
-        <ng-container *ngFor="let result of category.value">
-            <a
-                *ngIf="result.fqid.startsWith('mediafile')"
-                class="search-results-entry"
-                [href]="result.url"
-                target="blank"
-                mat-dialog-close
-            >
-                <h3 *ngIf="result.title">{{ result.title }}</h3>
-            </a>
-            <router-link
-                *ngIf="!result.fqid.startsWith('mediafile')"
-                class="search-results-entry"
-                [routerLink]="result.url"
-                mat-dialog-close
-            >
-                <h3 *ngIf="result.title">{{ result.title }}</h3>
-                <p *ngIf="result.text" [innerHtml]="result.text"></p>
-            </router-link>
-        </ng-container>
-    </section>
-    <h3 *ngIf="noResults" class="search-no-results">{{ 'No results found' | translate }}</h3>
+    <ng-container *ngIf="searching === null">
+        <section class="search-results-category alternating-list">
+            <div *ngFor="let result of filteredResults" class="search-results-entry">
+                <div class="breadcrumb">
+                    <ng-container *ngIf="result.committee">
+                        <span>{{ result.committee.name }}</span>
+                        <span class="sep">&gt;</span>
+                    </ng-container>
+                    <ng-container *ngIf="currentFilters.value.meetingFilter === 'all' && result.meeting">
+                        <span>{{ result.meeting.name }}</span>
+                        <span class="sep">&gt;</span>
+                    </ng-container>
+                    <span *ngIf="currentFilters.value.meetingFilter === 'all' && result.collection === 'user'">
+                        {{ 'Account' | translate }}
+                    </span>
+                    <span *ngIf="currentFilters.value.meetingFilter !== 'all' || result.collection !== 'user'">
+                        {{ availableFilters[result.collection] | translate }}
+                    </span>
+                </div>
+                <ng-container [ngSwitch]="result.collection">
+                    <a *ngSwitchCase="'mediafile'" [href]="result.url" target="blank" mat-dialog-close>
+                        <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
+                    </a>
+                    <a *ngSwitchCase="'motion'" [routerLink]="result.url" mat-dialog-close>
+                        <h3 *ngIf="result.title">
+                            <span *ngIf="result.obj?.number" [innerHTML]="result.obj?.number + ': '"></span>
+                            <span [innerHTML]="result.title"></span>
+                        </h3>
+                        <div class="info">
+                            <span *ngIf="result.obj?.submitter_ids?.length">
+                                {{ 'Submitter' | translate }}:
+                                <os-comma-separated-listing
+                                    [list]="getNamesBySubmitters(result.obj.submitter_ids)"
+                                ></os-comma-separated-listing>
+                            </span>
+                            <span>{{ 'Sequential number' | translate }} {{ result.obj.sequential_number }}</span>
+                        </div>
+                        <p *ngIf="result.text" [innerHtml]="getTextSnippet(result.text)"></p>
+                    </a>
+                    <a *ngSwitchDefault [routerLink]="result.url" mat-dialog-close>
+                        <h3 *ngIf="result.title" [innerHtml]="result.title"></h3>
+                        <p *ngIf="result.text" [innerHtml]="getTextSnippet(result.text)"></p>
+                    </a>
+                </ng-container>
+            </div>
+        </section>
+        <h3 *ngIf="noResults" class="search-no-results">{{ 'No results found' | translate }}</h3>
+        <div *ngIf="resultCount" class="info result-info">
+            <span>{{ 'Total' | translate }}: {{ resultCount }}</span>
+            <span>{{ 'Filtered' | translate }}: {{ filteredResultCount }}</span>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="searching !== null">
+        <div class="spinner-container">
+            <mat-spinner></mat-spinner>
+        </div>
+    </ng-container>
 </mat-dialog-content>

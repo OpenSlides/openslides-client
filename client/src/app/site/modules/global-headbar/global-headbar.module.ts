@@ -11,10 +11,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { DirectivesModule } from 'src/app/ui/directives';
 import { CommaSeparatedListingModule } from 'src/app/ui/modules/comma-separated-listing';
+import { InputModule } from 'src/app/ui/modules/input';
 
 import { OpenSlidesTranslationModule } from '../translations';
 import { UserComponentsModule } from '../user-components';
@@ -24,6 +28,7 @@ import { GlobalHeadbarComponent } from './components/global-headbar/global-headb
 import { GlobalSearchComponent } from './components/global-search/global-search.component';
 
 const MODULES = [
+    InputModule,
     MatToolbarModule,
     MatIconModule,
     MatListModule,
@@ -33,8 +38,11 @@ const MODULES = [
     MatTooltipModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatRadioModule,
     MatBadgeModule,
-    PortalModule
+    MatProgressSpinnerModule,
+    PortalModule,
+    DirectivesModule
 ];
 const DECLARATIONS = [GlobalHeadbarComponent];
 
