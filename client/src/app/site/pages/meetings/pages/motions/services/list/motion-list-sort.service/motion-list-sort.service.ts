@@ -36,13 +36,24 @@ export class MotionListSortService extends BaseSortListService<ViewMotion> {
      * Define the sort options
      */
     protected motionSortOptions: OsSortingOption<ViewMotion>[] = [
-        { property: `tree_weight`, label: `Call list` },
+        { property: `tree_weight`, label: `Call list`, baseKeys: [`sort_weight`, `sort_parent_id`] },
         { property: `number` },
         { property: `title` },
-        { property: `submitters` },
-        { property: `category`, sortFn: this.categorySortFn },
+        {
+            property: `submitters`,
+            foreignBaseKeys: {
+                user: [`username`, `first_name`, `last_name`, `default_structure_level`],
+                meeting_user: [`structure_level`]
+            }
+        },
+        {
+            property: `category`,
+            sortFn: this.categorySortFn,
+            baseKeys: [`category_id`, `category_weight`],
+            foreignBaseKeys: { category: [`parent_id`, `weight`] }
+        },
         { property: `block_id`, label: `Motion block` },
-        { property: `state` },
+        { property: `state`, baseKeys: [`state_id`], foreignBaseKeys: { motion_state: [`name`] } },
         { property: `created`, label: _(`Creation date`) },
         { property: `sequential_number`, label: _(`Sequential number`) },
         { property: `last_modified`, label: _(`Last modified`) }

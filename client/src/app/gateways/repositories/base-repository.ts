@@ -327,6 +327,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                     }
                 });
                 this.viewModelStoreSubject.next(this.viewModelStore);
+                this.tapViewModels(Object.values(this.viewModelStore));
                 if (changedModels) {
                     await this.initChangeBasedResorting(newModels, updatedModels, newViewModels, updatedViewModels);
                 }
@@ -491,12 +492,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected onCreateViewModel(viewModel: V): void {}
 
     private updateViewModelListSubject(viewModels: V[]): void {
-        this.viewModelListSubject.next(
-            viewModels
-                ?.filter(m => m.canAccess())
-                ?.tap(models => this.tapViewModels(models))
-                ?.sort(this.viewModelSortFn)
-        );
+        this.viewModelListSubject.next(viewModels?.filter(m => m.canAccess())?.sort(this.viewModelSortFn));
     }
 
     private processSortedViewModelList(key?: string): void {
