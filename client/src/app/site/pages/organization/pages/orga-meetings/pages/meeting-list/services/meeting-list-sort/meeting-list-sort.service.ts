@@ -20,9 +20,9 @@ export class MeetingListSortService extends BaseSortListService<ViewMeeting> {
         { property: `start_time`, label: _(`Start date`) },
         { property: `end_time`, label: _(`End date`) },
         { property: `location`, label: _(`Event location`) },
-        { property: `committeeName`, label: _(`Committee`) },
-        { property: `userAmount`, label: _(`Number of participants`) },
-        { property: `motionsAmount`, label: _(`Number of motions`) }
+        { property: `committeeName`, label: _(`Committee`), baseKeys: [], foreignBaseKeys: { committee: [`name`] } },
+        { property: `userAmount`, label: _(`Number of participants`), baseKeys: [`meeting_user_ids`] },
+        { property: `motionsAmount`, label: _(`Number of motions`), baseKeys: [`motion_ids`] }
     ];
 
     protected repositoryToken: ProviderToken<BaseRepository<any, any>> = MeetingRepositoryService;
