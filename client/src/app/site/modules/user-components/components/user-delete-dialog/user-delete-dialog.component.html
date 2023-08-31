@@ -21,7 +21,7 @@
                     </ng-container>
                 </cdk-virtual-scroll-viewport>
             </div>
-            <div *ngIf="hasUsersToRemove" class="user-list-wrapper">
+            <div *ngIf="hasUsersToRemove" class="user-list-wrapper spacer-top-20">
                 <p class="section-title flex-vertical-center">
                     {{ 'These participants will be removed:' | translate }}
                 </p>
@@ -45,7 +45,7 @@
 <p mat-dialog-actions>
     <button mat-button color="warn" [matDialogClose]="true">
         <span translate>Yes</span>
-        ,&nbsp;
+        <span>,&nbsp;</span>
         <span translate *ngIf="!hasUsersToDelete">remove</span>
         <span translate *ngIf="hasUsersToDelete">delete</span>
     </button>
