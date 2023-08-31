@@ -66,7 +66,7 @@ export class GlobalSearchService {
     }
 
     private updateScores(results: GlobalSearchResponse): void {
-        for (let fqid of Object.keys(results)) {
+        for (const fqid of Object.keys(results)) {
             this.updateScore(fqid, results[fqid].score || 0, results);
         }
     }
@@ -79,7 +79,7 @@ export class GlobalSearchService {
         const collection = collectionFromFqid(fqid);
         const result = results[fqid];
         if (collection === `tag` && results[fqid].content?.tagged_ids) {
-            for (let taggedFqid of results[fqid].content?.tagged_ids) {
+            for (const taggedFqid of results[fqid].content?.tagged_ids) {
                 results[taggedFqid].score = Math.max(results[taggedFqid].score || 0, addScore);
                 this.updateScore(taggedFqid, results[taggedFqid].score, results);
             }

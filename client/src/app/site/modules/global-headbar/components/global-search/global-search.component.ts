@@ -165,7 +165,7 @@ export class GlobalSearchComponent implements OnDestroy {
                 resultText += textParts[i];
             } else {
                 const text = splitStringKeepSeperator(textParts[i], ` `, `between`);
-                for (let word of text) {
+                for (const word of text) {
                     totalLength += word.length;
                     resultText += word;
                     if (totalLength > textSnippetSize) {
@@ -188,7 +188,7 @@ export class GlobalSearchComponent implements OnDestroy {
             }
         }
 
-        for (let result of this.results) {
+        for (const result of this.results) {
             const collection = result.collection;
             if (this.currentFilters.get(`meetingFilter`).getRawValue() === `meetings`) {
                 if (collection === `meeting` || collection === `committee`) {

@@ -100,10 +100,10 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
     public inputChanged = new EventEmitter<string>();
 
     /**
-     * EventHandler for the submit event.
+     * EventHandler for the clickSubmit event.
      */
     @Output()
-    public submit = new EventEmitter<string>();
+    public clickSubmit = new EventEmitter<string>();
 
     /**
      * Getter to get the border-radius as a string.
@@ -138,7 +138,7 @@ export class RoundedInputComponent extends BaseFormControlComponent<string> impl
      * Function to clear the input and refocus it.
      */
     public send(): void {
-        this.submit.emit(this.contentForm.getRawValue());
+        this.clickSubmit.emit(this.contentForm.getRawValue());
     }
 
     /**
