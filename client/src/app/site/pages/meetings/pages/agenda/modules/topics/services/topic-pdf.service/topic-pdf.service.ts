@@ -68,7 +68,7 @@ export class TopicPdfService {
      */
     private createTitle(topic: ViewTopic): object {
         return {
-            text: topic.title,
+            text: topic.getListTitle(),
             style: `title`
         };
     }
