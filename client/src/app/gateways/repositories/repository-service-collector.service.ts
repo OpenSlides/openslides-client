@@ -23,6 +23,12 @@ export class RepositoryServiceCollectorService {
         public relationManager: RelationManagerService // public errorService: ErrorService
     ) {}
 
+    /**
+     * Allows repositories to register if there have been updates on a certain key of their model,
+     * so other repositories can check them for the sake of their resorting logic
+     * @param collection the calling repositories own collection
+     * @param newKeys the keys that were updated in the repository
+     */
     public registerNewKeyUpdates(collection: string, newKeys: string[]): void {
         if (this.collectionToKeyUpdatesObservableMap[collection]) {
             this.collectionToKeyUpdatesObservableMap[collection].next(newKeys);
@@ -31,6 +37,11 @@ export class RepositoryServiceCollectorService {
         }
     }
 
+    /**
+     * Returns an observable that allows repositories to be notified when there are key updates on other model types
+     * @param collection the collection of the other model type.
+     * @returns an observable with the changed keys
+     */
     public getNewKeyUpdatesObservable(collection: string): Observable<string[]> {
         if (!this.collectionToKeyUpdatesObservableMap[collection]) {
             this.collectionToKeyUpdatesObservableMap[collection] = new BehaviorSubject([]);

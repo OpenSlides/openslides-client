@@ -45,10 +45,22 @@ export abstract class BaseController<V extends BaseViewModel, M extends BaseMode
         return this.repo.getViewModelListObservable();
     }
 
+    /**
+     * Get a sorted ViewModelList. This may pass through a delay,
+     * thus may not be accurate, especially on application loading.
+     *
+     * @returns all sorted view models stored in this repository sorted according to the SortListService with the given sorting key or by id if the sort service has been un-registered. Sorting is done according to sortFn if no sort key is given or the sort key id "default"
+     */
     public getSortedViewModelList(key?: string): V[] {
         return this.repo.getSortedViewModelList(key);
     }
 
+    /**
+     * Get a sorted ViewModelListObservable. This may pass through a delay,
+     * thus may not be accurate, especially on application loading.
+     *
+     * @returns all sorted view models stored in this repository sorted according to the SortListService with the given sorting key or by id if the sort service has been un-registered. Sorting is done according to sortFn if no sort key is given or the sort key id "default"
+     */
     public getSortedViewModelListObservable(key?: string): Observable<V[]> {
         return this.repo.getSortedViewModelListObservable(key);
     }

@@ -27,6 +27,9 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     extends BaseSortService<V>
     implements SortListService<V>
 {
+    /**
+     * The models own keys that the current sort option depends upon
+     */
     public get currentSortBaseKeys(): OsSortProperty<V>[] {
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
@@ -34,6 +37,9 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return option.baseKeys ?? (Array.isArray(option.property) ? option.property : [option.property]);
     }
 
+    /**
+     * Othe models keys that the current sort option depends upon
+     */
     public get currentForeignSortBaseKeys(): { [collection: string]: string[] } {
         const option = this.sortOptions.find(option =>
             this.isSameProperty(option.property, this.sortDefinition.sortProperty)
@@ -115,8 +121,14 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         );
     }
 
+    /**
+     * Resolves once there is a full sort definition saved within the sort service
+     */
     public readonly hasLoaded = new Deferred<boolean>();
 
+    /**
+     * Updates every time when there's a new sortDefinition. Emits said sortDefinition.
+     */
     public get sortingUpdatedObservable() {
         return this.sortDefinitionSubject.pipe(
             distinctUntilChanged((prev, curr) => {
@@ -126,6 +138,9 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         );
     }
 
+    /**
+     * The key under which the sortedViewModelList of this service can be retreived from the repository.
+     */
     public get repositorySortingKey(): string {
         return this.storageKey;
     }
@@ -134,6 +149,11 @@ export abstract class BaseSortListService<V extends BaseViewModel>
      * The key to access stored valued
      */
     protected abstract readonly storageKey: string;
+
+    /**
+     * Injection token for the repository whose values should be sorted by this service.
+     */
+    protected abstract readonly repositoryToken: ProviderToken<BaseRepository<any, any>>;
 
     /**
      * The current sorting definitions
@@ -145,8 +165,6 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     private _isDefaultSorting = false;
 
     private sortDefinitionSubject = new BehaviorSubject<OsSortingDefinition<V> | null>(null);
-
-    protected abstract readonly repositoryToken: ProviderToken<BaseRepository<any, any>>;
 
     private get repository(): BaseRepository<any, any> {
         if (!this._repository) {
@@ -188,7 +206,10 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     /**
-     * Defines the sorting properties, and returns an observable with sorted data
+     * Defines the sorting properties and registers this service with the repository.
+     * After this, calling the repositories `getSortedViewModelListObservable` will return an observable wherein the values are sorted according to this services sort definitions.
+     *
+     * exitSortService should be called when the sorting is not required anymore to ensure that the repository isn't doing any unnecessary sorting work.
      *
      * @param name arbitrary name, used to save/load correct saved settings from StorageService
      * @param definitions The definitions of the possible options
@@ -204,10 +225,17 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         this.initializationCount++;
     }
 
+    /**
+     * Unregisters this service with the repository if the sorting isn't still required somewhere else.
+     * After this, the repositories `getSortedViewModelListObservable` will return the regular id-based-order until re-registration.
+     */
     public exitSortService(): void {
         this.initializationCount--;
         if (this.initializationCount < 1) {
             this.repository.unregisterSortListService(this.storageKey);
+        }
+        if (this.initializationCount < 0) {
+            this.initializationCount = 0;
         }
     }
 
@@ -265,16 +293,26 @@ export abstract class BaseSortListService<V extends BaseViewModel>
         return a.equals(b);
     }
 
+    /**
+     * Sorts the given array according to this services sort settings and returns it.
+     */
     public async sort(array: V[]): Promise<V[]> {
         const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
         return array.sort((itemA, itemB) => this.compareHelperFunction(itemA, itemB, alternativeProperty));
     }
 
+    /**
+     * Compare function that can be used to sort an array according to this services sort settings.
+     * @returns a negative number if itemA is smaller than itemB, a positive number if itemB is smaller and 0 otherwise
+     */
     public async compare(itemA: V, itemB: V): Promise<number> {
         const alternativeProperty = (await this.getDefaultDefinition()).sortProperty;
         return this.compareHelperFunction(itemA, itemB, alternativeProperty);
     }
 
+    /**
+     * Gets the sortedViewModelListObservable resulting from this services definitions from the corresponding repository.
+     */
     public getSortedViewModelListObservable(): Observable<V[]> {
         return this.repository.getSortedViewModelListObservable(this.repositorySortingKey);
     }
@@ -296,7 +334,7 @@ export abstract class BaseSortListService<V extends BaseViewModel>
     }
 
     /**
-     * Recreates the sorting function. Is supposed to be called on init and
+     * Causes the chain reaction that leads to the list being resorted. Is supposed to be called on init and
      * every time the sorting (property, ascending/descending) or the language changes
      */
     protected async updateSortedData(): Promise<void> {
