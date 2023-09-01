@@ -36,7 +36,15 @@ type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: str
 })
 export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get organizationManagementLevels(): string[] {
-        return Object.values(OML).filter((level: OML) => this.operator.hasOrganizationPermissions(level));
+        return Object.values(OML).filter(
+            (level: OML) =>
+                this.operator.hasOrganizationPermissions(level) &&
+                !(this.orgaManagementLevelChangeDisabled && level !== this.user.organization_management_level)
+        );
+    }
+
+    public get orgaManagementLevelChangeDisabled(): boolean {
+        return this.user.id === this.operator.operatorId && this.operator.isSuperAdmin;
     }
 
     @ViewChild(UserDetailViewComponent, { static: false })
