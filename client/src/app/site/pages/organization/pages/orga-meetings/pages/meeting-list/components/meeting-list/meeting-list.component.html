@@ -21,7 +21,7 @@
 </os-head-bar>
 
 <os-list
-    [listObservable]="meetingsObservable"
+    [listObservableProvider]="meetingController"
     [multiSelect]="isMultiSelect"
     [alwaysShowMenu]="true"
     [filterProps]="['name', 'location', 'committeeName']"

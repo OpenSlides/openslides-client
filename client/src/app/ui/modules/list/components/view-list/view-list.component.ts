@@ -160,7 +160,11 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
             this.filterService.exitFilterService();
         }
 
-        if (this.sortService) {
+        if (
+            this.sortService &&
+            !this.listObservableProvider &&
+            this.listObservableProvider.getSortedViewModelListObservable()
+        ) {
             this.sortService.exitSortService();
         }
 
@@ -175,19 +179,23 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      */
     private initDataListObservable(): void {
         if (this.listObservableProvider || this.listObservable) {
-            this._source = this.listObservableProvider
+            if (this.sortService) {
+                this.sortService.initSorting();
+            }
+            this._source = this.sortService
+                ? this.listObservableProvider?.getSortedViewModelListObservable
+                    ? this.listObservableProvider.getSortedViewModelListObservable(
+                          this.sortService.repositorySortingKey
+                      )
+                    : this.sortService.getSortedViewModelListObservable()
+                : this.listObservableProvider
                 ? this.listObservableProvider.getViewModelListObservable()
                 : this.listObservable;
-
             let dataListObservable: Observable<V[]> = this._source!;
             if (this.filterService) {
                 this._source = this.filterService.getViewModelListObservable();
                 this.filterService.initFilters(dataListObservable);
                 dataListObservable = this.filterService.outputObservable;
-            }
-            if (this.sortService) {
-                this.sortService.initSorting(dataListObservable);
-                dataListObservable = this.sortService.outputObservable;
             }
             if (this.searchService) {
                 this.searchService.initSearchService(dataListObservable);
@@ -203,7 +211,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
             this._scrollingTableComponent.hasDataObservable
                 .pipe(find(hasData => hasData))
                 .pipe(delay(10))
-                .subscribe(_ => {
+                .subscribe(() => {
                     this.scrollTo(offset);
                 });
 

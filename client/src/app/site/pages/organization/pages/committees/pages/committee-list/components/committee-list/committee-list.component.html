@@ -25,7 +25,7 @@
 </os-head-bar>
 
 <os-list
-    [listObservable]="committeeController.getViewModelListObservable()"
+    [listObservableProvider]="committeeController"
     [multiSelect]="isMultiSelect"
     [alwaysShowMenu]="true"
     [filterProps]="['name']"

@@ -1,5 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, firstValueFrom, map, Observable, of, Subscription, switchAll, tap } from 'rxjs';
+import {
+    auditTime,
+    BehaviorSubject,
+    combineLatest,
+    filter,
+    firstValueFrom,
+    map,
+    Observable,
+    of,
+    Subscription,
+    switchAll,
+    tap
+} from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
@@ -49,6 +61,8 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     private _participantListUpdateSubscription: Subscription;
 
+    private _participantIdMapSubject = new BehaviorSubject<{ [id: number]: ViewUser }>({});
+
     public constructor(
         controllerServiceCollector: MeetingControllerServiceCollectorService,
         protected override repo: UserRepositoryService,
@@ -94,6 +108,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
                 meetingUserIds.includes(mUser.id)
         );
         const users = meetingUsers.map(mUser => mUser.user);
+        this._participantIdMapSubject.next(users.mapToObject(user => ({ [user.id]: user })));
         this._participantListSubject.next(users);
     }
 
@@ -103,6 +118,24 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     public override getViewModelListObservable(): Observable<ViewUser[]> {
         return this._participantListSubject;
+    }
+
+    public override getSortedViewModelList(key?: string): ViewUser[] {
+        return this.userController
+            .getSortedViewModelList(key)
+            .filter(user => this._participantIdMapSubject.value[user.id]);
+    }
+
+    public override getSortedViewModelListObservable(key?: string): Observable<ViewUser[]> {
+        return combineLatest([
+            this._participantIdMapSubject,
+            this.userController.getSortedViewModelListObservable(key)
+        ]).pipe(
+            auditTime(1),
+            map(([idMap, sortedUsers]) => {
+                return sortedUsers.filter(user => idMap[user.id]);
+            })
+        );
     }
 
     public override getViewModelObservable(id: Id): Observable<ViewUser | null> {

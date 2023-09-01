@@ -8,7 +8,7 @@ import { DataStoreUpdateManagerService } from 'src/app/site/services/data-store-
 interface DeletedModels {
     [collection: string]: number[];
 }
-interface ChangedModels {
+export interface ChangedModels {
     [collection: string]: BaseModel[];
 }
 
@@ -124,7 +124,7 @@ export class ViewModelStoreUpdateService {
             await this.DS.addOrUpdate(changedModels[collection]);
         }
 
-        this.DSUpdateService.commit(updateSlot);
+        this.DSUpdateService.commit(updateSlot, changedModels);
     }
 
     /**

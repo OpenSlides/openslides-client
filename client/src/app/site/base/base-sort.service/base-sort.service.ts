@@ -92,7 +92,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
                     }
                 case `function`:
                     const a = propertyA.bind(itemA)();
-                    const b = (propertyB as unknown as Function).bind(itemB)();
+                    const b = (propertyB as unknown as () => any).bind(itemB)();
                     return this.intl.compare(a, b);
                 case `object`:
                     if (propertyA instanceof Date) {
