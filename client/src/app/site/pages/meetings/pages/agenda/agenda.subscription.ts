@@ -108,7 +108,8 @@ export const getTopicDetailSubscriptionConfig: SubscriptionConfigGenerator = (..
             {
                 idField: `list_of_speakers_id`,
                 ...listOfSpeakersSpeakerCountSubscription
-            }
+            },
+            { idField: `agenda_item_id`, fieldset: [`item_number`, `content_object_id`] }
         ]
     },
     subscriptionName: TOPIC_ITEM_SUBSCRIPTION
