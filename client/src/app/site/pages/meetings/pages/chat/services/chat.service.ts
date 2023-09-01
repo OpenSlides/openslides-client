@@ -26,6 +26,11 @@ export class ChatService {
         _meetingSettingService: MeetingSettingsService,
         _orgaSettingService: OrganizationSettingsService
     ) {
+        this._canSeeSomeChatGroup = _chatGroupRepo.getViewModelList()?.length > 0;
+        this._canManage = _operator.hasPerms(Permission.chatCanManage);
+        this._isChatEnabled = _orgaSettingService.instant(`enable_chat`);
+        this.update();
+
         _chatGroupRepo.getViewModelListObservable().subscribe(groups => {
             this._canSeeSomeChatGroup = groups?.length > 0;
             this.update();
@@ -36,7 +41,10 @@ export class ChatService {
             this.update();
         });
 
-        _orgaSettingService.get(`enable_chat`).subscribe(isChatEnabled => (this._isChatEnabled = isChatEnabled));
+        _orgaSettingService.get(`enable_chat`).subscribe(isChatEnabled => {
+            this._isChatEnabled = isChatEnabled;
+            this.update();
+        });
     }
 
     private update(): void {
