@@ -15,7 +15,7 @@ import { BaseDatepickerComponent } from '../base-datepicker/base-datepicker.comp
 })
 export class DatepickerComponent extends BaseDatepickerComponent {
     public get empty(): boolean {
-        return !(this.value[`start`] || this.value[`end`]);
+        return !this.value;
     }
 
     public override contentForm: UntypedFormControl;
