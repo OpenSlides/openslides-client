@@ -111,11 +111,11 @@ export class HeadBarComponent implements OnInit, AfterViewInit {
         this._isSaveButtonEnabled = value || false;
     }
 
-    @ViewChild(`headbarContent`) headbarContent: TemplateRef<unknown>;
-
     public get isSaveButtonEnabled(): boolean {
         return this._isSaveButtonEnabled;
     }
+
+    @ViewChild(`headbarContent`) headbarContent: TemplateRef<unknown>;
 
     /**
      * Determine multiSelect mode: changed interactions and head bar

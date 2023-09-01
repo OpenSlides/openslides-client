@@ -27,7 +27,7 @@
                 formControlName="read_group_ids"
                 placeholder="{{ 'Groups with read permissions' | translate }}"
                 [multiple]="true"
-                [inputListValues]="groupsRepo.getViewModelListObservable()"
+                [inputListValues]="groupsObservable"
             ></os-list-search-selector>
         </mat-form-field>
         <mat-form-field>
@@ -35,7 +35,7 @@
                 formControlName="write_group_ids"
                 placeholder="{{ 'Groups with write permissions' | translate }}"
                 [multiple]="true"
-                [inputListValues]="groupsRepo.getViewModelListObservable()"
+                [inputListValues]="groupsObservable"
             ></os-list-search-selector>
         </mat-form-field>
     </div>
