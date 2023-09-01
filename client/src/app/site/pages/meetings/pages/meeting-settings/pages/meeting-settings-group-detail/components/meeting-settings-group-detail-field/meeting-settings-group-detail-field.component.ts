@@ -198,10 +198,12 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             value: [``, this.setting.validators ?? []],
             date: [``],
             time: [``],
-            daterange: {
-                start: [null],
-                end: [null]
-            }
+            daterange: [
+                {
+                    start: null,
+                    end: null
+                }
+            ]
         });
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
         if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
