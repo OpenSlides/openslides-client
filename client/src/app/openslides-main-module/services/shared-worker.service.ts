@@ -87,14 +87,18 @@ export class SharedWorkerService {
 
     private setupInWindowAu(): void {
         this.conn = window;
-        this.registerMessageListener();
+        this.registerMessageListener(true);
         this.zone.runOutsideAngular(() => {
             import(`../../worker/default-shared-worker.worker`);
         });
     }
 
-    private async registerMessageListener(): Promise<Event> {
-        const eventListener = fromEvent(this.conn, `message`).pipe(timeout({ first: SHARED_WORKER_READY_TIMEOUT }));
+    private async registerMessageListener(windowMode = false): Promise<Event> {
+        let eventListener = fromEvent(this.conn, `message`);
+        if (!windowMode) {
+            eventListener = eventListener.pipe(timeout({ first: SHARED_WORKER_READY_TIMEOUT }));
+        }
+
         const subscription = eventListener.subscribe((e: MessageEvent) => {
             if (this.ready && e?.data?.sender) {
                 this.messages.next(e?.data);
