@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { firstValueFrom } from 'rxjs';
 import { Identifiable } from 'src/app/domain/interfaces';
 import { User } from 'src/app/domain/models/users/user';
@@ -51,8 +52,8 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
         const patchFn = (user: ViewUser) => {
             return meetings.map(meeting => ({ id: user.id, meeting_id: meeting.id, group_ids: [] }));
         };
-        const title = this.translate.instant(`This action will remove you from one or more meetings.`);
-        const content = this.translate.instant(
+        const title = _(`This action will remove you from one or more meetings.`);
+        const content = _(
             `Afterwards you may be unable to regain your status in this meeting on your own. Are you sure you want to do this?`
         );
         if (
