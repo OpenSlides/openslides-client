@@ -26,7 +26,6 @@ export abstract class BaseProjectableViewModel<M extends BaseModel = any> extend
      * @returns the projector title used for managing projector elements.
      */
     public getProjectorTitle(projection: Projection): ProjectorTitle {
-        console.log(`PROJECTOR TITLE!!!`, this);
         return { title: this.getTitle() };
     }
 }
