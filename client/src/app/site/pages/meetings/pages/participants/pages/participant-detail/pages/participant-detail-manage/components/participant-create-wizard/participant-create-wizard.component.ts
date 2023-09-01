@@ -13,12 +13,14 @@ import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
 import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
 import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { getAccountDetailSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/accounts.subscription';
 import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 import { UserService } from 'src/app/site/services/user.service';
 
 import { GroupControllerService } from '../../../../../../modules/groups/services/group-controller.service';
-import { getParticipantMinimalSubscriptionConfig } from '../../../../../../participants.subscription';
+import {
+    getParticipantDetailSubscription,
+    getParticipantMinimalSubscriptionConfig
+} from '../../../../../../participants.subscription';
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
 
 @Component({
@@ -284,7 +286,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
             this._isUserInScope = await this.userService.isUserInSameScope(this._accountId);
             if (this._isUserInScope && this.account?.id !== this._accountId) {
                 this.account = new User(
-                    (await this.modelRequestService.fetch(getAccountDetailSubscriptionConfig(this._accountId)))[`user`][
+                    (await this.modelRequestService.fetch(getParticipantDetailSubscription(this._accountId)))[`user`][
                         this._accountId
                     ] as Partial<User>
                 );
