@@ -204,12 +204,7 @@ export class MotionPdfService {
         const changedTitle = this.changeRecoRepo.getTitleWithChanges(motion.title, titleChange, crMode);
 
         const number = motion.number ? motion.number : ``;
-        let title = ``;
-        if (this.pdfDocumentService.pageSize === `A4`) {
-            title += `${this.translate.instant(`Motion`)} `;
-        }
-
-        title += `${number}: ${changedTitle}`;
+        const title = `${this.translate.instant(`Motion`)} ${number}: ${changedTitle}`;
 
         return {
             text: title,

@@ -458,7 +458,7 @@ export class PdfDocumentService {
         docDefinition,
         filename: filetitle,
         ...config
-    }: DownloadConfig & { pageMargins: [number, number, number, number] }): void {
+    }: DownloadConfig & { pageMargins: [number, number, number, number]; pageSize: string }): void {
         this.showProgress();
         const imageUrls = this.pdfImagesService.getImageUrls();
         this.pdfImagesService.clearImageUrls();
@@ -468,6 +468,7 @@ export class PdfDocumentService {
                 ...config,
                 documentContent: docDefinition,
                 pageMargins: config.pageMargins,
+                pageSize: config.pageSize,
                 landscape: false,
                 imageUrls: imageUrls
             }),

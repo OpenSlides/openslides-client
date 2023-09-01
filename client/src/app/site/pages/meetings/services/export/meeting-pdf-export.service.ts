@@ -12,7 +12,7 @@ import { mmToPoints } from 'src/app/infrastructure/utils';
 import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { MeetingPdfExportModule } from './meeting-pdf-export.module';
+import { MeetingExportModule } from './meeting-export.module';
 
 interface MeetingDownloadLandscapeConfig {
     docDefinition: object;
@@ -25,7 +25,7 @@ interface MeetingDownloadConfig extends MeetingDownloadLandscapeConfig {
 }
 
 @Injectable({
-    providedIn: MeetingPdfExportModule
+    providedIn: MeetingExportModule
 })
 export class MeetingPdfExportService {
     private get fontSize(): number | null {
@@ -159,11 +159,13 @@ export class MeetingPdfExportService {
         fontSize: number;
         loadFonts: () => PdfFontDescription;
         createVfs: () => Promise<PdfVirtualFileSystem>;
+        pageSize: string;
     } {
         return {
             fontSize: this.fontSize!,
             loadFonts: () => this.getFonts(),
-            createVfs: () => this.createVirtualFileSystem()
+            createVfs: () => this.createVirtualFileSystem(),
+            pageSize: this.meetingSettingsService.instant(`export_pdf_pagesize`) ?? `A4`
         };
     }
 }

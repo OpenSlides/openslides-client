@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ChangeRecoMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import {
-    CsvColumnDefinitionMap,
-    CsvColumnDefinitionProperty,
-    CsvExportService
-} from 'src/app/gateways/export/csv-export.service';
+import { CsvColumnDefinitionMap, CsvColumnDefinitionProperty } from 'src/app/gateways/export/csv-export.service';
 import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
+import { MeetingCsvExportService } from 'src/app/site/pages/meetings/services/export';
 import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { LineNumberingService } from '../../../modules/change-recommendations/services';
@@ -60,7 +57,7 @@ const MotionCsvExportExample: MotionCsvExport[] = [
 })
 export class MotionCsvExportService {
     public constructor(
-        private csvExport: CsvExportService,
+        private csvExport: MeetingCsvExportService,
         private translate: TranslateService,
         private meetingSettingsService: MeetingSettingsService,
         private linenumberingService: LineNumberingService,
