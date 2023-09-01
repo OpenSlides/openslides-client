@@ -1,12 +1,12 @@
 import { environment } from 'src/environments/environment';
 
-import { ModelRequest } from '../domain/interfaces/model-request';
+import { ModelRequest } from '../../domain/interfaces/model-request';
 import {
     ErrorDescription,
     ErrorType,
     isCommunicationError,
     isCommunicationErrorWrapper
-} from '../gateways/http-stream/stream-utils';
+} from '../../gateways/http-stream/stream-utils';
 import { AutoupdateStream } from './autoupdate-stream';
 import { AutoupdateSubscription } from './autoupdate-subscription';
 import {

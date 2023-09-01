@@ -17,13 +17,12 @@ import {
     AutoupdateOpenStream,
     AutoupdateReceiveData,
     AutoupdateReceiveError,
-    AutoupdateReconnectForce,
     AutoupdateReconnectInactive,
     AutoupdateSetConnectionStatus,
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
     AutoupdateStatus
-} from 'src/app/worker/interfaces-autoupdate';
+} from 'src/app/worker/autoupdate/interfaces-autoupdate';
 
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';
@@ -102,7 +101,6 @@ export class AutoupdateCommunicationService {
         }
 
         this.registerConnectionStatusListener();
-        this.handleBrowserReload();
     }
 
     /**
@@ -144,19 +142,21 @@ export class AutoupdateCommunicationService {
      * @param params Additional url params
      */
     public open(streamId: Id | null, description: string, request: ModelRequest, params = {}): Promise<Id> {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const requestHash = djb2hash(JSON.stringify(request));
             this.openResolvers.set(requestHash, resolve);
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `open`,
-                params: {
-                    streamId,
-                    description,
-                    queryParams: formatQueryParams(params),
-                    requestHash: requestHash,
-                    request
-                }
-            } as AutoupdateOpenStream);
+            this.sharedWorker
+                .sendMessage(`autoupdate`, {
+                    action: `open`,
+                    params: {
+                        streamId,
+                        description,
+                        queryParams: formatQueryParams(params),
+                        requestHash: requestHash,
+                        request
+                    }
+                } as AutoupdateOpenStream)
+                .catch(reject);
         });
     }
 
@@ -204,6 +204,13 @@ export class AutoupdateCommunicationService {
      */
     public listen(): Observable<any> {
         return this.autoupdateDataObservable;
+    }
+
+    /**
+     * @returns Observable containing messages from autoupdate
+     */
+    public listenShouldReconnect(): Observable<any> {
+        return this.sharedWorker.restartObservable;
     }
 
     public hasReceivedDataForSubscription(description: string): boolean {
@@ -291,21 +298,6 @@ export class AutoupdateCommunicationService {
             }, 1000);
         } else {
             clearTimeout(this.unhealtyTimeout);
-        }
-    }
-
-    private handleBrowserReload(): void {
-        if (
-            (window.performance.navigation && window.performance.navigation.type === 1) ||
-            (window.performance.getEntriesByType &&
-                window.performance
-                    .getEntriesByType(`navigation`)
-                    .map(nav => nav.name)
-                    .includes(`reload`))
-        ) {
-            this.sharedWorker.sendMessage(`autoupdate`, {
-                action: `reconnect-force`
-            } as AutoupdateReconnectForce);
         }
     }
 }

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { filter, firstValueFrom, fromEvent } from 'rxjs';
 import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
@@ -6,6 +8,7 @@ import { HttpStreamEndpointService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
 import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
 import { Mutex } from '../../../infrastructure/utils/promises';
+import { BannerDefinition, BannerService } from '../../modules/site-wrapper/services/banner.service';
 import { ModelRequestObject } from '../model-request-builder';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
 import { AutoupdateCommunicationService } from './autoupdate-communication.service';
@@ -58,6 +61,11 @@ const COLLECTION_INDEX = 0;
 const ID_INDEX = 1;
 const FIELD_INDEX = 2;
 
+export const OUT_OF_SYNC_BANNER: BannerDefinition = {
+    text: _(`Out of sync`),
+    icon: `sync_disabled`
+};
+
 @Injectable({
     providedIn: `root`
 })
@@ -70,7 +78,8 @@ export class AutoupdateService {
     public constructor(
         private httpEndpointService: HttpStreamEndpointService,
         private viewmodelStoreUpdate: ViewModelStoreUpdateService,
-        private communication: AutoupdateCommunicationService
+        private communication: AutoupdateCommunicationService,
+        private bannerService: BannerService
     ) {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
@@ -82,6 +91,9 @@ export class AutoupdateService {
         this.communication.listen().subscribe(data => {
             this.handleAutoupdate({ autoupdateData: data.data, id: data.streamId, description: data.description });
         });
+        this.communication.listenShouldReconnect().subscribe(() => {
+            this.pauseUntilVisible();
+        });
 
         window.addEventListener(`beforeunload`, () => {
             for (const id of Object.keys(this._activeRequestObjects)) {
@@ -92,6 +104,46 @@ export class AutoupdateService {
         });
     }
 
+    public async pauseUntilVisible(): Promise<void> {
+        this.bannerService.addBanner(OUT_OF_SYNC_BANNER);
+        const pausedRequests: { start: () => Promise<any>; info: any }[] = [];
+        for (const id of Object.keys(this._activeRequestObjects)) {
+            const streamId = Number(id);
+            const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
+            pausedRequests.push({
+                start: () => this.request(modelRequest.getModelRequest(), description, streamId),
+                info: this._activeRequestObjects[streamId]
+            });
+            console.debug(`[autoupdate] pause request:`, description);
+            modelSubscription.close();
+        }
+
+        if (document.visibilityState !== `visible`) {
+            await firstValueFrom(
+                fromEvent(document, `visibilitychange`).pipe(filter(() => document.visibilityState === `visible`))
+            );
+        }
+
+        const openRequests = [];
+        for (const reqData of pausedRequests) {
+            const { modelRequest, description } = reqData.info;
+            const req = reqData.start();
+            openRequests.push(req);
+            req.then(nextModelSubscription => {
+                console.debug(`[autoupdate] resume request:`, description, [modelRequest]);
+                this._activeRequestObjects[nextModelSubscription.id] = {
+                    modelSubscription: nextModelSubscription,
+                    modelRequest,
+                    description
+                };
+            });
+        }
+
+        Promise.all(openRequests).then(() => {
+            this.bannerService.removeBanner(OUT_OF_SYNC_BANNER);
+        });
+    }
+
     public reconnect(config?: AutoupdateConnectConfig): void {
         this.setAutoupdateConfig(config || null);
         for (const id of Object.keys(this._activeRequestObjects)) {
@@ -99,6 +151,7 @@ export class AutoupdateService {
             const { modelSubscription, modelRequest, description } = this._activeRequestObjects[streamId];
             modelSubscription.close();
             this.request(modelRequest.getModelRequest(), description, streamId).then(nextModelSubscription => {
+                console.debug(`[autoupdate] reconnect request:`, description, [modelRequest]);
                 this._activeRequestObjects[nextModelSubscription.id] = {
                     modelSubscription: nextModelSubscription,
                     modelRequest,
