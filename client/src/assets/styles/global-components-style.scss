@@ -23,7 +23,6 @@
     }
 
     .underlined-links a {
-        // color: inherit;
         text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 2px;
 
         &:hover {
