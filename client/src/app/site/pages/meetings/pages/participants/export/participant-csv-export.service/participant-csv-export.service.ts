@@ -4,11 +4,11 @@ import { UserExport } from 'src/app/domain/models/users/user.export';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
-    CsvColumnsDefinition,
-    CsvExportService
+    CsvColumnsDefinition
 } from 'src/app/gateways/export/csv-export.service';
 import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
+import { MeetingCsvExportService } from '../../../../services/export';
 import { participantHeadersAndVerboseNames } from '../../pages/participant-import/definitions';
 import { ParticipantExportModule } from '../participant-export.module';
 import { participantsExportExample } from '../participants-export-example';
@@ -44,7 +44,7 @@ export class ParticipantCsvExportService {
         ]
     ]);
 
-    public constructor(private csvExport: CsvExportService, private translate: TranslateService) {}
+    public constructor(private csvExport: MeetingCsvExportService, private translate: TranslateService) {}
 
     public export(participants: ViewUser[]): void {
         this.csvExport.export(

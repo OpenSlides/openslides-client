@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
-import { CsvColumnDefinitionProperty, CsvExportService } from 'src/app/gateways/export/csv-export.service';
+import { CsvColumnDefinitionProperty } from 'src/app/gateways/export/csv-export.service';
 import { ViewMotionStatuteParagraph } from 'src/app/site/pages/meetings/pages/motions';
+import { MeetingCsvExportService } from 'src/app/site/pages/meetings/services/export';
 
 import { StatuteParagraphExport, statuteParagraphHeadersAndVerboseNames } from '../definitions';
 import { StatuteParagraphServiceModule } from './statute-paragraph-service.module';
@@ -11,7 +12,7 @@ import { StatuteParagraphServiceModule } from './statute-paragraph-service.modul
     providedIn: StatuteParagraphServiceModule
 })
 export class StatuteParagraphCsvExportService {
-    public constructor(private csvExport: CsvExportService, private translate: TranslateService) {}
+    public constructor(private csvExport: MeetingCsvExportService, private translate: TranslateService) {}
 
     /**
      * Export all statute paragraphs as CSV
