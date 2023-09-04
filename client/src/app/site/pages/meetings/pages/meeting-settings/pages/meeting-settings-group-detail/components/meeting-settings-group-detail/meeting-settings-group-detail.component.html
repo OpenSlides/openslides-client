@@ -22,21 +22,23 @@
 
 <div class="spacer-top-20"></div>
 
-<mat-card class="os-card spacer-bottom-60" *ngIf="settingsGroup">
-    <div id="wrapper">
-        <ng-container *ngFor="let subgroup of settingsGroup.subgroups; trackBy: trackByIndex">
-            <h3 class="accent" *ngIf="settingsGroup.subgroups.length > 1">{{ subgroup.label | translate }}</h3>
-            <ng-container *ngFor="let setting of subgroup.settings">
-                <os-meeting-settings-group-detail-field
-                    #settingsFields
-                    (update)="updateSetting($event)"
-                    [setting]="setting"
-                    [value]="meeting && getDetailFieldValue(meeting, setting)"
-                ></os-meeting-settings-group-detail-field>
+<div style="overflow: auto">
+    <mat-card class="os-card spacer-bottom-60" *ngIf="settingsGroup">
+        <div id="wrapper">
+            <ng-container *ngFor="let subgroup of settingsGroup.subgroups; trackBy: trackByIndex">
+                <h3 class="accent" *ngIf="settingsGroup.subgroups.length > 1">{{ subgroup.label | translate }}</h3>
+                <ng-container *ngFor="let setting of subgroup.settings">
+                    <os-meeting-settings-group-detail-field
+                        #settingsFields
+                        (update)="updateSetting($event)"
+                        [setting]="setting"
+                        [value]="meeting && getDetailFieldValue(meeting, setting)"
+                    ></os-meeting-settings-group-detail-field>
+                </ng-container>
             </ng-container>
-        </ng-container>
-    </div>
-</mat-card>
+        </div>
+    </mat-card>
+</div>
 
 <mat-menu #settingsMenu="matMenu">
     <button mat-menu-item (click)="resetAll()">
