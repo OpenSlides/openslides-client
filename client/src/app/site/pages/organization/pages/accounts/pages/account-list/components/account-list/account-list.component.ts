@@ -90,7 +90,11 @@ export class AccountListComponent extends BaseListViewComponent<ViewUser> {
             if (result.action === ADD) {
                 this.controller.bulkAddUserToMeeting(this.selectedRows, ...result.items).resolve();
             } else {
-                this.controller.bulkRemoveUserFromMeeting(this.selectedRows, ...result.items).resolve();
+                this.controller.bulkRemoveUserFromMeeting(this.selectedRows, ...result.items).then(action => {
+                    if (action) {
+                        action.resolve();
+                    }
+                });
             }
         }
     }

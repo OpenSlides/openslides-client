@@ -1,6 +1,7 @@
 import { KeyValue } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from 'src/app/domain/definitions/key-types';
 import { getOmlVerboseName, OML, OMLMapping } from 'src/app/domain/definitions/organization-permission';
@@ -35,7 +36,15 @@ type ParticipationTableMeetingDataRow = { meeting_name: string; group_names: str
 })
 export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get organizationManagementLevels(): string[] {
-        return Object.values(OML).filter((level: OML) => this.operator.hasOrganizationPermissions(level));
+        return Object.values(OML).filter(
+            (level: OML) =>
+                this.operator.hasOrganizationPermissions(level) &&
+                !(this.orgaManagementLevelChangeDisabled && level !== this.user.organization_management_level)
+        );
+    }
+
+    public get orgaManagementLevelChangeDisabled(): boolean {
+        return this.user?.id === this.operator.operatorId && this.operator.isSuperAdmin;
     }
 
     @ViewChild(UserDetailViewComponent, { static: false })
@@ -268,8 +277,21 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private async updateUser(): Promise<void> {
         const payload = this.getPartialUserPayload();
-        await this.userController.update(payload, this.user!).resolve();
-        this.router.navigate([`..`], { relativeTo: this.route });
+        if (
+            !(
+                this.user.id === this.operator.operatorId &&
+                this.operator.user.organization_management_level !== payload.organization_management_level
+            ) ||
+            (await this.promptService.open(
+                _(`This action will diminish your organization management level`),
+                _(
+                    `This will diminish your ability to do things on the organization level and you will not be able to revert this yourself.`
+                )
+            ))
+        ) {
+            await this.userController.update(payload, this.user!).resolve();
+            this.router.navigate([`..`], { relativeTo: this.route });
+        }
     }
 
     private getPartialUserPayload(): any {
