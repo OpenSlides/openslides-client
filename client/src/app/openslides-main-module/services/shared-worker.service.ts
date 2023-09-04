@@ -83,6 +83,10 @@ export class SharedWorkerService {
     }
 
     private async connectWorker(checkReload = false): Promise<void> {
+        if (this.conn) {
+            this.conn.close();
+        }
+
         if (environment.autoupdateOnSharedWorker) {
             try {
                 const worker = new SharedWorker(new URL(`../../worker/default-shared-worker.worker`, import.meta.url), {
