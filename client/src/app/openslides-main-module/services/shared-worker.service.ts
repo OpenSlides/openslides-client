@@ -78,7 +78,7 @@ export class SharedWorkerService {
             await ack;
         } catch (e) {
             await this.handleFault();
-            this.sendMessage(receiver, msg);
+            await this.sendMessage(receiver, msg);
         }
     }
 
