@@ -1,11 +1,30 @@
 import { Injectable, NgZone } from '@angular/core';
-import { filter, firstValueFrom, fromEvent, Observable, of, Subject, take, timeout } from 'rxjs';
+import {
+    defer,
+    filter,
+    firstValueFrom,
+    forkJoin,
+    from,
+    fromEvent,
+    Observable,
+    of,
+    repeat,
+    retry,
+    Subject,
+    Subscription,
+    take,
+    timeout,
+    timer
+} from 'rxjs';
 import { WorkerMessage, WorkerMessageContent, WorkerResponse } from 'src/app/worker/interfaces';
 import { environment } from 'src/environments/environment';
 
-const SHARED_WORKER_MESSAGE_ACK_TIMEOUT = 2000;
+const SHARED_WORKER_MESSAGE_ACK_TIMEOUT = 4000;
 const SHARED_WORKER_READY_TIMEOUT = 10000;
 const SHARED_WORKER_WAIT_AFTER_TERMINATE = 2000;
+const SHARED_WORKER_HEALTHCHECK_INTERVAL = 5000;
+const SHARED_WORKER_HEALTH_RESPONSE_TIMEOUT = 8000;
+const SHARED_WORKER_HEALTH_RETRIES = 2;
 
 @Injectable({
     providedIn: `root`
@@ -20,6 +39,8 @@ export class SharedWorkerService {
     private restartSubject: Subject<void> = new Subject();
     private conn: MessagePort | Window;
     private ready = false;
+    private healthCheckSubscription: Subscription;
+    private messageEventSubscription: Subscription;
 
     constructor(private zone: NgZone) {
         this.connectWorker(true);
@@ -52,7 +73,13 @@ export class SharedWorkerService {
                 )
             );
         });
-        await ack;
+
+        try {
+            await ack;
+        } catch (e) {
+            await this.handleFault();
+            this.sendMessage(receiver, msg);
+        }
     }
 
     private async connectWorker(checkReload = false): Promise<void> {
@@ -71,6 +98,7 @@ export class SharedWorkerService {
                 this.conn.start();
                 await registerListener;
                 console.debug(`[shared worker service] Using shared worker`);
+                this.startHealthCheck();
             } catch (e) {
                 console.warn(e);
                 if (this.conn) {
@@ -93,18 +121,62 @@ export class SharedWorkerService {
         });
     }
 
+    private startHealthCheck(): void {
+        if (this.healthCheckSubscription) {
+            this.healthCheckSubscription.unsubscribe();
+        }
+
+        this.zone.runOutsideAngular(() => {
+            this.healthCheckSubscription = forkJoin([
+                timer(SHARED_WORKER_HEALTHCHECK_INTERVAL),
+                defer(() =>
+                    from(
+                        this.waitForMessage(
+                            SHARED_WORKER_HEALTH_RESPONSE_TIMEOUT,
+                            m => m.sender === `control` && m.action === `pong`,
+                            () => this.sendMessageForce(`control`, { action: `ping` })
+                        )
+                    )
+                )
+            ])
+                .pipe(retry(SHARED_WORKER_HEALTH_RETRIES), repeat())
+                .subscribe({
+                    error: () => this.handleFault()
+                });
+        });
+    }
+
+    private async handleFault(): Promise<void> {
+        if (this.ready === false) {
+            return;
+        }
+
+        this.ready = false;
+        if (this.messageEventSubscription) {
+            this.messageEventSubscription.unsubscribe();
+        }
+        if (this.healthCheckSubscription) {
+            this.healthCheckSubscription.unsubscribe();
+        }
+        this.restartSubject.next();
+        await this.connectWorker();
+    }
+
     private async registerMessageListener(windowMode = false): Promise<Event> {
         let eventListener = fromEvent(this.conn, `message`);
         if (!windowMode) {
             eventListener = eventListener.pipe(timeout({ first: SHARED_WORKER_READY_TIMEOUT }));
         }
+        if (this.messageEventSubscription) {
+            this.messageEventSubscription.unsubscribe();
+        }
 
-        const subscription = eventListener.subscribe((e: MessageEvent) => {
+        this.messageEventSubscription = eventListener.subscribe((e: MessageEvent) => {
             if (this.ready && e?.data?.sender) {
                 this.messages.next(e?.data);
                 if (e.data.sender === `control` && e.data.action === `terminating`) {
                     this.ready = false;
-                    subscription.unsubscribe();
+                    this.messageEventSubscription.unsubscribe();
                     this.restartSubject.next();
                     setTimeout(() => {
                         this.connectWorker();
@@ -174,20 +246,25 @@ export class SharedWorkerService {
 
     private async waitForMessage(
         timeoutDuration: number,
-        isMessage: (data?: any) => boolean
+        isMessage: (data?: any) => boolean,
+        doBefore?: () => void
     ): Promise<MessageEvent<WorkerResponse>> {
-        const ret = await firstValueFrom(
+        const promise = firstValueFrom(
             fromEvent(this.conn, `message`).pipe(
                 filter(e => isMessage((<any>e)?.data)),
-                timeout({ each: timeoutDuration, with: () => of(false) }),
+                timeout({ first: timeoutDuration, with: () => of(false) }),
                 take(1)
             )
         );
 
-        if (ret === false) {
+        if (doBefore) {
+            doBefore();
+        }
+
+        if ((await promise) === false) {
             throw new Error(`Timeout while waiting for message.`);
         }
 
-        return <MessageEvent>ret;
+        return <MessageEvent>await promise;
     }
 }
