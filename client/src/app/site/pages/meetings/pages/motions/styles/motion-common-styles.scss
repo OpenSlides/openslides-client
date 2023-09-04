@@ -3,12 +3,18 @@
     .insert {
         color: green;
         text-decoration: underline;
+        a {
+            color: green;
+        }
     }
 
     del,
     .delete {
         color: red;
         text-decoration: line-through;
+        a {
+            color: red;
+        }
     }
 
     li {
