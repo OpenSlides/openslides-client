@@ -23,7 +23,7 @@
             [tableHeight]="fullScreen ? undefined : '50vh'"
             [hiddenColumns]="hiddenColumns"
             [selectionMode]="multiSelect"
-            [addBottomSpacer]="true"
+            [addBottomSpacer]="addBottomSpacer"
             (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"
         >
             <div *osScrollingTableNoData class="no-data-placeholder subtitle">{{ 'No data' | translate }}</div>

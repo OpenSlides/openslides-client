@@ -181,20 +181,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
         };
     }
 
-    public getRowClass(isLast = false): string | string[] | object | undefined {
-        if (isLast && this.addBottomSpacer) {
-            return this.rowClass;
-        }
-        if (!this.rowClass) {
-            return `divider-bottom`;
-        } else if (Array.isArray(this.rowClass)) {
-            return [...this.rowClass, `divider-bottom`];
-        } else if (typeof this.rowClass === `object`) {
-            return { ...this.rowClass, [`divider-bottom`]: true };
-        }
-        return this.rowClass + ` divider-bottom`;
-    }
-
     private select(rows: T[]): void {
         this.changeSelection(rows, true);
     }
