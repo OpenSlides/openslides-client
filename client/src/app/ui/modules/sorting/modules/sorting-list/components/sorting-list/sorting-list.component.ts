@@ -104,7 +104,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     }
 
     /**
-     * Updates the array with the new data. This is called, if the input changes
+     * Updates the array with the new data. This is called if the input changes.
      *
      * @param newValues The new values to set.
      */
@@ -127,7 +127,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     }
 
     /**
-     * Handles the start of a dragDrop event and clears multiSelect if the ittem dragged
+     * Handles the start of a dragDrop event and clears multiSelect if the dragged item
      * is not part of the selected items
      */
     public dragStarted(index: number): void {
@@ -139,7 +139,7 @@ export class SortingListComponent<T extends Selectable = Selectable> implements 
     /**
      * drop event
      * @param event the event
-     * @param dropBehind (optional) toggle explicit 'insert behind'(true) or
+     * @param dropBehind (optional) toggle explicit 'insert behind' (true) or
      * 'insert before' (false) behavior instead of relying on a
      * 'natural drop logic'
      */
