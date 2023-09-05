@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Topic } from 'src/app/domain/models/topics/topic';
 import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
 import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
 import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
@@ -14,7 +13,7 @@ import { TopicImportServiceModule } from '../topic-import-service.module';
 @Injectable({
     providedIn: TopicImportServiceModule
 })
-export class TopicImportService extends BaseBackendImportService<Topic> {
+export class TopicImportService extends BaseBackendImportService {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */

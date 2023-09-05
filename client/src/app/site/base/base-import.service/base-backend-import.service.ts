@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
 import { FileReaderProgressEvent, ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 import { BackendImportService } from 'src/app/ui/base/import-service';
 import { BackendImportPhase } from 'src/app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
@@ -17,9 +16,7 @@ import {
 import { ImportServiceCollectorService } from '../../services/import-service-collector.service';
 
 @Directive()
-export abstract class BaseBackendImportService<MainModel extends Identifiable>
-    implements BackendImportService<MainModel>
-{
+export abstract class BaseBackendImportService implements BackendImportService {
     /**
      * The minimimal number of header entries needed to successfully create an entry
      */

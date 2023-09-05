@@ -26,6 +26,10 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
         this.stateChanges.next();
     }
 
+    public get value(): T | null {
+        return this.contentForm.value;
+    }
+
     @Input()
     public set disabled(disable: boolean) {
         this._disabled = coerceBooleanProperty(disable);
@@ -39,10 +43,6 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
 
     public get disabled(): boolean {
         return this._disabled;
-    }
-
-    public get value(): T | null {
-        return this.contentForm.value;
     }
 
     public get id(): number {
@@ -92,9 +92,9 @@ export abstract class BaseFormControlComponent<T> implements ControlValueAccesso
         this.disabled = isDisabled;
     }
 
-    protected _onChange = (value: T | null) => {};
+    protected _onChange: (_v: T | null) => void = () => {};
 
-    protected _onTouched = (value: T | null) => {};
+    protected _onTouched: (_v: T | null) => void = () => {};
 
     protected abstract createForm(): UntypedFormControl | UntypedFormGroup;
 

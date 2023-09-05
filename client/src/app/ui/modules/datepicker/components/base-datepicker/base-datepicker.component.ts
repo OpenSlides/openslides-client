@@ -47,7 +47,7 @@ export abstract class BaseDatepickerComponent extends BaseFormFieldControlCompon
             });
     }
 
-    public onContainerClick(event: MouseEvent): void {}
+    public onContainerClick(_event: MouseEvent): void {}
 
     protected initializeForm(): void {}
 }

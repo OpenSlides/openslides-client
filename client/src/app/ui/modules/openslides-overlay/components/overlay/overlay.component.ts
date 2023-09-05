@@ -5,6 +5,7 @@ import {
     HostListener,
     Input,
     Output,
+    TemplateRef,
     Type,
     ViewChild,
     ViewContainerRef
@@ -54,9 +55,9 @@ export class OverlayComponent {
     /**
      * Attaches to the backdrop overlay a custom template.
      *
-     * @param templateRef The reference to attach.
+     * @param _templateRef The reference to attach.
      */
-    public attachTemplate<T>(templateRef: any): void {}
+    public attachTemplate<T>(_templateRef: TemplateRef<T>): void {}
 
     /**
      * Attaches to the backdrop overlay a custom component.

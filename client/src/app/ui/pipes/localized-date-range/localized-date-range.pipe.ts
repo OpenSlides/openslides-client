@@ -66,7 +66,7 @@ export class LocalizedDateRangePipe extends FormatPipe implements PipeTransform 
             case `cs#PP`:
                 return this.formatDMYPP;
             default:
-                return (startString, startArray, endString, endArray) =>
+                return (startString, _startArray, endString, _endArray) =>
                     this.defaultTransformInterval(startString, endString);
         }
     }

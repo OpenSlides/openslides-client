@@ -17,7 +17,7 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
     implements OnInit
 {
     @ViewChild(BackendImportListComponent)
-    private list: BackendImportListComponent<M>;
+    private list: BackendImportListComponent;
 
     /**
      * Helper function for previews
@@ -69,7 +69,7 @@ export abstract class BaseViaBackendImportListComponent<M extends Identifiable>
     public constructor(
         componentServiceCollector: ComponentServiceCollectorService,
         protected override translate: TranslateService,
-        protected importer: BaseBackendImportService<M>
+        protected importer: BaseBackendImportService
     ) {
         super(componentServiceCollector, translate);
     }

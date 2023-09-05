@@ -60,7 +60,7 @@ export class OrganizationMediafileListComponent
     }
 
     public get shouldShowFileMenuFn(): (file: ViewMediafile) => boolean {
-        return file => this.showFileMenu(file);
+        return () => this.showFileMenu();
     }
 
     /**
@@ -76,7 +76,7 @@ export class OrganizationMediafileListComponent
     public fileEditForm: UntypedFormGroup | null = null;
 
     public isUsedAsLogoFn = (file: ViewMediafile) => this.isUsedAs(file);
-    public isUsedAsFontFn = (file: ViewMediafile) => false;
+    public isUsedAsFontFn = (_file: ViewMediafile) => false;
 
     private folderSubscription: Subscription | null = null;
     private directorySubscription: Subscription | null = null;
@@ -178,10 +178,9 @@ export class OrganizationMediafileListComponent
 
     /**
      * Determine if the given file has any extra option to show.
-     * @param file the file to check
      * @returns wether the extra menu should be accessible
      */
-    public showFileMenu(file: ViewMediafile): boolean {
+    public showFileMenu(): boolean {
         return this.canEdit;
     }
 

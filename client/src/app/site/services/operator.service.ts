@@ -303,7 +303,7 @@ export class OperatorService {
         });
         this.DS.getChangeObservable(Group)
             .pipe(debounceTime(50))
-            .subscribe(changes => {
+            .subscribe(() => {
                 if (!this._groupsLoaded) {
                     console.log(`operator: group permissions loaded`);
                     this._groupsLoaded = true;
