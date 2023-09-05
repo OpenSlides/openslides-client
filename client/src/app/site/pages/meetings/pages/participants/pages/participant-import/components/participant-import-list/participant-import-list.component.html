@@ -30,12 +30,14 @@
     </ng-template>
 
     <div *osScrollingTableCell="'group_ids'; row as entry">
-        <span *ngFor="let group of entry.newEntry.group_ids; let last = last">
-            <span>{{ group.name | translate }}</span>
-            <span *ngIf="!group.id">
-                <mat-icon color="accent">add</mat-icon>
-            </span>
-            <span *ngIf="!last">,</span>
-        </span>
+        <div *osScrollingTableCellLabel>{{ 'Groups' | translate }}</div>
+        <os-comma-separated-listing [list]="entry.newEntry.group_ids">
+            <ng-template let-group>
+                <span>{{ group.name }}</span>
+                <span *ngIf="!group.id">
+                    <mat-icon color="accent">add</mat-icon>
+                </span>
+            </ng-template>
+        </os-comma-separated-listing>
     </div>
 </os-import-list>
