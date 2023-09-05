@@ -23,10 +23,10 @@
     }
 
     .underlined-links a {
-        text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 2px;
+        text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.15em;
 
         &:hover {
-            text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 3px;
+            text-decoration: solid underline mat.get-color-from-palette(if($is-dark-theme, $accent, $primary)) 0.175em;
         }
     }
 
