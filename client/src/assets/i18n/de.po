@@ -22,6 +22,9 @@ msgstr "\"0\" bedeutet eine unbegrenzte Anzahl an aktiven Veranstaltungen"
 msgid "%num% emails were send sucessfully."
 msgstr "%num% E-Mails wurden erfolgreich versandt."
 
+msgid "(Default)"
+msgstr "(Standard)"
+
 msgid "-Ä"
 msgstr "-Ä"
 
@@ -99,6 +102,9 @@ msgstr "Zugriffsgruppen"
 
 msgid "Access-data"
 msgstr "Zugangsdaten"
+
+msgid "Account"
+msgstr "Account"
 
 msgid "Account admin"
 msgstr "Accountadmin"
@@ -246,6 +252,13 @@ msgstr ""
 "Nach Prüfung der Vorschau klicken Sie bitte auf \"Importieren\" (oben "
 "rechts)."
 
+msgid ""
+"Afterwards you may be unable to regain your status in this meeting on your "
+"own. Are you sure you want to do this?"
+msgstr ""
+"Danach können Sie Ihren Status in dieser Veranstaltung möglicherweise nicht "
+"mehr selbständig zurücksetzen. Sind Sie sicher, dass Sie das tun wollen?"
+
 msgid "Agenda"
 msgstr "Tagesordnung"
 
@@ -266,6 +279,9 @@ msgstr "Anzahl der Stimmberechtigten"
 
 msgid "All lists of speakers will be cleared."
 msgstr "Alle Redelisten werden bereinigt."
+
+msgid "All meetings"
+msgstr "alle Veranstaltungen"
 
 msgid "All other fields are optional and may be empty."
 msgstr "Alle übrigen Felder sind optional und dürfen leer sein."
@@ -553,6 +569,9 @@ msgid "Are you sure you want to remove all selected items from the agenda?"
 msgstr ""
 "Sollen alle ausgewählten Einträge wirklich aus der Tagesordnung entfernt "
 "werden?"
+
+msgid "Are you sure you want to remove these participants?"
+msgstr "Sollen diese Teilnehmende wirklich entfernt werden?"
 
 msgid "Are you sure you want to remove this entry from the agenda?"
 msgstr "Soll dieser Eintrag wirklich aus der Tagesordnung entfernt werden?"
@@ -2047,6 +2066,9 @@ msgstr "Dateien"
 msgid "Filter"
 msgstr "Filter"
 
+msgid "Filtered"
+msgstr "gefiltert"
+
 msgid "Final version"
 msgstr "Beschlussfassung"
 
@@ -3070,6 +3092,9 @@ msgstr "Keine persönliche Notiz"
 msgid "No recommendation"
 msgstr "keine Empfehlung gesetzt"
 
+msgid "No results found"
+msgstr "Keine Ergebnisse gefunden."
+
 msgid "No results yet."
 msgstr "Noch keine Ergebnisse."
 
@@ -3274,6 +3299,9 @@ msgstr "Original"
 
 msgid "Original version"
 msgstr "Originalfassung"
+
+msgid "Out of sync"
+msgstr "nicht synchronisiert"
 
 msgid "Outside"
 msgstr "außerhalb"
@@ -4123,9 +4151,6 @@ msgstr "Single Sign-On-Einstellungen"
 msgid "Single votes"
 msgstr "Einzelstimmen"
 
-msgid "Size"
-msgstr "Größe"
-
 msgid "Slide"
 msgstr "Folie"
 
@@ -4486,8 +4511,8 @@ msgstr "davon Geschäftsordnungsanträge"
 msgid "These accounts will be deleted:"
 msgstr "Diese Accounts werden gelöscht:"
 
-msgid "These accounts will be removed from the meeting:"
-msgstr "Diese Accounts werden aus der Veranstaltung entfernt:"
+msgid "These participants will be removed:"
+msgstr "Diese Teilnehmende werden entfernt:"
 
 msgid "This account has relations to meetings or committees"
 msgstr "Dieser Account hat Verweise zu Veranstaltungen oder Gremien"
@@ -4498,6 +4523,15 @@ msgid ""
 msgstr ""
 "Dieser Account ist nicht als Kandidat*in, Antragsteller*in oder Redner*in in"
 " einer Veranstaltung verlinkt und auch kein Verwalter*in eines Gremiums."
+
+msgid "This action will diminish your organization management level"
+msgstr "Diese Aktion wird Ihre Administrationsrolle beeinträchtigen"
+
+msgid "This action will remove you from one or more groups."
+msgstr "Diese Aktion entfernt Sie aus einer oder mehreren Gruppen."
+
+msgid "This action will remove you from one or more meetings."
+msgstr "Diese Aktion entfernt Sie aus einer oder mehreren Veranstaltungen."
 
 msgid "This ballot contains deleted users."
 msgstr "Der Wahlgang enthält gelöschte Nutzer."
@@ -4516,6 +4550,17 @@ msgstr "Dieses Feld ist erforderlich."
 
 msgid "This is not a number."
 msgstr "Dies ist keine Zahl."
+
+msgid ""
+"This may diminish your ability to do things in this meeting and you may not "
+"be able to revert it by youself. Are you sure you want to do this?"
+msgstr ""
+"Dies kann Ihre Berechtigungen für diese Veranstaltung beeinträchtigen. Sie "
+"sind möglicherweise nicht mehr in der Lage, es selbst rückgängig zu machen. "
+"Sind Sie sicher, dass Sie das tun wollen?"
+
+msgid "This meeting"
+msgstr "diese Veranstaltung"
 
 msgid "This meeting is archived"
 msgstr "Diese Veranstaltung ist archiviert"
@@ -4577,6 +4622,14 @@ msgstr ""
 "Die ausgewählten Accounts werden in folgende Veranstaltungen hinzugefügt "
 "oder entfernt:"
 
+msgid ""
+"This will diminish your ability to do things on the organization level and "
+"you will not be able to revert this yourself."
+msgstr ""
+"Dadurch wird Ihre Fähigkeit, Dinge auf der Organisationsebene zu tun, "
+"beeinträchtigt. Sie werden nicht in der Lage sein, dies selbst rückgängig zu"
+" machen."
+
 msgid "This will move all selected motions as childs to:"
 msgstr ""
 "Alle ausgewählten Anträge werden unterhalb des folgenden "
@@ -4636,6 +4689,9 @@ msgstr "Titel für PDF-Dokumente von Anträgen"
 msgid "Title for access data and welcome PDF"
 msgstr "Titel für das Zugangsdaten- und Begrüßungs-PDF"
 
+msgid "To start your search press Enter or the search icon"
+msgstr "Zum Starten der Suche Enter oder das Suchsymbol drücken."
+
 msgid "Toggle to list of speakers"
 msgstr "Zur Redeliste wechseln"
 
@@ -4662,6 +4718,9 @@ msgstr "Themen aktualisiert"
 
 msgid "Topics with warnings (will be skipped)"
 msgstr "Themen mit Warnungen (werden übersprungen)"
+
+msgid "Total"
+msgstr "insgesamt"
 
 msgid "Total topics"
 msgstr "Themen insgesamt"
@@ -4955,9 +5014,6 @@ msgstr "Ja pro Kandidat"
 msgid "Yes per option"
 msgstr "Ja pro Option"
 
-msgid "Yes, delete"
-msgstr "Ja, löschen"
-
 msgid "Yes, inclusive meetings"
 msgstr "Ja, inkl. Veranstaltungen"
 
@@ -5226,6 +5282,9 @@ msgstr "benutzerdefiniert"
 msgid "dateless"
 msgstr "zeitlos"
 
+msgid "delete"
+msgstr "löschen"
+
 msgid "deleted"
 msgstr "gelöscht"
 
@@ -5420,6 +5479,9 @@ msgstr "abgelehnt"
 
 msgid "rejected (not authorized)"
 msgstr "verworfen (nicht zulässig)"
+
+msgid "remove"
+msgstr "entfernen"
 
 msgid "remove group(s)"
 msgstr "Gruppe(n) entfernen"
