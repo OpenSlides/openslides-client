@@ -74,12 +74,19 @@ export class SharedWorkerService {
             );
         });
 
+        let restarted = false;
+        const restartSubscription = this.restartSubject.subscribe(() => {
+            restarted = true;
+        });
         try {
             await ack;
         } catch (e) {
-            await this.handleFault();
+            if (!restarted) {
+                await this.handleFault();
+            }
             await this.sendMessage(receiver, msg);
         }
+        restartSubscription.unsubscribe();
     }
 
     private async connectWorker(checkReload = false): Promise<void> {
